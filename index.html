@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Souls Game Project &bull; VIIER Agency</title>
+    <!-- Google Fonts для готичної атмосфери -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #080808;
+            color: #c5c5c5;
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Темний затухаючий фон */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(15,15,15,0.85) 0%, rgba(3,3,3,0.98) 100%);
+            z-index: -1;
+        }
+
+        header {
+            width: 100%;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 1px solid #221810;
+            background: rgba(10, 8, 7, 0.9);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3.2rem;
+            color: #d4af37;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            font-style: italic;
+            color: #b35900;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 25px;
+        }
+
+        .block {
+            background: rgba(15, 12, 10, 0.85);
+            border: 1px solid #2a1e14;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+        }
+
+        .block:hover {
+            border-color: #c5a059;
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .block-number {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            color: #b35900;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .block h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: #e1e1e1;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .block p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #9a9a9a;
+        }
+
+        .cta-section {
+            width: 100%;
+            padding: 50px 20px;
+            text-align: center;
+            background: rgba(8, 6, 5, 0.95);
+            border-top: 1px solid #221810;
+            margin-top: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #d4af37;
+            color: #080808;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        footer {
+            padding: 30px;
+            font-size: 0.85rem;
+            color: #555;
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            background: #030303;
+            width: 100%;
+            border-top: 1px solid #111;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Dark Souls Game Project</h1>
+        <p class="subtitle">"Rest by the bonfire, prepare to die, and build your legend."</p>
+    </header>
+
+    <div class="main-container">
+        <!-- Блок 1 -->
+        <div class="block">
+            <div class="block-number">Block I</div>
+            <h3>Core Vision</h3>
+            <p>An uncompromising action-RPG built on dark fantasy principles, atmospheric world-building, and high-stakes tactical combat.</p>
+        </div>
+
+        <!-- Блок 2 -->
+        <div class="block">
+            <div class="block-number">Block II</div>
+            <h3>Architecture & Engine</h3>
+            <p>Engineered with modular systems for optimal performance, smooth frame pacing, and precise input buffering for combat responsiveness.</p>
+        </div>
+
+        <!-- Блок 3 -->
+        <div class="block">
+            <div class="block-number">Block III</div>
+            <h3>Bonfire Checkpoints</h3>
+            <p>Implementing classic rest mechanics, enemy respawn states, flask refilling, and fast-travel matrix calculations.</p>
+        </div>
+
+        <!-- Блок 4 -->
+        <div class="block">
+            <div class="block-number">Block IV</div>
+            <h3>Combat Mechanics</h3>
+            <p>Stamina management, poise systems, rolling frames of invincibility (i-frames), parry timing, and heavy weapon weight impact.</p>
+        </div>
+
+        <!-- Блок 5 -->
+        <div class="block">
+            <div class="block-number">Block V</div>
+            <h3>Level Design</h3>
+            <p>Interconnected labyrinthine maps with verticality, shortcuts, hidden pathways, and environmental storytelling.</p>
+        </div>
+
+        <!-- Блок 6 -->
+        <div class="block">
+            <div class="block-number">Block VI</div>
+            <h3>Enemy AI & Aggression</h3>
+            <p>State machine behaviors, line-of-sight detection, group flanking tactics, and punishing boss phase transitions.</p>
+        </div>
+
+        <!-- Блок 7 -->
+        <div class="block">
+            <div class="block-number">Block VII</div>
+            <h3>Loot & Progression</h3>
+            <p>Soul economy, weapon upgrading paths, rare material drops, and stat-driven character builds (Strength, Dexterity, Faith, Intellect).</p>
+        </div>
+
+        <!-- Блок 8 -->
+        <div class="block">
+            <div class="block-number">Block VIII</div>
+            <h3>Atmospheric Audio</h3>
+            <p>Minimalist ambient soundscapes, crushing metal impacts, chilling orchestral boss themes, and echoing footsteps.</p>
+        </div>
+
+        <!-- Блок 9 -->
+        <div class="block">
+            <div class="block-number">Block IX</div>
+            <h3>Lore & Narrative</h3>
+            <p>Environmental fragments, item description storytelling, fallen kingdoms, and the eternal cycle of light and dark.</p>
+        </div>
+
+        <!-- Блок 10 -->
+        <div class="block">
+            <div class="block-number">Block X</div>
+            <h3>Performance & Optimization</h3>
+            <p>Asset streaming, memory management, draw call batching, and strict framerate targets for seamless execution.</p>
+        </div>
+
+        <!-- Блок 11 -->
+        <div class="block">
+            <div class="block-number">Block XI</div>
+            <h3>UI & HUD Design</h3>
+            <p>Diegetic and minimalist user interface designed to keep the player fully immersed in the grim atmosphere without clutter.</p>
+        </div>
+
+        <!-- Блок 12 -->
+        <div class="block">
+            <div class="block-number">Block XII</div>
+            <h3>Multiplayer & Invads</h3>
+            <p>Asynchronous ghost messages, bloodstains showing player deaths, cooperative summons, and hostile invasions.</p>
+        </div>
+
+        <!-- Блок 13 -->
+        <div class="block">
+            <div class="block-number">Block XIII</div>
+            <h3>Code Quality & CI/CD</h3>
+            <p>Strict version control via Git, automated build testing, clean code architecture, and robust repository maintenance.</p>
+        </div>
+
+        <!-- Блок 14 -->
+        <div class="block">
+            <div class="block-number">Block XIV</div>
+            <h3>Testing & QA</h3>
+            <p>Rigorous stress-testing of collision meshes, hitboxes, edge-case physics glitches, and boss arena boundaries.</p>
+        </div>
+
+        <!-- Блок 15 -->
+        <div class="block">
+            <div class="block-number">Block XV</div>
+            <h3>Future Roadmap</h3>
+            <p>Expansion planning, covenant systems refinement, custom mod support tools, and community-driven balance patches.</p>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <a href="https://github.com/TrillionaireViier/darksouls_game" class="btn" target="_blank">Access Repository</a>
+    </div>
+
+    <footer>
+        <p>Developed by VIIER Agency &bull; TrillionaireViier &bull; Dark Souls Project &copy; 2026</p>
+    </footer>
+
+</body>
+</html>
