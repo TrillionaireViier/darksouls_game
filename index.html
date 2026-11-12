@@ -2,278 +2,1065 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Souls Game Project &bull; VIIER Agency</title>
-    <!-- Google Fonts для готичної атмосфери -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DARK SOULS: The Undead Burg & Taurus Demon &bull; Playable Web & Desktop Game</title>
+    
+    <!-- Authentic Dark Souls Gothic Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --ds-gold: #c49a45;
+            --ds-gold-glow: rgba(196, 154, 69, 0.4);
+            --ds-red: #8f1d1d;
+            --ds-green: #256d36;
+            --ds-dark: #070708;
+            --ds-panel: rgba(14, 13, 12, 0.88);
+            --ds-border: #382c20;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        body {
-            background-color: #080808;
-            color: #c5c5c5;
-            font-family: 'Roboto', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-            position: relative;
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Cinzel', serif;
+            color: #d8d8d8;
         }
 
-        /* Темний затухаючий фон */
-        body::before {
-            content: "";
-            position: fixed;
+        /* 3D WebGL Canvas Viewport */
+        #game-container {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(15,15,15,0.85) 0%, rgba(3,3,3,0.98) 100%);
-            z-index: -1;
+            z-index: 1;
         }
 
-        header {
+        #game-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Top Bar & Download Header */
+        #top-header {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 1px solid #221810;
-            background: rgba(10, 8, 7, 0.9);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(5, 4, 3, 0.85) 0%, rgba(5, 4, 3, 0) 100%);
+            pointer-events: none;
         }
 
-        h1 {
+        .header-title-group {
+            display: flex;
+            flex-direction: column;
+            pointer-events: auto;
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--ds-gold);
+            text-shadow: 0 0 12px var(--ds-gold-glow);
+            text-transform: uppercase;
+        }
+
+        .header-sub {
+            font-family: 'EB Garamond', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: #8c827a;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        /* DOWNLOAD BUTTON (Prominent Dark Souls Styling) */
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(180deg, #2b2218 0%, #17120d 100%);
+            color: #ffd276;
+            border: 2px solid #a87932;
+            padding: 10px 22px;
             font-family: 'Cinzel', serif;
-            font-size: 3.2rem;
-            color: #d4af37;
-            margin-bottom: 15px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(168, 121, 50, 0.35), inset 0 0 10px rgba(168, 121, 50, 0.2);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-download::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 120, 0.25), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-download:hover::before {
+            left: 100%;
+        }
+
+        .btn-download:hover {
+            border-color: #ffd276;
+            color: #fff;
+            box-shadow: 0 0 25px rgba(255, 210, 118, 0.6), inset 0 0 15px rgba(255, 210, 118, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-download:active {
+            transform: translateY(1px);
+        }
+
+        .btn-icon-bar {
+            background: rgba(18, 15, 13, 0.75);
+            border: 1px solid var(--ds-border);
+            color: #c0b2a0;
+            padding: 8px 14px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon-bar:hover {
+            border-color: var(--ds-gold);
+            color: var(--ds-gold);
+            background: rgba(35, 28, 20, 0.9);
+        }
+
+        /* TOP-LEFT PLAYER HUD */
+        #player-hud {
+            position: absolute;
+            top: 65px;
+            left: 24px;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        /* Health Bar */
+        .bar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .bar-frame {
+            width: 280px;
+            height: 16px;
+            background: rgba(10, 8, 8, 0.85);
+            border: 1px solid #3d2d24;
+            padding: 1px;
+            position: relative;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);
+        }
+
+        .bar-fill-hp {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #6b1414 0%, #aa2222 70%, #d83a3a 100%);
+            box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35);
+            transition: width 0.15s ease-out;
+        }
+
+        .bar-fill-stamina {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #1b5329 0%, #2f8544 70%, #4db368 100%);
+            box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35);
+            transition: width 0.08s ease-out;
+        }
+
+        .bar-label {
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
+            color: #9c8a7d;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            width: 280px;
+            padding: 0 2px;
+        }
+
+        /* D-Pad Equipment Box (Dark Souls Layout) */
+        .equipment-dpad {
+            display: grid;
+            grid-template-columns: repeat(3, 44px);
+            grid-template-rows: repeat(3, 44px);
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .eq-slot {
+            background: rgba(14, 12, 10, 0.85);
+            border: 1px solid #382c20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+        }
+
+        .eq-slot.active {
+            border-color: #8c6a30;
+        }
+
+        .eq-top { grid-column: 2; grid-row: 1; }
+        .eq-left { grid-column: 1; grid-row: 2; }
+        .eq-right { grid-column: 3; grid-row: 2; }
+        .eq-bottom { grid-column: 2; grid-row: 3; }
+
+        .eq-icon {
+            font-size: 1.15rem;
+        }
+
+        .eq-count {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 0.6rem;
+            color: #e2a84b;
+            font-weight: 700;
+        }
+
+        /* BOTTOM-RIGHT SOULS COUNTER */
+        #souls-hud {
+            position: absolute;
+            bottom: 24px;
+            right: 28px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(10, 9, 8, 0.75);
+            border: 1px solid #3a2e22;
+            padding: 8px 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+        }
+
+        .soul-orb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #e2f4ff 10%, #7db9e8 50%, #20558a 100%);
+            box-shadow: 0 0 12px rgba(130, 195, 255, 0.8);
+            animation: soulPulse 2.4s infinite ease-in-out;
+        }
+
+        @keyframes soulPulse {
+            0%, 100% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; }
+        }
+
+        #souls-count {
+            font-family: 'Cinzel', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #dcd3c4;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+        }
+
+        /* BOSS HEALTH BAR (Bottom Center) */
+        #boss-hud {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 640px;
+            max-width: 90vw;
+            display: none;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        .boss-name-label {
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #e5be70;
+            text-align: center;
+            margin-bottom: 6px;
+            text-shadow: 0 0 10px rgba(229, 190, 112, 0.4);
+            text-transform: uppercase;
+        }
+
+        .boss-bar-frame {
+            width: 100%;
+            height: 18px;
+            background: rgba(12, 10, 8, 0.95);
+            border: 1px solid #5a422a;
+            position: relative;
+            padding: 2px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+        }
+
+        .boss-bar-lag {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            height: 12px;
+            width: 100%;
+            background: #d4a017;
+            transition: width 0.8s ease;
+        }
+
+        .boss-bar-fill {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            height: 12px;
+            width: 100%;
+            background: linear-gradient(90deg, #881111 0%, #cc2222 100%);
+            box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.4);
+            transition: width 0.15s ease-out;
+        }
+
+        /* CENTER INTERACTION PROMPT */
+        #interaction-prompt {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(14, 12, 10, 0.9);
+            border: 1px solid var(--ds-gold);
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            color: #ffd778;
+            display: none;
+            z-index: 60;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9), 0 0 15px rgba(196, 154, 69, 0.3);
+            text-shadow: 0 0 8px rgba(255, 215, 120, 0.5);
+            pointer-events: none;
+        }
+
+        /* NOTIFICATION PILL */
+        #game-notification {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translate(-50%, -10px);
+            padding: 8px 24px;
+            background: rgba(18, 14, 12, 0.85);
+            border: 1px solid #503d29;
+            color: #d8c39e;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 70;
+            pointer-events: none;
+            text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+        }
+
+        /* DAMAGE SCREEN FLASH */
+        #damage-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 40%, rgba(180, 0, 0, 0.6) 100%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s ease;
+            z-index: 80;
+        }
+
+        /* LOCK-ON RETICLE */
+        #lockon-reticle {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #5599ff;
+            box-shadow: 0 0 10px #55aaff;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 55;
+            pointer-events: none;
+        }
+
+        /* FLOATING DAMAGE NUMBERS */
+        .floating-damage {
+            position: absolute;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #f5f5f5;
+            text-shadow: 0 0 6px #000, 0 0 12px #ff2200;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: floatUp 0.9s forwards ease-out;
+            z-index: 90;
+        }
+
+        .floating-damage.crit {
+            font-size: 1.8rem;
+            color: #ff3322;
+            text-shadow: 0 0 10px #000, 0 0 18px #ff0000;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translate(-50%, -50%) scale(0.7); opacity: 1; }
+            50% { transform: translate(-50%, -85px) scale(1.15); opacity: 1; }
+            100% { transform: translate(-50%, -120px) scale(0.9); opacity: 0; }
+        }
+
+        /* ====================================================
+           FULLSCREEN CINEMATIC BANNERS (YOU DIED, BONFIRE LIT, VICTORY)
+           ==================================================== */
+        .cinematic-banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            pointer-events: auto;
+        }
+
+        /* YOU DIED */
+        #death-screen {
+            background: rgba(0, 0, 0, 0);
+            transition: background 1.5s ease;
+        }
+
+        #death-screen.active {
+            background: rgba(0, 0, 0, 0.88);
+        }
+
+        .death-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3.2rem, 8vw, 6.5rem);
+            font-weight: 700;
+            letter-spacing: 12px;
+            color: #8f0d0d;
+            text-transform: uppercase;
+            text-shadow: 0 0 25px rgba(180, 0, 0, 0.8), 0 0 50px rgba(120, 0, 0, 0.4);
+            opacity: 0;
+            transform: scale(0.92);
+            transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #death-screen.active .death-title {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .btn-respawn {
+            margin-top: 35px;
+            padding: 14px 38px;
+            background: transparent;
+            border: 1px solid #772222;
+            color: #d4a0a0;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
             letter-spacing: 3px;
             text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.4s ease 1.2s;
         }
 
-        .subtitle {
-            font-family: 'Cinzel', serif;
-            font-style: italic;
-            color: #b35900;
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
+        #death-screen.active .btn-respawn {
+            opacity: 1;
         }
 
-        .main-container {
-            max-width: 1200px;
+        .btn-respawn:hover {
+            border-color: #ff3333;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 50, 50, 0.5);
+        }
+
+        /* BONFIRE LIT BANNER */
+        #bonfire-banner {
+            pointer-events: none;
+        }
+
+        .banner-strip {
             width: 100%;
-            padding: 40px 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 25px;
+            padding: 24px 0;
+            background: rgba(5, 4, 3, 0.85);
+            border-top: 2px solid #5a4224;
+            border-bottom: 2px solid #5a4224;
+            text-align: center;
+            opacity: 0;
+            transform: scaleY(0);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .block {
-            background: rgba(15, 12, 10, 0.85);
-            border: 1px solid #2a1e14;
-            padding: 30px;
+        #bonfire-banner.active .banner-strip {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        .bonfire-title {
+            font-size: clamp(2.2rem, 5vw, 4.2rem);
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: #ffb833;
+            text-shadow: 0 0 25px rgba(255, 184, 51, 0.7);
+        }
+
+        /* VICTORY ACHIEVED BANNER */
+        #victory-banner {
+            pointer-events: none;
+        }
+
+        .victory-title {
+            font-size: clamp(2.4rem, 6vw, 4.8rem);
+            font-weight: 700;
+            letter-spacing: 10px;
+            color: #ffda73;
+            text-shadow: 0 0 35px rgba(255, 218, 115, 0.8);
+        }
+
+        /* ====================================================
+           MODALS (BONFIRE LEVEL UP & DOWNLOAD MODAL)
+           ==================================================== */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 250;
+        }
+
+        .modal-box {
+            background: #110e0c;
+            border: 2px solid #523f2a;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(45, 32, 20, 0.4);
+            padding: 35px 45px;
+            max-width: 580px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-            transition: all 0.3s ease;
         }
 
-        .block:hover {
-            border-color: #c5a059;
-            box-shadow: 0 0 25px rgba(197, 160, 89, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .block-number {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            color: #b35900;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
+        .modal-header {
+            font-size: 1.6rem;
+            color: var(--ds-gold);
+            text-align: center;
+            letter-spacing: 4px;
+            border-bottom: 1px solid #382c20;
+            padding-bottom: 12px;
             text-transform: uppercase;
         }
 
-        .block h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.4rem;
-            color: #e1e1e1;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
+        .modal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #1f1914;
         }
 
-        .block p {
+        .modal-label {
             font-size: 0.95rem;
-            line-height: 1.6;
-            color: #9a9a9a;
+            color: #b0a498;
+            letter-spacing: 1.5px;
         }
 
-        .cta-section {
-            width: 100%;
-            padding: 50px 20px;
-            text-align: center;
-            background: rgba(8, 6, 5, 0.95);
-            border-top: 1px solid #221810;
-            margin-top: 40px;
+        .modal-val {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffd778;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 14px 35px;
+        .btn-upgrade {
+            background: #231b13;
+            border: 1px solid #73532c;
+            color: #e5be70;
+            padding: 4px 14px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-upgrade:hover {
+            background: #47341e;
+            color: #fff;
+            border-color: #ffd276;
+        }
+
+        .btn-modal-close {
+            align-self: center;
+            margin-top: 10px;
+            padding: 10px 28px;
             background: transparent;
-            color: #d4af37;
-            border: 1px solid #d4af37;
+            border: 1px solid var(--ds-border);
+            color: #a89886;
             font-family: 'Cinzel', serif;
-            font-weight: bold;
-            text-decoration: none;
-            text-transform: uppercase;
             letter-spacing: 2px;
-            transition: all 0.3s ease;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .btn:hover {
-            background: #d4af37;
-            color: #080808;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        .btn-modal-close:hover {
+            border-color: var(--ds-gold);
+            color: var(--ds-gold);
         }
 
-        footer {
-            padding: 30px;
+        /* CONTROLS GUIDE PANEL */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             font-size: 0.85rem;
-            color: #555;
-            font-family: 'Cinzel', serif;
-            text-align: center;
-            background: #030303;
+            color: #b3a494;
+        }
+
+        .key-badge {
+            display: inline-block;
+            background: #241c15;
+            border: 1px solid #5a422a;
+            color: #ffda73;
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.75rem;
+            margin-right: 4px;
+        }
+
+        /* MOBILE TOUCH CONTROLS OVERLAY */
+        #mobile-touch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-top: 1px solid #111;
+            height: 100%;
+            z-index: 50;
+            pointer-events: none;
+            display: none; /* Auto-enabled on touch */
+        }
+
+        /* Touch Joystick */
+        #touch-joystick-base {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(20, 16, 14, 0.45);
+            border: 2px solid rgba(160, 130, 80, 0.4);
+            pointer-events: auto;
+            touch-action: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #touch-joystick-stick {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(210, 170, 90, 0.65);
+            border: 2px solid #ffda73;
+            box-shadow: 0 0 10px rgba(255, 218, 115, 0.5);
+            pointer-events: none;
+            transition: transform 0.05s ease-out;
+        }
+
+        /* Touch Action Buttons */
+        #touch-buttons-cluster {
+            position: absolute;
+            bottom: 30px;
+            right: 25px;
+            display: grid;
+            grid-template-columns: repeat(3, 58px);
+            grid-template-rows: repeat(3, 58px);
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .touch-action-btn {
+            background: rgba(18, 14, 12, 0.75);
+            border: 1px solid rgba(180, 140, 80, 0.6);
+            border-radius: 50%;
+            color: #ffda73;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            pointer-events: auto;
+            touch-action: manipulation;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .touch-action-btn:active {
+            background: rgba(180, 140, 70, 0.5);
+            transform: scale(0.92);
+        }
+
+        /* Button grid mapping */
+        #touch-btn-lockon   { grid-column: 1; grid-row: 1; }
+        #touch-btn-heavy    { grid-column: 2; grid-row: 1; }
+        #touch-btn-interact { grid-column: 3; grid-row: 1; }
+        #touch-btn-block    { grid-column: 1; grid-row: 2; }
+        #touch-btn-attack   { grid-column: 2; grid-row: 2; width: 66px; height: 66px; margin: -4px; border-color: #ffcc44; background: rgba(60, 40, 20, 0.85); font-size: 0.8rem; }
+        #touch-btn-parry    { grid-column: 3; grid-row: 2; }
+        #touch-btn-estus    { grid-column: 1; grid-row: 3; }
+        #touch-btn-roll     { grid-column: 2; grid-row: 3; }
+
+        @media (max-width: 800px) {
+            #mobile-touch-overlay { display: block; }
+            #top-header { padding: 8px 12px; }
+            .header-title { font-size: 1rem; }
+            .header-sub { display: none; }
+            .btn-download { padding: 6px 12px; font-size: 0.75rem; }
+            .bar-frame { width: 190px; height: 13px; }
+            .bar-label { width: 190px; }
+            .equipment-dpad { display: none; }
+            #player-hud { top: 55px; left: 12px; }
+            #souls-hud { bottom: 12px; right: 12px; padding: 6px 12px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Dark Souls Game Project</h1>
-        <p class="subtitle">"Rest by the bonfire, prepare to die, and build your legend."</p>
+    <!-- 3D WebGL Canvas Container -->
+    <div id="game-container"></div>
+
+    <!-- Screen Vignette / Damage Flash -->
+    <div id="damage-flash"></div>
+
+    <!-- Lock-on Target Reticle -->
+    <div id="lockon-reticle"></div>
+
+    <!-- Top Navigation & Action Header -->
+    <header id="top-header">
+        <div class="header-title-group">
+            <h1 class="header-title">DARK SOULS</h1>
+            <p class="header-sub">Lordran Citadel &bull; Undead Burg &bull; Taurus Demon</p>
+        </div>
+
+        <div class="header-actions">
+            <!-- PROMINENT DOWNLOAD GAME BUTTON -->
+            <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
+                <span>⚔️</span> DOWNLOAD GAME
+            </button>
+            <button class="btn-icon-bar" onclick="openControlsModal()">CONTROLS</button>
+            <button class="btn-icon-bar" id="audio-toggle-btn" onclick="toggleAudio()">SOUND: ON</button>
+            <button class="btn-icon-bar" onclick="toggleFullscreen()">⛶</button>
+        </div>
     </header>
 
-    <div class="main-container">
-        <!-- Блок 1 -->
-        <div class="block">
-            <div class="block-number">Block I</div>
-            <h3>Core Vision</h3>
-            <p>An uncompromising action-RPG built on dark fantasy principles, atmospheric world-building, and high-stakes tactical combat.</p>
+    <!-- Player HUD (Top-Left) -->
+    <div id="player-hud">
+        <!-- Health Bar -->
+        <div class="bar-container">
+            <div class="bar-label">
+                <span>HEALTH</span>
+                <span id="hp-text">1000 / 1000</span>
+            </div>
+            <div class="bar-frame">
+                <div class="bar-fill-hp" id="hp-bar-fill"></div>
+            </div>
         </div>
 
-        <!-- Блок 2 -->
-        <div class="block">
-            <div class="block-number">Block II</div>
-            <h3>Architecture & Engine</h3>
-            <p>Engineered with modular systems for optimal performance, smooth frame pacing, and precise input buffering for combat responsiveness.</p>
+        <!-- Stamina Bar -->
+        <div class="bar-container">
+            <div class="bar-label">
+                <span>STAMINA</span>
+            </div>
+            <div class="bar-frame">
+                <div class="bar-fill-stamina" id="stamina-bar-fill"></div>
+            </div>
         </div>
 
-        <!-- Блок 3 -->
-        <div class="block">
-            <div class="block-number">Block III</div>
-            <h3>Bonfire Checkpoints</h3>
-            <p>Implementing classic rest mechanics, enemy respawn states, flask refilling, and fast-travel matrix calculations.</p>
-        </div>
-
-        <!-- Блок 4 -->
-        <div class="block">
-            <div class="block-number">Block IV</div>
-            <h3>Combat Mechanics</h3>
-            <p>Stamina management, poise systems, rolling frames of invincibility (i-frames), parry timing, and heavy weapon weight impact.</p>
-        </div>
-
-        <!-- Блок 5 -->
-        <div class="block">
-            <div class="block-number">Block V</div>
-            <h3>Level Design</h3>
-            <p>Interconnected labyrinthine maps with verticality, shortcuts, hidden pathways, and environmental storytelling.</p>
-        </div>
-
-        <!-- Блок 6 -->
-        <div class="block">
-            <div class="block-number">Block VI</div>
-            <h3>Enemy AI & Aggression</h3>
-            <p>State machine behaviors, line-of-sight detection, group flanking tactics, and punishing boss phase transitions.</p>
-        </div>
-
-        <!-- Блок 7 -->
-        <div class="block">
-            <div class="block-number">Block VII</div>
-            <h3>Loot & Progression</h3>
-            <p>Soul economy, weapon upgrading paths, rare material drops, and stat-driven character builds (Strength, Dexterity, Faith, Intellect).</p>
-        </div>
-
-        <!-- Блок 8 -->
-        <div class="block">
-            <div class="block-number">Block VIII</div>
-            <h3>Atmospheric Audio</h3>
-            <p>Minimalist ambient soundscapes, crushing metal impacts, chilling orchestral boss themes, and echoing footsteps.</p>
-        </div>
-
-        <!-- Блок 9 -->
-        <div class="block">
-            <div class="block-number">Block IX</div>
-            <h3>Lore & Narrative</h3>
-            <p>Environmental fragments, item description storytelling, fallen kingdoms, and the eternal cycle of light and dark.</p>
-        </div>
-
-        <!-- Блок 10 -->
-        <div class="block">
-            <div class="block-number">Block X</div>
-            <h3>Performance & Optimization</h3>
-            <p>Asset streaming, memory management, draw call batching, and strict framerate targets for seamless execution.</p>
-        </div>
-
-        <!-- Блок 11 -->
-        <div class="block">
-            <div class="block-number">Block XI</div>
-            <h3>UI & HUD Design</h3>
-            <p>Diegetic and minimalist user interface designed to keep the player fully immersed in the grim atmosphere without clutter.</p>
-        </div>
-
-        <!-- Блок 12 -->
-        <div class="block">
-            <div class="block-number">Block XII</div>
-            <h3>Multiplayer & Invads</h3>
-            <p>Asynchronous ghost messages, bloodstains showing player deaths, cooperative summons, and hostile invasions.</p>
-        </div>
-
-        <!-- Блок 13 -->
-        <div class="block">
-            <div class="block-number">Block XIII</div>
-            <h3>Code Quality & CI/CD</h3>
-            <p>Strict version control via Git, automated build testing, clean code architecture, and robust repository maintenance.</p>
-        </div>
-
-        <!-- Блок 14 -->
-        <div class="block">
-            <div class="block-number">Block XIV</div>
-            <h3>Testing & QA</h3>
-            <p>Rigorous stress-testing of collision meshes, hitboxes, edge-case physics glitches, and boss arena boundaries.</p>
-        </div>
-
-        <!-- Блок 15 -->
-        <div class="block">
-            <div class="block-number">Block XV</div>
-            <h3>Future Roadmap</h3>
-            <p>Expansion planning, covenant systems refinement, custom mod support tools, and community-driven balance patches.</p>
+        <!-- Classic Dark Souls Equipment D-Pad -->
+        <div class="equipment-dpad">
+            <div class="eq-slot eq-top" title="Pyromancy / Spell">
+                <span class="eq-icon">🔥</span>
+            </div>
+            <div class="eq-slot eq-left active" title="Heater Shield">
+                <span class="eq-icon">🛡️</span>
+            </div>
+            <div class="eq-slot eq-right active" title="Astora Straight Sword">
+                <span class="eq-icon">⚔️</span>
+            </div>
+            <div class="eq-slot eq-bottom active" title="Estus Flask (Press R or 1)">
+                <span class="eq-icon">🧪</span>
+                <span class="eq-count" id="estus-count">x 5</span>
+            </div>
         </div>
     </div>
 
-    <div class="cta-section">
-        <a href="https://github.com/TrillionaireViier/darksouls_game" class="btn" target="_blank">Access Repository</a>
+    <!-- Souls Counter (Bottom-Right) -->
+    <div id="souls-hud">
+        <div class="soul-orb"></div>
+        <div id="souls-count">0</div>
     </div>
 
-    <footer>
-        <p>Developed by VIIER Agency &bull; TrillionaireViier &bull; Dark Souls Project &copy; 2026</p>
-    </footer>
+    <!-- Boss HUD (Bottom Center, activated when Taurus Demon wakes) -->
+    <div id="boss-hud">
+        <div class="boss-name-label" id="boss-name">TAURUS DEMON</div>
+        <div class="boss-bar-frame">
+            <div class="boss-bar-lag" id="boss-bar-lag"></div>
+            <div class="boss-bar-fill" id="boss-bar-fill"></div>
+        </div>
+    </div>
 
+    <!-- Center Interaction Prompt -->
+    <div id="interaction-prompt">
+        <span id="prompt-text">[ E ] REST AT BONFIRE</span>
+    </div>
+
+    <!-- Notification Banner -->
+    <div id="game-notification">WELCOME TO LORDRAN</div>
+
+    <!-- ==============================================
+         CINEMATIC OVERLAYS
+         ============================================== -->
+
+    <!-- YOU DIED SCREEN -->
+    <div id="death-screen" class="cinematic-banner">
+        <div class="death-title">YOU DIED</div>
+        <button class="btn-respawn" onclick="window.game.respawnPlayer()">[ SPACE ] RESPAWN AT BONFIRE</button>
+    </div>
+
+    <!-- BONFIRE LIT BANNER -->
+    <div id="bonfire-banner" class="cinematic-banner">
+        <div class="banner-strip">
+            <div class="bonfire-title">BONFIRE LIT</div>
+        </div>
+    </div>
+
+    <!-- VICTORY ACHIEVED BANNER -->
+    <div id="victory-banner" class="cinematic-banner">
+        <div class="banner-strip">
+            <div class="victory-title">VICTORY ACHIEVED</div>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         MODALS
+         ============================================== -->
+
+    <!-- BONFIRE REST / LEVEL UP MODAL -->
+    <div id="level-up-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">BONFIRE &bull; LEVEL UP</div>
+            <div class="modal-row">
+                <span class="modal-label">Soul Level</span>
+                <span class="modal-val" id="modal-level">1</span>
+            </div>
+            <div class="modal-row">
+                <span class="modal-label">Current Souls</span>
+                <span class="modal-val" id="modal-souls">0</span>
+            </div>
+            <div class="modal-row">
+                <span class="modal-label">Souls Needed For Next Level</span>
+                <span class="modal-val" id="modal-cost">250</span>
+            </div>
+            <div class="modal-row">
+                <span class="modal-label">Vigor (Max HP)</span>
+                <div>
+                    <span class="modal-val" id="modal-vigor" style="margin-right: 12px;">10</span>
+                    <button class="btn-upgrade" onclick="levelStat('vigor')">+ UPGRADE</button>
+                </div>
+            </div>
+            <div class="modal-row">
+                <span class="modal-label">Endurance (Max Stamina)</span>
+                <div>
+                    <span class="modal-val" id="modal-endurance" style="margin-right: 12px;">10</span>
+                    <button class="btn-upgrade" onclick="levelStat('endurance')">+ UPGRADE</button>
+                </div>
+            </div>
+            <div class="modal-row">
+                <span class="modal-label">Strength (Attack Damage)</span>
+                <div>
+                    <span class="modal-val" id="modal-strength" style="margin-right: 12px;">10</span>
+                    <button class="btn-upgrade" onclick="levelStat('strength')">+ UPGRADE</button>
+                </div>
+            </div>
+            <button class="btn-modal-close" onclick="window.game.closeBonfireModal()">LEAVE BONFIRE</button>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD GAME MODAL -->
+    <div id="download-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">DOWNLOAD DARK SOULS</div>
+            <p style="font-size: 0.95rem; color: #b8a896; line-height: 1.6; text-align: center;">
+                Download the complete standalone build to play offline on your PC, Mac, Linux, or mobile device with full performance!
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                <!-- Direct ZIP Download -->
+                <a href="/darksouls_game_standalone.zip" download="darksouls_game_standalone.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 14px;">
+                    <span>📦</span> DOWNLOAD STANDALONE BUILD (.ZIP)
+                </a>
+
+                <!-- GitHub Repository -->
+                <a href="https://github.com/TrillionaireViier/darksouls_game" target="_blank" class="btn-icon-bar" style="text-align: center; padding: 12px;">
+                    <span>🐙</span> VIEW GITHUB REPOSITORY & SOURCE
+                </a>
+            </div>
+
+            <div style="font-size: 0.8rem; color: #7a6e62; text-align: center; margin-top: 8px;">
+                Includes: 3D Engine, Web Audio Synthesizer, Boss AI, Full Game World &bull; Zero installation required!
+            </div>
+
+            <button class="btn-modal-close" onclick="closeDownloadModal()">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- CONTROLS & HOW TO PLAY MODAL -->
+    <div id="controls-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 650px;">
+            <div class="modal-header">CONTROLS & COMBAT GUIDE</div>
+            <div class="controls-grid">
+                <div><span class="key-badge">W A S D</span> Move Character</div>
+                <div><span class="key-badge">Mouse</span> Orbit Camera</div>
+                <div><span class="key-badge">LMB / J</span> Light Attack Combo</div>
+                <div><span class="key-badge">RMB / K</span> Shield Block (Hold)</div>
+                <div><span class="key-badge">Q / Tab</span> Shield Parry</div>
+                <div><span class="key-badge">Space / Shift</span> Dodge Roll (i-frames)</div>
+                <div><span class="key-badge">E</span> Interact (Bonfire, Fog)</div>
+                <div><span class="key-badge">R / 1</span> Drink Estus Flask</div>
+                <div><span class="key-badge">F / MMB</span> Lock-on Target</div>
+                <div><span class="key-badge">Backstab</span> Attack directly behind enemy</div>
+                <div><span class="key-badge">Riposte</span> Attack after successful parry</div>
+                <div><span class="key-badge">Bonfire</span> Restores HP/Estus, respawns foes</div>
+            </div>
+            <button class="btn-modal-close" onclick="closeControlsModal()">RESUME BATTLE</button>
+        </div>
+    </div>
+
+    <!-- MOBILE TOUCH OVERLAY (Automatically enabled on touchscreen) -->
+    <div id="mobile-touch-overlay">
+        <div id="touch-joystick-base">
+            <div id="touch-joystick-stick"></div>
+        </div>
+
+        <div id="touch-buttons-cluster">
+            <button class="touch-action-btn" id="touch-btn-lockon">🎯<br>Lock</button>
+            <button class="touch-action-btn" id="touch-btn-heavy">💥<br>Heavy</button>
+            <button class="touch-action-btn" id="touch-btn-interact">🔥<br>Use</button>
+            <button class="touch-action-btn" id="touch-btn-block">🛡️<br>Block</button>
+            <button class="touch-action-btn" id="touch-btn-attack">⚔️<br>Attack</button>
+            <button class="touch-action-btn" id="touch-btn-parry">⚡<br>Parry</button>
+            <button class="touch-action-btn" id="touch-btn-estus">🧪<br>Estus</button>
+            <button class="touch-action-btn" id="touch-btn-roll">🌀<br>Roll</button>
+        </div>
+    </div>
+
+    <!-- UI Action Scripts -->
+    <script>
+        function openDownloadModal() {
+            document.getElementById('download-modal').style.display = 'flex';
+        }
+
+        function closeDownloadModal() {
+            document.getElementById('download-modal').style.display = 'none';
+        }
+
+        function openControlsModal() {
+            document.getElementById('controls-modal').style.display = 'flex';
+        }
+
+        function closeControlsModal() {
+            document.getElementById('controls-modal').style.display = 'none';
+        }
+
+        function toggleAudio() {
+            if (window.dsAudio) {
+                const muted = window.dsAudio.toggleMute();
+                document.getElementById('audio-toggle-btn').textContent = muted ? 'SOUND: OFF' : 'SOUND: ON';
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        function levelStat(stat) {
+            if (window.game && window.game.combat) {
+                const success = window.game.combat.levelUpStat(stat);
+                if (success) {
+                    window.game.updateLevelModalValues();
+                }
+            }
+        }
+
+        // Auto detect touch screen and enable mobile overlay
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            const overlay = document.getElementById('mobile-touch-overlay');
+            if (overlay) overlay.style.display = 'block';
+        }
+    </script>
+
+    <!-- Game Scripts -->
+    <script src="js/three.min.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/world.js"></script>
+    <script src="js/character.js"></script>
+    <script src="js/combat.js"></script>
+    <script src="js/game.js"></script>
 </body>
 </html>
