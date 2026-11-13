@@ -666,7 +666,7 @@ class DarkSoulsCharacters {
     // ----------------------------------------------------
     // CREATE HOLLOW UNDEAD SOLDIER
     // ----------------------------------------------------
-    createHollow(x, z, angle = 0) {
+    createHollow(x, z, angle = 0, y = 0) {
         const root = new THREE.Group();
         const bodyGroup = new THREE.Group();
         bodyGroup.position.y = 0.95;
@@ -737,7 +737,7 @@ class DarkSoulsCharacters {
         lLeg.position.y = -0.25;
         leftHip.add(lLeg);
 
-        root.position.set(x, 0, z);
+        root.position.set(x, y, z);
         root.rotation.y = angle;
 
         root.userData = {

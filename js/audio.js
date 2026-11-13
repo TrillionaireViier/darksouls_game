@@ -482,7 +482,7 @@ class DarkSoulsAudio {
     }
 
     // ----------------------------------------------------
-    // SFX: FOOTSTEP
+    // SFX: FOOTSTEP & LIQUID SPLASH
     // ----------------------------------------------------
     playFootstep() {
         this.ensureContext();
@@ -502,6 +502,129 @@ class DarkSoulsAudio {
         gain.connect(this.sfxGain);
         osc.start(now);
         osc.stop(now + 0.1);
+    }
+
+    playWaterSplash() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Low bubble/drop oscillator
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(220 + Math.random() * 80, now);
+        osc.frequency.exponentialRampToValueAtTime(80, now + 0.18);
+
+        // Filtered white noise splash
+        const bufferSize = Math.floor(this.ctx.sampleRate * 0.15);
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            output[i] = Math.random() * 2 - 1;
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = noiseBuffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(650, now);
+        filter.Q.setValueAtTime(3.5, now);
+
+        const noiseGain = this.ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.22, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+        noise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(this.sfxGain);
+
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+
+        osc.start(now);
+        noise.start(now);
+        osc.stop(now + 0.2);
+        noise.stop(now + 0.2);
+    }
+
+    playPlungingSlam() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Sub bass crater shock
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.exponentialRampToValueAtTime(28, now + 0.45);
+
+        gain.gain.setValueAtTime(0.7, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start(now);
+        osc.stop(now + 0.55);
+
+        // Heavy stone fracture crunch
+        const bufferSize = Math.floor(this.ctx.sampleRate * 0.35);
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            output[i] = Math.random() * 2 - 1;
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = noiseBuffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(550, now);
+        filter.frequency.exponentialRampToValueAtTime(100, now + 0.35);
+
+        const nGain = this.ctx.createGain();
+        nGain.gain.setValueAtTime(0.55, now);
+        nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        noise.connect(filter);
+        filter.connect(nGain);
+        nGain.connect(this.sfxGain);
+        noise.start(now);
+        noise.stop(now + 0.4);
+    }
+
+    playGuardCounter() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // High metallic chime ring
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(1320, now);
+        osc1.frequency.exponentialRampToValueAtTime(880, now + 0.4);
+
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(1760, now);
+        osc2.frequency.exponentialRampToValueAtTime(1100, now + 0.35);
+
+        gain.gain.setValueAtTime(0.45, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(this.sfxGain);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.5);
+        osc2.stop(now + 0.5);
     }
 
     // ----------------------------------------------------

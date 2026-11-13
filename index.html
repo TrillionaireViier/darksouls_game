@@ -987,6 +987,19 @@
         </div>
     </header>
 
+    <!-- PATHFINDER / ROUTE COMPASS BAR (LIT PATHWAYS & VERTICAL ELEVATIONS) -->
+    <div id="pathfinder-bar" style="position: absolute; top: 62px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 60; pointer-events: auto; flex-wrap: wrap; justify-content: center;">
+        <div id="route-catacombs" class="route-pill" onclick="teleportOrHighlightPath('catacombs')" title="West Sunken Crypt: Depth -5m, Murky Waters, Ancient Tombs" style="background: rgba(8, 28, 24, 0.88); border: 1px solid #00ffaa; color: #77ffcc; padding: 5px 12px; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 1.5px; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(0,255,170,0.6); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(0,255,170,0.25); transition: all 0.25s ease;">
+            <span>▼</span> CATACOMBS (DOWN: -5m)
+        </div>
+        <div id="route-bridge" class="route-pill" onclick="teleportOrHighlightPath('bridge')" title="South Royal Bridge: Level 0m, Torches, Direct Fog Gate Path" style="background: rgba(32, 16, 8, 0.88); border: 1px solid #ff7722; color: #ffaa66; padding: 5px 12px; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 1.5px; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(255,119,34,0.6); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(255,119,34,0.25); transition: all 0.25s ease;">
+            <span>⚔️</span> ROYAL BRIDGE (MAIN: 0m)
+        </div>
+        <div id="route-ramparts" class="route-pill" onclick="teleportOrHighlightPath('ramparts')" title="East Grand Stairs: Elevation +6m, Fortified Battlements, Watchtower Overlook" style="background: rgba(34, 26, 8, 0.88); border: 1px solid #ffd700; color: #ffe680; padding: 5px 12px; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 1.5px; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(255,215,0,0.6); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(255,215,0,0.25); transition: all 0.25s ease;">
+            <span>▲</span> HIGH RAMPARTS (UP: +6m)
+        </div>
+    </div>
+
     <!-- Player HUD (Top-Left) -->
     <div id="player-hud">
         <!-- Health Bar -->
@@ -1518,6 +1531,10 @@
                 <div><span class="key-badge">E</span> Interact (Bonfire, Merchant, Fog)</div>
                 <div><span class="key-badge">Q / Tab</span> Shield Parry</div>
                 <div><span class="key-badge">Space / Shift</span> Перекат / Dodge Roll (i-frames)</div>
+                <div><span class="key-badge">In Air + Attack</span> ⚔️ Plunging Attack (3.2× Crater DMG)</div>
+                <div><span class="key-badge">Sprint + Attack</span> ⚡ Leaping Jump Attack</div>
+                <div><span class="key-badge">Block + Attack</span> ⭐ Guard Counter Retaliation</div>
+                <div><span class="key-badge">▲ / ▼ Paths</span> Upper Ramparts (+6m) & Flooded Crypt (-5m)</div>
                 <div><span class="key-badge">Space (Neutral)</span> Backstep / Отскок назад</div>
                 <div><span class="key-badge">Roll Cancel</span> Cancel attack recovery into roll</div>
                 <div><span class="key-badge">R / 1</span> Drink Estus Flask</div>
@@ -1588,6 +1605,24 @@
 
         function closeWeaponArsenalModal() {
             if (window.game) window.game.closeWeaponArsenalModal();
+        }
+
+        function teleportOrHighlightPath(path) {
+            if (!window.game) return;
+            const p = window.game;
+            if (path === 'ramparts') {
+                p.cameraYaw = Math.PI / 2;
+                p.cameraPitch = 0.22;
+                p.showNotification("▲ HIGH RAMPARTS (UP): Ascend East Grand Stairs (+6m elevation • Archer battlements & overlook watchtower)");
+            } else if (path === 'catacombs') {
+                p.cameraYaw = -Math.PI / 2;
+                p.cameraPitch = 0.22;
+                p.showNotification("▼ FLOODED CATACOMBS (DOWN): Descend West Sunken Crypt (-5m depth • Murky flooded corridor & tombs)");
+            } else if (path === 'bridge') {
+                p.cameraYaw = 0;
+                p.cameraPitch = 0.22;
+                p.showNotification("⚔️ ROYAL BRIDGE (MAIN): Direct torch-lit royal bridge (0m • Straight to the White Light Fog Gate)");
+            }
         }
 
         function toggleBrightness() {

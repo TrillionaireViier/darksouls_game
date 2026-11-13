@@ -44,6 +44,8 @@ class DarkSoulsCombat {
         this.isStaggered = false;
         this.staggerTime = 0;
         this.isDead = false;
+        this.isPlungingAttack = false;
+        this.guardCounterWindow = 0;
 
         // Enemies & Boss Roster (5 Iconic Dark Souls Bosses)
         this.enemies = [];
@@ -290,31 +292,43 @@ class DarkSoulsCombat {
         });
         this.enemies = [];
 
-        // 1. Hollow Soldier 1: Courtyard left
-        this.createHollowSoldier(-10, -10, 0);
+        // 1. Courtyard Left Hollow
+        this.createHollowSoldier(-10, -10, 0, 0);
 
-        // 2. Hollow Soldier 2: Courtyard exit gate
-        this.createHollowSoldier(2, 22, Math.PI);
+        // 2. Courtyard Exit Gate Hollow
+        this.createHollowSoldier(2, 22, Math.PI, 0);
 
-        // 3. Hollow Soldier 3: Bridge midway
-        this.createHollowSoldier(-1, 55, Math.PI);
+        // 3. Central Royal Bridge Hollow
+        this.createHollowSoldier(-1, 55, Math.PI, 0);
 
-        // 4. Boss (in Boss Arena at z = 132)
+        // 4. Upper Castle Ramparts Hollow 1 (Patrolling Wall at y=6.0)
+        this.createHollowSoldier(20, 48, Math.PI, 6.0);
+
+        // 5. Upper Castle Ramparts Hollow 2 (Watchtower Guard at y=6.0)
+        this.createHollowSoldier(19, 78, Math.PI, 6.0);
+
+        // 6. Flooded Subterranean Catacombs Hollow 1 (In Murky Waters at y=-5.0)
+        this.createHollowSoldier(-20, 42, 0, -5.0);
+
+        // 7. Flooded Subterranean Catacombs Hollow 2 (Crypt Guard at y=-5.0)
+        this.createHollowSoldier(-19, 72, Math.PI, -5.0);
+
+        // 8. Boss (in Boss Arena at z = 132)
         if (!this.boss || this.boss.isDead) {
             this.spawnBoss(this.currentBossType || 'taurus');
         }
     }
 
-    createHollowSoldier(x, z, angle) {
-        const mesh = this.charFactory.createHollow(x, z, angle);
+    createHollowSoldier(x, z, angle, y = 0) {
+        const mesh = this.charFactory.createHollow(x, z, angle, y);
         const enemy = {
             type: 'hollow',
-            name: 'Undead Hollow',
+            name: y >= 5 ? 'Rampart Hollow' : (y <= -3 ? 'Crypt Hollow' : 'Undead Hollow'),
             mesh: mesh,
-            startPos: new THREE.Vector3(x, 0, z),
-            maxHp: 320,
-            hp: 320,
-            damage: 115,
+            startPos: new THREE.Vector3(x, y, z),
+            maxHp: y >= 5 ? 380 : (y <= -3 ? 420 : 320),
+            hp: y >= 5 ? 380 : (y <= -3 ? 420 : 320),
+            damage: y >= 5 ? 130 : (y <= -3 ? 145 : 115),
             state: 'PATROL',
             stateTimer: 0,
             cooldown: 0,
@@ -338,21 +352,43 @@ class DarkSoulsCombat {
         const stamCost = wpn.lightStamina || 20;
         if (this.stamina < stamCost) return;
 
-        // Check if looking at an enemy who is Riposteable (Counter-attack / Visceral Strike)
+        // 1. Airborne Plunging Attack from heights
+        const pPos = this.game.playerMesh.position;
+        const groundY = this.world.getGroundHeight(pPos.x, pPos.z);
+        if ((pPos.y - groundY) > 1.2 || this.game.playerVelocity.y < -2.0) {
+            this.executePlungingAttack();
+            return;
+        }
+
+        // 2. Guard Counter immediately after blocking
+        if (this.guardCounterWindow > 0) {
+            this.executeGuardCounter();
+            return;
+        }
+
+        // 3. Riposte (Visceral Stagger Strike)
         const riposteTarget = this.getRiposteTarget();
         if (riposteTarget) {
             this.executeRiposte(riposteTarget);
             return;
         }
 
-        // Check Backstab (enemy facing away within close proximity)
+        // 4. Backstab
         const backstabTarget = this.getBackstabTarget();
         if (backstabTarget) {
             this.executeBackstab(backstabTarget);
             return;
         }
 
-        // Standard Combo Attack
+        // 5. Running Leaping Jump Attack
+        const isSprinting = (this.game.keys['ShiftLeft'] || this.game.keys['ShiftRight']) && this.stamina > 15;
+        const isMoving = this.game.calculateMovementDirection().lengthSq() > 0.001;
+        if (isSprinting && isMoving && !this.isAttacking) {
+            this.executeJumpAttack();
+            return;
+        }
+
+        // 6. Standard Combo Attack
         if (!this.isAttacking) {
             this.isAttacking = true;
             this.attackCombo = 1;
@@ -378,6 +414,22 @@ class DarkSoulsCombat {
         const stamCost = wpn.heavyStamina || 34;
         if (this.stamina < stamCost) return;
 
+        // Airborne Plunging Attack
+        const pPos = this.game.playerMesh.position;
+        const groundY = this.world.getGroundHeight(pPos.x, pPos.z);
+        if ((pPos.y - groundY) > 1.2 || this.game.playerVelocity.y < -2.0) {
+            this.executePlungingAttack();
+            return;
+        }
+
+        // Running Leaping Jump Attack
+        const isSprinting = (this.game.keys['ShiftLeft'] || this.game.keys['ShiftRight']) && this.stamina > 15;
+        const isMoving = this.game.calculateMovementDirection().lengthSq() > 0.001;
+        if (isSprinting && isMoving && !this.isAttacking) {
+            this.executeJumpAttack();
+            return;
+        }
+
         this.isAttacking = true;
         this.attackCombo = 3; // Heavy thrust / overhead
         this.attackTime = 0;
@@ -391,6 +443,97 @@ class DarkSoulsCombat {
         } else if (this.currentWeaponId === 'dragontooth') {
             this.triggerShockwave();
         }
+    }
+
+    executePlungingAttack() {
+        const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
+        this.isPlungingAttack = true;
+        this.isAttacking = true;
+        this.attackCombo = 6; // Plunging downward strike
+        this.attackTime = 0;
+        this.stamina = Math.max(0, this.stamina - (wpn.heavyStamina || 34));
+        this.staminaDelay = 0.6;
+        this.game.playerVelocity.y = Math.min(this.game.playerVelocity.y, -16.0); // Dive downward blade-first
+        this.audio.playSwing(true);
+        this.game.showNotification("⚔️ PLUNGING ATTACK!");
+    }
+
+    executePlungingImpact(fallSpeed) {
+        this.isPlungingAttack = false;
+        this.isAttacking = false;
+        this.attackCombo = 0;
+        const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
+        const pPos = this.game.playerMesh.position;
+
+        // Devastating impact: 3.2x heavy damage
+        const damage = Math.round(wpn.heavyDmg * 3.2);
+        this.audio.playPlungingSlam();
+        this.world.spawnPlungingShockwave(pPos);
+        this.game.shakeCamera(0.35, 0.45);
+        this.game.showNotification(`💥 PLUNGING CRATER IMPACT • ${damage} DMG!`);
+
+        // Damage Boss if in radius
+        if (this.boss && !this.boss.isDead) {
+            const dist = pPos.distanceTo(this.boss.mesh.position);
+            if (dist < (this.boss.radius || 2.5) + 3.8) {
+                this.boss.hp -= damage;
+                this.boss.isStaggered = true;
+                this.boss.staggerTimer = 2.2;
+                this.game.showDamageNumber(this.boss.mesh.position, damage, true);
+                this.world.spawnHitSparks(this.boss.mesh.position, true);
+                if (this.boss.hp <= 0) this.killBoss();
+            }
+        }
+
+        // Damage any hollows in radius
+        for (const e of this.enemies) {
+            if (!e.isDead && pPos.distanceTo(e.mesh.position) < 5.5) {
+                e.hp -= damage;
+                e.isStaggered = true;
+                e.staggerTimer = 2.5;
+                this.game.showDamageNumber(e.mesh.position, damage, true);
+                this.world.spawnHitSparks(e.mesh.position, true);
+                if (e.hp <= 0) this.killEnemy(e);
+            }
+        }
+    }
+
+    executeJumpAttack() {
+        const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
+        const stamCost = Math.round((wpn.heavyStamina || 34) * 1.15);
+        this.isAttacking = true;
+        this.attackCombo = 5; // Leaping jump attack
+        this.attackTime = 0;
+        this.stamina = Math.max(0, this.stamina - stamCost);
+        this.staminaDelay = 0.6;
+
+        // Forward leaping momentum
+        this.game.playerVelocity.y = 5.2; // Upward leap
+        const moveDir = this.game.calculateMovementDirection().normalize();
+        this.game.playerMesh.position.addScaledVector(moveDir, 1.8);
+
+        this.audio.playSwing(true);
+        this.game.showNotification("⚡ LEAPING JUMP ATTACK!");
+        const dmg = Math.round(wpn.heavyDmg * 1.6);
+        this.checkAttackHits(dmg, wpn.poiseBreak * 2.4, wpn.reach + 0.8, wpn.bossReachBonus + 0.8);
+    }
+
+    executeGuardCounter() {
+        this.guardCounterWindow = 0;
+        const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
+        const stamCost = Math.round((wpn.lightStamina || 20) * 1.2);
+        this.isAttacking = true;
+        this.attackCombo = 4; // Sweeping retaliatory strike
+        this.attackTime = 0;
+        this.stamina = Math.max(0, this.stamina - stamCost);
+        this.staminaDelay = 0.5;
+
+        this.audio.playGuardCounter();
+        this.game.showNotification("⭐ GUARD COUNTER!");
+        this.game.shakeCamera(0.2, 0.25);
+
+        const dmg = Math.round(wpn.heavyDmg * 1.9);
+        this.checkAttackHits(dmg, wpn.poiseBreak * 2.8, wpn.reach + 0.6, wpn.bossReachBonus + 0.6);
     }
 
     tryBlock(isDown) {
@@ -827,7 +970,11 @@ class DarkSoulsCombat {
                     this.isStaggered = true;
                     this.staggerTime = 1.3;
                     this.isBlocking = false;
+                    this.guardCounterWindow = 0;
                     this.game.showNotification("GUARD BROKEN!");
+                } else {
+                    this.guardCounterWindow = 0.65;
+                    this.game.showNotification("🛡️ BLOCKED • [LMB] GUARD COUNTER READY!");
                 }
                 return;
             }
@@ -1020,6 +1167,11 @@ class DarkSoulsCombat {
             this.charcoalResinTimer -= delta;
         }
 
+        // Guard Counter Window Timer
+        if (this.guardCounterWindow > 0) {
+            this.guardCounterWindow -= delta;
+        }
+
         // Projectiles Update (Moonlight Beam waves)
         for (let i = this.projectiles.length - 1; i >= 0; i--) {
             const p = this.projectiles[i];
@@ -1155,9 +1307,10 @@ class DarkSoulsCombat {
 
             const toPlayer = new THREE.Vector3().subVectors(playerPos, e.mesh.position);
             const dist = toPlayer.length();
+            const heightDiff = Math.abs(playerPos.y - e.mesh.position.y);
 
-            // Aggro check (within 14 units)
-            if (dist < 14) {
+            // Aggro check (within 14 units horizontally, within 3.8m vertical floor tier)
+            if (dist < 14 && heightDiff < 3.8) {
                 e.state = 'CHASE';
                 // Turn toward player
                 const angle = Math.atan2(toPlayer.x, toPlayer.z);
@@ -1168,6 +1321,7 @@ class DarkSoulsCombat {
                     const moveSpeed = 2.4;
                     e.mesh.position.x += Math.sin(angle) * moveSpeed * delta;
                     e.mesh.position.z += Math.cos(angle) * moveSpeed * delta;
+                    e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z);
 
                     // Walk anim
                     if (e.mesh.userData.rightHip) {

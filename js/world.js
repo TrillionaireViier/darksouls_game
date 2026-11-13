@@ -518,6 +518,58 @@ class DarkSoulsWorld {
         });
     }
 
+    getGroundHeight(x, z) {
+        // 1. East Upper Ramparts & Stairs
+        // Ascending Stairs from Courtyard (z in [4, 22], x in [15, 25])
+        if (x >= 15 && x <= 25 && z >= 4 && z <= 22) {
+            const t = (z - 4) / 18;
+            return t * 6.0;
+        }
+        // High Ramparts Battlement Walkway (z in [22, 91], x in [15, 25])
+        if (x >= 15 && x <= 25 && z > 22 && z <= 91) {
+            return 6.0;
+        }
+        // Watchtower & Descent Ramp to Fog Gate (z in [91, 96], x in [13, 25])
+        if (x >= 13 && x <= 25 && z > 91 && z <= 96) {
+            const t = (96 - z) / 5;
+            return Math.max(0, t * 6.0);
+        }
+
+        // 2. West Lower Flooded Catacombs & Stairs
+        // Descending Sunken Stairs from Courtyard (z in [4, 22], x in [-25, -15])
+        if (x >= -25 && x <= -15 && z >= 4 && z <= 22) {
+            const t = (z - 4) / 18;
+            return -t * 5.0;
+        }
+        // Flooded Subterranean Catacombs (z in [22, 90], x in [-25, -15])
+        if (x >= -25 && x <= -15 && z > 22 && z <= 90) {
+            return -5.0;
+        }
+        // Crypt Exit Ascent Stairs to Fog Gate (z in [90, 96], x in [-25, -13])
+        if (x >= -25 && x <= -13 && z > 90 && z <= 96) {
+            const t = (z - 90) / 6;
+            return -5.0 + t * 5.0;
+        }
+
+        // 3. Central Bridge (z in [28, 96], x in [-8, 8])
+        if (x >= -8 && x <= 8 && z >= 28 && z <= 96) {
+            return 0.0;
+        }
+
+        // 4. Boss Arena (z in [95, 170], x in [-18, 18])
+        if (x >= -18 && x <= 18 && z >= 95 && z <= 170) {
+            return 0.0;
+        }
+
+        // 5. Courtyard (z in [-30, 30], x in [-30, 30])
+        if (x >= -30 && x <= 30 && z >= -30 && z <= 30) {
+            return 0.0;
+        }
+
+        // Default level ground
+        return 0.0;
+    }
+
     buildEnvironment() {
         // 1. Courtyard Floor (Starting area)
         const courtyardGeo = new THREE.PlaneGeometry(60, 60);
@@ -526,13 +578,21 @@ class DarkSoulsWorld {
         courtyard.receiveShadow = true;
         this.scene.add(courtyard);
 
-        // Outer Courtyard Fortress Walls
-        this.createWall(0, 5, -30, 60, 10, 2);  // North wall
-        this.createWall(-30, 5, 0, 2, 10, 60);  // West wall
-        this.createWall(30, 5, 0, 2, 10, 60);   // East wall
-        this.createWall(-18, 5, 30, 24, 10, 2); // South wall left
-        this.createWall(18, 5, 30, 24, 10, 2);  // South wall right
-        // South opening (exit to Bridge/Boss Arena) is at x=[-6, 6], z=30
+        // Outer Courtyard Fortress Walls with Openings for East/West Paths
+        this.createWall(0, 5, -30, 60, 10, 2);   // North wall
+        this.createWall(-30, 5, 0, 2, 10, 60);   // West wall
+        this.createWall(30, 5, 0, 2, 10, 60);    // East wall
+
+        // South Wall Openings (Central Bridge opening x=[-6, 6])
+        // West South Wall (leaves archway open for Catacombs Descent at x=[-25, -15])
+        this.createWall(-10.5, 5, 30, 9, 10, 2);
+        this.createWall(-27.5, 5, 30, 5, 10, 2);
+        this.createWall(-20, 6.5, 30, 10, 7, 2); // Overhead lintel above sunken stairs
+
+        // East South Wall (leaves archway open for High Ramparts Walkway at x=[15, 25])
+        this.createWall(10.5, 5, 30, 9, 10, 2);
+        this.createWall(27.5, 5, 30, 5, 10, 2);
+        this.createWall(20, 11, 30, 10, 2, 2);  // Overhead lintel above ramparts walkway
 
         // Gothic pillars in courtyard
         const pillarCoords = [
@@ -545,8 +605,94 @@ class DarkSoulsWorld {
             this.createPillar(px, pz, 8);
         });
 
-        // 2. High Castle Ramparts & Bridge leading to Boss
-        // Bridge starts at z = 30 and extends to z = 95
+        // ----------------------------------------------------
+        // PATH 1: THE HIGH CASTLE RAMPARTS (UP: Y = 6.0)
+        // Grand Stone Staircase, Battlements, Overlooks, Watchtower
+        // ----------------------------------------------------
+        // East Ascending Staircase (18 Stone Steps from z=4 to z=22 climbing to y=6.0)
+        for (let i = 0; i < 18; i++) {
+            const stepZ = 4.5 + i * 1.0;
+            const stepH = (i + 1) * (6.0 / 18);
+            const stepGeo = new THREE.BoxGeometry(8, stepH, 1.05);
+            const stepMesh = new THREE.Mesh(stepGeo, this.stoneMat);
+            stepMesh.position.set(20, stepH / 2, stepZ);
+            stepMesh.receiveShadow = true;
+            stepMesh.castShadow = true;
+            this.scene.add(stepMesh);
+        }
+
+        // Stair Balustrade Posts & Golden Sconces
+        for (let i = 0; i < 18; i += 4) {
+            const sz = 4.5 + i * 1.0;
+            const sh = (i + 1) * (6.0 / 18);
+            const postL = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.2, 0.5), this.stoneMat);
+            postL.position.set(15.75, sh + 0.6, sz);
+            this.scene.add(postL);
+            const postR = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.2, 0.5), this.stoneMat);
+            postR.position.set(24.25, sh + 0.6, sz);
+            this.scene.add(postR);
+
+            if (i === 0 || i === 16) {
+                this.createGoldenBrazier(15.75, sh + 1.2, sz);
+                this.createGoldenBrazier(24.25, sh + 1.2, sz);
+            }
+        }
+
+        // Upper Ramparts Walkway Elevated Floor Slab (z=22 to z=91 at y=5.5)
+        const rampartFloorGeo = new THREE.BoxGeometry(9, 1.0, 69);
+        const rampartFloor = new THREE.Mesh(rampartFloorGeo, this.stoneMat);
+        rampartFloor.position.set(20, 5.5, 56.5);
+        rampartFloor.receiveShadow = true;
+        this.scene.add(rampartFloor);
+
+        // Outer Fortress Wall with Crenellations (x=24.6, y=6.0 to 10.0)
+        this.createWall(24.6, 8.0, 56.5, 1.2, 4.0, 69);
+        for (let cz = 24; cz <= 88; cz += 4) {
+            const cren = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.0, 2.0), this.wallMat);
+            cren.position.set(24.6, 10.5, cz);
+            cren.castShadow = true;
+            this.scene.add(cren);
+        }
+
+        // Inner Overlook Railing facing Bridge below (x=15.4, y=6.8)
+        // With intentional drop-off gaps at z=[44, 52] and z=[70, 78] for plunging attacks!
+        this.createWall(15.4, 6.8, 33, 0.8, 1.6, 22); // Segment 1: z=22 to 44
+        this.createWall(15.4, 6.8, 61, 0.8, 1.6, 18); // Segment 2: z=52 to 70
+        this.createWall(15.4, 6.8, 84.5, 0.8, 1.6, 13); // Segment 3: z=78 to 91
+
+        // Golden Torches along the Upper Ramparts
+        [26, 38, 50, 62, 74, 86].forEach((tz) => {
+            this.createGoldenTorch(24.0, 8.2, tz);
+        });
+
+        // High Watchtower Bastion at z=92 overlooking Boss Arena & Fog Gate
+        const bastionGeo = new THREE.CylinderGeometry(4.2, 4.5, 9, 12);
+        const bastion = new THREE.Mesh(bastionGeo, this.wallMat);
+        bastion.position.set(20, 8.5, 92);
+        bastion.castShadow = true;
+        bastion.receiveShadow = true;
+        this.scene.add(bastion);
+        this.colliders.push(new THREE.Box3().setFromCenterAndSize(
+            new THREE.Vector3(20, 8.5, 92),
+            new THREE.Vector3(8.5, 9, 8.5)
+        ));
+
+        // Golden Brazier beacon on top of the Bastion
+        this.createGoldenBrazier(20, 13.2, 92, 2.8);
+
+        // Grand Descent Stone Staircase from Watchtower (z=91 to z=96) down to Fog Gate Plaza (y=0)
+        for (let i = 0; i < 8; i++) {
+            const stepZ = 91.5 + i * 0.65;
+            const stepH = (8 - i) * (6.0 / 8);
+            const stepMesh = new THREE.Mesh(new THREE.BoxGeometry(6, stepH, 0.7), this.stoneMat);
+            stepMesh.position.set(16, stepH / 2, stepZ);
+            stepMesh.receiveShadow = true;
+            this.scene.add(stepMesh);
+        }
+
+        // ----------------------------------------------------
+        // PATH 2: ROYAL PROCESSION BRIDGE (MAIN: Y = 0.0)
+        // ----------------------------------------------------
         const bridgeGeo = new THREE.BoxGeometry(14, 2, 65);
         const bridgeMat = this.stoneMat.clone();
         bridgeMat.map = bridgeMat.map.clone();
@@ -573,6 +719,104 @@ class DarkSoulsWorld {
             this.createTorch(-6.8, 2.5, tz);
             this.createTorch(6.8, 2.5, tz);
         });
+
+        // ----------------------------------------------------
+        // PATH 3: FLOODED SUBTERRANEAN CATACOMBS (DOWN: Y = -5.0)
+        // Sunken Stone Steps, Flooded Corridor, Crypt Arches, Teal Ghostfire
+        // ----------------------------------------------------
+        // West Sunken Staircase (18 Stone Steps descending from y=0 to y=-5.0, z=4 to z=22)
+        for (let i = 0; i < 18; i++) {
+            const stepZ = 4.5 + i * 1.0;
+            const stepDepth = (i + 1) * (5.0 / 18);
+            const stepGeo = new THREE.BoxGeometry(8, 0.45, 1.05);
+            const stepMesh = new THREE.Mesh(stepGeo, this.stoneMat);
+            stepMesh.position.set(-20, -stepDepth + 0.22, stepZ);
+            stepMesh.receiveShadow = true;
+            this.scene.add(stepMesh);
+        }
+
+        // Catacombs Entrance Crypt Gateway Arch at z=4
+        const archL = new THREE.Mesh(new THREE.BoxGeometry(1.4, 7, 1.4), this.wallMat);
+        archL.position.set(-24.5, 3.5, 4);
+        this.scene.add(archL);
+        const archR = new THREE.Mesh(new THREE.BoxGeometry(1.4, 7, 1.4), this.wallMat);
+        archR.position.set(-15.5, 3.5, 4);
+        this.scene.add(archR);
+        const archTop = new THREE.Mesh(new THREE.BoxGeometry(10.4, 1.6, 1.6), this.wallMat);
+        archTop.position.set(-20, 7.5, 4);
+        this.scene.add(archTop);
+
+        // Flooded Crypt Corridor Floor Slab (y=-5.5, z=22 to z=90)
+        const cryptFloorGeo = new THREE.BoxGeometry(9, 1.0, 68);
+        const cryptFloor = new THREE.Mesh(cryptFloorGeo, this.stoneMat);
+        cryptFloor.position.set(-20, -5.5, 56);
+        cryptFloor.receiveShadow = true;
+        this.scene.add(cryptFloor);
+
+        // Shallow Flooded Murky Water Plane (y=-4.92)
+        const waterGeo = new THREE.PlaneGeometry(8.6, 67);
+        const waterMat = new THREE.MeshStandardMaterial({
+            color: 0x0a2624,
+            roughness: 0.15,
+            metalness: 0.55,
+            transparent: true,
+            opacity: 0.82
+        });
+        const waterPlane = new THREE.Mesh(waterGeo, waterMat);
+        waterPlane.rotation.x = -Math.PI / 2;
+        waterPlane.position.set(-20, -4.92, 56);
+        waterPlane.receiveShadow = true;
+        this.scene.add(waterPlane);
+
+        // Crypt Side Fortress Walls
+        this.createWall(-24.6, -2.0, 56, 1.2, 6.5, 68); // West Crypt Wall
+        this.createWall(-15.4, -2.0, 56, 1.2, 6.5, 68); // East Crypt Wall
+
+        // Overhead Vaulted Stone Arches along the Crypt
+        [32, 44, 56, 68, 80].forEach((az) => {
+            const cryptArch = new THREE.Mesh(new THREE.BoxGeometry(8.8, 1.2, 1.2), this.wallMat);
+            cryptArch.position.set(-20, 0.8, az);
+            cryptArch.castShadow = true;
+            this.scene.add(cryptArch);
+
+            // Teal Ghostfire Lantern hanging from arch
+            this.createTealBrazier(-20, -0.6, az);
+        });
+
+        // Ancient Carved Stone Sarcophagi in Crypt Alcoves
+        [36, 50, 64, 76].forEach((sz, idx) => {
+            const sarcX = (idx % 2 === 0) ? -23.2 : -16.8;
+            const sarcGeo = new THREE.BoxGeometry(1.4, 0.9, 3.2);
+            const sarcMesh = new THREE.Mesh(sarcGeo, this.stoneMat);
+            sarcMesh.position.set(sarcX, -4.45, sz);
+            sarcMesh.castShadow = true;
+            sarcMesh.receiveShadow = true;
+            this.scene.add(sarcMesh);
+            this.colliders.push(new THREE.Box3().setFromObject(sarcMesh));
+        });
+
+        // Crypt Ascent Shortcut Stairs emerging right beside the Fog Gate (z=90 to z=96 climbing to y=0)
+        for (let i = 0; i < 8; i++) {
+            const stepZ = 90.5 + i * 0.7;
+            const stepH = (i + 1) * (5.0 / 8);
+            const stepMesh = new THREE.Mesh(new THREE.BoxGeometry(6, stepH, 0.75), this.stoneMat);
+            stepMesh.position.set(-18, -5.0 + stepH / 2, stepZ);
+            stepMesh.receiveShadow = true;
+            this.scene.add(stepMesh);
+        }
+
+        // ----------------------------------------------------
+        // DRAMATIC ILLUMINATED PATH BEACONS ("ADD LIGHTS MAKE IT SEEN")
+        // Luminous Sky Beacons, Overhead Banners & Path Color Themes
+        // ----------------------------------------------------
+        // 1. East Path Beacon: Golden Beam & High Ramparts Banner (UP)
+        this.createPathBeacon(20, 0, 3, 0xffbb33, "▲ UPPER RAMPARTS [UP]", "+6m ELEVATION • ARCHER BATTLEMENTS", "#ffd700");
+
+        // 2. West Path Beacon: Emerald Ghostfire Beam & Catacombs Banner (DOWN)
+        this.createPathBeacon(-20, 0, 3, 0x00ffaa, "▼ FLOODED CATACOMBS [DOWN]", "-5m SUBTERRANEAN • CRYPT SHORTCUT", "#00ffcc");
+
+        // 3. Central Path Beacon: Fiery Orange Torches & Royal Bridge Banner (MAIN)
+        this.createPathBeacon(0, 0, 29, 0xff7722, "⚔️ ROYAL BRIDGE [MAIN]", "LEVEL 0m • DIRECT FOG GATE PATH", "#ff9933");
 
         // 3. Boss Arena (Beyond Fog Gate at z = 95 to z = 160)
         const arenaGeo = new THREE.BoxGeometry(34, 2, 70);
@@ -603,6 +847,244 @@ class DarkSoulsWorld {
 
         // Collider box
         this.colliders.push(new THREE.Box3().setFromObject(mesh));
+    }
+
+    createPathBeacon(x, y, z, colorHex, title, desc, titleColor) {
+        const beaconGroup = new THREE.Group();
+
+        // 1. Towering vertical light beam reaching 36m into the sky
+        const beamGeo = new THREE.CylinderGeometry(0.55, 1.4, 36, 16, 1, true);
+        const beamMat = new THREE.MeshBasicMaterial({
+            color: colorHex,
+            transparent: true,
+            opacity: 0.38,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+            depthWrite: false
+        });
+        const beam = new THREE.Mesh(beamGeo, beamMat);
+        beam.position.y = 18;
+        beaconGroup.add(beam);
+
+        // 2. High-intensity PointLight illuminating the path entrance
+        const light = new THREE.PointLight(colorHex, 3.4, 28, 1.4);
+        light.position.y = 2.4;
+        light.castShadow = true;
+        light.shadow.bias = -0.002;
+        beaconGroup.add(light);
+
+        // 3. Glowing Core Flame Brazier
+        const flameCore = new THREE.Mesh(
+            new THREE.DodecahedronGeometry(0.55),
+            new THREE.MeshBasicMaterial({ color: colorHex })
+        );
+        flameCore.position.y = 2.2;
+        beaconGroup.add(flameCore);
+
+        // Stone Brazier Pedestal Base
+        const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 1.0, 2.0, 8), this.stoneMat);
+        pedestal.position.y = 1.0;
+        pedestal.receiveShadow = true;
+        beaconGroup.add(pedestal);
+
+        // 4. Overhead Illuminated Sign Banner
+        const sign = this.createPathSign(0, 4.8, 0, title, desc, titleColor, '#' + colorHex.toString(16).padStart(6, '0'));
+        beaconGroup.add(sign);
+
+        beaconGroup.position.set(x, y, z);
+        this.scene.add(beaconGroup);
+
+        this.particles.push({
+            mesh: flameCore,
+            light: light,
+            baseIntensity: 3.4,
+            seed: Math.random() * 20
+        });
+    }
+
+    createPathSign(x, y, z, title, desc, titleColor, glowColor) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+
+        // Dark gothic slate background
+        ctx.fillStyle = '#0a0908';
+        ctx.fillRect(0, 0, 512, 256);
+
+        // Ornate border
+        ctx.strokeStyle = glowColor || '#c49a45';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(8, 8, 496, 240);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(16, 16, 480, 224);
+
+        // Corner studs
+        const corners = [[16, 16], [496, 16], [16, 240], [496, 240]];
+        corners.forEach(([cx, cy]) => {
+            ctx.fillStyle = glowColor || '#c49a45';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // Title text
+        ctx.font = 'bold 36px "Cinzel", serif, Times, sans-serif';
+        ctx.fillStyle = titleColor || '#ffd700';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = glowColor || '#ffd700';
+        ctx.shadowBlur = 14;
+        ctx.fillText(title, 256, 95);
+
+        // Subtitle / Description
+        ctx.font = '22px "EB Garamond", serif, Georgia, sans-serif';
+        ctx.fillStyle = '#d0c6b8';
+        ctx.shadowBlur = 4;
+        ctx.fillText(desc, 256, 160);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        const mat = new THREE.MeshBasicMaterial({
+            map: tex,
+            transparent: true,
+            opacity: 0.96,
+            side: THREE.DoubleSide
+        });
+        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 3.2), mat);
+        mesh.position.set(x, y, z);
+        return mesh;
+    }
+
+    createGoldenBrazier(x, y, z, intensity = 2.2) {
+        const light = new THREE.PointLight(0xffcc44, intensity, 18, 1.5);
+        light.position.set(x, y + 0.5, z);
+        this.scene.add(light);
+
+        const flame = new THREE.Mesh(
+            new THREE.DodecahedronGeometry(0.35),
+            new THREE.MeshBasicMaterial({ color: 0xffdd66 })
+        );
+        flame.position.set(x, y + 0.5, z);
+        this.scene.add(flame);
+
+        const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.25, 0.4, 8), this.ironMat);
+        bowl.position.set(x, y, z);
+        this.scene.add(bowl);
+
+        this.particles.push({
+            mesh: flame,
+            light: light,
+            baseIntensity: intensity,
+            seed: Math.random() * 15
+        });
+    }
+
+    createGoldenTorch(x, y, z) {
+        const sconce = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.2, 6), this.ironMat);
+        sconce.position.set(x, y, z);
+        this.scene.add(sconce);
+
+        const flameLight = new THREE.PointLight(0xffbb33, 2.2, 16, 1.6);
+        flameLight.position.set(x, y + 0.7, z);
+        this.scene.add(flameLight);
+
+        const fMesh = new THREE.Mesh(
+            new THREE.DodecahedronGeometry(0.2),
+            new THREE.MeshBasicMaterial({ color: 0xffcc44 })
+        );
+        fMesh.position.set(x, y + 0.7, z);
+        this.scene.add(fMesh);
+
+        this.particles.push({
+            mesh: fMesh,
+            light: flameLight,
+            baseIntensity: 2.2,
+            seed: Math.random() * 10
+        });
+    }
+
+    createTealBrazier(x, y, z) {
+        const light = new THREE.PointLight(0x00ffcc, 2.0, 16, 1.6);
+        light.position.set(x, y + 0.4, z);
+        this.scene.add(light);
+
+        const flame = new THREE.Mesh(
+            new THREE.DodecahedronGeometry(0.28),
+            new THREE.MeshBasicMaterial({ color: 0x44ffdd })
+        );
+        flame.position.set(x, y + 0.4, z);
+        this.scene.add(flame);
+
+        const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.2, 6), this.ironMat);
+        chain.position.set(x, y + 1.0, z);
+        this.scene.add(chain);
+
+        this.particles.push({
+            mesh: flame,
+            light: light,
+            baseIntensity: 2.0,
+            seed: Math.random() * 15
+        });
+    }
+
+    spawnLandingDust(pos) {
+        for (let i = 0; i < 18; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 2.5 + Math.random() * 4.0;
+            const mesh = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.12 + Math.random() * 0.1),
+                new THREE.MeshStandardMaterial({ color: 0x857d72, roughness: 0.9 })
+            );
+            mesh.position.set(pos.x, pos.y + 0.1, pos.z);
+            const vel = new THREE.Vector3(
+                Math.sin(angle) * speed,
+                0.8 + Math.random() * 2.0,
+                Math.cos(angle) * speed
+            );
+            this.scene.add(mesh);
+            this.sparkParticles.push({ mesh, vel, life: 0.45, maxLife: 0.45 });
+        }
+    }
+
+    spawnWaterSplash(pos) {
+        for (let i = 0; i < 20; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1.8 + Math.random() * 3.5;
+            const mesh = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.08 + Math.random() * 0.08),
+                new THREE.MeshBasicMaterial({ color: 0x55eedd, transparent: true, opacity: 0.85 })
+            );
+            mesh.position.set(pos.x, pos.y + 0.1, pos.z);
+            const vel = new THREE.Vector3(
+                Math.sin(angle) * speed,
+                2.2 + Math.random() * 3.0,
+                Math.cos(angle) * speed
+            );
+            this.scene.add(mesh);
+            this.sparkParticles.push({ mesh, vel, life: 0.4, maxLife: 0.4 });
+        }
+    }
+
+    spawnPlungingShockwave(pos) {
+        // High-velocity expanding ring of sparks
+        const count = 36;
+        for (let i = 0; i < count; i++) {
+            const angle = (i / count) * Math.PI * 2;
+            const speed = 10.0 + Math.random() * 4.0;
+            const mesh = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.18 + Math.random() * 0.12),
+                new THREE.MeshBasicMaterial({ color: 0xffd244, transparent: true, opacity: 0.95 })
+            );
+            mesh.position.set(pos.x, pos.y + 0.2, pos.z);
+            const vel = new THREE.Vector3(
+                Math.sin(angle) * speed,
+                1.5 + Math.random() * 3.5,
+                Math.cos(angle) * speed
+            );
+            this.scene.add(mesh);
+            this.sparkParticles.push({ mesh, vel, life: 0.65, maxLife: 0.65 });
+        }
     }
 
     createPillar(x, z, height = 8) {

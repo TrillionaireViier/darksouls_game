@@ -693,7 +693,8 @@ class DarkSoulsGame {
                 }
 
                 // 4. Drop Y position close to ground during roll
-                this.playerMesh.position.y = -Math.sin(progress * Math.PI) * 0.35;
+                const groundY = this.world.getGroundHeight(this.playerMesh.position.x, this.playerMesh.position.z);
+                this.playerMesh.position.y = groundY - Math.sin(progress * Math.PI) * 0.35;
 
                 // 5. Spawn i-frame ghost trail & embers
                 if (this.combat.isInvincible && Math.random() < 0.45) {
@@ -711,7 +712,37 @@ class DarkSoulsGame {
                 uData.leftShoulder.rotation.x = 0;
                 uData.rightShoulder.rotation.x = 0;
             }
-            this.playerMesh.position.y = 0;
+
+            // 3D Vertical Physics & Terrain Elevation
+            const pPos = this.playerMesh.position;
+            const targetGroundY = this.world.getGroundHeight(pPos.x, pPos.z);
+            const heightDiff = pPos.y - targetGroundY;
+
+            if (heightDiff > 0.16 || this.playerVelocity.y < -0.2) {
+                // Airborne / falling
+                this.playerVelocity.y -= 26 * delta; // Gravity
+                pPos.y += this.playerVelocity.y * delta;
+
+                if (pPos.y <= targetGroundY) {
+                    const fallSpeed = -this.playerVelocity.y;
+                    pPos.y = targetGroundY;
+                    this.playerVelocity.y = 0;
+
+                    if (fallSpeed > 4.5) {
+                        this.audio.playFootstep();
+                        this.shakeCamera(0.18, 0.25);
+                        this.world.spawnLandingDust(pPos);
+
+                        if (this.combat.isPlungingAttack) {
+                            this.combat.executePlungingImpact(fallSpeed);
+                        }
+                    }
+                }
+            } else {
+                // Grounded: smoothly adhere to steps and slopes
+                pPos.y = THREE.MathUtils.lerp(pPos.y, targetGroundY, Math.min(1.0, delta * 20));
+                this.playerVelocity.y = 0;
+            }
         }
 
         const moveDir = this.calculateMovementDirection();
@@ -720,7 +751,13 @@ class DarkSoulsGame {
         if (isMoving && !this.combat.isAttacking && !this.combat.isDrinkingEstus && !this.combat.isStaggered) {
             // Speed (holding Shift = sprint if stamina > 0)
             const isSprinting = (this.keys['ShiftLeft'] || this.keys['ShiftRight']) && this.combat.stamina > 5;
-            const speed = isSprinting ? this.sprintSpeed : (this.combat.isBlocking ? this.moveSpeed * 0.55 : this.moveSpeed);
+            let speed = isSprinting ? this.sprintSpeed : (this.combat.isBlocking ? this.moveSpeed * 0.55 : this.moveSpeed);
+
+            // Water surface drag in Flooded Catacombs (y <= -4.0)
+            const isInWater = this.playerMesh.position.y <= -4.0;
+            if (isInWater) {
+                speed *= 0.88;
+            }
 
             if (isSprinting) {
                 this.combat.stamina = Math.max(0, this.combat.stamina - delta * 18);
@@ -752,9 +789,14 @@ class DarkSoulsGame {
                 uData.leftHip.rotation.x = -Math.sin(time * freq) * 0.5;
             }
 
-            // Periodic footstep audio
+            // Periodic footstep audio & surface splash particles
             if (Math.sin(time * freq) > 0.95) {
-                this.audio.playFootstep();
+                if (isInWater) {
+                    this.audio.playWaterSplash();
+                    this.world.spawnWaterSplash(this.playerMesh.position);
+                } else {
+                    this.audio.playFootstep();
+                }
             }
         } else {
             // Idle breathing oscillation
@@ -794,6 +836,12 @@ class DarkSoulsGame {
                 uData.swordGroup.rotation.x = Math.sin(t * 8) * 2.2;
             } else if (this.combat.attackCombo === 4) { // Riposte thrust
                 uData.swordGroup.position.z = 0.2 + Math.sin(t * 10) * 0.7;
+            } else if (this.combat.attackCombo === 5) { // Running Leaping Jump Attack
+                uData.swordGroup.rotation.x = 2.4 - Math.sin(Math.min(1.0, t * 4) * Math.PI) * 2.6;
+                uData.swordGroup.position.y = Math.sin(t * 5) * 0.3;
+            } else if (this.combat.attackCombo === 6) { // Plunging Attack (blade down)
+                uData.swordGroup.rotation.set(Math.PI * 0.95, 0, 0);
+                uData.swordGroup.position.set(0, -0.4, 0.4);
             }
         } else if (uData.swordGroup) {
             uData.swordGroup.rotation.set(Math.PI / 2, 0, 0);
@@ -803,24 +851,26 @@ class DarkSoulsGame {
 
     resolvePlayerCollisions() {
         const pPos = this.playerMesh.position;
-        // Keep within world boundary bounds
-        pPos.y = 0; // Stick to ground
+        const playerBottom = pPos.y;
+        const playerTop = pPos.y + 1.8;
 
         for (const box of this.world.colliders) {
-            if (box.containsPoint(pPos)) {
-                // Push back to closest edge
-                const min = box.min;
-                const max = box.max;
-                const dx1 = Math.abs(pPos.x - min.x);
-                const dx2 = Math.abs(pPos.x - max.x);
-                const dz1 = Math.abs(pPos.z - min.z);
-                const dz2 = Math.abs(pPos.z - max.z);
+            // Check vertical tier overlap:
+            if (playerBottom < box.max.y && playerTop > box.min.y) {
+                // Check horizontal penetration:
+                if (pPos.x >= box.min.x && pPos.x <= box.max.x &&
+                    pPos.z >= box.min.z && pPos.z <= box.max.z) {
+                    const dx1 = Math.abs(pPos.x - box.min.x);
+                    const dx2 = Math.abs(pPos.x - box.max.x);
+                    const dz1 = Math.abs(pPos.z - box.min.z);
+                    const dz2 = Math.abs(pPos.z - box.max.z);
 
-                const minD = Math.min(dx1, dx2, dz1, dz2);
-                if (minD === dx1) pPos.x = min.x - 0.5;
-                else if (minD === dx2) pPos.x = max.x + 0.5;
-                else if (minD === dz1) pPos.z = min.z - 0.5;
-                else if (minD === dz2) pPos.z = max.z + 0.5;
+                    const minD = Math.min(dx1, dx2, dz1, dz2);
+                    if (minD === dx1) pPos.x = box.min.x - 0.45;
+                    else if (minD === dx2) pPos.x = box.max.x + 0.45;
+                    else if (minD === dz1) pPos.z = box.min.z - 0.45;
+                    else if (minD === dz2) pPos.z = box.max.z + 0.45;
+                }
             }
         }
     }
@@ -892,6 +942,28 @@ class DarkSoulsGame {
 
         // Souls Counter
         this.ui.soulsCount.textContent = this.combat.souls.toLocaleString();
+
+        // Route Compass Pill Active Highlight
+        const rRamparts = document.getElementById('route-ramparts');
+        const rCatacombs = document.getElementById('route-catacombs');
+        const rBridge = document.getElementById('route-bridge');
+        if (rRamparts && rCatacombs && rBridge) {
+            const isRamparts = pPos.x > 13;
+            const isCatacombs = pPos.x < -13;
+            const isBridge = !isRamparts && !isCatacombs && pPos.z > 25;
+
+            rRamparts.style.opacity = isRamparts ? '1' : '0.75';
+            rRamparts.style.transform = isRamparts ? 'scale(1.06)' : 'scale(1)';
+            rRamparts.style.boxShadow = isRamparts ? '0 0 16px rgba(255,215,0,0.85)' : '0 0 6px rgba(255,215,0,0.2)';
+
+            rCatacombs.style.opacity = isCatacombs ? '1' : '0.75';
+            rCatacombs.style.transform = isCatacombs ? 'scale(1.06)' : 'scale(1)';
+            rCatacombs.style.boxShadow = isCatacombs ? '0 0 16px rgba(0,255,170,0.85)' : '0 0 6px rgba(0,255,170,0.2)';
+
+            rBridge.style.opacity = isBridge ? '1' : '0.75';
+            rBridge.style.transform = isBridge ? 'scale(1.06)' : 'scale(1)';
+            rBridge.style.boxShadow = isBridge ? '0 0 16px rgba(255,119,34,0.85)' : '0 0 6px rgba(255,119,34,0.2)';
+        }
 
         // Check Interactable Proximity
         const pPos = this.playerMesh.position;
