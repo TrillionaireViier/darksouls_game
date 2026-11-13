@@ -35,6 +35,7 @@ class DarkSoulsCombat {
         this.isParrying = false;
         this.parryTime = 0;
         this.isRolling = false;
+        this.isBackstep = false;
         this.rollTime = 0;
         this.rollDir = new THREE.Vector3();
         this.isInvincible = false;
@@ -44,15 +45,131 @@ class DarkSoulsCombat {
         this.staggerTime = 0;
         this.isDead = false;
 
-        // Enemies & Boss
+        // Enemies & Boss Roster (5 Iconic Dark Souls Bosses)
         this.enemies = [];
         this.boss = null;
         this.lockedTarget = null;
+        this.currentBossType = 'taurus';
+
+        this.bossRoster = [
+            {
+                id: 'taurus',
+                name: 'TAURUS DEMON',
+                title: 'Undead Burg Bridge &bull; Great Stone Hammer & Ground Slam',
+                icon: '👹',
+                maxHp: 2200,
+                damage: 280,
+                souls: 5000,
+                radius: 2.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createTaurusDemon(x, z)
+            },
+            {
+                id: 'gargoyle',
+                name: 'BELL GARGOYLE',
+                title: 'Undead Parish Belfry &bull; Bronze Halberd, Stone Wings & Flame Breath',
+                icon: '🗿',
+                maxHp: 2600,
+                damage: 260,
+                souls: 7500,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createBellGargoyle(x, z)
+            },
+            {
+                id: 'capra',
+                name: 'CAPRA DEMON',
+                title: 'Lower Undead Burg &bull; Dual Jagged Demon Great Machetes',
+                icon: '🐐',
+                maxHp: 2400,
+                damage: 320,
+                souls: 8000,
+                radius: 2.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createCapraDemon(x, z)
+            },
+            {
+                id: 'sif',
+                name: 'GREAT GREY WOLF SIF',
+                title: 'Darkroot Garden &bull; Artorias Greatsword & 360° Whirlwind Spin',
+                icon: '🐺',
+                maxHp: 3200,
+                damage: 340,
+                souls: 12000,
+                radius: 3.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createWolfSif(x, z)
+            },
+            {
+                id: 'gwyn',
+                name: 'GWYN, LORD OF CINDER',
+                title: 'Kiln of First Flame &bull; Flaming Sunlight Greatsword & Sun Burst',
+                icon: '☀️',
+                maxHp: 4000,
+                damage: 390,
+                souls: 20000,
+                radius: 2.6,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createGwynLordOfCinder(x, z)
+            }
+        ];
     }
 
     initEnemies(charFactory) {
         this.charFactory = charFactory;
         this.spawnEnemies();
+    }
+
+    spawnBoss(bossId = this.currentBossType, x = 0, z = 132) {
+        if (this.boss && this.boss.mesh) {
+            this.game.scene.remove(this.boss.mesh);
+        }
+
+        const def = this.bossRoster.find(b => b.id === bossId) || this.bossRoster[0];
+        this.currentBossType = def.id;
+
+        const bossMesh = def.create(this.charFactory, x, z);
+        this.boss = {
+            id: def.id,
+            type: 'boss',
+            name: def.name,
+            title: def.title,
+            icon: def.icon,
+            mesh: bossMesh,
+            maxHp: def.maxHp,
+            hp: def.maxHp,
+            damage: def.damage,
+            souls: def.souls,
+            radius: def.radius,
+            state: 'IDLE',
+            stateTimer: 0,
+            cooldown: 0,
+            isPhase2: false,
+            isDead: false,
+            isAttacking: false,
+            attackType: '',
+            animTime: 0,
+            comboStep: 0
+        };
+
+        if (this.game && this.game.ui && this.game.ui.bossName) {
+            this.game.ui.bossName.textContent = def.name;
+        }
+
+        return this.boss;
+    }
+
+    switchBoss(bossId) {
+        const boss = this.spawnBoss(bossId);
+        this.audio.playBellToll();
+        this.game.showNotification(`CHALLENGE READY: ${boss.name}`);
+        // If player is already in arena, awaken boss immediately
+        if (this.game.playerMesh.position.z > 98) {
+            this.boss.state = 'CHASE';
+            this.audio.setBossMusic(true);
+            this.game.showBossHpBar(this.boss);
+        }
+        return boss;
     }
 
     spawnEnemies() {
@@ -71,27 +188,9 @@ class DarkSoulsCombat {
         // 3. Hollow Soldier 3: Bridge midway
         this.createHollowSoldier(-1, 55, Math.PI);
 
-        // 4. Boss: Taurus Demon (in Boss Arena at z = 125)
+        // 4. Boss (in Boss Arena at z = 132)
         if (!this.boss || this.boss.isDead) {
-            if (this.boss && this.boss.mesh) this.game.scene.remove(this.boss.mesh);
-            const bossMesh = this.charFactory.createTaurusDemon(0, 132);
-            this.boss = {
-                type: 'boss',
-                name: 'TAURUS DEMON',
-                mesh: bossMesh,
-                maxHp: 2200,
-                hp: 2200,
-                damage: 280,
-                state: 'IDLE',
-                stateTimer: 0,
-                cooldown: 0,
-                isPhase2: false,
-                isDead: false,
-                isAttacking: false,
-                attackType: '',
-                radius: 2.2,
-                animTime: 0
-            };
+            this.spawnBoss(this.currentBossType || 'taurus');
         }
     }
 
@@ -194,23 +293,27 @@ class DarkSoulsCombat {
 
     tryRoll(moveDir) {
         if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
-        if (this.stamina < 24) return;
+        // Roll-cancel during attack recovery frames (after initial swing impact)
+        if (this.isAttacking && this.attackTime < 0.20) return;
+        if (this.stamina < 22) return;
 
         this.isRolling = true;
         this.rollTime = 0;
         this.isInvincible = true;
         this.isAttacking = false;
         this.isBlocking = false;
-        this.stamina = Math.max(0, this.stamina - 24);
-        this.staminaDelay = 0.5;
+        this.stamina = Math.max(0, this.stamina - 22);
+        this.staminaDelay = 0.45;
 
-        // Roll direction
-        if (moveDir.lengthSq() > 0.01) {
+        // Directional Roll or Dark Souls Backstep
+        if (moveDir && moveDir.lengthSq() > 0.01) {
             this.rollDir.copy(moveDir).normalize();
+            this.isBackstep = false;
         } else {
-            // Forward from player facing
+            // Neutral roll input = Authentic Dark Souls Backstep (быстрый отскок назад)
             const playerRot = this.game.playerMesh.rotation.y;
-            this.rollDir.set(Math.sin(playerRot), 0, Math.cos(playerRot)).normalize();
+            this.rollDir.set(-Math.sin(playerRot), 0, -Math.cos(playerRot)).normalize();
+            this.isBackstep = true;
         }
 
         this.audio.playRoll();
@@ -356,16 +459,18 @@ class DarkSoulsCombat {
             }
         }
 
-        // 2. Check Boss (Taurus Demon)
+        // 2. Check Boss (Taurus, Gargoyle, Capra, Sif, or Gwyn)
         if (this.boss && !this.boss.isDead) {
             const toBoss = new THREE.Vector3().subVectors(this.boss.mesh.position, playerPos);
             const dist = toBoss.length();
-            if (dist < 4.2) {
+            const hitThreshold = (this.boss.radius || 2.4) + 1.8;
+            if (dist < hitThreshold) {
                 const angle = forward.dot(toBoss.normalize());
-                if (angle > 0.2) {
+                if (angle > 0.15) {
                     this.boss.hp -= totalDmg;
                     this.audio.playHit(true);
                     this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    this.world.spawnBlood(this.boss.mesh.position);
                     this.game.showDamageNumber(this.boss.mesh.position, totalDmg, false);
                     this.game.shakeCamera(0.18, 0.2);
 
@@ -468,27 +573,53 @@ class DarkSoulsCombat {
 
     triggerBossPhase2() {
         this.boss.isPhase2 = true;
-        this.audio.playBossRoar();
-        this.game.showNotification("TAURUS DEMON ENRAGED!");
-        this.game.shakeCamera(0.4, 0.6);
+        this.game.shakeCamera(0.45, 0.7);
 
-        // Turn on weapon flame light & emissive
-        if (this.boss.mesh.userData.weaponFlame) {
-            this.boss.mesh.userData.weaponFlame.intensity = 4.0;
-        }
-        if (this.boss.mesh.userData.lavaCrack) {
-            this.boss.mesh.userData.lavaCrack.material.emissiveIntensity = 2.0;
+        const id = this.boss.id;
+        if (id === 'taurus') {
+            this.audio.playBossRoar();
+            this.game.showNotification("TAURUS DEMON ENRAGED!");
+            if (this.boss.mesh.userData.weaponFlame) this.boss.mesh.userData.weaponFlame.intensity = 4.5;
+            if (this.boss.mesh.userData.lavaCrack) this.boss.mesh.userData.lavaCrack.material.emissiveIntensity = 2.5;
+        } else if (id === 'gargoyle') {
+            this.audio.playBellToll();
+            this.game.showNotification("BELL OF AWAKENING RINGS! GARGOYLE ENRAGED!");
+            if (this.boss.mesh.userData.throatFlame) this.boss.mesh.userData.throatFlame.intensity = 3.5;
+        } else if (id === 'capra') {
+            this.audio.playBossRoar();
+            this.game.showNotification("CAPRA DEMON BLOODLUST!");
+        } else if (id === 'sif') {
+            this.audio.playWolfHowl();
+            this.game.showNotification("SIF FIGHTS FOR ARTORIAS!");
+            if (this.boss.mesh.userData.swordGlow) this.boss.mesh.userData.swordGlow.intensity = 4.5;
+        } else if (id === 'gwyn') {
+            this.audio.playSunlightFlame();
+            this.game.showNotification("GWYN CHANNELS THE FIRST FLAME!");
+            if (this.boss.mesh.userData.weaponFlame) this.boss.mesh.userData.weaponFlame.intensity = 6.5;
         }
     }
 
     killBoss() {
         this.boss.isDead = true;
         this.boss.state = 'DEAD';
-        const soulReward = 5000;
+        const soulReward = this.boss.souls || 5000;
         this.souls += soulReward;
         this.audio.playVictory();
         this.audio.setBossMusic(false);
-        this.game.triggerVictoryBanner();
+        this.game.triggerVictoryBanner(this.boss.name);
+
+        // Notify next unlocked boss
+        const currentIdx = this.bossRoster.findIndex(b => b.id === this.boss.id);
+        if (currentIdx >= 0 && currentIdx < this.bossRoster.length - 1) {
+            const nextBoss = this.bossRoster[currentIdx + 1];
+            setTimeout(() => {
+                this.game.showNotification(`NEXT LORD UNLOCKED: ${nextBoss.name} (Select in BOSS ROSTER)`);
+            }, 4200);
+        } else {
+            setTimeout(() => {
+                this.game.showNotification("ALL 5 LORDS OF LORDRAN SLAIN! YOU ARE THE LORD OF CINDER!");
+            }, 4200);
+        }
     }
 
     killPlayer() {
@@ -573,19 +704,23 @@ class DarkSoulsCombat {
             this.stamina = Math.min(this.maxStamina, this.stamina + rate * delta);
         }
 
-        // 2. Roll Timer & i-frames
+        // 2. Roll Timer & Invincibility Frames (i-frames)
         if (this.isRolling) {
             this.rollTime += delta;
-            // Invincible between 0.1s and 0.38s of roll
-            this.isInvincible = this.rollTime >= 0.08 && this.rollTime <= 0.40;
+            const maxDuration = this.isBackstep ? 0.38 : 0.52;
+            const iFrameStart = 0.04;
+            const iFrameEnd = this.isBackstep ? 0.28 : 0.42;
+            this.isInvincible = this.rollTime >= iFrameStart && this.rollTime <= iFrameEnd;
 
-            // Move player forward in rollDir
-            const rollSpeed = 8.5;
+            // Move player in roll/backstep direction
+            const rollSpeed = this.isBackstep ? 6.5 : 8.8;
             this.game.playerMesh.position.addScaledVector(this.rollDir, rollSpeed * delta);
+            this.game.resolvePlayerCollisions();
 
-            if (this.rollTime > 0.55) {
+            if (this.rollTime >= maxDuration) {
                 this.isRolling = false;
                 this.isInvincible = false;
+                this.isBackstep = false;
             }
         }
 
@@ -705,39 +840,62 @@ class DarkSoulsCombat {
         // Check if player entered Boss Arena (z > 98)
         if (playerPos.z > 98 && this.boss.state === 'IDLE') {
             this.boss.state = 'CHASE';
-            this.audio.playBossRoar();
+            const id = this.boss.id;
+            if (id === 'taurus') this.audio.playBossRoar();
+            else if (id === 'gargoyle') { this.audio.playBellToll(); this.audio.playBossRoar(); }
+            else if (id === 'capra') this.audio.playBossRoar();
+            else if (id === 'sif') this.audio.playWolfHowl();
+            else if (id === 'gwyn') this.audio.playSunlightFlame();
+
             this.audio.setBossMusic(true);
-            this.game.showNotification("TAURUS DEMON AWAKENED");
+            this.game.showNotification(`${this.boss.name} AWAKENED`);
             this.game.showBossHpBar(this.boss);
         }
 
         if (this.boss.state === 'IDLE') return;
 
-        // Turn towards player smoothly
+        this.boss.animTime += delta;
+
+        // Smoothly face player
         const targetAngle = Math.atan2(toPlayer.x, toPlayer.z);
-        this.boss.mesh.rotation.y = targetAngle;
+        this.boss.mesh.rotation.y = THREE.MathUtils.lerp(this.boss.mesh.rotation.y, targetAngle, 0.1);
 
         this.boss.cooldown -= delta;
 
+        // Dispatch to boss-specific AI behavior
+        const id = this.boss.id;
+        if (id === 'gargoyle') {
+            this.updateGargoyleAI(delta, dist, targetAngle);
+        } else if (id === 'capra') {
+            this.updateCapraAI(delta, dist, targetAngle);
+        } else if (id === 'sif') {
+            this.updateSifAI(delta, dist, targetAngle);
+        } else if (id === 'gwyn') {
+            this.updateGwynAI(delta, dist, targetAngle);
+        } else {
+            this.updateTaurusAI(delta, dist, targetAngle);
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 1: TAURUS DEMON AI
+    // ----------------------------------------------------
+    updateTaurusAI(delta, dist, targetAngle) {
         if (dist > 3.8 && !this.boss.isAttacking) {
-            // Boss Walk / Chase
             const speed = this.boss.isPhase2 ? 3.4 : 2.5;
             this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
 
-            // Footstep slam shake
-            this.boss.animTime += delta;
             if (Math.sin(this.boss.animTime * 4) > 0.95) {
                 this.game.shakeCamera(0.08, 0.1);
             }
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
-            // Initiate Boss Attack
             this.boss.isAttacking = true;
             this.boss.cooldown = this.boss.isPhase2 ? 1.8 : 2.6;
 
             const roll = Math.random();
             if (roll < 0.6) {
-                // Slam Attack
+                // Ground Slam
                 this.audio.playBossRoar();
                 setTimeout(() => {
                     if (this.boss && !this.boss.isDead) {
@@ -745,7 +903,6 @@ class DarkSoulsCombat {
                         this.game.shakeCamera(0.45, 0.6);
                         this.world.spawnHitSparks(this.boss.mesh.position, true);
 
-                        // Check slam radius
                         const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
                         if (hitDist < 4.8) {
                             this.damagePlayer(this.boss.damage, this.boss.mesh.position);
@@ -766,6 +923,314 @@ class DarkSoulsCombat {
                         this.boss.isAttacking = false;
                     }
                 }, 600);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 2: BELL GARGOYLE AI (Wings, Halberd & Fire Breath)
+    // ----------------------------------------------------
+    updateGargoyleAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        // Wing flapping & tail swaying animation
+        if (u.leftWingGroup && u.rightWingGroup) {
+            const flapSpeed = this.boss.isPhase2 ? 8 : 5;
+            u.leftWingGroup.rotation.y = Math.sin(this.boss.animTime * flapSpeed) * 0.4;
+            u.rightWingGroup.rotation.y = -Math.sin(this.boss.animTime * flapSpeed) * 0.4;
+        }
+        if (u.tailGroup) {
+            u.tailGroup.rotation.y = Math.sin(this.boss.animTime * 3) * 0.4;
+        }
+
+        if (dist > 4.2 && !this.boss.isAttacking) {
+            const speed = this.boss.isPhase2 ? 3.8 : 2.8;
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
+            this.boss.isAttacking = true;
+            this.boss.cooldown = this.boss.isPhase2 ? 2.0 : 2.8;
+
+            const roll = Math.random();
+            if (roll < 0.45) {
+                // Halberd Thrust & Aerial Lunge
+                this.audio.playSwing(false);
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.game.shakeCamera(0.25, 0.35);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 5.2) {
+                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 450);
+            } else if (roll < 0.8) {
+                // Fire Breath Stream (Iconic Gargoyle Flame)
+                this.audio.playFireBreath();
+                if (u.throatFlame) u.throatFlame.intensity = 4.0;
+
+                const headPos = this.boss.mesh.position.clone().add(new THREE.Vector3(0, 2.5, 0));
+                const fireDir = new THREE.Vector3(Math.sin(targetAngle), -0.15, Math.cos(targetAngle)).normalize();
+
+                // Spray fire particles over 1.0 second
+                const fireInterval = setInterval(() => {
+                    if (this.boss && !this.boss.isDead && this.boss.isAttacking) {
+                        this.world.spawnFlameBreath(headPos, fireDir);
+                    }
+                }, 120);
+
+                setTimeout(() => {
+                    clearInterval(fireInterval);
+                    if (this.boss && !this.boss.isDead) {
+                        if (u.throatFlame) u.throatFlame.intensity = 0;
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        // Forward cone check
+                        const toPlayer = new THREE.Vector3().subVectors(this.game.playerMesh.position, this.boss.mesh.position).normalize();
+                        const forward = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
+                        if (hitDist < 6.8 && forward.dot(toPlayer) > 0.3) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 1000);
+            } else {
+                // Tail-Axe Sweep
+                this.audio.playSwing(true);
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.game.shakeCamera(0.3, 0.4);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.2) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.75), this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 500);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 3: CAPRA DEMON AI (Dual Jagged Machetes & Jumping Slams)
+    // ----------------------------------------------------
+    updateCapraAI(delta, dist, targetAngle) {
+        if (dist > 3.6 && !this.boss.isAttacking) {
+            const speed = this.boss.isPhase2 ? 4.6 : 3.4;
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
+            this.boss.isAttacking = true;
+            this.boss.cooldown = this.boss.isPhase2 ? 1.6 : 2.4;
+
+            const roll = Math.random();
+            if (roll < 0.55) {
+                // Leaping Dual Overhead Chop
+                this.audio.playBossRoar();
+                // Forward jump burst
+                const jumpDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
+                this.boss.mesh.position.addScaledVector(jumpDir, 2.0);
+
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.audio.playBossSlam();
+                        this.game.shakeCamera(0.5, 0.65);
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.5) {
+                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 580);
+            } else {
+                // Dual Machete Flurry (Double Slice)
+                this.audio.playSwing(false);
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 3.8) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.5), this.boss.mesh.position);
+                        }
+                    }
+                }, 220);
+
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.audio.playSwing(true);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.0) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.65), this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 480);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 4: GREAT GREY WOLF SIF AI (Artorias Greatsword & 360° Spin)
+    // ----------------------------------------------------
+    updateSifAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        // 4-legged running animation
+        if (u.frontLeft && u.frontRight && u.rearLeft && u.rearRight) {
+            const runSpeed = 10;
+            u.frontLeft.rotation.x = Math.sin(this.boss.animTime * runSpeed) * 0.45;
+            u.frontRight.rotation.x = -Math.sin(this.boss.animTime * runSpeed) * 0.45;
+            u.rearLeft.rotation.x = -Math.sin(this.boss.animTime * runSpeed) * 0.45;
+            u.rearRight.rotation.x = Math.sin(this.boss.animTime * runSpeed) * 0.45;
+        }
+        if (u.tailGroup) {
+            u.tailGroup.rotation.y = Math.sin(this.boss.animTime * 4) * 0.4;
+        }
+
+        if (dist > 4.8 && !this.boss.isAttacking) {
+            const speed = this.boss.isPhase2 ? 4.6 : 3.6;
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
+            this.boss.isAttacking = true;
+            this.boss.cooldown = this.boss.isPhase2 ? 2.2 : 3.0;
+
+            const roll = Math.random();
+            if (roll < 0.6) {
+                // ICONIC 360° ARTORIAS GREATSWORD WHIRLWIND SPIN!
+                this.audio.playWolfHowl();
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.audio.playSwing(true);
+                        this.game.shakeCamera(0.4, 0.55);
+
+                        // Full 360 sweep visual burst
+                        this.boss.mesh.rotation.y += Math.PI * 2;
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 5.8) {
+                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                        }
+
+                        // Phase 2: Follow-up second spin!
+                        if (this.boss.isPhase2) {
+                            setTimeout(() => {
+                                if (this.boss && !this.boss.isDead) {
+                                    this.audio.playSwing(true);
+                                    this.game.shakeCamera(0.4, 0.5);
+                                    const hitDist2 = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                                    if (hitDist2 < 5.8) {
+                                        this.damagePlayer(Math.round(this.boss.damage * 0.8), this.boss.mesh.position);
+                                    }
+                                    this.boss.isAttacking = false;
+                                }
+                            }, 450);
+                        } else {
+                            this.boss.isAttacking = false;
+                        }
+                    }
+                }, 400);
+            } else {
+                // Leaping Overhead Sword Pounce
+                const jumpDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
+                this.boss.mesh.position.addScaledVector(jumpDir, 3.2);
+                this.audio.playSwing(false);
+
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.audio.playBossSlam();
+                        this.game.shakeCamera(0.35, 0.45);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.8) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 420);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 5: GWYN, LORD OF CINDER AI (Sunlight Combos & Sun Burst)
+    // ----------------------------------------------------
+    updateGwynAI(delta, dist, targetAngle) {
+        if (dist > 3.8 && !this.boss.isAttacking) {
+            const speed = this.boss.isPhase2 ? 4.8 : 3.8;
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
+            this.boss.isAttacking = true;
+            this.boss.cooldown = this.boss.isPhase2 ? 1.5 : 2.2;
+
+            const roll = Math.random();
+            if (roll < 0.5) {
+                // 3-HIT FLAMING SUNLIGHT COMBO
+                // Hit 1: Horizontal slash
+                this.audio.playSwing(false);
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.0) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.4), this.boss.mesh.position);
+                        }
+                    }
+                }, 200);
+
+                // Hit 2: Upward cross cut
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.audio.playSwing(false);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.0) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.4), this.boss.mesh.position);
+                        }
+                    }
+                }, 440);
+
+                // Hit 3: Overhead flame strike
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.audio.playSunlightFlame();
+                        this.game.shakeCamera(0.4, 0.5);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.5) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.7), this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 720);
+            } else if (roll < 0.8) {
+                // RADIANT SUNLIGHT BURST (Golden Shockwave Ring)
+                this.audio.playSunlightFlame();
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.game.shakeCamera(0.5, 0.65);
+                        this.world.spawnSunlightBurst(this.boss.mesh.position);
+
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 5.5) {
+                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 450);
+            } else {
+                // Lunging Flame Thrust (Fast gap closer)
+                const thrustDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
+                this.boss.mesh.position.addScaledVector(thrustDir, 3.0);
+                this.audio.playSwing(true);
+
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.game.shakeCamera(0.3, 0.4);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.2) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.85), this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 350);
             }
         }
     }

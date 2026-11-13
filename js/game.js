@@ -106,11 +106,11 @@ class DarkSoulsGame {
                 this.combat.tryParry();
             }
             if (e.code === 'KeyF') this.toggleLockOn();
-            if (e.code === 'Space') {
-                e.preventDefault();
+            if (e.code === 'Space' || ((e.code === 'ShiftLeft' || e.code === 'ShiftRight') && !e.repeat)) {
+                if (e.code === 'Space') e.preventDefault();
                 if (this.combat.isDead) {
                     this.respawnPlayer();
-                } else {
+                } else if (!this.combat.isRolling) {
                     this.triggerRoll();
                 }
             }
@@ -385,14 +385,62 @@ class DarkSoulsGame {
         }
 
         if (this.combat.isRolling) {
-            // Roll somersault rotation
-            const progress = this.combat.rollTime / 0.55;
-            if (this.playerMesh.userData.torso) {
-                this.playerMesh.userData.torso.rotation.x = progress * Math.PI * 2;
+            const uData = this.playerMesh.userData;
+            if (this.combat.isBackstep) {
+                // Backstep hop animation (0.38s)
+                const progress = Math.min(1.0, this.combat.rollTime / 0.38);
+                this.playerMesh.position.y = Math.sin(progress * Math.PI) * 0.28;
+                if (uData.torso) {
+                    uData.torso.rotation.x = Math.sin(progress * Math.PI) * 0.35;
+                }
+                if (uData.leftHip && uData.rightHip) {
+                    uData.leftHip.rotation.x = -0.4;
+                    uData.rightHip.rotation.x = -0.4;
+                }
+            } else {
+                // Full 3D directional somersault roll (0.52s)
+                const progress = Math.min(1.0, this.combat.rollTime / 0.52);
+
+                // 1. Orient player mesh towards roll direction
+                const rollYaw = Math.atan2(this.combat.rollDir.x, this.combat.rollDir.z);
+                this.playerMesh.rotation.y = rollYaw;
+
+                // 2. Full 360 somersault flip
+                if (uData.torso) {
+                    uData.torso.rotation.x = progress * Math.PI * 2;
+                }
+
+                // 3. Tuck legs & arms into tight somersault ball
+                const tuck = Math.sin(progress * Math.PI);
+                if (uData.leftHip && uData.rightHip) {
+                    uData.leftHip.rotation.x = -tuck * 1.4;
+                    uData.rightHip.rotation.x = -tuck * 1.4;
+                }
+                if (uData.leftShoulder && uData.rightShoulder) {
+                    uData.leftShoulder.rotation.x = tuck * 1.1;
+                    uData.rightShoulder.rotation.x = tuck * 1.1;
+                }
+
+                // 4. Drop Y position close to ground during roll
+                this.playerMesh.position.y = -Math.sin(progress * Math.PI) * 0.35;
+
+                // 5. Spawn i-frame ghost trail & embers
+                if (this.combat.isInvincible && Math.random() < 0.45) {
+                    this.spawnRollGhostTrail();
+                }
             }
             return;
-        } else if (this.playerMesh.userData.torso) {
-            this.playerMesh.userData.torso.rotation.x = 0;
+        } else {
+            // Restore upright posture when not rolling
+            const uData = this.playerMesh.userData;
+            if (uData.torso && uData.torso.rotation.x !== 0 && !this.combat.isAttacking) {
+                uData.torso.rotation.x = 0;
+            }
+            if (uData.leftShoulder && uData.rightShoulder && !this.combat.isAttacking && !this.combat.isBlocking) {
+                uData.leftShoulder.rotation.x = 0;
+                uData.rightShoulder.rotation.x = 0;
+            }
+            this.playerMesh.position.y = 0;
         }
 
         const moveDir = this.calculateMovementDirection();
@@ -679,6 +727,48 @@ class DarkSoulsGame {
         }
     }
 
+    spawnRollGhostTrail() {
+        // Invincibility frame ethereal ghost phantom
+        const ghostMat = new THREE.MeshBasicMaterial({
+            color: 0x88ccff,
+            transparent: true,
+            opacity: 0.38
+        });
+        const ghost = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.2, 0.4), ghostMat);
+        ghost.position.copy(this.playerMesh.position).add(new THREE.Vector3(0, 0.7, 0));
+        ghost.rotation.y = this.playerMesh.rotation.y;
+        this.scene.add(ghost);
+
+        let op = 0.38;
+        const fade = setInterval(() => {
+            op -= 0.08;
+            ghostMat.opacity = op;
+            if (op <= 0) {
+                this.scene.remove(ghost);
+                ghostMat.dispose();
+                clearInterval(fade);
+            }
+        }, 35);
+    }
+
+    selectBoss(bossId) {
+        if (!this.combat) return;
+        const boss = this.combat.switchBoss(bossId);
+        // Warp player right in front of arena fog gate if in courtyard
+        if (this.playerMesh.position.z < 80) {
+            this.warpToArena();
+        }
+        return boss;
+    }
+
+    warpToArena() {
+        // Warp player near the fog gate (z = 94)
+        this.playerMesh.position.set(0, 0, 94);
+        this.cameraYaw = 0;
+        this.cameraPitch = 0.28;
+        this.showNotification("WARPED TO THE ARENA FOG GATE");
+    }
+
     triggerDeathScreen() {
         if (this.ui.deathScreen) {
             this.ui.deathScreen.style.display = 'flex';
@@ -701,14 +791,19 @@ class DarkSoulsGame {
         }
     }
 
-    triggerVictoryBanner() {
+    triggerVictoryBanner(bossName) {
         if (this.ui.victoryBanner) {
+            const titleElem = this.ui.victoryBanner.querySelector('.victory-title');
+            if (titleElem && bossName) {
+                titleElem.innerHTML = `VICTORY ACHIEVED<br><span style="font-size: 0.45em; letter-spacing: 5px; color: #ffd276; opacity: 0.9;">${bossName} SLAIN</span>`;
+            }
             this.ui.victoryBanner.style.display = 'flex';
             this.ui.victoryBanner.classList.add('active');
             setTimeout(() => {
                 this.ui.victoryBanner.classList.remove('active');
                 setTimeout(() => {
                     this.ui.victoryBanner.style.display = 'none';
+                    if (titleElem) titleElem.textContent = 'VICTORY ACHIEVED';
                 }, 1000);
             }, 4500);
         }

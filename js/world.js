@@ -618,4 +618,59 @@ class DarkSoulsWorld {
             }
         }
     }
+
+    spawnFlameBreath(origin, dir) {
+        for (let i = 0; i < 18; i++) {
+            const colors = [0xff4400, 0xff7700, 0xffbb00, 0xee2200];
+            const col = colors[Math.floor(Math.random() * colors.length)];
+            const mesh = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.18 + Math.random() * 0.14),
+                new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.85 })
+            );
+            mesh.position.set(
+                origin.x + (Math.random() - 0.5) * 0.4,
+                origin.y + (Math.random() - 0.5) * 0.4,
+                origin.z + (Math.random() - 0.5) * 0.4
+            );
+            const spread = 0.35;
+            const vel = new THREE.Vector3(
+                dir.x * 12 + (Math.random() - 0.5) * 12 * spread,
+                dir.y * 12 + (Math.random() - 0.5) * 3,
+                dir.z * 12 + (Math.random() - 0.5) * 12 * spread
+            );
+            this.scene.add(mesh);
+            this.sparkParticles.push({
+                mesh,
+                vel,
+                life: 0.5 + Math.random() * 0.3,
+                maxLife: 0.8
+            });
+        }
+    }
+
+    spawnSunlightBurst(pos) {
+        // 360 degree golden flame shockwave ring
+        const count = 36;
+        for (let i = 0; i < count; i++) {
+            const angle = (i / count) * Math.PI * 2;
+            const mesh = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.22),
+                new THREE.MeshBasicMaterial({ color: 0xffd244, transparent: true, opacity: 0.9 })
+            );
+            mesh.position.set(pos.x, pos.y + 0.5, pos.z);
+            const speed = 9.0;
+            const vel = new THREE.Vector3(
+                Math.sin(angle) * speed,
+                0.4 + Math.random() * 1.5,
+                Math.cos(angle) * speed
+            );
+            this.scene.add(mesh);
+            this.sparkParticles.push({
+                mesh,
+                vel,
+                life: 0.6,
+                maxLife: 0.6
+            });
+        }
+    }
 }

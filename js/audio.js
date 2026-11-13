@@ -577,6 +577,106 @@ class DarkSoulsAudio {
     }
 
     // ----------------------------------------------------
+    // SFX: UNIQUE BOSS AUDIO (Gargoyle, Capra, Sif, Gwyn)
+    // ----------------------------------------------------
+    playWolfHowl() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(540, now + 0.4);
+        osc.frequency.exponentialRampToValueAtTime(320, now + 1.2);
+        osc.frequency.exponentialRampToValueAtTime(180, now + 2.0);
+
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.55, now + 0.35);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 2.1);
+
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start(now);
+        osc.stop(now + 2.2);
+    }
+
+    playFireBreath() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        const dur = 1.2;
+        const b = this.ctx.createBuffer(1, this.ctx.sampleRate * dur, this.ctx.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * (i / d.length));
+
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = b;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(450, now);
+        filter.Q.setValueAtTime(2.5, now);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.linearRampToValueAtTime(0.65, now + 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.sfxGain);
+        noise.start(now);
+    }
+
+    playBellToll() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        [174.61, 349.23, 523.25, 698.46].forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+
+            gain.gain.setValueAtTime(0.4 / (idx + 1), now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+
+            osc.connect(gain);
+            gain.connect(this.sfxGain);
+            osc.start(now);
+            osc.stop(now + 3.0);
+        });
+    }
+
+    playSunlightFlame() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Radiant sunlight choir tone
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(293.66, now); // D4
+        osc.frequency.linearRampToValueAtTime(440, now + 0.5);
+
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.5, now + 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start(now);
+        osc.stop(now + 1.3);
+
+        this.playBossSlam();
+    }
+
+    // ----------------------------------------------------
     // BACKGROUND AMBIENT DRONE & MUSIC
     // ----------------------------------------------------
     startAmbientDrone() {
