@@ -20,7 +20,7 @@ class DarkSoulsGame {
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.15;
+        this.renderer.toneMappingExposure = 1.5; // High visibility clear lighting
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -35,6 +35,12 @@ class DarkSoulsGame {
         this.playerVelocity = new THREE.Vector3();
         this.moveSpeed = 4.8;
         this.sprintSpeed = 7.2;
+
+        // Player Lantern (Illuminates surroundings so visibility is never lost)
+        this.playerLantern = new THREE.PointLight(0xffe8ba, 2.0, 18, 1.4);
+        this.playerLantern.position.set(0, 1.2, 0.3);
+        this.playerMesh.add(this.playerLantern);
+        this.brightnessLevel = 0; // 0: Clear & High, 1: Ultra Bright, 2: Twilight
 
         // Camera Parameters
         this.cameraDistance = 4.2;
@@ -109,6 +115,9 @@ class DarkSoulsGame {
 
             if (e.code === 'KeyE') this.handleInteraction();
             if (e.code === 'KeyR' || e.code === 'Digit1') this.combat.tryDrinkEstus();
+            if (e.code === 'Digit2' || e.code === 'KeyX') this.cycleEquippedWeapon(1);
+            if (e.code === 'KeyZ') this.cycleEquippedWeapon(-1);
+            if (e.code === 'KeyC') this.openWeaponArsenalModal();
             if (e.code === 'KeyQ' || e.code === 'Tab') {
                 e.preventDefault();
                 this.combat.tryParry();
@@ -304,6 +313,7 @@ class DarkSoulsGame {
         bindTouchBtn('touch-btn-parry', () => this.combat.tryParry());
         bindTouchBtn('touch-btn-lockon', () => this.toggleLockOn());
         bindTouchBtn('touch-btn-interact', () => this.handleInteraction());
+        bindTouchBtn('touch-btn-weapon', () => this.cycleEquippedWeapon(1));
     }
 
     assistMobileAim() {
@@ -381,13 +391,15 @@ class DarkSoulsGame {
     handleInteraction() {
         const pPos = this.playerMesh.position;
 
-        // Check Bonfire
         for (const item of this.world.interactables) {
             const d = pPos.distanceTo(item.position);
             if (d <= item.radius) {
                 if (item.type === 'bonfire') {
                     this.combat.restAtBonfire();
                     this.openBonfireModal();
+                    return;
+                } else if (item.type === 'merchant') {
+                    this.openMerchantModal();
                     return;
                 } else if (item.type === 'fog_gate' && !this.world.fogTraversed) {
                     this.world.traverseFogGate();
@@ -397,6 +409,158 @@ class DarkSoulsGame {
                 }
             }
         }
+    }
+
+    openMerchantModal() {
+        const modal = document.getElementById('merchant-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateMerchantUI();
+            this.audio.playRoll();
+        }
+    }
+
+    closeMerchantModal() {
+        const modal = document.getElementById('merchant-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    openWeaponArsenalModal() {
+        const modal = document.getElementById('weapons-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateArsenalUI();
+            this.audio.playRoll();
+        }
+    }
+
+    closeWeaponArsenalModal() {
+        const modal = document.getElementById('weapons-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    cycleBrightness() {
+        this.brightnessLevel = (this.brightnessLevel || 0) + 1;
+        if (this.brightnessLevel > 2) this.brightnessLevel = 0;
+
+        const btn = document.getElementById('btn-brightness-toggle');
+        if (this.brightnessLevel === 0) {
+            this.renderer.toneMappingExposure = 1.5;
+            if (this.world.moonlight) this.world.moonlight.intensity = 1.45;
+            if (this.playerLantern) this.playerLantern.intensity = 2.0;
+            if (btn) btn.textContent = '☀️ CLEAR';
+            this.showNotification("LIGHTING: CLEAR & HIGH VISIBILITY");
+        } else if (this.brightnessLevel === 1) {
+            this.renderer.toneMappingExposure = 1.85;
+            if (this.world.moonlight) this.world.moonlight.intensity = 2.0;
+            if (this.playerLantern) this.playerLantern.intensity = 2.6;
+            if (btn) btn.textContent = '☀️ BRIGHT+';
+            this.showNotification("LIGHTING: ULTRA BRIGHT / DAYLIGHT");
+        } else {
+            this.renderer.toneMappingExposure = 1.25;
+            if (this.world.moonlight) this.world.moonlight.intensity = 1.1;
+            if (this.playerLantern) this.playerLantern.intensity = 1.4;
+            if (btn) btn.textContent = '🌙 TWILIGHT';
+            this.showNotification("LIGHTING: ATMOSPHERIC TWILIGHT");
+        }
+    }
+
+    cycleEquippedWeapon(dir = 1) {
+        if (!this.combat) return;
+        const unlocked = this.combat.unlockedWeapons;
+        if (!unlocked || unlocked.length <= 1) {
+            this.showNotification("ONLY 1 WEAPON OWNED &bull; VISIT UNDEAD MERCHANT");
+            return;
+        }
+
+        let idx = unlocked.indexOf(this.combat.currentWeaponId);
+        if (idx < 0) idx = 0;
+        idx = (idx + dir + unlocked.length) % unlocked.length;
+        this.combat.equipWeapon(unlocked[idx]);
+    }
+
+    updateWeaponHUD(wpn) {
+        if (!wpn) return;
+        const rightSlot = document.querySelector('.equipment-dpad .eq-right');
+        if (rightSlot) {
+            const iconSpan = rightSlot.querySelector('.eq-icon');
+            if (iconSpan) iconSpan.textContent = wpn.icon || '⚔️';
+            rightSlot.title = `${wpn.name} (Press 2 / X to switch)`;
+        }
+        const nameLabel = document.getElementById('active-weapon-name');
+        if (nameLabel) {
+            nameLabel.textContent = wpn.name;
+        }
+    }
+
+    updateMerchantUI() {
+        if (!this.combat) return;
+        const soulsEl = document.getElementById('merchant-souls-val');
+        if (soulsEl) soulsEl.textContent = this.combat.souls.toLocaleString();
+
+        const cards = document.querySelectorAll('.merchant-weapon-card');
+        cards.forEach(card => {
+            const wid = card.getAttribute('data-weapon-id');
+            const wpn = this.combat.weapons[wid];
+            if (!wpn) return;
+
+            const isOwned = this.combat.unlockedWeapons.includes(wid);
+            const isEquipped = this.combat.currentWeaponId === wid;
+            const btn = card.querySelector('.btn-merchant-action');
+            if (btn) {
+                if (isEquipped) {
+                    btn.textContent = 'EQUIPPED';
+                    btn.disabled = true;
+                    btn.style.borderColor = '#88ff88';
+                    btn.style.color = '#88ff88';
+                    btn.style.background = 'rgba(20, 80, 40, 0.4)';
+                } else if (isOwned) {
+                    btn.textContent = 'EQUIP';
+                    btn.disabled = false;
+                    btn.style.borderColor = '#ffd276';
+                    btn.style.color = '#ffd276';
+                    btn.style.background = 'rgba(70, 50, 20, 0.5)';
+                    btn.onclick = () => { this.combat.equipWeapon(wid); this.updateMerchantUI(); };
+                } else {
+                    btn.textContent = `BUY (${wpn.cost.toLocaleString()})`;
+                    btn.disabled = this.combat.souls < wpn.cost;
+                    btn.style.borderColor = this.combat.souls >= wpn.cost ? '#ffd276' : '#554433';
+                    btn.style.color = this.combat.souls >= wpn.cost ? '#fff' : '#887766';
+                    btn.style.background = this.combat.souls >= wpn.cost ? 'linear-gradient(180deg, #64441e 0%, #322008 100%)' : '#221a14';
+                    btn.onclick = () => { this.combat.buyWeapon(wid); };
+                }
+            }
+        });
+    }
+
+    updateArsenalUI() {
+        if (!this.combat) return;
+        const cards = document.querySelectorAll('.arsenal-weapon-card');
+        cards.forEach(card => {
+            const wid = card.getAttribute('data-weapon-id');
+            const isOwned = this.combat.unlockedWeapons.includes(wid);
+            const isEquipped = this.combat.currentWeaponId === wid;
+            const btn = card.querySelector('.btn-arsenal-equip');
+            if (btn) {
+                if (isEquipped) {
+                    btn.textContent = 'EQUIPPED';
+                    btn.disabled = true;
+                    btn.style.borderColor = '#88ff88';
+                    btn.style.color = '#88ff88';
+                } else if (isOwned) {
+                    btn.textContent = 'EQUIP';
+                    btn.disabled = false;
+                    btn.style.borderColor = '#ffd276';
+                    btn.style.color = '#ffd276';
+                    btn.onclick = () => { this.combat.equipWeapon(wid); this.updateArsenalUI(); };
+                } else {
+                    btn.textContent = 'LOCKED (BUY AT MERCHANT)';
+                    btn.disabled = true;
+                    btn.style.borderColor = '#443322';
+                    btn.style.color = '#776655';
+                }
+            }
+        });
     }
 
     openBonfireModal() {
@@ -965,6 +1129,8 @@ class DarkSoulsGame {
             maxEstus: this.combat.maxEstus,
             currentBossType: this.combat.currentBossType,
             defeatedBosses: this.combat.defeatedBosses || [],
+            currentWeaponId: this.combat.currentWeaponId || 'sword',
+            unlockedWeapons: this.combat.unlockedWeapons || ['sword'],
             playerPos: {
                 x: Number(this.playerMesh.position.x.toFixed(2)),
                 y: Number(this.playerMesh.position.y.toFixed(2)),
@@ -1020,6 +1186,14 @@ class DarkSoulsGame {
             // Restore active boss
             if (data.currentBossType) {
                 this.combat.spawnBoss(data.currentBossType);
+            }
+
+            // Restore unlocked weapons & equipped weapon
+            if (Array.isArray(data.unlockedWeapons)) {
+                this.combat.unlockedWeapons = data.unlockedWeapons;
+            }
+            if (data.currentWeaponId && this.combat.weapons[data.currentWeaponId]) {
+                this.combat.equipWeapon(data.currentWeaponId);
             }
 
             this.updateHUD();

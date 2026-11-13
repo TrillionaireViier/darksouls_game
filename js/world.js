@@ -21,6 +21,7 @@ class DarkSoulsWorld {
         this.buildLighting();
         this.buildEnvironment();
         this.buildBonfire();
+        this.buildMerchant();
         this.buildFogGate();
         this.buildAtmosphere();
     }
@@ -479,28 +480,42 @@ class DarkSoulsWorld {
     }
 
     buildLighting() {
-        // Dark moody ambient light
-        const ambient = new THREE.AmbientLight(0x181c24, 0.45);
+        // High-visibility atmospheric ambient fill (eliminates pitch black shadows)
+        const ambient = new THREE.AmbientLight(0x758094, 1.05);
         this.scene.add(ambient);
 
-        // Cold Lordran moonlight from above
-        this.moonlight = new THREE.DirectionalLight(0x7c90aa, 0.7);
-        this.moonlight.position.set(30, 45, 20);
+        // Sky and ground bounce lighting for crisp 3D depth and volume
+        const hemiLight = new THREE.HemisphereLight(0xa5bde0, 0x544a3e, 0.95);
+        this.scene.add(hemiLight);
+
+        // Radiant Lordran moonlight from above
+        this.moonlight = new THREE.DirectionalLight(0xdde8fa, 1.45);
+        this.moonlight.position.set(35, 60, 25);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 2048;
         this.moonlight.shadow.mapSize.height = 2048;
         this.moonlight.shadow.camera.near = 0.5;
-        this.moonlight.shadow.camera.far = 120;
-        const d = 45;
+        this.moonlight.shadow.camera.far = 280;
+        const d = 75;
         this.moonlight.shadow.camera.left = -d;
         this.moonlight.shadow.camera.right = d;
         this.moonlight.shadow.camera.top = d;
         this.moonlight.shadow.camera.bottom = -d;
-        this.moonlight.shadow.bias = -0.0005;
+        this.moonlight.shadow.bias = -0.0003;
         this.scene.add(this.moonlight);
 
-        // World fog
-        this.scene.fog = new THREE.FogExp2(0x0a0908, 0.024);
+        // Linear distance fog: 100% crisp visibility up to 45m, subtle atmospheric falloff beyond
+        this.scene.fog = new THREE.Fog(0x18202c, 45, 260);
+
+        // Perimeter courtyard torches for clear visibility across starting zone
+        const courtyardTorches = [
+            [-18, 3, -18], [18, 3, -18],
+            [-18, 3, 18], [18, 3, 18],
+            [-24, 3, 0], [24, 3, 0]
+        ];
+        courtyardTorches.forEach(([tx, ty, tz]) => {
+            this.createTorch(tx, ty, tz);
+        });
     }
 
     buildEnvironment() {
@@ -745,6 +760,133 @@ class DarkSoulsWorld {
             position: new THREE.Vector3(0, 0, 0),
             radius: 3.5,
             prompt: '[ E ] REST AT BONFIRE'
+        });
+    }
+
+    // ----------------------------------------------------
+    // UNDEAD MERCHANT NPC (LORDRAN PEDDLER)
+    // ----------------------------------------------------
+    buildMerchant() {
+        const merchantGroup = new THREE.Group();
+
+        // 1. Merchant Rug / Blanket spread on flagstones
+        const rugGeo = new THREE.PlaneGeometry(3.6, 3.6);
+        const rugMat = new THREE.MeshStandardMaterial({
+            color: 0x4e2016, // Crimson patterned carpet
+            roughness: 0.92,
+            metalness: 0.05
+        });
+        const rug = new THREE.Mesh(rugGeo, rugMat);
+        rug.rotation.x = -Math.PI / 2;
+        rug.position.y = 0.02;
+        rug.receiveShadow = true;
+        merchantGroup.add(rug);
+
+        // 2. Wares Crates & Merchandise Barrels
+        const crate1 = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.85, 0.9), this.woodMat);
+        crate1.position.set(-1.1, 0.42, -0.6);
+        crate1.rotation.y = 0.15;
+        crate1.castShadow = true;
+        crate1.receiveShadow = true;
+        merchantGroup.add(crate1);
+
+        const crate2 = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.65, 0.75), this.woodMat);
+        crate2.position.set(-1.0, 1.15, -0.5);
+        crate2.rotation.y = -0.25;
+        crate2.castShadow = true;
+        merchantGroup.add(crate2);
+
+        // Display Weapons leaning against crates
+        const displayZwei = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.2, 0.22), this.ironMat);
+        displayZwei.position.set(-0.65, 0.9, -0.2);
+        displayZwei.rotation.z = -0.32;
+        displayZwei.castShadow = true;
+        merchantGroup.add(displayZwei);
+
+        const displayKatana = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.8, 6), this.ironMat);
+        displayKatana.position.set(-0.55, 0.8, -0.35);
+        displayKatana.rotation.z = -0.25;
+        displayKatana.castShadow = true;
+        merchantGroup.add(displayKatana);
+
+        // Glowing Merchant Lantern on the crate
+        const lanternLight = new THREE.PointLight(0xffa834, 2.4, 14, 1.4);
+        lanternLight.position.set(-1.0, 1.6, -0.5);
+        merchantGroup.add(lanternLight);
+
+        const lanternMesh = new THREE.Mesh(
+            new THREE.DodecahedronGeometry(0.18),
+            new THREE.MeshBasicMaterial({ color: 0xffcc66 })
+        );
+        lanternMesh.position.set(-1.0, 1.6, -0.5);
+        merchantGroup.add(lanternMesh);
+
+        // 3. Merchant NPC Figure (Sitting on low wooden stool)
+        const npcGroup = new THREE.Group();
+        npcGroup.position.set(0.3, 0, 0);
+
+        // Stool
+        const stool = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.35, 8), this.woodMat);
+        stool.position.y = 0.18;
+        npcGroup.add(stool);
+
+        // Sitting legs & boots
+        const legs = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.35, 0.55), new THREE.MeshStandardMaterial({ color: 0x362b22, roughness: 0.8 }));
+        legs.position.set(0, 0.25, 0.15);
+        legs.castShadow = true;
+        npcGroup.add(legs);
+
+        // Torso with weathered traveler's coat
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.72, 0.42), new THREE.MeshStandardMaterial({ color: 0x5a4230, roughness: 0.85 }));
+        torso.position.y = 0.72;
+        torso.castShadow = true;
+        npcGroup.add(torso);
+
+        // Crimson shawl / scarf
+        const scarf = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.22, 0.46), new THREE.MeshStandardMaterial({ color: 0x7c241c, roughness: 0.9 }));
+        scarf.position.y = 1.0;
+        npcGroup.add(scarf);
+
+        // Head
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.35, 0.32), new THREE.MeshStandardMaterial({ color: 0xb59e82, roughness: 0.8 }));
+        head.position.y = 1.28;
+        head.castShadow = true;
+        npcGroup.add(head);
+
+        // Wide-brimmed merchant pilgrim hat
+        const hatBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.58, 0.58, 0.04, 14), new THREE.MeshStandardMaterial({ color: 0x261d16, roughness: 0.8 }));
+        hatBrim.position.y = 1.48;
+        npcGroup.add(hatBrim);
+
+        const hatCone = new THREE.Mesh(new THREE.ConeGeometry(0.35, 0.42, 10), new THREE.MeshStandardMaterial({ color: 0x261d16, roughness: 0.8 }));
+        hatCone.position.y = 1.68;
+        npcGroup.add(hatCone);
+
+        // Arms resting forward on knees
+        const armL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.48, 0.14), new THREE.MeshStandardMaterial({ color: 0x5a4230, roughness: 0.85 }));
+        armL.position.set(-0.32, 0.55, 0.16);
+        armL.rotation.x = 0.42;
+        npcGroup.add(armL);
+
+        const armR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.48, 0.14), new THREE.MeshStandardMaterial({ color: 0x5a4230, roughness: 0.85 }));
+        armR.position.set(0.32, 0.55, 0.16);
+        armR.rotation.x = 0.42;
+        npcGroup.add(armR);
+
+        merchantGroup.add(npcGroup);
+
+        // Position merchant in Courtyard near the bonfire
+        merchantGroup.position.set(-8.5, 0, 3.5);
+        merchantGroup.rotation.y = Math.PI / 4;
+        this.scene.add(merchantGroup);
+        this.merchantGroup = merchantGroup;
+
+        // Register interactable
+        this.interactables.push({
+            type: 'merchant',
+            position: new THREE.Vector3(-8.5, 0, 3.5),
+            radius: 3.5,
+            prompt: '[ E ] TALK TO UNDEAD MERCHANT'
         });
     }
 

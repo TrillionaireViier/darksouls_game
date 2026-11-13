@@ -52,6 +52,116 @@ class DarkSoulsCombat {
         this.currentBossType = 'taurus';
         this.defeatedBosses = [];
 
+        // Weapon Arsenal System (6 Distinct Weapons)
+        this.weapons = {
+            sword: {
+                id: 'sword',
+                name: 'Astora Straight Sword',
+                type: 'Straight Sword',
+                icon: '⚔️',
+                desc: 'Balanced divine straight sword. Fast responsive slashes with moderate stamina cost.',
+                lightDmg: 150,
+                heavyDmg: 280,
+                reach: 2.8,
+                bossReachBonus: 1.8,
+                lightStamina: 20,
+                heavyStamina: 34,
+                speedMultiplier: 1.0,
+                poiseBreak: 1.0,
+                cost: 0,
+                unlocked: true
+            },
+            zweihander: {
+                id: 'zweihander',
+                name: 'Zweihander',
+                type: 'Ultra Greatsword',
+                icon: '🗡️',
+                desc: 'Colossal two-handed greatsword. Massive reach, obliterates enemy poise, and flattens hollows.',
+                lightDmg: 260,
+                heavyDmg: 490,
+                reach: 4.4,
+                bossReachBonus: 3.2,
+                lightStamina: 35,
+                heavyStamina: 52,
+                speedMultiplier: 0.8,
+                poiseBreak: 2.8,
+                cost: 2500,
+                unlocked: false
+            },
+            uchigatana: {
+                id: 'uchigatana',
+                name: 'Uchigatana',
+                type: 'Katana',
+                icon: '🎌',
+                desc: 'Deft eastern curved blade. Ultra-swift lacerating slashes and high critical backstab damage.',
+                lightDmg: 175,
+                heavyDmg: 320,
+                reach: 3.2,
+                bossReachBonus: 2.2,
+                lightStamina: 15,
+                heavyStamina: 26,
+                speedMultiplier: 1.35,
+                poiseBreak: 0.9,
+                cost: 3500,
+                unlocked: false
+            },
+            halberd: {
+                id: 'halberd',
+                name: 'Black Knight Halberd',
+                type: 'Polearm',
+                icon: '🔱',
+                desc: 'Demon-hunting halberd. Extreme striking reach lets you cleave enemies from safe distance.',
+                lightDmg: 210,
+                heavyDmg: 390,
+                reach: 4.8,
+                bossReachBonus: 3.8,
+                lightStamina: 26,
+                heavyStamina: 42,
+                speedMultiplier: 0.95,
+                poiseBreak: 1.8,
+                cost: 5000,
+                unlocked: false
+            },
+            dragontooth: {
+                id: 'dragontooth',
+                name: 'Dragon Tooth',
+                type: 'Great Hammer',
+                icon: '🦴',
+                desc: 'Colossal prehistoric dragon tooth club. Crushing blunt impacts trigger ground shockwaves.',
+                lightDmg: 310,
+                heavyDmg: 580,
+                reach: 3.9,
+                bossReachBonus: 2.9,
+                lightStamina: 44,
+                heavyStamina: 62,
+                speedMultiplier: 0.72,
+                poiseBreak: 3.4,
+                cost: 6500,
+                unlocked: false
+            },
+            moonlight: {
+                id: 'moonlight',
+                name: 'Moonlight Greatsword',
+                type: 'Sorcery Greatsword',
+                icon: '✨',
+                desc: 'Seath the Scaleless\'s luminous crystal relic. Heavy attack unleashes glowing crescent moonlight wave.',
+                lightDmg: 230,
+                heavyDmg: 440,
+                reach: 4.0,
+                bossReachBonus: 3.0,
+                lightStamina: 24,
+                heavyStamina: 38,
+                speedMultiplier: 1.05,
+                poiseBreak: 1.9,
+                cost: 10000,
+                unlocked: false
+            }
+        };
+        this.currentWeaponId = 'sword';
+        this.unlockedWeapons = ['sword'];
+        this.charcoalResinTimer = 0;
+        this.projectiles = [];
+
         this.bossRoster = [
             {
                 id: 'taurus',
@@ -224,7 +334,9 @@ class DarkSoulsCombat {
     // ----------------------------------------------------
     tryLightAttack() {
         if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
-        if (this.stamina < 20) return;
+        const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
+        const stamCost = wpn.lightStamina || 20;
+        if (this.stamina < stamCost) return;
 
         // Check if looking at an enemy who is Riposteable (Counter-attack / Visceral Strike)
         const riposteTarget = this.getRiposteTarget();
@@ -245,32 +357,40 @@ class DarkSoulsCombat {
             this.isAttacking = true;
             this.attackCombo = 1;
             this.attackTime = 0;
-            this.stamina = Math.max(0, this.stamina - 22);
-            this.staminaDelay = 0.5;
+            this.stamina = Math.max(0, this.stamina - stamCost);
+            this.staminaDelay = 0.45;
             this.audio.playSwing(false);
-            this.checkAttackHits(150, 1.2);
-        } else if (this.attackTime > 0.22 && this.attackCombo === 1) {
+            this.checkAttackHits(wpn.lightDmg, wpn.poiseBreak, wpn.reach, wpn.bossReachBonus);
+        } else if (this.attackTime > (0.22 / (wpn.speedMultiplier || 1.0)) && this.attackCombo === 1) {
             // Buffer combo 2
             this.attackCombo = 2;
             this.attackTime = 0;
-            this.stamina = Math.max(0, this.stamina - 24);
+            this.stamina = Math.max(0, this.stamina - Math.round(stamCost * 1.1));
             this.staminaDelay = 0.5;
             this.audio.playSwing(false);
-            this.checkAttackHits(170, 1.4);
+            this.checkAttackHits(Math.round(wpn.lightDmg * 1.15), wpn.poiseBreak * 1.2, wpn.reach + 0.2, wpn.bossReachBonus + 0.2);
         }
     }
 
     tryHeavyAttack() {
         if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
-        if (this.stamina < 35) return;
+        const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
+        const stamCost = wpn.heavyStamina || 34;
+        if (this.stamina < stamCost) return;
 
         this.isAttacking = true;
         this.attackCombo = 3; // Heavy thrust / overhead
         this.attackTime = 0;
-        this.stamina = Math.max(0, this.stamina - 36);
-        this.staminaDelay = 0.7;
+        this.stamina = Math.max(0, this.stamina - stamCost);
+        this.staminaDelay = 0.65;
         this.audio.playSwing(true);
-        this.checkAttackHits(280, 2.0);
+        this.checkAttackHits(wpn.heavyDmg, wpn.poiseBreak * 1.5, wpn.reach + 0.4, wpn.bossReachBonus + 0.4);
+
+        if (this.currentWeaponId === 'moonlight') {
+            this.fireMoonlightBeam();
+        } else if (this.currentWeaponId === 'dragontooth') {
+            this.triggerShockwave();
+        }
     }
 
     tryBlock(isDown) {
@@ -426,33 +546,35 @@ class DarkSoulsCombat {
         }
     }
 
-    checkAttackHits(baseDamage, poiseDmg) {
+    checkAttackHits(baseDamage, poiseDmg = 1.0, reach = 2.8, bossBonus = 1.8) {
         const playerPos = this.game.playerMesh.position;
         const playerRot = this.game.playerMesh.rotation.y;
         const forward = new THREE.Vector3(Math.sin(playerRot), 0, Math.cos(playerRot));
 
-        // Damage boost from strength stat
-        const totalDmg = Math.round(baseDamage * (1 + (this.strength - 10) * 0.12));
+        // Damage boost from strength stat + optional pine resin fire buff
+        let totalDmg = Math.round(baseDamage * (1 + (this.strength - 10) * 0.12));
+        if (this.charcoalResinTimer > 0) {
+            totalDmg += 60; // Fire Pine Resin buff!
+        }
 
         // 1. Check Hollow Soldiers
         for (const e of this.enemies) {
             if (e.isDead) continue;
             const toEnemy = new THREE.Vector3().subVectors(e.mesh.position, playerPos);
             const dist = toEnemy.length();
-            if (dist < 2.8) {
+            if (dist < reach) {
                 const angle = forward.dot(toEnemy.normalize());
-                if (angle > 0.35) { // In front arc
+                if (angle > 0.30) { // In front arc
                     e.hp -= totalDmg;
                     this.audio.playHit(this.attackCombo === 3);
                     this.world.spawnBlood(e.mesh.position);
-                    this.world.spawnHitSparks(e.mesh.position, false);
-                    this.game.showDamageNumber(e.mesh.position, totalDmg, false);
-                    this.game.shakeCamera(0.12, 0.15);
+                    this.world.spawnHitSparks(e.mesh.position, this.attackCombo === 3);
+                    this.game.showDamageNumber(e.mesh.position, totalDmg, this.currentWeaponId === 'uchigatana');
+                    this.game.shakeCamera(0.12 * poiseDmg, 0.15);
 
                     if (e.hp <= 0) {
                         this.killEnemy(e);
                     } else {
-                        // Stagger hollow
                         e.isStaggered = true;
                         e.staggerTimer = 0.5 * poiseDmg;
                     }
@@ -464,18 +586,17 @@ class DarkSoulsCombat {
         if (this.boss && !this.boss.isDead) {
             const toBoss = new THREE.Vector3().subVectors(this.boss.mesh.position, playerPos);
             const dist = toBoss.length();
-            const hitThreshold = (this.boss.radius || 2.4) + 1.8;
+            const hitThreshold = (this.boss.radius || 2.4) + bossBonus;
             if (dist < hitThreshold) {
                 const angle = forward.dot(toBoss.normalize());
-                if (angle > 0.15) {
+                if (angle > 0.12) {
                     this.boss.hp -= totalDmg;
                     this.audio.playHit(true);
                     this.world.spawnHitSparks(this.boss.mesh.position, true);
                     this.world.spawnBlood(this.boss.mesh.position);
                     this.game.showDamageNumber(this.boss.mesh.position, totalDmg, false);
-                    this.game.shakeCamera(0.18, 0.2);
+                    this.game.shakeCamera(0.18 * poiseDmg, 0.2);
 
-                    // Check Phase 2 (below 50% HP)
                     if (this.boss.hp <= this.boss.maxHp * 0.5 && !this.boss.isPhase2) {
                         this.triggerBossPhase2();
                     }
@@ -485,6 +606,181 @@ class DarkSoulsCombat {
                     }
                 }
             }
+        }
+    }
+
+    // ----------------------------------------------------
+    // WEAPONS ARSENAL MANAGEMENT & MERCHANT SHOP
+    // ----------------------------------------------------
+    equipWeapon(weaponId) {
+        if (!this.weapons[weaponId]) return false;
+        if (!this.unlockedWeapons.includes(weaponId)) {
+            this.game.showNotification("WEAPON LOCKED &bull; VISIT UNDEAD MERCHANT");
+            return false;
+        }
+
+        this.currentWeaponId = weaponId;
+        const wpn = this.weapons[weaponId];
+
+        if (this.game && this.game.charFactory && this.game.playerMesh) {
+            this.game.charFactory.attachWeaponToPlayer(this.game.playerMesh, weaponId);
+        }
+
+        if (this.game && this.game.updateWeaponHUD) {
+            this.game.updateWeaponHUD(wpn);
+        }
+
+        this.audio.playRoll();
+        this.game.showNotification(`EQUIPPED: ${wpn.name.toUpperCase()} (${wpn.icon})`);
+
+        if (this.game && this.game.saveGame) {
+            this.game.saveGame(false);
+        }
+        return true;
+    }
+
+    buyWeapon(weaponId) {
+        const wpn = this.weapons[weaponId];
+        if (!wpn) return false;
+
+        if (this.unlockedWeapons.includes(weaponId)) {
+            // Already owned, just equip
+            return this.equipWeapon(weaponId);
+        }
+
+        if (this.souls < wpn.cost) {
+            this.game.showNotification("INSUFFICIENT SOULS TO PURCHASE");
+            return false;
+        }
+
+        this.souls -= wpn.cost;
+        this.unlockedWeapons.push(weaponId);
+        this.audio.playBonfireIgnite();
+        this.game.showNotification(`PURCHASED: ${wpn.name.toUpperCase()}`);
+        this.equipWeapon(weaponId);
+
+        if (this.game && this.game.updateMerchantUI) {
+            this.game.updateMerchantUI();
+        }
+        return true;
+    }
+
+    buyItem(itemId) {
+        if (itemId === 'estus_shard') {
+            const cost = 1500;
+            if (this.souls < cost) {
+                this.game.showNotification("INSUFFICIENT SOULS");
+                return false;
+            }
+            this.souls -= cost;
+            this.maxEstus += 1;
+            this.estusFlasks = this.maxEstus;
+            this.audio.playBonfireIgnite();
+            this.game.showNotification(`ESTUS SHARD REINFORCED &bull; MAX FLASKS: ${this.maxEstus}`);
+        } else if (itemId === 'divine_blessing') {
+            const cost = 800;
+            if (this.souls < cost) {
+                this.game.showNotification("INSUFFICIENT SOULS");
+                return false;
+            }
+            this.souls -= cost;
+            this.hp = this.maxHp;
+            this.stamina = this.maxStamina;
+            this.audio.playEstusDrink();
+            this.game.showNotification("DIVINE BLESSING CONSUMED &bull; FULL HP & STAMINA RESTORED");
+        } else if (itemId === 'charcoal_resin') {
+            const cost = 500;
+            if (this.souls < cost) {
+                this.game.showNotification("INSUFFICIENT SOULS");
+                return false;
+            }
+            this.souls -= cost;
+            this.applyCharcoalResin();
+        } else if (itemId === 'homeward_bone') {
+            const cost = 300;
+            if (this.souls < cost) {
+                this.game.showNotification("INSUFFICIENT SOULS");
+                return false;
+            }
+            this.souls -= cost;
+            this.useHomewardBone();
+        }
+
+        if (this.game && this.game.updateHUD) {
+            this.game.updateHUD();
+        }
+        if (this.game && this.game.updateMerchantUI) {
+            this.game.updateMerchantUI();
+        }
+        if (this.game && this.game.saveGame) {
+            this.game.saveGame(false);
+        }
+        return true;
+    }
+
+    applyCharcoalResin() {
+        this.charcoalResinTimer = 45;
+        this.audio.playBonfireIgnite();
+        this.game.showNotification("CHARCOAL PINE RESIN APPLIED (+60 FIRE DMG FOR 45s)");
+    }
+
+    useHomewardBone() {
+        this.audio.playBonfireIgnite();
+        this.game.showNotification("HOMEWARD BONE: RETURNING TO BONFIRE");
+        this.game.playerMesh.position.set(0, 0, 5);
+        this.hp = this.maxHp;
+        this.estusFlasks = this.maxEstus;
+        this.stamina = this.maxStamina;
+        this.spawnEnemies();
+    }
+
+    fireMoonlightBeam() {
+        const playerPos = this.game.playerMesh.position.clone().add(new THREE.Vector3(0, 1.2, 0));
+        const rot = this.game.playerMesh.rotation.y;
+        const dir = new THREE.Vector3(Math.sin(rot), 0, Math.cos(rot)).normalize();
+
+        // 3D Crescent Moon Wave Mesh
+        const beamMat = new THREE.MeshBasicMaterial({ color: 0x55ffff, transparent: true, opacity: 0.9 });
+        const beamGeo = new THREE.TorusGeometry(0.8, 0.08, 6, 16, Math.PI);
+        const beam = new THREE.Mesh(beamGeo, beamMat);
+        beam.position.copy(playerPos).add(dir.clone().multiplyScalar(0.8));
+        beam.rotation.y = rot - Math.PI / 2;
+        beam.rotation.x = Math.PI / 2;
+        this.game.scene.add(beam);
+
+        const beamLight = new THREE.PointLight(0x00ffff, 2.5, 10);
+        beam.add(beamLight);
+
+        this.projectiles.push({
+            mesh: beam,
+            dir: dir,
+            speed: 18,
+            life: 1.6,
+            damage: 260
+        });
+
+        this.audio.playSunlightFlame(); // Cosmic swish
+    }
+
+    triggerShockwave() {
+        const pPos = this.game.playerMesh.position;
+        this.game.shakeCamera(0.4, 0.35);
+
+        // Ground dust ring
+        for (let i = 0; i < 16; i++) {
+            const angle = (i / 16) * Math.PI * 2;
+            const dust = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.2),
+                new THREE.MeshBasicMaterial({ color: 0x6e5c46, transparent: true, opacity: 0.7 })
+            );
+            dust.position.set(pPos.x + Math.cos(angle) * 1.5, 0.2, pPos.z + Math.sin(angle) * 1.5);
+            this.game.scene.add(dust);
+            this.world.sparkParticles.push({
+                mesh: dust,
+                vel: new THREE.Vector3(Math.cos(angle) * 4, 1.2, Math.sin(angle) * 4),
+                life: 0.45,
+                maxLife: 0.45
+            });
         }
     }
 
@@ -718,6 +1014,53 @@ class DarkSoulsCombat {
     // ----------------------------------------------------
     update(delta) {
         if (this.isDead) return;
+
+        // Pine Resin Fire Buff Timer
+        if (this.charcoalResinTimer > 0) {
+            this.charcoalResinTimer -= delta;
+        }
+
+        // Projectiles Update (Moonlight Beam waves)
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+            const p = this.projectiles[i];
+            p.life -= delta;
+            p.mesh.position.addScaledVector(p.dir, p.speed * delta);
+
+            // Check hit against boss
+            if (this.boss && !this.boss.isDead) {
+                const d = p.mesh.position.distanceTo(this.boss.mesh.position);
+                if (d < (this.boss.radius || 2.4) + 1.2) {
+                    this.boss.hp -= p.damage;
+                    this.game.showDamageNumber(this.boss.mesh.position, p.damage, true);
+                    this.world.spawnHitSparks(p.mesh.position, true);
+                    this.game.scene.remove(p.mesh);
+                    this.projectiles.splice(i, 1);
+                    if (this.boss.hp <= 0) this.killBoss();
+                    continue;
+                }
+            }
+
+            // Check hit against hollows
+            let hitHollow = false;
+            for (const e of this.enemies) {
+                if (!e.isDead && p.mesh.position.distanceTo(e.mesh.position) < 1.8) {
+                    e.hp -= p.damage;
+                    this.game.showDamageNumber(e.mesh.position, p.damage, true);
+                    this.world.spawnHitSparks(e.mesh.position, true);
+                    this.game.scene.remove(p.mesh);
+                    this.projectiles.splice(i, 1);
+                    if (e.hp <= 0) this.killEnemy(e);
+                    hitHollow = true;
+                    break;
+                }
+            }
+            if (hitHollow) continue;
+
+            if (p.life <= 0) {
+                this.game.scene.remove(p.mesh);
+                this.projectiles.splice(i, 1);
+            }
+        }
 
         // 1. Stamina Regeneration
         if (this.staminaDelay > 0) {

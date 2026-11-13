@@ -308,6 +308,210 @@ class DarkSoulsCharacters {
             color: 0xdedee4,
             roughness: 0.9
         });
+
+        // ----------------------------------------------------
+        // ARSENAL WEAPON MATERIALS
+        // ----------------------------------------------------
+        this.moonlightMat = new THREE.MeshStandardMaterial({
+            color: 0x55eeff,
+            emissive: 0x00aacc,
+            emissiveIntensity: 1.5,
+            roughness: 0.12,
+            metalness: 0.35,
+            transparent: true,
+            opacity: 0.92
+        });
+
+        this.dragonToothMat = new THREE.MeshStandardMaterial({
+            color: 0xd8ceb8,
+            roughness: 0.82,
+            metalness: 0.1
+        });
+
+        this.katanaBladeMat = new THREE.MeshStandardMaterial({
+            color: 0xf5f8fc,
+            metalness: 0.97,
+            roughness: 0.12
+        });
+
+        this.halberdShaftMat = new THREE.MeshStandardMaterial({
+            color: 0x1c1916,
+            roughness: 0.78,
+            metalness: 0.25
+        });
+    }
+
+    // ----------------------------------------------------
+    // ARSENAL WEAPON FACTORY (6 ICONIC WEAPONS)
+    // ----------------------------------------------------
+    createWeaponMesh(weaponId = 'sword') {
+        const root = new THREE.Group();
+
+        if (weaponId === 'zweihander') {
+            // Colossal Ultra Greatsword
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.65, 8), this.leatherMat);
+            hilt.position.y = -0.25;
+            root.add(hilt);
+
+            const pommel = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.025, 6, 12), this.darkSteelMat);
+            pommel.position.y = -0.58;
+            root.add(pommel);
+
+            const guard = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.08, 0.1), this.darkSteelMat);
+            guard.position.y = 0.08;
+            root.add(guard);
+
+            // Side Parrying Lugs (Parierhaken)
+            const lugL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.04), this.darkSteelMat);
+            lugL.position.set(-0.24, 0.55, 0);
+            lugL.rotation.z = 0.3;
+            root.add(lugL);
+            const lugR = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.04), this.darkSteelMat);
+            lugR.position.set(0.24, 0.55, 0);
+            lugR.rotation.z = -0.3;
+            root.add(lugR);
+
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.22, 2.1, 0.04), this.bladeMat);
+            blade.position.y = 1.15;
+            blade.castShadow = true;
+            root.add(blade);
+
+            const tip = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.32, 4), this.bladeMat);
+            tip.position.y = 2.36;
+            tip.rotation.y = Math.PI / 4;
+            root.add(tip);
+
+        } else if (weaponId === 'uchigatana') {
+            // Eastern Katana
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.45, 8), this.darkSteelMat);
+            hilt.position.y = -0.2;
+            root.add(hilt);
+
+            const pommel = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.03, 0.04, 8), this.goldTrimMat);
+            pommel.position.y = -0.42;
+            root.add(pommel);
+
+            const tsuba = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.025, 16), this.goldTrimMat);
+            tsuba.position.y = 0.03;
+            root.add(tsuba);
+
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.065, 1.45, 0.02), this.katanaBladeMat);
+            blade.position.set(0.04, 0.75, 0);
+            blade.rotation.z = -0.04;
+            blade.castShadow = true;
+            root.add(blade);
+
+            const tip = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.18, 4), this.katanaBladeMat);
+            tip.position.set(0.08, 1.55, 0);
+            tip.rotation.z = -0.15;
+            root.add(tip);
+
+        } else if (weaponId === 'halberd') {
+            // Black Knight Halberd
+            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 2.5, 8), this.halberdShaftMat);
+            shaft.position.y = 0.6;
+            root.add(shaft);
+
+            const butt = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.2, 6), this.darkSteelMat);
+            butt.position.y = -0.75;
+            butt.rotation.x = Math.PI;
+            root.add(butt);
+
+            const axeHead = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.55, 0.04), this.darkSteelMat);
+            axeHead.position.set(0.24, 1.7, 0);
+            axeHead.castShadow = true;
+            root.add(axeHead);
+
+            const beak = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.3, 4), this.darkSteelMat);
+            beak.position.set(-0.2, 1.7, 0);
+            beak.rotation.z = Math.PI / 2;
+            root.add(beak);
+
+            const spearSpike = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.6, 4), this.bladeMat);
+            spearSpike.position.y = 2.15;
+            root.add(spearSpike);
+
+        } else if (weaponId === 'dragontooth') {
+            // Colossal Dragon Tooth Greathammer
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.7, 8), this.darkSteelMat);
+            hilt.position.y = -0.25;
+            root.add(hilt);
+
+            const tooth = new THREE.Mesh(new THREE.ConeGeometry(0.35, 1.9, 8), this.dragonToothMat);
+            tooth.position.y = 0.95;
+            tooth.castShadow = true;
+            root.add(tooth);
+
+            const band1 = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.05, 6, 12), this.darkSteelMat);
+            band1.position.y = 0.35;
+            band1.rotation.x = Math.PI / 2;
+            root.add(band1);
+
+            const band2 = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.04, 6, 12), this.darkSteelMat);
+            band2.position.y = 0.75;
+            band2.rotation.x = Math.PI / 2;
+            root.add(band2);
+
+        } else if (weaponId === 'moonlight') {
+            // Moonlight Greatsword (Seath's Sorcery Blade)
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.45, 8), this.darkSteelMat);
+            hilt.position.y = -0.15;
+            root.add(hilt);
+
+            const guard = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.08, 0.1), this.moonlightMat);
+            guard.position.y = 0.1;
+            root.add(guard);
+
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.7, 0.04), this.moonlightMat);
+            blade.position.y = 0.98;
+            blade.castShadow = true;
+            root.add(blade);
+
+            const tip = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.28, 4), this.moonlightMat);
+            tip.position.y = 1.96;
+            tip.rotation.y = Math.PI / 4;
+            root.add(tip);
+
+            // Magical Ambient Aura Light
+            const glowLight = new THREE.PointLight(0x00ccff, 2.0, 7, 1.5);
+            glowLight.position.y = 1.0;
+            root.add(glowLight);
+
+        } else {
+            // Astora Straight Sword (Default)
+            const guard = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.06, 0.08), this.goldTrimMat);
+            root.add(guard);
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.25, 8), this.leatherMat);
+            hilt.position.y = -0.14;
+            root.add(hilt);
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.25, 0.03), this.bladeMat);
+            blade.position.y = 0.68;
+            blade.castShadow = true;
+            root.add(blade);
+            const tip = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.2, 4), this.bladeMat);
+            tip.position.y = 1.38;
+            tip.rotation.y = Math.PI / 4;
+            root.add(tip);
+        }
+
+        root.userData = { weaponId };
+        return root;
+    }
+
+    attachWeaponToPlayer(playerMesh, weaponId) {
+        if (!playerMesh || !playerMesh.userData || !playerMesh.userData.rHand) return;
+        const rHand = playerMesh.userData.rHand;
+
+        while (rHand.children.length > 0) {
+            rHand.remove(rHand.children[0]);
+        }
+
+        const newWeapon = this.createWeaponMesh(weaponId);
+        newWeapon.rotation.x = Math.PI / 2;
+        newWeapon.position.set(0, 0, 0);
+        rHand.add(newWeapon);
+
+        playerMesh.userData.swordGroup = newWeapon;
     }
 
     // ----------------------------------------------------
@@ -365,30 +569,12 @@ class DarkSoulsCharacters {
         rArm.position.y = -0.22;
         rightShoulder.add(rArm);
 
-        // Right Hand / Longsword
+        // Right Hand / Weapon
         const rHand = new THREE.Group();
         rHand.position.y = -0.42;
         rightShoulder.add(rHand);
 
-        const swordGroup = new THREE.Group();
-        // Crossguard
-        const guard = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.06, 0.08), this.goldTrimMat);
-        swordGroup.add(guard);
-        // Hilt
-        const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.25, 8), this.leatherMat);
-        hilt.position.y = -0.14;
-        swordGroup.add(hilt);
-        // Blade
-        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.25, 0.03), this.bladeMat);
-        blade.position.y = 0.68;
-        blade.castShadow = true;
-        swordGroup.add(blade);
-        // Tip
-        const tip = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.2, 4), this.bladeMat);
-        tip.position.y = 1.38;
-        tip.rotation.y = Math.PI / 4;
-        swordGroup.add(tip);
-
+        const swordGroup = this.createWeaponMesh('sword');
         swordGroup.rotation.x = Math.PI / 2;
         rHand.add(swordGroup);
 

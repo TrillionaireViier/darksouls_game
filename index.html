@@ -887,6 +887,7 @@
         #touch-btn-parry    { grid-column: 3; grid-row: 2; border-color: rgba(200, 180, 70, 0.7); }
         #touch-btn-estus    { grid-column: 1; grid-row: 3; border-color: rgba(80, 200, 100, 0.7); color: #9effb8; }
         #touch-btn-roll     { grid-column: 2; grid-row: 3; border-color: rgba(100, 180, 255, 0.85); color: #c2e2ff; background: rgba(16, 26, 42, 0.85); }
+        #touch-btn-weapon   { grid-column: 3; grid-row: 3; border-color: rgba(255, 215, 120, 0.75); color: #ffd778; }
 
         @media (max-width: 800px) {
             #mobile-touch-overlay { display: block; }
@@ -975,6 +976,9 @@
                 <span>📦</span> DOWNLOAD GAME
             </button>
             <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ BOSS ROSTER</button>
+            <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ WEAPONS</button>
+            <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 MERCHANT</button>
+            <button class="btn-icon-bar" id="btn-brightness-toggle" onclick="toggleBrightness()" title="Lighting & Exposure Toggle (High Visibility)">☀️ CLEAR</button>
             <button class="btn-icon-bar" id="btn-save-header" onclick="manualSaveGame()" title="Save your journey to local memory (Auto-saves on Bonfire rest & boss defeat)" style="border-color: #ffd276; color: #ffd276;">💾 SAVE</button>
             <button class="btn-icon-bar btn-load-save" id="btn-load-header" onclick="manualLoadGame()" title="Load your saved journey from local memory" style="border-color: #88ccff; color: #88ccff;">📂 LOAD</button>
             <button class="btn-icon-bar" onclick="openControlsModal()">CONTROLS</button>
@@ -1014,7 +1018,7 @@
             <div class="eq-slot eq-left active" title="Heater Shield">
                 <span class="eq-icon">🛡️</span>
             </div>
-            <div class="eq-slot eq-right active" title="Astora Straight Sword">
+            <div class="eq-slot eq-right active" onclick="cycleWeapon()" title="Equipped Weapon (Click to cycle, or press 2 / X)" style="cursor: pointer; border-color: #ffd276;">
                 <span class="eq-icon">⚔️</span>
             </div>
             <div class="eq-slot eq-bottom active" title="Estus Flask (Press R or 1)">
@@ -1225,6 +1229,238 @@
         </div>
     </div>
 
+    <!-- UNDEAD MERCHANT MODAL -->
+    <div id="merchant-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 680px;">
+            <div class="modal-header">🛒 UNDEAD MERCHANT &bull; LORDRAN PEDDLER</div>
+            <div style="background: rgba(28, 20, 14, 0.85); border: 1px solid #4a3622; padding: 12px 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; border-radius: 4px;">
+                <div style="font-size: 2.2rem;">🧙‍♂️</div>
+                <div style="font-family: 'EB Garamond', serif; font-size: 0.98rem; color: #d6c6b2; font-style: italic; line-height: 1.45;">
+                    &ldquo;Heh heh heh... Well, what have we here? An Undead with his wits intact! Care for a weapon, friend? Steel and miracles are the only currency that buys tomorrow in Lordran.&rdquo;
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(12, 10, 8, 0.7); padding: 8px 14px; border: 1px solid #3d2c1c; margin-bottom: 12px;">
+                <span style="font-size: 0.82rem; color: #ffd276; letter-spacing: 1.5px; font-weight: 700;">YOUR SOULS PURSE:</span>
+                <span style="font-size: 1.15rem; color: #fff; font-weight: 700; text-shadow: 0 0 10px #88ccff;"><span id="merchant-souls-val">0</span> SOULS</span>
+            </div>
+
+            <!-- Merchant Catalogue List -->
+            <div class="boss-cards-grid" style="max-height: 52vh;">
+                <!-- Weapon: Zweihander -->
+                <div class="boss-card merchant-weapon-card" data-weapon-id="zweihander">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ZWEIHANDER</div>
+                            <div class="boss-card-desc">Colossal Ultra Greatsword &bull; Extreme reach, crushes enemy poise and flattens hollows</div>
+                            <div class="boss-card-stats">DMG: 260 / 490 &bull; REACH: 4.4m &bull; STAMINA: 35 &bull; COST: 2,500 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-merchant-action">BUY (2,500)</button>
+                </div>
+
+                <!-- Weapon: Uchigatana -->
+                <div class="boss-card merchant-weapon-card" data-weapon-id="uchigatana">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🎌</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">UCHIGATANA</div>
+                            <div class="boss-card-desc">Eastern Katana &bull; Lacerating rapid slashes (1.35x speed) with deadly backstab crits</div>
+                            <div class="boss-card-stats">DMG: 175 / 320 &bull; SPEED: 1.35x &bull; STAMINA: 15 &bull; COST: 3,500 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-merchant-action">BUY (3,500)</button>
+                </div>
+
+                <!-- Weapon: Black Knight Halberd -->
+                <div class="boss-card merchant-weapon-card" data-weapon-id="halberd">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔱</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">BLACK KNIGHT HALBERD</div>
+                            <div class="boss-card-desc">Lordran Polearm &bull; Colossal 4.8m attack reach allows striking from safe distance</div>
+                            <div class="boss-card-stats">DMG: 210 / 390 &bull; REACH: 4.8m &bull; STAMINA: 26 &bull; COST: 5,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-merchant-action">BUY (5,000)</button>
+                </div>
+
+                <!-- Weapon: Dragon Tooth -->
+                <div class="boss-card merchant-weapon-card" data-weapon-id="dragontooth">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦴</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DRAGON TOOTH</div>
+                            <div class="boss-card-desc">Everlasting Dragon Tooth &bull; Heavy attack triggers crushing ground shockwaves</div>
+                            <div class="boss-card-stats">DMG: 310 / 580 &bull; POISE: 3.4x &bull; STAMINA: 44 &bull; COST: 6,500 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-merchant-action">BUY (6,500)</button>
+                </div>
+
+                <!-- Weapon: Moonlight Greatsword -->
+                <div class="boss-card merchant-weapon-card" data-weapon-id="moonlight">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">✨</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">MOONLIGHT GREATSWORD</div>
+                            <div class="boss-card-desc">Seath's Luminous Relic &bull; Heavy attack fires crescent moon magical beam wave</div>
+                            <div class="boss-card-stats">DMG: 230 / 440 &bull; BEAM: 260 MAGIC &bull; COST: 10,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-merchant-action">BUY (10,000)</button>
+                </div>
+
+                <!-- Consumable: Estus Shard -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🧪</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ESTUS FLASK SHARD</div>
+                            <div class="boss-card-desc">Ancient glass fragment &bull; Permanently increases Max Estus Flask capacity (+1)</div>
+                            <div class="boss-card-stats">PERMANENT UPGRADE &bull; COST: 1,500 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="buyMerchantItem('estus_shard')" style="border-color: #55aa66; color: #aaffaa; background: rgba(20, 60, 30, 0.4);">UPGRADE (1,500)</button>
+                </div>
+
+                <!-- Consumable: Divine Blessing -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🛡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DIVINE BLESSING</div>
+                            <div class="boss-card-desc">Holy water of Goddess Gwynevere &bull; Instantly restores 100% HP and Stamina</div>
+                            <div class="boss-card-stats">FULL RESTORATION &bull; COST: 800 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="buyMerchantItem('divine_blessing')" style="border-color: #66aacc; color: #aadcff; background: rgba(20, 40, 70, 0.4);">BUY (800)</button>
+                </div>
+
+                <!-- Consumable: Charcoal Pine Resin -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">CHARCOAL PINE RESIN</div>
+                            <div class="boss-card-desc">Imbues right-hand weapon with blazing fire &bull; +60 Fire Damage for 45 seconds</div>
+                            <div class="boss-card-stats">FLAME BUFF &bull; COST: 500 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="buyMerchantItem('charcoal_resin')" style="border-color: #cc6633; color: #ffb888; background: rgba(60, 30, 15, 0.4);">BUY (500)</button>
+                </div>
+
+                <!-- Consumable: Homeward Bone -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦴</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">HOMEWARD BONE</div>
+                            <div class="boss-card-desc">White ash bone &bull; Return safely to the Bonfire from anywhere in Lordran</div>
+                            <div class="boss-card-stats">WARP TO BONFIRE &bull; COST: 300 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="buyMerchantItem('homeward_bone')" style="border-color: #ccaa44; color: #fff0aa; background: rgba(50, 40, 15, 0.4);">BUY (300)</button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeMerchantModal()">FAREWELL</button>
+        </div>
+    </div>
+
+    <!-- WEAPONS ARSENAL MODAL -->
+    <div id="weapons-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 660px;">
+            <div class="modal-header">⚔️ WEAPONS ARSENAL &bull; EQUIPMENT</div>
+            <p style="font-size: 0.9rem; color: #b8a896; line-height: 1.5; text-align: center;">
+                Select any unlocked weapon to immediately equip into your right hand. You can also cycle owned weapons in real-time by pressing <strong style="color: #ffd276;">[ 2 ]</strong> or <strong style="color: #ffd276;">[ X ]</strong>!
+            </p>
+
+            <div class="boss-cards-grid" style="max-height: 52vh;">
+                <!-- Weapon 1: Astora Straight Sword -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="sword">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚔️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ASTORA STRAIGHT SWORD</div>
+                            <div class="boss-card-desc">Starting divine blade &bull; Balanced slashes, moderate stamina usage</div>
+                            <div class="boss-card-stats">DMG: 150 / 280 &bull; REACH: 2.8m &bull; SPEED: 1.0x &bull; DEFAULT WEAPON</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('sword')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 2: Zweihander -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="zweihander">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ZWEIHANDER</div>
+                            <div class="boss-card-desc">Colossal Ultra Greatsword &bull; Massive reach, obliterates poise</div>
+                            <div class="boss-card-stats">DMG: 260 / 490 &bull; REACH: 4.4m &bull; SPEED: 0.8x &bull; STAMINA: 35</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('zweihander')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 3: Uchigatana -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="uchigatana">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🎌</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">UCHIGATANA</div>
+                            <div class="boss-card-desc">Eastern Katana &bull; Lacerating rapid slashes (1.35x speed), deadly backstab crits</div>
+                            <div class="boss-card-stats">DMG: 175 / 320 &bull; REACH: 3.2m &bull; SPEED: 1.35x &bull; STAMINA: 15</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('uchigatana')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 4: Black Knight Halberd -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="halberd">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔱</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">BLACK KNIGHT HALBERD</div>
+                            <div class="boss-card-desc">Lordran Polearm &bull; Colossal 4.8m attack reach allows striking from distance</div>
+                            <div class="boss-card-stats">DMG: 210 / 390 &bull; REACH: 4.8m &bull; SPEED: 0.95x &bull; STAMINA: 26</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('halberd')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 5: Dragon Tooth -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="dragontooth">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦴</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DRAGON TOOTH</div>
+                            <div class="boss-card-desc">Colossal Dragon Greathammer &bull; Heavy attack triggers ground shockwave burst</div>
+                            <div class="boss-card-stats">DMG: 310 / 580 &bull; POISE: 3.4x &bull; SPEED: 0.72x &bull; STAMINA: 44</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('dragontooth')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 6: Moonlight Greatsword -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="moonlight">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">✨</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">MOONLIGHT GREATSWORD</div>
+                            <div class="boss-card-desc">Luminous Sorcery Blade &bull; Heavy attack releases crescent moonlight wave</div>
+                            <div class="boss-card-stats">DMG: 230 / 440 &bull; BEAM: 260 MAGIC &bull; SPEED: 1.05x &bull; STAMINA: 24</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('moonlight')">EQUIP</button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeWeaponArsenalModal()">CLOSE</button>
+        </div>
+    </div>
+
     <!-- DOWNLOAD GAME MODAL -->
     <div id="download-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 620px;">
@@ -1277,16 +1513,18 @@
                 <div><span class="key-badge">Mouse</span> Orbit Camera</div>
                 <div><span class="key-badge">LMB / J</span> Light Attack Combo</div>
                 <div><span class="key-badge">RMB / K</span> Shield Block (Hold)</div>
+                <div><span class="key-badge">2 / X</span> Cycle Equipped Weapon</div>
+                <div><span class="key-badge">C</span> Open Weapon Arsenal</div>
+                <div><span class="key-badge">E</span> Interact (Bonfire, Merchant, Fog)</div>
                 <div><span class="key-badge">Q / Tab</span> Shield Parry</div>
                 <div><span class="key-badge">Space / Shift</span> Перекат / Dodge Roll (i-frames)</div>
                 <div><span class="key-badge">Space (Neutral)</span> Backstep / Отскок назад</div>
                 <div><span class="key-badge">Roll Cancel</span> Cancel attack recovery into roll</div>
-                <div><span class="key-badge">E</span> Interact (Bonfire, Fog)</div>
                 <div><span class="key-badge">R / 1</span> Drink Estus Flask</div>
                 <div><span class="key-badge">F / MMB</span> Lock-on Target</div>
                 <div><span class="key-badge">Backstab</span> Attack directly behind enemy</div>
                 <div><span class="key-badge">Riposte</span> Critical hit after parry</div>
-                <div><span class="key-badge">Bonfire</span> Restores HP/Estus, choose boss</div>
+                <div><span class="key-badge">☀️ Button</span> Adjust Lighting & Exposure</div>
             </div>
             <button class="btn-modal-close" onclick="closeControlsModal()">RESUME BATTLE</button>
         </div>
@@ -1307,6 +1545,7 @@
             <button class="touch-action-btn" id="touch-btn-parry">⚡<br>Parry</button>
             <button class="touch-action-btn" id="touch-btn-estus">🧪<br>Estus</button>
             <button class="touch-action-btn" id="touch-btn-roll">🌀<br>Roll</button>
+            <button class="touch-action-btn" id="touch-btn-weapon">⚔️<br>Swap</button>
         </div>
     </div>
 
@@ -1332,6 +1571,43 @@
             if (window.game) {
                 if (window.game.closeBonfireModal) window.game.closeBonfireModal();
                 window.game.selectBoss(bossId);
+            }
+        }
+
+        function openMerchantModal() {
+            if (window.game) window.game.openMerchantModal();
+        }
+
+        function closeMerchantModal() {
+            if (window.game) window.game.closeMerchantModal();
+        }
+
+        function openWeaponArsenalModal() {
+            if (window.game) window.game.openWeaponArsenalModal();
+        }
+
+        function closeWeaponArsenalModal() {
+            if (window.game) window.game.closeWeaponArsenalModal();
+        }
+
+        function toggleBrightness() {
+            if (window.game) window.game.cycleBrightness();
+        }
+
+        function cycleWeapon() {
+            if (window.game) window.game.cycleEquippedWeapon(1);
+        }
+
+        function equipArsenalWeapon(weaponId) {
+            if (window.game && window.game.combat) {
+                window.game.combat.equipWeapon(weaponId);
+                window.game.updateArsenalUI();
+            }
+        }
+
+        function buyMerchantItem(itemId) {
+            if (window.game && window.game.combat) {
+                window.game.combat.buyItem(itemId);
             }
         }
 

@@ -66,6 +66,26 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
 ---
 
 ## 🔥 Features
+- **Undead Merchant & Wares Shop (Торговец Нежити)**:
+  - Atmospheric NPC merchant seated on an oriental rug by crates of wares and a golden lantern near the Bonfire.
+  - Interactive prompt `[ E ] TALK TO UNDEAD MERCHANT` opening the authentic Peddler Shop with dialogue.
+  - Sells iconic weapons, permanent Estus Shard upgrades (+1 max flasks), Divine Blessings, Charcoal Pine Resin (fire buff), and Homeward Bones.
+
+- **Weapons Arsenal System (6 Легендарных Оружий)**:
+  - **Astora Straight Sword**: Balanced divine blade, fast responsive slashes.
+  - **Zweihander**: Colossal ultra greatsword, massive 4.4m reach, devastating poise stagger.
+  - **Uchigatana**: Eastern curved katana with 1.35x attack speed and high backstab crits.
+  - **Black Knight Halberd**: Extreme 4.8m attack reach for striking enemies from safe distance.
+  - **Dragon Tooth**: Prehistoric fossilized dragon tooth club triggering ground shockwave bursts.
+  - **Moonlight Greatsword**: Luminous crystal relic unleashing glowing crescent moonlight projectile waves on heavy attacks.
+  - Real-time cycling via **[ 2 ] / [ X ]**, equipment D-pad click, or **`⚔️ WEAPONS`** header menu.
+
+- **High-Visibility Lighting & Brightness Toggle (Улучшенная Видимость)**:
+  - Eliminated pitch-black voids with warm-cool hemisphere fill light, bright moonlight (`1.45`), and linear distance fog (45m crystal clear).
+  - Attached player lantern providing 360° personal illumination wherever you explore.
+  - Added perimeter courtyard braziers and brighter torch illumination.
+  - Added header **`☀️ CLEAR / BRIGHT+ / TWILIGHT`** lighting toggle button.
+
 - **Save & Load Progress System (Архив Путешествия)**:
   - Persistent save state stored directly in browser local storage (`localStorage`).
   - **Auto-Save**: Triggers automatically on Bonfire rest, boss defeat, and stat upgrades.
