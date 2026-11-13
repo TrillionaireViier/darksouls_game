@@ -1,0 +1,25 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "4.24",
+	"Category": "Games",
+	"Description": "Dark Souls 3D Action RPG project for Unreal Engine 4.22 - 4.24 featuring stamina-based combat, dodge rolls with i-frames, 5 Lordran bosses, bonfires, and procedural combat system.",
+	"Modules": [
+		{
+			"Name": "DarkSoulsGame",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"CoreUObject",
+				"UMG"
+			]
+		}
+	],
+	"TargetPlatforms": [
+		"WindowsNoEditor",
+		"LinuxNoEditor",
+		"MacNoEditor",
+		"Android",
+		"IOS"
+	]
+}

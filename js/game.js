@@ -170,66 +170,164 @@ class DarkSoulsGame {
         const joyStick = document.getElementById('touch-joystick-stick');
         if (!joyBase || !joyStick) return;
 
+        let joyTouchId = null;
         let startX = 0, startY = 0;
         const maxDist = 45;
 
+        let lookTouchId = null;
+        let lastLookX = 0, lastLookY = 0;
+
+        // 1. Joystick touch start
         joyBase.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            e.stopPropagation();
+            if (joyTouchId !== null) return;
+            const touch = e.changedTouches[0];
+            joyTouchId = touch.identifier;
             this.touchJoyActive = true;
-            const touch = e.touches[0];
             const rect = joyBase.getBoundingClientRect();
             startX = rect.left + rect.width / 2;
             startY = rect.top + rect.height / 2;
+            if (navigator.vibrate) navigator.vibrate(8);
         }, { passive: false });
 
-        window.addEventListener('touchmove', (e) => {
-            if (!this.touchJoyActive) return;
-            const touch = e.touches[0];
-            let dx = touch.clientX - startX;
-            let dy = touch.clientY - startY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
+        // 2. Camera Touch Drag: touch anywhere outside joystick and buttons
+        window.addEventListener('touchstart', (e) => {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                const touch = e.changedTouches[i];
+                if (touch.identifier === joyTouchId) continue;
 
-            if (dist > maxDist) {
-                dx = (dx / dist) * maxDist;
-                dy = (dy / dist) * maxDist;
+                // Check if touch is on joystick, buttons, top-header, or modal
+                const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (target && (target.closest('#touch-joystick-base') || target.closest('#touch-buttons-cluster') || target.closest('#top-header') || target.closest('.modal-overlay'))) {
+                    continue;
+                }
+
+                if (lookTouchId === null) {
+                    lookTouchId = touch.identifier;
+                    lastLookX = touch.clientX;
+                    lastLookY = touch.clientY;
+                }
             }
+        }, { passive: true });
 
-            joyStick.style.transform = `translate(${dx}px, ${dy}px)`;
-            this.touchJoyVector.set(dx / maxDist, dy / maxDist);
-        });
+        // 3. TouchMove for both Joystick and Camera Look
+        window.addEventListener('touchmove', (e) => {
+            for (let i = 0; i < e.touches.length; i++) {
+                const touch = e.touches[i];
 
-        const resetJoy = () => {
-            this.touchJoyActive = false;
-            this.touchJoyVector.set(0, 0);
-            joyStick.style.transform = `translate(0px, 0px)`;
+                // Joystick movement
+                if (this.touchJoyActive && touch.identifier === joyTouchId) {
+                    let dx = touch.clientX - startX;
+                    let dy = touch.clientY - startY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist > maxDist) {
+                        dx = (dx / dist) * maxDist;
+                        dy = (dy / dist) * maxDist;
+                    }
+
+                    joyStick.style.transform = `translate(${dx}px, ${dy}px)`;
+                    this.touchJoyVector.set(dx / maxDist, dy / maxDist);
+                }
+
+                // Camera Look Drag
+                if (touch.identifier === lookTouchId) {
+                    const deltaX = touch.clientX - lastLookX;
+                    const deltaY = touch.clientY - lastLookY;
+                    lastLookX = touch.clientX;
+                    lastLookY = touch.clientY;
+
+                    const sensitivity = 0.0055;
+                    this.cameraYaw -= deltaX * sensitivity;
+                    this.cameraPitch = Math.max(-0.25, Math.min(1.2, this.cameraPitch + deltaY * sensitivity));
+                }
+            }
+        }, { passive: false });
+
+        const onTouchEnd = (e) => {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                const touch = e.changedTouches[i];
+                if (touch.identifier === joyTouchId) {
+                    joyTouchId = null;
+                    this.touchJoyActive = false;
+                    this.touchJoyVector.set(0, 0);
+                    joyStick.style.transform = `translate(0px, 0px)`;
+                }
+                if (touch.identifier === lookTouchId) {
+                    lookTouchId = null;
+                }
+            }
         };
-        window.addEventListener('touchend', resetJoy);
-        window.addEventListener('touchcancel', resetJoy);
 
-        // Mobile Buttons
+        window.addEventListener('touchend', onTouchEnd, { passive: true });
+        window.addEventListener('touchcancel', onTouchEnd, { passive: true });
+
+        // 4. Mobile Buttons with tactile feedback and aim assist
         const bindTouchBtn = (id, onDown, onUp) => {
             const btn = document.getElementById(id);
             if (!btn) return;
             btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                if (navigator.vibrate) navigator.vibrate(12);
                 if (onDown) onDown();
             }, { passive: false });
             if (onUp) {
                 btn.addEventListener('touchend', (e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     onUp();
                 }, { passive: false });
             }
         };
 
-        bindTouchBtn('touch-btn-attack', () => this.combat.tryLightAttack());
-        bindTouchBtn('touch-btn-heavy', () => this.combat.tryHeavyAttack());
+        bindTouchBtn('touch-btn-attack', () => {
+            this.assistMobileAim();
+            this.combat.tryLightAttack();
+        });
+        bindTouchBtn('touch-btn-heavy', () => {
+            this.assistMobileAim();
+            this.combat.tryHeavyAttack();
+        });
         bindTouchBtn('touch-btn-block', () => this.combat.tryBlock(true), () => this.combat.tryBlock(false));
         bindTouchBtn('touch-btn-roll', () => this.triggerRoll());
         bindTouchBtn('touch-btn-estus', () => this.combat.tryDrinkEstus());
         bindTouchBtn('touch-btn-parry', () => this.combat.tryParry());
         bindTouchBtn('touch-btn-lockon', () => this.toggleLockOn());
         bindTouchBtn('touch-btn-interact', () => this.handleInteraction());
+    }
+
+    assistMobileAim() {
+        if (this.combat.lockedTarget) return;
+        let closest = null;
+        let closestDist = 9.0;
+        const playerPos = this.playerMesh.position;
+
+        if (this.combat.boss && !this.combat.boss.isDead && this.combat.boss.mesh) {
+            const dist = playerPos.distanceTo(this.combat.boss.mesh.position);
+            if (dist < closestDist) {
+                closest = this.combat.boss.mesh;
+                closestDist = dist;
+            }
+        }
+
+        if (this.combat.enemies) {
+            for (const enemy of this.combat.enemies) {
+                if (!enemy.isDead && enemy.mesh) {
+                    const dist = playerPos.distanceTo(enemy.mesh.position);
+                    if (dist < closestDist) {
+                        closest = enemy.mesh;
+                        closestDist = dist;
+                    }
+                }
+            }
+        }
+
+        if (closest) {
+            const targetAngle = Math.atan2(closest.position.x - playerPos.x, closest.position.z - playerPos.z);
+            this.playerMesh.rotation.y = targetAngle;
+        }
     }
 
     triggerRoll() {

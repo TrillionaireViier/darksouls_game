@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>DARK SOULS: The Undead Burg & Taurus Demon &bull; Playable Web & Desktop Game</title>
     
     <!-- Authentic Dark Souls Gothic Fonts -->
@@ -46,12 +46,16 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         #game-container canvas {
             display: block;
             width: 100% !important;
             height: 100% !important;
+            touch-action: none;
         }
 
         /* Top Bar & Download Header */
@@ -583,13 +587,25 @@
             background: #110e0c;
             border: 2px solid #523f2a;
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(45, 32, 20, 0.4);
-            padding: 35px 45px;
+            padding: 30px 38px;
             max-width: 580px;
             width: 90%;
+            max-height: 86vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
             position: relative;
+        }
+
+        .modal-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-box::-webkit-scrollbar-thumb {
+            background: #523f2a;
+            border-radius: 3px;
         }
 
         .modal-header {
@@ -781,20 +797,24 @@
             z-index: 50;
             pointer-events: none;
             display: none; /* Auto-enabled on touch */
+            touch-action: none;
         }
 
         /* Touch Joystick */
         #touch-joystick-base {
             position: absolute;
-            bottom: 40px;
-            left: 40px;
+            bottom: 35px;
+            left: 30px;
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: rgba(20, 16, 14, 0.45);
-            border: 2px solid rgba(160, 130, 80, 0.4);
+            background: rgba(20, 16, 14, 0.55);
+            border: 2px solid rgba(196, 154, 69, 0.45);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(196, 154, 69, 0.15);
             pointer-events: auto;
             touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -804,9 +824,9 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: rgba(210, 170, 90, 0.65);
+            background: radial-gradient(circle, #ffe18d 0%, #c49a45 70%, #75551f 100%);
             border: 2px solid #ffda73;
-            box-shadow: 0 0 10px rgba(255, 218, 115, 0.5);
+            box-shadow: 0 0 12px rgba(255, 218, 115, 0.6);
             pointer-events: none;
             transition: transform 0.05s ease-out;
         }
@@ -814,58 +834,113 @@
         /* Touch Action Buttons */
         #touch-buttons-cluster {
             position: absolute;
-            bottom: 30px;
-            right: 25px;
+            bottom: 25px;
+            right: 20px;
             display: grid;
-            grid-template-columns: repeat(3, 58px);
-            grid-template-rows: repeat(3, 58px);
-            gap: 10px;
+            grid-template-columns: repeat(3, 56px);
+            grid-template-rows: repeat(3, 56px);
+            gap: 9px;
             pointer-events: none;
+            touch-action: none;
         }
 
         .touch-action-btn {
-            background: rgba(18, 14, 12, 0.75);
-            border: 1px solid rgba(180, 140, 80, 0.6);
+            width: 56px;
+            height: 56px;
+            background: rgba(18, 14, 12, 0.82);
+            border: 1.5px solid rgba(196, 154, 69, 0.6);
             border-radius: 50%;
-            color: #ffda73;
+            color: #ffd276;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-family: 'Cinzel', serif;
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             font-weight: 700;
             pointer-events: auto;
-            touch-action: manipulation;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), inset 0 0 8px rgba(196, 154, 69, 0.2);
+            transition: transform 0.08s ease, background 0.08s ease;
         }
 
         .touch-action-btn:active {
-            background: rgba(180, 140, 70, 0.5);
+            background: rgba(196, 154, 69, 0.55);
             transform: scale(0.92);
         }
 
         /* Button grid mapping */
-        #touch-btn-lockon   { grid-column: 1; grid-row: 1; }
-        #touch-btn-heavy    { grid-column: 2; grid-row: 1; }
-        #touch-btn-interact { grid-column: 3; grid-row: 1; }
+        #touch-btn-lockon   { grid-column: 1; grid-row: 1; border-color: rgba(120, 160, 220, 0.7); color: #aadcff; }
+        #touch-btn-heavy    { grid-column: 2; grid-row: 1; border-color: rgba(220, 100, 60, 0.7); color: #ffb088; }
+        #touch-btn-interact { grid-column: 3; grid-row: 1; border-color: rgba(255, 140, 40, 0.7); color: #ffd080; }
         #touch-btn-block    { grid-column: 1; grid-row: 2; }
-        #touch-btn-attack   { grid-column: 2; grid-row: 2; width: 66px; height: 66px; margin: -4px; border-color: #ffcc44; background: rgba(60, 40, 20, 0.85); font-size: 0.8rem; }
-        #touch-btn-parry    { grid-column: 3; grid-row: 2; }
-        #touch-btn-estus    { grid-column: 1; grid-row: 3; }
-        #touch-btn-roll     { grid-column: 2; grid-row: 3; }
+        #touch-btn-attack   { grid-column: 2; grid-row: 2; width: 64px; height: 64px; margin: -4px; border-color: #ffd276; background: linear-gradient(135deg, rgba(70, 45, 18, 0.9), rgba(35, 20, 8, 0.9)); font-size: 0.78rem; box-shadow: 0 0 16px rgba(255, 210, 118, 0.55); }
+        #touch-btn-parry    { grid-column: 3; grid-row: 2; border-color: rgba(200, 180, 70, 0.7); }
+        #touch-btn-estus    { grid-column: 1; grid-row: 3; border-color: rgba(80, 200, 100, 0.7); color: #9effb8; }
+        #touch-btn-roll     { grid-column: 2; grid-row: 3; border-color: rgba(100, 180, 255, 0.85); color: #c2e2ff; background: rgba(16, 26, 42, 0.85); }
 
         @media (max-width: 800px) {
             #mobile-touch-overlay { display: block; }
-            #top-header { padding: 8px 12px; }
-            .header-title { font-size: 1rem; }
+            #top-header { padding: 6px 10px; }
+            .header-title { font-size: 0.95rem; }
             .header-sub { display: none; }
-            .btn-download { padding: 6px 12px; font-size: 0.75rem; }
-            .bar-frame { width: 190px; height: 13px; }
-            .bar-label { width: 190px; }
+            .header-actions { gap: 6px; }
+            .btn-download { padding: 5px 9px; font-size: 0.7rem; }
+            .btn-icon-bar { padding: 5px 8px; font-size: 0.68rem; }
+            .bar-frame { width: 145px; height: 11px; }
+            .bar-label { width: 145px; font-size: 0.65rem; }
             .equipment-dpad { display: none; }
-            #player-hud { top: 55px; left: 12px; }
-            #souls-hud { bottom: 12px; right: 12px; padding: 6px 12px; }
+            #player-hud { top: 48px; left: 10px; gap: 4px; }
+            
+            /* Crucial: Move souls counter away from bottom-right attack buttons */
+            #souls-hud { 
+                top: 48px; 
+                right: 10px; 
+                bottom: auto; 
+                padding: 4px 10px; 
+                font-size: 0.8rem;
+            }
+
+            .modal-box {
+                padding: 20px 16px;
+                width: 94%;
+                max-height: 84vh;
+            }
+
+            .boss-cards-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            #touch-joystick-base {
+                bottom: 25px;
+                left: 15px;
+                width: 105px;
+                height: 105px;
+            }
+
+            #touch-buttons-cluster {
+                bottom: 20px;
+                right: 12px;
+                grid-template-columns: repeat(3, 49px);
+                grid-template-rows: repeat(3, 49px);
+                gap: 7px;
+            }
+
+            .touch-action-btn {
+                width: 49px;
+                height: 49px;
+                font-size: 0.58rem;
+            }
+
+            #touch-btn-attack {
+                width: 56px;
+                height: 56px;
+                margin: -3.5px;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -1131,33 +1206,38 @@
         <div class="modal-box" style="max-width: 620px;">
             <div class="modal-header">DOWNLOAD DARK SOULS</div>
             <p style="font-size: 0.95rem; color: #b8a896; line-height: 1.6; text-align: center;">
-                Choose your preferred engine or format. All packages include the full 3D game, all 5 boss battles, bonfire mechanics, and procedural combat system!
+                Choose your preferred engine or format. All packages include the full 3D game, all 5 boss battles, bonfire mechanics, dodge rolls with i-frames, and procedural combat system!
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
-                <!-- 1. Standalone Web & Desktop Build -->
-                <a href="/darksouls_game_standalone.zip" download="darksouls_game_standalone.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px;">
-                    <span>📦</span> DOWNLOAD STANDALONE BUILD (.ZIP)
+                <!-- 1. Unreal Engine 4 (UE 4.22–4.24) Project -->
+                <a href="/darksouls_unreal_ue4_project.zip" download="darksouls_unreal_ue4_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #102638 0%, #07131d 100%); border-color: #0099ff; color: #80d4ff; box-shadow: 0 0 16px rgba(0, 153, 255, 0.45);">
+                    <span>🔥</span> DOWNLOAD UNREAL ENGINE 4 (UE 4.22–4.24) PROJECT (.ZIP)
                 </a>
 
-                <!-- 2. Godot 4.x Project -->
-                <a href="/darksouls_godot_project.zip" download="darksouls_godot_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #1b2638 0%, #0d1520 100%); border-color: #478cbf; color: #9fd3ff; box-shadow: 0 0 15px rgba(71, 140, 191, 0.35);">
-                    <span>🎮</span> DOWNLOAD GODOT 4.X PROJECT (.ZIP)
-                </a>
-
-                <!-- 3. Unity 3D Project -->
+                <!-- 2. Unity 3D Project -->
                 <a href="/darksouls_unity_project.zip" download="darksouls_unity_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #2a1f2f 0%, #17101a 100%); border-color: #aa55cc; color: #e9bfff; box-shadow: 0 0 15px rgba(170, 85, 204, 0.35);">
                     <span>⚡</span> DOWNLOAD UNITY 3D PROJECT (.ZIP)
                 </a>
 
-                <!-- 4. GitHub Repository -->
+                <!-- 3. Standalone Web & Desktop Build -->
+                <a href="/darksouls_game_standalone.zip" download="darksouls_game_standalone.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px;">
+                    <span>📦</span> DOWNLOAD STANDALONE BUILD (.ZIP)
+                </a>
+
+                <!-- 4. Godot 4.x Project -->
+                <a href="/darksouls_godot_project.zip" download="darksouls_godot_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #1b2638 0%, #0d1520 100%); border-color: #478cbf; color: #9fd3ff; box-shadow: 0 0 15px rgba(71, 140, 191, 0.35);">
+                    <span>🎮</span> DOWNLOAD GODOT 4.X PROJECT (.ZIP)
+                </a>
+
+                <!-- 5. GitHub Repository -->
                 <a href="https://github.com/TrillionaireViier/darksouls_game" target="_blank" class="btn-icon-bar" style="text-align: center; padding: 11px;">
                     <span>🐙</span> VIEW GITHUB REPOSITORY & ALL SOURCE CODE
                 </a>
             </div>
 
             <div style="font-size: 0.8rem; color: #7a6e62; text-align: center; margin-top: 8px;">
-                Compatible with Windows, macOS, Linux &bull; Full C# & GDScript source code included!
+                Compatible with Unreal Engine 4.22–4.24, Unity 2020–2023, Godot 4 &bull; Full C++ & C# source code included!
             </div>
 
             <button class="btn-modal-close" onclick="closeDownloadModal()">CLOSE</button>
@@ -1266,11 +1346,15 @@
             }
         }
 
-        // Auto detect touch screen and enable mobile overlay
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-            const overlay = document.getElementById('mobile-touch-overlay');
-            if (overlay) overlay.style.display = 'block';
+        // Auto detect touch screen or mobile screen size and enable mobile overlay
+        function checkMobileOverlay() {
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 800) {
+                const overlay = document.getElementById('mobile-touch-overlay');
+                if (overlay) overlay.style.display = 'block';
+            }
         }
+        checkMobileOverlay();
+        window.addEventListener('resize', checkMobileOverlay);
     </script>
 
     <!-- Game Scripts -->
