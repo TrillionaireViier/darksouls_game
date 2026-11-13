@@ -128,25 +128,25 @@ class DarkSoulsCharacters {
 
         this.steelMat = new THREE.MeshStandardMaterial({
             map: armorTex,
-            color: 0x9ba2aa,
-            metalness: 0.9,
-            roughness: 0.28
+            color: 0xd8e2ec, // Bright polished Astora steel
+            metalness: 0.85,
+            roughness: 0.24
         });
 
         this.darkSteelMat = new THREE.MeshStandardMaterial({
             map: armorTex,
-            color: 0x363a40,
-            metalness: 0.92,
-            roughness: 0.35
+            color: 0x828c98, // Polished dark steel
+            metalness: 0.88,
+            roughness: 0.3
         });
 
         this.clothMat = new THREE.MeshStandardMaterial({
-            color: 0x182434, // Astora navy blue
-            roughness: 0.88
+            color: 0x245484, // Radiant Astora royal blue
+            roughness: 0.82
         });
 
         this.leatherMat = new THREE.MeshStandardMaterial({
-            color: 0x3d271d,
+            color: 0x6e4e3a, // Saddle brown leather
             roughness: 0.72
         });
 

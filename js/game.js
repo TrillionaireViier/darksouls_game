@@ -20,7 +20,7 @@ class DarkSoulsGame {
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.5; // High visibility clear lighting
+        this.renderer.toneMappingExposure = 2.1; // Brilliant high visibility daylight exposure
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -36,11 +36,22 @@ class DarkSoulsGame {
         this.moveSpeed = 4.8;
         this.sprintSpeed = 7.2;
 
-        // Player Lantern (Illuminates surroundings so visibility is never lost)
-        this.playerLantern = new THREE.PointLight(0xffe8ba, 2.0, 18, 1.4);
-        this.playerLantern.position.set(0, 1.2, 0.3);
+        // Player Overhead Lantern (Illuminates 360-degree surroundings with warm golden light)
+        this.playerLantern = new THREE.PointLight(0xfff0d4, 3.2, 30, 1.2);
+        this.playerLantern.position.set(0, 2.4, 0);
         this.playerMesh.add(this.playerLantern);
-        this.brightnessLevel = 0; // 0: Clear & High, 1: Ultra Bright, 2: Twilight
+
+        // Player Back Fill Light (Ensures player's armor is gleaming from behind the camera)
+        this.playerBackLight = new THREE.PointLight(0xddeeff, 2.2, 18, 1.4);
+        this.playerBackLight.position.set(0, 1.4, -1.2);
+        this.playerMesh.add(this.playerBackLight);
+
+        // Camera Headlight (Shines forward from camera perspective so dark voids are eliminated)
+        this.cameraLight = new THREE.DirectionalLight(0xeaf4ff, 1.2);
+        this.camera.add(this.cameraLight);
+        this.scene.add(this.camera);
+
+        this.brightnessLevel = 0; // 0: Daylight, 1: Ultra+, 2: Clear Twilight
 
         // Camera Parameters
         this.cameraDistance = 4.2;
@@ -445,23 +456,29 @@ class DarkSoulsGame {
 
         const btn = document.getElementById('btn-brightness-toggle');
         if (this.brightnessLevel === 0) {
-            this.renderer.toneMappingExposure = 1.5;
-            if (this.world.moonlight) this.world.moonlight.intensity = 1.45;
-            if (this.playerLantern) this.playerLantern.intensity = 2.0;
-            if (btn) btn.textContent = '☀️ CLEAR';
-            this.showNotification("LIGHTING: CLEAR & HIGH VISIBILITY");
+            this.renderer.toneMappingExposure = 2.1;
+            if (this.world.moonlight) this.world.moonlight.intensity = 2.6;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.9;
+            if (this.playerLantern) this.playerLantern.intensity = 3.2;
+            if (this.cameraLight) this.cameraLight.intensity = 1.2;
+            if (btn) btn.textContent = '☀️ DAYLIGHT';
+            this.showNotification("LIGHTING: HIGH VISIBILITY DAYLIGHT");
         } else if (this.brightnessLevel === 1) {
-            this.renderer.toneMappingExposure = 1.85;
-            if (this.world.moonlight) this.world.moonlight.intensity = 2.0;
-            if (this.playerLantern) this.playerLantern.intensity = 2.6;
-            if (btn) btn.textContent = '☀️ BRIGHT+';
-            this.showNotification("LIGHTING: ULTRA BRIGHT / DAYLIGHT");
+            this.renderer.toneMappingExposure = 2.7;
+            if (this.world.moonlight) this.world.moonlight.intensity = 3.4;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 2.6;
+            if (this.playerLantern) this.playerLantern.intensity = 4.2;
+            if (this.cameraLight) this.cameraLight.intensity = 1.8;
+            if (btn) btn.textContent = '☀️ ULTRA+';
+            this.showNotification("LIGHTING: MAXIMUM BRIGHTNESS (NO SHADOWS)");
         } else {
-            this.renderer.toneMappingExposure = 1.25;
-            if (this.world.moonlight) this.world.moonlight.intensity = 1.1;
-            if (this.playerLantern) this.playerLantern.intensity = 1.4;
+            this.renderer.toneMappingExposure = 1.7;
+            if (this.world.moonlight) this.world.moonlight.intensity = 1.8;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.4;
+            if (this.playerLantern) this.playerLantern.intensity = 2.4;
+            if (this.cameraLight) this.cameraLight.intensity = 0.8;
             if (btn) btn.textContent = '🌙 TWILIGHT';
-            this.showNotification("LIGHTING: ATMOSPHERIC TWILIGHT");
+            this.showNotification("LIGHTING: CLEAR DUSK & MOONLIGHT");
         }
     }
 
