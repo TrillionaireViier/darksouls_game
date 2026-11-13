@@ -10,34 +10,171 @@ class DarkSoulsCharacters {
     }
 
     initMaterials() {
-        // Player Knight Materials
-        this.steelMat = new THREE.MeshStandardMaterial({
-            color: 0x889098,
-            metalness: 0.85,
-            roughness: 0.3
+        // ==========================================
+        // HD CHARACTER MOD TEXTURES & PROCEDURAL ASSETS
+        // ==========================================
+
+        // 1. ELITE KNIGHT CREST SHIELD TEXTURE (512x512)
+        const shieldCanvas = document.createElement('canvas');
+        shieldCanvas.width = 512;
+        shieldCanvas.height = 512;
+        const sCtx = shieldCanvas.getContext('2d');
+
+        // Astora deep steel-blue field
+        const bgGrad = sCtx.createRadialGradient(256, 256, 40, 256, 256, 280);
+        bgGrad.addColorStop(0, '#1c2e44');
+        bgGrad.addColorStop(1, '#0e1824');
+        sCtx.fillStyle = bgGrad;
+        sCtx.fillRect(0, 0, 512, 512);
+
+        // Golden rim border
+        sCtx.strokeStyle = '#d4af37';
+        sCtx.lineWidth = 20;
+        sCtx.strokeRect(10, 10, 492, 492);
+        sCtx.strokeStyle = '#7c5a1a';
+        sCtx.lineWidth = 4;
+        sCtx.strokeRect(22, 22, 468, 468);
+
+        // Golden corner cornerpieces & rivets
+        const corners = [[20, 20], [492, 20], [20, 492], [492, 492]];
+        corners.forEach(([cx, cy]) => {
+            sCtx.fillStyle = '#f0c850';
+            sCtx.beginPath();
+            sCtx.arc(cx, cy, 10, 0, Math.PI * 2);
+            sCtx.fill();
+            sCtx.fillStyle = '#614810';
+            sCtx.beginPath();
+            sCtx.arc(cx - 2, cy - 2, 4, 0, Math.PI * 2);
+            sCtx.fill();
         });
-        this.darkSteelMat = new THREE.MeshStandardMaterial({
-            color: 0x2e3238,
+
+        // Silver Heraldic Falcon & Sacred Cross of Astora
+        sCtx.fillStyle = '#e8ecf0';
+        sCtx.beginPath();
+        // Cross vertical beam
+        sCtx.fillRect(236, 60, 40, 392);
+        // Cross horizontal bar
+        sCtx.fillRect(130, 160, 252, 38);
+        // Central diamond crest
+        sCtx.fillStyle = '#ffd700';
+        sCtx.beginPath();
+        sCtx.moveTo(256, 140);
+        sCtx.lineTo(290, 179);
+        sCtx.lineTo(256, 218);
+        sCtx.lineTo(222, 179);
+        sCtx.closePath();
+        sCtx.fill();
+
+        // Falcon wing heraldic flourishes
+        sCtx.strokeStyle = '#c8d4e2';
+        sCtx.lineWidth = 6;
+        sCtx.beginPath();
+        sCtx.arc(200, 240, 45, Math.PI * 0.2, Math.PI * 0.9);
+        sCtx.stroke();
+        sCtx.beginPath();
+        sCtx.arc(312, 240, 45, Math.PI * 0.1, Math.PI * 0.8, true);
+        sCtx.stroke();
+
+        // Battle cuts & micro-scratches
+        for (let i = 0; i < 45; i++) {
+            const x1 = 40 + Math.random() * 432;
+            const y1 = 40 + Math.random() * 432;
+            const len = 15 + Math.random() * 35;
+            const angle = Math.random() * Math.PI;
+            sCtx.strokeStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.45)';
+            sCtx.lineWidth = 1.2;
+            sCtx.beginPath();
+            sCtx.moveTo(x1, y1);
+            sCtx.lineTo(x1 + Math.cos(angle) * len, y1 + Math.sin(angle) * len);
+            sCtx.stroke();
+        }
+
+        const shieldTex = new THREE.CanvasTexture(shieldCanvas);
+
+        this.crestShieldMat = new THREE.MeshStandardMaterial({
+            map: shieldTex,
+            metalness: 0.82,
+            roughness: 0.32
+        });
+
+        // 2. BRUSHED FLUTED STEEL ARMOR (512x512)
+        const armorCanvas = document.createElement('canvas');
+        armorCanvas.width = 512;
+        armorCanvas.height = 512;
+        const aCtx = armorCanvas.getContext('2d');
+        aCtx.fillStyle = '#828a92';
+        aCtx.fillRect(0, 0, 512, 512);
+
+        // Fluted plate ridges
+        for (let y = 0; y < 512; y += 16) {
+            aCtx.fillStyle = 'rgba(255, 255, 255, 0.14)';
+            aCtx.fillRect(0, y, 512, 3);
+            aCtx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+            aCtx.fillRect(0, y + 10, 512, 3);
+        }
+        // Micro-hairline scratches
+        for (let i = 0; i < 400; i++) {
+            const x = Math.random() * 512;
+            const y = Math.random() * 512;
+            const l = 6 + Math.random() * 18;
+            aCtx.strokeStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.25)';
+            aCtx.lineWidth = 1;
+            aCtx.beginPath();
+            aCtx.moveTo(x, y);
+            aCtx.lineTo(x + l, y);
+            aCtx.stroke();
+        }
+        const armorTex = new THREE.CanvasTexture(armorCanvas);
+
+        this.steelMat = new THREE.MeshStandardMaterial({
+            map: armorTex,
+            color: 0x9ba2aa,
             metalness: 0.9,
+            roughness: 0.28
+        });
+
+        this.darkSteelMat = new THREE.MeshStandardMaterial({
+            map: armorTex,
+            color: 0x363a40,
+            metalness: 0.92,
             roughness: 0.35
         });
+
         this.clothMat = new THREE.MeshStandardMaterial({
-            color: 0x1b2838, // Astora navy blue
-            roughness: 0.85
+            color: 0x182434, // Astora navy blue
+            roughness: 0.88
         });
+
         this.leatherMat = new THREE.MeshStandardMaterial({
             color: 0x3d271d,
-            roughness: 0.7
+            roughness: 0.72
         });
+
         this.goldTrimMat = new THREE.MeshStandardMaterial({
-            color: 0xc49a45,
-            metalness: 0.8,
-            roughness: 0.35
+            color: 0xd4a84e,
+            metalness: 0.88,
+            roughness: 0.28
         });
+
+        // 3. POLISHED BLADE STEEL WITH BLOOD FULLER
+        const bladeCanvas = document.createElement('canvas');
+        bladeCanvas.width = 128;
+        bladeCanvas.height = 512;
+        const bCtx = bladeCanvas.getContext('2d');
+        const bGrad = bCtx.createLinearGradient(0, 0, 128, 0);
+        bGrad.addColorStop(0, '#f0f4f8');
+        bGrad.addColorStop(0.44, '#ffffff');
+        bGrad.addColorStop(0.5, '#4a5058'); // Central fuller depression
+        bGrad.addColorStop(0.56, '#ffffff');
+        bGrad.addColorStop(1, '#d8e0e8');
+        bCtx.fillStyle = bGrad;
+        bCtx.fillRect(0, 0, 128, 512);
+
+        const bladeTex = new THREE.CanvasTexture(bladeCanvas);
         this.bladeMat = new THREE.MeshStandardMaterial({
-            color: 0xd8e0e8,
-            metalness: 0.95,
-            roughness: 0.15
+            map: bladeTex,
+            metalness: 0.96,
+            roughness: 0.14
         });
 
         // Hollow Soldier Materials
@@ -55,21 +192,39 @@ class DarkSoulsCharacters {
             roughness: 0.7
         });
 
-        // Boss (Taurus Demon) Materials
+        // 4. TAURUS DEMON OBSIDIAN HIDE & LAVA CRACKS
+        const lavaCanvas = document.createElement('canvas');
+        lavaCanvas.width = 256;
+        lavaCanvas.height = 256;
+        const lCtx = lavaCanvas.getContext('2d');
+        lCtx.fillStyle = '#1c1514';
+        lCtx.fillRect(0, 0, 256, 256);
+        // Molten veins
+        lCtx.strokeStyle = '#ff4400';
+        lCtx.lineWidth = 3;
+        for (let i = 0; i < 14; i++) {
+            lCtx.beginPath();
+            lCtx.moveTo(Math.random() * 256, Math.random() * 256);
+            lCtx.lineTo(Math.random() * 256, Math.random() * 256);
+            lCtx.stroke();
+        }
+        const lavaTex = new THREE.CanvasTexture(lavaCanvas);
+
         this.demonFleshMat = new THREE.MeshStandardMaterial({
-            color: 0x221a18,
-            roughness: 0.85,
-            metalness: 0.2
+            map: lavaTex,
+            color: 0x241c1a,
+            roughness: 0.82,
+            metalness: 0.25
         });
         this.demonHornMat = new THREE.MeshStandardMaterial({
             color: 0x110d0b,
-            roughness: 0.6,
-            metalness: 0.3
+            roughness: 0.55,
+            metalness: 0.35
         });
         this.demonLavaMat = new THREE.MeshStandardMaterial({
-            color: 0xff3300,
-            emissive: 0xff3300,
-            emissiveIntensity: 0.8,
+            color: 0xff3b00,
+            emissive: 0xff4400,
+            emissiveIntensity: 1.1,
             roughness: 0.3
         });
         this.stoneClubMat = new THREE.MeshStandardMaterial({
@@ -81,16 +236,16 @@ class DarkSoulsCharacters {
         // ----------------------------------------------------
         // 4 NEW BOSSES MATERIALS
         // ----------------------------------------------------
-        // 1. Bell Gargoyle Materials
+        // 1. Bell Gargoyle Materials (Ancient Verdigris Stone & Bronze)
         this.gargoyleStoneMat = new THREE.MeshStandardMaterial({
-            color: 0x484c44,
-            roughness: 0.88,
-            metalness: 0.2
+            color: 0x4a5048,
+            roughness: 0.85,
+            metalness: 0.25
         });
         this.bronzeHalberdMat = new THREE.MeshStandardMaterial({
-            color: 0x9e6c38,
-            metalness: 0.85,
-            roughness: 0.35
+            color: 0xaa743c,
+            metalness: 0.88,
+            roughness: 0.32
         });
         this.wingMembraneMat = new THREE.MeshStandardMaterial({
             color: 0x2e2c28,
@@ -105,47 +260,49 @@ class DarkSoulsCharacters {
             metalness: 0.15
         });
         this.goatSkullMat = new THREE.MeshStandardMaterial({
-            color: 0xd6cdb8,
-            roughness: 0.75,
-            metalness: 0.1
+            color: 0xd8d0bc,
+            roughness: 0.72,
+            metalness: 0.12
         });
         this.capraMacheteMat = new THREE.MeshStandardMaterial({
-            color: 0x2a2826,
-            metalness: 0.85,
-            roughness: 0.4
+            color: 0x2e2c2a,
+            metalness: 0.88,
+            roughness: 0.38
         });
 
-        // 3. Great Grey Wolf Sif Materials
+        // 3. Great Grey Wolf Sif Materials (Pelt & Artorias Blade)
         this.wolfFurMat = new THREE.MeshStandardMaterial({
-            color: 0x828a94,
-            roughness: 0.96
+            color: 0x88929e,
+            roughness: 0.95
         });
         this.wolfUnderbellyMat = new THREE.MeshStandardMaterial({
-            color: 0xd0d8e2,
-            roughness: 0.96
+            color: 0xd8e0ea,
+            roughness: 0.95
         });
         this.artoriasBladeMat = new THREE.MeshStandardMaterial({
-            color: 0x88b0d8,
+            color: 0x90c0f0,
+            emissive: 0x224488,
+            emissiveIntensity: 0.3,
             metalness: 0.95,
-            roughness: 0.18
+            roughness: 0.16
         });
 
-        // 4. Gwyn Lord of Cinder Materials
+        // 4. Gwyn Lord of Cinder Materials (Sunlight Flame)
         this.gwynRobeMat = new THREE.MeshStandardMaterial({
-            color: 0x2c2825,
+            color: 0x2e2824,
             roughness: 0.92
         });
         this.gwynCrownMat = new THREE.MeshStandardMaterial({
-            color: 0xe6b840,
-            metalness: 0.9,
-            roughness: 0.25
+            color: 0xecbf44,
+            metalness: 0.92,
+            roughness: 0.22
         });
         this.sunlightGreatswordMat = new THREE.MeshStandardMaterial({
             color: 0xffaa22,
             emissive: 0xff5500,
-            emissiveIntensity: 1.4,
-            metalness: 0.7,
-            roughness: 0.3
+            emissiveIntensity: 1.6,
+            metalness: 0.75,
+            roughness: 0.25
         });
         this.gwynHairMat = new THREE.MeshStandardMaterial({
             color: 0xdedee4,
@@ -253,7 +410,7 @@ class DarkSoulsCharacters {
         leftShoulder.add(lHand);
 
         const shieldGroup = new THREE.Group();
-        const shieldPlate = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.8, 0.06), this.steelMat);
+        const shieldPlate = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.8, 0.06), this.crestShieldMat);
         shieldPlate.castShadow = true;
         shieldGroup.add(shieldPlate);
 

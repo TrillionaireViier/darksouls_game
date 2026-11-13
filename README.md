@@ -66,6 +66,22 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
 ---
 
 ## 🔥 Features
+- **Save & Load Progress System (Архив Путешествия)**:
+  - Persistent save state stored directly in browser local storage (`localStorage`).
+  - **Auto-Save**: Triggers automatically on Bonfire rest, boss defeat, and stat upgrades.
+  - **Manual Save / Load**: Easily accessible from the top header (`💾 SAVE` / `📂 LOAD`) and inside the Bonfire Altar.
+  - Preserves Soul Level, souls inventory, stats (Vigor, Endurance, Strength), current/max HP and stamina, Estus flasks, active boss, and list of slain lords.
+  - Boss Roster automatically tracks defeated bosses with a golden `[✓ LORD SLAIN]` badge and re-fight options.
+  - Auto-restores your journey upon returning to the game.
+
+- **HD Remaster Mod Textures (Текстурный Мод Высокого Разрешения)**:
+  - 1024x1024 procedural gothic flagstone floor with individual slate, basalt, and granite variations, chiseled bevel edge relief, normal bump map (`bumpScale: 0.08`), and damp surface specular sheen.
+  - 1024x1024 gothic castle ashlar fortress wall textures with mortar courses, chisel striations, vertical rainwater seepage, and deep mortar bump mapping.
+  - Boss Arena scorched & bloodstained floor with coagulated blood pools, splatter droplets, and radiant magma ember fissure veins (`emissiveMap`).
+  - Astora Crest Shield with hand-crafted heraldic silver falcon, holy cross, golden filigree rim, and battle wear scratches.
+  - Brushed steel armor plates with directional hairline scratches, fluted ridges, and sharpened sword edge specular highlights.
+  - Cinematic ACES Filmic Tone Mapping with enhanced dynamic range lighting.
+
 - **The Bonfire & Boss Selector**:
   - Rest to restore full HP and refill 5 Estus Flasks.
   - Level-Up menu to upgrade Vigor (HP), Endurance (Stamina), and Strength (Damage) with Souls.

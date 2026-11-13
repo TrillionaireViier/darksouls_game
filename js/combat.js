@@ -50,6 +50,7 @@ class DarkSoulsCombat {
         this.boss = null;
         this.lockedTarget = null;
         this.currentBossType = 'taurus';
+        this.defeatedBosses = [];
 
         this.bossRoster = [
             {
@@ -602,11 +603,22 @@ class DarkSoulsCombat {
     killBoss() {
         this.boss.isDead = true;
         this.boss.state = 'DEAD';
+        if (!this.defeatedBosses.includes(this.boss.id)) {
+            this.defeatedBosses.push(this.boss.id);
+        }
         const soulReward = this.boss.souls || 5000;
         this.souls += soulReward;
         this.audio.playVictory();
         this.audio.setBossMusic(false);
         this.game.triggerVictoryBanner(this.boss.name);
+
+        // Auto-save on boss victory
+        if (this.game && this.game.saveGame) {
+            this.game.saveGame(true, `VICTORY OVER ${this.boss.name}`);
+        }
+        if (this.game && this.game.updateBossRosterUI) {
+            this.game.updateBossRosterUI();
+        }
 
         // Notify next unlocked boss
         const currentIdx = this.bossRoster.findIndex(b => b.id === this.boss.id);
@@ -662,6 +674,11 @@ class DarkSoulsCombat {
         this.spawnEnemies();
         this.audio.playBonfireIgnite();
         this.game.triggerBonfireLitBanner();
+
+        // Auto-save on bonfire rest
+        if (this.game && this.game.saveGame) {
+            this.game.saveGame(true, 'RESTED AT BONFIRE');
+        }
     }
 
     levelUpStat(stat) {
@@ -687,6 +704,12 @@ class DarkSoulsCombat {
         }
 
         this.audio.playEstusDrink();
+
+        // Auto-save on stat upgrade
+        if (this.game && this.game.saveGame) {
+            this.game.saveGame(false);
+        }
+
         return true;
     }
 

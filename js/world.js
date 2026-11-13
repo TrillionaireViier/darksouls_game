@@ -26,36 +26,126 @@ class DarkSoulsWorld {
     }
 
     initMaterials() {
-        // Procedural Stone Texture Generator
-        const stoneCanvas = document.createElement('canvas');
-        stoneCanvas.width = 512;
-        stoneCanvas.height = 512;
-        const ctx = stoneCanvas.getContext('2d');
-        ctx.fillStyle = '#181615';
-        ctx.fillRect(0, 0, 512, 512);
+        // ==========================================
+        // HD REMASTER / MOD PROCEDURAL TEXTURES
+        // 1024x1024 High-Fidelity Medieval Lordran Textures
+        // Diffuse, Bump, Roughness & Emissive Maps
+        // ==========================================
 
-        // Cobblestone bricks
-        ctx.strokeStyle = '#0a0908';
-        ctx.lineWidth = 4;
+        // 1. ANCIENT GOTHIC COURTYARD COBBLESTONE (1024x1024)
+        const stoneCanvas = document.createElement('canvas');
+        stoneCanvas.width = 1024;
+        stoneCanvas.height = 1024;
+        const sCtx = stoneCanvas.getContext('2d');
+
+        const stoneBumpCanvas = document.createElement('canvas');
+        stoneBumpCanvas.width = 1024;
+        stoneBumpCanvas.height = 1024;
+        const sbCtx = stoneBumpCanvas.getContext('2d');
+
+        const stoneRoughCanvas = document.createElement('canvas');
+        stoneRoughCanvas.width = 1024;
+        stoneRoughCanvas.height = 1024;
+        const srCtx = stoneRoughCanvas.getContext('2d');
+
+        // Deep mortar base
+        sCtx.fillStyle = '#0c0a09';
+        sCtx.fillRect(0, 0, 1024, 1024);
+        sbCtx.fillStyle = '#101010'; // Recessed mortar
+        sbCtx.fillRect(0, 0, 1024, 1024);
+        srCtx.fillStyle = '#e5e5e5'; // Matte dry mortar
+        srCtx.fillRect(0, 0, 1024, 1024);
+
         const rows = 16;
         const cols = 8;
-        const rh = 512 / rows;
-        const cw = 512 / cols;
+        const rh = 1024 / rows;
+        const cw = 1024 / cols;
 
         for (let r = 0; r < rows; r++) {
-            const offset = (r % 2) * (cw / 2);
-            for (let c = -1; c <= cols; c++) {
-                const x = c * cw + offset;
-                const y = r * rh;
-                const shade = 18 + Math.floor(Math.random() * 20);
-                ctx.fillStyle = `rgb(${shade}, ${shade - 2}, ${shade - 4})`;
-                ctx.fillRect(x + 2, y + 2, cw - 4, rh - 4);
-                ctx.strokeRect(x, y, cw, rh);
+            const rowOffset = (r % 2) * (cw / 2) + Math.sin(r * 1.5) * 6;
+            for (let c = -1; c <= cols + 1; c++) {
+                const bx = c * cw + rowOffset + 3;
+                const by = r * rh + 3;
+                const bw = cw - 6;
+                const bh = rh - 6;
 
-                // Cracks and grit
-                for (let k = 0; k < 6; k++) {
-                    ctx.fillStyle = Math.random() > 0.5 ? '#0e0d0c' : '#2a2624';
-                    ctx.fillRect(x + Math.random() * cw, y + Math.random() * rh, 3, 3);
+                // Varied stone palette: slate, basalt, ash granite, mossy undertone
+                const palSeed = Math.random();
+                let baseR, baseG, baseB;
+                if (palSeed < 0.35) {
+                    baseR = 30 + Math.floor(Math.random() * 16); // Slate grey
+                    baseG = 32 + Math.floor(Math.random() * 16);
+                    baseB = 36 + Math.floor(Math.random() * 18);
+                } else if (palSeed < 0.7) {
+                    baseR = 34 + Math.floor(Math.random() * 18); // Dark ash granite
+                    baseG = 31 + Math.floor(Math.random() * 16);
+                    baseB = 28 + Math.floor(Math.random() * 14);
+                } else {
+                    baseR = 24 + Math.floor(Math.random() * 12); // Basalt charcoal
+                    baseG = 25 + Math.floor(Math.random() * 14);
+                    baseB = 24 + Math.floor(Math.random() * 12);
+                }
+
+                // Fill stone slab
+                sCtx.fillStyle = `rgb(${baseR}, ${baseG}, ${baseB})`;
+                sCtx.fillRect(bx, by, bw, bh);
+
+                // Bump map: elevated slab (180-220)
+                const bumpH = 190 + Math.floor(Math.random() * 35);
+                sbCtx.fillStyle = `rgb(${bumpH}, ${bumpH}, ${bumpH})`;
+                sbCtx.fillRect(bx, by, bw, bh);
+
+                // Roughness map: damp polished stone tops (100-140 = 0.4-0.55 roughness)
+                const roughVal = 100 + Math.floor(Math.random() * 40);
+                srCtx.fillStyle = `rgb(${roughVal}, ${roughVal}, ${roughVal})`;
+                srCtx.fillRect(bx, by, bw, bh);
+
+                // Chiseled beveled edges: top-left highlight, bottom-right shadow
+                sCtx.fillStyle = 'rgba(255, 255, 255, 0.09)';
+                sCtx.fillRect(bx, by, bw, 3);
+                sCtx.fillRect(bx, by, 3, bh);
+                sCtx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+                sCtx.fillRect(bx, by + bh - 3, bw, 3);
+                sCtx.fillRect(bx + bw - 3, by, 3, bh);
+
+                sbCtx.fillStyle = '#ffffff';
+                sbCtx.fillRect(bx, by, bw, 2);
+                sbCtx.fillRect(bx, by, 2, bh);
+                sbCtx.fillStyle = '#444444';
+                sbCtx.fillRect(bx, by + bh - 2, bw, 2);
+                sbCtx.fillRect(bx + bw - 2, by, 2, bh);
+
+                // Micro-cracks & weathering scars
+                const cracks = 2 + Math.floor(Math.random() * 3);
+                for (let k = 0; k < cracks; k++) {
+                    const cx1 = bx + Math.random() * bw;
+                    const cy1 = by + Math.random() * bh;
+                    const len = 12 + Math.random() * 26;
+                    const angle = Math.random() * Math.PI * 2;
+                    const cx2 = cx1 + Math.cos(angle) * len;
+                    const cy2 = cy1 + Math.sin(angle) * len;
+
+                    sCtx.strokeStyle = '#050404';
+                    sCtx.lineWidth = 1.2;
+                    sCtx.beginPath();
+                    sCtx.moveTo(cx1, cy1);
+                    sCtx.lineTo(cx2, cy2);
+                    sCtx.stroke();
+
+                    sbCtx.strokeStyle = '#000000';
+                    sbCtx.lineWidth = 1.4;
+                    sbCtx.beginPath();
+                    sbCtx.moveTo(cx1, cy1);
+                    sbCtx.lineTo(cx2, cy2);
+                    sbCtx.stroke();
+                }
+
+                // Damp surface noise / grit
+                for (let g = 0; g < 18; g++) {
+                    const gx = bx + Math.random() * bw;
+                    const gy = by + Math.random() * bh;
+                    sCtx.fillStyle = Math.random() > 0.5 ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.06)';
+                    sCtx.fillRect(gx, gy, 2, 2);
                 }
             }
         }
@@ -65,43 +155,326 @@ class DarkSoulsWorld {
         stoneTexture.wrapT = THREE.RepeatWrapping;
         stoneTexture.repeat.set(12, 12);
 
+        const stoneBumpTexture = new THREE.CanvasTexture(stoneBumpCanvas);
+        stoneBumpTexture.wrapS = THREE.RepeatWrapping;
+        stoneBumpTexture.wrapT = THREE.RepeatWrapping;
+        stoneBumpTexture.repeat.set(12, 12);
+
+        const stoneRoughTexture = new THREE.CanvasTexture(stoneRoughCanvas);
+        stoneRoughTexture.wrapS = THREE.RepeatWrapping;
+        stoneRoughTexture.wrapT = THREE.RepeatWrapping;
+        stoneRoughTexture.repeat.set(12, 12);
+
         this.stoneMat = new THREE.MeshStandardMaterial({
             map: stoneTexture,
-            roughness: 0.9,
-            metalness: 0.1
+            bumpMap: stoneBumpTexture,
+            bumpScale: 0.08,
+            roughnessMap: stoneRoughTexture,
+            roughness: 0.75,
+            metalness: 0.12
         });
 
-        // Dark castle stone wall material
+        // 2. GOTHIC ASHLAR FORTRESS WALL (1024x1024)
         const wallCanvas = document.createElement('canvas');
-        wallCanvas.width = 256;
-        wallCanvas.height = 256;
+        wallCanvas.width = 1024;
+        wallCanvas.height = 1024;
         const wCtx = wallCanvas.getContext('2d');
-        wCtx.fillStyle = '#121010';
-        wCtx.fillRect(0, 0, 256, 256);
-        for (let i = 0; i < 2000; i++) {
-            wCtx.fillStyle = Math.random() > 0.5 ? '#1a1817' : '#0a0908';
-            wCtx.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
+
+        const wallBumpCanvas = document.createElement('canvas');
+        wallBumpCanvas.width = 1024;
+        wallBumpCanvas.height = 1024;
+        const wbCtx = wallBumpCanvas.getContext('2d');
+
+        // Dark fortress background
+        wCtx.fillStyle = '#100e0e';
+        wCtx.fillRect(0, 0, 1024, 1024);
+        wbCtx.fillStyle = '#1a1a1a';
+        wbCtx.fillRect(0, 0, 1024, 1024);
+
+        const wRows = 16;
+        const wCols = 8;
+        const wrh = 1024 / wRows;
+        const wcw = 1024 / wCols;
+
+        for (let r = 0; r < wRows; r++) {
+            const offset = (r % 2) * (wcw / 2);
+            for (let c = -1; c <= wCols + 1; c++) {
+                const x = c * wcw + offset + 2;
+                const y = r * wrh + 2;
+                const w = wcw - 4;
+                const h = wrh - 4;
+
+                const shade = 18 + Math.floor(Math.random() * 22);
+                wCtx.fillStyle = `rgb(${shade}, ${shade - 1}, ${shade - 2})`;
+                wCtx.fillRect(x, y, w, h);
+
+                const wbVal = 180 + Math.floor(Math.random() * 45);
+                wbCtx.fillStyle = `rgb(${wbVal}, ${wbVal}, ${wbVal})`;
+                wbCtx.fillRect(x, y, w, h);
+
+                // Horizontal masonry chisel striations
+                for (let s = 4; s < h - 4; s += 8) {
+                    wCtx.strokeStyle = 'rgba(0, 0, 0, 0.28)';
+                    wCtx.lineWidth = 1;
+                    wCtx.beginPath();
+                    wCtx.moveTo(x + 2, y + s);
+                    wCtx.lineTo(x + w - 2, y + s + (Math.random() - 0.5) * 2);
+                    wCtx.stroke();
+                }
+
+                // Wall block bevels
+                wCtx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+                wCtx.fillRect(x, y, w, 2);
+                wCtx.fillRect(x, y, 2, h);
+                wCtx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                wCtx.fillRect(x, y + h - 2, w, 2);
+                wCtx.fillRect(x + w - 2, y, 2, h);
+
+                wbCtx.fillStyle = '#ffffff';
+                wbCtx.fillRect(x, y, w, 2);
+                wbCtx.fillRect(x, y, 2, h);
+                wbCtx.fillStyle = '#333333';
+                wbCtx.fillRect(x, y + h - 2, w, 2);
+                wbCtx.fillRect(x + w - 2, y, 2, h);
+            }
         }
+
+        // Vertical rainwater seepage & grime streaks
+        for (let i = 0; i < 40; i++) {
+            const sx = Math.random() * 1024;
+            const sy = Math.random() * 400;
+            const slen = 150 + Math.random() * 400;
+            const sgrad = wCtx.createLinearGradient(sx, sy, sx, sy + slen);
+            sgrad.addColorStop(0, 'rgba(8, 12, 10, 0.65)');
+            sgrad.addColorStop(1, 'rgba(8, 12, 10, 0)');
+            wCtx.fillStyle = sgrad;
+            wCtx.fillRect(sx - 3, sy, 6 + Math.random() * 6, slen);
+        }
+
         const wallTex = new THREE.CanvasTexture(wallCanvas);
         wallTex.wrapS = THREE.RepeatWrapping;
         wallTex.wrapT = THREE.RepeatWrapping;
         wallTex.repeat.set(4, 4);
 
+        const wallBumpTex = new THREE.CanvasTexture(wallBumpCanvas);
+        wallBumpTex.wrapS = THREE.RepeatWrapping;
+        wallBumpTex.wrapT = THREE.RepeatWrapping;
+        wallBumpTex.repeat.set(4, 4);
+
         this.wallMat = new THREE.MeshStandardMaterial({
             map: wallTex,
-            roughness: 0.95,
+            bumpMap: wallBumpTex,
+            bumpScale: 0.1,
+            roughness: 0.92,
+            metalness: 0.12
+        });
+
+        // 3. BOSS ARENA SCORCHED & BLOODSTAINED STONE (1024x1024)
+        const arenaCanvas = document.createElement('canvas');
+        arenaCanvas.width = 1024;
+        arenaCanvas.height = 1024;
+        const aCtx = arenaCanvas.getContext('2d');
+
+        const arenaBumpCanvas = document.createElement('canvas');
+        arenaBumpCanvas.width = 1024;
+        arenaBumpCanvas.height = 1024;
+        const abCtx = arenaBumpCanvas.getContext('2d');
+
+        const arenaEmissiveCanvas = document.createElement('canvas');
+        arenaEmissiveCanvas.width = 1024;
+        arenaEmissiveCanvas.height = 1024;
+        const aeCtx = arenaEmissiveCanvas.getContext('2d');
+
+        // Dark scorched arena base
+        aCtx.fillStyle = '#141110';
+        aCtx.fillRect(0, 0, 1024, 1024);
+        abCtx.fillStyle = '#808080';
+        abCtx.fillRect(0, 0, 1024, 1024);
+        aeCtx.fillStyle = '#000000';
+        aeCtx.fillRect(0, 0, 1024, 1024);
+
+        // Circular burned epicenter
+        const burnGrad = aCtx.createRadialGradient(512, 512, 40, 512, 512, 480);
+        burnGrad.addColorStop(0, '#090706');
+        burnGrad.addColorStop(0.5, '#120f0e');
+        burnGrad.addColorStop(1, '#1c1816');
+        aCtx.fillStyle = burnGrad;
+        aCtx.fillRect(0, 0, 1024, 1024);
+
+        // Ancient arena stone flagstone seams
+        aCtx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
+        aCtx.lineWidth = 3;
+        for (let x = 0; x <= 1024; x += 128) {
+            aCtx.beginPath();
+            aCtx.moveTo(x, 0);
+            aCtx.lineTo(x, 1024);
+            aCtx.stroke();
+        }
+        for (let y = 0; y <= 1024; y += 64) {
+            aCtx.beginPath();
+            aCtx.moveTo(0, y);
+            aCtx.lineTo(1024, y);
+            aCtx.stroke();
+        }
+
+        // Blood pools and splatters of fallen champions
+        const bloodPools = [
+            { x: 420, y: 480, r: 65 },
+            { x: 620, y: 350, r: 50 },
+            { x: 340, y: 720, r: 80 },
+            { x: 740, y: 640, r: 45 },
+            { x: 512, y: 512, r: 90 }
+        ];
+
+        bloodPools.forEach(bp => {
+            const bGrad = aCtx.createRadialGradient(bp.x, bp.y, bp.r * 0.15, bp.x, bp.y, bp.r);
+            bGrad.addColorStop(0, 'rgba(85, 12, 12, 0.85)');
+            bGrad.addColorStop(0.6, 'rgba(55, 8, 8, 0.75)');
+            bGrad.addColorStop(1, 'rgba(25, 4, 4, 0)');
+            aCtx.fillStyle = bGrad;
+            aCtx.beginPath();
+            aCtx.arc(bp.x, bp.y, bp.r, 0, Math.PI * 2);
+            aCtx.fill();
+
+            // Splatter drops
+            for (let d = 0; d < 22; d++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = bp.r + Math.random() * 45;
+                const dx = bp.x + Math.cos(angle) * dist;
+                const dy = bp.y + Math.sin(angle) * dist;
+                aCtx.fillStyle = 'rgba(70, 10, 10, 0.7)';
+                aCtx.beginPath();
+                aCtx.arc(dx, dy, 1.5 + Math.random() * 3, 0, Math.PI * 2);
+                aCtx.fill();
+            }
+        });
+
+        // Glowing magma/ember fissures radiating across the arena
+        for (let f = 0; f < 8; f++) {
+            let cx = 512 + (Math.random() - 0.5) * 80;
+            let cy = 512 + (Math.random() - 0.5) * 80;
+            const angle = (f / 8) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+            const len = 220 + Math.random() * 200;
+
+            aeCtx.strokeStyle = '#ff4400';
+            aeCtx.lineWidth = 2.5;
+            aeCtx.beginPath();
+            aeCtx.moveTo(cx, cy);
+
+            aCtx.strokeStyle = '#220800';
+            aCtx.lineWidth = 4;
+            aCtx.beginPath();
+            aCtx.moveTo(cx, cy);
+
+            let curX = cx;
+            let curY = cy;
+            const steps = 8;
+            for (let s = 1; s <= steps; s++) {
+                const segLen = len / steps;
+                curX += Math.cos(angle + (Math.random() - 0.5) * 0.8) * segLen;
+                curY += Math.sin(angle + (Math.random() - 0.5) * 0.8) * segLen;
+                aeCtx.lineTo(curX, curY);
+                aCtx.lineTo(curX, curY);
+            }
+            aeCtx.stroke();
+            aCtx.stroke();
+        }
+
+        const arenaTex = new THREE.CanvasTexture(arenaCanvas);
+        arenaTex.wrapS = THREE.RepeatWrapping;
+        arenaTex.wrapT = THREE.RepeatWrapping;
+        arenaTex.repeat.set(4, 8);
+
+        const arenaBumpTex = new THREE.CanvasTexture(arenaBumpCanvas);
+        arenaBumpTex.wrapS = THREE.RepeatWrapping;
+        arenaBumpTex.wrapT = THREE.RepeatWrapping;
+        arenaBumpTex.repeat.set(4, 8);
+
+        const arenaEmissiveTex = new THREE.CanvasTexture(arenaEmissiveCanvas);
+        arenaEmissiveTex.wrapS = THREE.RepeatWrapping;
+        arenaEmissiveTex.wrapT = THREE.RepeatWrapping;
+        arenaEmissiveTex.repeat.set(4, 8);
+
+        this.arenaMat = new THREE.MeshStandardMaterial({
+            map: arenaTex,
+            bumpMap: arenaBumpTex,
+            bumpScale: 0.1,
+            emissiveMap: arenaEmissiveTex,
+            emissive: 0xff3300,
+            emissiveIntensity: 0.4,
+            roughness: 0.82,
             metalness: 0.15
         });
 
+        // 4. WEATHERED MEDIEVAL TIMBER (512x512)
+        const woodCanvas = document.createElement('canvas');
+        woodCanvas.width = 512;
+        woodCanvas.height = 512;
+        const wdCtx = woodCanvas.getContext('2d');
+        wdCtx.fillStyle = '#22150c';
+        wdCtx.fillRect(0, 0, 512, 512);
+
+        // Wood grain striations
+        for (let i = 0; i < 512; i += 3) {
+            const tone = 20 + Math.floor(Math.random() * 20);
+            wdCtx.strokeStyle = `rgb(${tone + 12}, ${tone + 4}, ${tone})`;
+            wdCtx.lineWidth = 1.5;
+            wdCtx.beginPath();
+            wdCtx.moveTo(0, i);
+            wdCtx.bezierCurveTo(170, i + (Math.random() - 0.5) * 8, 340, i + (Math.random() - 0.5) * 8, 512, i);
+            wdCtx.stroke();
+        }
+
+        // Iron bolt studs on timber
+        for (let bx = 64; bx < 512; bx += 128) {
+            for (let by = 64; by < 512; by += 128) {
+                wdCtx.fillStyle = '#111010';
+                wdCtx.beginPath();
+                wdCtx.arc(bx, by, 6, 0, Math.PI * 2);
+                wdCtx.fill();
+                wdCtx.fillStyle = '#3a3530';
+                wdCtx.beginPath();
+                wdCtx.arc(bx - 1, by - 1, 3, 0, Math.PI * 2);
+                wdCtx.fill();
+            }
+        }
+
+        const woodTex = new THREE.CanvasTexture(woodCanvas);
+        woodTex.wrapS = THREE.RepeatWrapping;
+        woodTex.wrapT = THREE.RepeatWrapping;
+
         this.woodMat = new THREE.MeshStandardMaterial({
-            color: 0x24180f,
-            roughness: 0.8
+            map: woodTex,
+            roughness: 0.78,
+            metalness: 0.08
         });
 
+        // 5. FORGED DARK IRON & SCONCE METAL (512x512)
+        const ironCanvas = document.createElement('canvas');
+        ironCanvas.width = 512;
+        ironCanvas.height = 512;
+        const irCtx = ironCanvas.getContext('2d');
+        irCtx.fillStyle = '#222328';
+        irCtx.fillRect(0, 0, 512, 512);
+
+        // Brushed metallic scratches
+        for (let i = 0; i < 300; i++) {
+            const ix = Math.random() * 512;
+            const iy = Math.random() * 512;
+            const ilen = 10 + Math.random() * 30;
+            irCtx.strokeStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.3)';
+            irCtx.lineWidth = 1;
+            irCtx.beginPath();
+            irCtx.moveTo(ix, iy);
+            irCtx.lineTo(ix + ilen, iy + (Math.random() - 0.5) * 4);
+            irCtx.stroke();
+        }
+
+        const ironTex = new THREE.CanvasTexture(ironCanvas);
         this.ironMat = new THREE.MeshStandardMaterial({
-            color: 0x333338,
-            roughness: 0.4,
-            metalness: 0.8
+            map: ironTex,
+            roughness: 0.38,
+            metalness: 0.88
         });
     }
 
@@ -163,6 +536,14 @@ class DarkSoulsWorld {
         const bridgeMat = this.stoneMat.clone();
         bridgeMat.map = bridgeMat.map.clone();
         bridgeMat.map.repeat.set(4, 16);
+        if (bridgeMat.bumpMap) {
+            bridgeMat.bumpMap = bridgeMat.bumpMap.clone();
+            bridgeMat.bumpMap.repeat.set(4, 16);
+        }
+        if (bridgeMat.roughnessMap) {
+            bridgeMat.roughnessMap = bridgeMat.roughnessMap.clone();
+            bridgeMat.roughnessMap.repeat.set(4, 16);
+        }
         const bridge = new THREE.Mesh(bridgeGeo, bridgeMat);
         bridge.position.set(0, -1, 62.5);
         bridge.receiveShadow = true;
@@ -180,10 +561,7 @@ class DarkSoulsWorld {
 
         // 3. Boss Arena (Beyond Fog Gate at z = 95 to z = 160)
         const arenaGeo = new THREE.BoxGeometry(34, 2, 70);
-        const arenaMat = this.stoneMat.clone();
-        arenaMat.map = arenaMat.map.clone();
-        arenaMat.map.repeat.set(8, 16);
-        const arena = new THREE.Mesh(arenaGeo, arenaMat);
+        const arena = new THREE.Mesh(arenaGeo, this.arenaMat);
         arena.position.set(0, -1, 130);
         arena.receiveShadow = true;
         this.scene.add(arena);

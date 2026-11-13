@@ -98,8 +98,9 @@
 
         .header-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
             pointer-events: auto;
         }
 
@@ -701,6 +702,12 @@
             transition: all 0.2s ease;
         }
 
+        .boss-card.defeated {
+            border-color: rgba(212, 175, 55, 0.65);
+            background: linear-gradient(135deg, rgba(32, 26, 16, 0.95), rgba(16, 12, 8, 0.95));
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.12);
+        }
+
         .boss-card:hover {
             border-color: #ffd276;
             background: rgba(35, 26, 18, 0.95);
@@ -968,6 +975,8 @@
                 <span>📦</span> DOWNLOAD GAME
             </button>
             <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ BOSS ROSTER</button>
+            <button class="btn-icon-bar" id="btn-save-header" onclick="manualSaveGame()" title="Save your journey to local memory (Auto-saves on Bonfire rest & boss defeat)" style="border-color: #ffd276; color: #ffd276;">💾 SAVE</button>
+            <button class="btn-icon-bar btn-load-save" id="btn-load-header" onclick="manualLoadGame()" title="Load your saved journey from local memory" style="border-color: #88ccff; color: #88ccff;">📂 LOAD</button>
             <button class="btn-icon-bar" onclick="openControlsModal()">CONTROLS</button>
             <button class="btn-icon-bar" id="audio-toggle-btn" onclick="toggleAudio()">SOUND: ON</button>
             <button class="btn-icon-bar" onclick="toggleFullscreen()">⛶</button>
@@ -1104,6 +1113,21 @@
                 </div>
             </div>
 
+            <!-- Save / Load Section in Bonfire -->
+            <div style="margin-top: 14px; border-top: 1px solid #382c20; padding-top: 12px;">
+                <div class="modal-label" style="text-align: center; margin-bottom: 6px; color: #ffd778; font-weight: 700; letter-spacing: 1.5px;">
+                    💾 BONFIRE MEMORY &bull; PROGRESS ARCHIVE
+                </div>
+                <div id="save-status-text" style="text-align: center; font-size: 0.76rem; color: #a89886; margin-bottom: 10px; font-family: monospace;">
+                    NO ACTIVE SAVE FILE
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn-upgrade" onclick="manualSaveGame()" style="background: rgba(196,154,69,0.25); border-color: #ffd276; font-size: 0.82rem; padding: 6px 14px;">💾 SAVE JOURNEY</button>
+                    <button class="btn-upgrade btn-load-save" onclick="manualLoadGame()" style="background: rgba(50,100,160,0.25); border-color: #88ccff; color: #c2e2ff; font-size: 0.82rem; padding: 6px 14px;">📂 LOAD GAME</button>
+                    <button class="btn-upgrade" onclick="manualDeleteSave()" style="background: rgba(120,40,40,0.25); border-color: #ff6666; color: #ff9999; font-size: 0.82rem; padding: 6px 10px;">🗑️ CLEAR SAVE</button>
+                </div>
+            </div>
+
             <!-- Quick Boss Selector at Bonfire -->
             <div style="margin-top: 10px; border-top: 1px solid #382c20; padding-top: 14px;">
                 <div class="modal-label" style="text-align: center; margin-bottom: 10px; color: #ffd778; font-weight: 700; letter-spacing: 2px;">
@@ -1132,7 +1156,7 @@
 
             <div class="boss-cards-grid">
                 <!-- Boss 1: Taurus Demon -->
-                <div class="boss-card">
+                <div class="boss-card" data-boss-id="taurus">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">👹</div>
                         <div class="boss-card-text">
@@ -1145,7 +1169,7 @@
                 </div>
 
                 <!-- Boss 2: Bell Gargoyle -->
-                <div class="boss-card">
+                <div class="boss-card" data-boss-id="gargoyle">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">🗿</div>
                         <div class="boss-card-text">
@@ -1158,7 +1182,7 @@
                 </div>
 
                 <!-- Boss 3: Capra Demon -->
-                <div class="boss-card">
+                <div class="boss-card" data-boss-id="capra">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">🐐</div>
                         <div class="boss-card-text">
@@ -1171,7 +1195,7 @@
                 </div>
 
                 <!-- Boss 4: Great Grey Wolf Sif -->
-                <div class="boss-card">
+                <div class="boss-card" data-boss-id="sif">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">🐺</div>
                         <div class="boss-card-text">
@@ -1184,7 +1208,7 @@
                 </div>
 
                 <!-- Boss 5: Gwyn, Lord of Cinder -->
-                <div class="boss-card">
+                <div class="boss-card" data-boss-id="gwyn">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">☀️</div>
                         <div class="boss-card-text">
@@ -1290,7 +1314,12 @@
     <script>
         function openBossSelectModal() {
             const modal = document.getElementById('boss-select-modal');
-            if (modal) modal.style.display = 'flex';
+            if (modal) {
+                modal.style.display = 'flex';
+                if (window.game && window.game.updateBossRosterUI) {
+                    window.game.updateBossRosterUI();
+                }
+            }
         }
 
         function closeBossSelectModal() {
@@ -1303,6 +1332,26 @@
             if (window.game) {
                 if (window.game.closeBonfireModal) window.game.closeBonfireModal();
                 window.game.selectBoss(bossId);
+            }
+        }
+
+        function manualSaveGame() {
+            if (window.game) {
+                window.game.saveGame(true, 'MANUAL');
+            }
+        }
+
+        function manualLoadGame() {
+            if (window.game) {
+                window.game.loadGame(true);
+            }
+        }
+
+        function manualDeleteSave() {
+            if (confirm('Abandon your journey and extinguish the save file?')) {
+                if (window.game) {
+                    window.game.deleteSave();
+                }
             }
         }
 

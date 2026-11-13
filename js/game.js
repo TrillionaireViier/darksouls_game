@@ -19,6 +19,8 @@ class DarkSoulsGame {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.15;
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -68,7 +70,13 @@ class DarkSoulsGame {
         this.animate = this.animate.bind(this);
         requestAnimationFrame(this.animate);
 
-        this.showNotification("WELCOME TO LORDRAN. PREPARE TO DIE.");
+        // Auto-restore saved journey if present
+        if (this.hasSaveData()) {
+            this.loadGame(false);
+            this.showNotification(`JOURNEY RESTORED &bull; SOUL LEVEL ${this.combat.level}`);
+        } else {
+            this.showNotification("WELCOME TO LORDRAN. PREPARE TO DIE.");
+        }
     }
 
     cacheUIElements() {
@@ -395,6 +403,7 @@ class DarkSoulsGame {
         if (this.ui.levelModal) {
             this.ui.levelModal.style.display = 'flex';
             this.updateLevelModalValues();
+            this.updateSaveUI();
         }
     }
 
@@ -931,6 +940,165 @@ class DarkSoulsGame {
         this.combat.spawnEnemies();
         this.audio.playBonfireIgnite();
         this.showNotification("AWAKENED AT THE BONFIRE");
+    }
+
+    // ----------------------------------------------------
+    // SAVE / LOAD SYSTEM (LOCALSTORAGE PERSISTENCE)
+    // ----------------------------------------------------
+    saveGame(showNotification = true, context = 'MANUAL') {
+        if (!this.combat) return false;
+
+        const saveData = {
+            version: 1,
+            timestamp: Date.now(),
+            date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+            level: this.combat.level,
+            souls: this.combat.souls,
+            vigor: this.combat.vigor,
+            endurance: this.combat.endurance,
+            strength: this.combat.strength,
+            hp: this.combat.hp,
+            maxHp: this.combat.maxHp,
+            stamina: this.combat.stamina,
+            maxStamina: this.combat.maxStamina,
+            estusFlasks: this.combat.estusFlasks,
+            maxEstus: this.combat.maxEstus,
+            currentBossType: this.combat.currentBossType,
+            defeatedBosses: this.combat.defeatedBosses || [],
+            playerPos: {
+                x: Number(this.playerMesh.position.x.toFixed(2)),
+                y: Number(this.playerMesh.position.y.toFixed(2)),
+                z: Number(this.playerMesh.position.z.toFixed(2))
+            }
+        };
+
+        try {
+            localStorage.setItem('darksouls_save_v1', JSON.stringify(saveData));
+            if (showNotification) {
+                const prefix = context ? `[${context}] ` : '';
+                this.showNotification(`💾 ${prefix}JOURNEY SAVED &bull; LEVEL ${saveData.level}`);
+                if (this.audio) this.audio.playRoll();
+            }
+            this.updateSaveUI();
+            return true;
+        } catch (err) {
+            console.error('Failed to save darksouls game:', err);
+            return false;
+        }
+    }
+
+    loadGame(showNotification = true) {
+        try {
+            const raw = localStorage.getItem('darksouls_save_v1');
+            if (!raw) {
+                if (showNotification) this.showNotification("NO SAVED JOURNEY FOUND IN BONFIRE ASHES");
+                return false;
+            }
+
+            const data = JSON.parse(raw);
+            this.combat.level = data.level || 1;
+            this.combat.souls = Number(data.souls) || 0;
+            this.combat.vigor = data.vigor || 10;
+            this.combat.endurance = data.endurance || 10;
+            this.combat.strength = data.strength || 10;
+            this.combat.maxHp = data.maxHp || (1000 + (this.combat.vigor - 10) * 100);
+            this.combat.hp = this.combat.maxHp;
+            this.combat.maxStamina = data.maxStamina || (100 + (this.combat.endurance - 10) * 15);
+            this.combat.stamina = this.combat.maxStamina;
+            this.combat.maxEstus = data.maxEstus || 5;
+            this.combat.estusFlasks = this.combat.maxEstus;
+            this.combat.defeatedBosses = Array.isArray(data.defeatedBosses) ? data.defeatedBosses : [];
+            this.combat.isDead = false;
+
+            // Restore position (validate bounded)
+            if (data.playerPos && typeof data.playerPos.x === 'number' && typeof data.playerPos.z === 'number') {
+                this.playerMesh.position.set(data.playerPos.x, 0, data.playerPos.z);
+            } else {
+                this.playerMesh.position.set(0, 0, 5);
+            }
+
+            // Restore active boss
+            if (data.currentBossType) {
+                this.combat.spawnBoss(data.currentBossType);
+            }
+
+            this.updateHUD();
+            this.updateLevelModalValues();
+            this.updateBossRosterUI();
+            this.updateSaveUI();
+
+            if (this.audio) this.audio.playBonfireIgnite();
+            if (showNotification) {
+                this.showNotification(`📂 JOURNEY RESTORED &bull; SOUL LEVEL ${this.combat.level} (${this.combat.souls.toLocaleString()} SOULS)`);
+            }
+            return true;
+        } catch (err) {
+            console.error('Failed to load darksouls game:', err);
+            if (showNotification) this.showNotification("CORRUPTED SAVE DATA");
+            return false;
+        }
+    }
+
+    hasSaveData() {
+        return !!localStorage.getItem('darksouls_save_v1');
+    }
+
+    deleteSave() {
+        localStorage.removeItem('darksouls_save_v1');
+        this.showNotification("SAVED JOURNEY CLEARED FROM ASHES");
+        this.updateSaveUI();
+    }
+
+    updateSaveUI() {
+        const hasSave = this.hasSaveData();
+        const loadBtns = document.querySelectorAll('.btn-load-save');
+        loadBtns.forEach(btn => {
+            btn.disabled = !hasSave;
+            btn.style.opacity = hasSave ? '1' : '0.5';
+            btn.style.cursor = hasSave ? 'pointer' : 'not-allowed';
+        });
+
+        const statusElem = document.getElementById('save-status-text');
+        if (statusElem) {
+            if (hasSave) {
+                try {
+                    const data = JSON.parse(localStorage.getItem('darksouls_save_v1'));
+                    statusElem.innerHTML = `LAST SAVED: <span style="color:#ffd276;">${data.date || 'RECENT'}</span> &bull; LEVEL ${data.level} &bull; ${Number(data.souls).toLocaleString()} SOULS`;
+                } catch(e) {
+                    statusElem.textContent = 'SAVE READY IN MEMORY';
+                }
+            } else {
+                statusElem.textContent = 'NO ACTIVE SAVE FILE (REST AT BONFIRE OR CLICK SAVE)';
+            }
+        }
+    }
+
+    updateBossRosterUI() {
+        if (!this.combat) return;
+        const defeated = this.combat.defeatedBosses || [];
+        const cards = document.querySelectorAll('.boss-card');
+        cards.forEach(card => {
+            const bossId = card.getAttribute('data-boss-id');
+            if (bossId && defeated.includes(bossId)) {
+                card.classList.add('defeated');
+                card.style.borderColor = 'rgba(212, 175, 55, 0.7)';
+                let badge = card.querySelector('.slain-badge');
+                if (!badge) {
+                    badge = document.createElement('div');
+                    badge.className = 'slain-badge';
+                    badge.innerHTML = '⚔️ <span style="color: #ffd276; font-weight: 700;">LORD SLAIN</span>';
+                    badge.style.cssText = 'font-size: 0.75rem; letter-spacing: 1.5px; margin-top: 4px;';
+                    const textDiv = card.querySelector('.boss-card-text');
+                    if (textDiv) textDiv.appendChild(badge);
+                }
+                const btn = card.querySelector('.btn-fight-boss');
+                if (btn) {
+                    btn.textContent = 'RE-FIGHT';
+                    btn.style.borderColor = '#c49a45';
+                    btn.style.color = '#ffd276';
+                }
+            }
+        });
     }
 
     onWindowResize() {
