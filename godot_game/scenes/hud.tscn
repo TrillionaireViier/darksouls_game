@@ -1,0 +1,235 @@
+[gd_scene load_steps=5 format=3 uid="uid://ds_hud_001"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
+bg_color = Color(0.08, 0.05, 0.05, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.24, 0.18, 0.14, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill"]
+bg_color = Color(0.65, 0.12, 0.12, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stamina_fill"]
+bg_color = Color(0.18, 0.52, 0.25, 1)
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="PlayerHUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 350.0
+offset_bottom = 140.0
+
+[node name="HPBar" type="ProgressBar" parent="PlayerHUD"]
+layout_mode = 0
+offset_right = 260.0
+offset_bottom = 16.0
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
+max_value = 1000.0
+value = 1000.0
+show_percentage = false
+
+[node name="StaminaBar" type="ProgressBar" parent="PlayerHUD"]
+layout_mode = 0
+offset_top = 22.0
+offset_right = 260.0
+offset_bottom = 34.0
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_stamina_fill")
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="EstusContainer" type="HBoxContainer" parent="PlayerHUD"]
+layout_mode = 0
+offset_top = 44.0
+offset_right = 100.0
+offset_bottom = 74.0
+
+[node name="EstusIcon" type="Label" parent="PlayerHUD/EstusContainer"]
+layout_mode = 2
+text = "🧪 ESTUS"
+
+[node name="EstusLabel" type="Label" parent="PlayerHUD/EstusContainer"]
+layout_mode = 2
+text = "x 5"
+
+[node name="SoulsContainer" type="HBoxContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -45.0
+offset_right = -24.0
+offset_bottom = -15.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="SoulIcon" type="Label" parent="SoulsContainer"]
+layout_mode = 2
+text = "🔮 SOULS: "
+
+[node name="SoulsLabel" type="Label" parent="SoulsContainer"]
+layout_mode = 2
+text = "0"
+
+[node name="BossHUD" type="VBoxContainer" parent="."]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -80.0
+offset_right = 300.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="BossNameLabel" type="Label" parent="BossHUD"]
+layout_mode = 2
+text = "TAURUS DEMON"
+horizontal_alignment = 1
+
+[node name="BossBarFrame" type="Control" parent="BossHUD"]
+custom_minimum_size = Vector2(600, 18)
+layout_mode = 2
+
+[node name="BossHPBar" type="ProgressBar" parent="BossHUD/BossBarFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
+max_value = 2200.0
+value = 2200.0
+show_percentage = false
+
+[node name="NotificationLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 40.0
+offset_right = 200.0
+offset_bottom = 70.0
+grow_horizontal = 2
+horizontal_alignment = 1
+
+[node name="DeathOverlay" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.88)
+
+[node name="DeathLabel" type="Label" parent="DeathOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -40.0
+offset_right = 200.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.65, 0.08, 0.08, 1)
+theme_override_font_sizes/font_size = 48
+text = "YOU DIED"
+horizontal_alignment = 1
+
+[node name="RespawnLabel" type="Label" parent="DeathOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = 40.0
+offset_right = 150.0
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "[ SPACE ] RESPAWN AT BONFIRE"
+horizontal_alignment = 1
+
+[node name="BonfireBanner" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.03, 0.02, 0.9)
+
+[node name="BannerLabel" type="Label" parent="BonfireBanner"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.2, 1)
+theme_override_font_sizes/font_size = 32
+text = "BONFIRE LIT"
+horizontal_alignment = 1
+
+[node name="VictoryBanner" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.03, 0.02, 0.9)
+
+[node name="VictoryLabel" type="Label" parent="VictoryBanner"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -20.0
+offset_right = 200.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 34
+text = "VICTORY ACHIEVED"
+horizontal_alignment = 1

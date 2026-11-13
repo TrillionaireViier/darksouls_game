@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://ds_boss_taurus_001"]
+
+[ext_resource type="Script" path="res://scripts/boss_taurus.gd" id="1_boss"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_boss"]
+radius = 1.2
+height = 4.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_flesh"]
+albedo_color = Color(0.16, 0.12, 0.1, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+material = SubResource("StandardMaterial3D_flesh")
+size = Vector3(2.0, 2.2, 1.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_head"]
+material = SubResource("StandardMaterial3D_flesh")
+size = Vector3(1.0, 1.0, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hammer"]
+size = Vector3(1.2, 1.8, 1.2)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_shaft"]
+top_radius = 0.16
+bottom_radius = 0.16
+height = 4.2
+
+[node name="BossTaurus" type="CharacterBody3D" groups=["bosses"]]
+script = ExtResource("1_boss")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0)
+shape = SubResource("CapsuleShape3D_boss")
+
+[node name="MeshRoot" type="Node3D" parent="."]
+
+[node name="Torso" type="MeshInstance3D" parent="MeshRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="Head" type="MeshInstance3D" parent="MeshRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0.4)
+mesh = SubResource("BoxMesh_head")
+
+[node name="RightArm" type="Node3D" parent="MeshRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 2.4, 0)
+
+[node name="Weapon" type="Node3D" parent="MeshRoot/RightArm"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, -0.5, -0.6)
+
+[node name="Shaft" type="MeshInstance3D" parent="MeshRoot/RightArm/Weapon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("CylinderMesh_shaft")
+
+[node name="HammerHead" type="MeshInstance3D" parent="MeshRoot/RightArm/Weapon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+mesh = SubResource("BoxMesh_hammer")
+
+[node name="FireLight" type="OmniLight3D" parent="MeshRoot/RightArm/Weapon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+visible = false
+light_color = Color(1, 0.25, 0.05, 1)
+light_energy = 4.0
+omni_range = 10.0

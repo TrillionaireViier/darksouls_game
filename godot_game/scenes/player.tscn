@@ -1,0 +1,74 @@
+[gd_scene load_steps=8 format=3 uid="uid://ds_player_001"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_steel"]
+albedo_color = Color(0.55, 0.58, 0.62, 1)
+metallic = 0.85
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+material = SubResource("StandardMaterial3D_steel")
+size = Vector3(0.55, 0.65, 0.35)
+
+[sub_resource type="BoxMesh" id="BoxMesh_helm"]
+material = SubResource("StandardMaterial3D_steel")
+size = Vector3(0.35, 0.4, 0.35)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sword"]
+size = Vector3(0.12, 1.25, 0.04)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hitbox"]
+size = Vector3(1.2, 1.4, 1.6)
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="MeshRoot" type="Node3D" parent="."]
+
+[node name="Torso" type="MeshInstance3D" parent="MeshRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="Helm" type="MeshInstance3D" parent="MeshRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+mesh = SubResource("BoxMesh_helm")
+
+[node name="RightHand" type="Node3D" parent="MeshRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38, 0.8, -0.2)
+
+[node name="Sword" type="MeshInstance3D" parent="MeshRoot/RightHand"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0.4, 0)
+mesh = SubResource("BoxMesh_sword")
+
+[node name="HitboxArea" type="Area3D" parent="MeshRoot/RightHand/Sword"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshRoot/RightHand/Sword/HitboxArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -0.6)
+shape = SubResource("BoxShape3D_hitbox")
+
+[node name="LeftHand" type="Node3D" parent="MeshRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.38, 0.8, 0.1)
+
+[node name="Shield" type="MeshInstance3D" parent="MeshRoot/LeftHand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0.2)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+spring_length = 4.2
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+current = true
+fov = 65.0

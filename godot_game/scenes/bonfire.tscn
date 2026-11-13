@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://ds_bonfire_001"]
+
+[ext_resource type="Script" path="res://scripts/bonfire.gd" id="1_bonfire"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_area"]
+height = 2.0
+radius = 3.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ash"]
+albedo_color = Color(0.1, 0.09, 0.08, 1)
+roughness = 0.95
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mound"]
+material = SubResource("StandardMaterial3D_ash")
+top_radius = 0.2
+bottom_radius = 1.4
+height = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sword"]
+albedo_color = Color(0.35, 0.32, 0.3, 1)
+metallic = 0.8
+roughness = 0.4
+emission_enabled = true
+emission = Color(0.8, 0.3, 0.05, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_blade"]
+material = SubResource("StandardMaterial3D_sword")
+top_radius = 0.04
+bottom_radius = 0.08
+height = 1.8
+
+[node name="Bonfire" type="Area3D"]
+script = ExtResource("1_bonfire")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+shape = SubResource("CylinderShape3D_area")
+
+[node name="AshMound" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("CylinderMesh_mound")
+
+[node name="CoiledSword" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.995004, -0.0998334, 0, 0.0998334, 0.995004, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("CylinderMesh_blade")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+light_color = Color(1, 0.45, 0.12, 1)
+light_energy = 2.6
+omni_range = 14.0
+
+[node name="PromptLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+billboard = 1
+text = "[ E ] REST AT BONFIRE"
+font_size = 28
+outline_size = 6

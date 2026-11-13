@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="20" fill="#0c0a08"/>
+  <circle cx="64" cy="64" r="54" fill="#18130e" stroke="#5a4224" stroke-width="3"/>
+  <!-- Bonfire Flame -->
+  <path d="M64 22 C72 38 88 52 82 72 C78 86 64 96 64 96 C64 96 50 86 46 72 C40 52 56 38 64 22 Z" fill="url(#fireGrad)"/>
+  <!-- Coiled Sword -->
+  <path d="M62 30 L66 30 L65 88 L63 88 Z" fill="#b0a8a0"/>
+  <rect x="54" y="86" width="20" height="4" rx="2" fill="#d4af37"/>
+  <rect x="62" y="90" width="4" height="14" fill="#5a3d24"/>
+  <circle cx="64" cy="106" r="3" fill="#d4af37"/>
+  <defs>
+    <linearGradient id="fireGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff275"/>
+      <stop offset="30%" stop-color="#ff9900"/>
+      <stop offset="100%" stop-color="#cc2200"/>
+    </linearGradient>
+  </defs>
+</svg>

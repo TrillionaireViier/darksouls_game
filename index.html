@@ -940,26 +940,36 @@
 
     <!-- DOWNLOAD GAME MODAL -->
     <div id="download-modal" class="modal-overlay">
-        <div class="modal-box">
+        <div class="modal-box" style="max-width: 620px;">
             <div class="modal-header">DOWNLOAD DARK SOULS</div>
             <p style="font-size: 0.95rem; color: #b8a896; line-height: 1.6; text-align: center;">
-                Download the complete standalone build to play offline on your PC, Mac, Linux, or mobile device with full performance!
+                Choose your preferred engine or format. All packages include the full 3D game, Taurus Demon boss fight, bonfire rest mechanics, and procedural combat system!
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
-                <!-- Direct ZIP Download -->
-                <a href="/darksouls_game_standalone.zip" download="darksouls_game_standalone.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 14px;">
+                <!-- 1. Standalone Web & Desktop Build -->
+                <a href="/darksouls_game_standalone.zip" download="darksouls_game_standalone.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px;">
                     <span>📦</span> DOWNLOAD STANDALONE BUILD (.ZIP)
                 </a>
 
-                <!-- GitHub Repository -->
-                <a href="https://github.com/TrillionaireViier/darksouls_game" target="_blank" class="btn-icon-bar" style="text-align: center; padding: 12px;">
-                    <span>🐙</span> VIEW GITHUB REPOSITORY & SOURCE
+                <!-- 2. Godot 4.x Project -->
+                <a href="/darksouls_godot_project.zip" download="darksouls_godot_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #1b2638 0%, #0d1520 100%); border-color: #478cbf; color: #9fd3ff; box-shadow: 0 0 15px rgba(71, 140, 191, 0.35);">
+                    <span>🎮</span> DOWNLOAD GODOT 4.X PROJECT (.ZIP)
+                </a>
+
+                <!-- 3. Unity 3D Project -->
+                <a href="/darksouls_unity_project.zip" download="darksouls_unity_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #2a1f2f 0%, #17101a 100%); border-color: #aa55cc; color: #e9bfff; box-shadow: 0 0 15px rgba(170, 85, 204, 0.35);">
+                    <span>⚡</span> DOWNLOAD UNITY 3D PROJECT (.ZIP)
+                </a>
+
+                <!-- 4. GitHub Repository -->
+                <a href="https://github.com/TrillionaireViier/darksouls_game" target="_blank" class="btn-icon-bar" style="text-align: center; padding: 11px;">
+                    <span>🐙</span> VIEW GITHUB REPOSITORY & ALL SOURCE CODE
                 </a>
             </div>
 
             <div style="font-size: 0.8rem; color: #7a6e62; text-align: center; margin-top: 8px;">
-                Includes: 3D Engine, Web Audio Synthesizer, Boss AI, Full Game World &bull; Zero installation required!
+                Compatible with Windows, macOS, Linux &bull; Full C# & GDScript source code included!
             </div>
 
             <button class="btn-modal-close" onclick="closeDownloadModal()">CLOSE</button>

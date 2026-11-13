@@ -1,0 +1,87 @@
+[gd_scene load_steps=12 format=3 uid="uid://ds_main_world_001"]
+
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_world"]
+[ext_resource type="PackedScene" uid="uid://ds_player_001" path="res://scenes/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://ds_bonfire_001" path="res://scenes/bonfire.tscn" id="3_bonfire"]
+[ext_resource type="PackedScene" uid="uid://ds_enemy_001" path="res://scenes/enemy_hollow.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" uid="uid://ds_boss_taurus_001" path="res://scenes/boss_taurus.tscn" id="5_boss"]
+[ext_resource type="PackedScene" uid="uid://ds_hud_001" path="res://scenes/hud.tscn" id="6_hud"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.04, 0.04, 0.04, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.12, 0.14, 0.18, 1)
+fog_enabled = true
+fog_light_color = Color(0.05, 0.04, 0.04, 1)
+fog_density = 0.02
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.12, 0.11, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+material = SubResource("StandardMaterial3D_stone")
+size = Vector3(60, 1, 60)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(60, 1, 60)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bridge"]
+material = SubResource("StandardMaterial3D_stone")
+size = Vector3(14, 1, 120)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bridge"]
+size = Vector3(14, 1, 120)
+
+[node name="MainWorld" type="Node3D"]
+script = ExtResource("1_world")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Moonlight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 20, 30, 20)
+light_color = Color(0.65, 0.75, 0.9, 1)
+light_energy = 0.7
+shadow_enabled = true
+
+[node name="CourtyardFloor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CourtyardFloor"]
+mesh = SubResource("BoxMesh_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CourtyardFloor"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="BridgeFloor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 90)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BridgeFloor"]
+mesh = SubResource("BoxMesh_bridge")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BridgeFloor"]
+shape = SubResource("BoxShape3D_bridge")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
+[node name="Bonfire" parent="." instance=ExtResource("3_bonfire")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="EnemyHollow1" parent="Enemies" instance=ExtResource("4_enemy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -8)
+
+[node name="EnemyHollow2" parent="Enemies" instance=ExtResource("4_enemy")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 3, 0, 20)
+
+[node name="EnemyHollow3" parent="Enemies" instance=ExtResource("4_enemy")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -1, 0, 50)
+
+[node name="BossTaurus" parent="." instance=ExtResource("5_boss")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 130)
+
+[node name="HUD" parent="." instance=ExtResource("6_hud")]
