@@ -7,6 +7,22 @@ A complete 3D Soulslike Action RPG project created for **Godot 4.x** (compatible
 2. Click **Import** and browse to this folder, selecting `project.godot`.
 3. Press **Run Project (F5)** or open `scenes/main_world.tscn`.
 
+---
+
+## ⚙️ Web Export & Memory Configuration (Збільшення пам'яті для Web):
+Щоб запобігти збоям (crash) пам'яті браузера при завантаженні 3D сцени:
+1. Відкрийте **Project -> Export -> Web (Runnable)**.
+2. Увімкніть перемикач **Advanced Options** у верхньому правому кутку.
+3. У попередньо налаштованому файлі `export_presets.cfg` вже задано:
+   - **Initial Memory**: `536870912` (512 MB)
+   - **Maximum Memory**: `2147483648` (2 GB)
+   - **Custom Compiler Flags (Emscripten)**:
+     ```
+     -s INITIAL_MEMORY=536870912 -s MAXIMUM_MEMORY=2147483648 -s ALLOW_MEMORY_GROWTH=1
+     ```
+
+---
+
 ## ⚔️ Included Features & Architecture:
 - **Player Controller (`scripts/player.gd`)**:
   - Full 3D CharacterBody3D with spring arm third-person camera.

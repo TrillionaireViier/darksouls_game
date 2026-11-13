@@ -317,28 +317,33 @@ class DarkSoulsGame {
     }
 
     calculateMovementDirection() {
-        const moveDir = new THREE.Vector3();
+        let fwd = 0;
+        let right = 0;
 
         // Keyboard
-        if (this.keys['KeyW'] || this.keys['ArrowUp']) moveDir.z += 1;
-        if (this.keys['KeyS'] || this.keys['ArrowDown']) moveDir.z -= 1;
-        if (this.keys['KeyA'] || this.keys['ArrowLeft']) moveDir.x += 1;
-        if (this.keys['KeyD'] || this.keys['ArrowRight']) moveDir.x -= 1;
+        if (this.keys['KeyW'] || this.keys['ArrowUp']) fwd += 1;
+        if (this.keys['KeyS'] || this.keys['ArrowDown']) fwd -= 1;
+        if (this.keys['KeyD'] || this.keys['ArrowRight']) right += 1;
+        if (this.keys['KeyA'] || this.keys['ArrowLeft']) right -= 1;
 
-        // Touch Joystick
+        // Touch Joystick (y > 0 is down/back, y < 0 is up/forward)
         if (this.touchJoyActive) {
-            moveDir.x -= this.touchJoyVector.x;
-            moveDir.z -= this.touchJoyVector.y;
+            fwd -= this.touchJoyVector.y;
+            right += this.touchJoyVector.x;
         }
 
-        if (moveDir.lengthSq() > 0.001) {
-            moveDir.normalize();
-            // Transform relative to camera yaw
-            const transformed = new THREE.Vector3();
-            transformed.x = moveDir.x * Math.cos(this.cameraYaw) + moveDir.z * Math.sin(this.cameraYaw);
-            transformed.z = -moveDir.x * Math.sin(this.cameraYaw) + moveDir.z * Math.cos(this.cameraYaw);
-            return transformed;
+        if (Math.abs(fwd) < 0.001 && Math.abs(right) < 0.001) {
+            return new THREE.Vector3();
         }
+
+        // Camera forward and right vectors on XZ ground plane
+        const camForward = new THREE.Vector3(-Math.sin(this.cameraYaw), 0, -Math.cos(this.cameraYaw)).normalize();
+        const camRight = new THREE.Vector3(Math.cos(this.cameraYaw), 0, -Math.sin(this.cameraYaw)).normalize();
+
+        const moveDir = new THREE.Vector3()
+            .addScaledVector(camForward, fwd)
+            .addScaledVector(camRight, right)
+            .normalize();
 
         return moveDir;
     }
