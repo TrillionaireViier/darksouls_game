@@ -2247,22 +2247,13 @@ class DarkSoulsWorld {
             this.catacombFogMesh.material.opacity = 0.60 + Math.sin(time * 3.5) * 0.18;
         }
 
-        // 4. Floating embers update
+        // 4. Floating embers update (Zero-bandwidth GPU translation, 0 buffer uploads)
         if (this.emberParticles) {
-            const posAttr = this.emberParticles.geometry.attributes.position;
-            const arr = posAttr.array;
-            const count = arr.length / 3;
-            for (let i = 0; i < count; i++) {
-                arr[i * 3] += this.emberVelocities[i * 3] * delta;
-                arr[i * 3 + 1] += this.emberVelocities[i * 3 + 1] * delta;
-                arr[i * 3 + 2] += this.emberVelocities[i * 3 + 2] * delta;
-
-                // Reset when floating too high
-                if (arr[i * 3 + 1] > 26) {
-                    arr[i * 3 + 1] = 0.5;
-                }
+            this.emberParticles.position.y += delta * 0.45;
+            this.emberParticles.rotation.y = time * 0.025;
+            if (this.emberParticles.position.y > 14.0) {
+                this.emberParticles.position.y = 0;
             }
-            posAttr.needsUpdate = true;
         }
 
         // 5. Sparks update

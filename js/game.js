@@ -40,6 +40,12 @@ class DarkSoulsGame {
         this.heraldry = new HeraldryNobilitySystem(this);
         this.apothecary = new ApothecaryCraftingSystem(this);
 
+        // Comprehensive QA & Test Automation Suite
+        if (typeof DarkSoulsQASuite !== 'undefined') {
+            this.qaSuite = new DarkSoulsQASuite(this);
+            window.qaSuite = this.qaSuite;
+        }
+
         // Post-Processing Cinematic Pipeline (ACES Filmic Tone Mapping, 9-Tap Bloom, Vignette, Micro-grain)
         try {
             if (typeof DarkSoulsPostProcessing !== 'undefined') {
@@ -1777,6 +1783,43 @@ class DarkSoulsGame {
         }
     }
 
+    showNextLordUnlockedModal(defeatedBoss, nextBoss) {
+        if (!nextBoss) return;
+        const modal = document.getElementById('next-lord-modal');
+        if (modal) {
+            const defElem = document.getElementById('next-lord-defeated-name');
+            const nameElem = document.getElementById('next-lord-name');
+            const titleElem = document.getElementById('next-lord-title');
+            const iconElem = document.getElementById('next-lord-icon');
+            const hpElem = document.getElementById('next-lord-hp');
+            const soulsElem = document.getElementById('next-lord-souls');
+
+            if (defElem) defElem.textContent = `${defeatedBoss ? defeatedBoss.name : 'LORD'} VANQUISHED`;
+            if (nameElem) nameElem.textContent = nextBoss.name;
+            if (titleElem) titleElem.innerHTML = nextBoss.title;
+            if (iconElem) iconElem.textContent = nextBoss.icon;
+            if (hpElem) hpElem.textContent = `HP: ${nextBoss.maxHp.toLocaleString()}`;
+            if (soulsElem) soulsElem.textContent = `REWARD: ${nextBoss.souls.toLocaleString()} SOULS`;
+
+            const btnFight = document.getElementById('btn-next-lord-fight');
+            if (btnFight) {
+                btnFight.onclick = () => {
+                    this.closeNextLordModal();
+                    this.selectBoss(nextBoss.id);
+                };
+            }
+            modal.style.display = 'flex';
+            if (this.audio) this.audio.playBellToll();
+        } else {
+            this.showNotification(`⚔️ NEXT LORD UNLOCKED: ${nextBoss.name}!`);
+        }
+    }
+
+    closeNextLordModal() {
+        const modal = document.getElementById('next-lord-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
     respawnPlayer() {
         if (this.ui.deathScreen) {
             this.ui.deathScreen.classList.remove('active');
@@ -2361,6 +2404,10 @@ window.adminSummonBoss = (b) => { if (window.game) window.game.adminSummonBoss(b
 window.togglePerformanceMode = () => { if (window.game) window.game.togglePerformanceMode(); };
 
 // Global initialization
-window.addEventListener('DOMContentLoaded', () => {
-    window.game = new DarkSoulsGame();
-});
+if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', () => {
+        if (!window.game) window.game = new DarkSoulsGame();
+    });
+} else {
+    if (!window.game) window.game = new DarkSoulsGame();
+}

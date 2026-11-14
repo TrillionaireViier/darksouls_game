@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261114_v10_AAA_REMASTER';
+            var TARGET_BUILD = '20261115_v15_16_BOSSES_60FPS_TURBO';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1407,7 +1407,7 @@
     <header id="top-header">
         <div class="header-title-group">
             <h1 class="header-title">DARK SOULS</h1>
-            <p class="header-sub">Lordran &bull; 6 Lords</p>
+            <p class="header-sub">Lordran &bull; 16 Lords</p>
         </div>
 
         <div class="header-actions">
@@ -1415,6 +1415,7 @@
             <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
                 <span>📦</span> <span class="btn-label-text">DOWNLOAD</span>
             </button>
+            <button class="btn-icon-bar" onclick="openQASuiteModal()" title="Open Automated QA Test Suite, 1-HP Sandbox & Watchdog" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🛠️ <span class="btn-label-text">QA SUITE</span></button>
             <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
             <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
             <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
@@ -1640,25 +1641,38 @@
             </p>
 
             <div class="boss-cards-grid">
-                <!-- Boss 1: Taurus Demon -->
-                <div class="boss-card" data-boss-id="taurus">
+                <!-- Boss 1: Asylum Demon -->
+                <div class="boss-card" data-boss-id="asylum">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">👹</div>
                         <div class="boss-card-text">
-                            <div class="boss-card-name">TAURUS DEMON</div>
+                            <div class="boss-card-name">1. ASYLUM DEMON</div>
+                            <div class="boss-card-desc">Northern Undead Asylum &bull; Great Demon Hammer & Butt Slam</div>
+                            <div class="boss-card-stats">HP: 2,000 &bull; REWARD: 4,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('asylum')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 2: Taurus Demon -->
+                <div class="boss-card" data-boss-id="taurus">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐂</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">2. TAURUS DEMON</div>
                             <div class="boss-card-desc">Undead Burg Bridge &bull; Great Stone Hammer & Ground Slam</div>
-                            <div class="boss-card-stats">HP: 2,200 &bull; REWARD: 5,000 SOULS</div>
+                            <div class="boss-card-stats">HP: 2,400 &bull; REWARD: 5,000 SOULS</div>
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('taurus')">CHALLENGE</button>
                 </div>
 
-                <!-- Boss 2: Bell Gargoyle -->
+                <!-- Boss 3: Bell Gargoyle -->
                 <div class="boss-card" data-boss-id="gargoyle">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">🗿</div>
                         <div class="boss-card-text">
-                            <div class="boss-card-name">BELL GARGOYLE</div>
+                            <div class="boss-card-name">3. BELL GARGOYLE</div>
                             <div class="boss-card-desc">Undead Parish Belfry &bull; Bronze Halberd, Stone Wings & Flame Breath</div>
                             <div class="boss-card-stats">HP: 2,600 &bull; REWARD: 7,500 SOULS</div>
                         </div>
@@ -1666,53 +1680,170 @@
                     <button class="btn-fight-boss" onclick="chooseBoss('gargoyle')">CHALLENGE</button>
                 </div>
 
-                <!-- Boss 3: Capra Demon -->
+                <!-- Boss 4: Capra Demon -->
                 <div class="boss-card" data-boss-id="capra">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">🐐</div>
                         <div class="boss-card-text">
-                            <div class="boss-card-name">CAPRA DEMON</div>
+                            <div class="boss-card-name">4. CAPRA DEMON</div>
                             <div class="boss-card-desc">Lower Undead Burg &bull; Dual Jagged Demon Great Machetes</div>
-                            <div class="boss-card-stats">HP: 2,400 &bull; REWARD: 8,000 SOULS</div>
+                            <div class="boss-card-stats">HP: 2,500 &bull; REWARD: 8,000 SOULS</div>
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('capra')">CHALLENGE</button>
                 </div>
 
-                <!-- Boss 4: Gravelord Nito -->
-                <div class="boss-card" data-boss-id="nito">
+                <!-- Boss 5: Gaping Dragon -->
+                <div class="boss-card" data-boss-id="gaping">
                     <div class="boss-card-info">
-                        <div class="boss-card-icon">💀</div>
+                        <div class="boss-card-icon">🐉</div>
                         <div class="boss-card-text">
-                            <div class="boss-card-name">GRAVELORD NITO</div>
-                            <div class="boss-card-desc">Catacombs Mausoleum &bull; Gravelord Greatsword, Skeletal Cloak & Miasma Nova</div>
-                            <div class="boss-card-stats">HP: 3,500 &bull; REWARD: 15,000 SOULS</div>
+                            <div class="boss-card-name">5. GAPING DRAGON</div>
+                            <div class="boss-card-desc">The Depths &bull; Gaping Ribcage Maw, Acid Spit & Tail Sweep</div>
+                            <div class="boss-card-stats">HP: 3,200 &bull; REWARD: 10,000 SOULS</div>
                         </div>
                     </div>
-                    <button class="btn-fight-boss" onclick="chooseBoss('nito')">CHALLENGE</button>
+                    <button class="btn-fight-boss" onclick="chooseBoss('gaping')">CHALLENGE</button>
                 </div>
 
-                <!-- Boss 5: Great Grey Wolf Sif -->
+                <!-- Boss 6: Chaos Witch Quelaag -->
+                <div class="boss-card" data-boss-id="quelaag">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🕷️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">6. CHAOS WITCH QUELAAG</div>
+                            <div class="boss-card-desc">Blighttown Swamps &bull; Flaming Furysword & Magma Lava Pools</div>
+                            <div class="boss-card-stats">HP: 3,100 &bull; REWARD: 12,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('quelaag')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 7: Moonlight Butterfly -->
+                <div class="boss-card" data-boss-id="butterfly">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦋</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">7. MOONLIGHT BUTTERFLY</div>
+                            <div class="boss-card-desc">Darkroot Ruins &bull; Luminescent Wings, Homing Magic & Crystal Laser</div>
+                            <div class="boss-card-stats">HP: 2,700 &bull; REWARD: 9,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('butterfly')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 8: Iron Golem -->
+                <div class="boss-card" data-boss-id="iron_golem">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🤖</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">8. IRON GOLEM</div>
+                            <div class="boss-card-desc">Sen's Fortress Ramparts &bull; Giant Core Axe & Wind Wave Whirlwind</div>
+                            <div class="boss-card-stats">HP: 3,400 &bull; REWARD: 14,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('iron_golem')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 9: Dragonslayer Ornstein -->
+                <div class="boss-card" data-boss-id="ornstein">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚡</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">9. DRAGONSLAYER ORNSTEIN</div>
+                            <div class="boss-card-desc">Anor Londo Cathedral &bull; Lightning Cross-Spear & Supersonic Thrust</div>
+                            <div class="boss-card-stats">HP: 3,000 &bull; REWARD: 16,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('ornstein')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 10: Executioner Smough -->
+                <div class="boss-card" data-boss-id="smough">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔨</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">10. EXECUTIONER SMOUGH</div>
+                            <div class="boss-card-desc">Anor Londo Cathedral &bull; Colossal Gilded War Hammer & Butt Slam</div>
+                            <div class="boss-card-stats">HP: 3,800 &bull; REWARD: 16,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('smough')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 11: Great Grey Wolf Sif -->
                 <div class="boss-card" data-boss-id="sif">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">🐺</div>
                         <div class="boss-card-text">
-                            <div class="boss-card-name">GREAT GREY WOLF SIF</div>
+                            <div class="boss-card-name">11. GREAT GREY WOLF SIF</div>
                             <div class="boss-card-desc">Darkroot Garden &bull; Artorias's Greatsword & 360° Whirlwind</div>
-                            <div class="boss-card-stats">HP: 3,200 &bull; REWARD: 12,000 SOULS</div>
+                            <div class="boss-card-stats">HP: 3,300 &bull; REWARD: 15,000 SOULS</div>
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('sif')">CHALLENGE</button>
                 </div>
 
-                <!-- Boss 6: Gwyn, Lord of Cinder -->
+                <!-- Boss 12: Knight Artorias -->
+                <div class="boss-card" data-boss-id="artorias">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">12. KNIGHT ARTORIAS</div>
+                            <div class="boss-card-desc">Oolacile Abyss &bull; Somersault Abyss Slam, Sludge Blast & Dark Thrust</div>
+                            <div class="boss-card-stats">HP: 3,600 &bull; REWARD: 20,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('artorias')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 13: Manus, Father of the Abyss -->
+                <div class="boss-card" data-boss-id="manus">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👁️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">13. MANUS, FATHER OF THE ABYSS</div>
+                            <div class="boss-card-desc">Chasm of Abyss &bull; Primeval Monstrous Dark Arm, Claws & Dark Beads</div>
+                            <div class="boss-card-stats">HP: 4,200 &bull; REWARD: 24,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('manus')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 14: Black Dragon Kalameet -->
+                <div class="boss-card" data-boss-id="kalameet">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦇</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">14. BLACK DRAGON KALAMEET</div>
+                            <div class="boss-card-desc">Royal Wood &bull; Black Flame Breath, 4 Wings & Calamity Telekinesis</div>
+                            <div class="boss-card-stats">HP: 4,000 &bull; REWARD: 25,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('kalameet')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 15: Gravelord Nito -->
+                <div class="boss-card" data-boss-id="nito">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💀</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">15. GRAVELORD NITO</div>
+                            <div class="boss-card-desc">Catacombs Mausoleum &bull; Gravelord Greatsword, Skeletal Cloak & Miasma Nova</div>
+                            <div class="boss-card-stats">HP: 3,800 &bull; REWARD: 22,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('nito')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 16: Gwyn, Lord of Cinder -->
                 <div class="boss-card" data-boss-id="gwyn">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">☀️</div>
                         <div class="boss-card-text">
-                            <div class="boss-card-name">GWYN, LORD OF CINDER</div>
+                            <div class="boss-card-name">16. GWYN, LORD OF CINDER</div>
                             <div class="boss-card-desc">Kiln of First Flame &bull; Flaming Sunlight Greatsword & Sun Burst</div>
-                            <div class="boss-card-stats">HP: 4,000 &bull; REWARD: 20,000 SOULS</div>
+                            <div class="boss-card-stats">HP: 4,500 &bull; REWARD: 35,000 SOULS</div>
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('gwyn')">CHALLENGE</button>
@@ -2070,6 +2201,107 @@
             </div>
 
             <button class="btn-modal-close" onclick="closeSkinsModal()">RETURN TO BATTLE</button>
+        </div>
+    </div>
+
+    <!-- ⚔️ NEXT LORD UNLOCKED MODAL (SMOOTH SEQUENTIAL TRANSITION) -->
+    <div id="next-lord-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 580px; border-color: #ffd700; box-shadow: 0 0 35px rgba(255, 215, 0, 0.45); text-align: center;">
+            <div id="next-lord-defeated-name" style="font-size: 0.85rem; letter-spacing: 3px; color: #a5d6a7; margin-bottom: 4px; font-weight: 700;">
+                LORD VANQUISHED
+            </div>
+            <div class="modal-header" style="color: #ffd700; text-shadow: 0 0 16px rgba(255, 215, 0, 0.8); margin-bottom: 12px;">
+                ✦ NEXT LORD UNLOCKED ✦
+            </div>
+
+            <div style="background: linear-gradient(180deg, rgba(32, 24, 12, 0.95), rgba(16, 12, 8, 0.95)); border: 1px solid #c49a45; padding: 18px; border-radius: 6px; margin-bottom: 16px;">
+                <div id="next-lord-icon" style="font-size: 3.2rem; margin-bottom: 8px;">👹</div>
+                <div id="next-lord-name" style="font-size: 1.4rem; font-weight: 800; color: #ffd778; letter-spacing: 2px;">
+                    NEXT LORD
+                </div>
+                <div id="next-lord-title" style="font-size: 0.88rem; color: #ccc; margin: 6px 0 12px 0; line-height: 1.4;">
+                    Arena Description
+                </div>
+                <div style="display: flex; justify-content: center; gap: 20px; font-size: 0.85rem;">
+                    <span id="next-lord-hp" style="color: #ff8888; font-weight: 700;">HP: 2,400</span>
+                    <span id="next-lord-souls" style="color: #88ccff; font-weight: 700;">REWARD: 5,000 SOULS</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="btn-next-lord-fight" class="btn-fight-boss" style="padding: 12px 24px; font-size: 0.95rem; font-weight: 800; border-color: #ffd700; color: #fff3a8; background: linear-gradient(180deg, #553311 0%, #221100 100%); box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);">
+                    ⚔️ ADVANCE & CHALLENGE NOW
+                </button>
+                <button class="btn-modal-close" onclick="closeNextLordModal()" style="padding: 12px 18px; border-color: #554433; color: #aaa;">
+                    REST AT BONFIRE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🛠️ QA TEST AUTOMATION & 1-HP SANDBOX SUITE -->
+    <div id="qa-suite-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 780px; border-color: #00e5ff; box-shadow: 0 0 35px rgba(0, 229, 255, 0.35);">
+            <div class="modal-header" style="color: #80d8ff; text-shadow: 0 0 14px rgba(0, 229, 255, 0.7); display: flex; justify-content: space-between; align-items: center;">
+                <span>🛠️ QA TEST AUTOMATION SUITE</span>
+                <span style="font-size: 0.75rem; color: #00e5ff; border: 1px solid #00e5ff; padding: 2px 8px; border-radius: 3px;">LIVE WATCHDOG</span>
+            </div>
+
+            <!-- Metric summary badges -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; font-size: 0.78rem;">
+                <div style="background: rgba(0,255,170,0.15); border: 1px solid #00ffaa; color: #00ffaa; padding: 4px 8px; border-radius: 3px;">
+                    PASSED: <b id="qa-passed-count">0</b>
+                </div>
+                <div style="background: rgba(255,85,85,0.15); border: 1px solid #ff5555; color: #ff5555; padding: 4px 8px; border-radius: 3px;">
+                    FAILED: <b id="qa-failed-count">0</b>
+                </div>
+                <div style="background: rgba(255,215,0,0.15); border: 1px solid #ffd700; color: #ffd778; padding: 4px 8px; border-radius: 3px;">
+                    WARNINGS: <b id="qa-warn-count">0</b>
+                </div>
+                <div style="background: rgba(0,229,255,0.15); border: 1px solid #00e5ff; color: #80d8ff; padding: 4px 8px; border-radius: 3px;">
+                    SANDBOX: <b id="qa-1hp-status">NORMAL</b>
+                </div>
+                <div style="background: rgba(170,100,255,0.15); border: 1px solid #c084fc; color: #e9d5ff; padding: 4px 8px; border-radius: 3px;">
+                    AUTO-BOT: <b id="qa-bot-status">IDLE</b>
+                </div>
+            </div>
+
+            <!-- Action buttons grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-bottom: 12px;">
+                <button class="btn-fight-boss" onclick="qaRunFullAudit()" style="border-color: #00ffaa; color: #a7f3d0; background: rgba(6,78,59,0.7);">
+                    🚀 RUN FULL QA AUDIT
+                </button>
+                <button class="btn-fight-boss" onclick="qaTestHitDetection()" style="border-color: #ffd700; color: #fef08a; background: rgba(85,60,10,0.7);">
+                    ⚔️ TEST HIT DETECTION
+                </button>
+                <button class="btn-fight-boss" onclick="qaTestBossProgressionAudit()" style="border-color: #c084fc; color: #f3e8ff; background: rgba(59,7,100,0.7);">
+                    👑 AUDIT 16 BOSSES
+                </button>
+                <button class="btn-fight-boss" onclick="qaAuditSkinsIntegrity()" style="border-color: #38bdf8; color: #bae6fd; background: rgba(12,74,110,0.7);">
+                    🛡️ AUDIT 6 SKINS & ASSETS
+                </button>
+                <button class="btn-fight-boss" onclick="qaToggleOneHpSandbox()" style="border-color: #f43f5e; color: #fecdd3; background: rgba(76,5,25,0.7);">
+                    ⚡ 1-HP MOB & DMG
+                </button>
+                <button class="btn-fight-boss" onclick="qaToggleAutoBot()" style="border-color: #a855f7; color: #e9d5ff; background: rgba(68,14,106,0.7);">
+                    🤖 TOGGLE AUTO-BOT
+                </button>
+                <button class="btn-fight-boss" onclick="qaCaptureScreenshotProof()" style="border-color: #eab308; color: #fef08a; background: rgba(66,32,6,0.7);">
+                    📸 QA SCREENSHOT
+                </button>
+                <button class="btn-fight-boss" onclick="qaClearTerminal()" style="border-color: #64748b; color: #cbd5e1; background: rgba(15,23,42,0.7);">
+                    🧹 CLEAR TERMINAL
+                </button>
+            </div>
+
+            <!-- Terminal Output Window -->
+            <div style="background: #06090f; border: 1px solid #1e293b; border-radius: 4px; padding: 10px; height: 38vh; overflow-y: auto;" id="qa-terminal-logs">
+                <div style="font-family: 'Roboto Mono', monospace; font-size: 0.74rem; color: #64748b; line-height: 1.4;">
+                    [READY] QA Test Suite Engine loaded. Select any test above to execute live in-engine verification.
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeQASuiteModal()" style="margin-top: 12px;">CLOSE QA SUITE</button>
         </div>
     </div>
 
@@ -2637,6 +2869,66 @@
             }
         }
 
+        function closeNextLordModal() {
+            if (window.game && window.game.closeNextLordModal) {
+                window.game.closeNextLordModal();
+            } else {
+                const m = document.getElementById('next-lord-modal');
+                if (m) m.style.display = 'none';
+            }
+        }
+
+        // QA Suite Modal & Automation Helpers
+        function openQASuiteModal() {
+            if (window.qaSuite) {
+                window.qaSuite.openUI();
+            } else {
+                const modal = document.getElementById('qa-suite-modal');
+                if (modal) modal.style.display = 'flex';
+            }
+        }
+
+        function closeQASuiteModal() {
+            if (window.qaSuite) {
+                window.qaSuite.closeUI();
+            } else {
+                const modal = document.getElementById('qa-suite-modal');
+                if (modal) modal.style.display = 'none';
+            }
+        }
+
+        function qaRunFullAudit() {
+            if (window.qaSuite) window.qaSuite.runFullQASuite();
+        }
+
+        function qaTestHitDetection() {
+            if (window.qaSuite) window.qaSuite.testHitDetection();
+        }
+
+        function qaTestBossProgressionAudit() {
+            if (window.qaSuite) window.qaSuite.runFullBossProgressionAudit();
+        }
+
+        function qaAuditSkinsIntegrity() {
+            if (window.qaSuite) window.qaSuite.verifyAssetIntegrity();
+        }
+
+        function qaToggleOneHpSandbox() {
+            if (window.qaSuite) window.qaSuite.toggleOneHpMode();
+        }
+
+        function qaToggleAutoBot() {
+            if (window.qaSuite) window.qaSuite.toggleAutoBot();
+        }
+
+        function qaCaptureScreenshotProof() {
+            if (window.qaSuite) window.qaSuite.captureScreenshot('qa_manual_capture');
+        }
+
+        function qaClearTerminal() {
+            if (window.qaSuite) window.qaSuite.clearLogs();
+        }
+
         function openMerchantModal() {
             if (window.game) window.game.openMerchantModal();
         }
@@ -3065,15 +3357,16 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/audio.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/world.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/character.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/siege_warfare.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/heraldry_nobility.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/apothecary_crafting.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/combat.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/postprocessing.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
-    <script src="js/game.js?v=20261114_v14_SCULPTED_3D_WARRIOR"></script>
+    <script src="js/three.min.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/audio.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/world.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/character.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/siege_warfare.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/heraldry_nobility.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/apothecary_crafting.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/combat.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/postprocessing.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/qa_suite.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/game.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
 </body>
 </html>
