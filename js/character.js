@@ -645,11 +645,24 @@ class DarkSoulsCharacters {
         }
 
         const newWeapon = this.createWeaponMesh(weaponId);
-        newWeapon.rotation.x = Math.PI / 2;
-        newWeapon.position.set(0, 0, 0);
+        // Realistic initial weapon rigging (refined further in game.js per weapon class)
+        if (weaponId === 'halberd') {
+            newWeapon.rotation.set(-0.25, 0.12, 0.18);
+            newWeapon.position.set(-0.04, 0.12, -0.06);
+        } else if (weaponId === 'dragontooth') {
+            newWeapon.rotation.set(-0.45, 0.2, 0.15);
+            newWeapon.position.set(-0.06, 0.18, -0.1);
+        } else if (weaponId === 'torch') {
+            newWeapon.rotation.set(0.08, 0, -0.08);
+            newWeapon.position.set(0, 0.06, 0.04);
+        } else {
+            newWeapon.rotation.set(0.48, 0.14, -0.2);
+            newWeapon.position.set(0.02, 0.04, 0.06);
+        }
         rHand.add(newWeapon);
 
         playerMesh.userData.swordGroup = newWeapon;
+        playerMesh.userData.currentWeaponId = weaponId;
     }
 
     // ----------------------------------------------------
@@ -690,10 +703,25 @@ class DarkSoulsCharacters {
         visor.position.set(0, 0.02, 0.18);
         headGroup.add(visor);
 
-        // Helm Crest/Plume
-        const plume = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.35, 6), this.goldTrimMat);
-        plume.position.set(0, 0.22, -0.05);
-        headGroup.add(plume);
+        // Authentic Elite Knight Helmet Crest & Plume (replaces awkward vertical cylinder)
+        const crestGroup = new THREE.Group();
+        const crestRidge = new THREE.Mesh(
+            new THREE.BoxGeometry(0.06, 0.09, 0.38),
+            this.goldTrimMat
+        );
+        crestRidge.position.set(0, 0.22, 0.0);
+        crestRidge.castShadow = true;
+        crestGroup.add(crestRidge);
+
+        const rearPlume = new THREE.Mesh(
+            new THREE.BoxGeometry(0.05, 0.12, 0.18),
+            this.clothMat
+        );
+        rearPlume.position.set(0, 0.19, -0.2);
+        rearPlume.rotation.x = -0.35;
+        rearPlume.castShadow = true;
+        crestGroup.add(rearPlume);
+        headGroup.add(crestGroup);
 
         // 3. Right Arm (Weapon Arm)
         const rightShoulder = new THREE.Group();
@@ -713,7 +741,8 @@ class DarkSoulsCharacters {
         rightShoulder.add(rHand);
 
         const swordGroup = this.createWeaponMesh('sword');
-        swordGroup.rotation.x = Math.PI / 2;
+        swordGroup.rotation.set(0.48, 0.14, -0.2);
+        swordGroup.position.set(0.02, 0.04, 0.06);
         rHand.add(swordGroup);
 
         // 4. Left Arm (Shield Arm)
@@ -745,8 +774,16 @@ class DarkSoulsCharacters {
         shieldCross.position.y = 0.1;
         shieldGroup.add(shieldCross);
 
-        shieldGroup.position.set(-0.1, 0.1, 0.2);
-        shieldGroup.rotation.y = Math.PI / 6;
+        // Forearm leather grip straps on inner face of shield
+        const strap1 = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.018, 6, 8), this.leatherMat);
+        strap1.position.set(0, 0.15, -0.05);
+        shieldGroup.add(strap1);
+        const strap2 = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.018, 6, 8), this.leatherMat);
+        strap2.position.set(0, -0.15, -0.05);
+        shieldGroup.add(strap2);
+
+        shieldGroup.position.set(-0.06, 0.08, 0.16);
+        shieldGroup.rotation.set(0.08, Math.PI / 8, -0.05);
         lHand.add(shieldGroup);
 
         // Offhand Torch (Held high when toggled on [T] or via HUD)
@@ -756,19 +793,48 @@ class DarkSoulsCharacters {
         offhandTorch.visible = false;
         lHand.add(offhandTorch);
 
-        // Estus Flask (attached to hip, shown when drinking)
+        // Estus Flask (flagon fastened securely with leather hip harness)
         const estusFlask = new THREE.Group();
-        const flaskBody = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.08, 0.12, 0.25, 8),
+        const flaskHolster = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.07, 0.075, 0.09, 8),
+            this.leatherMat
+        );
+        flaskHolster.position.set(0, -0.02, 0);
+        estusFlask.add(flaskHolster);
+
+        const flaskVessel = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.055, 0.07, 0.15, 8),
             new THREE.MeshStandardMaterial({
-                color: 0xffaa00,
-                emissive: 0xff8800,
-                emissiveIntensity: 0.6,
-                roughness: 0.3
+                color: 0xd88015,
+                emissive: 0x663300,
+                emissiveIntensity: 0.45,
+                roughness: 0.22,
+                metalness: 0.15
             })
         );
-        estusFlask.add(flaskBody);
-        estusFlask.position.set(-0.25, -0.3, -0.15);
+        flaskVessel.castShadow = true;
+        estusFlask.add(flaskVessel);
+
+        const flaskNeck = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.026, 0.032, 0.05, 8),
+            this.goldTrimMat
+        );
+        flaskNeck.position.y = 0.1;
+        estusFlask.add(flaskNeck);
+
+        const flaskCork = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.022, 0.026, 0.035, 6),
+            this.leatherMat
+        );
+        flaskCork.position.y = 0.135;
+        estusFlask.add(flaskCork);
+
+        const flaskGlow = new THREE.PointLight(0xffaa22, 0.6, 2.0);
+        flaskGlow.position.set(0, 0, 0);
+        estusFlask.add(flaskGlow);
+
+        estusFlask.position.set(-0.26, -0.25, -0.08);
+        estusFlask.rotation.set(0.1, 0.15, -0.15);
         torso.add(estusFlask);
 
         // 5. Legs
@@ -800,6 +866,7 @@ class DarkSoulsCharacters {
             rHand,
             lHand,
             swordGroup,
+            currentWeaponId: 'sword',
             shieldGroup,
             offhandTorch,
             estusFlask

@@ -587,8 +587,8 @@ class DarkSoulsWorld {
             return -5.0 + t * 5.0;
         }
 
-        // 3. Central Bridge (z in [28, 96], x in [-8, 8])
-        if (x >= -8 && x <= 8 && z >= 28 && z <= 96) {
+        // 3. Central Bridge (z in [28, 96], walkable bridge span x in [-7.2, 7.2])
+        if (x >= -7.2 && x <= 7.2 && z >= 28 && z <= 96) {
             return 0.0;
         }
 
@@ -602,8 +602,8 @@ class DarkSoulsWorld {
             return 0.0;
         }
 
-        // Default level ground
-        return 0.0;
+        // Beyond citadel architectural borders lies the bottomless chasm
+        return -50.0;
     }
 
     buildEnvironment() {

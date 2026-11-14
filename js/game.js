@@ -1081,26 +1081,28 @@ class DarkSoulsGame {
         const uData = this.playerMesh.userData;
         if (uData.shieldGroup) {
             if (this.combat.isBlocking) {
-                uData.shieldGroup.position.set(0, 0.25, 0.38);
-                uData.shieldGroup.rotation.y = 0;
+                uData.shieldGroup.position.set(0, 0.22, 0.35);
+                uData.shieldGroup.rotation.set(0, 0, 0);
             } else {
-                uData.shieldGroup.position.set(-0.1, 0.1, 0.2);
-                uData.shieldGroup.rotation.y = Math.PI / 6;
+                uData.shieldGroup.position.set(-0.06, 0.08, 0.16);
+                uData.shieldGroup.rotation.set(0.08, Math.PI / 8, -0.05);
             }
         }
 
-        // Sword swing attack animation
+        // Weapon swing attack & realistic idle guard animation
         if (uData.swordGroup && this.combat.isAttacking) {
             const t = this.combat.attackTime;
             if (this.combat.attackCombo === 1) { // Slash 1
                 uData.swordGroup.rotation.z = Math.sin(t * 12) * 1.8;
                 uData.swordGroup.rotation.y = Math.cos(t * 12) * 1.2;
+                uData.swordGroup.rotation.x = 0.6;
             } else if (this.combat.attackCombo === 2) { // Slash 2
                 uData.swordGroup.rotation.z = -Math.sin(t * 12) * 1.8;
                 uData.swordGroup.rotation.x = Math.cos(t * 12) * 1.4;
             } else if (this.combat.attackCombo === 3) { // Heavy overhead
-                uData.swordGroup.rotation.x = Math.sin(t * 8) * 2.2;
+                uData.swordGroup.rotation.x = Math.sin(t * 8) * 2.2 + 0.3;
             } else if (this.combat.attackCombo === 4) { // Riposte thrust
+                uData.swordGroup.rotation.set(Math.PI / 2, 0, 0);
                 uData.swordGroup.position.z = 0.2 + Math.sin(t * 10) * 0.7;
             } else if (this.combat.attackCombo === 5) { // Running Leaping Jump Attack
                 uData.swordGroup.rotation.x = 2.4 - Math.sin(Math.min(1.0, t * 4) * Math.PI) * 2.6;
@@ -1110,8 +1112,29 @@ class DarkSoulsGame {
                 uData.swordGroup.position.set(0, -0.4, 0.4);
             }
         } else if (uData.swordGroup) {
-            uData.swordGroup.rotation.set(Math.PI / 2, 0, 0);
-            uData.swordGroup.position.set(0, 0, 0);
+            // Authentic Souls idle postures (no awkward horizontal protrusion or wall clipping)
+            const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
+            if (wpnId === 'halberd') {
+                // Halberd / Polearm: rest upright against right shoulder pointing safely into the air
+                uData.swordGroup.rotation.set(-0.25, 0.12, 0.18);
+                uData.swordGroup.position.set(-0.04, 0.12, -0.06);
+            } else if (wpnId === 'dragontooth') {
+                // Colossal greathammer: rested heavy over right pauldron
+                uData.swordGroup.rotation.set(-0.45, 0.2, 0.15);
+                uData.swordGroup.position.set(-0.06, 0.18, -0.1);
+            } else if (wpnId === 'torch') {
+                // Hand torch: held upright burning vertically into sky
+                uData.swordGroup.rotation.set(0.08, 0, -0.08);
+                uData.swordGroup.position.set(0, 0.06, 0.04);
+            } else if (wpnId === 'uchigatana') {
+                // Katana: elegant angled ready stance
+                uData.swordGroup.rotation.set(0.5, 0.15, -0.22);
+                uData.swordGroup.position.set(0.02, 0.04, 0.08);
+            } else {
+                // Astora Straight Sword / Moonlight / Zweihander: ready guard stance, blade pointed up-forward
+                uData.swordGroup.rotation.set(0.48, 0.14, -0.2);
+                uData.swordGroup.position.set(0.02, 0.04, 0.06);
+            }
         }
     }
 
@@ -1138,6 +1161,29 @@ class DarkSoulsGame {
                     else if (minD === dz2) pPos.z = box.max.z + 0.45;
                 }
             }
+        }
+
+        // Architectural Bounds & Railing Collision Enforcements:
+        // 1. Royal Bridge Parapets (z in [28, 94]): Walkway width strictly clamped inside walls
+        if (pPos.z >= 28 && pPos.z <= 94) {
+            if (pPos.y >= -1.0 && pPos.y <= 3.5) {
+                pPos.x = Math.max(-6.55, Math.min(6.55, pPos.x));
+            }
+        }
+
+        // 2. Flooded Catacombs Corridor (z in [22, 90], y < 1.0)
+        if (pPos.z >= 22 && pPos.z <= 90 && pPos.y < 1.0) {
+            pPos.x = Math.max(-23.6, Math.min(-16.4, pPos.x));
+        }
+
+        // 3. High Ramparts Walkway (z in [22, 90], y > 4.5)
+        if (pPos.z >= 22 && pPos.z <= 90 && pPos.y > 4.5) {
+            pPos.x = Math.max(16.2, Math.min(23.8, pPos.x));
+        }
+
+        // 4. Abyss Fall Protection (falls out of bounds respawn at bonfire)
+        if (pPos.y < -12) {
+            this.respawnPlayer();
         }
     }
 
