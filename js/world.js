@@ -551,17 +551,17 @@ class DarkSoulsWorld {
         this.moonlight = new THREE.DirectionalLight(0xffedd2, 1.4);
         this.moonlight.position.set(45, 80, -25);
         this.moonlight.castShadow = true;
-        this.moonlight.shadow.mapSize.width = 2048;
-        this.moonlight.shadow.mapSize.height = 2048;
-        this.moonlight.shadow.camera.near = 0.5;
-        this.moonlight.shadow.camera.far = 320;
-        const d = 85;
+        this.moonlight.shadow.mapSize.width = 1024;
+        this.moonlight.shadow.mapSize.height = 1024;
+        this.moonlight.shadow.camera.near = 1.0;
+        this.moonlight.shadow.camera.far = 240;
+        const d = 75;
         this.moonlight.shadow.camera.left = -d;
         this.moonlight.shadow.camera.right = d;
         this.moonlight.shadow.camera.top = d;
         this.moonlight.shadow.camera.bottom = -d;
-        this.moonlight.shadow.bias = -0.00015;
-        this.moonlight.shadow.radius = 2.0;
+        this.moonlight.shadow.bias = -0.0003;
+        this.moonlight.shadow.radius = 1.0;
         this.scene.add(this.moonlight);
 
         // 6. Radiant Golden Sun Disc & Volumetric Aura

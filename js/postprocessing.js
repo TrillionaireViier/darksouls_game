@@ -14,7 +14,8 @@ class DarkSoulsPostProcessing {
 
         const width = window.innerWidth;
         const height = window.innerHeight;
-        const pr = Math.min(window.devicePixelRatio || 1, 2);
+        // High-Performance 1.0 Pixel Ratio for offscreen composite (massive fillrate boost on Retina/Mobile)
+        const pr = 1.0;
 
         // HDR Render Target for 3D Scene Pass
         const pars = {
@@ -78,35 +79,24 @@ class DarkSoulsPostProcessing {
                     vec4 base = texture2D(tDiffuse, uv);
                     vec3 col = base.rgb;
 
-                    // 1. 9-Tap Luminance Bloom Blur (Soft soul-fire & sun halo)
-                    vec2 texel = 1.0 / resolution;
-                    vec3 bloom = vec3(0.0);
-                    float weights[5];
-                    weights[0] = 0.2270;
-                    weights[1] = 0.1945;
-                    weights[2] = 0.1216;
-                    weights[3] = 0.0540;
-                    weights[4] = 0.0162;
+                    // 1. High-Performance 4-Tap Diagonal Bloom Blur (75% less texture bandwidth)
+                    vec2 texel = 2.0 / resolution;
+                    vec3 s1 = texture2D(tDiffuse, uv + vec2(-texel.x, -texel.y)).rgb;
+                    vec3 s2 = texture2D(tDiffuse, uv + vec2( texel.x, -texel.y)).rgb;
+                    vec3 s3 = texture2D(tDiffuse, uv + vec2(-texel.x,  texel.y)).rgb;
+                    vec3 s4 = texture2D(tDiffuse, uv + vec2( texel.x,  texel.y)).rgb;
 
-                    for (int i = 1; i < 5; i++) {
-                        float dist = float(i) * 2.8;
-                        vec3 s1 = texture2D(tDiffuse, uv + vec2(dist, 0.0) * texel).rgb;
-                        vec3 s2 = texture2D(tDiffuse, uv - vec2(dist, 0.0) * texel).rgb;
-                        vec3 s3 = texture2D(tDiffuse, uv + vec2(0.0, dist) * texel).rgb;
-                        vec3 s4 = texture2D(tDiffuse, uv - vec2(0.0, dist) * texel).rgb;
+                    float lum1 = dot(s1, vec3(0.299, 0.587, 0.114));
+                    float lum2 = dot(s2, vec3(0.299, 0.587, 0.114));
+                    float lum3 = dot(s3, vec3(0.299, 0.587, 0.114));
+                    float lum4 = dot(s4, vec3(0.299, 0.587, 0.114));
 
-                        float lum1 = dot(s1, vec3(0.299, 0.587, 0.114));
-                        float lum2 = dot(s2, vec3(0.299, 0.587, 0.114));
-                        float lum3 = dot(s3, vec3(0.299, 0.587, 0.114));
-                        float lum4 = dot(s4, vec3(0.299, 0.587, 0.114));
-
-                        float b1 = max(0.0, lum1 - 1.05);
-                        float b2 = max(0.0, lum2 - 1.05);
-                        float b3 = max(0.0, lum3 - 1.05);
-                        float b4 = max(0.0, lum4 - 1.05);
-
-                        bloom += (s1 * b1 + s2 * b2 + s3 * b3 + s4 * b4) * weights[i];
-                    }
+                    vec3 bloom = (
+                        s1 * max(0.0, lum1 - 0.95) +
+                        s2 * max(0.0, lum2 - 0.95) +
+                        s3 * max(0.0, lum3 - 0.95) +
+                        s4 * max(0.0, lum4 - 0.95)
+                    ) * 0.25;
                     col += bloom * bloomIntensity;
 
                     // 2. Dark Souls 3 / Elden Ring Cinematic Color Grading
@@ -149,7 +139,7 @@ class DarkSoulsPostProcessing {
     }
 
     setSize(width, height) {
-        const pr = Math.min(window.devicePixelRatio || 1, 2);
+        const pr = 1.0;
         const w = Math.floor(width * pr);
         const h = Math.floor(height * pr);
         this.renderTarget.setSize(w, h);

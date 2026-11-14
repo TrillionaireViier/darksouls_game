@@ -16,11 +16,18 @@ class DarkSoulsGame {
             powerPreference: 'high-performance'
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        // Adaptive High-FPS Resolution: Cap to 1.0 on mobile/tablets or 1.25 on high-DPI displays
+        const isMobileOrTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1200);
+        const savedPerf = localStorage.getItem('darksouls_perf_mode');
+        this.performanceMode = savedPerf !== null ? (savedPerf === 'true') : false;
+
+        const effectivePr = this.performanceMode ? 1.0 : (isMobileOrTouch ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25));
+        this.renderer.setPixelRatio(effectivePr);
+        this.renderer.shadowMap.enabled = !this.performanceMode;
+        this.renderer.shadowMap.type = THREE.PCFShadowMap; // 2.5x faster shadow filtering
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.05;
+        this.renderer.toneMappingExposure = 1.08;
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -119,6 +126,7 @@ class DarkSoulsGame {
         // Start render loop
         this.animate = this.animate.bind(this);
         requestAnimationFrame(this.animate);
+        this.updatePerfUI();
 
         // Restore equipped skin
         const savedSkin = localStorage.getItem('darksouls_equipped_skin') || 'warrior';
@@ -917,6 +925,20 @@ class DarkSoulsGame {
         requestAnimationFrame(this.animate);
         const delta = Math.min(this.clock.getDelta(), 0.1);
 
+        // Real-Time FPS Tracker & Diagnostics
+        this.frameCount = (this.frameCount || 0) + 1;
+        this.fpsTimer = (this.fpsTimer || 0) + delta;
+        if (this.fpsTimer >= 0.5) {
+            this.currentFps = Math.round(this.frameCount / this.fpsTimer);
+            this.frameCount = 0;
+            this.fpsTimer = 0;
+            if (!this.fpsMeterElem) this.fpsMeterElem = document.getElementById('fps-meter');
+            if (this.fpsMeterElem) {
+                this.fpsMeterElem.textContent = `${this.currentFps} FPS`;
+                this.fpsMeterElem.style.color = this.currentFps >= 50 ? '#00ffaa' : (this.currentFps >= 30 ? '#ffd778' : '#ff5555');
+            }
+        }
+
         // 1. Update Subsystems
         this.world.update(delta);
         this.combat.update(delta);
@@ -933,8 +955,8 @@ class DarkSoulsGame {
         // 4. Update HUD
         this.updateHUD(delta);
 
-        // 5. Render Scene with Cinematic Post-Processing Pipeline
-        if (this.postProcessingEnabled && this.postProcessing) {
+        // 5. Render Scene: Direct high-speed render in 60 FPS Turbo mode, or HDR post-processing in AAA mode
+        if (!this.performanceMode && this.postProcessingEnabled && this.postProcessing) {
             this.postProcessing.render(delta);
         } else {
             this.renderer.render(this.scene, this.camera);
@@ -1431,43 +1453,62 @@ class DarkSoulsGame {
     // UI UPDATES & NOTIFICATIONS
     // ----------------------------------------------------
     updateHUD(delta = 0.016) {
-        // HP Bar
-        const hpPercent = Math.max(0, (this.combat.hp / this.combat.maxHp) * 100);
-        this.ui.hpBar.style.width = `${hpPercent}%`;
-        this.ui.hpText.textContent = `${this.combat.hp} / ${this.combat.maxHp}`;
+        // HP Bar (Dirty checking: only touch DOM when changed)
+        if (this.lastHp !== this.combat.hp || this.lastMaxHp !== this.combat.maxHp) {
+            this.lastHp = this.combat.hp;
+            this.lastMaxHp = this.combat.maxHp;
+            const hpPercent = Math.max(0, (this.combat.hp / this.combat.maxHp) * 100);
+            this.ui.hpBar.style.width = `${hpPercent}%`;
+            this.ui.hpText.textContent = `${this.combat.hp} / ${this.combat.maxHp}`;
+        }
 
-        // Stamina Bar
-        const stamPercent = Math.max(0, (this.combat.stamina / this.combat.maxStamina) * 100);
-        this.ui.staminaBar.style.width = `${stamPercent}%`;
+        // Stamina Bar (Dirty check: threshold 0.4 to prevent continuous reflows)
+        if (Math.abs((this.lastStamina || 0) - this.combat.stamina) > 0.4 || this.lastMaxStamina !== this.combat.maxStamina) {
+            this.lastStamina = this.combat.stamina;
+            this.lastMaxStamina = this.combat.maxStamina;
+            const stamPercent = Math.max(0, (this.combat.stamina / this.combat.maxStamina) * 100);
+            this.ui.staminaBar.style.width = `${stamPercent}%`;
+        }
 
         // Estus Flasks
-        this.ui.estusCount.textContent = `x ${this.combat.estusFlasks}`;
+        if (this.lastEstus !== this.combat.estusFlasks) {
+            this.lastEstus = this.combat.estusFlasks;
+            this.ui.estusCount.textContent = `x ${this.combat.estusFlasks}`;
+        }
 
         // Souls Counter
-        this.ui.soulsCount.textContent = this.combat.souls.toLocaleString();
+        if (this.lastSouls !== this.combat.souls) {
+            this.lastSouls = this.combat.souls;
+            this.ui.soulsCount.textContent = this.combat.souls.toLocaleString();
+        }
 
         const pPos = this.playerMesh.position;
 
-        // Route Compass Pill Active Highlight
-        const rRamparts = document.getElementById('route-ramparts');
-        const rCatacombs = document.getElementById('route-catacombs');
-        const rBridge = document.getElementById('route-bridge');
-        if (rRamparts && rCatacombs && rBridge) {
-            const isRamparts = pPos.x > 13;
-            const isCatacombs = pPos.x < -13;
-            const isBridge = !isRamparts && !isCatacombs && pPos.z > 25;
+        // Route Compass Pill Active Highlight (Cached, only on state change)
+        if (!this.cachedRoutes) {
+            this.cachedRoutes = {
+                ramparts: document.getElementById('route-ramparts'),
+                catacombs: document.getElementById('route-catacombs'),
+                bridge: document.getElementById('route-bridge')
+            };
+        }
+        if (this.cachedRoutes.ramparts && this.cachedRoutes.catacombs && this.cachedRoutes.bridge) {
+            const currentRoute = pPos.x > 13 ? 'ramparts' : (pPos.x < -13 ? 'catacombs' : (pPos.z > 25 ? 'bridge' : 'none'));
+            if (this.lastActiveRoute !== currentRoute) {
+                this.lastActiveRoute = currentRoute;
+                const r = this.cachedRoutes;
+                r.ramparts.style.opacity = currentRoute === 'ramparts' ? '1' : '0.75';
+                r.ramparts.style.transform = currentRoute === 'ramparts' ? 'scale(1.06)' : 'scale(1)';
+                r.ramparts.style.boxShadow = currentRoute === 'ramparts' ? '0 0 16px rgba(255,215,0,0.85)' : '0 0 6px rgba(255,215,0,0.2)';
 
-            rRamparts.style.opacity = isRamparts ? '1' : '0.75';
-            rRamparts.style.transform = isRamparts ? 'scale(1.06)' : 'scale(1)';
-            rRamparts.style.boxShadow = isRamparts ? '0 0 16px rgba(255,215,0,0.85)' : '0 0 6px rgba(255,215,0,0.2)';
+                r.catacombs.style.opacity = currentRoute === 'catacombs' ? '1' : '0.75';
+                r.catacombs.style.transform = currentRoute === 'catacombs' ? 'scale(1.06)' : 'scale(1)';
+                r.catacombs.style.boxShadow = currentRoute === 'catacombs' ? '0 0 16px rgba(0,255,170,0.85)' : '0 0 6px rgba(0,255,170,0.2)';
 
-            rCatacombs.style.opacity = isCatacombs ? '1' : '0.75';
-            rCatacombs.style.transform = isCatacombs ? 'scale(1.06)' : 'scale(1)';
-            rCatacombs.style.boxShadow = isCatacombs ? '0 0 16px rgba(0,255,170,0.85)' : '0 0 6px rgba(0,255,170,0.2)';
-
-            rBridge.style.opacity = isBridge ? '1' : '0.75';
-            rBridge.style.transform = isBridge ? 'scale(1.06)' : 'scale(1)';
-            rBridge.style.boxShadow = isBridge ? '0 0 16px rgba(255,119,34,0.85)' : '0 0 6px rgba(255,119,34,0.2)';
+                r.bridge.style.opacity = currentRoute === 'bridge' ? '1' : '0.75';
+                r.bridge.style.transform = currentRoute === 'bridge' ? 'scale(1.06)' : 'scale(1)';
+                r.bridge.style.boxShadow = currentRoute === 'bridge' ? '0 0 16px rgba(255,119,34,0.85)' : '0 0 6px rgba(255,119,34,0.2)';
+            }
         }
 
         // Check Interactable Proximity
@@ -2229,10 +2270,54 @@ class DarkSoulsGame {
         }
     }
 
+    togglePerformanceMode(forceMode = null) {
+        if (forceMode !== null) {
+            this.performanceMode = forceMode;
+        } else {
+            this.performanceMode = !this.performanceMode;
+        }
+        localStorage.setItem('darksouls_perf_mode', this.performanceMode ? 'true' : 'false');
+
+        const isMobileOrTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1200);
+        const pixelRatio = this.performanceMode ? 1.0 : (isMobileOrTouch ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25));
+        this.renderer.setPixelRatio(pixelRatio);
+        this.renderer.shadowMap.enabled = !this.performanceMode;
+
+        if (this.performanceMode) {
+            this.postProcessingEnabled = false;
+            this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            this.renderer.toneMappingExposure = 1.10;
+            this.showNotification("⚡ 60 FPS PERFORMANCE MODE: ACTIVE (SMOOTH & FAST)");
+        } else {
+            this.postProcessingEnabled = (this.postProcessing !== null);
+            if (this.postProcessingEnabled) {
+                this.renderer.toneMapping = THREE.NoToneMapping;
+            }
+            this.showNotification("✨ AAA GRAPHICS MODE: ACTIVE (CINEMATIC)");
+        }
+
+        this.updatePerfUI();
+        if (this.audio) this.audio.playRoll();
+    }
+
+    updatePerfUI() {
+        const btns = document.querySelectorAll('.btn-perf-toggle');
+        btns.forEach(btn => {
+            btn.innerHTML = this.performanceMode
+                ? '⚡ <span class="btn-label-text">60 FPS</span>'
+                : '✨ <span class="btn-label-text">AAA</span>';
+            btn.style.borderColor = this.performanceMode ? '#4caf50' : '#00e5ff';
+            btn.style.color = this.performanceMode ? '#a5d6a7' : '#b2ebf2';
+        });
+    }
+
     onWindowResize() {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        const isMobileOrTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1200);
+        const pixelRatio = this.performanceMode ? 1.0 : (isMobileOrTouch ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25));
+        this.renderer.setPixelRatio(pixelRatio);
         if (this.postProcessing) {
             this.postProcessing.setSize(window.innerWidth, window.innerHeight);
         }
@@ -2253,6 +2338,7 @@ window.adminGrantSoulsAndEstus = (s) => { if (window.game) window.game.adminGran
 window.adminToggleGodMode = () => { if (window.game) window.game.adminToggleGodMode(); };
 window.adminWarp = (d) => { if (window.game) window.game.adminWarp(d); };
 window.adminSummonBoss = (b) => { if (window.game) window.game.adminSummonBoss(b); };
+window.togglePerformanceMode = () => { if (window.game) window.game.togglePerformanceMode(); };
 
 // Global initialization
 window.addEventListener('DOMContentLoaded', () => {

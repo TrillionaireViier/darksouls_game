@@ -1415,6 +1415,7 @@
             <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
                 <span>📦</span> <span class="btn-label-text">DOWNLOAD</span>
             </button>
+            <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
             <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
             <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
             <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
@@ -1501,15 +1502,16 @@
     </div>
 
     <!-- Souls Counter (Bottom-Right) -->
-    <div id="souls-hud">
+    <div id="souls-hud" style="display: flex; align-items: center; gap: 8px;">
+        <div id="fps-meter" title="Live Rendering Frame Rate" style="font-family: 'Roboto Mono', monospace; font-size: 0.72rem; font-weight: 700; color: #00ffaa; background: rgba(8, 16, 12, 0.85); border: 1px solid #1b5e20; padding: 3px 7px; border-radius: 3px; letter-spacing: 1px;">60 FPS</div>
         <div class="soul-orb"></div>
         <div id="souls-count">0</div>
     </div>
 
     <!-- Build & Daylight Status Indicator -->
     <div id="build-status-indicator" style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 50; pointer-events: auto; display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 0.68rem; color: #ffd276; background: rgba(18, 14, 10, 0.85); border: 1px solid rgba(255, 210, 118, 0.35); padding: 3px 10px; border-radius: 3px; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); white-space: nowrap;">
-        <span>☀️ LORDRAN V10.0 • AAA GRAPHICS & IMMERSIVE REMASTER</span>
-        <button onclick="localStorage.clear(); if ('caches' in window) { caches.keys().then(function(k){ k.forEach(function(c){ caches.delete(c); }); }); } window.location.href = window.location.origin + window.location.pathname + '?b=20261114_v10_AAA_REMASTER&r=' + Date.now()" style="background: rgba(255,210,118,0.25); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 7px; cursor: pointer; border-radius: 2px; font-family: inherit; font-weight: bold;">HARD RELOAD</button>
+        <span>⚡ LORDRAN V13.0 • 60 FPS TURBO & DEV SUITE</span>
+        <button onclick="localStorage.clear(); if ('caches' in window) { caches.keys().then(function(k){ k.forEach(function(c){ caches.delete(c); }); }); } window.location.href = window.location.origin + window.location.pathname + '?b=20261114_v13_60FPS_TURBO&r=' + Date.now()" style="background: rgba(255,210,118,0.25); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 7px; cursor: pointer; border-radius: 2px; font-family: inherit; font-weight: bold;">HARD RELOAD</button>
     </div>
 
     <!-- Boss HUD (Bottom Center, activated when Taurus Demon wakes) -->
@@ -2552,6 +2554,7 @@
             </p>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px;">
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 8px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
+                <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 8px; font-weight: 700;">⚡ 60 FPS MODE</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDownloadModal();" style="border-color: #a87932; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">📦 DOWNLOAD</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">⚔️ BOSS ROSTER</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSkinsModal();" style="border-color: #64b5f6; color: #bbdefb; justify-content: center; padding: 10px 8px; font-weight: 700;">🛡️ 3D SKINS</button>
@@ -2699,6 +2702,10 @@
 
         function triggerAdminSummonBoss(bossId) {
             if (window.game) window.game.adminSummonBoss(bossId);
+        }
+
+        function togglePerformanceMode() {
+            if (window.game) window.game.togglePerformanceMode();
         }
 
         // ==========================================
@@ -3058,15 +3065,15 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/audio.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/world.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/character.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/siege_warfare.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/heraldry_nobility.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/apothecary_crafting.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/combat.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/postprocessing.js?v=20261114_v12_ADMIN_PERMANENT"></script>
-    <script src="js/game.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/three.min.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/audio.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/world.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/character.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/siege_warfare.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/heraldry_nobility.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/apothecary_crafting.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/combat.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/postprocessing.js?v=20261114_v13_60FPS_TURBO"></script>
+    <script src="js/game.js?v=20261114_v13_60FPS_TURBO"></script>
 </body>
 </html>
