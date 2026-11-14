@@ -20,6 +20,7 @@ class DarkSoulsWorld {
         this.initMaterials();
         this.buildLighting();
         this.buildEnvironment();
+        this.buildDistantFortress();
         this.buildBonfire();
         this.buildMerchant();
         this.buildFogGate();
@@ -70,21 +71,21 @@ class DarkSoulsWorld {
                 const bw = cw - 6;
                 const bh = rh - 6;
 
-                // Rich high-definition Lordran limestone palette (RGB 95-135)
+                // Rich high-definition Lordran limestone & weathered granite palette (RGB 85-115)
                 const palSeed = Math.random();
                 let baseR, baseG, baseB;
                 if (palSeed < 0.35) {
-                    baseR = 105 + Math.floor(Math.random() * 18); // Weathered granite
-                    baseG = 108 + Math.floor(Math.random() * 18);
-                    baseB = 114 + Math.floor(Math.random() * 18);
+                    baseR = 88 + Math.floor(Math.random() * 16); // Weathered basalt / granite
+                    baseG = 90 + Math.floor(Math.random() * 16);
+                    baseB = 96 + Math.floor(Math.random() * 16);
                 } else if (palSeed < 0.7) {
-                    baseR = 125 + Math.floor(Math.random() * 20); // Warm sunlit limestone
-                    baseG = 118 + Math.floor(Math.random() * 18);
-                    baseB = 105 + Math.floor(Math.random() * 16);
+                    baseR = 105 + Math.floor(Math.random() * 18); // Warm aged limestone
+                    baseG = 98 + Math.floor(Math.random() * 16);
+                    baseB = 86 + Math.floor(Math.random() * 14);
                 } else {
-                    baseR = 110 + Math.floor(Math.random() * 16); // Clean ashlar travertine
-                    baseG = 110 + Math.floor(Math.random() * 16);
-                    baseB = 108 + Math.floor(Math.random() * 16);
+                    baseR = 94 + Math.floor(Math.random() * 14); // Slate cobblestone
+                    baseG = 94 + Math.floor(Math.random() * 14);
+                    baseB = 92 + Math.floor(Math.random() * 14);
                 }
 
                 // Fill stone slab
@@ -116,29 +117,17 @@ class DarkSoulsWorld {
                 sbCtx.fillRect(bx, by + bh - 2, bw, 2);
                 sbCtx.fillRect(bx + bw - 2, by, 2, bh);
 
-                // Micro-cracks & weathering scars
-                const cracks = 2 + Math.floor(Math.random() * 3);
-                for (let k = 0; k < cracks; k++) {
-                    const cx1 = bx + Math.random() * bw;
-                    const cy1 = by + Math.random() * bh;
-                    const len = 12 + Math.random() * 26;
-                    const angle = Math.random() * Math.PI * 2;
-                    const cx2 = cx1 + Math.cos(angle) * len;
-                    const cy2 = cy1 + Math.sin(angle) * len;
-
-                    sCtx.strokeStyle = '#050404';
-                    sCtx.lineWidth = 1.2;
-                    sCtx.beginPath();
-                    sCtx.moveTo(cx1, cy1);
-                    sCtx.lineTo(cx2, cy2);
-                    sCtx.stroke();
-
-                    sbCtx.strokeStyle = '#000000';
-                    sbCtx.lineWidth = 1.4;
-                    sbCtx.beginPath();
-                    sbCtx.moveTo(cx1, cy1);
-                    sbCtx.lineTo(cx2, cy2);
-                    sbCtx.stroke();
+                // Natural limestone pores & mineral texture
+                for (let k = 0; k < 28; k++) {
+                    const gx = bx + Math.random() * bw;
+                    const gy = by + Math.random() * bh;
+                    const gw = 1 + Math.random() * 4;
+                    const gh = 1 + Math.random() * 3;
+                    const isDark = Math.random() > 0.45;
+                    sCtx.fillStyle = isDark ? 'rgba(20, 16, 12, 0.16)' : 'rgba(255, 255, 255, 0.10)';
+                    sCtx.fillRect(gx, gy, gw, gh);
+                    sbCtx.fillStyle = isDark ? '#404040' : '#ffffff';
+                    sbCtx.fillRect(gx, gy, gw, gh);
                 }
 
                 // Damp surface noise / grit
@@ -171,11 +160,11 @@ class DarkSoulsWorld {
             bumpMap: stoneBumpTexture,
             bumpScale: 0.08,
             roughnessMap: stoneRoughTexture,
-            roughness: 0.75,
-            metalness: 0.12
+            roughness: 0.85,
+            metalness: 0.02
         });
 
-        // 2. GOTHIC ASHLAR FORTRESS WALL (1024x1024)
+        // 2. GOTHIC ASHLAR FORTRESS WALL (1024x1024 AAA Realistic Masonry)
         const wallCanvas = document.createElement('canvas');
         wallCanvas.width = 1024;
         wallCanvas.height = 1024;
@@ -186,88 +175,130 @@ class DarkSoulsWorld {
         wallBumpCanvas.height = 1024;
         const wbCtx = wallBumpCanvas.getContext('2d');
 
-        // Rich medieval fortress wall mortar background
-        wCtx.fillStyle = '#1e1914';
-        wCtx.fillRect(0, 0, 1024, 1024);
-        wbCtx.fillStyle = '#2a2a2a';
-        wbCtx.fillRect(0, 0, 1024, 1024);
+        const wallRoughCanvas = document.createElement('canvas');
+        wallRoughCanvas.width = 1024;
+        wallRoughCanvas.height = 1024;
+        const wrCtx = wallRoughCanvas.getContext('2d');
 
-        const wRows = 16;
-        const wCols = 8;
+        // Deep recessed aged lime-mortar base
+        wCtx.fillStyle = '#1c1713';
+        wCtx.fillRect(0, 0, 1024, 1024);
+        wbCtx.fillStyle = '#181818'; // Recessed mortar
+        wbCtx.fillRect(0, 0, 1024, 1024);
+        wrCtx.fillStyle = '#f0f0f0'; // Matte dry mortar
+        wrCtx.fillRect(0, 0, 1024, 1024);
+
+        const wRows = 8;
+        const wCols = 4;
         const wrh = 1024 / wRows;
         const wcw = 1024 / wCols;
 
         for (let r = 0; r < wRows; r++) {
             const offset = (r % 2) * (wcw / 2);
             for (let c = -1; c <= wCols + 1; c++) {
-                const x = c * wcw + offset + 2;
-                const y = r * wrh + 2;
-                const w = wcw - 4;
-                const h = wrh - 4;
+                const x = c * wcw + offset + 4;
+                const y = r * wrh + 4;
+                const w = wcw - 8;
+                const h = wrh - 8;
 
-                const shade = 102 + Math.floor(Math.random() * 20);
-                wCtx.fillStyle = `rgb(${shade + 4}, ${shade + 2}, ${shade})`;
+                // Rich varied Lordran fortress limestone and granite tones
+                const toneSeed = Math.random();
+                let rC, gC, bC;
+                if (toneSeed < 0.35) {
+                    rC = 88 + Math.floor(Math.random() * 14); // Weathered dark basalt
+                    gC = 82 + Math.floor(Math.random() * 14);
+                    bC = 76 + Math.floor(Math.random() * 14);
+                } else if (toneSeed < 0.70) {
+                    rC = 112 + Math.floor(Math.random() * 16); // Warm sun-baked ashlar
+                    gC = 104 + Math.floor(Math.random() * 16);
+                    bC = 94 + Math.floor(Math.random() * 16);
+                } else {
+                    rC = 98 + Math.floor(Math.random() * 14); // Classic gray Lordran granite
+                    gC = 96 + Math.floor(Math.random() * 14);
+                    bC = 94 + Math.floor(Math.random() * 14);
+                }
+
+                wCtx.fillStyle = `rgb(${rC}, ${gC}, ${bC})`;
                 wCtx.fillRect(x, y, w, h);
 
-                const wbVal = 140 + Math.floor(Math.random() * 35);
+                // Height bump for stone face (180-220)
+                const wbVal = 185 + Math.floor(Math.random() * 35);
                 wbCtx.fillStyle = `rgb(${wbVal}, ${wbVal}, ${wbVal})`;
                 wbCtx.fillRect(x, y, w, h);
 
-                // Horizontal masonry chisel striations
-                for (let s = 4; s < h - 4; s += 8) {
-                    wCtx.strokeStyle = 'rgba(0, 0, 0, 0.28)';
-                    wCtx.lineWidth = 1;
-                    wCtx.beginPath();
-                    wCtx.moveTo(x + 2, y + s);
-                    wCtx.lineTo(x + w - 2, y + s + (Math.random() - 0.5) * 2);
-                    wCtx.stroke();
+                // Roughness variance
+                const wrVal = 190 + Math.floor(Math.random() * 45);
+                wrCtx.fillStyle = `rgb(${wrVal}, ${wrVal}, ${wrVal})`;
+                wrCtx.fillRect(x, y, w, h);
+
+                // Natural organic stone noise grain (replaces artificial harsh striations)
+                for (let k = 0; k < 60; k++) {
+                    const gx = x + Math.random() * w;
+                    const gy = y + Math.random() * h;
+                    const gw = 2 + Math.random() * 8;
+                    const gh = 2 + Math.random() * 4;
+                    const isDark = Math.random() > 0.45;
+                    wCtx.fillStyle = isDark ? 'rgba(0, 0, 0, 0.18)' : 'rgba(255, 255, 255, 0.12)';
+                    wCtx.fillRect(gx, gy, gw, gh);
+                    wbCtx.fillStyle = isDark ? '#404040' : '#ffffff';
+                    wbCtx.fillRect(gx, gy, gw, gh);
                 }
 
-                // Wall block bevels
-                wCtx.fillStyle = 'rgba(255, 255, 255, 0.07)';
-                wCtx.fillRect(x, y, w, 2);
-                wCtx.fillRect(x, y, 2, h);
-                wCtx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                wCtx.fillRect(x, y + h - 2, w, 2);
-                wCtx.fillRect(x + w - 2, y, 2, h);
+                // Subtle lichen / moss patches near lower block seams
+                if (Math.random() < 0.4) {
+                    wCtx.fillStyle = 'rgba(56, 68, 48, 0.28)';
+                    wCtx.fillRect(x + Math.random() * (w - 30), y + h - 14, 25 + Math.random() * 30, 10);
+                }
+
+                // Chiseled 3D beveled edges: soft highlight top/left, deep shadow bottom/right
+                wCtx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+                wCtx.fillRect(x, y, w, 3);
+                wCtx.fillRect(x, y, 3, h);
+                wCtx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+                wCtx.fillRect(x, y + h - 3, w, 3);
+                wCtx.fillRect(x + w - 3, y, 3, h);
 
                 wbCtx.fillStyle = '#ffffff';
                 wbCtx.fillRect(x, y, w, 2);
                 wbCtx.fillRect(x, y, 2, h);
-                wbCtx.fillStyle = '#333333';
+                wbCtx.fillStyle = '#222222';
                 wbCtx.fillRect(x, y + h - 2, w, 2);
                 wbCtx.fillRect(x + w - 2, y, 2, h);
             }
         }
 
-        // Vertical rainwater seepage & grime streaks
-        for (let i = 0; i < 40; i++) {
+        // Vertical rainwater seepage, grime & soot runoffs
+        for (let i = 0; i < 35; i++) {
             const sx = Math.random() * 1024;
-            const sy = Math.random() * 400;
-            const slen = 150 + Math.random() * 400;
+            const sy = Math.random() * 250;
+            const slen = 250 + Math.random() * 500;
             const sgrad = wCtx.createLinearGradient(sx, sy, sx, sy + slen);
-            sgrad.addColorStop(0, 'rgba(160, 150, 140, 0.2)');
-            sgrad.addColorStop(1, 'rgba(160, 150, 140, 0)');
+            sgrad.addColorStop(0, 'rgba(15, 12, 10, 0.55)');
+            sgrad.addColorStop(0.4, 'rgba(25, 20, 16, 0.28)');
+            sgrad.addColorStop(1, 'rgba(30, 25, 20, 0)');
             wCtx.fillStyle = sgrad;
-            wCtx.fillRect(sx - 3, sy, 6 + Math.random() * 6, slen);
+            wCtx.fillRect(sx - 4, sy, 8 + Math.random() * 12, slen);
         }
 
         const wallTex = new THREE.CanvasTexture(wallCanvas);
         wallTex.wrapS = THREE.RepeatWrapping;
         wallTex.wrapT = THREE.RepeatWrapping;
-        wallTex.repeat.set(4, 4);
 
         const wallBumpTex = new THREE.CanvasTexture(wallBumpCanvas);
         wallBumpTex.wrapS = THREE.RepeatWrapping;
         wallBumpTex.wrapT = THREE.RepeatWrapping;
-        wallBumpTex.repeat.set(4, 4);
+
+        const wallRoughTex = new THREE.CanvasTexture(wallRoughCanvas);
+        wallRoughTex.wrapS = THREE.RepeatWrapping;
+        wallRoughTex.wrapT = THREE.RepeatWrapping;
 
         this.wallMat = new THREE.MeshStandardMaterial({
             map: wallTex,
             bumpMap: wallBumpTex,
-            bumpScale: 0.1,
-            roughness: 0.92,
-            metalness: 0.12
+            bumpScale: 0.18,
+            roughnessMap: wallRoughTex,
+            roughness: 0.88,
+            metalness: 0.08
         });
 
         // 3. BOSS ARENA SCORCHED & BLOODSTAINED STONE (1024x1024)
@@ -480,23 +511,45 @@ class DarkSoulsWorld {
     }
 
     buildLighting() {
-        // 1. Lordran Daylight Azure Sky Zenith
-        this.scene.background = new THREE.Color(0x5282a6);
+        // 1. Panoramic Gothic Sky Dome with Vertical Horizon Gradient
+        const skyCanvas = document.createElement('canvas');
+        skyCanvas.width = 512;
+        skyCanvas.height = 512;
+        const skyCtx = skyCanvas.getContext('2d');
+        const skyGrad = skyCtx.createLinearGradient(0, 0, 0, 512);
+        skyGrad.addColorStop(0.0, '#152538'); // Dark twilight azure zenith
+        skyGrad.addColorStop(0.45, '#2e4862'); // Atmospheric sky blue
+        skyGrad.addColorStop(0.75, '#5c5244'); // Warm golden dust haze
+        skyGrad.addColorStop(1.0, '#786048'); // Sunlit mountain horizon glow
+        skyCtx.fillStyle = skyGrad;
+        skyCtx.fillRect(0, 0, 512, 512);
 
-        // 2. Sunny atmospheric aerial depth
-        this.scene.fog = new THREE.Fog(0x5282a6, 50, 220);
+        const skyTex = new THREE.CanvasTexture(skyCanvas);
+        const skyDomeGeo = new THREE.SphereGeometry(340, 32, 16);
+        const skyDomeMat = new THREE.MeshBasicMaterial({
+            map: skyTex,
+            side: THREE.BackSide,
+            depthWrite: false
+        });
+        const skyDome = new THREE.Mesh(skyDomeGeo, skyDomeMat);
+        this.scene.add(skyDome);
 
-        // 3. Balanced Ambient Daylight Fill (Crisp visibility with rich shadow depth)
-        this.ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+        this.scene.background = new THREE.Color(0x28384a);
+
+        // 2. Exponential Natural Atmospheric Depth Fog (Dark Souls / Elden Ring depth)
+        this.scene.fog = new THREE.FogExp2(0x324458, 0.0075);
+
+        // 3. Balanced Ambient Light (retains deep, dramatic shadow crevices without washing out)
+        this.ambientLight = new THREE.AmbientLight(0x202a38, 0.35);
         this.scene.add(this.ambientLight);
 
-        // 4. Sky and ground bounce hemisphere lighting (Azure sky + warm stone bounce)
-        this.hemiLight = new THREE.HemisphereLight(0x8ec2eb, 0x4a4238, 0.65);
+        // 4. Sky and ground bounce hemisphere lighting (slate blue sky + warm stone bounce)
+        this.hemiLight = new THREE.HemisphereLight(0x4a6d95, 0x221a14, 0.45);
         this.scene.add(this.hemiLight);
 
-        // 5. High-Noon Crisp Sunlight from above
-        this.moonlight = new THREE.DirectionalLight(0xfff5e6, 1.9);
-        this.moonlight.position.set(30, 95, 20);
+        // 5. Cinematic Golden Lordran Sunlight (dramatic rake angle casting long soft shadows)
+        this.moonlight = new THREE.DirectionalLight(0xffedd2, 1.4);
+        this.moonlight.position.set(45, 80, -25);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 2048;
         this.moonlight.shadow.mapSize.height = 2048;
@@ -507,22 +560,22 @@ class DarkSoulsWorld {
         this.moonlight.shadow.camera.right = d;
         this.moonlight.shadow.camera.top = d;
         this.moonlight.shadow.camera.bottom = -d;
-        this.moonlight.shadow.bias = -0.0003;
+        this.moonlight.shadow.bias = -0.00015;
+        this.moonlight.shadow.radius = 2.0;
         this.scene.add(this.moonlight);
 
-        // 6. Glowing Golden Sun Orb in the Sky
-        const sunGeo = new THREE.SphereGeometry(8, 16, 16);
-        const sunMat = new THREE.MeshBasicMaterial({ color: 0xfffae0 });
+        // 6. Radiant Golden Sun Disc & Volumetric Aura
+        const sunGeo = new THREE.SphereGeometry(8, 20, 20);
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xfffae4 });
         const sun = new THREE.Mesh(sunGeo, sunMat);
-        sun.position.set(60, 130, 50);
+        sun.position.set(65, 125, 45);
         this.scene.add(sun);
 
-        // Luminous radiant sunlight corona aura
-        const sunAuraGeo = new THREE.RingGeometry(8.2, 19.0, 32);
+        const sunAuraGeo = new THREE.RingGeometry(8.2, 22.0, 32);
         const sunAuraMat = new THREE.MeshBasicMaterial({
-            color: 0xffeedd,
+            color: 0xffeed0,
             transparent: true,
-            opacity: 0.55,
+            opacity: 0.65,
             side: THREE.DoubleSide
         });
         const sunAura = new THREE.Mesh(sunAuraGeo, sunAuraMat);
@@ -907,9 +960,163 @@ class DarkSoulsWorld {
         this.createStandingBrazier(5.5, 0, 163, 0xffaa33, 4.0, 28);
     }
 
+    buildDistantFortress() {
+        const distantGroup = new THREE.Group();
+
+        // 1. Distant Mountain Range Silhouettes (circling the horizon)
+        const mountainMat = new THREE.MeshStandardMaterial({
+            color: 0x1c242e,
+            roughness: 0.95,
+            metalness: 0.05,
+            flatShading: true
+        });
+
+        const mountainCoords = [
+            [-180, 25, -120, 55, 110], [-110, 20, -160, 45, 95], [0, 30, -180, 65, 130],
+            [120, 25, -160, 50, 105], [190, 20, -110, 55, 115],
+            [-210, 15, 40, 48, 90], [210, 15, 40, 52, 100],
+            [-190, 18, 160, 55, 110], [190, 18, 160, 55, 110],
+            [-100, 25, 230, 60, 125], [0, 35, 250, 75, 145], [110, 25, 230, 60, 120]
+        ];
+
+        mountainCoords.forEach(([mx, my, mz, mw, mh]) => {
+            const mGeo = new THREE.ConeGeometry(mw, mh, 5);
+            const mMesh = new THREE.Mesh(mGeo, mountainMat);
+            mMesh.position.set(mx, my, mz);
+            mMesh.rotation.y = Math.random() * Math.PI;
+            distantGroup.add(mMesh);
+        });
+
+        // 2. Towering Distant Gothic Spires & Cathedral Watchtowers (Anor Londo Skyline)
+        const spireTowerMat = new THREE.MeshStandardMaterial({
+            color: 0x222a36,
+            roughness: 0.9,
+            metalness: 0.1
+        });
+        const spireRoofMat = new THREE.MeshStandardMaterial({
+            color: 0x161d26,
+            roughness: 0.8,
+            metalness: 0.3
+        });
+
+        const distantSpires = [
+            [-85, 22, -90, 7, 55], [-45, 28, -115, 6, 68], [55, 26, -110, 6.5, 62], [95, 20, -85, 7.5, 52],
+            [-125, 18, 110, 8, 50], [125, 18, 110, 8, 50],
+            [-70, 32, 185, 9, 78], [70, 32, 185, 9, 78], [0, 40, 210, 11, 95]
+        ];
+
+        distantSpires.forEach(([tx, ty, tz, tr, th]) => {
+            // Tower shaft
+            const tBody = new THREE.Mesh(new THREE.CylinderGeometry(tr * 0.9, tr, th, 10), spireTowerMat);
+            tBody.position.set(tx, ty + th / 2, tz);
+            distantGroup.add(tBody);
+
+            // Conical spire roof
+            const tRoof = new THREE.Mesh(new THREE.ConeGeometry(tr * 1.05, th * 0.45, 10), spireRoofMat);
+            tRoof.position.set(tx, ty + th + (th * 0.45) / 2, tz);
+            distantGroup.add(tRoof);
+        });
+
+        // 3. Colossal Distant Arched Viaduct (Valley Aqueduct of Lordran)
+        const viaductGroup = new THREE.Group();
+        viaductGroup.position.set(130, 8, 45);
+        viaductGroup.rotation.y = -0.35;
+        const viaductSpan = new THREE.Mesh(new THREE.BoxGeometry(12, 5, 160), spireTowerMat);
+        viaductSpan.position.y = 20;
+        viaductGroup.add(viaductSpan);
+
+        for (let vz = -70; vz <= 70; vz += 28) {
+            const vPillar = new THREE.Mesh(new THREE.BoxGeometry(10, 38, 10), spireTowerMat);
+            vPillar.position.set(0, 0, vz);
+            viaductGroup.add(vPillar);
+        }
+        distantGroup.add(viaductGroup);
+
+        // 4. Volumetric Golden Sunrays / Godrays
+        const godrayMat = new THREE.MeshBasicMaterial({
+            color: 0xffeed4,
+            transparent: true,
+            opacity: 0.12,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+            depthWrite: false
+        });
+
+        for (let i = 0; i < 5; i++) {
+            const rayGeo = new THREE.CylinderGeometry(1.2, 18 + i * 4, 110, 8, 1, true);
+            const rayMesh = new THREE.Mesh(rayGeo, godrayMat);
+            rayMesh.position.set(55 + i * 4, 75, 38 + i * 3);
+            rayMesh.lookAt(i * 4 - 8, 0, 15 + i * 5);
+            distantGroup.add(rayMesh);
+        }
+
+        // 5. Glossy Courtyard Rain Puddles (specular reflections on flagstones)
+        const puddleMat = new THREE.MeshStandardMaterial({
+            color: 0x16202c,
+            roughness: 0.08,
+            metalness: 0.45,
+            transparent: true,
+            opacity: 0.82
+        });
+
+        const puddleCoords = [
+            [-5.5, 0.012, 7.5, 2.4], [6.2, 0.012, -4.5, 3.1],
+            [-14.0, 0.012, 14.0, 3.8], [15.5, 0.012, 12.0, 3.2],
+            [-7.0, 0.012, -16.0, 2.8], [8.5, 0.012, -18.0, 2.6]
+        ];
+        puddleCoords.forEach(([px, py, pz, pr]) => {
+            const pGeo = new THREE.CircleGeometry(pr, 14);
+            const pMesh = new THREE.Mesh(pGeo, puddleMat);
+            pMesh.position.set(px, py, pz);
+            pMesh.rotation.x = -Math.PI / 2;
+            pMesh.receiveShadow = true;
+            distantGroup.add(pMesh);
+        });
+
+        // 6. Ambient Occlusion Contact Shadow Decals (grounding pillars & bonfire)
+        const aoShadowMat = new THREE.MeshBasicMaterial({
+            color: 0x06080a,
+            transparent: true,
+            opacity: 0.62,
+            depthWrite: false
+        });
+
+        const aoPositions = [
+            [0, 0.008, 0, 3.8], // Bonfire base
+            [-12, 0.008, -12, 2.2], [12, 0.008, -12, 2.2],
+            [-12, 0.008, 12, 2.2], [12, 0.008, 12, 2.2],
+            [-20, 0.008, -4, 2.2], [20, 0.008, -4, 2.2],
+            [-20, 0.008, 20, 2.2], [20, 0.008, 20, 2.2],
+            [-3.6, 0.008, 0, 1.8], [3.6, 0.008, 0, 1.8] // Braziers
+        ];
+        aoPositions.forEach(([ax, ay, az, ar]) => {
+            const aoGeo = new THREE.CircleGeometry(ar, 14);
+            const aoMesh = new THREE.Mesh(aoGeo, aoShadowMat);
+            aoMesh.position.set(ax, ay, az);
+            aoMesh.rotation.x = -Math.PI / 2;
+            distantGroup.add(aoMesh);
+        });
+
+        this.scene.add(distantGroup);
+    }
+
     createWall(x, y, z, w, h, d) {
         const geo = new THREE.BoxGeometry(w, h, d);
-        const mesh = new THREE.Mesh(geo, this.wallMat);
+        
+        // Dynamically scaled PBR stone material matching architectural dimensions (1.8m x 1.4m blocks)
+        const mat = this.wallMat.clone();
+        mat.map = mat.map.clone();
+        mat.bumpMap = mat.bumpMap.clone();
+        if (mat.roughnessMap) mat.roughnessMap = mat.roughnessMap.clone();
+
+        const horizDim = Math.max(w, d);
+        const repeatX = Math.max(1, Math.round(horizDim / 2.0));
+        const repeatY = Math.max(1, Math.round(h / 1.6));
+        mat.map.repeat.set(repeatX, repeatY);
+        mat.bumpMap.repeat.set(repeatX, repeatY);
+        if (mat.roughnessMap) mat.roughnessMap.repeat.set(repeatX, repeatY);
+
+        const mesh = new THREE.Mesh(geo, mat);
         mesh.position.set(x, y, z);
         mesh.castShadow = true;
         mesh.receiveShadow = true;

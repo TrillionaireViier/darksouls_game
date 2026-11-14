@@ -33,26 +33,48 @@ class DarkSoulsGame {
         this.heraldry = new HeraldryNobilitySystem(this);
         this.apothecary = new ApothecaryCraftingSystem(this);
 
+        // Post-Processing Cinematic Pipeline (ACES Filmic Tone Mapping, 9-Tap Bloom, Vignette, Micro-grain)
+        try {
+            if (typeof DarkSoulsPostProcessing !== 'undefined') {
+                this.postProcessing = new DarkSoulsPostProcessing(this.renderer, this.scene, this.camera);
+                this.postProcessingEnabled = true;
+                this.renderer.toneMapping = THREE.NoToneMapping; // Composite shader handles ACES filmic & bloom
+            } else {
+                this.postProcessing = null;
+                this.postProcessingEnabled = false;
+            }
+        } catch (e) {
+            console.warn("PostProcessing init fallback:", e);
+            this.postProcessing = null;
+            this.postProcessingEnabled = false;
+        }
+
         // Player Entity
         this.playerMesh = this.charFactory.createPlayer();
         this.playerMesh.position.set(0, 0, 5); // Courtyard start near bonfire
+        this.playerMesh.rotation.y = Math.PI; // Face forward into Lordran towards bonfire
         this.heraldry.applyHeraldryTo3DPlayer();
         this.playerVelocity = new THREE.Vector3();
         this.moveSpeed = 4.8;
         this.sprintSpeed = 7.2;
 
-        // Player Local Warm Fill Light
-        this.playerLantern = new THREE.PointLight(0xffeedd, 1.2, 16, 1.4);
+        // Player Local Warm Fill Light (subtle, contours pop without washing out)
+        this.playerLantern = new THREE.PointLight(0xffeedd, 0.45, 12, 1.8);
         this.playerLantern.position.set(0, 2.2, 0);
         this.playerMesh.add(this.playerLantern);
 
         // Player Back Fill Light (Gleaming knight armor highlights)
-        this.playerBackLight = new THREE.PointLight(0xddeeff, 0.4, 10, 1.5);
+        this.playerBackLight = new THREE.PointLight(0xddeeff, 0.35, 10, 1.5);
         this.playerBackLight.position.set(0, 1.5, -1.2);
         this.playerMesh.add(this.playerBackLight);
 
-        // Camera Soft Headlight Fill
-        this.cameraLight = new THREE.DirectionalLight(0xffffff, 0.25);
+        // Character Rim Light (Gives silhouetted edge separation against dark fortress geometry)
+        this.playerRimLight = new THREE.DirectionalLight(0x7898c0, 0.55);
+        this.playerRimLight.position.set(-15, 25, -20);
+        this.scene.add(this.playerRimLight);
+
+        // Camera Soft Ambient Headlight Fill (gentle non-intrusive fill)
+        this.cameraLight = new THREE.DirectionalLight(0xffffff, 0.02);
         this.camera.add(this.cameraLight);
         this.scene.add(this.camera);
 
@@ -694,31 +716,31 @@ class DarkSoulsGame {
         const btn = document.getElementById('btn-brightness-toggle');
         if (this.brightnessLevel === 0) {
             this.renderer.toneMappingExposure = 1.05;
-            if (this.world.moonlight) this.world.moonlight.intensity = 1.9;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.85;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.65;
-            if (this.playerLantern) this.playerLantern.intensity = 1.2;
-            if (this.cameraLight) this.cameraLight.intensity = 0.25;
-            if (btn) btn.textContent = '☀️ NOON SUN';
-            this.showNotification("LIGHTING: HIGH NOON BALANCED SUNLIGHT");
+            if (this.world.moonlight) this.world.moonlight.intensity = 1.4;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.35;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.45;
+            if (this.playerLantern) this.playerLantern.intensity = 0.45;
+            if (this.cameraLight) this.cameraLight.intensity = 0.02;
+            if (btn) btn.textContent = '☀️ LORDRAN SUN';
+            this.showNotification("LIGHTING: LORDRAN CINEMATIC SUNLIGHT");
         } else if (this.brightnessLevel === 1) {
-            this.renderer.toneMappingExposure = 1.35;
-            if (this.world.moonlight) this.world.moonlight.intensity = 2.4;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.2;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.9;
-            if (this.playerLantern) this.playerLantern.intensity = 1.8;
-            if (this.cameraLight) this.cameraLight.intensity = 0.5;
+            this.renderer.toneMappingExposure = 1.25;
+            if (this.world.moonlight) this.world.moonlight.intensity = 1.85;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.5;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.65;
+            if (this.playerLantern) this.playerLantern.intensity = 0.75;
+            if (this.cameraLight) this.cameraLight.intensity = 0.06;
             if (btn) btn.textContent = '☀️ MAXIMUM+';
             this.showNotification("LIGHTING: EXTRA BRIGHT DAYLIGHT");
         } else {
-            this.renderer.toneMappingExposure = 0.9;
-            if (this.world.moonlight) this.world.moonlight.intensity = 1.5;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.65;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.5;
-            if (this.playerLantern) this.playerLantern.intensity = 0.9;
-            if (this.cameraLight) this.cameraLight.intensity = 0.2;
-            if (btn) btn.textContent = '☀️ CLEAR DAY';
-            this.showNotification("LIGHTING: CLEAR ATMOSPHERE");
+            this.renderer.toneMappingExposure = 0.95;
+            if (this.world.moonlight) this.world.moonlight.intensity = 1.15;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.25;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.35;
+            if (this.playerLantern) this.playerLantern.intensity = 0.35;
+            if (this.cameraLight) this.cameraLight.intensity = 0.01;
+            if (btn) btn.textContent = '☀️ MOODY DUSK';
+            this.showNotification("LIGHTING: ATMOSPHERIC DUSK");
         }
     }
 
@@ -899,8 +921,12 @@ class DarkSoulsGame {
         // 4. Update HUD
         this.updateHUD(delta);
 
-        // 5. Render Scene
-        this.renderer.render(this.scene, this.camera);
+        // 5. Render Scene with Cinematic Post-Processing Pipeline
+        if (this.postProcessingEnabled && this.postProcessing) {
+            this.postProcessing.render(delta);
+        } else {
+            this.renderer.render(this.scene, this.camera);
+        }
     }
 
     updatePlayer(delta) {
@@ -1741,6 +1767,9 @@ class DarkSoulsGame {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        if (this.postProcessing) {
+            this.postProcessing.setSize(window.innerWidth, window.innerHeight);
+        }
     }
 }
 
