@@ -120,6 +120,10 @@ class DarkSoulsGame {
         this.animate = this.animate.bind(this);
         requestAnimationFrame(this.animate);
 
+        // Restore equipped skin
+        const savedSkin = localStorage.getItem('darksouls_equipped_skin') || 'warrior';
+        this.selectSkin(savedSkin, false);
+
         // Auto-restore saved journey if present
         if (this.hasSaveData()) {
             this.loadGame(false);
@@ -474,6 +478,14 @@ class DarkSoulsGame {
                     this.world.traverseFogGate();
                     this.showNotification("TRAVERSED THE WHITE LIGHT");
                     this.audio.playRoll();
+                    return;
+                } else if (item.type === 'catacomb_fog_gate') {
+                    if (this.combat.isBossUnlocked('nito')) {
+                        this.combat.switchBoss('nito');
+                    } else {
+                        this.showNotification("🔒 SEALED BY ANCIENT LORD VESSEL • DEFEAT CAPRA DEMON FIRST");
+                        if (this.audio) this.audio.playRoll();
+                    }
                     return;
                 }
             }
@@ -930,44 +942,39 @@ class DarkSoulsGame {
     }
 
     updatePlayer(delta) {
+        const uData = this.playerMesh.userData;
+        const time = this.clock.getElapsedTime();
+
+        // 1. DEATH COLLAPSE
         if (this.combat.isDead) {
-            // Collapse downwards
             if (this.playerMesh.position.y > 0.1) {
                 this.playerMesh.position.y = Math.max(0, this.playerMesh.position.y - delta * 2);
             }
-            if (this.playerMesh.userData.torso) {
-                this.playerMesh.userData.torso.rotation.x = Math.min(Math.PI / 2.2, this.playerMesh.userData.torso.rotation.x + delta * 3);
+            if (uData.torso) {
+                uData.torso.rotation.x = Math.min(Math.PI / 2.2, uData.torso.rotation.x + delta * 3);
             }
+            if (uData.leftShoulder) uData.leftShoulder.rotation.z = Math.min(0.7, uData.leftShoulder.rotation.z + delta * 2);
+            if (uData.rightShoulder) uData.rightShoulder.rotation.z = Math.max(-0.7, uData.rightShoulder.rotation.z - delta * 2);
             return;
         }
 
+        // 2. DIRECTIONAL ROLLING & BACKSTEP
         if (this.combat.isRolling) {
-            const uData = this.playerMesh.userData;
             if (this.combat.isBackstep) {
-                // Backstep hop animation (0.38s)
                 const progress = Math.min(1.0, this.combat.rollTime / 0.38);
                 this.playerMesh.position.y = Math.sin(progress * Math.PI) * 0.28;
-                if (uData.torso) {
-                    uData.torso.rotation.x = Math.sin(progress * Math.PI) * 0.35;
-                }
+                if (uData.torso) uData.torso.rotation.x = Math.sin(progress * Math.PI) * 0.35;
                 if (uData.leftHip && uData.rightHip) {
                     uData.leftHip.rotation.x = -0.4;
                     uData.rightHip.rotation.x = -0.4;
                 }
             } else {
-                // Full 3D directional somersault roll (0.52s)
                 const progress = Math.min(1.0, this.combat.rollTime / 0.52);
-
-                // 1. Orient player mesh towards roll direction
                 const rollYaw = Math.atan2(this.combat.rollDir.x, this.combat.rollDir.z);
                 this.playerMesh.rotation.y = rollYaw;
 
-                // 2. Full 360 somersault flip
-                if (uData.torso) {
-                    uData.torso.rotation.x = progress * Math.PI * 2;
-                }
+                if (uData.torso) uData.torso.rotation.x = progress * Math.PI * 2;
 
-                // 3. Tuck legs & arms into tight somersault ball
                 const tuck = Math.sin(progress * Math.PI);
                 if (uData.leftHip && uData.rightHip) {
                     uData.leftHip.rotation.x = -tuck * 1.4;
@@ -978,92 +985,73 @@ class DarkSoulsGame {
                     uData.rightShoulder.rotation.x = tuck * 1.1;
                 }
 
-                // 4. Drop Y position close to ground during roll
                 const groundY = this.world.getGroundHeight(this.playerMesh.position.x, this.playerMesh.position.z);
                 this.playerMesh.position.y = groundY - Math.sin(progress * Math.PI) * 0.35;
 
-                // 5. Spawn i-frame ghost trail & embers
                 if (this.combat.isInvincible && Math.random() < 0.45) {
                     this.spawnRollGhostTrail();
                 }
             }
             return;
-        } else {
-            // Restore upright posture when not rolling
-            const uData = this.playerMesh.userData;
-            if (uData.torso && uData.torso.rotation.x !== 0 && !this.combat.isAttacking) {
-                uData.torso.rotation.x = 0;
-            }
-            if (uData.leftShoulder && uData.rightShoulder && !this.combat.isAttacking && !this.combat.isBlocking) {
-                if (this.isTorchActive) {
-                    uData.leftShoulder.rotation.x = -0.65;
-                    uData.leftShoulder.rotation.z = -0.15;
-                } else {
-                    uData.leftShoulder.rotation.x = 0;
-                    uData.leftShoulder.rotation.z = 0;
-                }
-                uData.rightShoulder.rotation.x = 0;
-            }
-
-            // 3D Vertical Physics & Terrain Elevation
-            const pPos = this.playerMesh.position;
-            const targetGroundY = this.world.getGroundHeight(pPos.x, pPos.z);
-            const heightDiff = pPos.y - targetGroundY;
-
-            if (heightDiff > 0.16 || this.playerVelocity.y < -0.2) {
-                // Airborne / falling
-                this.playerVelocity.y -= 26 * delta; // Gravity
-                pPos.y += this.playerVelocity.y * delta;
-
-                if (pPos.y <= targetGroundY) {
-                    const fallSpeed = -this.playerVelocity.y;
-                    pPos.y = targetGroundY;
-                    this.playerVelocity.y = 0;
-
-                    if (fallSpeed > 4.5) {
-                        this.audio.playFootstep();
-                        this.shakeCamera(0.18, 0.25);
-                        this.world.spawnLandingDust(pPos);
-
-                        if (this.combat.isPlungingAttack) {
-                            this.combat.executePlungingImpact(fallSpeed);
-                        }
-                    }
-                }
-            } else {
-                // Grounded: smoothly adhere to steps and slopes
-                pPos.y = THREE.MathUtils.lerp(pPos.y, targetGroundY, Math.min(1.0, delta * 20));
-                this.playerVelocity.y = 0;
-            }
         }
 
+        // 3. TERRAIN ELEVATION & GRAVITY
+        const pPos = this.playerMesh.position;
+        const targetGroundY = this.world.getGroundHeight(pPos.x, pPos.z);
+        const heightDiff = pPos.y - targetGroundY;
+
+        if (heightDiff > 0.16 || this.playerVelocity.y < -0.2) {
+            this.playerVelocity.y -= 26 * delta;
+            pPos.y += this.playerVelocity.y * delta;
+
+            if (pPos.y <= targetGroundY) {
+                const fallSpeed = -this.playerVelocity.y;
+                pPos.y = targetGroundY;
+                this.playerVelocity.y = 0;
+
+                if (fallSpeed > 4.5) {
+                    this.audio.playFootstep();
+                    this.shakeCamera(0.18, 0.25);
+                    this.world.spawnLandingDust(pPos);
+
+                    if (this.combat.isPlungingAttack) {
+                        this.combat.executePlungingImpact(fallSpeed);
+                    }
+                }
+            }
+        } else {
+            pPos.y = THREE.MathUtils.lerp(pPos.y, targetGroundY, Math.min(1.0, delta * 20));
+            this.playerVelocity.y = 0;
+        }
+
+        // 4. MOVEMENT DIRECTION & LOCOMOTION
         const moveDir = this.calculateMovementDirection();
         const isMoving = moveDir.lengthSq() > 0.001;
 
-        if (isMoving && !this.combat.isAttacking && !this.combat.isDrinkingEstus && !this.combat.isStaggered) {
-            // Speed (holding Shift = sprint if stamina > 0)
-            const isSprinting = (this.keys['ShiftLeft'] || this.keys['ShiftRight']) && this.combat.stamina > 5;
-            let speed = isSprinting ? this.sprintSpeed : (this.combat.isBlocking ? this.moveSpeed * 0.55 : this.moveSpeed);
+        // Apply skin stat perks
+        const perks = (this.combat && this.combat.skinPerks) || {};
+        const speedBonus = perks.speedMultiplier || 1.0;
+        const stamCostMult = (perks.stamMultiplier !== undefined) ? (2.0 - perks.stamMultiplier) : 1.0;
 
-            // Water surface drag in Flooded Catacombs (y <= -4.0)
+        let isSprinting = false;
+
+        if (isMoving && !this.combat.isAttacking && !this.combat.isDrinkingEstus && !this.combat.isStaggered) {
+            isSprinting = (this.keys['ShiftLeft'] || this.keys['ShiftRight']) && this.combat.stamina > 5;
+            let speed = isSprinting ? this.sprintSpeed : (this.combat.isBlocking ? this.moveSpeed * 0.55 : this.moveSpeed);
+            speed *= speedBonus;
+
             const isInWater = this.playerMesh.position.y <= -4.0;
-            if (isInWater) {
-                speed *= 0.88;
-            }
+            if (isInWater) speed *= 0.88;
 
             if (isSprinting) {
-                this.combat.stamina = Math.max(0, this.combat.stamina - delta * 18);
+                this.combat.stamina = Math.max(0, this.combat.stamina - delta * 18 * stamCostMult);
                 this.combat.staminaDelay = 0.4;
             }
 
-            // Move
             const step = moveDir.clone().multiplyScalar(speed * delta);
             this.playerMesh.position.add(step);
-
-            // Collisions with world walls
             this.resolvePlayerCollisions();
 
-            // Face movement direction or locked target
             if (this.combat.lockedTarget) {
                 const toTarget = new THREE.Vector3().subVectors(this.combat.lockedTarget.mesh.position, this.playerMesh.position);
                 this.playerMesh.rotation.y = Math.atan2(toTarget.x, toTarget.z);
@@ -1072,17 +1060,49 @@ class DarkSoulsGame {
                 this.playerMesh.rotation.y = targetRot;
             }
 
-            // Procedural running limb oscillation
-            const time = this.clock.getElapsedTime();
+            // Organic humanoid locomotion kinetics
             const freq = isSprinting ? 14 : 9;
-            const uData = this.playerMesh.userData;
+            const stride = isSprinting ? 0.75 : 0.52;
+            const armSwing = isSprinting ? 0.85 : 0.48;
+            const phase = time * freq;
+
+            // Alternating hips
             if (uData.rightHip && uData.leftHip) {
-                uData.rightHip.rotation.x = Math.sin(time * freq) * 0.5;
-                uData.leftHip.rotation.x = -Math.sin(time * freq) * 0.5;
+                uData.rightHip.rotation.x = Math.sin(phase) * stride;
+                uData.leftHip.rotation.x = -Math.sin(phase) * stride;
             }
 
-            // Periodic footstep audio & surface splash particles
-            if (Math.sin(time * freq) > 0.95) {
+            // Pelvic bounce & forward lean
+            if (uData.bodyGroup) {
+                uData.bodyGroup.position.y = 1.0 + Math.abs(Math.sin(phase)) * (isSprinting ? 0.07 : 0.04);
+            }
+            if (uData.torso) {
+                uData.torso.rotation.x = isSprinting ? 0.22 : 0.07;
+                uData.torso.rotation.y = -Math.sin(phase) * 0.12;
+                uData.torso.rotation.z = Math.cos(phase) * 0.03;
+                uData.torso.scale.set(1, 1, 1);
+            }
+
+            // Opposite arm swinging
+            if (!this.combat.isBlocking) {
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = -Math.sin(phase) * armSwing;
+                    uData.rightShoulder.rotation.y = 0;
+                    uData.rightShoulder.rotation.z = -0.06;
+                }
+                if (uData.leftShoulder) {
+                    if (this.isTorchActive) {
+                        uData.leftShoulder.rotation.x = -0.65;
+                        uData.leftShoulder.rotation.z = -0.15;
+                    } else {
+                        uData.leftShoulder.rotation.x = Math.sin(phase) * (armSwing * 0.65);
+                        uData.leftShoulder.rotation.z = 0.05;
+                    }
+                }
+            }
+
+            // Periodic footstep audio
+            if (Math.sin(phase) > 0.95) {
                 if (isInWater) {
                     this.audio.playWaterSplash();
                     this.world.spawnWaterSplash(this.playerMesh.position);
@@ -1090,76 +1110,221 @@ class DarkSoulsGame {
                     this.audio.playFootstep();
                 }
             }
-        } else {
-            // Idle breathing oscillation
-            const time = this.clock.getElapsedTime();
-            const uData = this.playerMesh.userData;
-            if (uData.rightHip && uData.leftHip) {
-                uData.rightHip.rotation.x = 0;
-                uData.leftHip.rotation.x = 0;
-            }
-            if (uData.torso) {
-                uData.torso.position.y = Math.sin(time * 2.5) * 0.03;
-            }
         }
 
-        // Shield stance
-        const uData = this.playerMesh.userData;
-        if (uData.shieldGroup) {
-            if (this.combat.isBlocking) {
+        // 5. COMBAT & ACTION ANIMATIONS (REAL KINETIC SKELETON POSED ANIMATIONS)
+        if (this.combat.isDrinkingEstus) {
+            // Estus Flask Drinking
+            const et = this.combat.estusTime;
+            const liftProgress = Math.sin(Math.min(1.0, et / 0.35) * Math.PI * 0.5);
+            if (uData.leftShoulder) {
+                uData.leftShoulder.rotation.x = 1.45 * liftProgress;
+                uData.leftShoulder.rotation.z = 0.42 * liftProgress;
+            }
+            if (uData.headGroup) {
+                uData.headGroup.rotation.x = -0.38 * liftProgress;
+            }
+            if (uData.torso) {
+                uData.torso.rotation.x = -0.05;
+                uData.torso.rotation.y = 0;
+            }
+            if (uData.rightShoulder) {
+                uData.rightShoulder.rotation.x = 0.2;
+            }
+        } else if (this.combat.isStaggered) {
+            // Heavy Hit Stagger / Knockback
+            const st = this.combat.staggerTime;
+            const fade = 1.0 - Math.min(1.0, st / 0.6);
+            if (uData.torso) {
+                uData.torso.rotation.x = -0.42 * fade;
+                uData.torso.rotation.z = 0.12 * Math.sin(st * 20) * fade;
+            }
+            if (uData.leftShoulder) uData.leftShoulder.rotation.z = 0.45 * fade;
+            if (uData.rightShoulder) uData.rightShoulder.rotation.z = -0.45 * fade;
+            if (uData.bodyGroup) uData.bodyGroup.position.y = 0.92;
+        } else if (this.combat.isParrying) {
+            // Parry Shield Deflection Flick
+            const p = Math.min(1.0, this.combat.parryTime / 0.4);
+            const flick = Math.sin(p * Math.PI);
+            if (uData.leftShoulder) {
+                uData.leftShoulder.rotation.z = flick * 1.15;
+                uData.leftShoulder.rotation.x = 0.45;
+                uData.leftShoulder.rotation.y = 0.35 + flick * 0.6;
+            }
+            if (uData.torso) {
+                uData.torso.rotation.y = -flick * 0.35;
+                uData.torso.rotation.x = -0.08;
+            }
+        } else if (this.combat.isAttacking) {
+            const t = this.combat.attackTime;
+            const combo = this.combat.attackCombo;
+
+            if (combo === 1) { // Light Slash 1 (Right-to-Left Cross Cleave)
+                const norm = Math.min(1.0, t / 0.42);
+                if (norm < 0.32) {
+                    const w = norm / 0.32;
+                    if (uData.torso) {
+                        uData.torso.rotation.y = w * 0.45;
+                        uData.torso.rotation.x = -0.08;
+                    }
+                    if (uData.rightShoulder) {
+                        uData.rightShoulder.rotation.x = -w * 0.65;
+                        uData.rightShoulder.rotation.y = w * 0.45;
+                    }
+                } else {
+                    const s = (norm - 0.32) / 0.68;
+                    if (uData.torso) {
+                        uData.torso.rotation.y = 0.45 - s * 1.15;
+                        uData.torso.rotation.x = 0.22;
+                    }
+                    if (uData.rightShoulder) {
+                        uData.rightShoulder.rotation.x = -0.65 + s * 1.95;
+                        uData.rightShoulder.rotation.y = 0.45 - s * 0.9;
+                    }
+                    if (uData.rightHip) uData.rightHip.rotation.x = 0.35 * (1 - s);
+                }
+                if (uData.swordGroup) {
+                    uData.swordGroup.rotation.z = Math.sin(t * 12) * 1.8;
+                    uData.swordGroup.rotation.y = Math.cos(t * 12) * 1.2;
+                    uData.swordGroup.rotation.x = 0.6;
+                }
+            } else if (combo === 2) { // Reverse Slash (Left-to-Right Backhand)
+                const norm = Math.min(1.0, t / 0.45);
+                if (uData.torso) {
+                    uData.torso.rotation.y = -0.45 + norm * 1.05;
+                    uData.torso.rotation.x = 0.15;
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = 0.3 + Math.sin(norm * Math.PI) * 0.9;
+                    uData.rightShoulder.rotation.y = -0.4 + norm * 0.95;
+                }
+                if (uData.swordGroup) {
+                    uData.swordGroup.rotation.z = -Math.sin(t * 12) * 1.8;
+                    uData.swordGroup.rotation.x = Math.cos(t * 12) * 1.4;
+                }
+            } else if (combo === 3) { // Heavy Two-Handed Overhead Slam
+                const norm = Math.min(1.0, t / 0.70);
+                if (norm < 0.42) {
+                    const w = norm / 0.42;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = -w * 2.1;
+                    if (uData.leftShoulder) {
+                        uData.leftShoulder.rotation.x = -w * 1.8;
+                        uData.leftShoulder.rotation.y = 0.4;
+                    }
+                    if (uData.torso) uData.torso.rotation.x = -w * 0.38;
+                    if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0 + w * 0.08;
+                    if (uData.swordGroup) uData.swordGroup.rotation.x = -w * 1.6;
+                } else {
+                    const s = (norm - 0.42) / 0.58;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = -2.1 + s * 3.8;
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.x = -1.8 + s * 3.3;
+                    if (uData.torso) uData.torso.rotation.x = -0.38 + s * 1.15;
+                    if (uData.bodyGroup) uData.bodyGroup.position.y = 1.08 - s * 0.36;
+                    if (uData.swordGroup) uData.swordGroup.rotation.x = Math.sin(t * 8) * 2.2 + 0.3;
+
+                    if (s > 0.5 && s < 0.65) {
+                        this.world.spawnLandingDust(this.playerMesh.position);
+                    }
+                }
+            } else if (combo === 4) { // Riposte Thrust
+                if (uData.torso) uData.torso.rotation.y = -0.35;
+                if (uData.rightShoulder) uData.rightShoulder.rotation.x = 1.55;
+                if (uData.rightHip) uData.rightHip.rotation.x = 0.45;
+                if (uData.swordGroup) {
+                    uData.swordGroup.rotation.set(Math.PI / 2, 0, 0);
+                    uData.swordGroup.position.z = 0.2 + Math.sin(t * 10) * 0.7;
+                }
+            } else if (combo === 5) { // Running Leaping Jump Attack
+                const norm = Math.min(1.0, t * 4);
+                if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0 + Math.sin(norm * Math.PI) * 0.6;
+                if (uData.rightShoulder) uData.rightShoulder.rotation.x = -1.2 + norm * 2.5;
+                if (uData.swordGroup) {
+                    uData.swordGroup.rotation.x = 2.4 - Math.sin(norm * Math.PI) * 2.6;
+                    uData.swordGroup.position.y = Math.sin(t * 5) * 0.3;
+                }
+            } else if (combo === 6) { // Plunging Attack
+                if (uData.torso) uData.torso.rotation.x = 0.6;
+                if (uData.swordGroup) {
+                    uData.swordGroup.rotation.set(Math.PI * 0.95, 0, 0);
+                    uData.swordGroup.position.set(0, -0.4, 0.4);
+                }
+            }
+        } else if (this.combat.isBlocking) {
+            // Shield Block Stance
+            if (uData.leftShoulder) {
+                uData.leftShoulder.rotation.x = 0.75;
+                uData.leftShoulder.rotation.y = 0.38;
+                uData.leftShoulder.rotation.z = -0.18;
+            }
+            if (uData.torso) {
+                uData.torso.rotation.y = -0.16;
+                uData.torso.rotation.x = 0.08;
+            }
+            if (uData.bodyGroup) uData.bodyGroup.position.y = 0.95;
+            if (uData.shieldGroup) {
                 uData.shieldGroup.position.set(0, 0.22, 0.35);
                 uData.shieldGroup.rotation.set(0, 0, 0);
-            } else {
+            }
+        } else if (!isMoving) {
+            // 6. IDLE BREATHING OSCILLATION & REALISTIC COMBAT STANCE
+            const t = time * 2.2;
+            if (uData.rightHip && uData.leftHip) {
+                uData.rightHip.rotation.x = 0.04;
+                uData.rightHip.rotation.z = 0.04;
+                uData.leftHip.rotation.x = -0.04;
+                uData.leftHip.rotation.z = -0.04;
+            }
+            if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0;
+            if (uData.torso) {
+                uData.torso.position.y = Math.sin(t) * 0.025;
+                uData.torso.rotation.x = Math.sin(t) * 0.015;
+                uData.torso.rotation.y = Math.sin(t * 0.3) * 0.015;
+                uData.torso.rotation.z = Math.sin(t * 0.5) * 0.02;
+                uData.torso.scale.set(1.0 + Math.sin(t) * 0.012, 1.0, 1.0 + Math.sin(t) * 0.018);
+            }
+            if (uData.rightShoulder) {
+                uData.rightShoulder.rotation.x = Math.sin(t) * 0.03;
+                uData.rightShoulder.rotation.y = 0;
+                uData.rightShoulder.rotation.z = -0.06;
+            }
+            if (uData.leftShoulder) {
+                if (this.isTorchActive) {
+                    uData.leftShoulder.rotation.x = -0.65;
+                    uData.leftShoulder.rotation.z = -0.15;
+                } else {
+                    uData.leftShoulder.rotation.x = -0.12 + Math.sin(t) * 0.02;
+                    uData.leftShoulder.rotation.z = 0.05;
+                }
+            }
+            if (uData.headGroup) {
+                uData.headGroup.rotation.x = 0;
+            }
+
+            // Normal shield posture
+            if (uData.shieldGroup) {
                 uData.shieldGroup.position.set(-0.06, 0.08, 0.16);
                 uData.shieldGroup.rotation.set(0.08, Math.PI / 8, -0.05);
             }
-        }
 
-        // Weapon swing attack & realistic idle guard animation
-        if (uData.swordGroup && this.combat.isAttacking) {
-            const t = this.combat.attackTime;
-            if (this.combat.attackCombo === 1) { // Slash 1
-                uData.swordGroup.rotation.z = Math.sin(t * 12) * 1.8;
-                uData.swordGroup.rotation.y = Math.cos(t * 12) * 1.2;
-                uData.swordGroup.rotation.x = 0.6;
-            } else if (this.combat.attackCombo === 2) { // Slash 2
-                uData.swordGroup.rotation.z = -Math.sin(t * 12) * 1.8;
-                uData.swordGroup.rotation.x = Math.cos(t * 12) * 1.4;
-            } else if (this.combat.attackCombo === 3) { // Heavy overhead
-                uData.swordGroup.rotation.x = Math.sin(t * 8) * 2.2 + 0.3;
-            } else if (this.combat.attackCombo === 4) { // Riposte thrust
-                uData.swordGroup.rotation.set(Math.PI / 2, 0, 0);
-                uData.swordGroup.position.z = 0.2 + Math.sin(t * 10) * 0.7;
-            } else if (this.combat.attackCombo === 5) { // Running Leaping Jump Attack
-                uData.swordGroup.rotation.x = 2.4 - Math.sin(Math.min(1.0, t * 4) * Math.PI) * 2.6;
-                uData.swordGroup.position.y = Math.sin(t * 5) * 0.3;
-            } else if (this.combat.attackCombo === 6) { // Plunging Attack (blade down)
-                uData.swordGroup.rotation.set(Math.PI * 0.95, 0, 0);
-                uData.swordGroup.position.set(0, -0.4, 0.4);
-            }
-        } else if (uData.swordGroup) {
-            // Authentic Souls idle postures (no awkward horizontal protrusion or wall clipping)
-            const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
-            if (wpnId === 'halberd') {
-                // Halberd / Polearm: rest upright against right shoulder pointing safely into the air
-                uData.swordGroup.rotation.set(-0.25, 0.12, 0.18);
-                uData.swordGroup.position.set(-0.04, 0.12, -0.06);
-            } else if (wpnId === 'dragontooth') {
-                // Colossal greathammer: rested heavy over right pauldron
-                uData.swordGroup.rotation.set(-0.45, 0.2, 0.15);
-                uData.swordGroup.position.set(-0.06, 0.18, -0.1);
-            } else if (wpnId === 'torch') {
-                // Hand torch: held upright burning vertically into sky
-                uData.swordGroup.rotation.set(0.08, 0, -0.08);
-                uData.swordGroup.position.set(0, 0.06, 0.04);
-            } else if (wpnId === 'uchigatana') {
-                // Katana: elegant angled ready stance
-                uData.swordGroup.rotation.set(0.5, 0.15, -0.22);
-                uData.swordGroup.position.set(0.02, 0.04, 0.08);
-            } else {
-                // Astora Straight Sword / Moonlight / Zweihander: ready guard stance, blade pointed up-forward
-                uData.swordGroup.rotation.set(0.48, 0.14, -0.2);
-                uData.swordGroup.position.set(0.02, 0.04, 0.06);
+            // Resting weapon postures
+            if (uData.swordGroup) {
+                const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
+                if (wpnId === 'halberd') {
+                    uData.swordGroup.rotation.set(-0.25, 0.12, 0.18);
+                    uData.swordGroup.position.set(-0.04, 0.12, -0.06);
+                } else if (wpnId === 'dragontooth') {
+                    uData.swordGroup.rotation.set(-0.45, 0.2, 0.15);
+                    uData.swordGroup.position.set(-0.06, 0.18, -0.1);
+                } else if (wpnId === 'torch') {
+                    uData.swordGroup.rotation.set(0.08, 0, -0.08);
+                    uData.swordGroup.position.set(0, 0.06, 0.04);
+                } else if (wpnId === 'uchigatana') {
+                    uData.swordGroup.rotation.set(0.5, 0.15, -0.22);
+                    uData.swordGroup.position.set(0.02, 0.04, 0.08);
+                } else {
+                    uData.swordGroup.rotation.set(0.48, 0.14, -0.2);
+                    uData.swordGroup.position.set(0.02, 0.04, 0.06);
+                }
             }
         }
     }
@@ -1487,15 +1652,24 @@ class DarkSoulsGame {
     selectBoss(bossId) {
         if (!this.combat) return;
         const boss = this.combat.switchBoss(bossId);
-        // Warp player right in front of arena fog gate if in courtyard
-        if (this.playerMesh.position.z < 80) {
+        if (!boss) return null; // Locked boss
+        if (bossId === 'nito') {
+            this.warpToCatacombs();
+        } else if (this.playerMesh.position.z < 80) {
             this.warpToArena();
         }
         return boss;
     }
 
+    warpToCatacombs() {
+        this.playerMesh.position.set(-20, -5.8, 93);
+        this.cameraYaw = 0;
+        this.cameraPitch = 0.22;
+        this.showNotification("WARPED TO CATACOMBS SANCTUM (GRAVELORD NITO)");
+    }
+
     warpToArena() {
-        // Warp player near the fog gate (z = 94)
+        // Warp player near the surface fog gate (z = 94)
         this.playerMesh.position.set(0, 0, 94);
         this.cameraYaw = 0;
         this.cameraPitch = 0.28;
@@ -1591,6 +1765,9 @@ class DarkSoulsGame {
             maxEstus: this.combat.maxEstus,
             currentBossType: this.combat.currentBossType,
             defeatedBosses: this.combat.defeatedBosses || [],
+            adminModeUnlocked: !!(this.combat && this.combat.adminModeUnlocked),
+            isGodMode: !!(this.combat && this.combat.isGodMode),
+            equippedSkin: localStorage.getItem('darksouls_equipped_skin') || 'warrior',
             currentWeaponId: this.combat.currentWeaponId || 'sword',
             unlockedWeapons: this.combat.unlockedWeapons || ['sword'],
             heraldry: this.heraldry ? this.heraldry.heraldry : null,
@@ -1643,6 +1820,24 @@ class DarkSoulsGame {
             this.combat.estusFlasks = this.combat.maxEstus;
             this.combat.defeatedBosses = Array.isArray(data.defeatedBosses) ? data.defeatedBosses : [];
             this.combat.isDead = false;
+
+            // Restore Admin Mode & God Mode
+            if (data.adminModeUnlocked !== undefined) {
+                this.combat.adminModeUnlocked = !!data.adminModeUnlocked;
+                if (this.combat.adminModeUnlocked) {
+                    localStorage.setItem('darksouls_admin_mode', 'true');
+                } else {
+                    localStorage.removeItem('darksouls_admin_mode');
+                }
+            }
+            if (data.isGodMode !== undefined) {
+                this.combat.isGodMode = !!data.isGodMode;
+            }
+
+            // Restore Equipped 3D Skin
+            if (data.equippedSkin) {
+                this.selectSkin(data.equippedSkin, false);
+            }
 
             // Restore position (validate bounded)
             if (data.playerPos && typeof data.playerPos.x === 'number' && typeof data.playerPos.z === 'number') {
@@ -1741,26 +1936,297 @@ class DarkSoulsGame {
         const cards = document.querySelectorAll('.boss-card');
         cards.forEach(card => {
             const bossId = card.getAttribute('data-boss-id');
-            if (bossId && defeated.includes(bossId)) {
-                card.classList.add('defeated');
-                card.style.borderColor = 'rgba(212, 175, 55, 0.7)';
-                let badge = card.querySelector('.slain-badge');
-                if (!badge) {
-                    badge = document.createElement('div');
-                    badge.className = 'slain-badge';
-                    badge.innerHTML = '⚔️ <span style="color: #ffd276; font-weight: 700;">LORD SLAIN</span>';
-                    badge.style.cssText = 'font-size: 0.75rem; letter-spacing: 1.5px; margin-top: 4px;';
-                    const textDiv = card.querySelector('.boss-card-text');
-                    if (textDiv) textDiv.appendChild(badge);
+            if (!bossId) return;
+
+            const isUnlocked = this.combat.isBossUnlocked(bossId);
+            const isDefeated = defeated.includes(bossId);
+            const btn = card.querySelector('.btn-fight-boss');
+            const textDiv = card.querySelector('.boss-card-text');
+
+            // Remove existing badges
+            const oldBadge = card.querySelector('.slain-badge, .locked-badge');
+            if (oldBadge) oldBadge.remove();
+
+            if (!isUnlocked) {
+                card.classList.add('locked');
+                card.classList.remove('defeated');
+                card.style.opacity = '0.55';
+                card.style.borderColor = '#38251c';
+                card.style.background = 'rgba(18, 12, 10, 0.7)';
+
+                const lockBadge = document.createElement('div');
+                lockBadge.className = 'locked-badge';
+                const idx = this.combat.bossRoster.findIndex(b => b.id === bossId);
+                const prev = idx > 0 ? this.combat.bossRoster[idx - 1].name : 'PREVIOUS LORD';
+                lockBadge.innerHTML = `🔒 <span style="color: #ff7777; font-weight: 700;">LOCKED</span> &bull; <span style="color: #aaa; font-size: 0.72rem;">DEFEAT ${prev} FIRST</span>`;
+                lockBadge.style.cssText = 'font-size: 0.75rem; letter-spacing: 1px; margin-top: 4px;';
+                if (textDiv) textDiv.appendChild(lockBadge);
+
+                if (btn) {
+                    btn.textContent = 'LOCKED 🔒';
+                    btn.disabled = true;
+                    btn.style.opacity = '0.35';
+                    btn.style.cursor = 'not-allowed';
+                    btn.style.borderColor = '#443328';
+                    btn.style.color = '#776655';
+                    btn.style.background = '#110c08';
                 }
-                const btn = card.querySelector('.btn-fight-boss');
+            } else if (isDefeated) {
+                card.classList.add('defeated');
+                card.classList.remove('locked');
+                card.style.opacity = '1';
+                card.style.borderColor = 'rgba(212, 175, 55, 0.7)';
+                card.style.background = 'linear-gradient(135deg, rgba(32, 26, 16, 0.95), rgba(16, 12, 8, 0.95))';
+
+                const badge = document.createElement('div');
+                badge.className = 'slain-badge';
+                badge.innerHTML = '⚔️ <span style="color: #ffd276; font-weight: 700;">LORD SLAIN</span>';
+                badge.style.cssText = 'font-size: 0.75rem; letter-spacing: 1.5px; margin-top: 4px;';
+                if (textDiv) textDiv.appendChild(badge);
+
                 if (btn) {
                     btn.textContent = 'RE-FIGHT';
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
                     btn.style.borderColor = '#c49a45';
                     btn.style.color = '#ffd276';
+                    btn.style.background = 'linear-gradient(180deg, #331515 0%, #1a0a0a 100%)';
+                }
+            } else {
+                card.classList.remove('locked', 'defeated');
+                card.style.opacity = '1';
+                card.style.borderColor = '#4a3826';
+                card.style.background = 'rgba(18, 14, 12, 0.85)';
+
+                if (btn) {
+                    btn.textContent = 'CHALLENGE';
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                    btn.style.borderColor = '#aa3333';
+                    btn.style.color = '#ff9999';
+                    btn.style.background = 'linear-gradient(180deg, #331515 0%, #1a0a0a 100%)';
                 }
             }
         });
+    }
+
+    // ----------------------------------------------------
+    // 3D COSTUMES & SKINS UI CONTROLLER
+    // ----------------------------------------------------
+    openSkinsModal() {
+        const modal = document.getElementById('skins-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateSkinsModalUI();
+            if (this.audio) this.audio.playRoll();
+        }
+    }
+
+    closeSkinsModal() {
+        const modal = document.getElementById('skins-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    selectSkin(skinId, showNotification = true) {
+        if (!window.COSTUMES || !window.COSTUMES[skinId]) return;
+        const costume = window.COSTUMES[skinId];
+
+        // Apply 3D model skin swap
+        if (this.charFactory && this.playerMesh) {
+            this.charFactory.applySkinToPlayer(this.playerMesh, skinId);
+        }
+
+        // Apply stat perks
+        if (this.combat) {
+            this.combat.skinPerks = costume.perkData;
+        }
+
+        // Save preference
+        localStorage.setItem('darksouls_equipped_skin', skinId);
+
+        // Update UI modal cards
+        this.updateSkinsModalUI();
+
+        if (showNotification) {
+            this.showNotification(`🛡️ EQUIPPED 3D ARMOR: ${costume.name}`);
+            if (this.audio) this.audio.playBonfireIgnite();
+        }
+    }
+
+    updateSkinsModalUI() {
+        const current = localStorage.getItem('darksouls_equipped_skin') || 'warrior';
+        const cards = document.querySelectorAll('.skin-card');
+        cards.forEach(card => {
+            const sid = card.getAttribute('data-skin-id');
+            const btn = card.querySelector('.btn-equip-skin');
+            if (sid === current) {
+                card.classList.add('equipped');
+                card.style.borderColor = '#ffd276';
+                card.style.boxShadow = '0 0 15px rgba(255, 210, 118, 0.3)';
+                if (btn) {
+                    btn.textContent = 'EQUIPPED ✓';
+                    btn.disabled = true;
+                    btn.style.borderColor = '#c49a45';
+                    btn.style.color = '#ffd276';
+                    btn.style.background = 'rgba(60, 45, 20, 0.8)';
+                }
+            } else {
+                card.classList.remove('equipped');
+                card.style.borderColor = '#4a3826';
+                card.style.boxShadow = 'none';
+                if (btn) {
+                    btn.textContent = 'EQUIP';
+                    btn.disabled = false;
+                    btn.style.borderColor = '#886633';
+                    btn.style.color = '#e0c896';
+                    btn.style.background = 'transparent';
+                }
+            }
+        });
+    }
+
+    // ==========================================
+    // ADMIN TESTING & DEV SUITE (PERMANENT)
+    // ==========================================
+    openAdminModal() {
+        const modal = document.getElementById('admin-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateAdminModalUI();
+            if (this.audio) this.audio.playRoll();
+        }
+    }
+
+    closeAdminModal() {
+        const modal = document.getElementById('admin-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    adminUnlockAllBosses() {
+        if (!this.combat) return;
+        this.combat.adminModeUnlocked = true;
+        this.combat.defeatedBosses = ['taurus', 'gargoyle', 'capra', 'nito', 'sif', 'gwyn'];
+        localStorage.setItem('darksouls_admin_mode', 'true');
+        this.saveGame(false, 'ADMIN UNLOCK');
+        this.updateBossRosterUI();
+        this.updateAdminModalUI();
+        this.showNotification("👑 ADMIN: ALL 6 LORDS UNLOCKED PERMANENTLY!");
+        if (this.audio) this.audio.playBellToll();
+    }
+
+    adminLockBosses() {
+        if (!this.combat) return;
+        this.combat.adminModeUnlocked = false;
+        this.combat.defeatedBosses = [];
+        localStorage.removeItem('darksouls_admin_mode');
+        this.saveGame(false, 'ADMIN RESET');
+        this.updateBossRosterUI();
+        this.updateAdminModalUI();
+        this.showNotification("🔒 PROGRESSION RESET: TAURUS UNLOCKED, SUBSEQUENT LORDS LOCKED");
+        if (this.audio) this.audio.playRoll();
+    }
+
+    adminUnlockAllWeapons() {
+        if (!this.combat) return;
+        this.combat.unlockedWeapons = ['sword', 'zweihander', 'uchigatana', 'halberd', 'dragontooth', 'moonlight', 'torch'];
+        this.saveGame(false, 'ADMIN WEAPONS');
+        if (this.updateWeaponArsenalUI) this.updateWeaponArsenalUI();
+        this.updateAdminModalUI();
+        this.showNotification("🗡️ ADMIN: ALL 7 WEAPONS UNLOCKED PERMANENTLY!");
+        if (this.audio) this.audio.playBonfireIgnite();
+    }
+
+    adminGrantSoulsAndEstus(souls = 100000) {
+        if (!this.combat) return;
+        this.combat.souls += souls;
+        this.combat.maxEstus = 10;
+        this.combat.estusFlasks = 10;
+        this.combat.hp = this.combat.maxHp;
+        this.combat.stamina = this.combat.maxStamina;
+        this.saveGame(false, 'ADMIN RESOURCES');
+        this.updateHUD();
+        this.updateAdminModalUI();
+        this.showNotification(`💰 ADMIN: +${souls.toLocaleString()} SOULS & 10 ESTUS FLASKS GRANTED!`);
+        if (this.audio) this.audio.playBonfireIgnite();
+    }
+
+    adminToggleGodMode() {
+        if (!this.combat) return;
+        this.combat.isGodMode = !this.combat.isGodMode;
+        if (this.combat.isGodMode) {
+            this.combat.hp = this.combat.maxHp;
+            this.combat.stamina = this.combat.maxStamina;
+        }
+        this.saveGame(false, 'ADMIN GODMODE');
+        this.updateAdminModalUI();
+        this.showNotification(this.combat.isGodMode ? "⚡ ADMIN GOD MODE: ENABLED (INVULNERABLE)" : "🛡️ ADMIN GOD MODE: DISABLED");
+        if (this.audio) this.audio.playParry();
+    }
+
+    adminWarp(dest) {
+        if (!this.playerMesh) return;
+        switch (dest) {
+            case 'nito':
+            case 'catacombs_mausoleum':
+                this.warpToCatacombs();
+                break;
+            case 'arena':
+                this.warpToArena();
+                break;
+            case 'bonfire':
+                this.playerMesh.position.set(0, 0, 5);
+                this.cameraYaw = 0;
+                this.cameraPitch = 0.25;
+                this.showNotification("WARPED TO FIRELINK BONFIRE");
+                break;
+            case 'crypt':
+                this.playerMesh.position.set(-20, -5.0, 35);
+                this.cameraYaw = 0;
+                this.cameraPitch = 0.18;
+                this.showNotification("WARPED TO FLOODED CRYPT CORRIDOR");
+                break;
+            case 'ramparts':
+                this.playerMesh.position.set(20, 6.0, 35);
+                this.cameraYaw = 0;
+                this.cameraPitch = 0.22;
+                this.showNotification("WARPED TO HIGH ARCHER RAMPARTS (+6M)");
+                break;
+        }
+        this.closeAdminModal();
+        if (this.audio) this.audio.playRoll();
+    }
+
+    adminSummonBoss(bossId) {
+        this.closeAdminModal();
+        if (this.combat) {
+            this.combat.spawnBoss(bossId);
+            if (bossId === 'nito') {
+                this.warpToCatacombs();
+            } else {
+                this.warpToArena();
+            }
+            if (this.audio) this.audio.playBellToll();
+        }
+    }
+
+    updateAdminModalUI() {
+        const godBtn = document.getElementById('btn-admin-godmode');
+        if (godBtn && this.combat) {
+            godBtn.textContent = this.combat.isGodMode ? '⚡ GOD MODE: ON (INVULNERABLE)' : '🛡️ GOD MODE: OFF';
+            godBtn.style.borderColor = this.combat.isGodMode ? '#ffd700' : '#885533';
+            godBtn.style.color = this.combat.isGodMode ? '#fff3a8' : '#e0c896';
+            godBtn.style.background = this.combat.isGodMode ? 'rgba(80, 60, 10, 0.85)' : 'transparent';
+        }
+
+        const lockBtn = document.getElementById('btn-admin-unlock-bosses');
+        if (lockBtn && this.combat) {
+            const isAllUnlocked = this.combat.adminModeUnlocked || (this.combat.defeatedBosses && this.combat.defeatedBosses.length >= 5);
+            lockBtn.textContent = isAllUnlocked ? '⚡ ALL BOSSES UNLOCKED ✓' : '🔓 UNLOCK ALL 6 BOSSES';
+            lockBtn.style.borderColor = isAllUnlocked ? '#4caf50' : '#c49a45';
+            lockBtn.style.color = isAllUnlocked ? '#a5d6a7' : '#ffd276';
+        }
     }
 
     onWindowResize() {
@@ -1772,6 +2238,21 @@ class DarkSoulsGame {
         }
     }
 }
+
+// Global window helper functions
+window.openSkinsModal = () => { if (window.game) window.game.openSkinsModal(); };
+window.closeSkinsModal = () => { if (window.game) window.game.closeSkinsModal(); };
+window.chooseSkin = (skinId) => { if (window.game) window.game.selectSkin(skinId); };
+
+window.openAdminModal = () => { if (window.game) window.game.openAdminModal(); };
+window.closeAdminModal = () => { if (window.game) window.game.closeAdminModal(); };
+window.adminUnlockAllBosses = () => { if (window.game) window.game.adminUnlockAllBosses(); };
+window.adminLockBosses = () => { if (window.game) window.game.adminLockBosses(); };
+window.adminUnlockAllWeapons = () => { if (window.game) window.game.adminUnlockAllWeapons(); };
+window.adminGrantSoulsAndEstus = (s) => { if (window.game) window.game.adminGrantSoulsAndEstus(s); };
+window.adminToggleGodMode = () => { if (window.game) window.game.adminToggleGodMode(); };
+window.adminWarp = (d) => { if (window.game) window.game.adminWarp(d); };
+window.adminSummonBoss = (b) => { if (window.game) window.game.adminSummonBoss(b); };
 
 // Global initialization
 window.addEventListener('DOMContentLoaded', () => {

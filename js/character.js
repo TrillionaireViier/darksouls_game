@@ -3,6 +3,64 @@
 // Player (Chosen Undead Knight), Hollows, Black Knight, Taurus Demon Boss
 // ==========================================
 
+const COSTUMES = {
+    warrior: {
+        id: 'warrior',
+        name: 'NORTHERN WARRIOR',
+        title: 'Hardened Barbarian Wanderer &bull; Fur Mantle & Heavy Quilted Gambeson',
+        icon: '🛡️',
+        desc: 'Traditional Lordran wanderer equipped with kettle helm, fur-draped pauldrons, quilted tassets, and reinforced greaves.',
+        perk: 'Balanced Veteran: Base 100% Defense, 100% Stamina Regen',
+        perkData: { defMultiplier: 1.0, stamMultiplier: 1.0, speedMultiplier: 1.0, dmgBonus: 1.0, poiseBonus: 0 }
+    },
+    elite_knight: {
+        id: 'elite_knight',
+        name: 'ELITE KNIGHT OF ASTORA',
+        title: 'Oscar of Astora &bull; Royal Fluted Steel Armet & Heraldic Surcoat',
+        icon: '⚔️',
+        desc: 'Armor of a nameless knight said to have journeyed from Astora. High-polished steel plate with royal blue embroidered cross.',
+        perk: 'Astora Steel: +18% Physical Defense, +15% Poise Stagger Resistance',
+        perkData: { defMultiplier: 1.18, stamMultiplier: 0.95, speedMultiplier: 1.0, dmgBonus: 1.0, poiseBonus: 15 }
+    },
+    black_knight: {
+        id: 'black_knight',
+        name: 'BLACK KNIGHT OF GWYN',
+        title: 'Soot-Stained Charred Dark Iron &bull; Dual Horned Crests & Smoldering Lava',
+        icon: '🔥',
+        desc: 'Armor of the Black Knights who burned to ash in the Kiln of the First Flame. Jagged horns and veins of molten ember.',
+        perk: 'Charred Flame: +20% Fire/Dark Power, +15% Weapon Attack Damage',
+        perkData: { defMultiplier: 1.12, stamMultiplier: 0.92, speedMultiplier: 0.98, dmgBonus: 1.15, poiseBonus: 20 }
+    },
+    shinobi: {
+        id: 'shinobi',
+        name: 'SHINOBI OF THE EAST',
+        title: 'Shadow Assassin of the Far East &bull; Midnight Cowl & Demon Oni Mask',
+        icon: '🥷',
+        desc: 'Woven garb of eastern assassins. Lightweight midnight silk, demon oni war mask, and articulated rope tabi sandals.',
+        perk: 'Shadow Agility: +22% Movement & Sprint Speed, +30% Roll Distance, -20% Stamina Cost',
+        perkData: { defMultiplier: 0.88, stamMultiplier: 1.25, speedMultiplier: 1.22, dmgBonus: 1.08, poiseBonus: -5 }
+    },
+    solaire: {
+        id: 'solaire',
+        name: 'SOLAIRE OF ASTORA',
+        title: 'Warrior of Sunlight &bull; Iconic Smiling Holy Sun Tunic & Radiant Sunlight Aura',
+        icon: '☀️',
+        desc: 'The sacred holy vestments of Solaire of Astora! Features the brilliant hand-painted smiling Holy Sun and golden aura.',
+        perk: 'Praise The Sun: Holy Radiant Aura, +25% Estus Flask Healing, +15% Miracle/Fire Damage',
+        perkData: { defMultiplier: 1.10, stamMultiplier: 1.10, speedMultiplier: 1.05, healBonus: 1.25, dmgBonus: 1.12, poiseBonus: 10 }
+    },
+    onion_knight: {
+        id: 'onion_knight',
+        name: 'SIEGMEYER OF CATARINA',
+        title: 'Jovial Knight of Catarina &bull; Rotund Bulbous Onion Armor & Ivory Enamel',
+        icon: '🧅',
+        desc: 'Distinctive spherical armor forged by the smiths of Catarina. Superb deflection against slashing blows and high poise.',
+        perk: 'Catarina Bulk: +50% Heavy Poise (Immune to light staggers), +25% Physical Defense',
+        perkData: { defMultiplier: 1.25, stamMultiplier: 0.85, speedMultiplier: 0.90, dmgBonus: 1.0, poiseBonus: 50 }
+    }
+};
+window.COSTUMES = COSTUMES;
+
 class DarkSoulsCharacters {
     constructor(scene) {
         this.scene = scene;
@@ -424,6 +482,188 @@ class DarkSoulsCharacters {
             roughness: 0.95,
             metalness: 0.05
         });
+
+        // ====================================================
+        // 3D COSTUMES & SKINS MATERIALS (6 ICONIC ARMOR SETS)
+        // ====================================================
+
+        // 1. ELITE KNIGHT OF ASTORA
+        this.eliteSteelMat = new THREE.MeshStandardMaterial({
+            color: 0xdde4ec,
+            metalness: 0.88,
+            roughness: 0.22
+        });
+        this.astoraBlueClothMat = new THREE.MeshStandardMaterial({
+            color: 0x1c3b66,
+            roughness: 0.82
+        });
+
+        // 2. BLACK KNIGHT OF GWYN (Soot-stained charred obsidian & smoldering embers)
+        const bkCanvas = document.createElement('canvas');
+        bkCanvas.width = 256;
+        bkCanvas.height = 256;
+        const bkCtx = bkCanvas.getContext('2d');
+        bkCtx.fillStyle = '#141416';
+        bkCtx.fillRect(0, 0, 256, 256);
+        // Ember fissures
+        for (let i = 0; i < 25; i++) {
+            bkCtx.strokeStyle = Math.random() > 0.4 ? 'rgba(255, 60, 0, 0.45)' : 'rgba(20, 20, 22, 0.8)';
+            bkCtx.lineWidth = 1 + Math.random() * 2;
+            bkCtx.beginPath();
+            const bx = Math.random() * 256;
+            const by = Math.random() * 256;
+            bkCtx.moveTo(bx, by);
+            bkCtx.lineTo(bx + (Math.random() - 0.5) * 40, by + (Math.random() - 0.5) * 40);
+            bkCtx.stroke();
+        }
+        const bkTex = new THREE.CanvasTexture(bkCanvas);
+
+        this.blackKnightMat = new THREE.MeshStandardMaterial({
+            map: bkTex,
+            color: 0x18181c,
+            metalness: 0.88,
+            roughness: 0.55
+        });
+        this.blackKnightHornMat = new THREE.MeshStandardMaterial({
+            color: 0x221f1d,
+            roughness: 0.72,
+            metalness: 0.4
+        });
+        this.emberGlowMat = new THREE.MeshStandardMaterial({
+            color: 0xff3b00,
+            emissive: 0xff4400,
+            emissiveIntensity: 1.4,
+            roughness: 0.3
+        });
+
+        // 3. SHINOBI OF THE EAST (Midnight ninja silk & Oni demon mask)
+        this.shinobiClothMat = new THREE.MeshStandardMaterial({
+            color: 0x11131c,
+            roughness: 0.92
+        });
+        this.shinobiMaskMat = new THREE.MeshStandardMaterial({
+            color: 0xded8cc,
+            roughness: 0.42,
+            metalness: 0.2
+        });
+        this.shinobiRopeMat = new THREE.MeshStandardMaterial({
+            color: 0x991818,
+            roughness: 0.82
+        });
+
+        // 4. SOLAIRE OF ASTORA (Warrior of Sunlight - Iconic Smiling Holy Sun)
+        const sunCanvas = document.createElement('canvas');
+        sunCanvas.width = 512;
+        sunCanvas.height = 512;
+        const sunCtx = sunCanvas.getContext('2d');
+        // Off-white canvas cloth
+        sunCtx.fillStyle = '#f4f2ea';
+        sunCtx.fillRect(0, 0, 512, 512);
+
+        // Radiant sunlight golden rays
+        sunCtx.save();
+        sunCtx.translate(256, 256);
+        for (let a = 0; a < 16; a++) {
+            sunCtx.rotate(Math.PI / 8);
+            sunCtx.fillStyle = a % 2 === 0 ? '#ffb300' : '#ffa000';
+            sunCtx.beginPath();
+            sunCtx.moveTo(-16, -110);
+            sunCtx.lineTo(0, -195);
+            sunCtx.lineTo(16, -110);
+            sunCtx.closePath();
+            sunCtx.fill();
+        }
+        sunCtx.restore();
+
+        // Central bright sun circle
+        sunCtx.beginPath();
+        sunCtx.arc(256, 256, 105, 0, Math.PI * 2);
+        sunCtx.fillStyle = '#ffc107';
+        sunCtx.fill();
+        sunCtx.lineWidth = 10;
+        sunCtx.strokeStyle = '#d84315';
+        sunCtx.stroke();
+
+        // Iconic Solaire Smiling Sun Face!
+        // Eyes
+        sunCtx.fillStyle = '#3e2723';
+        sunCtx.beginPath();
+        sunCtx.arc(220, 230, 10, 0, Math.PI * 2);
+        sunCtx.arc(292, 230, 10, 0, Math.PI * 2);
+        sunCtx.fill();
+
+        // Cheerful Smiling Mouth Arc
+        sunCtx.strokeStyle = '#b71c1c';
+        sunCtx.lineWidth = 9;
+        sunCtx.beginPath();
+        sunCtx.arc(256, 260, 48, 0.15 * Math.PI, 0.85 * Math.PI);
+        sunCtx.stroke();
+
+        const sunTex = new THREE.CanvasTexture(sunCanvas);
+        this.solaireTunicMat = new THREE.MeshStandardMaterial({
+            map: sunTex,
+            roughness: 0.85
+        });
+        this.solairePlumeMat = new THREE.MeshStandardMaterial({
+            color: 0xc62828,
+            roughness: 0.75
+        });
+        this.solaireChainmailMat = new THREE.MeshStandardMaterial({
+            color: 0x90949c,
+            metalness: 0.82,
+            roughness: 0.42
+        });
+
+        // 5. SIEGMEYER OF CATARINA (Onion Knight - Rotund Ivory Enamel & Brass)
+        this.onionPlateMat = new THREE.MeshStandardMaterial({
+            color: 0xecf0f4,
+            metalness: 0.76,
+            roughness: 0.28
+        });
+        this.onionBrassMat = new THREE.MeshStandardMaterial({
+            color: 0xc89b3c,
+            metalness: 0.85,
+            roughness: 0.32
+        });
+
+        // 6. CATACOMBS & SKELETON WARRIORS
+        this.boneMat = new THREE.MeshStandardMaterial({
+            color: 0xd8d0bf,
+            roughness: 0.85,
+            metalness: 0.05
+        });
+        this.rustIronMat = new THREE.MeshStandardMaterial({
+            color: 0x2e2a28,
+            roughness: 0.65,
+            metalness: 0.72
+        });
+
+        // 7. GRAVELORD NITO (Cloak of the Dead & Miasma)
+        this.nitoCloakMat = new THREE.MeshStandardMaterial({
+            color: 0x08080a,
+            roughness: 0.95
+        });
+        this.nitoBoneMat = new THREE.MeshStandardMaterial({
+            color: 0xb5aa95,
+            roughness: 0.82
+        });
+        this.nitoMaskMat = new THREE.MeshStandardMaterial({
+            color: 0xd4af37,
+            metalness: 0.75,
+            roughness: 0.35
+        });
+        this.nitoBladeMat = new THREE.MeshStandardMaterial({
+            color: 0x111114,
+            metalness: 0.85,
+            roughness: 0.45
+        });
+        this.nitoMiasmaMat = new THREE.MeshStandardMaterial({
+            color: 0x4a0a22,
+            emissive: 0x240010,
+            emissiveIntensity: 0.8,
+            transparent: true,
+            opacity: 0.85
+        });
     }
 
     // ----------------------------------------------------
@@ -738,7 +978,7 @@ class DarkSoulsCharacters {
     }
 
     // ----------------------------------------------------
-    // CREATE PLAYER (CHOSEN UNDEAD / NORTHERN WARRIOR SCULPT)
+    // CREATE PLAYER (CHOSEN UNDEAD SKELETAL RIG & WEAPONS)
     // ----------------------------------------------------
     createPlayer() {
         const root = new THREE.Group();
@@ -748,262 +988,20 @@ class DarkSoulsCharacters {
         bodyGroup.position.y = 1.0;
         root.add(bodyGroup);
 
-        // 1. Torso / Breastplate (contoured medieval plate with fluted spine)
+        // 1. Torso / Pelvis Group (Parent for spine, shoulders, hips & head)
         const torso = new THREE.Group();
         bodyGroup.add(torso);
 
-        // Upper Breastplate (shaped with fluted chest and contoured waist)
-        const chestPlate = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.44, 0.34), this.steelMat);
-        chestPlate.position.y = 0.12;
-        chestPlate.castShadow = true;
-        torso.add(chestPlate);
-
-        // Central vertical fluted ridge along sternum
-        const chestRidge = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.42, 0.05), this.steelMat);
-        chestRidge.position.set(0, 0.12, 0.17);
-        torso.add(chestRidge);
-
-        // Contoured narrower waist / ab-plate
-        const waistPlate = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.24, 0.31), this.darkSteelMat);
-        waistPlate.position.y = -0.16;
-        waistPlate.castShadow = true;
-        torso.add(waistPlate);
-
-        // Astora Royal Blue Tabard Cloth (folded draped front)
-        const tabard = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.62, 0.36), this.clothMat);
-        tabard.position.y = 0.02;
-        torso.add(tabard);
-
-        // Weathered Fur / Mail Shoulder Mantle (as in reference image)
-        const mantleCowl = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.16, 0.44), this.furMantleMat);
-        mantleCowl.position.set(0, 0.32, 0);
-        mantleCowl.castShadow = true;
-        torso.add(mantleCowl);
-
-        const mantleRearPelt = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.28, 0.09), this.furMantleMat);
-        mantleRearPelt.position.set(0, 0.18, -0.19);
-        mantleRearPelt.castShadow = true;
-        torso.add(mantleRearPelt);
-
-        // Double Leather Waist Belts with steel buckles (as in reference image)
-        const upperBelt = new THREE.Mesh(new THREE.BoxGeometry(0.51, 0.07, 0.34), this.leatherMat);
-        upperBelt.position.y = -0.14;
-        torso.add(upperBelt);
-
-        const upperBuckle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.08, 0.03), this.steelBuckleMat);
-        upperBuckle.position.set(0, -0.14, 0.175);
-        torso.add(upperBuckle);
-
-        // Secondary slung utility belt (tilted diagonally with sagging strap)
-        const lowerBelt = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.06, 0.35), this.leatherMat);
-        lowerBelt.position.set(-0.02, -0.23, 0);
-        lowerBelt.rotation.z = -0.06;
-        torso.add(lowerBelt);
-
-        const lowerSagStrap = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.24, 0.02), this.leatherMat);
-        lowerSagStrap.position.set(-0.16, -0.32, 0.18);
-        lowerSagStrap.rotation.z = 0.08;
-        torso.add(lowerSagStrap);
-
-        // Diamond-Quilted Gambeson / Armor Skirt (Faulds & Tassets) (exact match to reference)
-        const skirtGroup = new THREE.Group();
-        skirtGroup.position.y = -0.26;
-        torso.add(skirtGroup);
-
-        // Front Quilted Tasset
-        const frontTasset = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.32, 0.07), this.quiltedSkirtMat);
-        frontTasset.position.set(0, -0.12, 0.15);
-        frontTasset.rotation.x = 0.14;
-        frontTasset.castShadow = true;
-        skirtGroup.add(frontTasset);
-
-        // Rear Quilted Tasset
-        const rearTasset = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.34, 0.07), this.quiltedSkirtMat);
-        rearTasset.position.set(0, -0.13, -0.15);
-        rearTasset.rotation.x = -0.12;
-        rearTasset.castShadow = true;
-        skirtGroup.add(rearTasset);
-
-        // Left & Right Hip Tassets
-        const lTasset = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.28), this.quiltedSkirtMat);
-        lTasset.position.set(-0.24, -0.12, 0);
-        lTasset.rotation.z = 0.1;
-        lTasset.castShadow = true;
-        skirtGroup.add(lTasset);
-
-        const rTasset = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.28), this.quiltedSkirtMat);
-        rTasset.position.set(0.24, -0.12, 0);
-        rTasset.rotation.z = -0.1;
-        rTasset.castShadow = true;
-        skirtGroup.add(rTasset);
-
-        // Skirt Hem Border Band
-        const skirtHem = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.035, 0.33), this.leatherMat);
-        skirtHem.position.y = -0.27;
-        skirtGroup.add(skirtHem);
-
-        // Crossed Baldric Harness (supporting back scabbard)
-        const baldricFront = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.78, 0.02), this.leatherMat);
-        baldricFront.position.set(0.02, 0.08, 0.185);
-        baldricFront.rotation.z = -0.58;
-        torso.add(baldricFront);
-
-        const baldricBack = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.78, 0.02), this.leatherMat);
-        baldricBack.position.set(-0.02, 0.08, -0.185);
-        baldricBack.rotation.z = 0.58;
-        torso.add(baldricBack);
-
-        const baldricRing = new THREE.Mesh(new THREE.TorusGeometry(0.035, 0.01, 6, 12), this.steelBuckleMat);
-        baldricRing.position.set(0.02, 0.08, 0.19);
-        torso.add(baldricRing);
-
-        // ====================================================
-        // THE ICONIC BACK-MOUNTED GREATSWORD WITH LEATHER SCABBARD
-        // (Diagonal Sheath, Criss-Cross Wraps, Ring/Wheel Pommel)
-        // Matching reference sculpt: hilt rises on screen-right, tip on screen-left
-        // ====================================================
-        const backScabbardGroup = new THREE.Group();
-        backScabbardGroup.position.set(-0.04, 0.08, -0.23);
-        backScabbardGroup.rotation.set(-0.12, -0.06, 0.56);
-        torso.add(backScabbardGroup);
-
-        // Main Leather Scabbard Sheath
-        const scabbardBody = new THREE.Mesh(new THREE.BoxGeometry(0.09, 1.45, 0.05), this.scabbardMat);
-        scabbardBody.position.y = -0.32;
-        scabbardBody.castShadow = true;
-        backScabbardGroup.add(scabbardBody);
-
-        // Scabbard Throat / Locket (steel collar at scabbard mouth)
-        const scabbardThroat = new THREE.Mesh(new THREE.BoxGeometry(0.108, 0.08, 0.066), this.steelMat);
-        scabbardThroat.position.y = 0.42;
-        backScabbardGroup.add(scabbardThroat);
-
-        // Criss-Cross Leather Lacing Bands (exact match to reference sculpt)
-        const wrapLevels = [0.32, 0.16, 0.0, -0.16, -0.32, -0.48, -0.64, -0.82, -0.98];
-        wrapLevels.forEach((wy, idx) => {
-            const wrapBand = new THREE.Mesh(new THREE.BoxGeometry(0.096, 0.028, 0.056), this.scabbardWrapMat);
-            wrapBand.position.y = wy;
-            wrapBand.rotation.y = (idx % 2 === 0 ? 0.04 : -0.04);
-            backScabbardGroup.add(wrapBand);
-
-            // Diagonal cross-stitch details
-            const diagStrap = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.08, 0.058), this.scabbardWrapMat);
-            diagStrap.position.set(0, wy, 0);
-            diagStrap.rotation.z = (idx % 2 === 0 ? 0.35 : -0.35);
-            backScabbardGroup.add(diagStrap);
-        });
-
-        // Steel Chape (protective tip at bottom of scabbard)
-        const chape = new THREE.Mesh(new THREE.ConeGeometry(0.055, 0.14, 4), this.steelMat);
-        chape.position.y = -1.11;
-        chape.rotation.x = Math.PI;
-        chape.rotation.y = Math.PI / 4;
-        backScabbardGroup.add(chape);
-
-        // Sheathed Greatsword Hilt (visible above right shoulder)
-        const greatswordHiltGroup = new THREE.Group();
-        greatswordHiltGroup.position.y = 0.46;
-        backScabbardGroup.add(greatswordHiltGroup);
-
-        // Crossguard
-        const guardMesh = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.048, 0.065), this.steelMat);
-        guardMesh.castShadow = true;
-        greatswordHiltGroup.add(guardMesh);
-
-        // Two-Handed Leather Wrapped Grip
-        const gripMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.025, 0.38, 8), this.scabbardWrapMat);
-        gripMesh.position.y = 0.21;
-        greatswordHiltGroup.add(gripMesh);
-
-        // Grip cord wrapping rings
-        for (let gi = 0; gi < 5; gi++) {
-            const cordRing = new THREE.Mesh(new THREE.TorusGeometry(0.025, 0.005, 4, 8), this.leatherMat);
-            cordRing.position.y = 0.08 + gi * 0.065;
-            cordRing.rotation.x = Math.PI / 2;
-            greatswordHiltGroup.add(cordRing);
-        }
-
-        // The Signature Ring Pommel / Wheel Pommel (from reference image)
-        const ringPommel = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.015, 8, 16), this.steelMat);
-        ringPommel.position.y = 0.45;
-        ringPommel.castShadow = true;
-        greatswordHiltGroup.add(ringPommel);
-
-        const pommelSpoke = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.09, 0.016), this.steelMat);
-        pommelSpoke.position.y = 0.45;
-        greatswordHiltGroup.add(pommelSpoke);
-
-        // 2. Head & Elite Knight Helm
+        // 2. Head Group
         const headGroup = new THREE.Group();
         headGroup.position.y = 0.55;
         torso.add(headGroup);
-
-        const helm = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.4, 0.38), this.steelMat);
-        helm.castShadow = true;
-        headGroup.add(helm);
-
-        // Visor slit
-        const visor = new THREE.Mesh(
-            new THREE.BoxGeometry(0.25, 0.05, 0.05),
-            new THREE.MeshBasicMaterial({ color: 0x88ccff })
-        );
-        visor.position.set(0, 0.02, 0.18);
-        headGroup.add(visor);
-
-        // Helmet Crest & Plume
-        const crestGroup = new THREE.Group();
-        const crestRidge = new THREE.Mesh(
-            new THREE.BoxGeometry(0.06, 0.09, 0.38),
-            this.goldTrimMat
-        );
-        crestRidge.position.set(0, 0.22, 0.0);
-        crestRidge.castShadow = true;
-        crestGroup.add(crestRidge);
-
-        const rearPlume = new THREE.Mesh(
-            new THREE.BoxGeometry(0.05, 0.12, 0.18),
-            this.clothMat
-        );
-        rearPlume.position.set(0, 0.19, -0.2);
-        rearPlume.rotation.x = -0.35;
-        rearPlume.castShadow = true;
-        crestGroup.add(rearPlume);
-        headGroup.add(crestGroup);
 
         // 3. Right Arm (Weapon Arm)
         const rightShoulder = new THREE.Group();
         rightShoulder.position.set(0.38, 0.25, 0);
         torso.add(rightShoulder);
 
-        // Sculpted Pauldron (curved shoulder bell with gold rim)
-        const rPauldrons = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.26), this.steelMat);
-        rPauldrons.castShadow = true;
-        rightShoulder.add(rPauldrons);
-        const rPauldronRim = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.04, 0.28), this.goldTrimMat);
-        rPauldronRim.position.y = 0.07;
-        rightShoulder.add(rPauldronRim);
-
-        // Bicep with leather bandage wraps (as in reference image)
-        const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.darkSteelMat);
-        rArm.position.y = -0.22;
-        rightShoulder.add(rArm);
-
-        // Bicep cord wraps
-        const rWrap1 = new THREE.Mesh(new THREE.TorusGeometry(0.078, 0.012, 6, 8), this.scabbardWrapMat);
-        rWrap1.position.y = -0.16;
-        rWrap1.rotation.x = Math.PI / 2;
-        rightShoulder.add(rWrap1);
-        const rWrap2 = new THREE.Mesh(new THREE.TorusGeometry(0.078, 0.012, 6, 8), this.scabbardWrapMat);
-        rWrap2.position.y = -0.22;
-        rWrap2.rotation.x = Math.PI / 2;
-        rightShoulder.add(rWrap2);
-
-        // Elbow Couter guard
-        const rElbow = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.11, 0.13), this.steelMat);
-        rElbow.position.set(0, -0.38, -0.02);
-        rightShoulder.add(rElbow);
-
-        // Right Hand / Weapon
         const rHand = new THREE.Group();
         rHand.position.y = -0.42;
         rightShoulder.add(rHand);
@@ -1013,38 +1011,11 @@ class DarkSoulsCharacters {
         swordGroup.position.set(0.02, 0.04, 0.06);
         rHand.add(swordGroup);
 
-        // 4. Left Arm (Shield Arm)
+        // 4. Left Arm (Shield & Offhand Arm)
         const leftShoulder = new THREE.Group();
         leftShoulder.position.set(-0.38, 0.25, 0);
         torso.add(leftShoulder);
 
-        const lPauldrons = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.26), this.steelMat);
-        lPauldrons.castShadow = true;
-        leftShoulder.add(lPauldrons);
-        const lPauldronRim = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.04, 0.28), this.goldTrimMat);
-        lPauldronRim.position.y = 0.07;
-        leftShoulder.add(lPauldronRim);
-
-        const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.darkSteelMat);
-        lArm.position.y = -0.22;
-        leftShoulder.add(lArm);
-
-        // Left bicep cord wraps
-        const lWrap1 = new THREE.Mesh(new THREE.TorusGeometry(0.078, 0.012, 6, 8), this.scabbardWrapMat);
-        lWrap1.position.y = -0.16;
-        lWrap1.rotation.x = Math.PI / 2;
-        leftShoulder.add(lWrap1);
-        const lWrap2 = new THREE.Mesh(new THREE.TorusGeometry(0.078, 0.012, 6, 8), this.scabbardWrapMat);
-        lWrap2.position.y = -0.22;
-        lWrap2.rotation.x = Math.PI / 2;
-        leftShoulder.add(lWrap2);
-
-        // Left Elbow Couter
-        const lElbow = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.11, 0.13), this.steelMat);
-        lElbow.position.set(0, -0.38, -0.02);
-        leftShoulder.add(lElbow);
-
-        // Left Hand & Heater Shield
         const lHand = new THREE.Group();
         lHand.position.y = -0.42;
         leftShoulder.add(lHand);
@@ -1054,14 +1025,14 @@ class DarkSoulsCharacters {
         shieldPlate.castShadow = true;
         shieldGroup.add(shieldPlate);
 
-        // Shield crest stripe
+        // Shield crest stripe & heraldic cross
         const shieldStripe = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.78, 0.07), this.clothMat);
         shieldGroup.add(shieldStripe);
         const shieldCross = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12, 0.08), this.goldTrimMat);
         shieldCross.position.y = 0.1;
         shieldGroup.add(shieldCross);
 
-        // Forearm leather grip straps on inner face of shield
+        // Forearm inner straps
         const strap1 = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.018, 6, 8), this.leatherMat);
         strap1.position.set(0, 0.15, -0.05);
         shieldGroup.add(strap1);
@@ -1080,12 +1051,9 @@ class DarkSoulsCharacters {
         offhandTorch.visible = false;
         lHand.add(offhandTorch);
 
-        // Estus Flask (amber flagon with leather holster harness)
+        // Estus Flask (Holstered on hip)
         const estusFlask = new THREE.Group();
-        const flaskHolster = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.07, 0.075, 0.09, 8),
-            this.leatherMat
-        );
+        const flaskHolster = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.075, 0.09, 8), this.leatherMat);
         flaskHolster.position.set(0, -0.02, 0);
         estusFlask.add(flaskHolster);
 
@@ -1102,17 +1070,11 @@ class DarkSoulsCharacters {
         flaskVessel.castShadow = true;
         estusFlask.add(flaskVessel);
 
-        const flaskNeck = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.026, 0.032, 0.05, 8),
-            this.goldTrimMat
-        );
+        const flaskNeck = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.032, 0.05, 8), this.goldTrimMat);
         flaskNeck.position.y = 0.1;
         estusFlask.add(flaskNeck);
 
-        const flaskCork = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.022, 0.026, 0.035, 6),
-            this.leatherMat
-        );
+        const flaskCork = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.026, 0.035, 6), this.leatherMat);
         flaskCork.position.y = 0.135;
         estusFlask.add(flaskCork);
 
@@ -1124,61 +1086,78 @@ class DarkSoulsCharacters {
         estusFlask.rotation.set(0.1, 0.15, -0.15);
         torso.add(estusFlask);
 
-        // 5. Contoured Legs (Thigh cuisse, Knee poleyns, Plate Greaves, Leather Boots)
+        // 5. Contoured Legs (Hips attached to Torso for unified kinetic motion)
         const rightHip = new THREE.Group();
         rightHip.position.set(0.18, -0.35, 0);
         torso.add(rightHip);
 
-        const rThigh = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.3, 0.18), this.darkSteelMat);
-        rThigh.position.y = -0.15;
-        rThigh.castShadow = true;
-        rightHip.add(rThigh);
-
-        const rKnee = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.12, 0.16), this.steelMat);
-        rKnee.position.set(0, -0.3, 0.03);
-        rightHip.add(rKnee);
-
-        const rShin = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.steelMat);
-        rShin.position.y = -0.46;
-        rShin.castShadow = true;
-        rightHip.add(rShin);
-
-        const rBootCuff = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.1, 0.18), this.leatherMat);
-        rBootCuff.position.y = -0.56;
-        rightHip.add(rBootCuff);
-
-        const rFoot = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.leatherMat);
-        rFoot.position.set(0, -0.62, 0.04);
-        rightHip.add(rFoot);
-
-        // Left Leg
         const leftHip = new THREE.Group();
         leftHip.position.set(-0.18, -0.35, 0);
         torso.add(leftHip);
 
-        const lThigh = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.3, 0.18), this.darkSteelMat);
-        lThigh.position.y = -0.15;
-        lThigh.castShadow = true;
-        leftHip.add(lThigh);
+        // 6. Iconic Back-Mounted Greatsword with Leather Scabbard
+        const backScabbardGroup = new THREE.Group();
+        backScabbardGroup.position.set(-0.04, 0.08, -0.23);
+        backScabbardGroup.rotation.set(-0.12, -0.06, 0.56);
+        torso.add(backScabbardGroup);
 
-        const lKnee = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.12, 0.16), this.steelMat);
-        lKnee.position.set(0, -0.3, 0.03);
-        leftHip.add(lKnee);
+        const scabbardBody = new THREE.Mesh(new THREE.BoxGeometry(0.09, 1.45, 0.05), this.scabbardMat);
+        scabbardBody.position.y = -0.32;
+        scabbardBody.castShadow = true;
+        backScabbardGroup.add(scabbardBody);
 
-        const lShin = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.steelMat);
-        lShin.position.y = -0.46;
-        lShin.castShadow = true;
-        leftHip.add(lShin);
+        const scabbardThroat = new THREE.Mesh(new THREE.BoxGeometry(0.108, 0.08, 0.066), this.steelMat);
+        scabbardThroat.position.y = 0.42;
+        backScabbardGroup.add(scabbardThroat);
 
-        const lBootCuff = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.1, 0.18), this.leatherMat);
-        lBootCuff.position.y = -0.56;
-        leftHip.add(lBootCuff);
+        const wrapLevels = [0.32, 0.16, 0.0, -0.16, -0.32, -0.48, -0.64, -0.82, -0.98];
+        wrapLevels.forEach((wy, idx) => {
+            const wrapBand = new THREE.Mesh(new THREE.BoxGeometry(0.096, 0.028, 0.056), this.scabbardWrapMat);
+            wrapBand.position.y = wy;
+            wrapBand.rotation.y = (idx % 2 === 0 ? 0.04 : -0.04);
+            backScabbardGroup.add(wrapBand);
 
-        const lFoot = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.leatherMat);
-        lFoot.position.set(0, -0.62, 0.04);
-        leftHip.add(lFoot);
+            const diagStrap = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.08, 0.058), this.scabbardWrapMat);
+            diagStrap.position.set(0, wy, 0);
+            diagStrap.rotation.z = (idx % 2 === 0 ? 0.35 : -0.35);
+            backScabbardGroup.add(diagStrap);
+        });
 
-        // Assign animation nodes
+        const chape = new THREE.Mesh(new THREE.ConeGeometry(0.055, 0.14, 4), this.steelMat);
+        chape.position.y = -1.11;
+        chape.rotation.x = Math.PI;
+        chape.rotation.y = Math.PI / 4;
+        backScabbardGroup.add(chape);
+
+        const greatswordHiltGroup = new THREE.Group();
+        greatswordHiltGroup.position.y = 0.46;
+        backScabbardGroup.add(greatswordHiltGroup);
+
+        const guardMesh = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.048, 0.065), this.steelMat);
+        guardMesh.castShadow = true;
+        greatswordHiltGroup.add(guardMesh);
+
+        const gripMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.025, 0.38, 8), this.scabbardWrapMat);
+        gripMesh.position.y = 0.21;
+        greatswordHiltGroup.add(gripMesh);
+
+        for (let gi = 0; gi < 5; gi++) {
+            const cordRing = new THREE.Mesh(new THREE.TorusGeometry(0.025, 0.005, 4, 8), this.leatherMat);
+            cordRing.position.y = 0.08 + gi * 0.065;
+            cordRing.rotation.x = Math.PI / 2;
+            greatswordHiltGroup.add(cordRing);
+        }
+
+        const ringPommel = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.015, 8, 16), this.steelMat);
+        ringPommel.position.y = 0.45;
+        ringPommel.castShadow = true;
+        greatswordHiltGroup.add(ringPommel);
+
+        const pommelSpoke = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.09, 0.016), this.steelMat);
+        pommelSpoke.position.y = 0.45;
+        greatswordHiltGroup.add(pommelSpoke);
+
+        // Assign core animation nodes
         root.userData = {
             bodyGroup,
             torso,
@@ -1194,7 +1173,653 @@ class DarkSoulsCharacters {
             shieldGroup,
             offhandTorch,
             estusFlask,
-            backScabbardGroup
+            backScabbardGroup,
+            skinMeshes: [],
+            currentSkin: 'warrior'
+        };
+
+        // Apply default skin
+        this.applySkinToPlayer(root, 'warrior');
+
+        this.scene.add(root);
+        return root;
+    }
+
+    // ====================================================
+    // 3D COSTUMES & SKINS APPLIER (HOT-SWAPPABLE 3D ARMOR)
+    // ====================================================
+    applySkinToPlayer(playerMesh, skinId = 'warrior') {
+        if (!playerMesh || !playerMesh.userData) return;
+        const u = playerMesh.userData;
+        if (!u.skinMeshes) u.skinMeshes = [];
+
+        // Remove previous skin meshes cleanly from their parents
+        u.skinMeshes.forEach(mesh => {
+            if (mesh && mesh.parent) {
+                mesh.parent.remove(mesh);
+            }
+        });
+        u.skinMeshes = [];
+
+        const addPart = (parent, mesh) => {
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            parent.add(mesh);
+            u.skinMeshes.push(mesh);
+            return mesh;
+        };
+
+        u.currentSkin = skinId;
+
+        if (skinId === 'elite_knight') {
+            // ------------------------------------------------
+            // ELITE KNIGHT OF ASTORA (Oscar of Astora)
+            // ------------------------------------------------
+            // Helm: Fluted Armet with winged gold crests
+            const helm = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.40, 0.38), this.eliteSteelMat));
+            const visor = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.05, 0.05), new THREE.MeshBasicMaterial({ color: 0x66ccff })));
+            visor.position.set(0, 0.02, 0.18);
+            const crest = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.40), this.goldTrimMat));
+            crest.position.set(0, 0.22, 0);
+            const wingL = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.18, 0.16), this.goldTrimMat));
+            wingL.position.set(-0.19, 0.14, -0.06);
+            wingL.rotation.z = -0.25;
+            const wingR = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.18, 0.16), this.goldTrimMat));
+            wingR.position.set(0.19, 0.14, -0.06);
+            wingR.rotation.z = 0.25;
+
+            // Torso: Polished fluted plate & Astora blue embroidered cross tabard
+            const chest = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.46, 0.34), this.eliteSteelMat));
+            chest.position.y = 0.12;
+            const ridge = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.44, 0.05), this.goldTrimMat));
+            ridge.position.set(0, 0.12, 0.17);
+            const tabard = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.64, 0.36), this.astoraBlueClothMat));
+            tabard.position.y = 0.02;
+            const crossH = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.06, 0.02), this.goldTrimMat));
+            crossH.position.set(0, 0.12, 0.185);
+            const crossV = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.28, 0.02), this.goldTrimMat));
+            crossV.position.set(0, 0.08, 0.185);
+            const waist = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.49, 0.24, 0.31), this.steelMat));
+            waist.position.y = -0.16;
+            const belt = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.07, 0.34), this.leatherMat));
+            belt.position.y = -0.14;
+            const buckle = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.08, 0.03), this.goldTrimMat));
+            buckle.position.set(0, -0.14, 0.175);
+
+            // Surcoat / Skirt
+            const skirtF = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.34, 0.06), this.astoraBlueClothMat));
+            skirtF.position.set(0, -0.38, 0.15);
+            skirtF.rotation.x = 0.12;
+            const skirtB = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.34, 0.06), this.astoraBlueClothMat));
+            skirtB.position.set(0, -0.38, -0.15);
+            skirtB.rotation.x = -0.12;
+            const skirtTrim = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.04, 0.34), this.goldTrimMat));
+            skirtTrim.position.y = -0.52;
+
+            // Pauldrons & Arms
+            const rPauld = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.20, 0.28), this.eliteSteelMat));
+            const rTrim = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.04, 0.30), this.goldTrimMat));
+            rTrim.position.y = 0.08;
+            const rArm = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.steelMat));
+            rArm.position.y = -0.22;
+            const rElbow = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.11, 0.13), this.goldTrimMat));
+            rElbow.position.set(0, -0.38, -0.02);
+
+            const lPauld = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.20, 0.28), this.eliteSteelMat));
+            const lTrim = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.04, 0.30), this.goldTrimMat));
+            lTrim.position.y = 0.08;
+            const lArm = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.steelMat));
+            lArm.position.y = -0.22;
+            const lElbow = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.11, 0.13), this.goldTrimMat));
+            lElbow.position.set(0, -0.38, -0.02);
+
+            // Legs: Articulated silver plate greaves & sabatons
+            const rThigh = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.36, 0.18), this.steelMat));
+            rThigh.position.y = -0.16;
+            const rKnee = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.11, 0.14), this.goldTrimMat));
+            rKnee.position.set(0, -0.32, 0.06);
+            const rShin = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.eliteSteelMat));
+            rShin.position.y = -0.46;
+            const rFoot = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.steelMat));
+            rFoot.position.set(0, -0.62, 0.04);
+
+            const lThigh = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.36, 0.18), this.steelMat));
+            lThigh.position.y = -0.16;
+            const lKnee = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.11, 0.14), this.goldTrimMat));
+            lKnee.position.set(0, -0.32, 0.06);
+            const lShin = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.eliteSteelMat));
+            lShin.position.y = -0.46;
+            const lFoot = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.steelMat));
+            lFoot.position.set(0, -0.62, 0.04);
+
+        } else if (skinId === 'black_knight') {
+            // ------------------------------------------------
+            // BLACK KNIGHT OF GWYN (Charred Iron, Horns & Lava Embers)
+            // ------------------------------------------------
+            // Helm with dual demonic horns
+            const helm = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.42, 0.39), this.blackKnightMat));
+            const visor = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.05, 0.05), this.emberGlowMat));
+            visor.position.set(0, 0.02, 0.19);
+            const hornL = addPart(u.headGroup, new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.32, 5), this.blackKnightHornMat));
+            hornL.position.set(-0.20, 0.28, 0.05);
+            hornL.rotation.set(-0.25, 0, -0.55);
+            const hornR = addPart(u.headGroup, new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.32, 5), this.blackKnightHornMat));
+            hornR.position.set(0.20, 0.28, 0.05);
+            hornR.rotation.set(-0.25, 0, 0.55);
+
+            // Torso: Obsidian charred plate with molten lava veins
+            const chest = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.48, 0.36), this.blackKnightMat));
+            chest.position.y = 0.12;
+            const emberCore = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.32, 0.04), this.emberGlowMat));
+            emberCore.position.set(0, 0.12, 0.185);
+            const waist = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.49, 0.24, 0.32), this.blackKnightMat));
+            waist.position.y = -0.16;
+            const cape = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.50, 0.72, 0.04), this.blackKnightMat));
+            cape.position.set(0, -0.14, -0.20);
+            cape.rotation.x = -0.1;
+
+            // Spiked Obsidian Pauldrons
+            const rPauld = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.22, 0.28), this.blackKnightMat));
+            const rSpike = addPart(u.rightShoulder, new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.18, 4), this.blackKnightHornMat));
+            rSpike.position.set(0.12, 0.14, 0);
+            rSpike.rotation.z = -0.5;
+            const rArm = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.blackKnightMat));
+            rArm.position.y = -0.22;
+
+            const lPauld = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.22, 0.28), this.blackKnightMat));
+            const lSpike = addPart(u.leftShoulder, new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.18, 4), this.blackKnightHornMat));
+            lSpike.position.set(-0.12, 0.14, 0);
+            lSpike.rotation.z = 0.5;
+            const lArm = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.blackKnightMat));
+            lArm.position.y = -0.22;
+
+            // Skirt: Burnt chainmail
+            const skirtF = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.32, 0.08), this.blackKnightMat));
+            skirtF.position.set(0, -0.38, 0.15);
+            skirtF.rotation.x = 0.12;
+
+            // Legs: Spiked blackened iron greaves
+            const rThigh = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.36, 0.18), this.blackKnightMat));
+            rThigh.position.y = -0.16;
+            const rKneeSpike = addPart(u.rightHip, new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.12, 4), this.blackKnightHornMat));
+            rKneeSpike.position.set(0, -0.32, 0.11);
+            rKneeSpike.rotation.x = Math.PI / 2;
+            const rShin = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.blackKnightMat));
+            rShin.position.y = -0.46;
+            const rFoot = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.blackKnightMat));
+            rFoot.position.set(0, -0.62, 0.04);
+
+            const lThigh = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.36, 0.18), this.blackKnightMat));
+            lThigh.position.y = -0.16;
+            const lKneeSpike = addPart(u.leftHip, new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.12, 4), this.blackKnightHornMat));
+            lKneeSpike.position.set(0, -0.32, 0.11);
+            lKneeSpike.rotation.x = Math.PI / 2;
+            const lShin = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.blackKnightMat));
+            lShin.position.y = -0.46;
+            const lFoot = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.blackKnightMat));
+            lFoot.position.set(0, -0.62, 0.04);
+
+        } else if (skinId === 'shinobi') {
+            // ------------------------------------------------
+            // SHINOBI OF THE EAST (Midnight Cowl & Demon Oni Mask)
+            // ------------------------------------------------
+            // Hood & Demon Oni Mask
+            const cowl = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.38, 0.36), this.shinobiClothMat));
+            const mask = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.22, 0.06), this.shinobiMaskMat));
+            mask.position.set(0, -0.06, 0.18);
+            const fangs = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.03), this.shinobiRopeMat));
+            fangs.position.set(0, -0.12, 0.21);
+            const eyes = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.03, 0.04), new THREE.MeshBasicMaterial({ color: 0xff4422 })));
+            eyes.position.set(0, 0.06, 0.185);
+
+            // Torso: Lightweight midnight vest & crossed crimson cord
+            const vest = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.50, 0.46, 0.32), this.shinobiClothMat));
+            vest.position.y = 0.12;
+            const sash1 = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.62, 0.03), this.shinobiRopeMat));
+            sash1.position.set(0, 0.10, 0.17);
+            sash1.rotation.z = 0.45;
+            const sash2 = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.62, 0.03), this.shinobiRopeMat));
+            sash2.position.set(0, 0.10, 0.17);
+            sash2.rotation.z = -0.45;
+            const waist = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.12, 0.34), this.shinobiRopeMat));
+            waist.position.y = -0.16;
+
+            // Pauldrons & Arms
+            const rPauld = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.14, 0.22), this.shinobiClothMat));
+            const rArm = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.38, 0.12), this.shinobiClothMat));
+            rArm.position.y = -0.22;
+            const rClaw = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.16, 0.02), this.steelMat));
+            rClaw.position.set(0, -0.40, 0.08);
+
+            const lPauld = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.14, 0.22), this.shinobiClothMat));
+            const lArm = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.38, 0.12), this.shinobiClothMat));
+            lArm.position.y = -0.22;
+
+            // Bamboo Kusazuri War Skirt
+            const skirtF = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.28, 0.05), this.shinobiClothMat));
+            skirtF.position.set(0, -0.34, 0.15);
+            skirtF.rotation.x = 0.14;
+
+            // Legs: Shinobi Tabi & Bindings
+            const rThigh = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.36, 0.16), this.shinobiClothMat));
+            rThigh.position.y = -0.16;
+            const rShin = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.28, 0.14), this.shinobiClothMat));
+            rShin.position.y = -0.46;
+            const rBinding = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.06, 0.16), this.shinobiRopeMat));
+            rBinding.position.y = -0.44;
+            const rFoot = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.07, 0.22), this.shinobiClothMat));
+            rFoot.position.set(0, -0.62, 0.04);
+
+            const lThigh = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.36, 0.16), this.shinobiClothMat));
+            lThigh.position.y = -0.16;
+            const lShin = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.28, 0.14), this.shinobiClothMat));
+            lShin.position.y = -0.46;
+            const lBinding = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.06, 0.16), this.shinobiRopeMat));
+            lBinding.position.y = -0.44;
+            const lFoot = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.07, 0.22), this.shinobiClothMat));
+            lFoot.position.set(0, -0.62, 0.04);
+
+        } else if (skinId === 'solaire') {
+            // ------------------------------------------------
+            // SOLAIRE OF ASTORA (Praise The Sun - Smiling Holy Sun Tunic)
+            // ------------------------------------------------
+            // Holy Iron Bucket Greathelm & Red Plume
+            const helm = addPart(u.headGroup, new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.42, 12), this.steelMat));
+            const helmRim = addPart(u.headGroup, new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.06, 12), this.goldTrimMat));
+            helmRim.position.y = 0.18;
+            const visor = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.04, 0.06), new THREE.MeshBasicMaterial({ color: 0x111111 })));
+            visor.position.set(0, 0.04, 0.17);
+            const plume = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.24, 0.14), this.solairePlumeMat));
+            plume.position.set(0, 0.28, -0.06);
+            plume.rotation.x = -0.3;
+
+            // Torso: Iconic Painted Smiling Holy Sun Tunic & Red Scarf
+            const tunic = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.54, 0.35), this.solaireTunicMat));
+            tunic.position.y = 0.08;
+            const scarf = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.12, 0.40), this.solairePlumeMat));
+            scarf.position.set(0, 0.32, 0);
+            const belt = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.08, 0.36), this.leatherMat));
+            belt.position.y = -0.16;
+            const buckle = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.08, 0.03), this.goldTrimMat));
+            buckle.position.set(0, -0.16, 0.185);
+
+            // Chainmail Pauldrons with red epaulets
+            const rPauld = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.26), this.solaireChainmailMat));
+            const rEpaulet = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.05, 0.28), this.solairePlumeMat));
+            rEpaulet.position.y = 0.08;
+            const rArm = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.leatherMat));
+            rArm.position.y = -0.22;
+
+            const lPauld = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.26), this.solaireChainmailMat));
+            const lEpaulet = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.05, 0.28), this.solairePlumeMat));
+            lEpaulet.position.y = 0.08;
+            const lArm = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.leatherMat));
+            lArm.position.y = -0.22;
+
+            // Flowing White Crusader Tabard
+            const skirtF = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.36, 0.06), this.solaireTunicMat));
+            skirtF.position.set(0, -0.38, 0.15);
+            skirtF.rotation.x = 0.12;
+
+            // Gilded Sunlight Greaves
+            const rThigh = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.36, 0.18), this.solaireChainmailMat));
+            rThigh.position.y = -0.16;
+            const rKnee = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.12, 0.14), this.goldTrimMat));
+            rKnee.position.set(0, -0.32, 0.06);
+            const rShin = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.goldTrimMat));
+            rShin.position.y = -0.46;
+            const rFoot = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.leatherMat));
+            rFoot.position.set(0, -0.62, 0.04);
+
+            const lThigh = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.36, 0.18), this.solaireChainmailMat));
+            lThigh.position.y = -0.16;
+            const lKnee = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.12, 0.14), this.goldTrimMat));
+            lKnee.position.set(0, -0.32, 0.06);
+            const lShin = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.goldTrimMat));
+            lShin.position.y = -0.46;
+            const lFoot = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.leatherMat));
+            lFoot.position.set(0, -0.62, 0.04);
+
+            // Radiant Holy Sunlight Aura
+            const sunLight = addPart(u.torso, new THREE.PointLight(0xffd700, 1.8, 10, 1.2));
+            sunLight.position.set(0, 0.2, 0.2);
+
+        } else if (skinId === 'onion_knight') {
+            // ------------------------------------------------
+            // SIEGMEYER OF CATARINA (Rotund Bulbous Onion Armor)
+            // ------------------------------------------------
+            // Spherical Onion Dome Helm & Spindle
+            const helm = addPart(u.headGroup, new THREE.Mesh(new THREE.SphereGeometry(0.24, 16, 14), this.onionPlateMat));
+            helm.scale.set(1.1, 0.95, 1.1);
+            const spindle = addPart(u.headGroup, new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.16, 8), this.onionBrassMat));
+            spindle.position.y = 0.24;
+            const visor = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.04, 0.06), new THREE.MeshBasicMaterial({ color: 0x111111 })));
+            visor.position.set(0, 0.02, 0.24);
+
+            // Torso: Massive Bulbous Spherical Onion Cuirass
+            const belly = addPart(u.torso, new THREE.Mesh(new THREE.SphereGeometry(0.38, 16, 14), this.onionPlateMat));
+            belly.position.set(0, 0.05, 0.02);
+            belly.scale.set(1.15, 0.95, 1.15);
+            const collar = addPart(u.torso, new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.32, 0.12, 14), this.onionBrassMat));
+            collar.position.y = 0.32;
+
+            // Giant Bulbous Onion Shoulder Bells
+            const rPauld = addPart(u.rightShoulder, new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), this.onionPlateMat));
+            rPauld.position.set(0.06, 0, 0);
+            const rArm = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.38, 0.16), this.onionPlateMat));
+            rArm.position.y = -0.22;
+
+            const lPauld = addPart(u.leftShoulder, new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), this.onionPlateMat));
+            lPauld.position.set(-0.06, 0, 0);
+            const lArm = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.38, 0.16), this.onionPlateMat));
+            lArm.position.y = -0.22;
+
+            // Fluted Wide Bell Skirt
+            const skirt = addPart(u.torso, new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.44, 0.26, 14, 1, true), this.onionPlateMat));
+            skirt.position.y = -0.26;
+            const skirtRim = addPart(u.torso, new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.03, 6, 16), this.onionBrassMat));
+            skirtRim.position.y = -0.38;
+            skirtRim.rotation.x = Math.PI / 2;
+
+            // Legs: Rounded onion domes & plates
+            const rThigh = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.36, 0.20), this.onionPlateMat));
+            rThigh.position.y = -0.16;
+            const rKneeDome = addPart(u.rightHip, new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), this.onionBrassMat));
+            rKneeDome.position.set(0, -0.32, 0.08);
+            const rShin = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.28, 0.18), this.onionPlateMat));
+            rShin.position.y = -0.46;
+            const rFoot = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.10, 0.26), this.onionPlateMat));
+            rFoot.position.set(0, -0.62, 0.04);
+
+            const lThigh = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.36, 0.20), this.onionPlateMat));
+            lThigh.position.y = -0.16;
+            const lKneeDome = addPart(u.leftHip, new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), this.onionBrassMat));
+            lKneeDome.position.set(0, -0.32, 0.08);
+            const lShin = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.28, 0.18), this.onionPlateMat));
+            lShin.position.y = -0.46;
+            const lFoot = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.10, 0.26), this.onionPlateMat));
+            lFoot.position.set(0, -0.62, 0.04);
+
+        } else {
+            // ------------------------------------------------
+            // NORTHERN WARRIOR (Default Barbarian Sculpt)
+            // ------------------------------------------------
+            // Kettle / Bascinet Helm with gold ridge
+            const helm = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.4, 0.38), this.steelMat));
+            const visor = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.05, 0.05), new THREE.MeshBasicMaterial({ color: 0x88ccff })));
+            visor.position.set(0, 0.02, 0.18);
+            const crestRidge = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.09, 0.38), this.goldTrimMat));
+            crestRidge.position.set(0, 0.22, 0.0);
+            const rearPlume = addPart(u.headGroup, new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.12, 0.18), this.clothMat));
+            rearPlume.position.set(0, 0.19, -0.2);
+            rearPlume.rotation.x = -0.35;
+
+            // Torso: Breastplate, Waist, Fur Mantle, Belts, Quilted Skirt
+            const chestPlate = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.44, 0.34), this.steelMat));
+            chestPlate.position.y = 0.12;
+            const chestRidge = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.42, 0.05), this.steelMat));
+            chestRidge.position.set(0, 0.12, 0.17);
+            const waistPlate = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.24, 0.31), this.darkSteelMat));
+            waistPlate.position.y = -0.16;
+            const tabard = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.62, 0.36), this.clothMat));
+            tabard.position.y = 0.02;
+
+            const mantleCowl = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.16, 0.44), this.furMantleMat));
+            mantleCowl.position.set(0, 0.32, 0);
+            const mantleRearPelt = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.28, 0.09), this.furMantleMat));
+            mantleRearPelt.position.set(0, 0.18, -0.19);
+
+            const upperBelt = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.51, 0.07, 0.34), this.leatherMat));
+            upperBelt.position.y = -0.14;
+            const upperBuckle = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.08, 0.03), this.steelBuckleMat));
+            upperBuckle.position.set(0, -0.14, 0.175);
+
+            // Quilted Skirt Tassets
+            const frontTasset = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.32, 0.07), this.quiltedSkirtMat));
+            frontTasset.position.set(0, -0.38, 0.15);
+            frontTasset.rotation.x = 0.14;
+            const rearTasset = addPart(u.torso, new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.34, 0.07), this.quiltedSkirtMat));
+            rearTasset.position.set(0, -0.39, -0.15);
+            rearTasset.rotation.x = -0.12;
+
+            // Pauldrons & Arms
+            const rPauldrons = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.26), this.steelMat));
+            const rPauldronRim = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.04, 0.28), this.goldTrimMat));
+            rPauldronRim.position.y = 0.07;
+            const rArm = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.darkSteelMat));
+            rArm.position.y = -0.22;
+            const rElbow = addPart(u.rightShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.11, 0.13), this.steelMat));
+            rElbow.position.set(0, -0.38, -0.02);
+
+            const lPauldrons = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.26), this.steelMat));
+            const lPauldronRim = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.04, 0.28), this.goldTrimMat));
+            lPauldronRim.position.y = 0.07;
+            const lArm = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.14), this.darkSteelMat));
+            lArm.position.y = -0.22;
+            const lElbow = addPart(u.leftShoulder, new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.11, 0.13), this.steelMat));
+            lElbow.position.set(0, -0.38, -0.02);
+
+            // Legs: Greaves & Leather Boots
+            const rThigh = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.36, 0.18), this.darkSteelMat));
+            rThigh.position.y = -0.16;
+            const rKnee = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.11, 0.14), this.steelMat));
+            rKnee.position.set(0, -0.32, 0.06);
+            const rShin = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.steelMat));
+            rShin.position.y = -0.46;
+            const rFoot = addPart(u.rightHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.leatherMat));
+            rFoot.position.set(0, -0.62, 0.04);
+
+            const lThigh = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.36, 0.18), this.darkSteelMat));
+            lThigh.position.y = -0.16;
+            const lKnee = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.11, 0.14), this.steelMat));
+            lKnee.position.set(0, -0.32, 0.06);
+            const lShin = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 0.16), this.steelMat));
+            lShin.position.y = -0.46;
+            const lFoot = addPart(u.leftHip, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.24), this.leatherMat));
+            lFoot.position.set(0, -0.62, 0.04);
+        }
+    }
+
+    // ----------------------------------------------------
+    // CREATE CATACOMBS SKELETON WARRIOR
+    // ----------------------------------------------------
+    createSkeletonWarrior(x, z, angle = 0, y = -5.0) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.92;
+        root.add(bodyGroup);
+
+        const torso = new THREE.Group();
+        bodyGroup.add(torso);
+
+        // Weathered bone ribcage
+        const ribcage = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.32, 0.22), this.boneMat);
+        ribcage.position.y = 0.1;
+        ribcage.castShadow = true;
+        torso.add(ribcage);
+
+        // Spine vertebrae column
+        const spine = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.35, 6), this.boneMat);
+        spine.position.y = -0.15;
+        torso.add(spine);
+
+        // Bony pelvis
+        const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.12, 0.20), this.boneMat);
+        pelvis.position.y = -0.25;
+        torso.add(pelvis);
+
+        // Skull & glowing red eye sockets
+        const headGroup = new THREE.Group();
+        headGroup.position.y = 0.44;
+        torso.add(headGroup);
+
+        const cranium = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.24, 0.24), this.boneMat);
+        cranium.castShadow = true;
+        headGroup.add(cranium);
+
+        const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.08, 0.16), this.boneMat);
+        jaw.position.set(0, -0.14, 0.04);
+        headGroup.add(jaw);
+
+        const eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, 0.04), this.emberGlowMat);
+        eyeL.position.set(-0.06, 0.02, 0.12);
+        headGroup.add(eyeL);
+        const eyeR = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, 0.04), this.emberGlowMat);
+        eyeR.position.set(0.06, 0.02, 0.12);
+        headGroup.add(eyeR);
+
+        // Right Arm (Curved Rusted Scimitar)
+        const rightArm = new THREE.Group();
+        rightArm.position.set(0.26, 0.22, 0);
+        torso.add(rightArm);
+        const rBone = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.42, 6), this.boneMat);
+        rBone.position.y = -0.21;
+        rightArm.add(rBone);
+
+        const scimitar = new THREE.Group();
+        scimitar.position.set(0, -0.42, 0.06);
+        scimitar.rotation.set(0.4, 0.2, -0.3);
+        const scimBlade = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.95, 0.02), this.rustIronMat);
+        scimBlade.position.y = 0.45;
+        scimBlade.castShadow = true;
+        scimitar.add(scimBlade);
+        const scimCurve = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.25, 0.02), this.rustIronMat);
+        scimCurve.position.set(0.04, 0.85, 0);
+        scimitar.add(scimCurve);
+        rightArm.add(scimitar);
+
+        // Left Arm (Cracked Round Bronze Buckler)
+        const leftArm = new THREE.Group();
+        leftArm.position.set(-0.26, 0.22, 0);
+        torso.add(leftArm);
+        const lBone = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.42, 6), this.boneMat);
+        lBone.position.y = -0.21;
+        leftArm.add(lBone);
+
+        const buckler = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.04, 12), this.darkSteelMat);
+        buckler.position.set(0, -0.38, 0.12);
+        buckler.rotation.x = Math.PI / 2;
+        buckler.castShadow = true;
+        leftArm.add(buckler);
+
+        // Legs
+        const rightLeg = new THREE.Group();
+        rightLeg.position.set(0.14, -0.25, 0);
+        bodyGroup.add(rightLeg);
+        const rLegBone = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.025, 0.58, 6), this.boneMat);
+        rLegBone.position.y = -0.29;
+        rightLeg.add(rLegBone);
+
+        const leftLeg = new THREE.Group();
+        leftLeg.position.set(-0.14, -0.25, 0);
+        bodyGroup.add(leftLeg);
+        const lLegBone = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.025, 0.58, 6), this.boneMat);
+        lLegBone.position.y = -0.29;
+        leftLeg.add(lLegBone);
+
+        root.userData = {
+            type: 'skeleton',
+            bodyGroup,
+            torso,
+            headGroup,
+            rightArm,
+            leftArm,
+            rightLeg,
+            leftLeg,
+            weapon: scimitar
+        };
+
+        this.scene.add(root);
+        return root;
+    }
+
+    // ----------------------------------------------------
+    // CREATE GRAVELORD NITO (FIRST OF THE DEAD)
+    // ----------------------------------------------------
+    createGravelordNito(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, -6.0, z); // Positioned on Catacombs Mausoleum floor
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 2.0;
+        root.add(bodyGroup);
+
+        // 1. Enormous Towering Death Cloak of Skulls and Black Funeral Shrouds (Height ~4.2m)
+        const cloakBase = new THREE.Mesh(new THREE.ConeGeometry(2.2, 4.0, 16), this.nitoCloakMat);
+        cloakBase.position.y = 0.2;
+        cloakBase.castShadow = true;
+        bodyGroup.add(cloakBase);
+
+        // Layered skeletal ribs and bone spurs jutting from the cloak
+        for (let i = 0; i < 14; i++) {
+            const boneSpur = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.65, 4), this.nitoBoneMat);
+            const ang = (i / 14) * Math.PI * 2;
+            const rad = 1.2 + (i % 3) * 0.25;
+            boneSpur.position.set(Math.cos(ang) * rad, -0.4 + (i % 4) * 0.35, Math.sin(ang) * rad);
+            boneSpur.rotation.set((Math.random() - 0.5) * 0.8, ang, Math.PI / 2.2);
+            boneSpur.castShadow = true;
+            bodyGroup.add(boneSpur);
+        }
+
+        // 2. Giant Embedded Rite of Kindling Masks (Father, Mother, Child)
+        const maskFather = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.65, 0.14), this.nitoMaskMat);
+        maskFather.position.set(0, 1.4, 1.1);
+        maskFather.rotation.x = -0.15;
+        bodyGroup.add(maskFather);
+
+        const maskMother = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.58, 0.12), this.nitoBoneMat);
+        maskMother.position.set(-0.75, 1.1, 0.9);
+        maskMother.rotation.set(-0.1, 0.4, -0.2);
+        bodyGroup.add(maskMother);
+
+        const maskChild = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.52, 0.12), this.nitoBoneMat);
+        maskChild.position.set(0.75, 1.1, 0.9);
+        maskChild.rotation.set(-0.1, -0.4, 0.2);
+        bodyGroup.add(maskChild);
+
+        // 3. Colossal Right Arm wielding the Gravelord Greatsword
+        const rightShoulder = new THREE.Group();
+        rightShoulder.position.set(1.4, 1.2, 0);
+        bodyGroup.add(rightShoulder);
+
+        const rArmBone = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 1.6, 8), this.nitoBoneMat);
+        rArmBone.position.y = -0.8;
+        rightShoulder.add(rArmBone);
+
+        // The Gravelord Greatsword
+        const swordGroup = new THREE.Group();
+        swordGroup.position.set(0, -1.6, 0.3);
+        swordGroup.rotation.set(0.6, 0.2, -0.4);
+        rightShoulder.add(swordGroup);
+
+        // Chipped Obsidian Blade
+        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.38, 3.6, 0.14), this.nitoBladeMat);
+        blade.position.y = 1.6;
+        blade.castShadow = true;
+        swordGroup.add(blade);
+
+        // Vertebrae Spine Crossguard
+        const guard = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.24, 0.28), this.nitoBoneMat);
+        swordGroup.add(guard);
+
+        // 4. Toxic Miasma Aura PointLight
+        const miasmaLight = new THREE.PointLight(0xaa1144, 3.5, 16, 1.5);
+        miasmaLight.position.set(0, 1.0, 0);
+        bodyGroup.add(miasmaLight);
+
+        root.userData = {
+            type: 'boss',
+            bossId: 'nito',
+            bodyGroup,
+            rightShoulder,
+            swordGroup,
+            maskFather,
+            maskMother,
+            maskChild,
+            miasmaLight
         };
 
         this.scene.add(root);

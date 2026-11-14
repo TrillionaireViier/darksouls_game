@@ -53,6 +53,8 @@ class DarkSoulsCombat {
         this.lockedTarget = null;
         this.currentBossType = 'taurus';
         this.defeatedBosses = [];
+        this.adminModeUnlocked = (localStorage.getItem('darksouls_admin_mode') === 'true');
+        this.isGodMode = false;
 
         // Weapon Arsenal System (6 Distinct Weapons)
         this.weapons = {
@@ -219,6 +221,18 @@ class DarkSoulsCombat {
                 create: (cf, x, z) => cf.createCapraDemon(x, z)
             },
             {
+                id: 'nito',
+                name: 'GRAVELORD NITO',
+                title: 'Tomb of the Dead &bull; Sarcophagus of Skeletons, Miasma & Gravelord Greatsword',
+                icon: '💀',
+                maxHp: 3600,
+                damage: 360,
+                souls: 15000,
+                radius: 3.2,
+                spawnPos: { x: -20, z: 122 },
+                create: (cf, x, z) => cf.createGravelordNito(x, z)
+            },
+            {
                 id: 'sif',
                 name: 'GREAT GREY WOLF SIF',
                 title: 'Darkroot Garden &bull; Artorias Greatsword & 360° Whirlwind Spin',
@@ -245,12 +259,22 @@ class DarkSoulsCombat {
         ];
     }
 
+    // Check sequential boss progression (override if admin mode active)
+    isBossUnlocked(bossId) {
+        if (this.adminModeUnlocked) return true;
+        if (!bossId || bossId === 'taurus') return true;
+        const idx = this.bossRoster.findIndex(b => b.id === bossId);
+        if (idx <= 0) return true;
+        const prevBoss = this.bossRoster[idx - 1];
+        return this.defeatedBosses.includes(prevBoss.id);
+    }
+
     initEnemies(charFactory) {
         this.charFactory = charFactory;
         this.spawnEnemies();
     }
 
-    spawnBoss(bossId = this.currentBossType, x = 0, z = 132) {
+    spawnBoss(bossId = this.currentBossType, x = null, z = null) {
         if (this.boss && this.boss.mesh) {
             this.game.scene.remove(this.boss.mesh);
         }
@@ -258,7 +282,10 @@ class DarkSoulsCombat {
         const def = this.bossRoster.find(b => b.id === bossId) || this.bossRoster[0];
         this.currentBossType = def.id;
 
-        const bossMesh = def.create(this.charFactory, x, z);
+        const posX = (x !== null) ? x : (def.spawnPos ? def.spawnPos.x : 0);
+        const posZ = (z !== null) ? z : (def.spawnPos ? def.spawnPos.z : 132);
+
+        const bossMesh = def.create(this.charFactory, posX, posZ);
         this.boss = {
             id: def.id,
             type: 'boss',
@@ -290,11 +317,40 @@ class DarkSoulsCombat {
     }
 
     switchBoss(bossId) {
+        if (!this.isBossUnlocked(bossId)) {
+            const idx = this.bossRoster.findIndex(b => b.id === bossId);
+            const prevBoss = this.bossRoster[idx - 1];
+            const prevName = prevBoss ? prevBoss.name : 'previous Lord';
+            this.game.showNotification(`🔒 LOCKED: Defeat ${prevName} first!`);
+            if (this.audio) this.audio.playRoll();
+            return null;
+        }
+
+        const def = this.bossRoster.find(b => b.id === bossId) || this.bossRoster[0];
         const boss = this.spawnBoss(bossId);
         this.audio.playBellToll();
         this.game.showNotification(`CHALLENGE READY: ${boss.name}`);
-        // If player is already in arena, awaken boss immediately
-        if (this.game.playerMesh.position.z > 98) {
+
+        // Warp player to the entrance of the arena or catacombs mausoleum
+        if (bossId === 'nito') {
+            this.game.playerMesh.position.set(-20, -5.8, 93);
+            this.game.playerMesh.rotation.y = 0;
+            this.game.cameraYaw = 0;
+            this.game.cameraPitch = 0.15;
+            this.game.showNotification("WARPED TO CATACOMBS SANCTUM OF THE DEAD");
+        } else {
+            this.game.playerMesh.position.set(0, 0, 93);
+            this.game.playerMesh.rotation.y = 0;
+            this.game.cameraYaw = 0;
+            this.game.cameraPitch = 0.15;
+        }
+
+        // If player enters arena, awaken boss immediately
+        if (bossId === 'nito' && this.game.playerMesh.position.z > 96) {
+            this.boss.state = 'CHASE';
+            this.audio.setBossMusic(true);
+            this.game.showBossHpBar(this.boss);
+        } else if (this.game.playerMesh.position.z > 98) {
             this.boss.state = 'CHASE';
             this.audio.setBossMusic(true);
             this.game.showBossHpBar(this.boss);
@@ -324,16 +380,50 @@ class DarkSoulsCombat {
         // 5. Upper Castle Ramparts Hollow 2 (Watchtower Guard at y=6.0)
         this.createHollowSoldier(19, 78, Math.PI, 6.0);
 
-        // 6. Flooded Subterranean Catacombs Hollow 1 (In Murky Waters at y=-5.0)
+        // 6. Flooded Subterranean Catacombs Hollow (Murky Waters at y=-5.0)
         this.createHollowSoldier(-20, 42, 0, -5.0);
 
-        // 7. Flooded Subterranean Catacombs Hollow 2 (Crypt Guard at y=-5.0)
-        this.createHollowSoldier(-19, 72, Math.PI, -5.0);
+        // 7. Catacombs Patrolling Skeleton Warriors
+        this.createSkeletonWarriorEnemy(-20, 60, Math.PI, -5.0);
+        this.createSkeletonWarriorEnemy(-22, 82, 0, -5.0);
 
-        // 8. Boss (in Boss Arena at z = 132)
+        // 8. Deep Catacombs Mausoleum Skeleton Sentinels (y=-6.0)
+        this.createSkeletonWarriorEnemy(-16, 108, Math.PI, -6.0);
+        this.createSkeletonWarriorEnemy(-24, 134, 0, -6.0);
+
+        // 9. Boss
         if (!this.boss || this.boss.isDead) {
             this.spawnBoss(this.currentBossType || 'taurus');
         }
+    }
+
+    createSkeletonWarriorEnemy(x, z, angle, y = -5.0) {
+        const mesh = this.charFactory.createSkeletonWarrior(x, z, angle, y);
+        const enemy = {
+            type: 'skeleton',
+            name: y <= -5.5 ? 'Tomb Skeleton Sentinel' : 'Catacombs Skeleton Warrior',
+            mesh: mesh,
+            startPos: new THREE.Vector3(x, y, z),
+            maxHp: 480,
+            hp: 480,
+            damage: 160,
+            state: 'PATROL',
+            stateTimer: 0,
+            cooldown: 0,
+            animTime: Math.random() * 10,
+            isDead: false,
+            isRiposteable: false,
+            riposteTimer: 0,
+            isStaggered: false,
+            staggerTimer: 0,
+            attackWindup: 0,
+            patrolRadius: 6,
+            aggroRadius: 13,
+            attackReach: 2.4,
+            souls: 350
+        };
+        this.enemies.push(enemy);
+        return enemy;
     }
 
     createHollowSoldier(x, z, angle, y = 0) {
@@ -960,7 +1050,7 @@ class DarkSoulsCombat {
     }
 
     damagePlayer(damage, attackerPos) {
-        if (this.isDead || this.isInvincible) return;
+        if (this.isDead || this.isInvincible || this.isGodMode) return;
 
         // Check if player is actively Parrying
         if (this.isParrying && this.parryTime > 0.05 && this.parryTime < 0.28) {
@@ -1200,6 +1290,12 @@ class DarkSoulsCombat {
     // ----------------------------------------------------
     update(delta) {
         if (this.isDead) return;
+
+        // Admin God Mode: ensure infinite HP and stamina
+        if (this.isGodMode) {
+            this.hp = this.maxHp;
+            this.stamina = this.maxStamina;
+        }
 
         // Torch Fire Burn DoT Processing on Enemies & Boss
         const burnTargets = [...this.enemies];
@@ -1458,6 +1554,8 @@ class DarkSoulsCombat {
             this.updateSifAI(delta, dist, targetAngle);
         } else if (id === 'gwyn') {
             this.updateGwynAI(delta, dist, targetAngle);
+        } else if (id === 'nito') {
+            this.updateNitoAI(delta, dist, targetAngle);
         } else {
             this.updateTaurusAI(delta, dist, targetAngle);
         }
@@ -1817,6 +1915,93 @@ class DarkSoulsCombat {
                         this.boss.isAttacking = false;
                     }
                 }, 350);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 4: GRAVELORD NITO AI (Miasma Nova, Sword Dance, Cleaves)
+    // ----------------------------------------------------
+    updateNitoAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        if (u.maskFather) u.maskFather.rotation.y = Math.sin(this.boss.animTime * 2.0) * 0.25;
+        if (u.maskMother) u.maskMother.rotation.y = Math.cos(this.boss.animTime * 1.8) * 0.25;
+        if (u.maskChild) u.maskChild.rotation.y = -Math.sin(this.boss.animTime * 2.2) * 0.25;
+
+        if (dist > 4.2 && !this.boss.isAttacking) {
+            const speed = this.boss.isPhase2 ? 3.2 : 2.2;
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+
+            if (Math.sin(this.boss.animTime * 3) > 0.95) {
+                this.game.shakeCamera(0.06, 0.1);
+            }
+        } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
+            this.boss.isAttacking = true;
+            this.boss.cooldown = this.boss.isPhase2 ? 1.6 : 2.4;
+
+            const roll = Math.random();
+            if (roll < 0.45) {
+                // GRAVELORD GREATSWORD SWEEPING CLEAVE
+                if (u.rightShoulder) {
+                    u.rightShoulder.rotation.x = -0.8;
+                    u.rightShoulder.rotation.y = 0.5;
+                }
+                this.audio.playSwing(true);
+
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        if (u.rightShoulder) {
+                            u.rightShoulder.rotation.x = 1.2;
+                            u.rightShoulder.rotation.y = -0.6;
+                        }
+                        this.game.shakeCamera(0.35, 0.45);
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 5.2) {
+                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                        }
+                        setTimeout(() => {
+                            if (u.rightShoulder) u.rightShoulder.rotation.set(0, 0, 0);
+                            this.boss.isAttacking = false;
+                        }, 300);
+                    }
+                }, 650);
+            } else if (roll < 0.75) {
+                // GRAVELORD SWORD DANCE (Toxic red spikes erupt beneath player)
+                this.audio.playBossRoar();
+                this.game.showNotification("GRAVELORD SWORD DANCE ERUPTION!");
+
+                const targetPos = this.game.playerMesh.position.clone();
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.audio.playBossSlam();
+                        this.game.shakeCamera(0.48, 0.6);
+                        this.world.spawnSunlightBurst(targetPos);
+
+                        const hitDist = this.game.playerMesh.position.distanceTo(targetPos);
+                        if (hitDist < 3.2) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.9), targetPos);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 850);
+            } else {
+                // MIASMA DEATH NOVA (360 degree dark burst)
+                this.game.showNotification("MIASMA DEATH NOVA!");
+                setTimeout(() => {
+                    if (this.boss && !this.boss.isDead) {
+                        this.game.shakeCamera(0.55, 0.75);
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 6.2) {
+                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                        }
+                        this.boss.isAttacking = false;
+                    }
+                }, 900);
             }
         }
     }

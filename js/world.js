@@ -624,20 +624,30 @@ class DarkSoulsWorld {
             return Math.max(0, t * 6.0);
         }
 
-        // 2. West Lower Flooded Catacombs & Stairs
+        // 2. West Lower Flooded Catacombs & Deep Subterranean Mausoleum
         // Descending Sunken Stairs from Courtyard (z in [4, 22], x in [-25, -15])
         if (x >= -25 && x <= -15 && z >= 4 && z <= 22) {
             const t = (z - 4) / 18;
             return -t * 5.0;
         }
-        // Flooded Subterranean Catacombs (z in [22, 90], x in [-25, -15])
+        // Flooded Subterranean Catacombs Corridor (z in [22, 90], x in [-25, -15])
         if (x >= -25 && x <= -15 && z > 22 && z <= 90) {
             return -5.0;
         }
-        // Crypt Exit Ascent Stairs to Fog Gate (z in [90, 96], x in [-25, -13])
-        if (x >= -25 && x <= -13 && z > 90 && z <= 96) {
-            const t = (z - 90) / 6;
-            return -5.0 + t * 5.0;
+        // Deep Catacombs Subterranean Mausoleum Arena & Crypt (z in [90, 150], x in [-34, -7])
+        if (x >= -34 && x <= -7 && z >= 90 && z <= 150) {
+            // Crypt Exit Ascent Stairs back to surface fog gate (x in [-20, -12], z in [90, 96])
+            if (x >= -20 && x <= -12 && z >= 90 && z <= 96) {
+                const t = (z - 90) / 6;
+                return -5.0 + t * 5.0;
+            }
+            // Descending entrance ramp into Mausoleum (z in [90, 98])
+            if (z >= 90 && z <= 98) {
+                const t = (z - 90) / 8;
+                return -5.0 - t * 1.0;
+            }
+            // Deep subterranean Catacombs Mausoleum floor
+            return -6.0;
         }
 
         // 3. Central Bridge (z in [28, 96], walkable bridge span x in [-7.2, 7.2])
@@ -645,8 +655,8 @@ class DarkSoulsWorld {
             return 0.0;
         }
 
-        // 4. Boss Arena (z in [95, 170], x in [-18, 18])
-        if (x >= -18 && x <= 18 && z >= 95 && z <= 170) {
+        // 4. Surface Boss Arena (z in [95, 170], x in [-6.8, 18])
+        if (x >= -6.8 && x <= 18 && z >= 95 && z <= 170) {
             return 0.0;
         }
 
@@ -960,6 +970,113 @@ class DarkSoulsWorld {
             stepMesh.receiveShadow = true;
             this.scene.add(stepMesh);
         }
+
+        // ====================================================
+        // DEEP SUBTERRANEAN CATACOMBS MAUSOLEUM (z=96 to z=148, y=-6.0)
+        // Tomb of the Giants & Crypt Sanctum of Gravelord Nito
+        // ====================================================
+        // Entrance Portal Arch at z=96 leading into the Mausoleum
+        const mausoleumArchL = new THREE.Mesh(new THREE.BoxGeometry(1.6, 6.0, 1.6), this.wallMat);
+        mausoleumArchL.position.set(-24.5, -2.5, 96);
+        this.scene.add(mausoleumArchL);
+        const mausoleumArchR = new THREE.Mesh(new THREE.BoxGeometry(1.6, 6.0, 1.6), this.wallMat);
+        mausoleumArchR.position.set(-15.5, -2.5, 96);
+        this.scene.add(mausoleumArchR);
+        const mausoleumArchTop = new THREE.Mesh(new THREE.BoxGeometry(10.6, 1.4, 1.6), this.wallMat);
+        mausoleumArchTop.position.set(-20, 0.8, 96);
+        this.scene.add(mausoleumArchTop);
+
+        // Subterranean Mausoleum Stone Floor Slab (y=-6.5, z=96 to 148, x=[-33, -7])
+        const mausoleumFloorGeo = new THREE.BoxGeometry(26, 1.0, 52);
+        const mausoleumFloor = new THREE.Mesh(mausoleumFloorGeo, this.stoneMat);
+        mausoleumFloor.position.set(-20, -6.5, 122);
+        mausoleumFloor.receiveShadow = true;
+        this.scene.add(mausoleumFloor);
+
+        // Subterranean Vaulted Stone Ceiling (y=2.8, z=96 to 148, x=[-33, -7])
+        const mausoleumCeilGeo = new THREE.BoxGeometry(26.6, 0.9, 52);
+        const mausoleumCeil = new THREE.Mesh(mausoleumCeilGeo, this.stoneMat);
+        mausoleumCeil.position.set(-20, 2.8, 122);
+        mausoleumCeil.receiveShadow = true;
+        this.scene.add(mausoleumCeil);
+
+        // Mausoleum Outer Retaining Fortress Walls
+        this.createWall(-33.2, -2.0, 122, 1.2, 9.5, 52); // West Crypt Wall
+        this.createWall(-6.8, -2.0, 122, 1.2, 9.5, 52);  // East Crypt Wall (Divides Catacombs from Bridge chasm)
+        this.createWall(-20, -2.0, 148, 27, 9.5, 1.2);   // South Sanctum Wall
+        this.createWall(-29, -2.0, 96, 9, 9.5, 1.2);     // North Left Wall
+        this.createWall(-11, -2.0, 96, 9, 9.5, 1.2);     // North Right Wall
+
+        // Massive Skeletal Ossuary Pillars supporting the crypt ceiling
+        const cryptPillarCoords = [
+            [-27, 106], [-13, 106],
+            [-27, 118], [-13, 118],
+            [-27, 130], [-13, 130],
+            [-27, 142], [-13, 142]
+        ];
+        cryptPillarCoords.forEach(([px, pz]) => {
+            const pillar = new THREE.Mesh(new THREE.BoxGeometry(2.2, 8.5, 2.2), this.wallMat);
+            pillar.position.set(px, -2.0, pz);
+            pillar.castShadow = true;
+            pillar.receiveShadow = true;
+            this.scene.add(pillar);
+            this.colliders.push(new THREE.Box3().setFromObject(pillar));
+
+            // Ghostfire Brazier hanging on pillar
+            this.createTealBrazier(px > -20 ? px - 1.2 : px + 1.2, -3.5, pz);
+        });
+
+        // Ancient Carved Stone Sarcophagi lining the tomb
+        [102, 114, 126, 138].forEach((sz, idx) => {
+            const sarcX = (idx % 2 === 0) ? -31.8 : -8.2;
+            const sarc = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.1, 3.4), this.stoneMat);
+            sarc.position.set(sarcX, -5.4, sz);
+            sarc.castShadow = true;
+            sarc.receiveShadow = true;
+            this.scene.add(sarc);
+            this.colliders.push(new THREE.Box3().setFromObject(sarc));
+
+            const skullPile = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35, 1), this.stoneMat);
+            skullPile.position.set(sarcX, -4.6, sz);
+            this.scene.add(skullPile);
+        });
+
+        // Giant Throne of Bones & Gravelord Sarcophagus at the far end (z=145)
+        const boneThrone = new THREE.Mesh(new THREE.BoxGeometry(6.0, 3.0, 2.4), this.stoneMat);
+        boneThrone.position.set(-20, -4.5, 146);
+        boneThrone.castShadow = true;
+        this.scene.add(boneThrone);
+        this.colliders.push(new THREE.Box3().setFromObject(boneThrone));
+
+        // Emerald Ghostfire Mist & Torch Sconces throughout the Mausoleum
+        [100, 112, 124, 136, 144].forEach((tz) => {
+            this.createTorch(-32.6, -3.2, tz, { color: 0x00ffcc, intensity: 3.2, radius: 22 });
+            this.createTorch(-7.4, -3.2, tz, { color: 0x00ffcc, intensity: 3.2, radius: 22 });
+        });
+
+        // Emerald Fog Gate at Catacombs Mausoleum Entrance (x=-20, y=-6.0, z=96)
+        const catacombFogGroup = new THREE.Group();
+        const cFogGeo = new THREE.PlaneGeometry(8, 7.5, 8, 8);
+        const cFogMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc,
+            transparent: true,
+            opacity: 0.72,
+            side: THREE.DoubleSide
+        });
+        const cFogMesh = new THREE.Mesh(cFogGeo, cFogMat);
+        cFogMesh.position.set(0, 3.2, 0);
+        catacombFogGroup.add(cFogMesh);
+        catacombFogGroup.position.set(-20, -6.0, 96);
+        this.scene.add(catacombFogGroup);
+        this.catacombFogMesh = cFogMesh;
+
+        // Register Catacombs Fog Gate interaction
+        this.interactables.push({
+            type: 'catacomb_fog_gate',
+            position: new THREE.Vector3(-20, -5.0, 94.5),
+            radius: 3.6,
+            prompt: '[ E ] ENTER SANCTUM OF THE DEAD (GRAVELORD NITO)'
+        });
 
         // ----------------------------------------------------
         // DRAMATIC ILLUMINATED PATH BEACONS ("ADD LIGHTS MAKE IT SEEN")
@@ -2099,6 +2216,9 @@ class DarkSoulsWorld {
         // 3. Fog Gate ripple
         if (this.fogGateMesh && !this.fogTraversed) {
             this.fogGateMesh.material.opacity = 0.65 + Math.sin(time * 3) * 0.15;
+        }
+        if (this.catacombFogMesh) {
+            this.catacombFogMesh.material.opacity = 0.60 + Math.sin(time * 3.5) * 0.18;
         }
 
         // 4. Floating embers update

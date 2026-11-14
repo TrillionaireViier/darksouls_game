@@ -1407,7 +1407,7 @@
     <header id="top-header">
         <div class="header-title-group">
             <h1 class="header-title">DARK SOULS</h1>
-            <p class="header-sub">Lordran &bull; 5 Lords</p>
+            <p class="header-sub">Lordran &bull; 6 Lords</p>
         </div>
 
         <div class="header-actions">
@@ -1415,7 +1415,9 @@
             <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
                 <span>📦</span> <span class="btn-label-text">DOWNLOAD</span>
             </button>
+            <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
             <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
+            <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
             <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
             <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
             <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 <span class="btn-label-text">SHOP</span></button>
@@ -1617,6 +1619,7 @@
                     <button class="btn-upgrade" onclick="chooseBoss('taurus')">👹 TAURUS</button>
                     <button class="btn-upgrade" onclick="chooseBoss('gargoyle')">🗿 GARGOYLE</button>
                     <button class="btn-upgrade" onclick="chooseBoss('capra')">🐐 CAPRA</button>
+                    <button class="btn-upgrade" onclick="chooseBoss('nito')">💀 NITO</button>
                     <button class="btn-upgrade" onclick="chooseBoss('sif')">🐺 SIF</button>
                     <button class="btn-upgrade" onclick="chooseBoss('gwyn')">☀️ GWYN</button>
                 </div>
@@ -1674,7 +1677,20 @@
                     <button class="btn-fight-boss" onclick="chooseBoss('capra')">CHALLENGE</button>
                 </div>
 
-                <!-- Boss 4: Great Grey Wolf Sif -->
+                <!-- Boss 4: Gravelord Nito -->
+                <div class="boss-card" data-boss-id="nito">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💀</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">GRAVELORD NITO</div>
+                            <div class="boss-card-desc">Catacombs Mausoleum &bull; Gravelord Greatsword, Skeletal Cloak & Miasma Nova</div>
+                            <div class="boss-card-stats">HP: 3,500 &bull; REWARD: 15,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('nito')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 5: Great Grey Wolf Sif -->
                 <div class="boss-card" data-boss-id="sif">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">🐺</div>
@@ -1687,7 +1703,7 @@
                     <button class="btn-fight-boss" onclick="chooseBoss('sif')">CHALLENGE</button>
                 </div>
 
-                <!-- Boss 5: Gwyn, Lord of Cinder -->
+                <!-- Boss 6: Gwyn, Lord of Cinder -->
                 <div class="boss-card" data-boss-id="gwyn">
                     <div class="boss-card-info">
                         <div class="boss-card-icon">☀️</div>
@@ -1960,6 +1976,213 @@
             </div>
 
             <button class="btn-modal-close" onclick="closeWeaponArsenalModal()">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- 3D COSTUMES & SKINS MODAL -->
+    <div id="skins-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 680px;">
+            <div class="modal-header">🛡️ 3D COSTUMES & ARMOR SETS</div>
+            <p style="font-size: 0.9rem; color: #b8a896; line-height: 1.5; text-align: center;">
+                Select any authentic 3D armor set to hot-swap your model. Each costume includes specialized poise, movement speed, stamina regeneration, and defense perks!
+            </p>
+
+            <div class="boss-cards-grid" style="max-height: 54vh;">
+                <!-- 1. Northern Warrior -->
+                <div class="boss-card skin-card" data-skin-id="warrior">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚔️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">NORTHERN WARRIOR</div>
+                            <div class="boss-card-desc">Standard Astora expedition gear &bull; Hardened steel plate, leather straps & chainmail</div>
+                            <div class="boss-card-stats">PERK: Balanced &bull; Standard Speed &bull; Standard Stamina &bull; 1.00x DEF</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-skin" onclick="chooseSkin('warrior')">EQUIP</button>
+                </div>
+
+                <!-- 2. Elite Knight of Astora -->
+                <div class="boss-card skin-card" data-skin-id="elite_knight">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🛡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ELITE KNIGHT OF ASTORA</div>
+                            <div class="boss-card-desc">Finest steel cuirass, royal Astora blue heraldic tabard & reinforced spaulders</div>
+                            <div class="boss-card-stats">PERK: +18% Defense &bull; +20 Poise &bull; 0.94x Move Speed</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-skin" onclick="chooseSkin('elite_knight')">EQUIP</button>
+                </div>
+
+                <!-- 3. Black Knight -->
+                <div class="boss-card skin-card" data-skin-id="black_knight">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">BLACK KNIGHT (CHARRED)</div>
+                            <div class="boss-card-desc">Burnt Lordran obsidian armor scorched by Chaos flame &bull; Great horned helm & ember glow</div>
+                            <div class="boss-card-stats">PERK: +35% Defense &bull; +15% Heavy Damage &bull; -12% Move Speed</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-skin" onclick="chooseSkin('black_knight')">EQUIP</button>
+                </div>
+
+                <!-- 4. Eastern Shinobi -->
+                <div class="boss-card skin-card" data-skin-id="shinobi">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🥷</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">EASTERN SHINOBI</div>
+                            <div class="boss-card-desc">Lightweight dark silk garb, wrapped face cowl & tied rope belt &bull; Swift as shadows</div>
+                            <div class="boss-card-stats">PERK: +22% Move Speed &bull; -25% Stamina Cost &bull; -15% Defense</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-skin" onclick="chooseSkin('shinobi')">EQUIP</button>
+                </div>
+
+                <!-- 5. Knight Solaire of Astora -->
+                <div class="boss-card skin-card" data-skin-id="solaire">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">☀️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">KNIGHT SOLAIRE OF ASTORA</div>
+                            <div class="boss-card-desc">Praise the Sun! White cloth tunic hand-painted with radiant Holy Sun & red knightly plume</div>
+                            <div class="boss-card-stats">PERK: +30% Stamina Regen &bull; +10% Estus Heal &bull; +8% Defense</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-skin" onclick="chooseSkin('solaire')">EQUIP</button>
+                </div>
+
+                <!-- 6. Siegmeyer of Catarina (Onion Knight) -->
+                <div class="boss-card skin-card" data-skin-id="onion_knight">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🧅</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">CATARINA ONION KNIGHT</div>
+                            <div class="boss-card-desc">Distinctive bulbous onion armor forged to deflect blows harmlessly & Catarina brass rim</div>
+                            <div class="boss-card-stats">PERK: +40% Poise / Stagger Resistance &bull; +25% Defense &bull; -10% Speed</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-skin" onclick="chooseSkin('onion_knight')">EQUIP</button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeSkinsModal()">RETURN TO BATTLE</button>
+        </div>
+    </div>
+
+    <!-- 👑 ADMIN TESTING & DEV CONTROL SUITE (PERMANENT) -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 720px; border-color: #ffd700; box-shadow: 0 0 35px rgba(255, 215, 0, 0.35);">
+            <div class="modal-header" style="color: #ffd700; text-shadow: 0 0 14px rgba(255, 215, 0, 0.7);">
+                👑 ADMIN TESTING & DEV SUITE
+            </div>
+            <p style="font-size: 0.88rem; color: #b8a896; text-align: center; margin-bottom: 12px; line-height: 1.5;">
+                Instant testing sandbox for all lords, 3D armor sets, weapons, teleports, and invulnerability. Changes are permanently persisted!
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 14px; max-height: 56vh; overflow-y: auto; padding-right: 4px;">
+                <!-- 1. BOSS PROGRESSION & ROSTER -->
+                <div style="background: rgba(30, 22, 10, 0.85); border: 1px solid #c49a45; padding: 12px; border-radius: 4px;">
+                    <div style="font-size: 0.82rem; font-weight: 700; color: #ffd778; letter-spacing: 1.5px; margin-bottom: 8px;">
+                        ⚔️ 1. BOSS PROGRESSION OVERRIDE:
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                        <button id="btn-admin-unlock-bosses" class="btn-fight-boss" onclick="triggerAdminUnlockBosses()" style="border-color: #ffd700; color: #fff3a8; flex: 1; padding: 10px 14px;">
+                            ⚡ UNLOCK ALL 6 BOSSES (PERMANENT)
+                        </button>
+                        <button class="btn-fight-boss" onclick="triggerAdminLockBosses()" style="border-color: #aa4444; color: #ff9999; flex: 1; padding: 10px 14px; background: rgba(50, 15, 15, 0.6);">
+                            🔒 RESET TO CAMPAIGN LOCKS
+                        </button>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 6px;">DIRECT SUMMON LORD & WARP:</div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;">
+                        <button class="btn-upgrade" onclick="triggerAdminSummonBoss('taurus')">👹 TAURUS</button>
+                        <button class="btn-upgrade" onclick="triggerAdminSummonBoss('gargoyle')">🗿 GARGOYLE</button>
+                        <button class="btn-upgrade" onclick="triggerAdminSummonBoss('capra')">🐐 CAPRA</button>
+                        <button class="btn-upgrade" onclick="triggerAdminSummonBoss('nito')" style="border-color: #00ffaa; color: #77ffcc;">💀 NITO (CATACOMBS)</button>
+                        <button class="btn-upgrade" onclick="triggerAdminSummonBoss('sif')">🐺 SIF</button>
+                        <button class="btn-upgrade" onclick="triggerAdminSummonBoss('gwyn')" style="border-color: #ffaa33; color: #ffd276;">☀️ GWYN</button>
+                    </div>
+                </div>
+
+                <!-- 2. 3D COSTUMES / SKINS -->
+                <div style="background: rgba(14, 24, 34, 0.85); border: 1px solid #4a75a0; padding: 12px; border-radius: 4px;">
+                    <div style="font-size: 0.82rem; font-weight: 700; color: #90caf9; letter-spacing: 1.5px; margin-bottom: 8px;">
+                        🛡️ 2. HOT-SWAP 3D COSTUMES & SKINS:
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;">
+                        <button class="btn-upgrade" onclick="chooseSkin('warrior')">⚔️ WARRIOR</button>
+                        <button class="btn-upgrade" onclick="chooseSkin('elite_knight')" style="border-color: #64b5f6; color: #bbdefb;">🛡️ ELITE KNIGHT</button>
+                        <button class="btn-upgrade" onclick="chooseSkin('black_knight')" style="border-color: #ff5533; color: #ffaa88;">🔥 BLACK KNIGHT</button>
+                        <button class="btn-upgrade" onclick="chooseSkin('shinobi')" style="border-color: #9c27b0; color: #ce93d8;">🥷 SHINOBI</button>
+                        <button class="btn-upgrade" onclick="chooseSkin('solaire')" style="border-color: #ffd700; color: #fff3a8;">☀️ SOLAIRE</button>
+                        <button class="btn-upgrade" onclick="chooseSkin('onion_knight')" style="border-color: #ffb74d; color: #ffe0b2;">🧅 ONION KNIGHT</button>
+                    </div>
+                </div>
+
+                <!-- 3. WEAPONS ARSENAL UNLOCK -->
+                <div style="background: rgba(30, 20, 16, 0.85); border: 1px solid #d4af37; padding: 12px; border-radius: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size: 0.82rem; font-weight: 700; color: #ffd778; letter-spacing: 1.5px;">🗡️ 3. WEAPON ARSENAL:</span>
+                        <button class="btn-upgrade" onclick="triggerAdminUnlockWeapons()" style="border-color: #ffd700; color: #fff3a8; padding: 4px 10px; font-size: 0.72rem;">
+                            ⚔️ UNLOCK ALL 7 WEAPONS
+                        </button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('sword')">⚔️ SWORD</button>
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('zweihander')">🗡️ ZWEIHANDER</button>
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('uchigatana')">🎌 UCHIGATANA</button>
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('halberd')">🔱 HALBERD</button>
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('dragontooth')">🦴 DRAGON TOOTH</button>
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('moonlight')">✨ MOONLIGHT</button>
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('torch')">🔥 TORCH</button>
+                        <button class="btn-upgrade" onclick="toggleTorch()">💡 TOGGLE TORCH</button>
+                    </div>
+                </div>
+
+                <!-- 4. GOD MODE & RESOURCES -->
+                <div style="background: rgba(20, 28, 18, 0.85); border: 1px solid #4caf50; padding: 12px; border-radius: 4px;">
+                    <div style="font-size: 0.82rem; font-weight: 700; color: #a5d6a7; letter-spacing: 1.5px; margin-bottom: 8px;">
+                        ⚡ 4. GOD MODE, SOULS & RESOURCES:
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button id="btn-admin-godmode" class="btn-fight-boss" onclick="triggerAdminGodMode()" style="padding: 10px 8px; justify-content: center; font-weight: 700;">
+                            🛡️ GOD MODE: OFF
+                        </button>
+                        <button class="btn-fight-boss" onclick="triggerAdminGrantSouls()" style="border-color: #ffd700; color: #fff3a8; padding: 10px 8px; justify-content: center; background: rgba(50, 40, 10, 0.6);">
+                            💰 +100,000 SOULS & 10 ESTUS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. INSTANT TELEPORTER -->
+                <div style="background: rgba(18, 20, 30, 0.85); border: 1px solid #7986cb; padding: 12px; border-radius: 4px;">
+                    <div style="font-size: 0.82rem; font-weight: 700; color: #c5cae9; letter-spacing: 1.5px; margin-bottom: 8px;">
+                        🌀 5. INSTANT TELEPORTER (WARP LOCATIONS):
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;">
+                        <button class="btn-upgrade" onclick="triggerAdminWarp('nito')" style="border-color: #00ffaa; color: #77ffcc;">💀 CATACOMBS (NITO)</button>
+                        <button class="btn-upgrade" onclick="triggerAdminWarp('arena')">👹 ARENA (BRIDGE)</button>
+                        <button class="btn-upgrade" onclick="triggerAdminWarp('bonfire')">🔥 FIRELINK BONFIRE</button>
+                        <button class="btn-upgrade" onclick="triggerAdminWarp('crypt')">🌊 FLOODED CRYPT</button>
+                        <button class="btn-upgrade" onclick="triggerAdminWarp('ramparts')">🏹 HIGH RAMPARTS (+6M)</button>
+                        <button class="btn-upgrade" onclick="toggleBrightness()">☀️ SUN / EXPOSURE</button>
+                    </div>
+                </div>
+
+                <!-- 6. PERMANENT STORAGE -->
+                <div style="background: rgba(24, 20, 16, 0.85); border: 1px solid #5a422a; padding: 10px 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.78rem; color: #d6c6b2;">💾 PERMANENT LOCALSTORAGE:</span>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn-upgrade" onclick="manualSaveGame()" style="padding: 4px 10px; font-size: 0.72rem;">💾 SAVE</button>
+                        <button class="btn-upgrade btn-load-save" onclick="manualLoadGame()" style="padding: 4px 10px; font-size: 0.72rem;">📂 LOAD</button>
+                        <button class="btn-upgrade" onclick="manualDeleteSave()" style="padding: 4px 10px; font-size: 0.72rem; border-color: #ff6666; color: #ff9999;">🗑️ CLEAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeAdminModal()" style="margin-top: 14px;">RETURN TO GAME</button>
         </div>
     </div>
 
@@ -2328,8 +2551,10 @@
                 Direct access to all tactical systems, game saves, weapon arsenal and settings.
             </p>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px;">
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 8px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDownloadModal();" style="border-color: #a87932; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">📦 DOWNLOAD</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">⚔️ BOSS ROSTER</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSkinsModal();" style="border-color: #64b5f6; color: #bbdefb; justify-content: center; padding: 10px 8px; font-weight: 700;">🛡️ 3D SKINS</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 8px; font-weight: 700;">🗡️ WEAPONS</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openMerchantModal();" style="border-color: #ff9933; color: #ffb866; justify-content: center; padding: 10px 8px; font-weight: 700;">🛒 MERCHANT</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSiegeModal();" style="border-color: #e65100; color: #ffb74d; justify-content: center; padding: 10px 8px; font-weight: 700;">🏰 SIEGE (391-400)</button>
@@ -2423,6 +2648,57 @@
 
         function closeWeaponArsenalModal() {
             if (window.game) window.game.closeWeaponArsenalModal();
+        }
+
+        function openSkinsModal() {
+            if (window.game) window.game.openSkinsModal();
+        }
+
+        function closeSkinsModal() {
+            if (window.game) window.game.closeSkinsModal();
+        }
+
+        function chooseSkin(skinId) {
+            if (window.game) window.game.selectSkin(skinId);
+        }
+
+        // ==========================================
+        // ADMIN & DEV SUITE (PERMANENT)
+        // ==========================================
+        function openAdminModal() {
+            if (window.game) window.game.openAdminModal();
+        }
+
+        function closeAdminModal() {
+            if (window.game) window.game.closeAdminModal();
+        }
+
+        function triggerAdminUnlockBosses() {
+            if (window.game) window.game.adminUnlockAllBosses();
+        }
+
+        function triggerAdminLockBosses() {
+            if (window.game) window.game.adminLockBosses();
+        }
+
+        function triggerAdminUnlockWeapons() {
+            if (window.game) window.game.adminUnlockAllWeapons();
+        }
+
+        function triggerAdminGrantSouls() {
+            if (window.game) window.game.adminGrantSoulsAndEstus(100000);
+        }
+
+        function triggerAdminGodMode() {
+            if (window.game) window.game.adminToggleGodMode();
+        }
+
+        function triggerAdminWarp(dest) {
+            if (window.game) window.game.adminWarp(dest);
+        }
+
+        function triggerAdminSummonBoss(bossId) {
+            if (window.game) window.game.adminSummonBoss(bossId);
         }
 
         // ==========================================
@@ -2782,15 +3058,15 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/audio.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/world.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/character.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/siege_warfare.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/heraldry_nobility.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/apothecary_crafting.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/combat.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/postprocessing.js?v=20261114_v10_AAA_REMASTER"></script>
-    <script src="js/game.js?v=20261114_v10_AAA_REMASTER"></script>
+    <script src="js/three.min.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/audio.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/world.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/character.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/siege_warfare.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/heraldry_nobility.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/apothecary_crafting.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/combat.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/postprocessing.js?v=20261114_v12_ADMIN_PERMANENT"></script>
+    <script src="js/game.js?v=20261114_v12_ADMIN_PERMANENT"></script>
 </body>
 </html>
