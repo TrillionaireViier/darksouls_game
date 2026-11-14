@@ -727,6 +727,38 @@ class DarkSoulsWorld {
             }
         }
 
+        // Solid masonry side balustrades along East Stairs (prevents falling and floating look)
+        const handrailGeo = new THREE.BoxGeometry(0.45, 1.2, 19.2);
+        const handrailL = new THREE.Mesh(handrailGeo, this.stoneMat);
+        handrailL.position.set(15.75, 3.6, 13.5);
+        handrailL.rotation.x = Math.atan2(6.0, 18.0);
+        handrailL.castShadow = true;
+        handrailL.receiveShadow = true;
+        this.scene.add(handrailL);
+
+        const handrailR = new THREE.Mesh(handrailGeo, this.stoneMat);
+        handrailR.position.set(24.25, 3.6, 13.5);
+        handrailR.rotation.x = Math.atan2(6.0, 18.0);
+        handrailR.castShadow = true;
+        handrailR.receiveShadow = true;
+        this.scene.add(handrailR);
+
+        // Solid stair side skirt filling under steps
+        const skirtGeo = new THREE.BoxGeometry(0.3, 3.5, 18.5);
+        const skirtL = new THREE.Mesh(skirtGeo, this.wallMat);
+        skirtL.position.set(15.8, 1.6, 13.5);
+        skirtL.rotation.x = Math.atan2(6.0, 18.0);
+        this.scene.add(skirtL);
+
+        this.colliders.push(new THREE.Box3().setFromCenterAndSize(
+            new THREE.Vector3(15.75, 3.5, 13.5),
+            new THREE.Vector3(0.6, 5.0, 19.0)
+        ));
+        this.colliders.push(new THREE.Box3().setFromCenterAndSize(
+            new THREE.Vector3(24.25, 3.5, 13.5),
+            new THREE.Vector3(0.6, 5.0, 19.0)
+        ));
+
         // Upper Ramparts Walkway Elevated Floor Slab (z=22 to z=91 at y=5.5)
         const rampartFloorGeo = new THREE.BoxGeometry(9, 1.0, 69);
         const rampartFloor = new THREE.Mesh(rampartFloorGeo, this.stoneMat);
@@ -841,6 +873,16 @@ class DarkSoulsWorld {
         archTop.position.set(-20, 7.5, 4);
         this.scene.add(archTop);
 
+        // Side retaining walls enclosing the sunken stairs (z=4 to z=22)
+        this.createWall(-24.6, 0.5, 13, 0.8, 6.0, 18);
+        this.createWall(-15.4, 0.5, 13, 0.8, 6.0, 18);
+
+        // Overhead sloped tunnel ceiling above sunken stairs
+        const tunnelCeil = new THREE.Mesh(new THREE.BoxGeometry(10.0, 0.8, 18.5), this.stoneMat);
+        tunnelCeil.position.set(-20, 3.8, 13);
+        tunnelCeil.rotation.x = -Math.atan2(5.0, 18.0);
+        this.scene.add(tunnelCeil);
+
         // Flooded Crypt Corridor Floor Slab (y=-5.5, z=22 to z=90)
         const cryptFloorGeo = new THREE.BoxGeometry(9, 1.0, 68);
         const cryptFloor = new THREE.Mesh(cryptFloorGeo, this.stoneMat);
@@ -866,6 +908,13 @@ class DarkSoulsWorld {
         // Crypt Side Fortress Walls
         this.createWall(-24.6, -2.0, 56, 1.2, 6.5, 68); // West Crypt Wall
         this.createWall(-15.4, -2.0, 56, 1.2, 6.5, 68); // East Crypt Wall
+
+        // Flooded Crypt Corridor Vaulted Stone Ceiling (y=1.5, z=22 to z=90)
+        const cryptCeilGeo = new THREE.BoxGeometry(9.6, 0.8, 68);
+        const cryptCeil = new THREE.Mesh(cryptCeilGeo, this.stoneMat);
+        cryptCeil.position.set(-20, 1.5, 56);
+        cryptCeil.receiveShadow = true;
+        this.scene.add(cryptCeil);
 
         // Overhead Vaulted Stone Arches along the Crypt
         [32, 44, 56, 68, 80].forEach((az) => {
@@ -1032,7 +1081,82 @@ class DarkSoulsWorld {
         }
         distantGroup.add(viaductGroup);
 
-        // 4. Volumetric Golden Sunrays / Godrays
+        // 4. Colossal Lordran Chasm Floor & Citadel Bedrock Foundations
+        const chasmMat = new THREE.MeshStandardMaterial({
+            color: 0x14181a, // Dark wet mountain bedrock
+            roughness: 0.95,
+            metalness: 0.08,
+            flatShading: true
+        });
+
+        // Vast valley chasm floor beneath the citadel (eliminates all empty sky gaps)
+        const chasmFloorGeo = new THREE.PlaneGeometry(400, 400, 12, 12);
+        const cPos = chasmFloorGeo.attributes.position;
+        for (let i = 0; i < cPos.count; i++) {
+            const vx = cPos.getX(i);
+            const vy = cPos.getY(i);
+            const bump = Math.sin(vx * 0.04) * Math.cos(vy * 0.04) * 4.2;
+            cPos.setZ(i, bump);
+        }
+        chasmFloorGeo.computeVertexNormals();
+        const chasmFloor = new THREE.Mesh(chasmFloorGeo, chasmMat);
+        chasmFloor.rotation.x = -Math.PI / 2;
+        chasmFloor.position.set(0, -22.0, 60);
+        chasmFloor.receiveShadow = true;
+        distantGroup.add(chasmFloor);
+
+        // Low valley atmospheric fog layer
+        const chasmMistGeo = new THREE.PlaneGeometry(320, 320);
+        const chasmMistMat = new THREE.MeshBasicMaterial({
+            color: 0x223242,
+            transparent: true,
+            opacity: 0.42,
+            depthWrite: false
+        });
+        const chasmMist = new THREE.Mesh(chasmMistGeo, chasmMistMat);
+        chasmMist.rotation.x = -Math.PI / 2;
+        chasmMist.position.set(0, -12.0, 60);
+        distantGroup.add(chasmMist);
+
+        // Colossal foundation cliff under the Starting Courtyard (x=[-30, 30], z=[-30, 30])
+        const courtyardCliff = new THREE.Mesh(new THREE.BoxGeometry(62, 20, 62), this.wallMat);
+        courtyardCliff.position.set(0, -12.0, 0);
+        courtyardCliff.receiveShadow = true;
+        distantGroup.add(courtyardCliff);
+
+        // Massive foundation walls under East Ramparts (x=20, z=[22, 91])
+        const rampartFoundation = new THREE.Mesh(new THREE.BoxGeometry(8.8, 24, 69), this.wallMat);
+        rampartFoundation.position.set(20, -9.0, 56.5);
+        rampartFoundation.receiveShadow = true;
+        distantGroup.add(rampartFoundation);
+
+        // Massive foundation walls under West Catacombs (x=-20, z=[22, 90])
+        const cryptFoundation = new THREE.Mesh(new THREE.BoxGeometry(8.8, 16, 67), this.wallMat);
+        cryptFoundation.position.set(-20, -15.0, 56);
+        cryptFoundation.receiveShadow = true;
+        distantGroup.add(cryptFoundation);
+
+        // Colossal stone bridge piers & buttresses beneath the Royal Bridge (x=0, z=[28, 96])
+        for (let bz = 36; bz <= 88; bz += 26) {
+            const bridgePier = new THREE.Mesh(new THREE.BoxGeometry(10, 22, 10), this.wallMat);
+            bridgePier.position.set(0, -11.0, bz);
+            bridgePier.receiveShadow = true;
+            distantGroup.add(bridgePier);
+
+            // Flying buttress arch connecting bridge to East Ramparts
+            const buttressE = new THREE.Mesh(new THREE.BoxGeometry(7, 3.5, 4), this.wallMat);
+            buttressE.position.set(11, -3.5, bz);
+            buttressE.rotation.z = -0.22;
+            distantGroup.add(buttressE);
+
+            // Flying buttress arch connecting bridge to West Catacombs
+            const buttressW = new THREE.Mesh(new THREE.BoxGeometry(7, 3.5, 4), this.wallMat);
+            buttressW.position.set(-11, -3.5, bz);
+            buttressW.rotation.z = 0.22;
+            distantGroup.add(buttressW);
+        }
+
+        // 5. Volumetric Golden Sunrays / Godrays
         const godrayMat = new THREE.MeshBasicMaterial({
             color: 0xffeed4,
             transparent: true,
@@ -1157,12 +1281,11 @@ class DarkSoulsWorld {
         pedestal.receiveShadow = true;
         beaconGroup.add(pedestal);
 
-        // 3. Overhead Illuminated Sign Banner
-        const sign = this.createPathSign(0, 4.8, 0, title, desc, titleColor, '#' + colorHex.toString(16).padStart(6, '0'));
-        beaconGroup.add(sign);
-
         beaconGroup.position.set(x, y, z);
         this.scene.add(beaconGroup);
+
+        // 3. Authentic Floor Soapstone Guidance Rune lying flat on cobblestone
+        this.createFloorSoapstone(x, y, z + 2.5, titleColor || ('#' + colorHex.toString(16).padStart(6, '0')), title, desc);
 
         this.particles.push({
             mesh: flameCore,
@@ -1170,57 +1293,59 @@ class DarkSoulsWorld {
         });
     }
 
-    createPathSign(x, y, z, title, desc, titleColor, glowColor) {
+    createFloorSoapstone(x, y, z, colorHex, title, desc) {
         const canvas = document.createElement('canvas');
         canvas.width = 512;
-        canvas.height = 256;
+        canvas.height = 140;
         const ctx = canvas.getContext('2d');
 
-        // Dark gothic slate background
-        ctx.fillStyle = '#0a0908';
-        ctx.fillRect(0, 0, 512, 256);
+        // Dark gothic rune slate backing
+        ctx.fillStyle = 'rgba(8, 7, 6, 0.78)';
+        ctx.fillRect(0, 0, 512, 140);
 
-        // Ornate border
-        ctx.strokeStyle = glowColor || '#c49a45';
-        ctx.lineWidth = 6;
-        ctx.strokeRect(8, 8, 496, 240);
+        // Ornate rune borders
+        ctx.strokeStyle = colorHex;
+        ctx.lineWidth = 4;
+        ctx.strokeRect(6, 6, 500, 128);
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(16, 16, 480, 224);
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(12, 12, 488, 116);
 
         // Corner studs
-        const corners = [[16, 16], [496, 16], [16, 240], [496, 240]];
-        corners.forEach(([cx, cy]) => {
-            ctx.fillStyle = glowColor || '#c49a45';
+        [[12, 12], [500, 12], [12, 128], [500, 128]].forEach(([cx, cy]) => {
+            ctx.fillStyle = colorHex;
             ctx.beginPath();
-            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+            ctx.arc(cx, cy, 4, 0, Math.PI * 2);
             ctx.fill();
         });
 
-        // Title text
-        ctx.font = 'bold 36px "Cinzel", serif, Times, sans-serif';
-        ctx.fillStyle = titleColor || '#ffd700';
+        // Title
+        ctx.font = 'bold 30px "Cinzel", serif, Times, sans-serif';
+        ctx.fillStyle = colorHex;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.shadowColor = glowColor || '#ffd700';
-        ctx.shadowBlur = 14;
-        ctx.fillText(title, 256, 95);
+        ctx.shadowColor = colorHex;
+        ctx.shadowBlur = 10;
+        ctx.fillText(title, 256, 48);
 
-        // Subtitle / Description
-        ctx.font = '22px "EB Garamond", serif, Georgia, sans-serif';
-        ctx.fillStyle = '#d0c6b8';
+        // Subtitle
+        ctx.font = '19px "EB Garamond", serif, Georgia, sans-serif';
+        ctx.fillStyle = '#ded8cc';
         ctx.shadowBlur = 4;
-        ctx.fillText(desc, 256, 160);
+        ctx.fillText(desc || '', 256, 96);
 
         const tex = new THREE.CanvasTexture(canvas);
         const mat = new THREE.MeshBasicMaterial({
             map: tex,
             transparent: true,
-            opacity: 0.96,
-            side: THREE.DoubleSide
+            opacity: 0.92,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
         });
-        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 3.2), mat);
-        mesh.position.set(x, y, z);
+        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.0), mat);
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.set(x, y + 0.03, z);
+        this.scene.add(mesh);
         return mesh;
     }
 
