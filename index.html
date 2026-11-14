@@ -121,7 +121,7 @@
             align-items: center;
             flex-wrap: nowrap;
             overflow-x: auto;
-            max-width: calc(100vw - 260px);
+            max-width: calc(100vw - 240px);
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
             pointer-events: auto;
@@ -130,6 +130,14 @@
 
         .header-actions::-webkit-scrollbar {
             display: none;
+        }
+
+        .header-desktop-only {
+            display: inline-flex;
+        }
+
+        .header-mobile-menu-btn {
+            display: none !important;
         }
 
         /* DOWNLOAD BUTTON (Prominent Dark Souls Styling) */
@@ -214,6 +222,14 @@
             justify-content: center;
         }
 
+        .route-full-name { display: inline; }
+        .route-short-name { display: none; }
+
+        @media (max-width: 1199px) {
+            .route-full-name { display: none; }
+            .route-short-name { display: inline; }
+        }
+
         /* TOP-LEFT PLAYER HUD */
         #player-hud {
             position: absolute;
@@ -260,14 +276,17 @@
         }
 
         .bar-label {
-            font-size: 0.65rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.68rem;
             letter-spacing: 1.5px;
-            color: #9c8a7d;
+            color: #ffd276;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
             font-weight: 700;
             display: flex;
             justify-content: space-between;
             width: 280px;
             padding: 0 2px;
+            margin-bottom: 2px;
         }
 
         /* D-Pad Equipment Box (Dark Souls Layout) */
@@ -882,23 +901,24 @@
             transition: transform 0.05s ease-out;
         }
 
-        /* Touch Action Buttons */
+        /* Touch Action Buttons: Ergonomic 3-Column, 4-Row Dark Souls Cluster */
         #touch-buttons-cluster {
             position: absolute;
             bottom: 25px;
             right: 20px;
             display: grid;
             grid-template-columns: repeat(3, 56px);
-            grid-template-rows: repeat(3, 56px);
-            gap: 9px;
+            grid-template-rows: repeat(4, 56px);
+            gap: 8px;
             pointer-events: none;
             touch-action: none;
+            z-index: 100;
         }
 
         .touch-action-btn {
             width: 56px;
             height: 56px;
-            background: rgba(18, 14, 12, 0.82);
+            background: rgba(18, 14, 12, 0.88);
             border: 1.5px solid rgba(196, 154, 69, 0.6);
             border-radius: 50%;
             color: #ffd276;
@@ -914,7 +934,7 @@
             user-select: none;
             -webkit-user-select: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), inset 0 0 8px rgba(196, 154, 69, 0.2);
-            transition: transform 0.08s ease, background 0.08s ease;
+            transition: transform 0.08s ease, background 0.08s ease, border-color 0.1s ease;
         }
 
         .touch-action-btn:active {
@@ -922,16 +942,30 @@
             transform: scale(0.92);
         }
 
-        /* Button grid mapping */
+        .touch-label {
+            font-size: 0.52rem;
+            letter-spacing: 0.5px;
+            margin-top: 1px;
+        }
+
+        /* Button grid mapping: 3 columns, 4 rows */
+        /* Row 1: Auxiliary / Utility */
         #touch-btn-lockon   { grid-column: 1; grid-row: 1; border-color: rgba(120, 160, 220, 0.7); color: #aadcff; }
-        #touch-btn-heavy    { grid-column: 2; grid-row: 1; border-color: rgba(220, 100, 60, 0.7); color: #ffb088; }
-        #touch-btn-interact { grid-column: 3; grid-row: 1; border-color: rgba(255, 140, 40, 0.7); color: #ffd080; }
-        #touch-btn-block    { grid-column: 1; grid-row: 2; }
-        #touch-btn-attack   { grid-column: 2; grid-row: 2; width: 64px; height: 64px; margin: -4px; border-color: #ffd276; background: linear-gradient(135deg, rgba(70, 45, 18, 0.9), rgba(35, 20, 8, 0.9)); font-size: 0.78rem; box-shadow: 0 0 16px rgba(255, 210, 118, 0.55); }
-        #touch-btn-parry    { grid-column: 3; grid-row: 2; border-color: rgba(200, 180, 70, 0.7); }
-        #touch-btn-estus    { grid-column: 1; grid-row: 3; border-color: rgba(80, 200, 100, 0.7); color: #9effb8; }
-        #touch-btn-roll     { grid-column: 2; grid-row: 3; border-color: rgba(100, 180, 255, 0.85); color: #c2e2ff; background: rgba(16, 26, 42, 0.85); }
-        #touch-btn-weapon   { grid-column: 3; grid-row: 3; border-color: rgba(255, 215, 120, 0.75); color: #ffd778; }
+        #touch-btn-interact { grid-column: 2; grid-row: 1; border-color: rgba(255, 180, 50, 0.8); color: #ffe090; }
+        #touch-btn-torch    { grid-column: 3; grid-row: 1; border-color: rgba(255, 119, 34, 0.85); color: #ffaa55; background: rgba(36, 18, 8, 0.9); }
+
+        /* Row 2: Defensive & Heavy Stance */
+        #touch-btn-block    { grid-column: 1; grid-row: 2; border-color: rgba(180, 180, 200, 0.7); color: #e0e0f0; }
+        #touch-btn-heavy    { grid-column: 2; grid-row: 2; border-color: rgba(230, 90, 50, 0.8); color: #ffad88; }
+        #touch-btn-parry    { grid-column: 3; grid-row: 2; border-color: rgba(215, 185, 75, 0.8); color: #ffe685; }
+
+        /* Row 3: Primary Core Combat & Reflexes */
+        #touch-btn-estus    { grid-column: 1; grid-row: 3; border-color: rgba(60, 200, 100, 0.8); color: #a5ffbe; }
+        #touch-btn-attack   { grid-column: 2; grid-row: 3; width: 66px; height: 66px; margin: -5px; border-color: #ffd276; background: radial-gradient(circle, rgba(95, 60, 22, 0.95) 0%, rgba(35, 20, 8, 0.95) 100%); font-size: 0.82rem; font-weight: 900; box-shadow: 0 0 18px rgba(255, 210, 118, 0.65); z-index: 2; }
+        #touch-btn-roll     { grid-column: 3; grid-row: 3; border-color: rgba(80, 175, 255, 0.85); color: #c8e5ff; background: rgba(14, 28, 48, 0.88); }
+
+        /* Row 4: Equipment Stance */
+        #touch-btn-weapon   { grid-column: 2; grid-row: 4; border-color: rgba(255, 215, 120, 0.75); color: #ffd778; }
 
         /* =================================================== */
         /* RESPONSIVE DESIGN: TABLET & MOBILE ADAPTIVE ENGINE  */
@@ -951,10 +985,12 @@
             }
 
             #top-header {
-                padding: 10px 18px;
-                padding-top: max(10px, env(safe-area-inset-top));
+                padding: 8px 16px;
+                padding-top: max(8px, env(safe-area-inset-top));
                 flex-wrap: nowrap;
-                gap: 12px;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
             }
 
             .header-title-group {
@@ -962,119 +998,130 @@
             }
 
             .header-title {
-                font-size: 1.15rem;
+                font-size: 1.1rem;
                 letter-spacing: 2px;
             }
 
             .header-sub {
-                font-size: 0.78rem;
-                max-width: 260px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .header-actions {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                scrollbar-width: none;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 4px;
-                padding-right: 12px;
-                gap: 8px;
-            }
-
-            .header-actions::-webkit-scrollbar {
                 display: none;
             }
 
+            .header-actions {
+                max-width: none;
+                flex-wrap: nowrap;
+                overflow: visible;
+                gap: 6px;
+            }
+
+            .header-desktop-only {
+                display: none !important;
+            }
+
+            .header-mobile-menu-btn {
+                display: inline-flex !important;
+                padding: 6px 12px;
+                font-size: 0.74rem;
+            }
+
             .btn-download {
-                padding: 7px 14px;
-                font-size: 0.78rem;
+                padding: 6px 11px;
+                font-size: 0.72rem;
                 white-space: nowrap;
             }
 
             .btn-icon-bar {
-                padding: 7px 11px;
-                font-size: 0.74rem;
+                padding: 6px 9px;
+                font-size: 0.7rem;
                 white-space: nowrap;
             }
 
             #pathfinder-bar {
-                top: 96px;
+                top: 92px;
                 gap: 6px;
-                max-width: 95%;
+                max-width: 85%;
             }
 
             .route-pill {
-                padding: 4px 10px !important;
-                font-size: 0.7rem !important;
+                padding: 4px 9px !important;
+                font-size: 0.66rem !important;
+                letter-spacing: 1px !important;
             }
 
             #player-hud {
-                top: 60px;
-                left: 18px;
-                gap: 8px;
+                top: 56px;
+                left: 16px;
+                gap: 4px;
             }
 
             .bar-frame {
-                width: 210px;
-                height: 13px;
+                width: 185px;
+                height: 12px;
             }
 
             .bar-label {
-                width: 210px;
+                width: 185px;
                 font-size: 0.62rem;
+                margin-bottom: 2px;
             }
 
             .equipment-dpad {
-                grid-template-columns: repeat(3, 38px);
-                grid-template-rows: repeat(3, 38px);
+                grid-template-columns: repeat(3, 34px);
+                grid-template-rows: repeat(3, 34px);
                 gap: 3px;
             }
 
             #souls-hud {
-                top: 60px;
-                right: 18px;
+                top: 56px;
+                right: 16px;
                 bottom: auto;
-                padding: 6px 14px;
-                font-size: 0.88rem;
+                padding: 5px 12px;
+                font-size: 0.82rem;
             }
 
             /* Tablet Ergonomic Touch Zones */
             #touch-joystick-base {
-                bottom: 35px;
-                bottom: max(35px, env(safe-area-inset-bottom));
-                left: 32px;
-                width: 140px;
-                height: 140px;
+                bottom: 28px;
+                bottom: max(28px, env(safe-area-inset-bottom));
+                left: 24px;
+                width: 130px;
+                height: 130px;
             }
 
             #touch-joystick-stick {
-                width: 56px;
-                height: 56px;
+                width: 52px;
+                height: 52px;
             }
 
             #touch-buttons-cluster {
-                bottom: 30px;
-                bottom: max(30px, env(safe-area-inset-bottom));
-                right: 28px;
-                grid-template-columns: repeat(3, 62px);
-                grid-template-rows: repeat(3, 62px);
-                gap: 10px;
+                bottom: 24px;
+                bottom: max(24px, env(safe-area-inset-bottom));
+                right: 22px;
+                right: max(22px, env(safe-area-inset-right));
+                grid-template-columns: repeat(3, 56px);
+                grid-template-rows: repeat(4, 56px);
+                gap: 8px;
             }
 
             .touch-action-btn {
-                width: 62px;
-                height: 62px;
-                font-size: 0.66rem;
+                width: 56px;
+                height: 56px;
+                font-size: 0.62rem;
+            }
+
+            .touch-label {
+                font-size: 0.52rem;
             }
 
             #touch-btn-attack {
-                width: 72px;
-                height: 72px;
+                width: 66px;
+                height: 66px;
                 margin: -5px;
                 font-size: 0.82rem;
+            }
+
+            #touch-btn-weapon {
+                grid-column: 2;
+                grid-row: 4;
             }
 
             .modal-box {
@@ -1097,16 +1144,16 @@
             }
 
             #top-header {
-                padding: 6px 10px;
-                padding-top: max(6px, env(safe-area-inset-top));
+                padding: 5px 8px;
+                padding-top: max(5px, env(safe-area-inset-top));
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
-                gap: 8px;
+                gap: 6px;
             }
 
             .header-title {
-                font-size: 0.92rem;
+                font-size: 0.95rem;
                 letter-spacing: 1.5px;
                 white-space: nowrap;
             }
@@ -1116,58 +1163,64 @@
             }
 
             .header-actions {
+                max-width: none;
                 flex-wrap: nowrap;
-                overflow-x: auto;
-                scrollbar-width: none;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 2px;
-                padding-right: 8px;
-                gap: 6px;
+                overflow: visible;
+                gap: 4px;
             }
 
-            .header-actions::-webkit-scrollbar {
+            .header-desktop-only {
+                display: none !important;
+            }
+
+            .header-mobile-menu-btn {
+                display: inline-flex !important;
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+
+            .btn-label-text {
                 display: none;
             }
 
             .btn-download {
-                padding: 5px 9px;
-                font-size: 0.68rem;
-                white-space: nowrap;
+                padding: 4px 7px;
+                font-size: 0.65rem;
             }
 
             .btn-icon-bar {
-                padding: 5px 8px;
-                font-size: 0.65rem;
-                white-space: nowrap;
+                padding: 4px 6px;
+                font-size: 0.62rem;
             }
 
             #pathfinder-bar {
-                top: 86px;
+                top: 84px;
                 gap: 4px;
-                width: 98%;
+                width: 96%;
                 padding: 0 4px;
             }
 
             .route-pill {
-                padding: 3px 8px !important;
-                font-size: 0.64rem !important;
+                padding: 3px 6px !important;
+                font-size: 0.58rem !important;
                 letter-spacing: 0.5px !important;
             }
 
             #player-hud {
-                top: 46px;
+                top: 48px;
                 left: 8px;
-                gap: 3px;
+                gap: 2px;
             }
 
             .bar-frame {
-                width: 140px;
-                height: 10px;
+                width: 130px;
+                height: 9px;
             }
 
             .bar-label {
-                width: 140px;
-                font-size: 0.6rem;
+                width: 130px;
+                font-size: 0.58rem;
+                margin-bottom: 1px;
             }
 
             .equipment-dpad {
@@ -1175,48 +1228,57 @@
             }
 
             #souls-hud {
-                top: 46px;
+                top: 48px;
                 right: 8px;
                 bottom: auto;
-                padding: 4px 8px;
-                font-size: 0.78rem;
+                padding: 3px 8px;
+                font-size: 0.72rem;
             }
 
             #touch-joystick-base {
-                bottom: 20px;
-                bottom: max(20px, env(safe-area-inset-bottom));
-                left: 14px;
-                left: max(14px, env(safe-area-inset-left));
-                width: 105px;
-                height: 105px;
+                bottom: 16px;
+                bottom: max(16px, env(safe-area-inset-bottom));
+                left: 10px;
+                left: max(10px, env(safe-area-inset-left));
+                width: 100px;
+                height: 100px;
             }
 
             #touch-joystick-stick {
-                width: 42px;
-                height: 42px;
+                width: 40px;
+                height: 40px;
             }
 
             #touch-buttons-cluster {
-                bottom: 18px;
-                bottom: max(18px, env(safe-area-inset-bottom));
-                right: 12px;
-                right: max(12px, env(safe-area-inset-right));
-                grid-template-columns: repeat(3, 49px);
-                grid-template-rows: repeat(3, 49px);
-                gap: 7px;
+                bottom: 14px;
+                bottom: max(14px, env(safe-area-inset-bottom));
+                right: 8px;
+                right: max(8px, env(safe-area-inset-right));
+                grid-template-columns: repeat(3, 44px);
+                grid-template-rows: repeat(4, 44px);
+                gap: 5px;
             }
 
             .touch-action-btn {
-                width: 49px;
-                height: 49px;
-                font-size: 0.58rem;
+                width: 44px;
+                height: 44px;
+                font-size: 0.52rem;
+            }
+
+            .touch-label {
+                font-size: 0.44rem;
             }
 
             #touch-btn-attack {
-                width: 58px;
-                height: 58px;
-                margin: -4.5px;
-                font-size: 0.72rem;
+                width: 52px;
+                height: 52px;
+                margin: -4px;
+                font-size: 0.7rem;
+            }
+
+            #touch-btn-weapon {
+                grid-column: 2;
+                grid-row: 4;
             }
 
             .modal-box {
@@ -1244,51 +1306,76 @@
         /* 3. MOBILE & TABLET LANDSCAPE (Short Height Displays: <= 520px) */
         @media (max-height: 520px) and (orientation: landscape) {
             #top-header {
-                padding: 4px 10px;
+                padding: 3px 8px;
             }
 
             .header-title {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
+            }
+
+            .header-desktop-only {
+                display: none !important;
+            }
+
+            .header-mobile-menu-btn {
+                display: inline-flex !important;
             }
 
             #pathfinder-bar {
-                top: 40px;
+                top: 36px;
+                gap: 4px;
+            }
+
+            .route-pill {
+                padding: 2px 6px !important;
+                font-size: 0.55rem !important;
             }
 
             #player-hud {
-                top: 38px;
+                top: 34px;
+                left: 8px;
             }
 
             #souls-hud {
-                top: 38px;
+                top: 34px;
+                right: 8px;
+                padding: 3px 8px;
+                font-size: 0.72rem;
             }
 
             #touch-joystick-base {
-                bottom: 12px;
-                left: 18px;
-                width: 95px;
-                height: 95px;
+                bottom: 8px;
+                left: 12px;
+                width: 90px;
+                height: 90px;
             }
 
             #touch-buttons-cluster {
-                bottom: 10px;
-                right: 16px;
-                grid-template-columns: repeat(3, 44px);
-                grid-template-rows: repeat(3, 44px);
-                gap: 5px;
+                bottom: 8px;
+                right: 10px;
+                grid-template-columns: repeat(5, 40px);
+                grid-template-rows: repeat(2, 40px);
+                gap: 4px;
             }
 
             .touch-action-btn {
-                width: 44px;
-                height: 44px;
-                font-size: 0.54rem;
+                width: 40px;
+                height: 40px;
+                font-size: 0.5rem;
             }
 
-            #touch-btn-attack {
-                width: 52px;
-                height: 52px;
-                margin: -4px;
-            }
+            /* 5x2 landscape mapping */
+            #touch-btn-lockon   { grid-column: 1; grid-row: 1; }
+            #touch-btn-block    { grid-column: 2; grid-row: 1; }
+            #touch-btn-heavy    { grid-column: 3; grid-row: 1; }
+            #touch-btn-parry    { grid-column: 4; grid-row: 1; }
+            #touch-btn-torch    { grid-column: 5; grid-row: 1; }
+
+            #touch-btn-estus    { grid-column: 1; grid-row: 2; }
+            #touch-btn-interact { grid-column: 2; grid-row: 2; }
+            #touch-btn-attack   { grid-column: 3; grid-row: 2; width: 46px; height: 46px; margin: -3px; font-size: 0.65rem; }
+            #touch-btn-roll     { grid-column: 4; grid-row: 2; }
+            #touch-btn-weapon   { grid-column: 5; grid-row: 2; }
 
             .modal-box {
                 max-height: 92vh;
@@ -1318,34 +1405,36 @@
         <div class="header-actions">
             <!-- PROMINENT DOWNLOAD GAME BUTTON -->
             <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
-                <span>📦</span> DOWNLOAD GAME
+                <span>📦</span> <span class="btn-label-text">DOWNLOAD</span>
             </button>
-            <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ BOSS ROSTER</button>
-            <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ WEAPONS</button>
-            <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T] (Illuminates darkness & infuses attacks with fire damage)" style="border-color: #ff7722; color: #ffaa44; font-weight: 700; box-shadow: 0 0 10px rgba(255,119,34,0.35);">🔥 TORCH [T]</button>
-            <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 MERCHANT</button>
-            <button class="btn-icon-bar" onclick="openSiegeModal()" style="border-color: #e65100; color: #ffb74d; font-weight: 700;">🏰 SIEGE (391-400)</button>
-            <button class="btn-icon-bar" onclick="openHeraldryModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 700;">👑 HERALDRY (401-410)</button>
-            <button class="btn-icon-bar" onclick="openApothecaryModal()" style="border-color: #2e7d32; color: #a5d6a7; font-weight: 700;">🌿 APOTHECARY (411-420)</button>
-            <button class="btn-icon-bar" id="btn-brightness-toggle" onclick="toggleBrightness()" title="Lighting & Exposure Toggle (High Visibility)">☀️ NOON SUN</button>
-            <button class="btn-icon-bar" id="btn-save-header" onclick="manualSaveGame()" title="Save your journey to local memory (Auto-saves on Bonfire rest & boss defeat)" style="border-color: #ffd276; color: #ffd276;">💾 SAVE</button>
-            <button class="btn-icon-bar btn-load-save" id="btn-load-header" onclick="manualLoadGame()" title="Load your saved journey from local memory" style="border-color: #88ccff; color: #88ccff;">📂 LOAD</button>
-            <button class="btn-icon-bar" onclick="openControlsModal()">CONTROLS</button>
-            <button class="btn-icon-bar" id="audio-toggle-btn" onclick="toggleAudio()">SOUND: ON</button>
-            <button class="btn-icon-bar" onclick="toggleFullscreen()">⛶</button>
+            <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
+            <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
+            <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
+            <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 <span class="btn-label-text">SHOP</span></button>
+            <button class="btn-icon-bar header-desktop-only" onclick="openSiegeModal()" style="border-color: #e65100; color: #ffb74d; font-weight: 700;">🏰 SIEGE (391-400)</button>
+            <button class="btn-icon-bar header-desktop-only" onclick="openHeraldryModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 700;">👑 HERALDRY (401-410)</button>
+            <button class="btn-icon-bar header-desktop-only" onclick="openApothecaryModal()" style="border-color: #2e7d32; color: #a5d6a7; font-weight: 700;">🌿 APOTHECARY (411-420)</button>
+            <button class="btn-icon-bar" id="btn-brightness-toggle" onclick="toggleBrightness()" title="Lighting & Exposure Toggle (High Visibility)">☀️ <span class="btn-label-text">SUN</span></button>
+            <button class="btn-icon-bar header-desktop-only" id="btn-save-header" onclick="manualSaveGame()" title="Save your journey to local memory" style="border-color: #ffd276; color: #ffd276;">💾 SAVE</button>
+            <button class="btn-icon-bar header-desktop-only btn-load-save" id="btn-load-header" onclick="manualLoadGame()" title="Load your saved journey from local memory" style="border-color: #88ccff; color: #88ccff;">📂 LOAD</button>
+            <button class="btn-icon-bar header-desktop-only" onclick="openControlsModal()">CONTROLS</button>
+            <button class="btn-icon-bar header-desktop-only" id="audio-toggle-btn" onclick="toggleAudio()">SOUND: ON</button>
+            <button class="btn-icon-bar header-desktop-only" onclick="toggleFullscreen()">⛶</button>
+            <!-- REVOLUTIONARY QUICK MENU FOR TABLET & MOBILE -->
+            <button class="btn-icon-bar header-mobile-menu-btn" onclick="openQuickMenuModal()" style="border-color: #ffd700; color: #ffe680; font-weight: 900; background: rgba(45, 30, 10, 0.7); box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);">☰ MENU</button>
         </div>
     </header>
 
     <!-- PATHFINDER / ROUTE COMPASS BAR (LIT PATHWAYS & VERTICAL ELEVATIONS) -->
     <div id="pathfinder-bar">
-        <div id="route-catacombs" class="route-pill" onclick="teleportOrHighlightPath('catacombs')" title="West Sunken Crypt: Depth -5m, Murky Waters, Ancient Tombs" style="background: rgba(8, 28, 24, 0.88); border: 1px solid #00ffaa; color: #77ffcc; padding: 5px 12px; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 1.5px; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(0,255,170,0.6); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(0,255,170,0.25); transition: all 0.25s ease;">
-            <span>▼</span> CATACOMBS (DOWN: -5m)
+        <div id="route-catacombs" class="route-pill" onclick="teleportOrHighlightPath('catacombs')" title="West Sunken Crypt: Depth -5m, Murky Waters, Ancient Tombs" style="background: rgba(8, 28, 24, 0.88); border: 1px solid #00ffaa; color: #77ffcc; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(0,255,170,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(0,255,170,0.25); transition: all 0.25s ease;">
+            <span>▼</span> <span class="route-full-name">CATACOMBS (DOWN: -5m)</span><span class="route-short-name">CATACOMBS -5M</span>
         </div>
-        <div id="route-bridge" class="route-pill" onclick="teleportOrHighlightPath('bridge')" title="South Royal Bridge: Level 0m, Torches, Direct Fog Gate Path" style="background: rgba(32, 16, 8, 0.88); border: 1px solid #ff7722; color: #ffaa66; padding: 5px 12px; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 1.5px; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(255,119,34,0.6); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(255,119,34,0.25); transition: all 0.25s ease;">
-            <span>⚔️</span> ROYAL BRIDGE (MAIN: 0m)
+        <div id="route-bridge" class="route-pill" onclick="teleportOrHighlightPath('bridge')" title="South Royal Bridge: Level 0m, Torches, Direct Fog Gate Path" style="background: rgba(32, 16, 8, 0.88); border: 1px solid #ff7722; color: #ffaa66; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(255,119,34,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(255,119,34,0.25); transition: all 0.25s ease;">
+            <span>⚔️</span> <span class="route-full-name">ROYAL BRIDGE (MAIN: 0m)</span><span class="route-short-name">BRIDGE 0M</span>
         </div>
-        <div id="route-ramparts" class="route-pill" onclick="teleportOrHighlightPath('ramparts')" title="East Grand Stairs: Elevation +6m, Fortified Battlements, Watchtower Overlook" style="background: rgba(34, 26, 8, 0.88); border: 1px solid #ffd700; color: #ffe680; padding: 5px 12px; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 1.5px; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(255,215,0,0.6); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(255,215,0,0.25); transition: all 0.25s ease;">
-            <span>▲</span> HIGH RAMPARTS (UP: +6m)
+        <div id="route-ramparts" class="route-pill" onclick="teleportOrHighlightPath('ramparts')" title="East Grand Stairs: Elevation +6m, Fortified Battlements, Watchtower Overlook" style="background: rgba(34, 26, 8, 0.88); border: 1px solid #ffd700; color: #ffe680; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(255,215,0,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(255,215,0,0.25); transition: all 0.25s ease;">
+            <span>▲</span> <span class="route-full-name">HIGH RAMPARTS (UP: +6m)</span><span class="route-short-name">RAMPARTS +6M</span>
         </div>
     </div>
 
@@ -1408,9 +1497,9 @@
     </div>
 
     <!-- Build & Daylight Status Indicator -->
-    <div id="build-status-indicator" style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 50; pointer-events: auto; display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 0.72rem; color: #ffd276; background: rgba(18, 14, 10, 0.85); border: 1px solid rgba(255, 210, 118, 0.35); padding: 3px 10px; border-radius: 3px; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); white-space: nowrap;">
+    <div id="build-status-indicator" style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 50; pointer-events: auto; display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 0.68rem; color: #ffd276; background: rgba(18, 14, 10, 0.85); border: 1px solid rgba(255, 210, 118, 0.35); padding: 3px 10px; border-radius: 3px; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); white-space: nowrap;">
         <span>☀️ LORDRAN SUNLIT CITADEL</span>
-        <button onclick="window.location.href = window.location.origin + window.location.pathname + '?b=20261114_sunlit_v4&t=' + Date.now()" style="background: rgba(255,210,118,0.2); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-family: inherit;">RELOAD</button>
+        <button onclick="window.location.href = window.location.origin + window.location.pathname + '?b=20261114_adaptive_v5&t=' + Date.now()" style="background: rgba(255,210,118,0.2); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-family: inherit;">RELOAD</button>
     </div>
 
     <!-- Boss HUD (Bottom Center, activated when Taurus Demon wakes) -->
@@ -2223,6 +2312,33 @@
         </div>
     </div>
 
+    <!-- QUICK ACTION & EXPEDITION MENU (TABLET & MOBILE) -->
+    <div id="quick-menu-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 620px; padding: 22px 18px;">
+            <div class="modal-header">⚜️ LORDRAN COMMAND MENU ⚜️</div>
+            <p style="font-size: 0.85rem; color: #b8a896; text-align: center; margin-bottom: 14px;">
+                Direct access to all tactical systems, game saves, weapon arsenal and settings.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px;">
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDownloadModal();" style="border-color: #a87932; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">📦 DOWNLOAD</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">⚔️ BOSS ROSTER</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 8px; font-weight: 700;">🗡️ WEAPONS</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openMerchantModal();" style="border-color: #ff9933; color: #ffb866; justify-content: center; padding: 10px 8px; font-weight: 700;">🛒 MERCHANT</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSiegeModal();" style="border-color: #e65100; color: #ffb74d; justify-content: center; padding: 10px 8px; font-weight: 700;">🏰 SIEGE (391-400)</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openHeraldryModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 8px; font-weight: 700;">👑 HERALDRY (401-410)</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openApothecaryModal();" style="border-color: #2e7d32; color: #a5d6a7; justify-content: center; padding: 10px 8px; font-weight: 700;">🌿 APOTHECARY (411-420)</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleTorch();" style="border-color: #ff7722; color: #ffaa44; justify-content: center; padding: 10px 8px; font-weight: 700;">🔥 TOGGLE TORCH</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleBrightness();" style="border-color: #ffcc00; color: #ffea70; justify-content: center; padding: 10px 8px; font-weight: 700;">☀️ SUN / NIGHT</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); manualSaveGame();" style="border-color: #ffd276; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">💾 SAVE JOURNEY</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); manualLoadGame();" style="border-color: #88ccff; color: #88ccff; justify-content: center; padding: 10px 8px; font-weight: 700;">📂 LOAD JOURNEY</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openControlsModal();" style="justify-content: center; padding: 10px 8px; font-weight: 700;">⌨️ CONTROLS</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleAudio();" style="justify-content: center; padding: 10px 8px; font-weight: 700;">🔊 SOUND TOGGLE</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleFullscreen();" style="justify-content: center; padding: 10px 8px; font-weight: 700;">⛶ FULLSCREEN</button>
+            </div>
+            <button class="btn-modal-close" onclick="closeQuickMenuModal()" style="margin-top: 16px;">RETURN TO BATTLE</button>
+        </div>
+    </div>
+
     <!-- MOBILE TOUCH OVERLAY (Automatically enabled on touchscreen) -->
     <div id="mobile-touch-overlay">
         <div id="touch-joystick-base">
@@ -2230,21 +2346,38 @@
         </div>
 
         <div id="touch-buttons-cluster">
-            <button class="touch-action-btn" id="touch-btn-lockon">🎯<br>Lock</button>
-            <button class="touch-action-btn" id="touch-btn-heavy">💥<br>Heavy</button>
-            <button class="touch-action-btn" id="touch-btn-interact">✋<br>Use</button>
-            <button class="touch-action-btn" id="touch-btn-block">🛡️<br>Block</button>
-            <button class="touch-action-btn" id="touch-btn-attack">⚔️<br>Attack</button>
-            <button class="touch-action-btn" id="touch-btn-parry">⚡<br>Parry</button>
-            <button class="touch-action-btn" id="touch-btn-estus">🧪<br>Estus</button>
-            <button class="touch-action-btn" id="touch-btn-roll">🌀<br>Roll</button>
-            <button class="touch-action-btn" id="touch-btn-weapon">⚔️<br>Swap</button>
+            <!-- Row 1: Auxiliary / Utility -->
+            <button class="touch-action-btn" id="touch-btn-lockon" title="Lock-on Target">🎯<span class="touch-label">Lock</span></button>
+            <button class="touch-action-btn" id="touch-btn-interact" title="Interact / Use">✋<span class="touch-label">Use</span></button>
+            <button class="touch-action-btn" id="touch-btn-torch" title="Toggle Torch">🔥<span class="touch-label">Torch</span></button>
+
+            <!-- Row 2: Defensive & Heavy Stance -->
+            <button class="touch-action-btn" id="touch-btn-block" title="Raise Shield / Block">🛡️<span class="touch-label">Block</span></button>
+            <button class="touch-action-btn" id="touch-btn-heavy" title="Heavy Attack">💥<span class="touch-label">Heavy</span></button>
+            <button class="touch-action-btn" id="touch-btn-parry" title="Parry Deflection">⚡<span class="touch-label">Parry</span></button>
+
+            <!-- Row 3: Primary Core Combat & Reflexes -->
+            <button class="touch-action-btn" id="touch-btn-estus" title="Estus Heal">🧪<span class="touch-label">Estus</span></button>
+            <button class="touch-action-btn" id="touch-btn-attack" title="Light Attack">⚔️<span class="touch-label">Attack</span></button>
+            <button class="touch-action-btn" id="touch-btn-roll" title="Dodge Roll">🌀<span class="touch-label">Roll</span></button>
+
+            <!-- Row 4: Equipment Stance -->
+            <button class="touch-action-btn" id="touch-btn-weapon" title="Cycle Equipped Weapon">🔄<span class="touch-label">Swap</span></button>
         </div>
-        <button class="touch-action-btn" id="touch-btn-torch" title="Toggle Torch" style="position: absolute; bottom: 195px; right: 14px; width: 48px; height: 48px; border-radius: 50%; background: rgba(30, 16, 6, 0.92); border: 2px solid #ff7722; color: #ffaa44; font-size: 0.72rem; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; box-shadow: 0 0 10px rgba(255,119,34,0.45); z-index: 105;">🔥<span style="font-size:0.52rem; font-weight:700;">TORCH</span></button>
     </div>
 
     <!-- UI Action Scripts -->
     <script>
+        function openQuickMenuModal() {
+            const modal = document.getElementById('quick-menu-modal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeQuickMenuModal() {
+            const modal = document.getElementById('quick-menu-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
         function openBossSelectModal() {
             const modal = document.getElementById('boss-select-modal');
             if (modal) {
@@ -2641,14 +2774,14 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261114_perfect_vision"></script>
-    <script src="js/audio.js?v=20261114_perfect_vision"></script>
-    <script src="js/world.js?v=20261114_perfect_vision"></script>
-    <script src="js/character.js?v=20261114_perfect_vision"></script>
-    <script src="js/siege_warfare.js?v=20261114_perfect_vision"></script>
-    <script src="js/heraldry_nobility.js?v=20261114_perfect_vision"></script>
-    <script src="js/apothecary_crafting.js?v=20261114_perfect_vision"></script>
-    <script src="js/combat.js?v=20261114_perfect_vision"></script>
-    <script src="js/game.js?v=20261114_perfect_vision"></script>
+    <script src="js/three.min.js?v=20261114_adaptive_v5"></script>
+    <script src="js/audio.js?v=20261114_adaptive_v5"></script>
+    <script src="js/world.js?v=20261114_adaptive_v5"></script>
+    <script src="js/character.js?v=20261114_adaptive_v5"></script>
+    <script src="js/siege_warfare.js?v=20261114_adaptive_v5"></script>
+    <script src="js/heraldry_nobility.js?v=20261114_adaptive_v5"></script>
+    <script src="js/apothecary_crafting.js?v=20261114_adaptive_v5"></script>
+    <script src="js/combat.js?v=20261114_adaptive_v5"></script>
+    <script src="js/game.js?v=20261114_adaptive_v5"></script>
 </body>
 </html>
