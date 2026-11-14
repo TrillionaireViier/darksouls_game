@@ -123,21 +123,106 @@
             max-width: 380px;
         }
 
+        /* ====================================================
+           AUTHENTIC DARK SOULS PILL BUTTONS (UNIVERSAL SYSTEM)
+           ==================================================== */
+        button,
+        .btn-download,
+        .btn-icon-bar,
+        .btn-fight-boss,
+        .btn-modal-close,
+        .btn-upgrade,
+        .btn-respawn,
+        .route-pill,
+        .btn-scroll-nav,
+        .key-badge,
+        .ds-pill-btn {
+            border-radius: 9999px !important;
+        }
+
+        .header-actions-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            max-width: calc(100vw - 230px);
+            position: relative;
+            pointer-events: auto;
+        }
+
+        .btn-scroll-nav {
+            background: rgba(22, 17, 13, 0.92);
+            border: 1px solid #7d5b24;
+            color: #ffd276;
+            width: 26px;
+            height: 28px;
+            border-radius: 9999px !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            flex-shrink: 0;
+            user-select: none;
+            z-index: 102;
+        }
+
+        .btn-scroll-nav:hover {
+            border-color: #ffd700;
+            color: #fff;
+            background: rgba(45, 34, 20, 0.98);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+            transform: scale(1.1);
+        }
+
         .header-actions {
             display: flex;
-            gap: 6px;
+            gap: 7px;
             align-items: center;
             flex-wrap: nowrap;
-            overflow-x: auto;
-            max-width: calc(100vw - 240px);
-            scrollbar-width: none;
+            overflow-x: auto !important;
+            max-width: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: #a87932 rgba(18, 14, 10, 0.85);
             -webkit-overflow-scrolling: touch;
             pointer-events: auto;
-            padding-bottom: 2px;
+            padding: 4px 6px;
+            scroll-behavior: smooth;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .header-actions:active {
+            cursor: grabbing;
         }
 
         .header-actions::-webkit-scrollbar {
-            display: none;
+            height: 5px;
+            display: block;
+        }
+
+        .header-actions::-webkit-scrollbar-track {
+            background: rgba(14, 11, 8, 0.85);
+            border-radius: 9999px;
+        }
+
+        .header-actions::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #7a5822, #ffd276, #7a5822);
+            border-radius: 9999px;
+            box-shadow: 0 0 8px rgba(255, 210, 118, 0.5);
+        }
+
+        @keyframes headerGlowPulse {
+            0% { box-shadow: 0 0 0 rgba(255, 215, 0, 0); }
+            50% { box-shadow: 0 0 22px rgba(255, 215, 0, 0.75); }
+            100% { box-shadow: 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        .header-actions-glow {
+            animation: headerGlowPulse 1.2s ease-in-out;
         }
 
         .header-desktop-only {
@@ -156,9 +241,10 @@
             background: linear-gradient(180deg, #2b2218 0%, #17120d 100%);
             color: #ffd276;
             border: 2px solid #a87932;
-            padding: 7px 14px;
+            padding: 6px 16px;
+            border-radius: 9999px !important;
             font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
@@ -169,6 +255,7 @@
             position: relative;
             overflow: hidden;
             white-space: nowrap;
+            user-select: none;
         }
 
         .btn-download::before {
@@ -198,22 +285,51 @@
         }
 
         .btn-icon-bar {
-            background: rgba(18, 15, 13, 0.75);
+            background: rgba(18, 15, 13, 0.82);
             border: 1px solid var(--ds-border);
             color: #c0b2a0;
-            padding: 6px 11px;
+            padding: 6px 14px;
+            border-radius: 9999px !important;
             font-family: 'Cinzel', serif;
             font-size: 0.74rem;
             letter-spacing: 1.2px;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
         }
 
         .btn-icon-bar:hover {
             border-color: var(--ds-gold);
             color: var(--ds-gold);
-            background: rgba(35, 28, 20, 0.9);
+            background: rgba(45, 34, 22, 0.95);
+            box-shadow: 0 0 14px rgba(196, 154, 69, 0.45), inset 0 0 6px rgba(196, 154, 69, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* ESCAPE PILL HINT */
+        #escape-hint-pill {
+            position: fixed;
+            bottom: 16px;
+            right: 18px;
+            background: rgba(14, 11, 8, 0.9);
+            border: 1px solid #7d5b24;
+            color: #ffd276;
+            padding: 6px 14px;
+            border-radius: 9999px !important;
+            font-family: 'Cinzel', serif;
+            font-size: 0.72rem;
+            letter-spacing: 1.2px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            z-index: 65;
+            display: none;
+            align-items: center;
+            gap: 6px;
         }
 
         /* PATHFINDER / ROUTE COMPASS BAR */
@@ -1403,6 +1519,9 @@
     <!-- Lock-on Target Reticle -->
     <div id="lockon-reticle"></div>
 
+    <!-- Escape Hint Pill (Visual Indicator for Desktop Controls) -->
+    <div id="escape-hint-pill">⚜️ [ESC] UNLOCK CURSOR & SCROLL BUTTONS</div>
+
     <!-- Top Navigation & Action Header -->
     <header id="top-header">
         <div class="header-title-group">
@@ -1410,42 +1529,46 @@
             <p class="header-sub">Lordran &bull; 16 Lords</p>
         </div>
 
-        <div class="header-actions">
-            <!-- PROMINENT DOWNLOAD GAME BUTTON -->
-            <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
-                <span>📦</span> <span class="btn-label-text">DOWNLOAD</span>
-            </button>
-            <button class="btn-icon-bar" onclick="openQASuiteModal()" title="Open Automated QA Test Suite, 1-HP Sandbox & Watchdog" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🛠️ <span class="btn-label-text">QA SUITE</span></button>
-            <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
-            <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
-            <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
-            <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
-            <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
-            <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
-            <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 <span class="btn-label-text">SHOP</span></button>
-            <button class="btn-icon-bar header-desktop-only" onclick="openSiegeModal()" style="border-color: #e65100; color: #ffb74d; font-weight: 700;">🏰 SIEGE (391-400)</button>
-            <button class="btn-icon-bar header-desktop-only" onclick="openHeraldryModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 700;">👑 HERALDRY (401-410)</button>
-            <button class="btn-icon-bar header-desktop-only" onclick="openApothecaryModal()" style="border-color: #2e7d32; color: #a5d6a7; font-weight: 700;">🌿 APOTHECARY (411-420)</button>
-            <button class="btn-icon-bar" id="btn-brightness-toggle" onclick="toggleBrightness()" title="Lighting & Exposure Toggle (High Visibility)">☀️ <span class="btn-label-text">SUN</span></button>
-            <button class="btn-icon-bar header-desktop-only" id="btn-save-header" onclick="manualSaveGame()" title="Save your journey to local memory" style="border-color: #ffd276; color: #ffd276;">💾 SAVE</button>
-            <button class="btn-icon-bar header-desktop-only btn-load-save" id="btn-load-header" onclick="manualLoadGame()" title="Load your saved journey from local memory" style="border-color: #88ccff; color: #88ccff;">📂 LOAD</button>
-            <button class="btn-icon-bar header-desktop-only" onclick="openControlsModal()">CONTROLS</button>
-            <button class="btn-icon-bar header-desktop-only" id="audio-toggle-btn" onclick="toggleAudio()">SOUND: ON</button>
-            <button class="btn-icon-bar header-desktop-only" onclick="toggleFullscreen()">⛶</button>
-            <!-- REVOLUTIONARY QUICK MENU FOR TABLET & MOBILE -->
-            <button class="btn-icon-bar header-mobile-menu-btn" onclick="openQuickMenuModal()" style="border-color: #ffd700; color: #ffe680; font-weight: 900; background: rgba(45, 30, 10, 0.7); box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);">☰ MENU</button>
+        <div class="header-actions-container">
+            <button class="btn-scroll-nav btn-scroll-prev" id="header-scroll-left" onclick="scrollHeaderActions(-240)" title="Scroll pill buttons left (or roll mouse wheel)">‹</button>
+            <div class="header-actions" id="header-actions-bar">
+                <!-- PROMINENT DOWNLOAD GAME BUTTON -->
+                <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
+                    <span>📦</span> <span class="btn-label-text">DOWNLOAD</span>
+                </button>
+                <button class="btn-icon-bar" onclick="openQASuiteModal()" title="Open Automated QA Test Suite, 1-HP Sandbox & Watchdog" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🛠️ <span class="btn-label-text">QA SUITE</span></button>
+                <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
+                <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
+                <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
+                <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
+                <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
+                <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
+                <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 <span class="btn-label-text">SHOP</span></button>
+                <button class="btn-icon-bar header-desktop-only" onclick="openSiegeModal()" style="border-color: #e65100; color: #ffb74d; font-weight: 700;">🏰 <span class="btn-label-text">SIEGE (391-400)</span></button>
+                <button class="btn-icon-bar header-desktop-only" onclick="openHeraldryModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 700;">👑 <span class="btn-label-text">HERALDRY (401-410)</span></button>
+                <button class="btn-icon-bar header-desktop-only" onclick="openApothecaryModal()" style="border-color: #2e7d32; color: #a5d6a7; font-weight: 700;">🌿 <span class="btn-label-text">APOTHECARY (411-420)</span></button>
+                <button class="btn-icon-bar" id="btn-brightness-toggle" onclick="toggleBrightness()" title="Lighting & Exposure Toggle (High Visibility)">☀️ <span class="btn-label-text">SUN</span></button>
+                <button class="btn-icon-bar header-desktop-only" id="btn-save-header" onclick="manualSaveGame()" title="Save your journey to local memory" style="border-color: #ffd276; color: #ffd276;">💾 <span class="btn-label-text">SAVE</span></button>
+                <button class="btn-icon-bar header-desktop-only btn-load-save" id="btn-load-header" onclick="manualLoadGame()" title="Load your saved journey from local memory" style="border-color: #88ccff; color: #88ccff;">📂 <span class="btn-label-text">LOAD</span></button>
+                <button class="btn-icon-bar header-desktop-only" onclick="openControlsModal()">⌨️ <span class="btn-label-text">CONTROLS</span></button>
+                <button class="btn-icon-bar header-desktop-only" id="audio-toggle-btn" onclick="toggleAudio()">🔊 <span class="btn-label-text">SOUND: ON</span></button>
+                <button class="btn-icon-bar header-desktop-only" onclick="toggleFullscreen()">⛶</button>
+                <!-- REVOLUTIONARY QUICK MENU FOR TABLET & MOBILE -->
+                <button class="btn-icon-bar header-mobile-menu-btn" onclick="openQuickMenuModal()" style="border-color: #ffd700; color: #ffe680; font-weight: 900; background: rgba(45, 30, 10, 0.7); box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);">☰ <span class="btn-label-text">MENU</span></button>
+            </div>
+            <button class="btn-scroll-nav btn-scroll-next" id="header-scroll-right" onclick="scrollHeaderActions(240)" title="Scroll pill buttons right (or roll mouse wheel)">›</button>
         </div>
     </header>
 
     <!-- PATHFINDER / ROUTE COMPASS BAR (LIT PATHWAYS & VERTICAL ELEVATIONS) -->
     <div id="pathfinder-bar">
-        <div id="route-catacombs" class="route-pill" onclick="teleportOrHighlightPath('catacombs')" title="West Sunken Crypt: Depth -5m, Murky Waters, Ancient Tombs" style="background: rgba(8, 28, 24, 0.88); border: 1px solid #00ffaa; color: #77ffcc; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(0,255,170,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(0,255,170,0.25); transition: all 0.25s ease;">
+        <div id="route-catacombs" class="route-pill" onclick="teleportOrHighlightPath('catacombs')" title="West Sunken Crypt: Depth -5m, Murky Waters, Ancient Tombs" style="background: rgba(8, 28, 24, 0.88); border: 1px solid #00ffaa; color: #77ffcc; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 9999px; text-shadow: 0 0 8px rgba(0,255,170,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(0,255,170,0.25); transition: all 0.25s ease;">
             <span>▼</span> <span class="route-full-name">CATACOMBS (DOWN: -5m)</span><span class="route-short-name">CATACOMBS -5M</span>
         </div>
-        <div id="route-bridge" class="route-pill" onclick="teleportOrHighlightPath('bridge')" title="South Royal Bridge: Level 0m, Torches, Direct Fog Gate Path" style="background: rgba(32, 16, 8, 0.88); border: 1px solid #ff7722; color: #ffaa66; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(255,119,34,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(255,119,34,0.25); transition: all 0.25s ease;">
+        <div id="route-bridge" class="route-pill" onclick="teleportOrHighlightPath('bridge')" title="South Royal Bridge: Level 0m, Torches, Direct Fog Gate Path" style="background: rgba(32, 16, 8, 0.88); border: 1px solid #ff7722; color: #ffaa66; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 9999px; text-shadow: 0 0 8px rgba(255,119,34,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(255,119,34,0.25); transition: all 0.25s ease;">
             <span>⚔️</span> <span class="route-full-name">ROYAL BRIDGE (MAIN: 0m)</span><span class="route-short-name">BRIDGE 0M</span>
         </div>
-        <div id="route-ramparts" class="route-pill" onclick="teleportOrHighlightPath('ramparts')" title="East Grand Stairs: Elevation +6m, Fortified Battlements, Watchtower Overlook" style="background: rgba(34, 26, 8, 0.88); border: 1px solid #ffd700; color: #ffe680; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(255,215,0,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(255,215,0,0.25); transition: all 0.25s ease;">
+        <div id="route-ramparts" class="route-pill" onclick="teleportOrHighlightPath('ramparts')" title="East Grand Stairs: Elevation +6m, Fortified Battlements, Watchtower Overlook" style="background: rgba(34, 26, 8, 0.88); border: 1px solid #ffd700; color: #ffe680; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 9999px; text-shadow: 0 0 8px rgba(255,215,0,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(255,215,0,0.25); transition: all 0.25s ease;">
             <span>▲</span> <span class="route-full-name">HIGH RAMPARTS (UP: +6m)</span><span class="route-short-name">RAMPARTS +6M</span>
         </div>
     </div>
@@ -2777,33 +2900,34 @@
         </div>
     </div>
 
-    <!-- QUICK ACTION & EXPEDITION MENU (TABLET & MOBILE) -->
+    <!-- QUICK ACTION & EXPEDITION MENU (TABLET & MOBILE & ESCAPE KEY) -->
     <div id="quick-menu-modal" class="modal-overlay">
-        <div class="modal-box" style="max-width: 620px; padding: 22px 18px;">
+        <div class="modal-box" style="max-width: 720px; max-height: 85vh; overflow-y: auto; padding: 24px 22px; scrollbar-width: thin; scrollbar-color: #a87932 rgba(18, 14, 10, 0.85);">
             <div class="modal-header">⚜️ LORDRAN COMMAND MENU ⚜️</div>
-            <p style="font-size: 0.85rem; color: #b8a896; text-align: center; margin-bottom: 14px;">
-                Direct access to all tactical systems, game saves, weapon arsenal and settings.
+            <p style="font-size: 0.85rem; color: #b8a896; text-align: center; margin-bottom: 16px;">
+                Direct access to all tactical systems, game saves, weapon arsenal, QA suite and settings. [ESC] to return.
             </p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px;">
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 8px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
-                <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 8px; font-weight: 700;">⚡ 60 FPS MODE</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDownloadModal();" style="border-color: #a87932; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">📦 DOWNLOAD</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">⚔️ BOSS ROSTER</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSkinsModal();" style="border-color: #64b5f6; color: #bbdefb; justify-content: center; padding: 10px 8px; font-weight: 700;">🛡️ 3D SKINS</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 8px; font-weight: 700;">🗡️ WEAPONS</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openMerchantModal();" style="border-color: #ff9933; color: #ffb866; justify-content: center; padding: 10px 8px; font-weight: 700;">🛒 MERCHANT</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSiegeModal();" style="border-color: #e65100; color: #ffb74d; justify-content: center; padding: 10px 8px; font-weight: 700;">🏰 SIEGE (391-400)</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openHeraldryModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 8px; font-weight: 700;">👑 HERALDRY (401-410)</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openApothecaryModal();" style="border-color: #2e7d32; color: #a5d6a7; justify-content: center; padding: 10px 8px; font-weight: 700;">🌿 APOTHECARY (411-420)</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleTorch();" style="border-color: #ff7722; color: #ffaa44; justify-content: center; padding: 10px 8px; font-weight: 700;">🔥 TOGGLE TORCH</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleBrightness();" style="border-color: #ffcc00; color: #ffea70; justify-content: center; padding: 10px 8px; font-weight: 700;">☀️ SUN / NIGHT</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); manualSaveGame();" style="border-color: #ffd276; color: #ffd276; justify-content: center; padding: 10px 8px; font-weight: 700;">💾 SAVE JOURNEY</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); manualLoadGame();" style="border-color: #88ccff; color: #88ccff; justify-content: center; padding: 10px 8px; font-weight: 700;">📂 LOAD JOURNEY</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openControlsModal();" style="justify-content: center; padding: 10px 8px; font-weight: 700;">⌨️ CONTROLS</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleAudio();" style="justify-content: center; padding: 10px 8px; font-weight: 700;">🔊 SOUND TOGGLE</button>
-                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleFullscreen();" style="justify-content: center; padding: 10px 8px; font-weight: 700;">⛶ FULLSCREEN</button>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px;">
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openQASuiteModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🛠️ QA SUITE</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
+                <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 700;">⚡ 60 FPS MODE</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDownloadModal();" style="border-color: #a87932; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 700;">📦 DOWNLOAD</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 700;">⚔️ BOSS ROSTER</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSkinsModal();" style="border-color: #64b5f6; color: #bbdefb; justify-content: center; padding: 10px 12px; font-weight: 700;">🛡️ 3D SKINS</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 12px; font-weight: 700;">🗡️ WEAPONS</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openMerchantModal();" style="border-color: #ff9933; color: #ffb866; justify-content: center; padding: 10px 12px; font-weight: 700;">🛒 MERCHANT</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSiegeModal();" style="border-color: #e65100; color: #ffb74d; justify-content: center; padding: 10px 12px; font-weight: 700;">🏰 SIEGE (391-400)</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openHeraldryModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 700;">👑 HERALDRY (401-410)</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openApothecaryModal();" style="border-color: #2e7d32; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 700;">🌿 APOTHECARY (411-420)</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleTorch();" style="border-color: #ff7722; color: #ffaa44; justify-content: center; padding: 10px 12px; font-weight: 700;">🔥 PITCH TORCH</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleBrightness();" style="border-color: #ffcc00; color: #ffea70; justify-content: center; padding: 10px 12px; font-weight: 700;">☀️ SUN / NIGHT</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); manualSaveGame();" style="border-color: #ffd276; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 700;">💾 SAVE EXPEDITION</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); manualLoadGame();" style="border-color: #88ccff; color: #88ccff; justify-content: center; padding: 10px 12px; font-weight: 700;">📂 LOAD EXPEDITION</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openControlsModal();" style="justify-content: center; padding: 10px 12px; font-weight: 700;">⌨️ CONTROLS & HELP</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleAudio();" style="justify-content: center; padding: 10px 12px; font-weight: 700;">🔊 SOUND TOGGLE</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); toggleFullscreen();" style="justify-content: center; padding: 10px 12px; font-weight: 700;">⛶ FULLSCREEN</button>
             </div>
-            <button class="btn-modal-close" onclick="closeQuickMenuModal()" style="margin-top: 16px;">RETURN TO BATTLE</button>
+            <button class="btn-modal-close" onclick="closeQuickMenuModal()" style="margin-top: 18px;">RETURN TO BATTLE [ESC]</button>
         </div>
     </div>
 
@@ -3354,19 +3478,129 @@
         checkMobileOverlay();
         window.addEventListener('resize', checkMobileOverlay);
         window.addEventListener('orientationchange', checkMobileOverlay);
+
+        // ====================================================
+        // PILL BUTTONS SCROLL & ESCAPE HANDLER SYSTEM
+        // ====================================================
+        function scrollHeaderActions(amount) {
+            const bar = document.getElementById('header-actions-bar') || document.querySelector('.header-actions');
+            if (bar) {
+                bar.scrollBy({ left: amount, behavior: 'smooth' });
+            }
+        }
+
+        function initHeaderActionsScroll() {
+            const bar = document.getElementById('header-actions-bar') || document.querySelector('.header-actions');
+            if (!bar) return;
+
+            // 1. Mouse wheel horizontal scroll conversion
+            bar.addEventListener('wheel', (e) => {
+                if (e.deltaY !== 0 || e.deltaX !== 0) {
+                    e.preventDefault();
+                    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                    bar.scrollLeft += delta * 1.5;
+                }
+            }, { passive: false });
+
+            // 2. Wheel over entire top header
+            const header = document.getElementById('top-header');
+            if (header) {
+                header.addEventListener('wheel', (e) => {
+                    if (e.target.closest && e.target.closest('.header-actions-container')) return;
+                    if (e.deltaY !== 0 || e.deltaX !== 0) {
+                        e.preventDefault();
+                        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                        bar.scrollLeft += delta * 1.5;
+                    }
+                }, { passive: false });
+            }
+
+            // 3. Desktop Drag to Scroll
+            let isDown = false;
+            let startX = 0;
+            let scrollLeft = 0;
+            let moved = false;
+
+            bar.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - bar.offsetLeft;
+                scrollLeft = bar.scrollLeft;
+                moved = false;
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDown = false;
+            });
+
+            bar.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                const x = e.pageX - bar.offsetLeft;
+                const walk = (x - startX) * 1.6;
+                if (Math.abs(walk) > 4) moved = true;
+                bar.scrollLeft = scrollLeft - walk;
+            });
+
+            // Prevent accidental clicks when dragging
+            bar.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (moved) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        moved = false;
+                    }
+                }, true);
+            });
+        }
+
+        // Global fallback Escape handler
+        function handleGlobalEscapeKey() {
+            if (window.game && typeof window.game.handleEscapeKey === 'function') {
+                window.game.handleEscapeKey();
+                return;
+            }
+
+            const openModals = Array.from(document.querySelectorAll('.modal-overlay')).filter(m => m.style.display === 'flex' || m.style.display === 'block');
+            if (openModals.length > 0) {
+                openModals.forEach(m => m.style.display = 'none');
+                return;
+            }
+
+            if (document.pointerLockElement) {
+                document.exitPointerLock();
+            }
+            openQuickMenuModal();
+            scrollHeaderActions(-1000);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.code === 'Escape') {
+                if (window.game && typeof window.game.handleEscapeKey === 'function') {
+                    // Handled exclusively by window.game.handleEscapeKey to prevent double-toggle
+                    return;
+                }
+                e.preventDefault();
+                handleGlobalEscapeKey();
+            }
+        });
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initHeaderActionsScroll);
+        } else {
+            initHeaderActionsScroll();
+        }
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/audio.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/world.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/character.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/siege_warfare.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/heraldry_nobility.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/apothecary_crafting.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/combat.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/postprocessing.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/qa_suite.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
-    <script src="js/game.js?v=20261115_v15_16_BOSSES_60FPS_TURBO"></script>
+    <script src="js/three.min.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/audio.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/world.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/character.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/siege_warfare.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/heraldry_nobility.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/apothecary_crafting.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/combat.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/postprocessing.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/qa_suite.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/game.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
 </body>
 </html>

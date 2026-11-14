@@ -175,6 +175,11 @@ class DarkSoulsGame {
         window.addEventListener('keydown', (e) => {
             this.keys[e.code] = true;
 
+            if (e.code === 'Escape') {
+                e.preventDefault();
+                this.handleEscapeKey();
+                return;
+            }
             if (e.code === 'KeyE') this.handleInteraction();
             if (e.code === 'KeyT') this.toggleTorch();
             if (e.code === 'KeyR' || e.code === 'Digit1') this.combat.tryDrinkEstus();
@@ -240,6 +245,10 @@ class DarkSoulsGame {
         // Pointer Lock & Mouse Look
         document.addEventListener('pointerlockchange', () => {
             this.isPointerLocked = document.pointerLockElement === this.renderer.domElement;
+            const hint = document.getElementById('escape-hint-pill');
+            if (hint) {
+                hint.style.display = this.isPointerLocked ? 'flex' : 'none';
+            }
         });
 
         document.addEventListener('mousemove', (e) => {
@@ -1818,6 +1827,41 @@ class DarkSoulsGame {
     closeNextLordModal() {
         const modal = document.getElementById('next-lord-modal');
         if (modal) modal.style.display = 'none';
+    }
+
+    handleEscapeKey() {
+        // 1. If any modal overlay is open, close all open modals and resume battle
+        const openModals = Array.from(document.querySelectorAll('.modal-overlay')).filter(m => {
+            return m.style.display === 'flex' || m.style.display === 'block';
+        });
+
+        if (openModals.length > 0) {
+            openModals.forEach(m => m.style.display = 'none');
+            this.closeNextLordModal();
+            if (window.qaSuite && window.qaSuite.closeUI) window.qaSuite.closeUI();
+            this.showNotification("⚔️ BATTLE RESUMED");
+            return;
+        }
+
+        // 2. If pointer lock is active, unlock cursor
+        if (document.pointerLockElement) {
+            document.exitPointerLock();
+        }
+
+        // 3. Open Lordran Command Menu
+        if (typeof openQuickMenuModal === 'function') {
+            openQuickMenuModal();
+        }
+
+        // 4. Smoothly scroll header actions to start and trigger golden pulse
+        const bar = document.getElementById('header-actions-bar') || document.querySelector('.header-actions');
+        if (bar) {
+            bar.scrollTo({ left: 0, behavior: 'smooth' });
+            bar.classList.add('header-actions-glow');
+            setTimeout(() => bar.classList.remove('header-actions-glow'), 1200);
+        }
+
+        this.showNotification("⚜️ LORDRAN COMMAND MENU • SCROLL BUTTONS [ESC]");
     }
 
     respawnPlayer() {
