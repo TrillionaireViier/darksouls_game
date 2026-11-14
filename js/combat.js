@@ -157,10 +157,27 @@ class DarkSoulsCombat {
                 poiseBreak: 1.9,
                 cost: 10000,
                 unlocked: false
+            },
+            torch: {
+                id: 'torch',
+                name: 'Lordran Pitch Torch',
+                type: 'Torch / Flame Weapon',
+                icon: '🔥',
+                desc: 'Pitch-soaked iron-bound torch. Illuminates darkness, inflicts 165+ fire damage, and sets targets ablaze with burning fire over time.',
+                lightDmg: 165,
+                heavyDmg: 310,
+                reach: 2.8,
+                bossReachBonus: 1.9,
+                lightStamina: 16,
+                heavyStamina: 28,
+                speedMultiplier: 1.25,
+                poiseBreak: 1.3,
+                cost: 400,
+                unlocked: true
             }
         };
         this.currentWeaponId = 'sword';
-        this.unlockedWeapons = ['sword'];
+        this.unlockedWeapons = ['sword', 'torch'];
         this.charcoalResinTimer = 0;
         this.projectiles = [];
 
@@ -699,6 +716,10 @@ class DarkSoulsCombat {
         if (this.charcoalResinTimer > 0) {
             totalDmg += 60; // Fire Pine Resin buff!
         }
+        const hasTorchFire = this.currentWeaponId === 'torch' || (this.game && this.game.isTorchActive);
+        if (hasTorchFire) {
+            totalDmg += 45; // Burning Torch fire damage bonus
+        }
 
         // 1. Check Hollow Soldiers
         for (const e of this.enemies) {
@@ -709,9 +730,10 @@ class DarkSoulsCombat {
                 const angle = forward.dot(toEnemy.normalize());
                 if (angle > 0.30) { // In front arc
                     e.hp -= totalDmg;
+                    if (hasTorchFire) this.applyBurnEffect(e);
                     this.audio.playHit(this.attackCombo === 3);
                     this.world.spawnBlood(e.mesh.position);
-                    this.world.spawnHitSparks(e.mesh.position, this.attackCombo === 3);
+                    this.world.spawnHitSparks(e.mesh.position, this.attackCombo === 3 || hasTorchFire);
                     this.game.showDamageNumber(e.mesh.position, totalDmg, this.currentWeaponId === 'uchigatana');
                     this.game.shakeCamera(0.12 * poiseDmg, 0.15);
 
@@ -734,6 +756,7 @@ class DarkSoulsCombat {
                 const angle = forward.dot(toBoss.normalize());
                 if (angle > 0.12) {
                     this.boss.hp -= totalDmg;
+                    if (hasTorchFire) this.applyBurnEffect(this.boss);
                     this.audio.playHit(true);
                     this.world.spawnHitSparks(this.boss.mesh.position, true);
                     this.world.spawnBlood(this.boss.mesh.position);
@@ -847,6 +870,15 @@ class DarkSoulsCombat {
             }
             this.souls -= cost;
             this.useHomewardBone();
+        } else if (itemId === 'torch_pitch') {
+            const cost = 100;
+            if (this.souls < cost) {
+                this.game.showNotification("INSUFFICIENT SOULS");
+                return false;
+            }
+            this.souls -= cost;
+            this.game.refuelTorch(100);
+            this.game.showNotification("FLASK OF TORCH PITCH APPLIED &bull; 100% REFUEL");
         }
 
         if (this.game && this.game.updateHUD) {
@@ -1156,11 +1188,45 @@ class DarkSoulsCombat {
         return true;
     }
 
+    applyBurnEffect(target) {
+        if (!target) return;
+        target.isBurning = true;
+        target.burnTimer = 3.6; // Burns for 3.6 seconds
+        target.burnTickTimer = 0;
+    }
+
     // ----------------------------------------------------
     // UPDATE TICK (COMBAT TIMERS & ENEMY AI)
     // ----------------------------------------------------
     update(delta) {
         if (this.isDead) return;
+
+        // Torch Fire Burn DoT Processing on Enemies & Boss
+        const burnTargets = [...this.enemies];
+        if (this.boss && !this.boss.isDead) burnTargets.push(this.boss);
+        for (const t of burnTargets) {
+            if (t.isDead || !t.isBurning) continue;
+            t.burnTimer -= delta;
+            t.burnTickTimer = (t.burnTickTimer || 0) + delta;
+            if (t.burnTickTimer >= 0.6) {
+                t.burnTickTimer = 0;
+                const burnDmg = 18;
+                t.hp -= burnDmg;
+                if (this.game && this.game.showDamageNumber && t.mesh) {
+                    this.game.showDamageNumber(t.mesh.position, burnDmg, false);
+                }
+                if (this.world && this.world.spawnHitSparks && t.mesh) {
+                    this.world.spawnHitSparks(t.mesh.position, false);
+                }
+                if (t.hp <= 0) {
+                    if (t === this.boss) this.killBoss();
+                    else this.killEnemy(t);
+                }
+            }
+            if (t.burnTimer <= 0) {
+                t.isBurning = false;
+            }
+        }
 
         // Pine Resin Fire Buff Timer
         if (this.charcoalResinTimer > 0) {

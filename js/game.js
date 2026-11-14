@@ -58,6 +58,11 @@ class DarkSoulsGame {
 
         this.brightnessLevel = 0; // 0: Daylight, 1: Ultra+, 2: Clear Twilight
 
+        // Handheld Medieval Pitch Torch State (Kingdom Come / Dark Souls Mechanics)
+        this.isTorchActive = false;
+        this.torchFuel = 100.0;
+        this.maxTorchFuel = 100.0;
+
         // Camera Parameters
         this.cameraDistance = 4.2;
         this.cameraPitch = 0.28;
@@ -130,6 +135,7 @@ class DarkSoulsGame {
             this.keys[e.code] = true;
 
             if (e.code === 'KeyE') this.handleInteraction();
+            if (e.code === 'KeyT') this.toggleTorch();
             if (e.code === 'KeyR' || e.code === 'Digit1') this.combat.tryDrinkEstus();
             if (e.code === 'Digit2' || e.code === 'KeyX') this.cycleEquippedWeapon(1);
             if (e.code === 'KeyZ') this.cycleEquippedWeapon(-1);
@@ -339,6 +345,7 @@ class DarkSoulsGame {
         bindTouchBtn('touch-btn-parry', () => this.combat.tryParry());
         bindTouchBtn('touch-btn-lockon', () => this.toggleLockOn());
         bindTouchBtn('touch-btn-interact', () => this.handleInteraction());
+        bindTouchBtn('touch-btn-torch', () => this.toggleTorch());
         bindTouchBtn('touch-btn-weapon', () => this.cycleEquippedWeapon(1));
     }
 
@@ -422,8 +429,21 @@ class DarkSoulsGame {
             if (d <= item.radius) {
                 if (item.type === 'bonfire') {
                     this.combat.restAtBonfire();
+                    this.refuelTorch(100);
                     this.openBonfireModal();
                     return;
+                } else if (item.type === 'torch_sconce') {
+                    if (!item.isLit) {
+                        item.lightUp();
+                        this.combat.souls += 50;
+                        this.updateSoulsHUD();
+                        this.showNotification("🔥 TORCH LIT &bull; +50 SOULS");
+                        if (this.audio) this.audio.playTorchIgnite();
+                        return;
+                    } else {
+                        this.refuelTorch(30);
+                        return;
+                    }
                 } else if (item.type === 'merchant') {
                     this.openMerchantModal();
                     return;
@@ -594,6 +614,76 @@ class DarkSoulsGame {
         // Mortar progress
         const grindBar = document.getElementById('mortar-grind-bar');
         if (grindBar) grindBar.style.width = Math.round(a.mortarPestle.crushProgress) + '%';
+    }
+
+    // ----------------------------------------------------
+    // TORCH SYSTEM (HANDHELD TORCH & FUEL CONSUMPTION)
+    // ----------------------------------------------------
+    toggleTorch(forced = null) {
+        if (forced !== null) {
+            this.isTorchActive = forced;
+        } else {
+            this.isTorchActive = !this.isTorchActive;
+        }
+
+        if (this.isTorchActive && this.torchFuel <= 0) {
+            this.isTorchActive = false;
+            this.showNotification("TORCH OUT OF FUEL &bull; REFUEL AT BONFIRE OR SCONCES");
+            if (this.audio) this.audio.playTorchSizzle();
+            return;
+        }
+
+        // Toggle visibility on 3D player model
+        if (this.charFactory && this.charFactory.setPlayerTorchVisible) {
+            this.charFactory.setPlayerTorchVisible(this.playerMesh, this.isTorchActive);
+        }
+
+        const btn = document.getElementById('btn-torch-toggle');
+        const fuelContainer = document.getElementById('torch-fuel-container');
+        const touchBtn = document.getElementById('touch-btn-torch');
+
+        if (this.isTorchActive) {
+            if (this.audio) this.audio.playTorchIgnite();
+            this.showNotification("🔥 TORCH EQUIPPED &bull; DARKNESS DISPELLED &bull; FIRE DAMAGE INFUSED");
+            if (btn) {
+                btn.style.borderColor = '#ffaa33';
+                btn.style.color = '#ffdd77';
+                btn.style.boxShadow = '0 0 14px rgba(255,150,30,0.6)';
+            }
+            if (touchBtn) {
+                touchBtn.style.borderColor = '#ffdd77';
+                touchBtn.style.boxShadow = '0 0 14px rgba(255,150,30,0.6)';
+            }
+            if (fuelContainer) fuelContainer.style.display = 'block';
+        } else {
+            if (this.audio) this.audio.playTorchSizzle();
+            this.showNotification("TORCH STOWED &bull; SHIELD RE-EQUIPPED");
+            if (btn) {
+                btn.style.borderColor = '#ff7722';
+                btn.style.color = '#ffaa44';
+                btn.style.boxShadow = '0 0 8px rgba(255,119,34,0.35)';
+            }
+            if (touchBtn) {
+                touchBtn.style.borderColor = '#ff7722';
+                touchBtn.style.boxShadow = '0 0 10px rgba(255,119,34,0.4)';
+            }
+            if (fuelContainer) fuelContainer.style.display = 'none';
+        }
+        this.updateTorchHUD();
+    }
+
+    refuelTorch(amount = 100) {
+        this.torchFuel = Math.min(this.maxTorchFuel, this.torchFuel + amount);
+        this.updateTorchHUD();
+        this.showNotification(`🔥 TORCH REFUELED (${Math.round(this.torchFuel)}% PITCH FUEL)`);
+        if (this.audio) this.audio.playTorchIgnite();
+    }
+
+    updateTorchHUD() {
+        const fill = document.getElementById('torch-bar-fill');
+        const text = document.getElementById('torch-fuel-text');
+        if (fill) fill.style.width = `${Math.round(this.torchFuel)}%`;
+        if (text) text.textContent = `${Math.round(this.torchFuel)}%`;
     }
 
     cycleBrightness() {
@@ -875,7 +965,13 @@ class DarkSoulsGame {
                 uData.torso.rotation.x = 0;
             }
             if (uData.leftShoulder && uData.rightShoulder && !this.combat.isAttacking && !this.combat.isBlocking) {
-                uData.leftShoulder.rotation.x = 0;
+                if (this.isTorchActive) {
+                    uData.leftShoulder.rotation.x = -0.65;
+                    uData.leftShoulder.rotation.z = -0.15;
+                } else {
+                    uData.leftShoulder.rotation.x = 0;
+                    uData.leftShoulder.rotation.z = 0;
+                }
                 uData.rightShoulder.rotation.x = 0;
             }
 
@@ -1160,6 +1256,57 @@ class DarkSoulsGame {
             }, 300);
         } else {
             this.ui.bossHud.style.display = 'none';
+        }
+
+        // ----------------------------------------------------
+        // TORCH FUEL CONSUMPTION & FLAME ANIMATION (KINGDOM COME 301-315)
+        // ----------------------------------------------------
+        if (this.isTorchActive) {
+            // Deplete torch fuel (lasts ~6.5 minutes of continuous use)
+            this.torchFuel = Math.max(0, this.torchFuel - delta * 0.25);
+            this.updateTorchHUD();
+
+            // Extinguish if fuel depleted
+            if (this.torchFuel <= 0) {
+                this.toggleTorch(false);
+                this.showNotification("TORCH EXTINGUISHED &bull; OUT OF FUEL");
+                if (this.audio) this.audio.playTorchSizzle();
+            }
+
+            // Extinguish if rolling underwater in flooded catacombs
+            if (this.playerMesh.position.y <= -4.6 && this.combat.isRolling) {
+                this.toggleTorch(false);
+                this.showNotification("TORCH EXTINGUISHED BY DEEP WATER");
+                if (this.audio) this.audio.playTorchSizzle();
+            }
+
+            // Animate flame flicker and embers on player's offhand torch
+            const offhand = this.playerMesh.userData.offhandTorch;
+            if (offhand && offhand.visible) {
+                const now = performance.now() * 0.001;
+                if (offhand.userData && offhand.userData.flameLight) {
+                    offhand.userData.flameLight.intensity = 3.6 + Math.sin(now * 14) * 0.5 + Math.sin(now * 29) * 0.25;
+                }
+                if (offhand.userData && offhand.userData.midMesh) {
+                    const s = 1.0 + Math.sin(now * 15) * 0.1;
+                    offhand.userData.midMesh.scale.set(s, 1.0 + Math.sin(now * 18) * 0.15, s);
+                }
+            }
+        }
+
+        // Animate flame if equipped as primary weapon in right hand
+        if (this.combat && this.combat.currentWeaponId === 'torch') {
+            const wpn = this.playerMesh.userData.swordGroup;
+            if (wpn && wpn.userData && wpn.userData.isTorch) {
+                const now = performance.now() * 0.001;
+                if (wpn.userData.flameLight) {
+                    wpn.userData.flameLight.intensity = 3.6 + Math.sin(now * 14) * 0.5 + Math.sin(now * 29) * 0.25;
+                }
+                if (wpn.userData.midMesh) {
+                    const s = 1.0 + Math.sin(now * 15) * 0.1;
+                    wpn.userData.midMesh.scale.set(s, 1.0 + Math.sin(now * 18) * 0.15, s);
+                }
+            }
         }
     }
 

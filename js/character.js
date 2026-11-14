@@ -339,6 +339,19 @@ class DarkSoulsCharacters {
             roughness: 0.78,
             metalness: 0.25
         });
+
+        // ----------------------------------------------------
+        // TORCH MATERIALS (MEDIEVAL WOOD & PITCH WRAPPING)
+        // ----------------------------------------------------
+        this.woodTorchMat = new THREE.MeshStandardMaterial({
+            color: 0x3d2716,
+            roughness: 0.88
+        });
+        this.pitchWrapMat = new THREE.MeshStandardMaterial({
+            color: 0x17110c,
+            roughness: 0.95,
+            metalness: 0.05
+        });
     }
 
     // ----------------------------------------------------
@@ -477,6 +490,10 @@ class DarkSoulsCharacters {
             glowLight.position.y = 1.0;
             root.add(glowLight);
 
+        } else if (weaponId === 'torch') {
+            // Pitch-Soaked Torch Weapon (Fire damage & darkness illumination)
+            return this.createTorchMesh(true);
+
         } else {
             // Astora Straight Sword (Default)
             const guard = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.06, 0.08), this.goldTrimMat);
@@ -495,6 +512,128 @@ class DarkSoulsCharacters {
         }
 
         root.userData = { weaponId };
+        return root;
+    }
+
+    createTorchMesh(isWeapon = false) {
+        const root = new THREE.Group();
+
+        // 1. Hardwood Shaft
+        const shaftGeo = new THREE.CylinderGeometry(0.04, 0.05, 1.15, 8);
+        const shaft = new THREE.Mesh(shaftGeo, this.woodTorchMat || this.leatherMat);
+        shaft.position.y = 0.45;
+        shaft.castShadow = true;
+        root.add(shaft);
+
+        // 2. Leather Wrapped Grip
+        const gripGeo = new THREE.CylinderGeometry(0.044, 0.048, 0.28, 8);
+        const grip = new THREE.Mesh(gripGeo, this.leatherMat);
+        grip.position.y = 0.08;
+        root.add(grip);
+
+        // Pommel iron ring
+        const pommelGeo = new THREE.TorusGeometry(0.045, 0.014, 6, 12);
+        const pommel = new THREE.Mesh(pommelGeo, this.darkSteelMat);
+        pommel.position.y = -0.06;
+        pommel.rotation.x = Math.PI / 2;
+        root.add(pommel);
+
+        // 3. Pitch-Soaked Cloth Head
+        const pitchGeo = new THREE.CylinderGeometry(0.11, 0.09, 0.35, 10);
+        const pitchHead = new THREE.Mesh(pitchGeo, this.pitchWrapMat);
+        pitchHead.position.y = 0.95;
+        pitchHead.castShadow = true;
+        root.add(pitchHead);
+
+        // Iron Binding Bands holding the cloth
+        const band1 = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.014, 6, 12), this.darkSteelMat);
+        band1.position.y = 0.83;
+        band1.rotation.x = Math.PI / 2;
+        root.add(band1);
+
+        const band2 = new THREE.Mesh(new THREE.TorusGeometry(0.112, 0.014, 6, 12), this.darkSteelMat);
+        band2.position.y = 1.05;
+        band2.rotation.x = Math.PI / 2;
+        root.add(band2);
+
+        // 4. Burning Flame Core (Multi-layered emissive mesh)
+        const flameGroup = new THREE.Group();
+        flameGroup.position.y = 1.16;
+
+        // White-hot inner core
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const coreMesh = new THREE.Mesh(new THREE.DodecahedronGeometry(0.1), coreMat);
+        flameGroup.add(coreMesh);
+
+        // Amber-gold mid flame
+        const midMat = new THREE.MeshStandardMaterial({
+            color: 0xff8800,
+            emissive: 0xff7700,
+            emissiveIntensity: 2.8,
+            roughness: 0.15
+        });
+        const midMesh = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.45, 8), midMat);
+        midMesh.position.y = 0.14;
+        flameGroup.add(midMesh);
+
+        // Outer flickering orange flame tip
+        const tipMat = new THREE.MeshBasicMaterial({
+            color: 0xff4400,
+            transparent: true,
+            opacity: 0.85
+        });
+        const tipMesh = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.58, 8), tipMat);
+        tipMesh.position.y = 0.22;
+        flameGroup.add(tipMesh);
+
+        // 5. Dynamic Warm PointLight
+        const flameLight = new THREE.PointLight(0xff8833, 3.8, 28, 1.2);
+        flameLight.position.y = 0.22;
+        flameLight.castShadow = true;
+        flameLight.shadow.bias = -0.002;
+        flameGroup.add(flameLight);
+
+        // 6. Spark / Ember Particles
+        const emberCount = 8;
+        const emberGeo = new THREE.BufferGeometry();
+        const emberPositions = new Float32Array(emberCount * 3);
+        const emberOffsets = [];
+        for (let i = 0; i < emberCount; i++) {
+            emberPositions[i * 3 + 0] = (Math.random() - 0.5) * 0.22;
+            emberPositions[i * 3 + 1] = Math.random() * 0.5;
+            emberPositions[i * 3 + 2] = (Math.random() - 0.5) * 0.22;
+            emberOffsets.push({
+                x: emberPositions[i * 3 + 0],
+                speedY: 0.35 + Math.random() * 0.5,
+                maxH: 0.75 + Math.random() * 0.5,
+                seed: Math.random() * 10
+            });
+        }
+        emberGeo.setAttribute('position', new THREE.BufferAttribute(emberPositions, 3));
+        const emberMat = new THREE.PointsMaterial({
+            color: 0xffaa22,
+            size: 0.08,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending
+        });
+        const emberPoints = new THREE.Points(emberGeo, emberMat);
+        flameGroup.add(emberPoints);
+
+        root.add(flameGroup);
+
+        root.userData = {
+            weaponId: 'torch',
+            flameGroup,
+            flameLight,
+            coreMesh,
+            midMesh,
+            tipMesh,
+            emberPoints,
+            emberOffsets,
+            isTorch: true
+        };
+
         return root;
     }
 
@@ -611,6 +750,13 @@ class DarkSoulsCharacters {
         shieldGroup.rotation.y = Math.PI / 6;
         lHand.add(shieldGroup);
 
+        // Offhand Torch (Held high when toggled on [T] or via HUD)
+        const offhandTorch = this.createTorchMesh(false);
+        offhandTorch.position.set(0, 0.1, 0.15);
+        offhandTorch.rotation.x = -0.2;
+        offhandTorch.visible = false;
+        lHand.add(offhandTorch);
+
         // Estus Flask (attached to hip, shown when drinking)
         const estusFlask = new THREE.Group();
         const flaskBody = new THREE.Mesh(
@@ -656,11 +802,24 @@ class DarkSoulsCharacters {
             lHand,
             swordGroup,
             shieldGroup,
+            offhandTorch,
             estusFlask
         };
 
         this.scene.add(root);
         return root;
+    }
+
+    setPlayerTorchVisible(playerMesh, isVisible) {
+        if (!playerMesh || !playerMesh.userData) return;
+        const u = playerMesh.userData;
+        if (u.offhandTorch) {
+            u.offhandTorch.visible = isVisible;
+        }
+        if (u.shieldGroup) {
+            // Stow shield when holding torch
+            u.shieldGroup.visible = !isVisible;
+        }
     }
 
     // ----------------------------------------------------

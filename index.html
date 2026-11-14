@@ -1278,6 +1278,7 @@
             </button>
             <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ BOSS ROSTER</button>
             <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ WEAPONS</button>
+            <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T] (Illuminates darkness & infuses attacks with fire damage)" style="border-color: #ff7722; color: #ffaa44; font-weight: 700; box-shadow: 0 0 10px rgba(255,119,34,0.35);">🔥 TORCH [T]</button>
             <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 MERCHANT</button>
             <button class="btn-icon-bar" onclick="openSiegeModal()" style="border-color: #e65100; color: #ffb74d; font-weight: 700;">🏰 SIEGE (391-400)</button>
             <button class="btn-icon-bar" onclick="openHeraldryModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 700;">👑 HERALDRY (401-410)</button>
@@ -1324,6 +1325,17 @@
             </div>
             <div class="bar-frame">
                 <div class="bar-fill-stamina" id="stamina-bar-fill"></div>
+            </div>
+        </div>
+
+        <!-- Torch Fuel Bar (Active when torch is equipped) -->
+        <div class="bar-container" id="torch-fuel-container" style="display: none; transition: opacity 0.3s ease;">
+            <div class="bar-label" style="color: #ffaa55;">
+                <span>🔥 TORCH FUEL</span>
+                <span id="torch-fuel-text">100%</span>
+            </div>
+            <div class="bar-frame" style="border-color: rgba(255,119,34,0.65); box-shadow: 0 0 8px rgba(255,119,34,0.35);">
+                <div class="bar-fill-torch" id="torch-bar-fill" style="width: 100%; height: 100%; background: linear-gradient(90deg, #ff3300, #ff9900, #ffdd55); transition: width 0.15s ease;"></div>
             </div>
         </div>
 
@@ -1680,6 +1692,19 @@
                     </div>
                     <button class="btn-fight-boss" onclick="buyMerchantItem('homeward_bone')" style="border-color: #ccaa44; color: #fff0aa; background: rgba(50, 40, 15, 0.4);">BUY (300)</button>
                 </div>
+
+                <!-- Consumable: Flask of Torch Pitch -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🪔</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">FLASK OF TORCH PITCH</div>
+                            <div class="boss-card-desc">Distilled mineral pitch &bull; Immediately refills Handheld Torch fuel to 100%</div>
+                            <div class="boss-card-stats">TORCH REFUEL &bull; COST: 100 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="buyMerchantItem('torch_pitch')" style="border-color: #ff7722; color: #ffaa55; background: rgba(50, 25, 10, 0.4);">BUY (100)</button>
+                </div>
             </div>
 
             <button class="btn-modal-close" onclick="closeMerchantModal()">FAREWELL</button>
@@ -1771,6 +1796,19 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('moonlight')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 7: Lordran Pitch Torch -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="torch">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">LORDRAN PITCH TORCH</div>
+                            <div class="boss-card-desc">Pitch-soaked iron-bound torch &bull; Dispels all darkness, inflicts fire burn DoT on foes</div>
+                            <div class="boss-card-stats">DMG: 165 / 310 FIRE &bull; REACH: 2.8m &bull; SPEED: 1.25x &bull; STAMINA: 16</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('torch')">EQUIP</button>
                 </div>
             </div>
 
@@ -2112,7 +2150,8 @@
                 <div><span class="key-badge">RMB / K</span> Shield Block (Hold)</div>
                 <div><span class="key-badge">2 / X</span> Cycle Equipped Weapon</div>
                 <div><span class="key-badge">C</span> Open Weapon Arsenal</div>
-                <div><span class="key-badge">E</span> Interact (Bonfire, Merchant, Fog)</div>
+                <div><span class="key-badge">E</span> Interact (Bonfire, Merchant, Sconces, Fog)</div>
+                <div><span class="key-badge">T</span> 🔥 Equip / Stow Pitch Torch (Dispels Darkness & Fire Buff)</div>
                 <div><span class="key-badge">Q / Tab</span> Shield Parry</div>
                 <div><span class="key-badge">Space / Shift</span> Перекат / Dodge Roll (i-frames)</div>
                 <div><span class="key-badge">In Air + Attack</span> ⚔️ Plunging Attack (3.2× Crater DMG)</div>
@@ -2143,7 +2182,7 @@
         <div id="touch-buttons-cluster">
             <button class="touch-action-btn" id="touch-btn-lockon">🎯<br>Lock</button>
             <button class="touch-action-btn" id="touch-btn-heavy">💥<br>Heavy</button>
-            <button class="touch-action-btn" id="touch-btn-interact">🔥<br>Use</button>
+            <button class="touch-action-btn" id="touch-btn-interact">✋<br>Use</button>
             <button class="touch-action-btn" id="touch-btn-block">🛡️<br>Block</button>
             <button class="touch-action-btn" id="touch-btn-attack">⚔️<br>Attack</button>
             <button class="touch-action-btn" id="touch-btn-parry">⚡<br>Parry</button>
@@ -2151,6 +2190,7 @@
             <button class="touch-action-btn" id="touch-btn-roll">🌀<br>Roll</button>
             <button class="touch-action-btn" id="touch-btn-weapon">⚔️<br>Swap</button>
         </div>
+        <button class="touch-action-btn" id="touch-btn-torch" title="Toggle Torch" style="position: absolute; bottom: 195px; right: 14px; width: 48px; height: 48px; border-radius: 50%; background: rgba(30, 16, 6, 0.92); border: 2px solid #ff7722; color: #ffaa44; font-size: 0.72rem; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; box-shadow: 0 0 10px rgba(255,119,34,0.45); z-index: 105;">🔥<span style="font-size:0.52rem; font-weight:700;">TORCH</span></button>
     </div>
 
     <!-- UI Action Scripts -->
@@ -2509,6 +2549,12 @@
             document.getElementById('controls-modal').style.display = 'none';
         }
 
+        function toggleTorch() {
+            if (window.game) {
+                window.game.toggleTorch();
+            }
+        }
+
         function toggleAudio() {
             if (window.dsAudio) {
                 const muted = window.dsAudio.toggleMute();
@@ -2545,14 +2591,14 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261114_tablet"></script>
-    <script src="js/audio.js?v=20261114_tablet"></script>
-    <script src="js/world.js?v=20261114_tablet"></script>
-    <script src="js/character.js?v=20261114_tablet"></script>
-    <script src="js/siege_warfare.js?v=20261114_tablet"></script>
-    <script src="js/heraldry_nobility.js?v=20261114_tablet"></script>
-    <script src="js/apothecary_crafting.js?v=20261114_tablet"></script>
-    <script src="js/combat.js?v=20261114_tablet"></script>
-    <script src="js/game.js?v=20261114_tablet"></script>
+    <script src="js/three.min.js?v=20261114_torches"></script>
+    <script src="js/audio.js?v=20261114_torches"></script>
+    <script src="js/world.js?v=20261114_torches"></script>
+    <script src="js/character.js?v=20261114_torches"></script>
+    <script src="js/siege_warfare.js?v=20261114_torches"></script>
+    <script src="js/heraldry_nobility.js?v=20261114_torches"></script>
+    <script src="js/apothecary_crafting.js?v=20261114_torches"></script>
+    <script src="js/combat.js?v=20261114_torches"></script>
+    <script src="js/game.js?v=20261114_torches"></script>
 </body>
 </html>

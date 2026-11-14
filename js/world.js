@@ -532,13 +532,26 @@ class DarkSoulsWorld {
 
         // Perimeter courtyard torches for clear visibility across starting zone
         const courtyardTorches = [
-            [-18, 3, -18], [18, 3, -18],
-            [-18, 3, 18], [18, 3, 18],
-            [-24, 3, 0], [24, 3, 0]
+            // North perimeter wall
+            [-26, 3.5, -28], [-13, 3.5, -28], [0, 3.5, -28], [13, 3.5, -28], [26, 3.5, -28],
+            // West wall
+            [-28, 3.5, -14], [-28, 3.5, 0], [-28, 3.5, 14],
+            // East wall
+            [28, 3.5, -14], [28, 3.5, 0], [28, 3.5, 14],
+            // South wall flanking bridge arch
+            [-12, 3.5, 28], [12, 3.5, 28]
         ];
         courtyardTorches.forEach(([tx, ty, tz]) => {
-            this.createTorch(tx, ty, tz);
+            this.createTorch(tx, ty, tz, { intensity: 2.8, radius: 22 });
         });
+
+        // Standing Iron Braziers flanking the Bonfire in central courtyard
+        this.createStandingBrazier(-3.6, 0, 0, 0xff7722, 3.8, 26);
+        this.createStandingBrazier(3.6, 0, 0, 0xff7722, 3.8, 26);
+
+        // Interactive unlit torches near courtyard gate (ignitable with [E] for +50 Souls)
+        this.createTorch(-6.5, 2.5, 25, { interactive: true, isLit: false });
+        this.createTorch(6.5, 2.5, 25, { interactive: true, isLit: false });
     }
 
     getGroundHeight(x, z) {
@@ -737,11 +750,17 @@ class DarkSoulsWorld {
         this.createWall(-7.5, 1.5, 62.5, 1, 3, 65); // Left rail
         this.createWall(7.5, 1.5, 62.5, 1, 3, 65);  // Right rail
 
-        // Torches along the bridge
-        [40, 55, 70, 85].forEach((tz) => {
-            this.createTorch(-6.8, 2.5, tz);
-            this.createTorch(6.8, 2.5, tz);
+        // Torches along both parapets of the Royal Bridge (16 Wall Sconces)
+        [32, 40, 48, 56, 64, 72, 80, 88].forEach((tz) => {
+            this.createTorch(-6.8, 2.8, tz, { intensity: 2.8, radius: 20 });
+            this.createTorch(6.8, 2.8, tz, { intensity: 2.8, radius: 20 });
         });
+
+        // Grand Standing Braziers at Bridge Portal (South & North)
+        this.createStandingBrazier(-5.2, 0, 30, 0xff7722, 3.8, 28);
+        this.createStandingBrazier(5.2, 0, 30, 0xff7722, 3.8, 28);
+        this.createStandingBrazier(-5.2, 0, 93, 0xffaa33, 4.0, 30);
+        this.createStandingBrazier(5.2, 0, 93, 0xffaa33, 4.0, 30);
 
         // ----------------------------------------------------
         // PATH 3: FLOODED SUBTERRANEAN CATACOMBS (DOWN: Y = -5.0)
@@ -806,6 +825,18 @@ class DarkSoulsWorld {
             this.createTealBrazier(-20, -0.6, az);
         });
 
+        // Crypt Corridor Sconces & Atmospheric Lighting
+        [28, 38, 48, 58, 68, 78, 86].forEach((cz, idx) => {
+            const isGhostfire = idx % 2 === 1;
+            const torchColor = isGhostfire ? 0x00ffcc : 0xff8833;
+            this.createTorch(-24.0, -2.8, cz, { color: torchColor, intensity: 2.6, radius: 18 });
+            this.createTorch(-16.0, -2.8, cz, { color: torchColor, intensity: 2.6, radius: 18 });
+        });
+
+        // Interactive unlit torches in crypt alcoves
+        this.createTorch(-23.8, -2.8, 52, { interactive: true, isLit: false, color: 0x00ffcc });
+        this.createTorch(-16.2, -2.8, 66, { interactive: true, isLit: false, color: 0xff8833 });
+
         // Ancient Carved Stone Sarcophagi in Crypt Alcoves
         [36, 50, 64, 76].forEach((sz, idx) => {
             const sarcX = (idx % 2 === 0) ? -23.2 : -16.8;
@@ -858,6 +889,22 @@ class DarkSoulsWorld {
         this.createTower(14, 105);
         this.createTower(-14, 155);
         this.createTower(14, 155);
+
+        // Roaring Braziers atop the 4 Arena Watchtowers (High Atmospheric Illumination)
+        this.createStandingBrazier(-14, 17.5, 105, 0xff7722, 4.6, 35);
+        this.createStandingBrazier(14, 17.5, 105, 0xff7722, 4.6, 35);
+        this.createStandingBrazier(-14, 17.5, 155, 0xff7722, 4.6, 35);
+        this.createStandingBrazier(14, 17.5, 155, 0xff7722, 4.6, 35);
+
+        // Perimeter Wall Torches along Boss Arena East & West Walls (18 Sconces)
+        [102, 110, 118, 126, 134, 142, 150, 158].forEach((az) => {
+            this.createTorch(-16.8, 4.2, az, { intensity: 3.0, radius: 24, color: 0xff8833 });
+            this.createTorch(16.8, 4.2, az, { intensity: 3.0, radius: 24, color: 0xff8833 });
+        });
+
+        // Northern Throne Gate Braziers (at far end of Arena)
+        this.createStandingBrazier(-5.5, 0, 163, 0xffaa33, 4.0, 28);
+        this.createStandingBrazier(5.5, 0, 163, 0xffaa33, 4.0, 28);
     }
 
     createWall(x, y, z, w, h, d) {
@@ -1138,27 +1185,200 @@ class DarkSoulsWorld {
         ));
     }
 
-    createTorch(x, y, z) {
-        const sconce = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.2, 6), this.ironMat);
-        sconce.position.set(x, y, z);
-        this.scene.add(sconce);
+    createTorch(x, y, z, options = {}) {
+        const torchGroup = new THREE.Group();
+        const colorHex = options.color !== undefined ? options.color : 0xff7722;
+        const baseIntensity = options.intensity !== undefined ? options.intensity : 2.8;
+        const radius = options.radius !== undefined ? options.radius : 20;
+        const isInteractive = options.interactive || false;
+        let isLit = options.isLit !== false;
 
-        const flameLight = new THREE.PointLight(0xff7722, 1.8, 14, 1.8);
-        flameLight.position.set(x, y + 0.7, z);
-        this.scene.add(flameLight);
+        // 1. Wrought iron wall mount backplate
+        const plateGeo = new THREE.BoxGeometry(0.18, 0.45, 0.06);
+        const plate = new THREE.Mesh(plateGeo, this.ironMat);
+        torchGroup.add(plate);
 
-        // Animated flame particle
-        const fMat = new THREE.MeshBasicMaterial({ color: 0xffaa33 });
-        const fMesh = new THREE.Mesh(new THREE.DodecahedronGeometry(0.18), fMat);
-        fMesh.position.set(x, y + 0.7, z);
-        this.scene.add(fMesh);
+        // 2. Curved forged iron holder arm
+        const armGeo = new THREE.CylinderGeometry(0.035, 0.035, 0.5, 6);
+        const arm = new THREE.Mesh(armGeo, this.ironMat);
+        arm.position.set(0, 0.08, 0.2);
+        arm.rotation.x = Math.PI / 4;
+        torchGroup.add(arm);
+
+        // 3. Iron torch collar / basket ring
+        const basketGeo = new THREE.CylinderGeometry(0.12, 0.08, 0.22, 8, 1, true);
+        const basket = new THREE.Mesh(basketGeo, this.ironMat);
+        basket.position.set(0, 0.26, 0.38);
+        torchGroup.add(basket);
+
+        // 4. Charred wooden torch handle wrapped in pitch cloth
+        const shaftGeo = new THREE.CylinderGeometry(0.05, 0.06, 0.85, 8);
+        const shaftMat = new THREE.MeshStandardMaterial({ color: 0x221812, roughness: 0.95 });
+        const shaft = new THREE.Mesh(shaftGeo, shaftMat);
+        shaft.position.set(0, 0.28, 0.38);
+        shaft.rotation.x = Math.PI / 12;
+        shaft.castShadow = true;
+        torchGroup.add(shaft);
+
+        // Pitch wrapping bundle
+        const pitchGeo = new THREE.CylinderGeometry(0.1, 0.085, 0.28, 8);
+        const pitchMat = new THREE.MeshStandardMaterial({ color: 0x140e0a, roughness: 0.95 });
+        const pitchMesh = new THREE.Mesh(pitchGeo, pitchMat);
+        pitchMesh.position.set(0, 0.58, 0.44);
+        torchGroup.add(pitchMesh);
+
+        // 5. Dual-Layer Animated Flame
+        const flameGroup = new THREE.Group();
+        flameGroup.position.set(0, 0.8, 0.48);
+
+        // White-gold inner core
+        const coreGeo = new THREE.DodecahedronGeometry(0.1);
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        flameGroup.add(coreMesh);
+
+        // Outer vibrant flame body
+        const flameGeo = new THREE.ConeGeometry(0.16, 0.48, 8);
+        const flameMat = new THREE.MeshStandardMaterial({
+            color: colorHex,
+            emissive: colorHex,
+            emissiveIntensity: 2.5,
+            roughness: 0.2
+        });
+        const flameMesh = new THREE.Mesh(flameGeo, flameMat);
+        flameMesh.position.y = 0.16;
+        flameGroup.add(flameMesh);
+
+        // PointLight
+        const flameLight = new THREE.PointLight(colorHex, isLit ? baseIntensity : 0, radius, 1.4);
+        flameLight.position.y = 0.18;
+        flameLight.castShadow = true;
+        flameLight.shadow.bias = -0.002;
+        flameGroup.add(flameLight);
+
+        flameGroup.visible = isLit;
+        torchGroup.add(flameGroup);
+
+        torchGroup.position.set(x, y, z);
+        this.scene.add(torchGroup);
+
+        const particleEntry = {
+            mesh: flameGroup,
+            coreMesh,
+            flameMesh,
+            light: flameLight,
+            baseIntensity: baseIntensity,
+            seed: Math.random() * 20,
+            isTorch: true,
+            isLit: isLit
+        };
+        this.particles.push(particleEntry);
+
+        // Interactive unlit torch
+        if (isInteractive) {
+            const interactable = {
+                type: 'torch_sconce',
+                position: new THREE.Vector3(x, y, z),
+                radius: 2.8,
+                prompt: isLit ? '[ E ] REFUEL TORCH' : '🔥 [ E ] LIGHT TORCH (+50 SOULS)',
+                isLit: isLit,
+                lightUp: () => {
+                    isLit = true;
+                    interactable.isLit = true;
+                    flameGroup.visible = true;
+                    flameLight.intensity = baseIntensity;
+                    particleEntry.isLit = true;
+                    interactable.prompt = '[ E ] REFUEL TORCH';
+                }
+            };
+            this.interactables.push(interactable);
+        }
+
+        return torchGroup;
+    }
+
+    createStandingBrazier(x, y, z, colorHex = 0xff7722, intensity = 3.6, radius = 26) {
+        const brazierGroup = new THREE.Group();
+
+        // 1. Tripod Iron Legs
+        for (let i = 0; i < 3; i++) {
+            const angle = (i / 3) * Math.PI * 2;
+            const legGeo = new THREE.CylinderGeometry(0.04, 0.05, 1.5, 6);
+            const leg = new THREE.Mesh(legGeo, this.ironMat);
+            leg.position.set(Math.sin(angle) * 0.42, 0.75, Math.cos(angle) * 0.42);
+            leg.rotation.z = Math.cos(angle) * 0.22;
+            leg.rotation.x = -Math.sin(angle) * 0.22;
+            brazierGroup.add(leg);
+        }
+
+        // 2. Iron Brazier Cauldron Bowl
+        const bowlGeo = new THREE.CylinderGeometry(0.7, 0.45, 0.5, 12, 1, false);
+        const bowl = new THREE.Mesh(bowlGeo, this.ironMat);
+        bowl.position.y = 1.4;
+        bowl.castShadow = true;
+        brazierGroup.add(bowl);
+
+        // Riveted Lip Ring
+        const lipGeo = new THREE.TorusGeometry(0.72, 0.04, 6, 16);
+        const lip = new THREE.Mesh(lipGeo, this.ironMat);
+        lip.position.y = 1.65;
+        lip.rotation.x = Math.PI / 2;
+        brazierGroup.add(lip);
+
+        // 3. Glowing Charcoal Embers Mound
+        const coalsGeo = new THREE.ConeGeometry(0.65, 0.35, 10);
+        const coalsMat = new THREE.MeshStandardMaterial({
+            color: 0x221100,
+            emissive: colorHex,
+            emissiveIntensity: 1.8,
+            roughness: 0.85
+        });
+        const coals = new THREE.Mesh(coalsGeo, coalsMat);
+        coals.position.y = 1.7;
+        brazierGroup.add(coals);
+
+        // 4. Roaring Central Flame
+        const flameGeo = new THREE.ConeGeometry(0.38, 1.0, 8);
+        const flameMat = new THREE.MeshStandardMaterial({
+            color: colorHex,
+            emissive: colorHex,
+            emissiveIntensity: 3.2,
+            roughness: 0.1
+        });
+        const flame = new THREE.Mesh(flameGeo, flameMat);
+        flame.position.y = 2.2;
+        brazierGroup.add(flame);
+
+        // Core white-hot spark
+        const coreGeo = new THREE.DodecahedronGeometry(0.2);
+        const core = new THREE.Mesh(coreGeo, new THREE.MeshBasicMaterial({ color: 0xffffff }));
+        core.position.y = 1.95;
+        brazierGroup.add(core);
+
+        // 5. Dynamic Warm Light
+        const light = new THREE.PointLight(colorHex, intensity, radius, 1.3);
+        light.position.y = 2.4;
+        light.castShadow = true;
+        light.shadow.bias = -0.002;
+        brazierGroup.add(light);
+
+        brazierGroup.position.set(x, y, z);
+        this.scene.add(brazierGroup);
 
         this.particles.push({
-            mesh: fMesh,
-            light: flameLight,
-            baseIntensity: 1.8,
-            seed: Math.random() * 10
+            mesh: flame,
+            light: light,
+            baseIntensity: intensity,
+            seed: Math.random() * 20
         });
+
+        // Collider for the solid tripod brazier
+        this.colliders.push(new THREE.Box3().setFromCenterAndSize(
+            new THREE.Vector3(x, y + 0.9, z),
+            new THREE.Vector3(1.5, 1.8, 1.5)
+        ));
+
+        return brazierGroup;
     }
 
     createTower(x, z) {
@@ -1581,8 +1801,13 @@ class DarkSoulsWorld {
 
         // 2. Torch lights flicker
         this.particles.forEach(p => {
+            if (p.isLit === false) return;
             if (p.light) {
-                p.light.intensity = p.baseIntensity + Math.sin(time * 8 + p.seed) * 0.3;
+                p.light.intensity = p.baseIntensity + Math.sin(time * 9 + p.seed) * 0.35 + Math.sin(time * 21 + p.seed * 2) * 0.15;
+            }
+            if (p.flameMesh) {
+                const s = 1.0 + Math.sin(time * 12 + p.seed) * 0.08;
+                p.flameMesh.scale.set(s, 1.0 + Math.sin(time * 16 + p.seed) * 0.14, s);
             }
         });
 

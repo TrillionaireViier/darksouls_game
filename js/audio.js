@@ -1092,6 +1092,118 @@ class DarkSoulsAudio {
             osc.stop(now + offset + 0.6);
         });
     }
+
+    // ----------------------------------------------------
+    // TORCH PROCEDURAL AUDIO (IGNITE, SIZZLE & SWING)
+    // ----------------------------------------------------
+    playTorchIgnite() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // 1. Flint Spark Strike (sharp metallic click)
+        const flintOsc = this.ctx.createOscillator();
+        const flintGain = this.ctx.createGain();
+        flintOsc.type = 'triangle';
+        flintOsc.frequency.setValueAtTime(2800, now);
+        flintOsc.frequency.exponentialRampToValueAtTime(600, now + 0.05);
+        flintGain.gain.setValueAtTime(0.35, now);
+        flintGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        flintOsc.connect(flintGain);
+        flintGain.connect(this.sfxGain);
+        flintOsc.start(now);
+        flintOsc.stop(now + 0.07);
+
+        // 2. Roaring Pitch Flame Ignition (resonant warm white noise burst)
+        const dur = 1.2;
+        const b = this.ctx.createBuffer(1, this.ctx.sampleRate * dur, this.ctx.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) {
+            d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.45));
+        }
+        const fire = this.ctx.createBufferSource();
+        fire.buffer = b;
+
+        const f = this.ctx.createBiquadFilter();
+        f.type = 'lowpass';
+        f.frequency.setValueAtTime(180, now);
+        f.frequency.linearRampToValueAtTime(750, now + 0.15);
+        f.frequency.linearRampToValueAtTime(220, now + dur);
+
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.05, now);
+        g.gain.linearRampToValueAtTime(0.65, now + 0.12);
+        g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        fire.connect(f);
+        f.connect(g);
+        g.connect(this.sfxGain);
+        fire.start(now + 0.02);
+    }
+
+    playTorchSizzle() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Water steam hiss / extinguishing fizzle
+        const dur = 0.8;
+        const b = this.ctx.createBuffer(1, this.ctx.sampleRate * dur, this.ctx.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) {
+            d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = b;
+
+        const f = this.ctx.createBiquadFilter();
+        f.type = 'bandpass';
+        f.Q.setValueAtTime(4.0, now);
+        f.frequency.setValueAtTime(3200, now);
+        f.frequency.exponentialRampToValueAtTime(800, now + dur);
+
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.4, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        noise.connect(f);
+        f.connect(g);
+        g.connect(this.sfxGain);
+        noise.start(now);
+    }
+
+    playTorchSwing() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Flaming swoosh: low frequency air rush combined with crackling fire
+        const dur = 0.32;
+        const b = this.ctx.createBuffer(1, this.ctx.sampleRate * dur, this.ctx.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) {
+            d[i] = (Math.random() * 2 - 1);
+        }
+        const src = this.ctx.createBufferSource();
+        src.buffer = b;
+
+        const f = this.ctx.createBiquadFilter();
+        f.type = 'bandpass';
+        f.Q.setValueAtTime(2.2, now);
+        f.frequency.setValueAtTime(260, now);
+        f.frequency.exponentialRampToValueAtTime(1100, now + 0.12);
+        f.frequency.exponentialRampToValueAtTime(140, now + dur);
+
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.05, now);
+        g.gain.linearRampToValueAtTime(0.55, now + 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        src.connect(f);
+        f.connect(g);
+        g.connect(this.sfxGain);
+        src.start(now);
+    }
 }
 
 // Global audio singleton
