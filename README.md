@@ -102,6 +102,42 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
   - Brushed steel armor plates with directional hairline scratches, fluted ridges, and sharpened sword edge specular highlights.
   - Cinematic ACES Filmic Tone Mapping with enhanced dynamic range lighting.
 
+- **Advanced Siege & Warfare Mechanics (391–400)**:
+  - **391. Trebuchet & Catapult Aiming**: Manual counterweight calibration (200kg to 1200kg) and winch angle elevation (15° to 65°) calculating parabolic ballistic trajectories, triggering thunderous fiery boulder explosions and ground craters.
+  - **392. Scaling Ladder Placement**: Raising and securing wooden assault ladders against rampart battlements under fire.
+  - **393. Battering Ram Coordination**: Synchronized timing rhythm mini-mechanic against portcullises, shattering gate integrity.
+  - **394. Boiling Oil Defense**: Pouring cauldrons of searing pitch down castle hatches, creating ground fire hazard zones (-85 HP/s DoT).
+  - **395. Arrow Slit Archery Cover**: Utilizing narrow arrow loops for 100% directional missile protection while sniping outward.
+  - **396. Caltrop Scatter & Foot Injury**: Scattering sharp four-pointed iron caltrops (Key `V`), crippling charging enemies with -60% movement speed penalties.
+  - **397. Palisade & Wooden Spike Defenses**: Erecting defensive timber chevaux-de-frise barriers that deflect enemy charges.
+  - **398. Siege Tower Docking**: Pushing multi-story wheeled siege towers to fortress walls and dropping heavy drawbridges.
+  - **399. Fire Arrow Imbues**: Wrapping pitch cloth around arrows and lighting them at bonfires for incendiary siege strikes.
+  - **400. Horn Blow Morale Buffs**: Sounding the sacred War Horn of Lordran (Key `H`), granting +45% defense and +60% stamina regen for 30s.
+
+- **Heraldry, Social Hierarchy & Nobility (401–410)**:
+  - **401. Tabard & Coat of Arms Customization**: Interactive Canvas Blazon studio with field tinctures (Gules, Azure, Sable, Vert, Purpure, Or, Argent), divisions (Pale, Fess, Chevron, Saltire, Quartered), and charges (Lion, Sun, Dragon, Swords, Crown, Raven, Tower) rendered directly onto the 3D player shield in real-time.
+  - **402. Noble Title Social Standing**: Feudal hierarchy progression (Peasant Retainer, Squire, Knight Bachelor, Baronet, Count, Grand Paladin) unlocking merchant discounts (up to 35%) and guard deference.
+  - **403. Peasant Deference & Bowing**: Non-hostile NPCs and hollows bow respectfully and doff caps when passing the knight.
+  - **404. Aristocratic Banquet Etiquette**: Court banquet etiquette and diplomatic toasts gaining chivalric honor.
+  - **405. Duel of Honor Mechanics**: Formal 1v1 chivalric challenges against elite champions (Sir Roland, Baron Vilem) settling personal disputes.
+  - **406. Vassal Land Management**: Collecting passive soul taxes from managed fiefdoms (Skalitz Outpost, Burg Bastion, Parish Valley).
+  - **407. Ransom & Prisoner Logistics**: Negotiating coin and soul ransoms for captured enemy warlords.
+  - **408. Heraldic Recognition Penalty**: Infamy system tracking crimes committed while wearing faction arms.
+  - **409. Royal Court Audience Protocols**: Kneeling protocols and formal sovereign honorifics.
+  - **410. Knightly Order Initiation**: Overnight bonfire vigil, chivalric vows, and accolade dubbing ceremonies.
+
+- **Medical, Herbalism & Apothecary Crafting (411–420)**:
+  - **411. Leechcraft & Bloodletting**: Applying black medicinal leeches to drain infected blood and purge toxic poisons.
+  - **412. Bone Setting Minigame**: Aligning fractured limb bones and applying splints to restore full sprint and roll locomotion.
+  - **413. Herb Drying Racks**: Safehouse drying racks dehydrating wild flora (Marigold, Bloodflower, Poppy, Thistle) for long-term potency.
+  - **414. Mortar & Pestle Grinding Physics**: Interactive rotational pestle grinding physics crushing dried herbs into refined powders.
+  - **415. Alembic Heat Control**: Charcoal bellows regulation keeping alembic boiling point in the gold distillation band (78°C – 84°C).
+  - **416. Opioid Poppy Extraction**: Brewing refined poppy tears into pain-numbing tinctures that eliminate stamina exhaustion for 25s.
+  - **417. Antidote Synthesis**: Combining charcoal, sulfur, and thistle root into universal venom antidotes.
+  - **418. Bandage Sterilization**: Boiling linen rags in water to prevent post-injury sepsis and wound rotting.
+  - **419. Botanical Encyclopedia Journal**: Illustrated botanical codex with plant properties, Latin binomials, and brewing lore.
+  - **420. Poisonous Spore Extraction**: Harvesting subterranean crypt fungi spores to craft blade confusion toxins.
+
 - **The Bonfire & Boss Selector**:
   - Rest to restore full HP and refill 5 Estus Flasks.
   - Level-Up menu to upgrade Vigor (HP), Endurance (Stamina), and Strength (Damage) with Souls.

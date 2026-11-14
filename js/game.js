@@ -27,11 +27,16 @@ class DarkSoulsGame {
         this.audio = window.dsAudio;
         this.world = new DarkSoulsWorld(this.scene);
         this.charFactory = new DarkSoulsCharacters(this.scene);
+        this.character = this.charFactory;
         this.combat = new DarkSoulsCombat(this);
+        this.siege = new SiegeWarfareSystem(this);
+        this.heraldry = new HeraldryNobilitySystem(this);
+        this.apothecary = new ApothecaryCraftingSystem(this);
 
         // Player Entity
         this.playerMesh = this.charFactory.createPlayer();
         this.playerMesh.position.set(0, 0, 5); // Courtyard start near bonfire
+        this.heraldry.applyHeraldryTo3DPlayer();
         this.playerVelocity = new THREE.Vector3();
         this.moveSpeed = 4.8;
         this.sprintSpeed = 7.2;
@@ -144,6 +149,15 @@ class DarkSoulsGame {
             }
             if (e.code === 'KeyJ') this.combat.tryLightAttack();
             if (e.code === 'KeyK') this.combat.tryHeavyAttack();
+            if (e.code === 'KeyH') {
+                if (this.siege) this.siege.blowWarHorn();
+            }
+            if (e.code === 'KeyV') {
+                if (this.siege) this.siege.deployCaltrops();
+            }
+            if (e.code === 'KeyB') {
+                if (this.apothecary) this.apothecary.applySterileBandage();
+            }
         });
 
         window.addEventListener('keyup', (e) => {
@@ -450,6 +464,137 @@ class DarkSoulsGame {
         if (modal) modal.style.display = 'none';
     }
 
+    // ----------------------------------------------------
+    // SIEGE WARFARE MODAL (391–400)
+    // ----------------------------------------------------
+    openSiegeModal() {
+        const modal = document.getElementById('siege-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateSiegeUI();
+            if (this.audio) this.audio.playRoll();
+        }
+    }
+
+    closeSiegeModal() {
+        const modal = document.getElementById('siege-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    updateSiegeUI() {
+        if (!this.siege) return;
+        const s = this.siege;
+
+        // Trebuchet labels
+        const cwEl = document.getElementById('treb-cw-val');
+        if (cwEl) cwEl.textContent = s.trebuchet.counterweightKg + ' kg';
+        const angleEl = document.getElementById('treb-angle-val');
+        if (angleEl) angleEl.textContent = s.trebuchet.winchAngleDeg + '°';
+        const distEl = document.getElementById('treb-last-dist');
+        if (distEl) distEl.textContent = s.trebuchet.lastHitDistance ? (s.trebuchet.lastHitDistance + ' m') : '--';
+
+        // Battering Ram
+        const ramFill = document.getElementById('ram-sync-bar');
+        if (ramFill) ramFill.style.width = Math.round(s.batteringRam.rhythmBeat * 100) + '%';
+        const gateHp = document.getElementById('ram-gate-hp');
+        if (gateHp) gateHp.textContent = s.batteringRam.gateIntegrity + ' / ' + s.batteringRam.maxGateIntegrity;
+
+        // Boiling Oil & Caltrops
+        const oilCount = document.getElementById('siege-oil-count');
+        if (oilCount) oilCount.textContent = s.boilingOil.cauldronsReady + ' / ' + s.boilingOil.maxCauldrons;
+        const caltropCount = document.getElementById('siege-caltrop-count');
+        if (caltropCount) caltropCount.textContent = s.caltrops.carried;
+
+        // Tower
+        const towerPct = document.getElementById('siege-tower-pct');
+        if (towerPct) towerPct.textContent = Math.round(s.siegeTower.progressPct) + '%';
+    }
+
+    // ----------------------------------------------------
+    // HERALDRY & NOBILITY MODAL (401–410)
+    // ----------------------------------------------------
+    openHeraldryModal() {
+        const modal = document.getElementById('heraldry-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateHeraldryUI();
+            if (this.audio) this.audio.playRoll();
+        }
+    }
+
+    closeHeraldryModal() {
+        const modal = document.getElementById('heraldry-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    updateHeraldryUI() {
+        if (!this.heraldry) return;
+        const h = this.heraldry;
+
+        // Render preview canvas
+        const previewCanvas = document.getElementById('heraldry-preview-canvas');
+        if (previewCanvas) {
+            h.renderCoatOfArms(previewCanvas);
+        }
+
+        // Rank & Honor
+        const rankObj = h.getCurrentRank();
+        const rankEl = document.getElementById('heraldry-rank-title');
+        if (rankEl) rankEl.textContent = rankObj.title;
+        const honorEl = document.getElementById('heraldry-honor-pts');
+        if (honorEl) honorEl.textContent = h.chivalryHonor + ' pts';
+        const perkEl = document.getElementById('heraldry-perk-desc');
+        if (perkEl) perkEl.textContent = rankObj.perk;
+
+        // Fief Taxes
+        let uncollected = 0;
+        h.fiefdoms.forEach(f => uncollected += Math.floor(f.uncollectedTithe));
+        const titheEl = document.getElementById('fief-uncollected-val');
+        if (titheEl) titheEl.textContent = uncollected + ' Souls';
+    }
+
+    // ----------------------------------------------------
+    // APOTHECARY & MEDIEVAL SURGERY MODAL (411–420)
+    // ----------------------------------------------------
+    openApothecaryModal() {
+        const modal = document.getElementById('apothecary-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateApothecaryUI();
+            if (this.audio) this.audio.playRoll();
+        }
+    }
+
+    closeApothecaryModal() {
+        const modal = document.getElementById('apothecary-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    updateApothecaryUI() {
+        if (!this.apothecary) return;
+        const a = this.apothecary;
+
+        // Leeches & Bandages
+        const leechEl = document.getElementById('med-leech-count');
+        if (leechEl) leechEl.textContent = a.leechcraft.leechesInJar;
+        const bandEl = document.getElementById('med-bandage-count');
+        if (bandEl) bandEl.textContent = a.craftedMeds.sterileBandages;
+        const poppyEl = document.getElementById('med-poppy-count');
+        if (poppyEl) poppyEl.textContent = a.craftedMeds.poppyExtracts;
+        const antiEl = document.getElementById('med-antidote-count');
+        if (antiEl) antiEl.textContent = a.craftedMeds.venomAntidotes;
+
+        // Alembic Temp
+        const tempEl = document.getElementById('alembic-temp-val');
+        if (tempEl) tempEl.textContent = Math.round(a.alembic.currentTempC) + '°C';
+        const distBar = document.getElementById('alembic-distill-bar');
+        if (distBar) distBar.style.width = Math.round(a.alembic.distillProgress) + '%';
+
+        // Mortar progress
+        const grindBar = document.getElementById('mortar-grind-bar');
+        if (grindBar) grindBar.style.width = Math.round(a.mortarPestle.crushProgress) + '%';
+    }
+
     cycleBrightness() {
         this.brightnessLevel = (this.brightnessLevel || 0) + 1;
         if (this.brightnessLevel > 2) this.brightnessLevel = 0;
@@ -646,6 +791,9 @@ class DarkSoulsGame {
         // 1. Update Subsystems
         this.world.update(delta);
         this.combat.update(delta);
+        if (this.siege) this.siege.update(delta);
+        if (this.heraldry) this.heraldry.update(delta);
+        if (this.apothecary) this.apothecary.update(delta);
 
         // 2. Update Player Position & Rotation
         this.updatePlayer(delta);
@@ -1220,6 +1368,12 @@ class DarkSoulsGame {
             defeatedBosses: this.combat.defeatedBosses || [],
             currentWeaponId: this.combat.currentWeaponId || 'sword',
             unlockedWeapons: this.combat.unlockedWeapons || ['sword'],
+            heraldry: this.heraldry ? this.heraldry.heraldry : null,
+            chivalryHonor: this.heraldry ? this.heraldry.chivalryHonor : 850,
+            currentRankIndex: this.heraldry ? this.heraldry.currentRankIndex : 2,
+            fiefdoms: this.heraldry ? this.heraldry.fiefdoms : null,
+            craftedMeds: this.apothecary ? this.apothecary.craftedMeds : null,
+            trebuchet: this.siege ? { counterweightKg: this.siege.trebuchet.counterweightKg, winchAngleDeg: this.siege.trebuchet.winchAngleDeg } : null,
             playerPos: {
                 x: Number(this.playerMesh.position.x.toFixed(2)),
                 y: Number(this.playerMesh.position.y.toFixed(2)),
@@ -1283,6 +1437,26 @@ class DarkSoulsGame {
             }
             if (data.currentWeaponId && this.combat.weapons[data.currentWeaponId]) {
                 this.combat.equipWeapon(data.currentWeaponId);
+            }
+
+            // Restore Heraldry & Nobility
+            if (data.heraldry && this.heraldry) {
+                this.heraldry.heraldry = data.heraldry;
+                if (data.chivalryHonor !== undefined) this.heraldry.chivalryHonor = data.chivalryHonor;
+                if (data.currentRankIndex !== undefined) this.heraldry.currentRankIndex = data.currentRankIndex;
+                if (Array.isArray(data.fiefdoms)) this.heraldry.fiefdoms = data.fiefdoms;
+                this.heraldry.customizeHeraldry();
+            }
+
+            // Restore Apothecary Medicines
+            if (data.craftedMeds && this.apothecary) {
+                this.apothecary.craftedMeds = data.craftedMeds;
+            }
+
+            // Restore Siege Settings
+            if (data.trebuchet && this.siege) {
+                this.siege.trebuchet.counterweightKg = data.trebuchet.counterweightKg || 650;
+                this.siege.trebuchet.winchAngleDeg = data.trebuchet.winchAngleDeg || 42;
             }
 
             this.updateHUD();

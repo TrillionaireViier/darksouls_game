@@ -978,6 +978,9 @@
             <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ BOSS ROSTER</button>
             <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ WEAPONS</button>
             <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 MERCHANT</button>
+            <button class="btn-icon-bar" onclick="openSiegeModal()" style="border-color: #e65100; color: #ffb74d; font-weight: 700;">🏰 SIEGE (391-400)</button>
+            <button class="btn-icon-bar" onclick="openHeraldryModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 700;">👑 HERALDRY (401-410)</button>
+            <button class="btn-icon-bar" onclick="openApothecaryModal()" style="border-color: #2e7d32; color: #a5d6a7; font-weight: 700;">🌿 APOTHECARY (411-420)</button>
             <button class="btn-icon-bar" id="btn-brightness-toggle" onclick="toggleBrightness()" title="Lighting & Exposure Toggle (High Visibility)">☀️ DAYLIGHT</button>
             <button class="btn-icon-bar" id="btn-save-header" onclick="manualSaveGame()" title="Save your journey to local memory (Auto-saves on Bonfire rest & boss defeat)" style="border-color: #ffd276; color: #ffd276;">💾 SAVE</button>
             <button class="btn-icon-bar btn-load-save" id="btn-load-header" onclick="manualLoadGame()" title="Load your saved journey from local memory" style="border-color: #88ccff; color: #88ccff;">📂 LOAD</button>
@@ -1474,6 +1477,286 @@
         </div>
     </div>
 
+    <!-- ======================================================= -->
+    <!-- 1. SIEGE WARFARE & BATTLEFIELD DEFENSES MODAL (391–400) -->
+    <!-- ======================================================= -->
+    <div id="siege-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 740px;">
+            <div class="modal-header">🏰 ADVANCED SIEGE & WARFARE (391–400)</div>
+            <div style="background: rgba(36, 18, 10, 0.85); border: 1px solid #7c3f15; padding: 12px 16px; margin-bottom: 12px; border-radius: 4px; display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 2.2rem;">💣</div>
+                <div style="font-family: 'EB Garamond', serif; font-size: 0.98rem; color: #eedbc7; font-style: italic; line-height: 1.45;">
+                    &ldquo;Lordran’s battlements will not fall to hollow blades alone! Calibrate your counterweight engines, pour boiling pitch from the machicolations, and scatter iron caltrops to break the demon horde!&rdquo;
+                </div>
+            </div>
+
+            <!-- Siege Control Panels Grid -->
+            <div class="boss-cards-grid" style="max-height: 56vh; gap: 14px;">
+                <!-- 391. Trebuchet & Catapult Aiming -->
+                <div class="boss-card" style="flex-direction: column; align-items: stretch; border-color: #e65100;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #4a2812; padding-bottom: 6px;">
+                        <span style="font-size: 0.95rem; font-weight: 700; color: #ffb74d;">🎯 391. TREBUCHET & CATAPULT CALIBRATION</span>
+                        <span style="font-size: 0.8rem; color: #ffd276;">LAST RANGE: <b id="treb-last-dist">--</b></span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+                        <div>
+                            <label style="font-size: 0.78rem; color: #d0c0b0; display: block; margin-bottom: 4px;">Counterweight: <span id="treb-cw-val" style="color: #ffd778; font-weight: 700;">650 kg</span></label>
+                            <input type="range" id="treb-cw-slider" min="200" max="1200" step="50" value="650" style="width: 100%; accent-color: #e65100;" oninput="onTrebCwChange(this.value)">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.78rem; color: #d0c0b0; display: block; margin-bottom: 4px;">Winch Elevation Angle: <span id="treb-angle-val" style="color: #ffd778; font-weight: 700;">42°</span></label>
+                            <input type="range" id="treb-angle-slider" min="15" max="65" step="1" value="42" style="width: 100%; accent-color: #e65100;" oninput="onTrebAngleChange(this.value)">
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="triggerTrebFire()" style="margin-top: 10px; width: 100%; background: linear-gradient(180deg, #5c2009 0%, #2e0e04 100%); border-color: #e65100; color: #ffcc80;">
+                        🔥 LAUNCH FIERY BOULDER BOMBARDMENT
+                    </button>
+                </div>
+
+                <!-- 393. Battering Ram Coordination -->
+                <div class="boss-card" style="flex-direction: column; align-items: stretch; border-color: #d84315;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #4a2812; padding-bottom: 6px;">
+                        <span style="font-size: 0.95rem; font-weight: 700; color: #ffab91;">🪵 393. BATTERING RAM SYNCHRONIZATION</span>
+                        <span style="font-size: 0.8rem; color: #ffccbc;">GATE HP: <b id="ram-gate-hp">1000 / 1000</b></span>
+                    </div>
+                    <div style="margin: 10px 0 6px 0;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: #ccc; margin-bottom: 4px;">
+                            <span>SWING RHYTHM (HEAVE ON PEAK):</span>
+                            <span style="color: #ffd700;">OPTIONAL PERFECT WINDOW: 80-100%</span>
+                        </div>
+                        <div style="width: 100%; height: 14px; background: #1a0f0a; border: 1px solid #5a3018; border-radius: 3px; overflow: hidden; position: relative;">
+                            <div id="ram-sync-bar" style="height: 100%; width: 50%; background: linear-gradient(90deg, #ff5722, #ffd700); transition: width 0.08s linear;"></div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="triggerRamHeave()" style="width: 100%; border-color: #ff5722; color: #ffd276;">
+                        ⚡ HEAVE RAM AGAINST PORTCULLIS
+                    </button>
+                </div>
+
+                <!-- 394. Boiling Oil & 396. Caltrops & 397. Palisades -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="boss-card" style="flex-direction: column; align-items: stretch;">
+                        <div style="font-size: 0.88rem; font-weight: 700; color: #ffb74d;">🛢️ 394. BOILING OIL DEFENSE</div>
+                        <div style="font-size: 0.78rem; color: #bda895; margin: 4px 0 8px 0;">Cauldrons Ready: <b id="siege-oil-count" style="color: #ff7700;">3 / 3</b></div>
+                        <button class="btn-fight-boss" onclick="triggerBoilingOil()" style="border-color: #ff7700; color: #ffaa44;">POUR BOILING PITCH</button>
+                    </div>
+
+                    <div class="boss-card" style="flex-direction: column; align-items: stretch;">
+                        <div style="font-size: 0.88rem; font-weight: 700; color: #aed581;">📌 396. CALTROP SCATTER</div>
+                        <div style="font-size: 0.78rem; color: #bda895; margin: 4px 0 8px 0;">Pouch Count: <b id="siege-caltrop-count" style="color: #c5e1a5;">4 Clusters</b> (Key V)</div>
+                        <button class="btn-fight-boss" onclick="triggerCaltropDeploy()" style="border-color: #7cb342; color: #dcedc8;">SCATTER CALTROPS</button>
+                    </div>
+                </div>
+
+                <!-- 392. Ladders, 395. Arrow Slit, 397. Palisades, 398. Tower, 399. Fire Arrows, 400. War Horn -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                    <button class="btn-fight-boss" onclick="triggerToggleLadder('ladder_west')" style="padding: 8px; font-size: 0.75rem;">🪜 392. WEST LADDER</button>
+                    <button class="btn-fight-boss" onclick="triggerArrowSlit()" style="padding: 8px; font-size: 0.75rem;">🎯 395. ARROW SLIT</button>
+                    <button class="btn-fight-boss" onclick="triggerBuildPalisade('palisade_center')" style="padding: 8px; font-size: 0.75rem;">🛡️ 397. ERECT PALISADE</button>
+                    <button class="btn-fight-boss" onclick="triggerPushTower()" style="padding: 8px; font-size: 0.75rem;">🏰 398. ADVANCE TOWER (<span id="siege-tower-pct">0%</span>)</button>
+                    <button class="btn-fight-boss" onclick="triggerFireArrows()" style="padding: 8px; font-size: 0.75rem;">🔥 399. IMBUE FIRE ARROWS</button>
+                    <button class="btn-fight-boss" onclick="triggerWarHorn()" style="padding: 8px; font-size: 0.75rem; border-color: #ffd700; color: #ffe680;">📯 400. SOUND WAR HORN (H)</button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeSiegeModal()">RESUME BATTLE</button>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- 2. HERALDRY, SOCIAL HIERARCHY & NOBILITY MODAL (401–410) -->
+    <!-- ======================================================= -->
+    <div id="heraldry-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 760px;">
+            <div class="modal-header">👑 HERALDRY, TITLES & FEUDAL NOBILITY (401–410)</div>
+            
+            <div style="display: grid; grid-template-columns: 240px 1fr; gap: 16px; margin-bottom: 12px;">
+                <!-- Live Shield & Tabard Canvas Preview -->
+                <div style="background: rgba(14, 12, 10, 0.9); border: 2px solid #5a4224; padding: 10px; display: flex; flex-direction: column; align-items: center; border-radius: 4px;">
+                    <span style="font-size: 0.78rem; color: #ffd778; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 8px;">COAT OF ARMS & SHIELD</span>
+                    <canvas id="heraldry-preview-canvas" width="200" height="200" style="border: 2px solid #d4af37; border-radius: 6px; box-shadow: 0 0 15px rgba(212,175,55,0.4);"></canvas>
+                    <button class="btn-upgrade" onclick="applyHeraldryChanges()" style="margin-top: 10px; width: 100%; border-color: #ffd700; color: #ffe57f;">EMBLAZON 3D SHIELD</button>
+                </div>
+
+                <!-- 401. Blazon Controls -->
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="background: rgba(28, 22, 16, 0.8); border: 1px solid #4a3824; padding: 8px 12px;">
+                        <span style="font-size: 0.8rem; color: #ffd276; font-weight: 700;">401. BLAZON STUDIO CUSTOMIZATION:</span>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+                            <div>
+                                <label style="font-size: 0.75rem; color: #bbb;">Field Tincture:</label>
+                                <select id="heraldry-tincture-select" style="width: 100%; background: #1a1410; color: #ffd778; border: 1px solid #5a4025; padding: 4px; font-family: 'Cinzel', serif;" onchange="previewHeraldry()">
+                                    <option value="azure">Azure (Royal Blue)</option>
+                                    <option value="gules">Gules (Crimson)</option>
+                                    <option value="sable">Sable (Obsidian Black)</option>
+                                    <option value="vert">Vert (Emerald Green)</option>
+                                    <option value="purpure">Purpure (Imperial Purple)</option>
+                                    <option value="or">Or (Pure Gold)</option>
+                                    <option value="argent">Argent (Silver)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: #bbb;">Heraldic Charge / Sigil:</label>
+                                <select id="heraldry-sigil-select" style="width: 100%; background: #1a1410; color: #ffd778; border: 1px solid #5a4025; padding: 4px; font-family: 'Cinzel', serif;" onchange="previewHeraldry()">
+                                    <option value="lion">🦁 Bohemian Crowned Lion</option>
+                                    <option value="sun">☀️ Warrior of Sunlight</option>
+                                    <option value="dragon">🐉 Everlasting Dragon</option>
+                                    <option value="swords">⚔️ Crossed Broadswords</option>
+                                    <option value="crown">👑 High Sovereign Crown</option>
+                                    <option value="raven">🦅 Velka Black Raven</option>
+                                    <option value="tower">🏰 Castle Fortress</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: #bbb;">Division / Ordinary:</label>
+                                <select id="heraldry-division-select" style="width: 100%; background: #1a1410; color: #ffd778; border: 1px solid #5a4025; padding: 4px; font-family: 'Cinzel', serif;" onchange="previewHeraldry()">
+                                    <option value="plain">Plain Field</option>
+                                    <option value="pale">Per Pale (Vertical Split)</option>
+                                    <option value="fess">Per Fess (Horizontal Stripe)</option>
+                                    <option value="chevron">Chevron</option>
+                                    <option value="saltire">Saltire Cross</option>
+                                    <option value="quartered">Quartered</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: #bbb;">Secondary Trim:</label>
+                                <select id="heraldry-sec-select" style="width: 100%; background: #1a1410; color: #ffd778; border: 1px solid #5a4025; padding: 4px; font-family: 'Cinzel', serif;" onchange="previewHeraldry()">
+                                    <option value="or">Or (Gold Trim)</option>
+                                    <option value="argent">Argent (Silver Trim)</option>
+                                    <option value="gules">Gules (Red Accent)</option>
+                                    <option value="sable">Sable (Black Trim)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 402. Rank & 403. Deference -->
+                    <div style="background: rgba(20, 16, 12, 0.8); border: 1px solid #3d2c1c; padding: 8px 12px; font-size: 0.8rem;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>👑 402. TITLE: <b id="heraldry-rank-title" style="color: #ffd778;">Knight Bachelor of Astora</b></span>
+                            <span>HONOR: <b id="heraldry-honor-pts" style="color: #88ccff;">850 pts</b></span>
+                        </div>
+                        <div style="color: #aaa; margin-top: 4px; font-size: 0.75rem;" id="heraldry-perk-desc">Guards salute, 15% merchant discount, peasants bow.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fiefs, Duels, Ransoms & Banquets Grid -->
+            <div class="boss-cards-grid" style="max-height: 38vh; gap: 10px;">
+                <!-- 406. Vassal Fiefdoms & Taxes -->
+                <div class="boss-card" style="justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 0.9rem; font-weight: 700; color: #ffd778;">🏰 406. VASSAL FIEFDOM TAX TREASURY</div>
+                        <div style="font-size: 0.78rem; color: #bbb;">3 Fiefs: Skalitz Outpost, Burg Bastion, Parish Valley</div>
+                        <div style="font-size: 0.8rem; color: #88ccff; margin-top: 2px;">Accumulated Revenues: <b id="fief-uncollected-val" style="color: #ffd700;">1,720 Souls</b></div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="triggerCollectFiefTaxes()" style="border-color: #ffd700; color: #ffe680;">COLLECT TITHE</button>
+                </div>
+
+                <!-- 405. Duel of Honor -->
+                <div class="boss-card" style="justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 0.9rem; font-weight: 700; color: #ffab91;">⚔️ 405. 1v1 DUEL OF HONOR (SIR ROLAND)</div>
+                        <div style="font-size: 0.78rem; color: #bbb;">Chivalric dispute settled in secluded dueling ring &bull; Wager: 1,500 Souls</div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="triggerHonorDuel('duel_sir_crest')" style="border-color: #ff5722; color: #ffccbc;">ISSUE CHALLENGE</button>
+                </div>
+
+                <!-- 404. Banquet, 407. Ransom, 410. Knightly Order -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                    <button class="btn-fight-boss" onclick="triggerBanquet()" style="padding: 8px; font-size: 0.75rem;">🍷 404. BANQUET ETIQUETTE</button>
+                    <button class="btn-fight-boss" onclick="triggerRansom('pris_cuman_khan')" style="padding: 8px; font-size: 0.75rem;">📜 407. RANSOM WARLORD</button>
+                    <button class="btn-fight-boss" onclick="triggerKnightlyOath()" style="padding: 8px; font-size: 0.75rem; border-color: #ffd700; color: #ffe680;">🛡️ 410. SWEAR CHIVALRIC OATH</button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeHeraldryModal()">RESUME BATTLE</button>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- 3. MEDICAL, HERBALISM & APOTHECARY MODAL (411–420)     -->
+    <!-- ======================================================= -->
+    <div id="apothecary-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 760px;">
+            <div class="modal-header">🌿 APOTHECARY, HERBALISM & SURGERY (411–420)</div>
+            
+            <div style="background: rgba(16, 28, 18, 0.85); border: 1px solid #2e7d32; padding: 12px 16px; margin-bottom: 12px; border-radius: 4px; display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 2.2rem;">🧪</div>
+                <div style="font-family: 'EB Garamond', serif; font-size: 0.98rem; color: #c8e6c9; font-style: italic; line-height: 1.45;">
+                    &ldquo;Heal the flesh before the rot claims the bone. Grind wild marigold into powders, distill poppy tears over charcoal retorts, and boil linen rags to ensure clean recovery without sepsis.&rdquo;
+                </div>
+            </div>
+
+            <!-- Ready Medicine Satchel Bar -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px;">
+                <div style="background: rgba(12, 18, 12, 0.85); border: 1px solid #388e3c; padding: 8px; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 1.3rem;">🩹</div>
+                    <div style="font-size: 0.75rem; color: #a5d6a7;">STERILE BANDAGES</div>
+                    <div id="med-bandage-count" style="font-size: 1.1rem; font-weight: 700; color: #fff;">3</div>
+                    <button class="btn-upgrade" onclick="triggerApplyBandage()" style="margin-top: 4px; width: 100%; font-size: 0.7rem; border-color: #81c784; color: #c8e6c9;">APPLY (+280 HP)</button>
+                </div>
+
+                <div style="background: rgba(18, 12, 18, 0.85); border: 1px solid #8e24aa; padding: 8px; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 1.3rem;">🌸</div>
+                    <div style="font-size: 0.75rem; color: #e1bee7;">POPPY EXTRACT</div>
+                    <div id="med-poppy-count" style="font-size: 1.1rem; font-weight: 700; color: #fff;">2</div>
+                    <button class="btn-upgrade" onclick="triggerDrinkPoppy()" style="margin-top: 4px; width: 100%; font-size: 0.7rem; border-color: #ba68c8; color: #f3e5f5;">DRINK (0 STAMINA)</button>
+                </div>
+
+                <div style="background: rgba(12, 18, 24, 0.85); border: 1px solid #1976d2; padding: 8px; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 1.3rem;">🧪</div>
+                    <div style="font-size: 0.75rem; color: #90caf9;">VENOM ANTIDOTE</div>
+                    <div id="med-antidote-count" style="font-size: 1.1rem; font-weight: 700; color: #fff;">3</div>
+                    <button class="btn-upgrade" onclick="triggerDrinkAntidote()" style="margin-top: 4px; width: 100%; font-size: 0.7rem; border-color: #64b5f6; color: #bbdefb;">CURE POISON</button>
+                </div>
+
+                <div style="background: rgba(24, 16, 12, 0.85); border: 1px solid #d84315; padding: 8px; text-align: center; border-radius: 3px;">
+                    <div style="font-size: 1.3rem;">🪱</div>
+                    <div style="font-size: 0.75rem; color: #ffab91;">LEECHCRAFT JAR</div>
+                    <div id="med-leech-count" style="font-size: 1.1rem; font-weight: 700; color: #fff;">8</div>
+                    <button class="btn-upgrade" onclick="triggerApplyLeeches()" style="margin-top: 4px; width: 100%; font-size: 0.7rem; border-color: #ff7043; color: #ffccbc;">BLEED (-40 HP)</button>
+                </div>
+            </div>
+
+            <!-- Pharmacy Crafting Workstations Grid -->
+            <div class="boss-cards-grid" style="max-height: 40vh; gap: 10px;">
+                <!-- 414. Mortar & Pestle Grinding -->
+                <div class="boss-card" style="justify-content: space-between; align-items: center; border-color: #388e3c;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.9rem; font-weight: 700; color: #a5d6a7;">🥣 414. MORTAR & PESTLE GRINDING PHYSICS</div>
+                        <div style="font-size: 0.78rem; color: #aaa;">Crush dried golden marigold & thistle petals into fine alchemy powders</div>
+                        <div style="width: 80%; height: 8px; background: #111; border: 1px solid #388e3c; margin-top: 6px; border-radius: 2px; overflow: hidden;">
+                            <div id="mortar-grind-bar" style="height: 100%; width: 0%; background: #4caf50; transition: width 0.1s linear;"></div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="triggerMortarGrind()" style="border-color: #4caf50; color: #c8e6c9;">CRUSH PESTLE</button>
+                </div>
+
+                <!-- 415. Alembic Heat Control & Distillation -->
+                <div class="boss-card" style="justify-content: space-between; align-items: center; border-color: #1976d2;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.9rem; font-weight: 700; color: #90caf9;">🔥 415. ALEMBIC HEAT & CHARCOAL BELLOWS</div>
+                        <div style="font-size: 0.78rem; color: #aaa;">Target Boiling Zone: <b>78°C – 84°C</b> &bull; Current Temp: <b id="alembic-temp-val" style="color: #ffd778;">72°C</b></div>
+                        <div style="width: 80%; height: 8px; background: #111; border: 1px solid #1976d2; margin-top: 6px; border-radius: 2px; overflow: hidden;">
+                            <div id="alembic-distill-bar" style="height: 100%; width: 0%; background: #2196f3; transition: width 0.1s linear;"></div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="triggerPumpBellows()" style="border-color: #2196f3; color: #bbdefb;">PUMP BELLOWS</button>
+                </div>
+
+                <!-- 412. Bone Setting, 418. Boil Bandages, 420. Spores -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                    <button class="btn-fight-boss" onclick="triggerSetBone()" style="padding: 8px; font-size: 0.75rem;">🦴 412. SET FRACTURED BONE</button>
+                    <button class="btn-fight-boss" onclick="triggerBoilBandages()" style="padding: 8px; font-size: 0.75rem;">🩹 418. BOIL STERILE BANDAGES</button>
+                    <button class="btn-fight-boss" onclick="triggerHarvestSpores()" style="padding: 8px; font-size: 0.75rem;">🍄 420. EXTRACT CRYPT SPORES</button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeApothecaryModal()">RESUME BATTLE</button>
+        </div>
+    </div>
+
     <!-- DOWNLOAD GAME MODAL -->
     <div id="download-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 620px;">
@@ -1539,6 +1822,9 @@
                 <div><span class="key-badge">Roll Cancel</span> Cancel attack recovery into roll</div>
                 <div><span class="key-badge">R / 1</span> Drink Estus Flask</div>
                 <div><span class="key-badge">F / MMB</span> Lock-on Target</div>
+                <div><span class="key-badge">H</span> 📯 War Horn Morale Blast (+45% DEF, +60% Stamina)</div>
+                <div><span class="key-badge">V</span> 📌 Scatter Caltrops (-60% Enemy Move Speed)</div>
+                <div><span class="key-badge">B</span> 🩹 Quick Surgery / Apply Sterile Bandage (+280 HP)</div>
                 <div><span class="key-badge">Backstab</span> Attack directly behind enemy</div>
                 <div><span class="key-badge">Riposte</span> Critical hit after parry</div>
                 <div><span class="key-badge">☀️ Button</span> Adjust Lighting & Exposure</div>
@@ -1605,6 +1891,246 @@
 
         function closeWeaponArsenalModal() {
             if (window.game) window.game.closeWeaponArsenalModal();
+        }
+
+        // ==========================================
+        // 1. SIEGE WARFARE BRIDGES (391–400)
+        // ==========================================
+        function openSiegeModal() {
+            if (window.game) window.game.openSiegeModal();
+        }
+
+        function closeSiegeModal() {
+            if (window.game) window.game.closeSiegeModal();
+        }
+
+        function onTrebCwChange(val) {
+            const angleVal = document.getElementById('treb-angle-slider') ? document.getElementById('treb-angle-slider').value : 42;
+            if (window.game && window.game.siege) {
+                window.game.siege.calibrateTrebuchet(Number(val), Number(angleVal));
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function onTrebAngleChange(val) {
+            const cwVal = document.getElementById('treb-cw-slider') ? document.getElementById('treb-cw-slider').value : 650;
+            if (window.game && window.game.siege) {
+                window.game.siege.calibrateTrebuchet(Number(cwVal), Number(val));
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerTrebFire() {
+            if (window.game && window.game.siege) {
+                window.game.siege.fireTrebuchet();
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerRamHeave() {
+            if (window.game && window.game.siege) {
+                window.game.siege.heaveBatteringRam();
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerBoilingOil() {
+            if (window.game && window.game.siege) {
+                window.game.siege.pourBoilingOil(0, -10);
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerCaltropDeploy() {
+            if (window.game && window.game.siege) {
+                window.game.siege.deployCaltrops();
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerToggleLadder(id) {
+            if (window.game && window.game.siege) {
+                window.game.siege.toggleLadder(id);
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerArrowSlit() {
+            if (window.game && window.game.siege) {
+                window.game.siege.toggleArrowSlitCover();
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerBuildPalisade(id) {
+            if (window.game && window.game.siege) {
+                window.game.siege.buildPalisade(id);
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerPushTower() {
+            if (window.game && window.game.siege) {
+                window.game.siege.pushSiegeTower();
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerFireArrows() {
+            if (window.game && window.game.siege) {
+                window.game.siege.igniteFireArrows();
+                window.game.updateSiegeUI();
+            }
+        }
+
+        function triggerWarHorn() {
+            if (window.game && window.game.siege) {
+                window.game.siege.blowWarHorn();
+                window.game.updateSiegeUI();
+            }
+        }
+
+        // ==========================================
+        // 2. HERALDRY & NOBILITY BRIDGES (401–410)
+        // ==========================================
+        function openHeraldryModal() {
+            if (window.game) window.game.openHeraldryModal();
+        }
+
+        function closeHeraldryModal() {
+            if (window.game) window.game.closeHeraldryModal();
+        }
+
+        function previewHeraldry() {
+            if (!window.game || !window.game.heraldry) return;
+            const t = document.getElementById('heraldry-tincture-select').value;
+            const s = document.getElementById('heraldry-sigil-select').value;
+            const d = document.getElementById('heraldry-division-select').value;
+            const sec = document.getElementById('heraldry-sec-select').value;
+            window.game.heraldry.heraldry.tincture = t;
+            window.game.heraldry.heraldry.sigil = s;
+            window.game.heraldry.heraldry.division = d;
+            window.game.heraldry.heraldry.secondaryColor = sec;
+            const cvs = document.getElementById('heraldry-preview-canvas');
+            if (cvs) window.game.heraldry.renderCoatOfArms(cvs);
+        }
+
+        function applyHeraldryChanges() {
+            if (!window.game || !window.game.heraldry) return;
+            previewHeraldry();
+            window.game.heraldry.customizeHeraldry();
+            window.game.updateHeraldryUI();
+        }
+
+        function triggerCollectFiefTaxes() {
+            if (window.game && window.game.heraldry) {
+                window.game.heraldry.collectFiefTaxes();
+                window.game.updateHeraldryUI();
+            }
+        }
+
+        function triggerHonorDuel(id) {
+            if (window.game && window.game.heraldry) {
+                window.game.heraldry.issueHonorDuel(id);
+                window.game.updateHeraldryUI();
+            }
+        }
+
+        function triggerBanquet() {
+            if (window.game) {
+                if (window.game.audio) window.game.audio.playVictory();
+                if (window.game.heraldry) window.game.heraldry.earnHonor(120);
+                window.game.showNotification("🍷 BANQUET OF NOBLES ATTENDED: Flawless diplomatic toasts! +120 Chivalric Honor.");
+                window.game.updateHeraldryUI();
+            }
+        }
+
+        function triggerRansom(id) {
+            if (window.game && window.game.heraldry) {
+                window.game.heraldry.ransomPrisoner(id);
+                window.game.updateHeraldryUI();
+            }
+        }
+
+        function triggerKnightlyOath() {
+            if (window.game && window.game.heraldry) {
+                window.game.heraldry.swearKnightlyOath();
+                window.game.updateHeraldryUI();
+            }
+        }
+
+        // ==========================================
+        // 3. APOTHECARY & SURGERY BRIDGES (411–420)
+        // ==========================================
+        function openApothecaryModal() {
+            if (window.game) window.game.openApothecaryModal();
+        }
+
+        function closeApothecaryModal() {
+            if (window.game) window.game.closeApothecaryModal();
+        }
+
+        function triggerApplyBandage() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.applySterileBandage();
+                window.game.updateApothecaryUI();
+            }
+        }
+
+        function triggerDrinkPoppy() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.drinkPoppyExtract();
+                window.game.updateApothecaryUI();
+            }
+        }
+
+        function triggerDrinkAntidote() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.drinkAntidote();
+                window.game.updateApothecaryUI();
+            }
+        }
+
+        function triggerApplyLeeches() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.applyLeeches();
+                window.game.updateApothecaryUI();
+            }
+        }
+
+        function triggerMortarGrind() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.grindPestle();
+                window.game.updateApothecaryUI();
+            }
+        }
+
+        function triggerPumpBellows() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.pumpBellows();
+                window.game.updateApothecaryUI();
+            }
+        }
+
+        function triggerSetBone() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.setFracture(95);
+                window.game.updateApothecaryUI();
+            }
+        }
+
+        function triggerBoilBandages() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.boilSterileBandages();
+                window.game.updateApothecaryUI();
+            }
+        }
+
+        function triggerHarvestSpores() {
+            if (window.game && window.game.apothecary) {
+                window.game.apothecary.extractToxicSpores();
+                window.game.updateApothecaryUI();
+            }
         }
 
         function teleportOrHighlightPath(path) {
@@ -1722,6 +2248,9 @@
     <script src="js/audio.js?v=20261114_bright3"></script>
     <script src="js/world.js?v=20261114_bright3"></script>
     <script src="js/character.js?v=20261114_bright3"></script>
+    <script src="js/siege_warfare.js?v=20261114_siege"></script>
+    <script src="js/heraldry_nobility.js?v=20261114_heraldry"></script>
+    <script src="js/apothecary_crafting.js?v=20261114_apothecary"></script>
     <script src="js/combat.js?v=20261114_bright3"></script>
     <script src="js/game.js?v=20261114_bright3"></script>
 </body>
