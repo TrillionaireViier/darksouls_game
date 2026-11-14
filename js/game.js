@@ -19,8 +19,8 @@ class DarkSoulsGame {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        this.renderer.toneMapping = THREE.LinearToneMapping; // Zero toe-crushing: shadows are never pitch black!
-        this.renderer.toneMappingExposure = 1.35; // Brilliant high visibility daylight exposure
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.05;
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -41,18 +41,18 @@ class DarkSoulsGame {
         this.moveSpeed = 4.8;
         this.sprintSpeed = 7.2;
 
-        // Player Overhead Lantern (Illuminates 360-degree surroundings with warm golden light)
-        this.playerLantern = new THREE.PointLight(0xfff5e4, 4.2, 40, 1.0);
-        this.playerLantern.position.set(0, 2.5, 0);
+        // Player Local Warm Fill Light
+        this.playerLantern = new THREE.PointLight(0xffeedd, 1.2, 16, 1.4);
+        this.playerLantern.position.set(0, 2.2, 0);
         this.playerMesh.add(this.playerLantern);
 
-        // Player Back Fill Light (Ensures player's armor is gleaming from behind the camera)
-        this.playerBackLight = new THREE.PointLight(0xddeeff, 2.6, 22, 1.2);
+        // Player Back Fill Light (Gleaming knight armor highlights)
+        this.playerBackLight = new THREE.PointLight(0xddeeff, 0.4, 10, 1.5);
         this.playerBackLight.position.set(0, 1.5, -1.2);
         this.playerMesh.add(this.playerBackLight);
 
-        // Camera Headlight (Shines forward from camera perspective so dark voids are eliminated)
-        this.cameraLight = new THREE.DirectionalLight(0xffffff, 1.8);
+        // Camera Soft Headlight Fill
+        this.cameraLight = new THREE.DirectionalLight(0xffffff, 0.25);
         this.camera.add(this.cameraLight);
         this.scene.add(this.camera);
 
@@ -693,32 +693,32 @@ class DarkSoulsGame {
 
         const btn = document.getElementById('btn-brightness-toggle');
         if (this.brightnessLevel === 0) {
-            this.renderer.toneMappingExposure = 1.35;
-            if (this.world.moonlight) this.world.moonlight.intensity = 4.0;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 3.4;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 2.8;
-            if (this.playerLantern) this.playerLantern.intensity = 4.2;
-            if (this.cameraLight) this.cameraLight.intensity = 1.8;
+            this.renderer.toneMappingExposure = 1.05;
+            if (this.world.moonlight) this.world.moonlight.intensity = 1.9;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.85;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.65;
+            if (this.playerLantern) this.playerLantern.intensity = 1.2;
+            if (this.cameraLight) this.cameraLight.intensity = 0.25;
             if (btn) btn.textContent = '☀️ NOON SUN';
-            this.showNotification("LIGHTING: HIGH NOON CRYSTAL DAYLIGHT");
+            this.showNotification("LIGHTING: HIGH NOON BALANCED SUNLIGHT");
         } else if (this.brightnessLevel === 1) {
-            this.renderer.toneMappingExposure = 1.65;
-            if (this.world.moonlight) this.world.moonlight.intensity = 5.2;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 4.5;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 3.6;
-            if (this.playerLantern) this.playerLantern.intensity = 5.5;
-            if (this.cameraLight) this.cameraLight.intensity = 2.4;
+            this.renderer.toneMappingExposure = 1.35;
+            if (this.world.moonlight) this.world.moonlight.intensity = 2.4;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.2;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.9;
+            if (this.playerLantern) this.playerLantern.intensity = 1.8;
+            if (this.cameraLight) this.cameraLight.intensity = 0.5;
             if (btn) btn.textContent = '☀️ MAXIMUM+';
-            this.showNotification("LIGHTING: MAXIMUM BRIGHTNESS (NO SHADOWS)");
+            this.showNotification("LIGHTING: EXTRA BRIGHT DAYLIGHT");
         } else {
-            this.renderer.toneMappingExposure = 1.15;
-            if (this.world.moonlight) this.world.moonlight.intensity = 3.2;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 2.8;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 2.4;
-            if (this.playerLantern) this.playerLantern.intensity = 3.5;
-            if (this.cameraLight) this.cameraLight.intensity = 1.4;
+            this.renderer.toneMappingExposure = 0.9;
+            if (this.world.moonlight) this.world.moonlight.intensity = 1.5;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.65;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.5;
+            if (this.playerLantern) this.playerLantern.intensity = 0.9;
+            if (this.cameraLight) this.cameraLight.intensity = 0.2;
             if (btn) btn.textContent = '☀️ CLEAR DAY';
-            this.showNotification("LIGHTING: SUNLIT CLEAR HORIZON");
+            this.showNotification("LIGHTING: CLEAR ATMOSPHERE");
         }
     }
 
@@ -897,7 +897,7 @@ class DarkSoulsGame {
         this.updateCamera(delta);
 
         // 4. Update HUD
-        this.updateHUD();
+        this.updateHUD(delta);
 
         // 5. Render Scene
         this.renderer.render(this.scene, this.camera);
@@ -1193,7 +1193,7 @@ class DarkSoulsGame {
     // ----------------------------------------------------
     // UI UPDATES & NOTIFICATIONS
     // ----------------------------------------------------
-    updateHUD() {
+    updateHUD(delta = 0.016) {
         // HP Bar
         const hpPercent = Math.max(0, (this.combat.hp / this.combat.maxHp) * 100);
         this.ui.hpBar.style.width = `${hpPercent}%`;
@@ -1208,6 +1208,8 @@ class DarkSoulsGame {
 
         // Souls Counter
         this.ui.soulsCount.textContent = this.combat.souls.toLocaleString();
+
+        const pPos = this.playerMesh.position;
 
         // Route Compass Pill Active Highlight
         const rRamparts = document.getElementById('route-ramparts');
@@ -1232,7 +1234,6 @@ class DarkSoulsGame {
         }
 
         // Check Interactable Proximity
-        const pPos = this.playerMesh.position;
         let activePrompt = null;
         for (const item of this.world.interactables) {
             if (item.type === 'fog_gate' && this.world.fogTraversed) continue;

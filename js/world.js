@@ -49,12 +49,12 @@ class DarkSoulsWorld {
         stoneRoughCanvas.height = 1024;
         const srCtx = stoneRoughCanvas.getContext('2d');
 
-        // Deep mortar base - bright warm limestone mortar
-        sCtx.fillStyle = '#aba296';
+        // Deep mortar base - dark recessed mortar for crisp slab separation
+        sCtx.fillStyle = '#231e18';
         sCtx.fillRect(0, 0, 1024, 1024);
-        sbCtx.fillStyle = '#707070'; // Recessed mortar
+        sbCtx.fillStyle = '#202020'; // Recessed mortar
         sbCtx.fillRect(0, 0, 1024, 1024);
-        srCtx.fillStyle = '#cccccc'; // Matte dry mortar
+        srCtx.fillStyle = '#dddddd'; // Matte dry mortar
         srCtx.fillRect(0, 0, 1024, 1024);
 
         const rows = 16;
@@ -70,21 +70,21 @@ class DarkSoulsWorld {
                 const bw = cw - 6;
                 const bh = rh - 6;
 
-                // High-visibility bright sun-drenched Lordran limestone palette (RGB 205-245)
+                // Rich high-definition Lordran limestone palette (RGB 95-135)
                 const palSeed = Math.random();
                 let baseR, baseG, baseB;
                 if (palSeed < 0.35) {
-                    baseR = 214 + Math.floor(Math.random() * 24); // Radiant granite
-                    baseG = 218 + Math.floor(Math.random() * 24);
-                    baseB = 224 + Math.floor(Math.random() * 24);
+                    baseR = 105 + Math.floor(Math.random() * 18); // Weathered granite
+                    baseG = 108 + Math.floor(Math.random() * 18);
+                    baseB = 114 + Math.floor(Math.random() * 18);
                 } else if (palSeed < 0.7) {
-                    baseR = 232 + Math.floor(Math.random() * 22); // Warm sun-drenched limestone
-                    baseG = 226 + Math.floor(Math.random() * 22);
-                    baseB = 212 + Math.floor(Math.random() * 20);
+                    baseR = 125 + Math.floor(Math.random() * 20); // Warm sunlit limestone
+                    baseG = 118 + Math.floor(Math.random() * 18);
+                    baseB = 105 + Math.floor(Math.random() * 16);
                 } else {
-                    baseR = 218 + Math.floor(Math.random() * 22); // Clean ashlar travertine
-                    baseG = 218 + Math.floor(Math.random() * 22);
-                    baseB = 218 + Math.floor(Math.random() * 22);
+                    baseR = 110 + Math.floor(Math.random() * 16); // Clean ashlar travertine
+                    baseG = 110 + Math.floor(Math.random() * 16);
+                    baseB = 108 + Math.floor(Math.random() * 16);
                 }
 
                 // Fill stone slab
@@ -102,10 +102,10 @@ class DarkSoulsWorld {
                 srCtx.fillRect(bx, by, bw, bh);
 
                 // Chiseled beveled edges: top-left highlight, bottom-right shadow
-                sCtx.fillStyle = 'rgba(255, 255, 255, 0.09)';
+                sCtx.fillStyle = 'rgba(255, 255, 255, 0.22)';
                 sCtx.fillRect(bx, by, bw, 3);
                 sCtx.fillRect(bx, by, 3, bh);
-                sCtx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+                sCtx.fillStyle = 'rgba(0, 0, 0, 0.65)';
                 sCtx.fillRect(bx, by + bh - 3, bw, 3);
                 sCtx.fillRect(bx + bw - 3, by, 3, bh);
 
@@ -186,10 +186,10 @@ class DarkSoulsWorld {
         wallBumpCanvas.height = 1024;
         const wbCtx = wallBumpCanvas.getContext('2d');
 
-        // Bright fortress wall mortar background
-        wCtx.fillStyle = '#a89e92';
+        // Rich medieval fortress wall mortar background
+        wCtx.fillStyle = '#1e1914';
         wCtx.fillRect(0, 0, 1024, 1024);
-        wbCtx.fillStyle = '#555555';
+        wbCtx.fillStyle = '#2a2a2a';
         wbCtx.fillRect(0, 0, 1024, 1024);
 
         const wRows = 16;
@@ -205,11 +205,11 @@ class DarkSoulsWorld {
                 const w = wcw - 4;
                 const h = wrh - 4;
 
-                const shade = 210 + Math.floor(Math.random() * 28);
+                const shade = 102 + Math.floor(Math.random() * 20);
                 wCtx.fillStyle = `rgb(${shade + 4}, ${shade + 2}, ${shade})`;
                 wCtx.fillRect(x, y, w, h);
 
-                const wbVal = 180 + Math.floor(Math.random() * 45);
+                const wbVal = 140 + Math.floor(Math.random() * 35);
                 wbCtx.fillStyle = `rgb(${wbVal}, ${wbVal}, ${wbVal})`;
                 wbCtx.fillRect(x, y, w, h);
 
@@ -480,22 +480,22 @@ class DarkSoulsWorld {
     }
 
     buildLighting() {
-        // 1. Radiant European Sky Blue Zenith (100% Crisp Daylight, ZERO pitch black void)
-        this.scene.background = new THREE.Color(0x7ec0ee);
+        // 1. Lordran Daylight Azure Sky Zenith
+        this.scene.background = new THREE.Color(0x5282a6);
 
-        // 2. Sunny atmospheric aerial depth (pushed far back: 160m to 600m)
-        this.scene.fog = new THREE.Fog(0x8ec8f2, 160, 600);
+        // 2. Sunny atmospheric aerial depth
+        this.scene.fog = new THREE.Fog(0x5282a6, 50, 220);
 
-        // 3. High-Noon Ambient Illumination (Guarantees every surface is bright and clearly seen)
-        this.ambientLight = new THREE.AmbientLight(0xffffff, 3.4);
+        // 3. Balanced Ambient Daylight Fill (Crisp visibility with rich shadow depth)
+        this.ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
         this.scene.add(this.ambientLight);
 
-        // 4. Sky and ground bounce hemisphere lighting (Daylight azure sky + warm stone ground bounce)
-        this.hemiLight = new THREE.HemisphereLight(0x87ceeb, 0xdfd4c0, 2.8);
+        // 4. Sky and ground bounce hemisphere lighting (Azure sky + warm stone bounce)
+        this.hemiLight = new THREE.HemisphereLight(0x8ec2eb, 0x4a4238, 0.65);
         this.scene.add(this.hemiLight);
 
-        // 5. Blazing High-Noon Sunlight from above
-        this.moonlight = new THREE.DirectionalLight(0xfffaec, 4.0);
+        // 5. High-Noon Crisp Sunlight from above
+        this.moonlight = new THREE.DirectionalLight(0xfff5e6, 1.9);
         this.moonlight.position.set(30, 95, 20);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 2048;

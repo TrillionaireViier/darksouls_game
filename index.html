@@ -105,25 +105,34 @@
 
         .header-actions {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            max-width: calc(100vw - 260px);
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
             pointer-events: auto;
+            padding-bottom: 2px;
+        }
+
+        .header-actions::-webkit-scrollbar {
+            display: none;
         }
 
         /* DOWNLOAD BUTTON (Prominent Dark Souls Styling) */
         .btn-download {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: linear-gradient(180deg, #2b2218 0%, #17120d 100%);
             color: #ffd276;
             border: 2px solid #a87932;
-            padding: 10px 22px;
+            padding: 7px 14px;
             font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             text-decoration: none;
             cursor: pointer;
@@ -131,6 +140,7 @@
             transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
+            white-space: nowrap;
         }
 
         .btn-download::before {
@@ -163,12 +173,13 @@
             background: rgba(18, 15, 13, 0.75);
             border: 1px solid var(--ds-border);
             color: #c0b2a0;
-            padding: 8px 14px;
+            padding: 6px 11px;
             font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            letter-spacing: 1.5px;
+            font-size: 0.74rem;
+            letter-spacing: 1.2px;
             cursor: pointer;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .btn-icon-bar:hover {
@@ -1275,7 +1286,7 @@
     <header id="top-header">
         <div class="header-title-group">
             <h1 class="header-title">DARK SOULS</h1>
-            <p class="header-sub">Lordran &bull; 5 Lords: Taurus &bull; Gargoyle &bull; Capra &bull; Sif &bull; Gwyn</p>
+            <p class="header-sub">Lordran &bull; 5 Lords</p>
         </div>
 
         <div class="header-actions">
@@ -1300,7 +1311,7 @@
     </header>
 
     <!-- PATHFINDER / ROUTE COMPASS BAR (LIT PATHWAYS & VERTICAL ELEVATIONS) -->
-    <div id="pathfinder-bar" style="position: absolute; top: 62px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 60; pointer-events: auto; flex-wrap: wrap; justify-content: center;">
+    <div id="pathfinder-bar" style="position: absolute; top: 54px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 60; pointer-events: auto; flex-wrap: wrap; justify-content: center;">
         <div id="route-catacombs" class="route-pill" onclick="teleportOrHighlightPath('catacombs')" title="West Sunken Crypt: Depth -5m, Murky Waters, Ancient Tombs" style="background: rgba(8, 28, 24, 0.88); border: 1px solid #00ffaa; color: #77ffcc; padding: 5px 12px; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 1.5px; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(0,255,170,0.6); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(0,255,170,0.25); transition: all 0.25s ease;">
             <span>▼</span> CATACOMBS (DOWN: -5m)
         </div>
@@ -1372,7 +1383,7 @@
 
     <!-- Build & Daylight Status Indicator -->
     <div id="build-status-indicator" style="position: absolute; bottom: 12px; left: 16px; z-index: 50; pointer-events: auto; display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 0.72rem; color: #ffd276; background: rgba(18, 14, 10, 0.75); border: 1px solid rgba(255, 210, 118, 0.35); padding: 4px 10px; border-radius: 3px; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
-        <span>☀️ HIGH NOON DAYLIGHT v3.0</span>
+        <span>☀️ LORDRAN SUNLIT CITADEL</span>
         <button onclick="window.location.reload(true)" style="background: rgba(255,210,118,0.2); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-family: inherit;">RELOAD</button>
     </div>
 
@@ -2604,14 +2615,14 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261114_daylight_v3"></script>
-    <script src="js/audio.js?v=20261114_daylight_v3"></script>
-    <script src="js/world.js?v=20261114_daylight_v3"></script>
-    <script src="js/character.js?v=20261114_daylight_v3"></script>
-    <script src="js/siege_warfare.js?v=20261114_daylight_v3"></script>
-    <script src="js/heraldry_nobility.js?v=20261114_daylight_v3"></script>
-    <script src="js/apothecary_crafting.js?v=20261114_daylight_v3"></script>
-    <script src="js/combat.js?v=20261114_daylight_v3"></script>
-    <script src="js/game.js?v=20261114_daylight_v3"></script>
+    <script src="js/three.min.js?v=20261114_perfect_vision"></script>
+    <script src="js/audio.js?v=20261114_perfect_vision"></script>
+    <script src="js/world.js?v=20261114_perfect_vision"></script>
+    <script src="js/character.js?v=20261114_perfect_vision"></script>
+    <script src="js/siege_warfare.js?v=20261114_perfect_vision"></script>
+    <script src="js/heraldry_nobility.js?v=20261114_perfect_vision"></script>
+    <script src="js/apothecary_crafting.js?v=20261114_perfect_vision"></script>
+    <script src="js/combat.js?v=20261114_perfect_vision"></script>
+    <script src="js/game.js?v=20261114_perfect_vision"></script>
 </body>
 </html>
