@@ -670,12 +670,38 @@ class DarkSoulsWorld {
     }
 
     buildEnvironment() {
-        // 1. Courtyard Floor (Starting area)
-        const courtyardGeo = new THREE.PlaneGeometry(60, 60);
-        const courtyard = new THREE.Mesh(courtyardGeo, this.stoneMat);
-        courtyard.rotation.x = -Math.PI / 2;
-        courtyard.receiveShadow = true;
-        this.scene.add(courtyard);
+        // 1. Courtyard Floor (Starting area) with Open Trenches for Catacombs Descent & Ramparts Stairs
+        // North Courtyard Floor Slab (z in [-30, 4], x in [-30, 30])
+        const northCourtyardGeo = new THREE.PlaneGeometry(60, 34);
+        const northCourtyard = new THREE.Mesh(northCourtyardGeo, this.stoneMat);
+        northCourtyard.rotation.x = -Math.PI / 2;
+        northCourtyard.position.set(0, 0, -13);
+        northCourtyard.receiveShadow = true;
+        this.scene.add(northCourtyard);
+
+        // Center Promenade Floor Slab (z in [4, 30], x in [-15, 15] - between stairwells)
+        const centerCourtyardGeo = new THREE.PlaneGeometry(30, 26);
+        const centerCourtyard = new THREE.Mesh(centerCourtyardGeo, this.stoneMat);
+        centerCourtyard.rotation.x = -Math.PI / 2;
+        centerCourtyard.position.set(0, 0, 17);
+        centerCourtyard.receiveShadow = true;
+        this.scene.add(centerCourtyard);
+
+        // Far West Battlement Floor Slab (z in [4, 30], x in [-30, -25])
+        const westCourtyardGeo = new THREE.PlaneGeometry(5, 26);
+        const westCourtyard = new THREE.Mesh(westCourtyardGeo, this.stoneMat);
+        westCourtyard.rotation.x = -Math.PI / 2;
+        westCourtyard.position.set(-27.5, 0, 17);
+        westCourtyard.receiveShadow = true;
+        this.scene.add(westCourtyard);
+
+        // Far East Battlement Floor Slab (z in [4, 30], x in [25, 30])
+        const eastCourtyardGeo = new THREE.PlaneGeometry(5, 26);
+        const eastCourtyard = new THREE.Mesh(eastCourtyardGeo, this.stoneMat);
+        eastCourtyard.rotation.x = -Math.PI / 2;
+        eastCourtyard.position.set(27.5, 0, 17);
+        eastCourtyard.receiveShadow = true;
+        this.scene.add(eastCourtyard);
 
         // Outer Courtyard Fortress Walls with Openings for East/West Paths
         this.createWall(0, 5, -30, 60, 10, 2);   // North wall

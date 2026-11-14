@@ -1008,7 +1008,7 @@ class DarkSoulsGame {
                 }
 
                 const groundY = this.world.getGroundHeight(this.playerMesh.position.x, this.playerMesh.position.z);
-                this.playerMesh.position.y = groundY - Math.sin(progress * Math.PI) * 0.35;
+                this.playerMesh.position.y = groundY; // Keep feet grounded on terrain during roll
 
                 if (this.combat.isInvincible && Math.random() < 0.45) {
                     this.spawnRollGhostTrail();
@@ -1324,31 +1324,51 @@ class DarkSoulsGame {
 
             // Normal shield posture
             if (uData.shieldGroup) {
-                uData.shieldGroup.position.set(-0.06, 0.08, 0.16);
+                uData.shieldGroup.position.set(-0.04, 0.06, 0.16);
                 uData.shieldGroup.rotation.set(0.08, Math.PI / 8, -0.05);
             }
-
-            // Resting weapon postures
-            if (uData.swordGroup) {
-                const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
-                if (wpnId === 'halberd') {
-                    uData.swordGroup.rotation.set(-0.25, 0.12, 0.18);
-                    uData.swordGroup.position.set(-0.04, 0.12, -0.06);
-                } else if (wpnId === 'dragontooth') {
-                    uData.swordGroup.rotation.set(-0.45, 0.2, 0.15);
-                    uData.swordGroup.position.set(-0.06, 0.18, -0.1);
-                } else if (wpnId === 'torch') {
-                    uData.swordGroup.rotation.set(0.08, 0, -0.08);
-                    uData.swordGroup.position.set(0, 0.06, 0.04);
-                } else if (wpnId === 'uchigatana') {
-                    uData.swordGroup.rotation.set(0.5, 0.15, -0.22);
-                    uData.swordGroup.position.set(0.02, 0.04, 0.08);
-                } else {
-                    uData.swordGroup.rotation.set(0.48, 0.14, -0.2);
-                    uData.swordGroup.position.set(0.02, 0.04, 0.06);
-                }
-            }
         }
+
+        // 7. WEAPON STANCE STABILIZATION (Active for both moving and idle)
+        if (!this.combat.isAttacking) {
+            this.updateWeaponStance(delta, isMoving);
+        }
+    }
+
+    updateWeaponStance(delta, isMoving) {
+        const uData = this.playerMesh && this.playerMesh.userData;
+        if (!uData || !uData.swordGroup) return;
+
+        const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
+        let targetRotX = 0.45, targetRotY = 0.10, targetRotZ = -0.18;
+        let targetPosX = 0.02, targetPosY = 0.04, targetPosZ = 0.06;
+
+        if (wpnId === 'halberd') {
+            // Held forward-up at a natural 45 deg thrust-ready stance (NEVER 90 deg sideways into wall)
+            targetRotX = 0.85; targetRotY = 0.08; targetRotZ = -0.15;
+            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.04;
+        } else if (wpnId === 'zweihander') {
+            targetRotX = 0.50; targetRotY = 0.12; targetRotZ = -0.20;
+            targetPosX = 0.02; targetPosY = 0.05; targetPosZ = 0.08;
+        } else if (wpnId === 'dragontooth') {
+            targetRotX = 0.40; targetRotY = 0.12; targetRotZ = -0.18;
+            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
+        } else if (wpnId === 'torch') {
+            targetRotX = 0.12; targetRotY = 0.0; targetRotZ = -0.06;
+            targetPosX = 0.0; targetPosY = 0.06; targetPosZ = 0.04;
+        } else if (wpnId === 'uchigatana') {
+            targetRotX = 0.45; targetRotY = 0.10; targetRotZ = -0.16;
+            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
+        }
+
+        // Smoothly glide back to the natural ready stance every frame
+        const blend = Math.min(1.0, delta * 15);
+        uData.swordGroup.rotation.x = THREE.MathUtils.lerp(uData.swordGroup.rotation.x, targetRotX, blend);
+        uData.swordGroup.rotation.y = THREE.MathUtils.lerp(uData.swordGroup.rotation.y, targetRotY, blend);
+        uData.swordGroup.rotation.z = THREE.MathUtils.lerp(uData.swordGroup.rotation.z, targetRotZ, blend);
+        uData.swordGroup.position.x = THREE.MathUtils.lerp(uData.swordGroup.position.x, targetPosX, blend);
+        uData.swordGroup.position.y = THREE.MathUtils.lerp(uData.swordGroup.position.y, targetPosY, blend);
+        uData.swordGroup.position.z = THREE.MathUtils.lerp(uData.swordGroup.position.z, targetPosZ, blend);
     }
 
     resolvePlayerCollisions() {
