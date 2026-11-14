@@ -19,8 +19,8 @@ class DarkSoulsGame {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 2.1; // Brilliant high visibility daylight exposure
+        this.renderer.toneMapping = THREE.LinearToneMapping; // Zero toe-crushing: shadows are never pitch black!
+        this.renderer.toneMappingExposure = 1.35; // Brilliant high visibility daylight exposure
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -42,26 +42,27 @@ class DarkSoulsGame {
         this.sprintSpeed = 7.2;
 
         // Player Overhead Lantern (Illuminates 360-degree surroundings with warm golden light)
-        this.playerLantern = new THREE.PointLight(0xfff0d4, 3.2, 30, 1.2);
-        this.playerLantern.position.set(0, 2.4, 0);
+        this.playerLantern = new THREE.PointLight(0xfff5e4, 4.2, 40, 1.0);
+        this.playerLantern.position.set(0, 2.5, 0);
         this.playerMesh.add(this.playerLantern);
 
         // Player Back Fill Light (Ensures player's armor is gleaming from behind the camera)
-        this.playerBackLight = new THREE.PointLight(0xddeeff, 2.2, 18, 1.4);
-        this.playerBackLight.position.set(0, 1.4, -1.2);
+        this.playerBackLight = new THREE.PointLight(0xddeeff, 2.6, 22, 1.2);
+        this.playerBackLight.position.set(0, 1.5, -1.2);
         this.playerMesh.add(this.playerBackLight);
 
         // Camera Headlight (Shines forward from camera perspective so dark voids are eliminated)
-        this.cameraLight = new THREE.DirectionalLight(0xeaf4ff, 1.2);
+        this.cameraLight = new THREE.DirectionalLight(0xffffff, 1.8);
         this.camera.add(this.cameraLight);
         this.scene.add(this.camera);
 
-        this.brightnessLevel = 0; // 0: Daylight, 1: Ultra+, 2: Clear Twilight
+        this.brightnessLevel = 0; // 0: Noon Sun, 1: Maximum+, 2: Daylight
 
-        // Handheld Medieval Pitch Torch State (Kingdom Come / Dark Souls Mechanics)
-        this.isTorchActive = false;
+        // Handheld Medieval Pitch Torch State - ACTIVE BY DEFAULT FOR INSTANT VISION!
+        this.isTorchActive = true;
         this.torchFuel = 100.0;
         this.maxTorchFuel = 100.0;
+        this.charFactory.setPlayerTorchVisible(this.playerMesh, true);
 
         // Camera Parameters
         this.cameraDistance = 4.2;
@@ -692,29 +693,32 @@ class DarkSoulsGame {
 
         const btn = document.getElementById('btn-brightness-toggle');
         if (this.brightnessLevel === 0) {
-            this.renderer.toneMappingExposure = 2.1;
-            if (this.world.moonlight) this.world.moonlight.intensity = 2.6;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.9;
-            if (this.playerLantern) this.playerLantern.intensity = 3.2;
-            if (this.cameraLight) this.cameraLight.intensity = 1.2;
-            if (btn) btn.textContent = '☀️ DAYLIGHT';
-            this.showNotification("LIGHTING: HIGH VISIBILITY DAYLIGHT");
-        } else if (this.brightnessLevel === 1) {
-            this.renderer.toneMappingExposure = 2.7;
-            if (this.world.moonlight) this.world.moonlight.intensity = 3.4;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 2.6;
+            this.renderer.toneMappingExposure = 1.35;
+            if (this.world.moonlight) this.world.moonlight.intensity = 4.0;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 3.4;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 2.8;
             if (this.playerLantern) this.playerLantern.intensity = 4.2;
             if (this.cameraLight) this.cameraLight.intensity = 1.8;
-            if (btn) btn.textContent = '☀️ ULTRA+';
+            if (btn) btn.textContent = '☀️ NOON SUN';
+            this.showNotification("LIGHTING: HIGH NOON CRYSTAL DAYLIGHT");
+        } else if (this.brightnessLevel === 1) {
+            this.renderer.toneMappingExposure = 1.65;
+            if (this.world.moonlight) this.world.moonlight.intensity = 5.2;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 4.5;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 3.6;
+            if (this.playerLantern) this.playerLantern.intensity = 5.5;
+            if (this.cameraLight) this.cameraLight.intensity = 2.4;
+            if (btn) btn.textContent = '☀️ MAXIMUM+';
             this.showNotification("LIGHTING: MAXIMUM BRIGHTNESS (NO SHADOWS)");
         } else {
-            this.renderer.toneMappingExposure = 1.7;
-            if (this.world.moonlight) this.world.moonlight.intensity = 1.8;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.4;
-            if (this.playerLantern) this.playerLantern.intensity = 2.4;
-            if (this.cameraLight) this.cameraLight.intensity = 0.8;
-            if (btn) btn.textContent = '🌙 TWILIGHT';
-            this.showNotification("LIGHTING: CLEAR DUSK & MOONLIGHT");
+            this.renderer.toneMappingExposure = 1.15;
+            if (this.world.moonlight) this.world.moonlight.intensity = 3.2;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 2.8;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 2.4;
+            if (this.playerLantern) this.playerLantern.intensity = 3.5;
+            if (this.cameraLight) this.cameraLight.intensity = 1.4;
+            if (btn) btn.textContent = '☀️ CLEAR DAY';
+            this.showNotification("LIGHTING: SUNLIT CLEAR HORIZON");
         }
     }
 

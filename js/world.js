@@ -49,12 +49,12 @@ class DarkSoulsWorld {
         stoneRoughCanvas.height = 1024;
         const srCtx = stoneRoughCanvas.getContext('2d');
 
-        // Deep mortar base
-        sCtx.fillStyle = '#3a3430';
+        // Deep mortar base - bright warm limestone mortar
+        sCtx.fillStyle = '#aba296';
         sCtx.fillRect(0, 0, 1024, 1024);
-        sbCtx.fillStyle = '#202020'; // Recessed mortar
+        sbCtx.fillStyle = '#707070'; // Recessed mortar
         sbCtx.fillRect(0, 0, 1024, 1024);
-        srCtx.fillStyle = '#e5e5e5'; // Matte dry mortar
+        srCtx.fillStyle = '#cccccc'; // Matte dry mortar
         srCtx.fillRect(0, 0, 1024, 1024);
 
         const rows = 16;
@@ -70,21 +70,21 @@ class DarkSoulsWorld {
                 const bw = cw - 6;
                 const bh = rh - 6;
 
-                // High-visibility bright weathered Lordran stone palette
+                // High-visibility bright sun-drenched Lordran limestone palette (RGB 205-245)
                 const palSeed = Math.random();
                 let baseR, baseG, baseB;
                 if (palSeed < 0.35) {
-                    baseR = 130 + Math.floor(Math.random() * 26); // Slate grey granite
-                    baseG = 135 + Math.floor(Math.random() * 26);
-                    baseB = 142 + Math.floor(Math.random() * 26);
+                    baseR = 214 + Math.floor(Math.random() * 24); // Radiant granite
+                    baseG = 218 + Math.floor(Math.random() * 24);
+                    baseB = 224 + Math.floor(Math.random() * 24);
                 } else if (palSeed < 0.7) {
-                    baseR = 145 + Math.floor(Math.random() * 26); // Warm Lordran limestone
-                    baseG = 138 + Math.floor(Math.random() * 24);
-                    baseB = 126 + Math.floor(Math.random() * 22);
+                    baseR = 232 + Math.floor(Math.random() * 22); // Warm sun-drenched limestone
+                    baseG = 226 + Math.floor(Math.random() * 22);
+                    baseB = 212 + Math.floor(Math.random() * 20);
                 } else {
-                    baseR = 118 + Math.floor(Math.random() * 24); // Weathered ashlar stone
-                    baseG = 120 + Math.floor(Math.random() * 24);
-                    baseB = 124 + Math.floor(Math.random() * 24);
+                    baseR = 218 + Math.floor(Math.random() * 22); // Clean ashlar travertine
+                    baseG = 218 + Math.floor(Math.random() * 22);
+                    baseB = 218 + Math.floor(Math.random() * 22);
                 }
 
                 // Fill stone slab
@@ -186,10 +186,10 @@ class DarkSoulsWorld {
         wallBumpCanvas.height = 1024;
         const wbCtx = wallBumpCanvas.getContext('2d');
 
-        // Dark fortress background
-        wCtx.fillStyle = '#3c3630';
+        // Bright fortress wall mortar background
+        wCtx.fillStyle = '#a89e92';
         wCtx.fillRect(0, 0, 1024, 1024);
-        wbCtx.fillStyle = '#1a1a1a';
+        wbCtx.fillStyle = '#555555';
         wbCtx.fillRect(0, 0, 1024, 1024);
 
         const wRows = 16;
@@ -205,8 +205,8 @@ class DarkSoulsWorld {
                 const w = wcw - 4;
                 const h = wrh - 4;
 
-                const shade = 135 + Math.floor(Math.random() * 30);
-                wCtx.fillStyle = `rgb(${shade + 6}, ${shade + 2}, ${shade})`;
+                const shade = 210 + Math.floor(Math.random() * 28);
+                wCtx.fillStyle = `rgb(${shade + 4}, ${shade + 2}, ${shade})`;
                 wCtx.fillRect(x, y, w, h);
 
                 const wbVal = 180 + Math.floor(Math.random() * 45);
@@ -246,8 +246,8 @@ class DarkSoulsWorld {
             const sy = Math.random() * 400;
             const slen = 150 + Math.random() * 400;
             const sgrad = wCtx.createLinearGradient(sx, sy, sx, sy + slen);
-            sgrad.addColorStop(0, 'rgba(8, 12, 10, 0.65)');
-            sgrad.addColorStop(1, 'rgba(8, 12, 10, 0)');
+            sgrad.addColorStop(0, 'rgba(160, 150, 140, 0.2)');
+            sgrad.addColorStop(1, 'rgba(160, 150, 140, 0)');
             wCtx.fillStyle = sgrad;
             wCtx.fillRect(sx - 3, sy, 6 + Math.random() * 6, slen);
         }
@@ -296,9 +296,9 @@ class DarkSoulsWorld {
 
         // Circular burned epicenter
         const burnGrad = aCtx.createRadialGradient(512, 512, 40, 512, 512, 480);
-        burnGrad.addColorStop(0, '#382e28');
-        burnGrad.addColorStop(0.5, '#50443c');
-        burnGrad.addColorStop(1, '#685a50');
+        burnGrad.addColorStop(0, '#c8baa6');
+        burnGrad.addColorStop(0.5, '#d6c8b6');
+        burnGrad.addColorStop(1, '#dfd2c0');
         aCtx.fillStyle = burnGrad;
         aCtx.fillRect(0, 0, 1024, 1024);
 
@@ -480,23 +480,23 @@ class DarkSoulsWorld {
     }
 
     buildLighting() {
-        // 1. Celestial Lordran Twilight Sky Background (Eliminates pitch-black void)
-        this.scene.background = new THREE.Color(0x324660);
+        // 1. Radiant European Sky Blue Zenith (100% Crisp Daylight, ZERO pitch black void)
+        this.scene.background = new THREE.Color(0x7ec0ee);
 
-        // 2. Linear distance atmospheric fog (Pushed far back: 100% crisp visibility up to 95m)
-        this.scene.fog = new THREE.Fog(0x324660, 95, 420);
+        // 2. Sunny atmospheric aerial depth (pushed far back: 160m to 600m)
+        this.scene.fog = new THREE.Fog(0x8ec8f2, 160, 600);
 
-        // 3. Radiant High-Visibility Ambient Fill (Ensures no surface is ever pitch black)
-        this.ambientLight = new THREE.AmbientLight(0xdce8f8, 1.9);
+        // 3. High-Noon Ambient Illumination (Guarantees every surface is bright and clearly seen)
+        this.ambientLight = new THREE.AmbientLight(0xffffff, 3.4);
         this.scene.add(this.ambientLight);
 
-        // 4. Sky and ground bounce lighting for crisp 3D depth and volume
-        this.hemiLight = new THREE.HemisphereLight(0xeaf4ff, 0x9c8c7c, 1.7);
+        // 4. Sky and ground bounce hemisphere lighting (Daylight azure sky + warm stone ground bounce)
+        this.hemiLight = new THREE.HemisphereLight(0x87ceeb, 0xdfd4c0, 2.8);
         this.scene.add(this.hemiLight);
 
-        // 5. Radiant Lordran Sunlight / Moonlight from above
-        this.moonlight = new THREE.DirectionalLight(0xfff5e4, 2.6);
-        this.moonlight.position.set(40, 75, 30);
+        // 5. Blazing High-Noon Sunlight from above
+        this.moonlight = new THREE.DirectionalLight(0xfffaec, 4.0);
+        this.moonlight.position.set(30, 95, 20);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 2048;
         this.moonlight.shadow.mapSize.height = 2048;
@@ -510,25 +510,25 @@ class DarkSoulsWorld {
         this.moonlight.shadow.bias = -0.0003;
         this.scene.add(this.moonlight);
 
-        // 6. Glowing Celestial Moon/Sun Orb in the Sky
-        const moonGeo = new THREE.SphereGeometry(6, 16, 16);
-        const moonMat = new THREE.MeshBasicMaterial({ color: 0xfffaea });
-        const moon = new THREE.Mesh(moonGeo, moonMat);
-        moon.position.set(70, 120, 60);
-        this.scene.add(moon);
+        // 6. Glowing Golden Sun Orb in the Sky
+        const sunGeo = new THREE.SphereGeometry(8, 16, 16);
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xfffae0 });
+        const sun = new THREE.Mesh(sunGeo, sunMat);
+        sun.position.set(60, 130, 50);
+        this.scene.add(sun);
 
-        // Luminous celestial aura ring
-        const moonAuraGeo = new THREE.RingGeometry(6.2, 13.0, 32);
-        const moonAuraMat = new THREE.MeshBasicMaterial({
+        // Luminous radiant sunlight corona aura
+        const sunAuraGeo = new THREE.RingGeometry(8.2, 19.0, 32);
+        const sunAuraMat = new THREE.MeshBasicMaterial({
             color: 0xffeedd,
             transparent: true,
-            opacity: 0.38,
+            opacity: 0.55,
             side: THREE.DoubleSide
         });
-        const moonAura = new THREE.Mesh(moonAuraGeo, moonAuraMat);
-        moonAura.position.copy(moon.position);
-        moonAura.lookAt(0, 0, 0);
-        this.scene.add(moonAura);
+        const sunAura = new THREE.Mesh(sunAuraGeo, sunAuraMat);
+        sunAura.position.copy(sun.position);
+        sunAura.lookAt(0, 0, 0);
+        this.scene.add(sunAura);
 
         // Perimeter courtyard torches for clear visibility across starting zone
         const courtyardTorches = [
