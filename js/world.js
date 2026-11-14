@@ -936,14 +936,7 @@ class DarkSoulsWorld {
         beam.position.y = 18;
         beaconGroup.add(beam);
 
-        // 2. High-intensity PointLight illuminating the path entrance
-        const light = new THREE.PointLight(colorHex, 3.4, 28, 1.4);
-        light.position.y = 2.4;
-        light.castShadow = true;
-        light.shadow.bias = -0.002;
-        beaconGroup.add(light);
-
-        // 3. Glowing Core Flame Brazier
+        // 2. Glowing Core Flame Brazier
         const flameCore = new THREE.Mesh(
             new THREE.DodecahedronGeometry(0.55),
             new THREE.MeshBasicMaterial({ color: colorHex })
@@ -957,7 +950,7 @@ class DarkSoulsWorld {
         pedestal.receiveShadow = true;
         beaconGroup.add(pedestal);
 
-        // 4. Overhead Illuminated Sign Banner
+        // 3. Overhead Illuminated Sign Banner
         const sign = this.createPathSign(0, 4.8, 0, title, desc, titleColor, '#' + colorHex.toString(16).padStart(6, '0'));
         beaconGroup.add(sign);
 
@@ -966,8 +959,6 @@ class DarkSoulsWorld {
 
         this.particles.push({
             mesh: flameCore,
-            light: light,
-            baseIntensity: 3.4,
             seed: Math.random() * 20
         });
     }
@@ -1027,10 +1018,6 @@ class DarkSoulsWorld {
     }
 
     createGoldenBrazier(x, y, z, intensity = 2.2) {
-        const light = new THREE.PointLight(0xffcc44, intensity, 18, 1.5);
-        light.position.set(x, y + 0.5, z);
-        this.scene.add(light);
-
         const flame = new THREE.Mesh(
             new THREE.DodecahedronGeometry(0.35),
             new THREE.MeshBasicMaterial({ color: 0xffdd66 })
@@ -1044,8 +1031,6 @@ class DarkSoulsWorld {
 
         this.particles.push({
             mesh: flame,
-            light: light,
-            baseIntensity: intensity,
             seed: Math.random() * 15
         });
     }
@@ -1054,10 +1039,6 @@ class DarkSoulsWorld {
         const sconce = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.2, 6), this.ironMat);
         sconce.position.set(x, y, z);
         this.scene.add(sconce);
-
-        const flameLight = new THREE.PointLight(0xffbb33, 2.2, 16, 1.6);
-        flameLight.position.set(x, y + 0.7, z);
-        this.scene.add(flameLight);
 
         const fMesh = new THREE.Mesh(
             new THREE.DodecahedronGeometry(0.2),
@@ -1068,17 +1049,11 @@ class DarkSoulsWorld {
 
         this.particles.push({
             mesh: fMesh,
-            light: flameLight,
-            baseIntensity: 2.2,
             seed: Math.random() * 10
         });
     }
 
     createTealBrazier(x, y, z) {
-        const light = new THREE.PointLight(0x00ffcc, 2.0, 16, 1.6);
-        light.position.set(x, y + 0.4, z);
-        this.scene.add(light);
-
         const flame = new THREE.Mesh(
             new THREE.DodecahedronGeometry(0.28),
             new THREE.MeshBasicMaterial({ color: 0x44ffdd })
@@ -1092,8 +1067,6 @@ class DarkSoulsWorld {
 
         this.particles.push({
             mesh: flame,
-            light: light,
-            baseIntensity: 2.0,
             seed: Math.random() * 15
         });
     }
@@ -1249,13 +1222,6 @@ class DarkSoulsWorld {
         flameMesh.position.y = 0.16;
         flameGroup.add(flameMesh);
 
-        // PointLight
-        const flameLight = new THREE.PointLight(colorHex, isLit ? baseIntensity : 0, radius, 1.4);
-        flameLight.position.y = 0.18;
-        flameLight.castShadow = true;
-        flameLight.shadow.bias = -0.002;
-        flameGroup.add(flameLight);
-
         flameGroup.visible = isLit;
         torchGroup.add(flameGroup);
 
@@ -1266,8 +1232,6 @@ class DarkSoulsWorld {
             mesh: flameGroup,
             coreMesh,
             flameMesh,
-            light: flameLight,
-            baseIntensity: baseIntensity,
             seed: Math.random() * 20,
             isTorch: true,
             isLit: isLit
@@ -1286,7 +1250,6 @@ class DarkSoulsWorld {
                     isLit = true;
                     interactable.isLit = true;
                     flameGroup.visible = true;
-                    flameLight.intensity = baseIntensity;
                     particleEntry.isLit = true;
                     interactable.prompt = '[ E ] REFUEL TORCH';
                 }
@@ -1355,20 +1318,11 @@ class DarkSoulsWorld {
         core.position.y = 1.95;
         brazierGroup.add(core);
 
-        // 5. Dynamic Warm Light
-        const light = new THREE.PointLight(colorHex, intensity, radius, 1.3);
-        light.position.y = 2.4;
-        light.castShadow = true;
-        light.shadow.bias = -0.002;
-        brazierGroup.add(light);
-
         brazierGroup.position.set(x, y, z);
         this.scene.add(brazierGroup);
 
         this.particles.push({
             mesh: flame,
-            light: light,
-            baseIntensity: intensity,
             seed: Math.random() * 20
         });
 
@@ -1470,8 +1424,7 @@ class DarkSoulsWorld {
         // Bonfire Point Light
         this.bonfireLight = new THREE.PointLight(0xff6611, 2.8, 22, 1.6);
         this.bonfireLight.position.set(0, 1.4, 0);
-        this.bonfireLight.castShadow = true;
-        this.bonfireLight.shadow.bias = -0.002;
+        this.bonfireLight.castShadow = false;
         bonfireGroup.add(this.bonfireLight);
 
         // Position Bonfire at center of Courtyard

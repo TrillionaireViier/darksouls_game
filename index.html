@@ -94,9 +94,13 @@
         .header-sub {
             font-family: 'EB Garamond', serif;
             font-style: italic;
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             color: #8c827a;
             letter-spacing: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 380px;
         }
 
         .header-actions {
@@ -176,7 +180,7 @@
         /* TOP-LEFT PLAYER HUD */
         #player-hud {
             position: absolute;
-            top: 65px;
+            top: 76px;
             left: 24px;
             z-index: 50;
             display: flex;
@@ -1364,6 +1368,12 @@
     <div id="souls-hud">
         <div class="soul-orb"></div>
         <div id="souls-count">0</div>
+    </div>
+
+    <!-- Build & Daylight Status Indicator -->
+    <div id="build-status-indicator" style="position: absolute; bottom: 12px; left: 16px; z-index: 50; pointer-events: auto; display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 0.72rem; color: #ffd276; background: rgba(18, 14, 10, 0.75); border: 1px solid rgba(255, 210, 118, 0.35); padding: 4px 10px; border-radius: 3px; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+        <span>☀️ HIGH NOON DAYLIGHT v3.0</span>
+        <button onclick="window.location.reload(true)" style="background: rgba(255,210,118,0.2); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-family: inherit;">RELOAD</button>
     </div>
 
     <!-- Boss HUD (Bottom Center, activated when Taurus Demon wakes) -->
@@ -2594,14 +2604,14 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261114_brightnoon"></script>
-    <script src="js/audio.js?v=20261114_brightnoon"></script>
-    <script src="js/world.js?v=20261114_brightnoon"></script>
-    <script src="js/character.js?v=20261114_brightnoon"></script>
-    <script src="js/siege_warfare.js?v=20261114_brightnoon"></script>
-    <script src="js/heraldry_nobility.js?v=20261114_brightnoon"></script>
-    <script src="js/apothecary_crafting.js?v=20261114_brightnoon"></script>
-    <script src="js/combat.js?v=20261114_brightnoon"></script>
-    <script src="js/game.js?v=20261114_brightnoon"></script>
+    <script src="js/three.min.js?v=20261114_daylight_v3"></script>
+    <script src="js/audio.js?v=20261114_daylight_v3"></script>
+    <script src="js/world.js?v=20261114_daylight_v3"></script>
+    <script src="js/character.js?v=20261114_daylight_v3"></script>
+    <script src="js/siege_warfare.js?v=20261114_daylight_v3"></script>
+    <script src="js/heraldry_nobility.js?v=20261114_daylight_v3"></script>
+    <script src="js/apothecary_crafting.js?v=20261114_daylight_v3"></script>
+    <script src="js/combat.js?v=20261114_daylight_v3"></script>
+    <script src="js/game.js?v=20261114_daylight_v3"></script>
 </body>
 </html>

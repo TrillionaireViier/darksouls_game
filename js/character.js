@@ -589,8 +589,7 @@ class DarkSoulsCharacters {
         // 5. Dynamic Warm PointLight
         const flameLight = new THREE.PointLight(0xff8833, 3.8, 28, 1.2);
         flameLight.position.y = 0.22;
-        flameLight.castShadow = true;
-        flameLight.shadow.bias = -0.002;
+        flameLight.castShadow = false;
         flameGroup.add(flameLight);
 
         // 6. Spark / Ember Particles
