@@ -6,6 +6,18 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <script>
+        // Automatic cache buster for iOS / Android mobile browsers
+        (function() {
+            var TARGET_BUILD = '20261114_sunlit_v4';
+            var urlParams = new URLSearchParams(window.location.search);
+            var bParam = urlParams.get('b');
+            if (bParam !== TARGET_BUILD) {
+                var freshUrl = window.location.origin + window.location.pathname + '?b=' + TARGET_BUILD + '&t=' + Date.now();
+                window.location.replace(freshUrl);
+            }
+        })();
+    </script>
     <title>DARK SOULS: The Undead Burg & Taurus Demon &bull; Playable Web & Desktop Game</title>
     
     <!-- Authentic Dark Souls Gothic Fonts -->
@@ -186,6 +198,20 @@
             border-color: var(--ds-gold);
             color: var(--ds-gold);
             background: rgba(35, 28, 20, 0.9);
+        }
+
+        /* PATHFINDER / ROUTE COMPASS BAR */
+        #pathfinder-bar {
+            position: absolute;
+            top: 54px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 60;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         /* TOP-LEFT PLAYER HUD */
@@ -975,7 +1001,7 @@
             }
 
             #pathfinder-bar {
-                top: 58px;
+                top: 96px;
                 gap: 6px;
                 max-width: 95%;
             }
@@ -1116,7 +1142,7 @@
             }
 
             #pathfinder-bar {
-                top: 48px;
+                top: 86px;
                 gap: 4px;
                 width: 98%;
                 padding: 0 4px;
@@ -1311,7 +1337,7 @@
     </header>
 
     <!-- PATHFINDER / ROUTE COMPASS BAR (LIT PATHWAYS & VERTICAL ELEVATIONS) -->
-    <div id="pathfinder-bar" style="position: absolute; top: 54px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 60; pointer-events: auto; flex-wrap: wrap; justify-content: center;">
+    <div id="pathfinder-bar">
         <div id="route-catacombs" class="route-pill" onclick="teleportOrHighlightPath('catacombs')" title="West Sunken Crypt: Depth -5m, Murky Waters, Ancient Tombs" style="background: rgba(8, 28, 24, 0.88); border: 1px solid #00ffaa; color: #77ffcc; padding: 5px 12px; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 1.5px; cursor: pointer; border-radius: 3px; text-shadow: 0 0 8px rgba(0,255,170,0.6); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(0,255,170,0.25); transition: all 0.25s ease;">
             <span>▼</span> CATACOMBS (DOWN: -5m)
         </div>
@@ -1382,9 +1408,9 @@
     </div>
 
     <!-- Build & Daylight Status Indicator -->
-    <div id="build-status-indicator" style="position: absolute; bottom: 12px; left: 16px; z-index: 50; pointer-events: auto; display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 0.72rem; color: #ffd276; background: rgba(18, 14, 10, 0.75); border: 1px solid rgba(255, 210, 118, 0.35); padding: 4px 10px; border-radius: 3px; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+    <div id="build-status-indicator" style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 50; pointer-events: auto; display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 0.72rem; color: #ffd276; background: rgba(18, 14, 10, 0.85); border: 1px solid rgba(255, 210, 118, 0.35); padding: 3px 10px; border-radius: 3px; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); white-space: nowrap;">
         <span>☀️ LORDRAN SUNLIT CITADEL</span>
-        <button onclick="window.location.reload(true)" style="background: rgba(255,210,118,0.2); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-family: inherit;">RELOAD</button>
+        <button onclick="window.location.href = window.location.origin + window.location.pathname + '?b=20261114_sunlit_v4&t=' + Date.now()" style="background: rgba(255,210,118,0.2); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-family: inherit;">RELOAD</button>
     </div>
 
     <!-- Boss HUD (Bottom Center, activated when Taurus Demon wakes) -->
