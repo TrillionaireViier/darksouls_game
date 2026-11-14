@@ -214,7 +214,7 @@ class DarkSoulsGame {
 
         let joyTouchId = null;
         let startX = 0, startY = 0;
-        const maxDist = 45;
+        let currentMaxDist = 45;
 
         let lookTouchId = null;
         let lastLookX = 0, lastLookY = 0;
@@ -230,6 +230,7 @@ class DarkSoulsGame {
             const rect = joyBase.getBoundingClientRect();
             startX = rect.left + rect.width / 2;
             startY = rect.top + rect.height / 2;
+            currentMaxDist = Math.max(30, rect.width * 0.38);
             if (navigator.vibrate) navigator.vibrate(8);
         }, { passive: false });
 
@@ -264,13 +265,13 @@ class DarkSoulsGame {
                     let dy = touch.clientY - startY;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist > maxDist) {
-                        dx = (dx / dist) * maxDist;
-                        dy = (dy / dist) * maxDist;
+                    if (dist > currentMaxDist) {
+                        dx = (dx / dist) * currentMaxDist;
+                        dy = (dy / dist) * currentMaxDist;
                     }
 
                     joyStick.style.transform = `translate(${dx}px, ${dy}px)`;
-                    this.touchJoyVector.set(dx / maxDist, dy / maxDist);
+                    this.touchJoyVector.set(dx / currentMaxDist, dy / currentMaxDist);
                 }
 
                 // Camera Look Drag
