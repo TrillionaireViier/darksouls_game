@@ -1481,10 +1481,9 @@ class DarkSoulsCombat {
             this.stamina = this.maxStamina;
         }
 
-        // Torch Fire Burn DoT Processing on Enemies & Boss
-        const burnTargets = [...this.enemies];
-        if (this.boss && !this.boss.isDead) burnTargets.push(this.boss);
-        for (const t of burnTargets) {
+        // Torch Fire Burn DoT Processing on Enemies & Boss (Zero-allocation)
+        for (let i = 0; i < this.enemies.length; i++) {
+            const t = this.enemies[i];
             if (t.isDead || !t.isBurning) continue;
             t.burnTimer -= delta;
             t.burnTickTimer = (t.burnTickTimer || 0) + delta;
@@ -1498,14 +1497,28 @@ class DarkSoulsCombat {
                 if (this.world && this.world.spawnHitSparks && t.mesh) {
                     this.world.spawnHitSparks(t.mesh.position, false);
                 }
-                if (t.hp <= 0) {
-                    if (t === this.boss) this.killBoss();
-                    else this.killEnemy(t);
+                if (t.hp <= 0) this.killEnemy(t);
+            }
+            if (t.burnTimer <= 0) t.isBurning = false;
+        }
+
+        if (this.boss && !this.boss.isDead && this.boss.isBurning) {
+            const b = this.boss;
+            b.burnTimer -= delta;
+            b.burnTickTimer = (b.burnTickTimer || 0) + delta;
+            if (b.burnTickTimer >= 0.6) {
+                b.burnTickTimer = 0;
+                const burnDmg = 18;
+                b.hp -= burnDmg;
+                if (this.game && this.game.showDamageNumber && b.mesh) {
+                    this.game.showDamageNumber(b.mesh.position, burnDmg, false);
                 }
+                if (this.world && this.world.spawnHitSparks && b.mesh) {
+                    this.world.spawnHitSparks(b.mesh.position, false);
+                }
+                if (b.hp <= 0) this.killBoss();
             }
-            if (t.burnTimer <= 0) {
-                t.isBurning = false;
-            }
+            if (b.burnTimer <= 0) b.isBurning = false;
         }
 
         // Pine Resin Fire Buff Timer
@@ -1631,9 +1644,24 @@ class DarkSoulsCombat {
 
     updateHollowAI(delta) {
         const playerPos = this.game.playerMesh.position;
+        if (!this._scratchMobVec) this._scratchMobVec = new THREE.Vector3();
 
-        for (const e of this.enemies) {
+        for (let i = 0; i < this.enemies.length; i++) {
+            const e = this.enemies[i];
             if (e.isDead) continue;
+
+            // Distance culling & frustum optimization:
+            // Mobs farther than 48m are hidden from the Three.js scene graph to save GPU draw calls and shadow passes
+            const dx = playerPos.x - e.mesh.position.x;
+            const dz = playerPos.z - e.mesh.position.z;
+            const distSq = dx * dx + dz * dz;
+
+            if (distSq > 48 * 48) {
+                if (e.mesh.visible) e.mesh.visible = false;
+                continue; // Skip AI calculations for distant mobs!
+            } else {
+                if (!e.mesh.visible) e.mesh.visible = true;
+            }
 
             e.animTime += delta;
 
@@ -1651,15 +1679,15 @@ class DarkSoulsCombat {
                 continue;
             }
 
-            const toPlayer = new THREE.Vector3().subVectors(playerPos, e.mesh.position);
-            const dist = toPlayer.length();
+            this._scratchMobVec.subVectors(playerPos, e.mesh.position);
+            const dist = this._scratchMobVec.length();
             const heightDiff = Math.abs(playerPos.y - e.mesh.position.y);
 
             // Aggro check (within 14 units horizontally, within 3.8m vertical floor tier)
             if (dist < 14 && heightDiff < 3.8) {
                 e.state = 'CHASE';
                 // Turn toward player
-                const angle = Math.atan2(toPlayer.x, toPlayer.z);
+                const angle = Math.atan2(this._scratchMobVec.x, this._scratchMobVec.z);
                 e.mesh.rotation.y = angle;
 
                 const reach = e.attackReach || 2.0;

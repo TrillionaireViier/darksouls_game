@@ -17,12 +17,11 @@ class DarkSoulsGame {
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-        // Adaptive High-FPS Resolution: Cap to 1.0 on mobile/tablets or 1.25 on high-DPI displays
-        const isMobileOrTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1200);
+        // Adaptive High-FPS Resolution: Default to 60 FPS Turbo Mode for ultra-smooth 60 FPS
         const savedPerf = localStorage.getItem('darksouls_perf_mode');
-        this.performanceMode = savedPerf !== null ? (savedPerf === 'true') : false;
+        this.performanceMode = savedPerf !== null ? (savedPerf === 'true') : true;
 
-        const effectivePr = this.performanceMode ? 1.0 : (isMobileOrTouch ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25));
+        const effectivePr = 1.0; // 1.0 CSS pixel ratio eliminates Retina GPU fillrate bottlenecks
         this.renderer.setPixelRatio(effectivePr);
         this.renderer.shadowMap.enabled = !this.performanceMode;
         this.renderer.shadowMap.type = THREE.PCFShadowMap; // 2.5x faster shadow filtering
@@ -1839,6 +1838,7 @@ class DarkSoulsGame {
         if (openModals.length > 0) {
             openModals.forEach(m => m.style.display = 'none');
             this.closeNextLordModal();
+            if (this.closeLocationsModal) this.closeLocationsModal();
             if (window.qaSuite && window.qaSuite.closeUI) window.qaSuite.closeUI();
             this.showNotification("⚔️ BATTLE RESUMED");
             return;
@@ -1849,9 +1849,12 @@ class DarkSoulsGame {
             document.exitPointerLock();
         }
 
-        // 3. Open Lordran Command Menu
+        // 3. Open Lordran Command Menu & refresh character stats and save slots
         if (typeof openQuickMenuModal === 'function') {
             openQuickMenuModal();
+        }
+        if (this.updateEscapeMenuUI) {
+            this.updateEscapeMenuUI();
         }
 
         // 4. Smoothly scroll header actions to start and trigger golden pulse
@@ -1862,7 +1865,7 @@ class DarkSoulsGame {
             setTimeout(() => bar.classList.remove('header-actions-glow'), 1200);
         }
 
-        this.showNotification("⚜️ LORDRAN COMMAND MENU • SCROLL BUTTONS [ESC]");
+        this.showNotification("⚜️ LORDRAN COMMAND MENU • [ESC] RESUME");
     }
 
     respawnPlayer() {
@@ -1892,10 +1895,13 @@ class DarkSoulsGame {
     }
 
     // ----------------------------------------------------
-    // SAVE / LOAD SYSTEM (LOCALSTORAGE PERSISTENCE)
+    // SAVE / LOAD SYSTEM (LOCALSTORAGE PERSISTENCE & MULTI-SLOT ARCHIVE)
     // ----------------------------------------------------
-    saveGame(showNotification = true, context = 'MANUAL') {
+    saveGame(showNotification = true, context = 'MANUAL', slotKey = 'darksouls_save_v1') {
         if (!this.combat) return false;
+
+        const p = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
+        const zoneName = p.y <= -3.5 ? 'Catacombs (-5m Depth)' : (p.x > 12 ? 'High Ramparts (+6m)' : (p.z > 95 ? 'Boss Arena' : 'Royal Bridge (0m)'));
 
         const saveData = {
             version: 1,
@@ -1925,6 +1931,7 @@ class DarkSoulsGame {
             fiefdoms: this.heraldry ? this.heraldry.fiefdoms : null,
             craftedMeds: this.apothecary ? this.apothecary.craftedMeds : null,
             trebuchet: this.siege ? { counterweightKg: this.siege.trebuchet.counterweightKg, winchAngleDeg: this.siege.trebuchet.winchAngleDeg } : null,
+            locationName: zoneName,
             playerPos: {
                 x: Number(this.playerMesh.position.x.toFixed(2)),
                 y: Number(this.playerMesh.position.y.toFixed(2)),
@@ -1933,13 +1940,17 @@ class DarkSoulsGame {
         };
 
         try {
-            localStorage.setItem('darksouls_save_v1', JSON.stringify(saveData));
+            localStorage.setItem(slotKey, JSON.stringify(saveData));
+            if (slotKey !== 'darksouls_save_v1') {
+                localStorage.setItem('darksouls_save_v1', JSON.stringify(saveData));
+            }
             if (showNotification) {
                 const prefix = context ? `[${context}] ` : '';
                 this.showNotification(`💾 ${prefix}JOURNEY SAVED &bull; LEVEL ${saveData.level}`);
                 if (this.audio) this.audio.playRoll();
             }
             this.updateSaveUI();
+            this.updateEscapeMenuUI();
             return true;
         } catch (err) {
             console.error('Failed to save darksouls game:', err);
@@ -1947,9 +1958,12 @@ class DarkSoulsGame {
         }
     }
 
-    loadGame(showNotification = true) {
+    loadGame(showNotification = true, slotKey = 'darksouls_save_v1') {
         try {
-            const raw = localStorage.getItem('darksouls_save_v1');
+            let raw = localStorage.getItem(slotKey);
+            if (!raw && slotKey === 'darksouls_save_v1') {
+                raw = localStorage.getItem('darksouls_save_slot_1');
+            }
             if (!raw) {
                 if (showNotification) this.showNotification("NO SAVED JOURNEY FOUND IN BONFIRE ASHES");
                 return false;
@@ -2032,6 +2046,7 @@ class DarkSoulsGame {
             this.updateLevelModalValues();
             this.updateBossRosterUI();
             this.updateSaveUI();
+            this.updateEscapeMenuUI();
 
             if (this.audio) this.audio.playBonfireIgnite();
             if (showNotification) {
@@ -2045,14 +2060,95 @@ class DarkSoulsGame {
         }
     }
 
+    saveToSlot(slotId = 1) {
+        const slotKey = `darksouls_save_slot_${slotId}`;
+        this.saveGame(false, `SLOT ${slotId}`, slotKey);
+        this.showNotification(`💾 EXPEDITION ARCHIVED IN SLOT ${slotId}`);
+        if (this.audio) this.audio.playRoll();
+        this.updateEscapeMenuUI();
+        this.updateSaveUI();
+    }
+
+    loadFromSlot(slotId = 1) {
+        const slotKey = `darksouls_save_slot_${slotId}`;
+        const success = this.loadGame(false, slotKey);
+        if (success) {
+            this.showNotification(`📂 LOADED SAVE SLOT ${slotId} • LEVEL ${this.combat.level}`);
+            this.updateEscapeMenuUI();
+            this.updateSaveUI();
+            if (typeof closeQuickMenuModal === 'function') closeQuickMenuModal();
+        } else {
+            this.showNotification(`⚠️ NO DATA IN SAVE SLOT ${slotId}`);
+        }
+    }
+
+    deleteSlot(slotId = 1) {
+        const slotKey = `darksouls_save_slot_${slotId}`;
+        localStorage.removeItem(slotKey);
+        if (slotId === 1) localStorage.removeItem('darksouls_save_v1');
+        this.showNotification(`🗑️ SAVE SLOT ${slotId} PURGED`);
+        this.updateEscapeMenuUI();
+        this.updateSaveUI();
+    }
+
+    exportSaveJson() {
+        const raw = localStorage.getItem('darksouls_save_slot_1') || localStorage.getItem('darksouls_save_v1');
+        if (!raw) {
+            this.showNotification("⚠️ NO EXPEDITION SAVE FOUND TO EXPORT");
+            return;
+        }
+        try {
+            const data = JSON.parse(raw);
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `darksouls_lordran_level_${data.level || 1}_save.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            this.showNotification("📤 SAVE FILE EXPORTED AS JSON");
+        } catch(e) {
+            this.showNotification("❌ ERROR EXPORTING SAVE");
+        }
+    }
+
+    importSaveJson(jsonStr) {
+        try {
+            const data = JSON.parse(jsonStr);
+            if (!data.level && !data.version) throw new Error("Invalid format");
+            localStorage.setItem('darksouls_save_slot_1', JSON.stringify(data));
+            localStorage.setItem('darksouls_save_v1', JSON.stringify(data));
+            this.loadGame(true, 'darksouls_save_v1');
+            this.updateEscapeMenuUI();
+            this.updateSaveUI();
+            this.showNotification("📥 SAVE RESTORED SUCCESSFULLY");
+        } catch(e) {
+            this.showNotification("❌ ERROR IMPORTING SAVE FILE");
+        }
+    }
+
+    resetJourney() {
+        if (!confirm("Are you sure you want to begin a fresh journey? All unarchived Lordran progress will be cleared.")) return;
+        localStorage.removeItem('darksouls_save_v1');
+        localStorage.removeItem('darksouls_save_slot_1');
+        localStorage.removeItem('darksouls_save_slot_2');
+        localStorage.removeItem('darksouls_save_slot_3');
+        location.reload();
+    }
+
     hasSaveData() {
-        return !!localStorage.getItem('darksouls_save_v1');
+        return !!(localStorage.getItem('darksouls_save_v1') || localStorage.getItem('darksouls_save_slot_1'));
     }
 
     deleteSave() {
         localStorage.removeItem('darksouls_save_v1');
+        localStorage.removeItem('darksouls_save_slot_1');
         this.showNotification("SAVED JOURNEY CLEARED FROM ASHES");
         this.updateSaveUI();
+        this.updateEscapeMenuUI();
     }
 
     updateSaveUI() {
@@ -2068,7 +2164,8 @@ class DarkSoulsGame {
         if (statusElem) {
             if (hasSave) {
                 try {
-                    const data = JSON.parse(localStorage.getItem('darksouls_save_v1'));
+                    const raw = localStorage.getItem('darksouls_save_v1') || localStorage.getItem('darksouls_save_slot_1');
+                    const data = JSON.parse(raw);
                     statusElem.innerHTML = `LAST SAVED: <span style="color:#ffd276;">${data.date || 'RECENT'}</span> &bull; LEVEL ${data.level} &bull; ${Number(data.souls).toLocaleString()} SOULS`;
                 } catch(e) {
                     statusElem.textContent = 'SAVE READY IN MEMORY';
@@ -2077,6 +2174,81 @@ class DarkSoulsGame {
                 statusElem.textContent = 'NO ACTIVE SAVE FILE (REST AT BONFIRE OR CLICK SAVE)';
             }
         }
+    }
+
+    updateEscapeMenuUI() {
+        if (!this.combat) return;
+
+        // 1. Update Character Stats Overview Card
+        const elLevel = document.getElementById('esc-stat-level');
+        const elSouls = document.getElementById('esc-stat-souls');
+        const elHp = document.getElementById('esc-stat-hp');
+        const elStamina = document.getElementById('esc-stat-stamina');
+        const elEstus = document.getElementById('esc-stat-estus');
+        const elWeapon = document.getElementById('esc-stat-weapon');
+        const elSkin = document.getElementById('esc-stat-skin');
+        const elZone = document.getElementById('esc-stat-zone');
+        const elBosses = document.getElementById('esc-stat-bosses');
+        const elLore = document.getElementById('esc-stat-lore');
+
+        if (elLevel) elLevel.textContent = this.combat.level;
+        if (elSouls) elSouls.textContent = this.combat.souls.toLocaleString();
+        if (elHp) elHp.textContent = `${this.combat.hp} / ${this.combat.maxHp}`;
+        if (elStamina) elStamina.textContent = `${Math.round(this.combat.stamina)} / ${this.combat.maxStamina}`;
+        if (elEstus) elEstus.textContent = `${this.combat.estusFlasks} / ${this.combat.maxEstus}`;
+
+        const weaponName = (this.combat.weapons[this.combat.currentWeaponId] && this.combat.weapons[this.combat.currentWeaponId].name) || 'Lordran Straight Sword';
+        if (elWeapon) elWeapon.textContent = weaponName;
+
+        const currentSkin = localStorage.getItem('darksouls_equipped_skin') || 'warrior';
+        if (elSkin) elSkin.textContent = currentSkin.toUpperCase();
+
+        const p = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
+        const zoneName = p.y <= -3.5 ? 'Catacombs (-5m Depth)' : (p.x > 12 ? 'High Ramparts (+6m)' : (p.z > 95 ? 'Boss Arena' : 'Royal Bridge (0m)'));
+        if (elZone) elZone.textContent = zoneName;
+
+        const defeatedCount = (this.combat.defeatedBosses && this.combat.defeatedBosses.length) || 0;
+        if (elBosses) elBosses.textContent = `${defeatedCount} / 16`;
+
+        const unlockedLoreMap = (window.DarkSoulsLore && window.DarkSoulsLore.getUnlockedMap()) || {};
+        const loreCount = Object.keys(unlockedLoreMap).length;
+        if (elLore) elLore.textContent = `${loreCount} / 60`;
+
+        // 2. Update Save Slots List
+        [1, 2, 3].forEach(slotId => {
+            const slotKey = `darksouls_save_slot_${slotId}`;
+            const raw = localStorage.getItem(slotKey) || (slotId === 1 ? localStorage.getItem('darksouls_save_v1') : null);
+            const metaElem = document.getElementById(`esc-slot-${slotId}-meta`);
+            const loadBtn = document.getElementById(`esc-slot-${slotId}-load-btn`);
+            const delBtn = document.getElementById(`esc-slot-${slotId}-del-btn`);
+
+            if (raw) {
+                try {
+                    const data = JSON.parse(raw);
+                    if (metaElem) {
+                        metaElem.innerHTML = `<span style="color: #a5d6a7; font-weight: 700;">ACTIVE ARCHIVE</span> &bull; LVL ${data.level} &bull; ${Number(data.souls).toLocaleString()} Souls &bull; <span style="color: #bbb;">${data.date || 'RECENT'}</span>`;
+                    }
+                    if (loadBtn) {
+                        loadBtn.disabled = false;
+                        loadBtn.style.opacity = '1';
+                        loadBtn.style.cursor = 'pointer';
+                    }
+                    if (delBtn) delBtn.style.display = 'inline-flex';
+                } catch(e) {
+                    if (metaElem) metaElem.textContent = 'EMPTY SAVE SLOT';
+                    if (loadBtn) { loadBtn.disabled = true; loadBtn.style.opacity = '0.5'; loadBtn.style.cursor = 'not-allowed'; }
+                    if (delBtn) delBtn.style.display = 'none';
+                }
+            } else {
+                if (metaElem) metaElem.innerHTML = `<span style="color: #888;">EMPTY SLOT &bull; READY FOR ARCHIVE</span>`;
+                if (loadBtn) {
+                    loadBtn.disabled = true;
+                    loadBtn.style.opacity = '0.5';
+                    loadBtn.style.cursor = 'not-allowed';
+                }
+                if (delBtn) delBtn.style.display = 'none';
+            }
+        });
     }
 
     updateBossRosterUI() {
@@ -2587,9 +2759,86 @@ class DarkSoulsGame {
     adminUnlockAllLore() {
         if (window.DarkSoulsLore && window.DarkSoulsLore.unlockAll) {
             window.DarkSoulsLore.unlockAll();
-            this.showNotification("📜 ADMIN: ALL 30 DARK SOULS LORE ITEMS UNLOCKED!");
+            this.showNotification("📜 ADMIN: ALL 60 DARK SOULS LORE ITEMS UNLOCKED!");
             this.renderLoreCodexContent('all');
         }
+    }
+
+    // ----------------------------------------------------
+    // 30 LORDRAN LOCATIONS & FAST-TRAVEL EXPEDITIONS
+    // ----------------------------------------------------
+    openLocationsModal() {
+        const modal = document.getElementById('locations-modal');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        this.renderLocationsUI('all');
+    }
+
+    closeLocationsModal() {
+        const modal = document.getElementById('locations-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    renderLocationsUI(activeFilter = 'all') {
+        const container = document.getElementById('locations-cards-grid');
+        if (!container) return;
+
+        const locs = window.DARK_SOULS_LOCATIONS || [];
+        const filtered = locs.filter(l => {
+            if (activeFilter === 'all') return true;
+            if (activeFilter === 'depths') return l.pos[1] < -1;
+            if (activeFilter === 'high') return l.pos[1] > 2;
+            if (activeFilter === 'surface') return l.pos[1] >= -1 && l.pos[1] <= 2;
+            if (activeFilter === 'legendary') return (l.danger || '').includes('Tier V');
+            return true;
+        });
+
+        container.innerHTML = filtered.map(l => {
+            const elevColor = l.pos[1] < -1 ? '#00ffaa' : (l.pos[1] > 2 ? '#ffd700' : '#ff7722');
+            return `
+                <div class="location-card" style="background: linear-gradient(145deg, rgba(28, 22, 16, 0.95), rgba(15, 12, 10, 0.95)); border: 1.5px solid #a87932; border-radius: 12px; padding: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-size: 0.72rem; letter-spacing: 1px; color: ${elevColor}; font-weight: 800; text-transform: uppercase;">📍 ${l.zone} • ${l.elev}</span>
+                            <span style="font-size: 0.7rem; color: #ffd276; font-weight: 700; background: rgba(168,121,50,0.25); border: 1px solid rgba(168,121,50,0.4); padding: 2px 8px; border-radius: 9999px;">${l.danger}</span>
+                        </div>
+                        <h4 style="margin: 0 0 6px 0; color: #fff3a8; font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 800;">${l.name}</h4>
+                        <div style="font-size: 0.76rem; color: #b8a896; margin-bottom: 8px;">
+                            <span>Key Encounters: <strong style="color: #ff9944;">${l.boss}</strong></span>
+                        </div>
+                        <p style="margin: 0 0 12px 0; font-size: 0.8rem; line-height: 1.4; color: #d0c0b0; font-style: italic;">
+                            "${l.desc}"
+                        </p>
+                    </div>
+                    <button class="btn-icon-bar" onclick="travelToLordranLocation('${l.id}')" style="width: 100%; justify-content: center; border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.3); padding: 8px 12px;">
+                        ⚡ TRAVEL TO THIS LOCATION
+                    </button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    travelToLocation(locationId) {
+        const locs = window.DARK_SOULS_LOCATIONS || [];
+        const loc = locs.find(l => l.id === locationId);
+        if (!loc || !this.playerMesh) return;
+
+        this.playerMesh.position.set(loc.pos[0], loc.pos[1], loc.pos[2]);
+        this.playerMesh.position.y = this.world.getGroundHeight(loc.pos[0], loc.pos[2]);
+        this.cameraYaw = 0;
+        this.cameraPitch = 0.22;
+
+        if (loc.light && this.renderer) {
+            this.renderer.toneMappingExposure = loc.light;
+        }
+
+        if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+        this.showNotification(`🗺️ FAST-TRAVEL: ${loc.name.toUpperCase()} (${loc.elev})`);
+
+        this.closeLocationsModal();
+        if (typeof closeQuickMenuModal === 'function') closeQuickMenuModal();
+        this.updateHUD();
+        this.updateEscapeMenuUI();
     }
 
     onWindowResize() {
@@ -2624,6 +2873,67 @@ window.openLoreCodexModal = () => { if (window.game) window.game.openLoreCodexMo
 window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodexModal(); };
 window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
 window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
+
+// 30 Authentic Lordran Locations Fast-Travel Compendium
+window.DARK_SOULS_LOCATIONS = [
+    { id: 'undead_asylum', name: 'Undead Asylum - Northern Courtyard', zone: 'Undead Asylum', pos: [0, 0, -25], elev: '0m', danger: 'Tier I (Novice)', boss: 'Asylum Demon', desc: 'The remote fortress asylum where the Undead are locked away to await the end of the world.', light: 0.95 },
+    { id: 'firelink_shrine', name: 'Firelink Shrine - Ruined Bonfire', zone: 'Firelink Shrine', pos: [0, 0, 5], elev: '0m', danger: 'Sanctuary (Safe)', boss: 'None (Crestfallen Warrior)', desc: 'The historic nexus of Lordran where weary pilgrims gather around the warm embers of the bonfire.', light: 1.10 },
+    { id: 'undead_burg_aqueduct', name: 'Undead Burg - Lower Aqueduct', zone: 'Undead Burg', pos: [-10, 0, -15], elev: '0m', danger: 'Tier I (Novice)', boss: 'Hollow Ambush', desc: 'Narrow mossy brick conduits bridging Firelink Shrine to the lower quarters of the Undead settlement.', light: 0.85 },
+    { id: 'undead_burg_bridge', name: 'Undead Burg - Watchtower Bridge', zone: 'Undead Burg', pos: [0, 0, 20], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Hellkite Wyvern', desc: 'The scorched stone causeway where the crimson dragon rains incandescent flame upon all who cross.', light: 1.15 },
+    { id: 'undead_parish_altar', name: 'Undead Parish - Sunlit Altar', zone: 'Undead Parish', pos: [4, 0, 40], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Armored Fang Boar', desc: 'The shattered altar of the Warriors of Sunlight bathed in the golden radiance of the ancient sun.', light: 1.25 },
+    { id: 'undead_parish_belfry', name: 'Undead Parish - Bell Tower Roof', zone: 'Undead Parish', pos: [20, 6.0, 50], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'Bell Gargoyles', desc: 'The precipitous rooftop of the parish cathedral where the First Bell of Awakening tolls across Lordran.', light: 1.20 },
+    { id: 'darkroot_garden', name: 'Darkroot Garden - Moonlit Grove', zone: 'Darkroot Garden', pos: [12, 0, 25], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Moonlight Butterfly', desc: 'A serene yet treacherous forest glowing with bioluminescent foliage and ancient stone guardians.', light: 0.75 },
+    { id: 'darkroot_basin', name: 'Darkroot Basin - Hydra Lagoon', zone: 'Darkroot Basin', pos: [-12, -5.0, 20], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Lake Hydra & Havel', desc: 'Deep mountain chasm where roaring waterfalls crash into a lagoon guarded by the primeval hydra.', light: 0.80 },
+    { id: 'the_depths', name: 'The Depths - Slimy Sewers', zone: 'The Depths', pos: [-18, -5.0, 35], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Gaping Dragon', desc: 'The suffocating subterranean runoff of the Burg, inhabited by butchers, slime and cursed basilisks.', light: 0.65 },
+    { id: 'blighttown_upper', name: 'Blighttown - Upper Scaffolding', zone: 'Blighttown', pos: [15, 6.0, 65], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Blowdart Snipers', desc: 'Creaking wooden walkways clinging to damp ravine cliffs, riddled with toxic snipers and ghoul nests.', light: 0.60 },
+    { id: 'blighttown_swamp', name: 'Blighttown - Poison Swamp Bottom', zone: 'Blighttown', pos: [-24, -5.0, 55], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Maneater Mildred', desc: 'A vast expanse of poisonous sludge stretching beneath the great hollow, boiling with magma flies.', light: 0.55 },
+    { id: 'quelaags_domain', name: "Quelaag's Domain - Lava Cavern", zone: "Quelaag's Domain", pos: [-18, -5.0, 65], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Chaos Witch Quelaag', desc: 'Cavern of petrified spiderwebs and boiling volcanic magma where the Second Bell of Awakening hangs.', light: 0.90 },
+    { id: 'sens_fortress_gate', name: "Sen's Fortress - Pendulum Gate", zone: "Sen's Fortress", pos: [16, 6.0, 75], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Man-Serpents', desc: 'A deadly gauntlet of swinging pendulum axes, rolling boulders, and pitfall spikes testing undead pilgrims.', light: 0.90 },
+    { id: 'sens_fortress_roof', name: "Sen's Fortress - Rooftop Battlements", zone: "Sen's Fortress", pos: [24, 6.0, 95], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Iron Golem', desc: 'The gale-swept fortress roof overlooking Lordran, guarded by a colossal automaton forged of dragon bone.', light: 1.10 },
+    { id: 'anor_londo_courtyard', name: 'Anor Londo - Grand Cathedral Steps', zone: 'Anor Londo', pos: [-6, 0, 80], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Royal Sentinels', desc: 'The breathtaking marble city of the gods, illuminated by eternal sunlight atop the mountain plateau.', light: 1.30 },
+    { id: 'anor_londo_hall', name: 'Anor Londo - Hall of the Great Lord', zone: 'Anor Londo', pos: [0, 0, 110], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Ornstein & Smough', desc: 'The majestic throne room where Dragon Slayer Ornstein and Executioner Smough guard the Lordvessel.', light: 1.25 },
+    { id: 'painted_world', name: 'Painted World of Ariamis - Snow Courtyard', zone: 'Painted World', pos: [-8, 0, 50], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Crossbreed Priscilla', desc: 'A quiet, snowbound exile sealed within an immense oil canvas inside the Anor Londo cathedral.', light: 1.05 },
+    { id: 'the_catacombs', name: 'The Catacombs - Bone Crypt', zone: 'The Catacombs', pos: [-20, -5.0, 45], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Pinwheel', desc: 'A pitch-black necropolis of winding tunnels carved with skull mosaics and animated skeleton sentinels.', light: 0.50 },
+    { id: 'tomb_of_the_giants', name: 'Tomb of the Giants - Stygian Crypt', zone: 'Tomb of the Giants', pos: [-15, -5.0, 90], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Skeletal Beasts', desc: 'A realm of absolute suffocating blackness where giant four-legged skeletons hunt travelers by sound alone.', light: 0.35 },
+    { id: 'nitos_domain', name: "Gravelord Nito's Domain - Altar of Death", zone: 'Gravelord Domain', pos: [-22, -5.0, 140], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Gravelord Nito', desc: 'The deepest ossuary of Lordran where the First of the Dead rests inside his subterranean sarcophagus.', light: 0.40 },
+    { id: 'new_londo_ruins', name: 'New Londo Ruins - Flooded City', zone: 'New Londo Ruins', pos: [-20, -5.0, 145], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Drowned Ghosts & Darkwraiths', desc: 'The drowned city submerged under tons of lake water to contain the spread of the Darkwraiths.', light: 0.55 },
+    { id: 'the_abyss', name: 'The Abyss - Void of the Four Kings', zone: 'The Abyss', pos: [0, 0, 65], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Four Kings', desc: 'An infinite dimension of pure void where matter and time dissolve into primordial darkness.', light: 0.25 },
+    { id: 'demon_ruins', name: 'Demon Ruins - Magma Riverbanks', zone: 'Demon Ruins', pos: [-26, -5.0, 75], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Ceaseless Discharge', desc: "The scorched red riverbeds directly beneath Quelaag's domain, flooded with fiery molten rock.", light: 1.00 },
+    { id: 'lost_izalith', name: 'Lost Izalith - Bed of Chaos Sanctuary', zone: 'Lost Izalith', pos: [-22, -5.0, 120], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Bed of Chaos', desc: 'The ancient capital of flame swallowed by mutant vegetation and chaotic demons after the fire went wild.', light: 0.95 },
+    { id: 'dukes_archives', name: "The Duke's Archives - Grand Library", zone: "Duke's Archives", pos: [22, 6.0, 35], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Channelers & Pisacas', desc: 'Vast multi-tiered library towers filled with esoteric sorcery tomes where Seath descended into madness.', light: 1.15 },
+    { id: 'crystal_cave', name: 'Crystal Cave - Invisible Crystal Bridges', zone: 'Crystal Cave', pos: [-2, 0, 90], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Seath the Scaleless', desc: 'A glistening underground cavern of blue titanite crystals and invisible walkways spanning bottomless drops.', light: 0.90 },
+    { id: 'kiln_of_first_flame', name: 'Kiln of the First Flame - Ash Field', zone: 'Kiln of the First Flame', pos: [14, 6.0, 140], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Gwyn, Lord of Cinder', desc: 'The white ash desert where the First Flame was ignited and where Lord Gwyn waits at the end of time.', light: 1.05 },
+    { id: 'royal_bridge_arena', name: 'Royal Bridge - Taurus Arena', zone: 'Royal Bridge', pos: [0, 0, 105], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Taurus Demon', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and parapets.', light: 1.10 },
+    { id: 'high_ramparts_watchtower', name: 'High Ramparts - Solar Overlook', zone: 'High Ramparts', pos: [24, 6.0, 35], elev: '+6m', danger: 'Tier II (Moderate)', boss: 'Knight Solaire', desc: 'The elevated eastern battlements where Knight Solaire gazes upon his incandescent sun.', light: 1.25 },
+    { id: 'chasm_of_the_abyss', name: 'Chasm of the Abyss - Primeval Dark', zone: 'Oolacile', pos: [-28, -5.0, 160], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Manus, Father of the Abyss', desc: 'The primordial birthplace of dark humanity deep beneath the ancient ruins of Oolacile.', light: 0.30 }
+];
+
+// Locations & Save Slot Global Window Helpers
+window.openLocationsModal = () => { if (window.game) window.game.openLocationsModal(); };
+window.closeLocationsModal = () => { if (window.game) window.game.closeLocationsModal(); };
+window.filterLocations = (f) => { if (window.game) window.game.renderLocationsUI(f); };
+window.travelToLordranLocation = (id) => { if (window.game) window.game.travelToLocation(id); };
+
+window.saveToSlot = (id) => { if (window.game) window.game.saveToSlot(id); };
+window.loadFromSlot = (id) => { if (window.game) window.game.loadFromSlot(id); };
+window.deleteSlot = (id) => { if (window.game) window.game.deleteSlot(id); };
+window.exportSaveJson = () => { if (window.game) window.game.exportSaveJson(); };
+window.importSaveJsonPrompt = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            if (window.game) window.game.importSaveJson(ev.target.result);
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+};
+window.resetJourney = () => { if (window.game) window.game.resetJourney(); };
 
 // Global initialization
 if (document.readyState === 'loading') {
