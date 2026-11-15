@@ -559,6 +559,71 @@ class DarkSoulsCharacters {
             roughness: 0.1
         });
 
+        // 11. 30 MOBS COMPENDIUM DEDICATED MATERIALS
+        this.mobCrystalMat = new THREE.MeshStandardMaterial({
+            color: 0x88d8ff,
+            roughness: 0.18,
+            metalness: 0.8,
+            emissive: 0x2266aa,
+            emissiveIntensity: 0.5
+        });
+        this.mobGhostMat = new THREE.MeshStandardMaterial({
+            color: 0xaae8ff,
+            transparent: true,
+            opacity: 0.65,
+            emissive: 0x3388bb,
+            emissiveIntensity: 0.65,
+            roughness: 0.1
+        });
+        this.mobSlimeMat = new THREE.MeshStandardMaterial({
+            color: 0x33bb44,
+            roughness: 0.25,
+            metalness: 0.2,
+            emissive: 0x116611,
+            emissiveIntensity: 0.4
+        });
+        this.mobDarkHandMat = new THREE.MeshStandardMaterial({
+            color: 0xcc2200,
+            emissive: 0xff3300,
+            emissiveIntensity: 1.4,
+            roughness: 0.3,
+            transparent: true,
+            opacity: 0.85
+        });
+        this.mobSilverKnightMat = new THREE.MeshStandardMaterial({
+            color: 0xdde5ee,
+            metalness: 0.92,
+            roughness: 0.2
+        });
+        this.mobTreantBarkMat = new THREE.MeshStandardMaterial({
+            color: 0x382c1e,
+            roughness: 0.95
+        });
+        this.mobTreantFoliageMat = new THREE.MeshStandardMaterial({
+            color: 0x243e16,
+            roughness: 0.9
+        });
+        this.mobStoneKnightMat = new THREE.MeshStandardMaterial({
+            color: 0x546050,
+            roughness: 0.92
+        });
+        this.mobTorchFlameMat = new THREE.MeshStandardMaterial({
+            color: 0xff6600,
+            emissive: 0xff4400,
+            emissiveIntensity: 1.9,
+            roughness: 0.2
+        });
+        this.mobPustuleMat = new THREE.MeshStandardMaterial({
+            color: 0xddaa22,
+            emissive: 0xaa7711,
+            emissiveIntensity: 0.7,
+            roughness: 0.4
+        });
+        this.mobWhiteRobeMat = new THREE.MeshStandardMaterial({
+            color: 0xf4f4f0,
+            roughness: 0.8
+        });
+
         // ----------------------------------------------------
         // ARSENAL WEAPON MATERIALS
         // ----------------------------------------------------
@@ -2472,6 +2537,399 @@ class DarkSoulsCharacters {
             rightHip,
             leftHip,
             sword
+        };
+
+        this.scene.add(root);
+        return root;
+    }
+
+    // ----------------------------------------------------
+    // CREATE PROCEDURAL MOB (30 MOBS COMPENDIUM)
+    // Supports 30 distinct mob types with unique geometries, weapons & materials
+    // ----------------------------------------------------
+    createMob(mobDef, x, z, angle = 0, y = 0) {
+        const root = new THREE.Group();
+        const type = (mobDef && (mobDef.meshType || mobDef.id)) || 'torch_hollow';
+
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.95;
+        root.add(bodyGroup);
+
+        // Materials setup
+        let torsoMat = this.hollowRagsMat || this.rustedIronMat;
+        let skinMat = this.hollowSkinMat;
+        let weaponMat = this.rustedIronMat || this.darkSteelMat;
+
+        if (type.includes('crystal') || type.includes('golem')) {
+            torsoMat = this.mobCrystalMat || this.darkSteelMat;
+            skinMat = this.mobCrystalMat || this.darkSteelMat;
+            weaponMat = this.mobCrystalMat || this.darkSteelMat;
+        } else if (type.includes('ghost')) {
+            torsoMat = this.mobGhostMat;
+            skinMat = this.mobGhostMat;
+            weaponMat = this.mobGhostMat;
+        } else if (type.includes('slime')) {
+            torsoMat = this.mobSlimeMat;
+            skinMat = this.mobSlimeMat;
+            weaponMat = this.mobSlimeMat;
+        } else if (type.includes('silver')) {
+            torsoMat = this.mobSilverKnightMat;
+            skinMat = this.mobSilverKnightMat;
+            weaponMat = this.mobSilverKnightMat;
+        } else if (type.includes('black_knight') || type.includes('darkwraith')) {
+            torsoMat = this.darkSteelMat;
+            skinMat = this.darkSteelMat;
+            weaponMat = this.darkSteelMat;
+        } else if (type.includes('stone')) {
+            torsoMat = this.mobStoneKnightMat;
+            skinMat = this.mobStoneKnightMat;
+            weaponMat = this.mobStoneKnightMat;
+        } else if (type.includes('treant')) {
+            torsoMat = this.mobTreantBarkMat;
+            skinMat = this.mobTreantBarkMat;
+            weaponMat = this.mobTreantFoliageMat;
+        } else if (type.includes('painting')) {
+            torsoMat = this.mobWhiteRobeMat;
+            skinMat = this.hollowSkinMat;
+            weaponMat = this.darkSteelMat;
+        } else if (type.includes('skeleton')) {
+            torsoMat = this.boneMat;
+            skinMat = this.boneMat;
+            weaponMat = this.rustedIronMat;
+        }
+
+        // Shared Node Containers for 100% animation safety
+        const torso = new THREE.Group();
+        bodyGroup.add(torso);
+
+        const head = new THREE.Group();
+        head.position.y = 0.5;
+        torso.add(head);
+
+        const rightShoulder = new THREE.Group();
+        rightShoulder.position.set(0.32, 0.2, 0);
+        torso.add(rightShoulder);
+
+        const leftShoulder = new THREE.Group();
+        leftShoulder.position.set(-0.32, 0.2, 0);
+        torso.add(leftShoulder);
+
+        const rightHip = new THREE.Group();
+        rightHip.position.set(0.16, -0.3, 0);
+        torso.add(rightHip);
+
+        const leftHip = new THREE.Group();
+        leftHip.position.set(-0.16, -0.3, 0);
+        torso.add(leftHip);
+
+        let weapon = null;
+
+        // Specialized Mob Archetypes
+        if (type === 'acid_slime') {
+            bodyGroup.position.y = 0.25;
+            const slimeDome = new THREE.Mesh(new THREE.SphereGeometry(0.65, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.5), torsoMat);
+            slimeDome.scale.set(1.2, 0.8, 1.2);
+            torso.add(slimeDome);
+            const nucleus = new THREE.Mesh(new THREE.DodecahedronGeometry(0.2), this.mobPustuleMat || this.emberGlowMat);
+            nucleus.position.y = 0.2;
+            torso.add(nucleus);
+            weapon = slimeDome;
+        } else if (type === 'wheel_skeleton') {
+            const rib = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.4, 0.2), torsoMat);
+            torso.add(rib);
+            const skull = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.25, 0.24), skinMat);
+            head.add(skull);
+            const wheel = new THREE.Mesh(new THREE.TorusGeometry(0.65, 0.08, 8, 16), this.hollowRagsMat);
+            wheel.rotation.y = Math.PI / 2;
+            torso.add(wheel);
+            for (let i = 0; i < 8; i++) {
+                const spoke = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.2, 6), this.hollowRagsMat);
+                spoke.rotation.z = (i * Math.PI) / 4;
+                wheel.add(spoke);
+                const spike = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.2, 4), this.rustedIronMat);
+                spike.position.set(Math.cos(i * Math.PI / 4) * 0.65, Math.sin(i * Math.PI / 4) * 0.65, 0);
+                spike.rotation.z = i * Math.PI / 4 - Math.PI / 2;
+                wheel.add(spike);
+            }
+            weapon = wheel;
+        } else if (type === 'giant_skeleton') {
+            root.scale.set(2.0, 2.0, 2.0);
+            const rib = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.5, 0.25), torsoMat);
+            torso.add(rib);
+            const skull = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.32, 0.3), skinMat);
+            head.add(skull);
+            const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.6, 0.12), skinMat);
+            rArm.position.y = -0.3;
+            rightShoulder.add(rArm);
+            const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.6, 0.12), skinMat);
+            lArm.position.y = -0.3;
+            leftShoulder.add(lArm);
+            const rLeg = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.65, 0.14), skinMat);
+            rLeg.position.y = -0.32;
+            rightHip.add(rLeg);
+            const lLeg = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.65, 0.14), skinMat);
+            lLeg.position.y = -0.32;
+            leftHip.add(lLeg);
+            const scim = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.8, 0.04), weaponMat);
+            scim.position.set(0, -0.6, 0.6);
+            scim.rotation.x = Math.PI / 2.3;
+            rightShoulder.add(scim);
+            weapon = scim;
+        } else if (type === 'skeletal_beast') {
+            bodyGroup.position.y = 0.55;
+            torso.rotation.x = 0.35;
+            const spine = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.3, 0.8), torsoMat);
+            torso.add(spine);
+            head.position.set(0, 0.2, 0.55);
+            const skull = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.22, 0.45), skinMat);
+            head.add(skull);
+            const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.45, 0.1), skinMat);
+            rArm.position.set(0.18, -0.25, 0.25);
+            torso.add(rArm);
+            const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.45, 0.1), skinMat);
+            lArm.position.set(-0.18, -0.25, 0.25);
+            torso.add(lArm);
+            const rLeg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.45, 0.1), skinMat);
+            rLeg.position.set(0.18, -0.25, -0.25);
+            rightHip.add(rLeg);
+            const lLeg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.45, 0.1), skinMat);
+            lLeg.position.set(-0.18, -0.25, -0.25);
+            leftHip.add(lLeg);
+            weapon = skull;
+        } else {
+            // Standard Humanoid Geometry Framework
+            if (type === 'berenike_knight') root.scale.set(1.35, 1.35, 1.35);
+            else if (type === 'infested_barbarian') root.scale.set(1.5, 1.5, 1.5);
+            else if (type === 'crystal_golem') root.scale.set(1.4, 1.4, 1.4);
+            else if (type === 'stone_guardian') root.scale.set(1.45, 1.45, 1.45);
+            else if (type === 'blowdart_sniper') root.scale.set(0.85, 0.85, 0.85);
+
+            const chest = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.6, 0.3), torsoMat);
+            chest.castShadow = true;
+            torso.add(chest);
+
+            const cranium = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.35, 0.3), skinMat);
+            cranium.castShadow = true;
+            head.add(cranium);
+
+            // Glowing Undead Eyes
+            const eyeColor = type.includes('crystal') ? 0x00ffff : (type.includes('ghost') ? 0x88ffff : 0xff1100);
+            const eyeGeo = new THREE.SphereGeometry(0.04);
+            const eyeMat = new THREE.MeshBasicMaterial({ color: eyeColor });
+            const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+            eyeL.position.set(-0.08, 0.05, 0.16);
+            head.add(eyeL);
+            const eyeR = eyeL.clone();
+            eyeR.position.x = 0.08;
+            head.add(eyeR);
+
+            const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.45, 0.13), skinMat);
+            rArm.position.y = -0.22;
+            rightShoulder.add(rArm);
+
+            const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.45, 0.13), skinMat);
+            lArm.position.y = -0.22;
+            leftShoulder.add(lArm);
+
+            const rLeg = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.5, 0.15), skinMat);
+            rLeg.position.y = -0.25;
+            rightHip.add(rLeg);
+
+            const lLeg = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.5, 0.15), skinMat);
+            lLeg.position.y = -0.25;
+            leftHip.add(lLeg);
+
+            // Archetype specifics & weapons
+            if (type === 'torch_hollow') {
+                const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1.1, 6), this.hollowRagsMat);
+                staff.position.set(0, -0.25, 0.4);
+                staff.rotation.x = Math.PI / 3;
+                rightShoulder.add(staff);
+                const flame = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.28, 6), this.mobTorchFlameMat || this.emberGlowMat);
+                flame.position.set(0, 0.6, 0);
+                staff.add(flame);
+                weapon = staff;
+            } else if (type === 'pitchfork_peasant') {
+                const hat = new THREE.Mesh(new THREE.ConeGeometry(0.38, 0.14, 8), this.hollowRagsMat);
+                hat.position.y = 0.24;
+                head.add(hat);
+                const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.8, 6), this.hollowRagsMat);
+                staff.position.set(0, -0.2, 0.55);
+                staff.rotation.x = Math.PI / 2.4;
+                rightShoulder.add(staff);
+                [-0.08, 0, 0.08].forEach(ox => {
+                    const tine = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.3, 0.02), weaponMat);
+                    tine.position.set(ox, 1.0, 0);
+                    staff.add(tine);
+                });
+                weapon = staff;
+            } else if (type === 'broken_sword_hollow') {
+                torso.rotation.x = 0.25;
+                const sword = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.45, 0.02), weaponMat);
+                sword.position.set(0, -0.3, 0.25);
+                sword.rotation.x = Math.PI / 2;
+                rightShoulder.add(sword);
+                weapon = sword;
+            } else if (type === 'undead_assassin') {
+                const cowl = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.38, 0.34), this.darkSteelMat);
+                head.add(cowl);
+                const dagR = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.45, 0.02), weaponMat);
+                dagR.position.set(0, -0.25, 0.2);
+                dagR.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(dagR);
+                const dagL = dagR.clone();
+                leftShoulder.add(dagL);
+                weapon = dagR;
+            } else if (type === 'balder_knight') {
+                const plume = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.25, 0.25), this.mobPustuleMat || this.emberGlowMat);
+                plume.position.set(0, 0.24, 0);
+                head.add(plume);
+                const rapier = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.2, 6), weaponMat);
+                rapier.position.set(0, -0.3, 0.5);
+                rapier.rotation.x = Math.PI / 2;
+                rightShoulder.add(rapier);
+                const buckler = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 8), weaponMat);
+                buckler.position.set(0, -0.2, 0.15);
+                buckler.rotation.x = Math.PI / 2;
+                leftShoulder.add(buckler);
+                weapon = rapier;
+            } else if (type === 'berenike_knight') {
+                const helm = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.38, 0.38), weaponMat);
+                head.add(helm);
+                const mace = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.1, 0.18), weaponMat);
+                mace.position.set(0, -0.4, 0.4);
+                mace.rotation.x = Math.PI / 2.3;
+                rightShoulder.add(mace);
+                const shield = new THREE.Mesh(new THREE.BoxGeometry(0.65, 1.25, 0.08), weaponMat);
+                shield.position.set(-0.1, -0.2, 0.2);
+                leftShoulder.add(shield);
+                weapon = mace;
+            } else if (type === 'crystal_soldier' || type === 'crystal_golem') {
+                for (let i = 0; i < 4; i++) {
+                    const spike = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.35, 5), this.mobCrystalMat || weaponMat);
+                    spike.position.set((Math.random() - 0.5) * 0.4, 0.2, -0.15);
+                    spike.rotation.set(-0.5, (Math.random() - 0.5), 0);
+                    torso.add(spike);
+                }
+                const crySword = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.0, 0.03), this.mobCrystalMat || weaponMat);
+                crySword.position.set(0, -0.3, 0.4);
+                crySword.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(crySword);
+                weapon = crySword;
+            } else if (type === 'darkwraith_mob') {
+                const skullMask = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.36, 0.32), this.boneMat);
+                head.add(skullMask);
+                const dSword = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.15, 0.03), this.darkSteelMat);
+                dSword.position.set(0, -0.3, 0.45);
+                dSword.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(dSword);
+                const dHand = new THREE.Mesh(new THREE.SphereGeometry(0.24, 8, 8), this.mobDarkHandMat || this.emberGlowMat);
+                dHand.position.set(0, -0.25, 0.2);
+                leftShoulder.add(dHand);
+                weapon = dSword;
+            } else if (type === 'silver_knight') {
+                const sHelm = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.4, 0.34), this.mobSilverKnightMat || weaponMat);
+                head.add(sHelm);
+                const spear = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 2.0, 6), this.mobSilverKnightMat || weaponMat);
+                spear.position.set(0, -0.2, 0.7);
+                spear.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(spear);
+                const sShield = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.9, 0.05), this.mobSilverKnightMat || weaponMat);
+                sShield.position.set(0, -0.2, 0.2);
+                leftShoulder.add(sShield);
+                weapon = spear;
+            } else if (type === 'black_knight_mob') {
+                const bAxe = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.4, 0.06), this.darkSteelMat);
+                bAxe.position.set(0, -0.35, 0.5);
+                bAxe.rotation.x = Math.PI / 2.3;
+                rightShoulder.add(bAxe);
+                weapon = bAxe;
+            } else if (type === 'lantern_necromancer') {
+                const cowl = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.38, 0.34), this.darkSteelMat);
+                head.add(cowl);
+                const lantern = new THREE.Mesh(new THREE.DodecahedronGeometry(0.16), this.mobTorchFlameMat || this.emberGlowMat);
+                lantern.position.set(0, -0.35, 0.3);
+                leftShoulder.add(lantern);
+                const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.3, 6), this.hollowRagsMat);
+                staff.position.set(0, -0.2, 0.4);
+                staff.rotation.x = Math.PI / 2.5;
+                rightShoulder.add(staff);
+                weapon = staff;
+            } else if (type === 'engorged_zombie') {
+                for (let i = 0; i < 4; i++) {
+                    const pustule = new THREE.Mesh(new THREE.SphereGeometry(0.1), this.mobPustuleMat || this.emberGlowMat);
+                    pustule.position.set((Math.random() - 0.5) * 0.3, 0.15 + Math.random() * 0.15, 0.15);
+                    head.add(pustule);
+                }
+                const cleaver = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.7, 0.03), weaponMat);
+                cleaver.position.set(0, -0.3, 0.3);
+                cleaver.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(cleaver);
+                weapon = cleaver;
+            } else if (type === 'chasm_bloathead') {
+                head.scale.set(1.4, 1.4, 1.4);
+                for (let i = 0; i < 6; i++) {
+                    const mEye = new THREE.Mesh(new THREE.SphereGeometry(0.03), new THREE.MeshBasicMaterial({ color: 0xff0022 }));
+                    mEye.position.set((Math.random() - 0.5) * 0.3, (Math.random() - 0.5) * 0.3, 0.16);
+                    head.add(mEye);
+                }
+                const wand = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.03, 0.9, 6), this.darkSteelMat);
+                wand.position.set(0, -0.2, 0.3);
+                wand.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(wand);
+                weapon = wand;
+            } else if (type === 'tree_treant') {
+                const foliage = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35), this.mobTreantFoliageMat || torsoMat);
+                foliage.position.y = 0.35;
+                head.add(foliage);
+                const branch = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.02, 1.2, 5), this.mobTreantBarkMat || torsoMat);
+                branch.position.set(0, -0.3, 0.4);
+                branch.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(branch);
+                weapon = branch;
+            } else if (type === 'stone_guardian') {
+                const stShield = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.06, 10), this.mobStoneKnightMat || weaponMat);
+                stShield.rotation.x = Math.PI / 2;
+                stShield.position.set(0, -0.2, 0.2);
+                leftShoulder.add(stShield);
+                const stSword = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.2, 0.05), this.mobStoneKnightMat || weaponMat);
+                stSword.position.set(0, -0.35, 0.5);
+                stSword.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(stSword);
+                weapon = stSword;
+            } else if (type === 'new_londo_ghost') {
+                root.position.y += 0.3;
+                const gDagger = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.6, 0.02), this.mobGhostMat || weaponMat);
+                gDagger.position.set(0, -0.25, 0.25);
+                gDagger.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(gDagger);
+                weapon = gDagger;
+            } else {
+                const sword = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.9, 0.02), weaponMat);
+                sword.position.set(0, -0.4, 0.35);
+                sword.rotation.x = Math.PI / 2.2;
+                rightShoulder.add(sword);
+                weapon = sword;
+            }
+        }
+
+        root.userData = {
+            def: mobDef,
+            bodyGroup,
+            torso,
+            head,
+            rightShoulder,
+            leftShoulder,
+            rightHip,
+            leftHip,
+            rightArm: rightShoulder,
+            leftArm: leftShoulder,
+            rightLeg: rightHip,
+            leftLeg: leftHip,
+            weapon: weapon || rightShoulder
         };
 
         this.scene.add(root);

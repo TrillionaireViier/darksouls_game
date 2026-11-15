@@ -1542,6 +1542,7 @@
                 <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
+                <button class="btn-icon-bar" onclick="openLoreCodexModal()" title="Dark Souls Lore Codex & 30 Mobs/Zombies Drops" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">📜 <span class="btn-label-text">LORE (30)</span></button>
                 <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
                 <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 <span class="btn-label-text">SHOP</span></button>
                 <button class="btn-icon-bar header-desktop-only" onclick="openSiegeModal()" style="border-color: #e65100; color: #ffb74d; font-weight: 700;">🏰 <span class="btn-label-text">SIEGE (391-400)</span></button>
@@ -2362,6 +2363,37 @@
         </div>
     </div>
 
+    <!-- 📜 DARK SOULS LORE CODEX & 30 MOBS COMPENDIUM -->
+    <div id="lore-codex-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 860px; max-height: 88vh; display: flex; flex-direction: column; border-color: #d4af37; box-shadow: 0 0 35px rgba(212, 175, 55, 0.35); background: linear-gradient(180deg, #16120d 0%, #0a0806 100%);">
+            <div class="modal-header" style="color: #ffd778; text-shadow: 0 0 14px rgba(212, 175, 55, 0.6); display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #a87932; padding-bottom: 10px; margin-bottom: 12px;">
+                <span>📜 LORDRAN LORE CODEX & REMNANTS</span>
+                <span id="lore-unlocked-count" style="font-size: 0.82rem; color: #a5d6a7; border: 1px solid #4caf50; padding: 3px 10px; border-radius: 9999px; font-weight: 700; background: rgba(76,175,80,0.15);">3 / 30 Discovered</span>
+            </div>
+
+            <!-- Category filter pill tabs & Admin unlock button -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; justify-content: space-between;">
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <button class="btn-icon-bar" onclick="filterLoreCodex('all')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd778; color: #fff3a8; background: rgba(60,45,15,0.7);">ALL (30)</button>
+                    <button class="btn-icon-bar" onclick="filterLoreCodex('weapon')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #c49a45; color: #ffd276;">WEAPONS</button>
+                    <button class="btn-icon-bar" onclick="filterLoreCodex('armor')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #64b5f6; color: #bbdefb;">ARMOR</button>
+                    <button class="btn-icon-bar" onclick="filterLoreCodex('relic')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #ce93d8; color: #f3e5f5;">RELICS</button>
+                    <button class="btn-icon-bar" onclick="filterLoreCodex('remnant')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #ffb74d; color: #ffe0b2;">REMNANTS</button>
+                </div>
+                <button class="btn-icon-bar" onclick="adminUnlockAllLore()" style="padding: 6px 12px; font-size: 0.74rem; font-weight: 800; border-color: #ffd700; color: #fff3a8; background: rgba(60, 45, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.35);">👑 UNLOCK ALL 30 LORE</button>
+            </div>
+
+            <!-- Lore Cards Scrollable Grid -->
+            <div id="lore-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; overflow-y: auto; max-height: 56vh; padding-right: 6px; scrollbar-width: thin; scrollbar-color: #a87932 rgba(18, 14, 10, 0.85);">
+                <!-- Populated dynamically via renderLoreCodexContent -->
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 14px; justify-content: flex-end;">
+                <button class="btn-modal-close" onclick="closeLoreCodexModal()" style="padding: 8px 24px; font-size: 0.85rem; font-weight: 800;">RESUME EXPEDITION [ESC]</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 🛠️ QA TEST AUTOMATION & 1-HP SANDBOX SUITE -->
     <div id="qa-suite-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 780px; border-color: #00e5ff; box-shadow: 0 0 35px rgba(0, 229, 255, 0.35);">
@@ -2910,6 +2942,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px;">
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openQASuiteModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🛠️ QA SUITE</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
+                <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLoreCodexModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">📜 LORE (30)</button>
                 <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 700;">⚡ 60 FPS MODE</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDownloadModal();" style="border-color: #a87932; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 700;">📦 DOWNLOAD</button>
                 <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 700;">⚔️ BOSS ROSTER</button>
@@ -3591,16 +3624,17 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/audio.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/world.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/character.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/siege_warfare.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/heraldry_nobility.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/apothecary_crafting.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/combat.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/postprocessing.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/qa_suite.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
-    <script src="js/game.js?v=20261115_v16_PILL_BUTTONS_ESC_SCROLL"></script>
+    <script src="js/three.min.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/audio.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/lore_items.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/world.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/character.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/siege_warfare.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/heraldry_nobility.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/apothecary_crafting.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/combat.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/postprocessing.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/qa_suite.js?v=20261115_v17_30_MOBS_LORE"></script>
+    <script src="js/game.js?v=20261115_v17_30_MOBS_LORE"></script>
 </body>
 </html>

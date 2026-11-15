@@ -957,6 +957,7 @@ class DarkSoulsGame {
         // 1. Update Subsystems
         this.world.update(delta);
         this.combat.update(delta);
+        if (this.updateLoreBeacons) this.updateLoreBeacons(delta);
         if (this.siege) this.siege.update(delta);
         if (this.heraldry) this.heraldry.update(delta);
         if (this.apothecary) this.apothecary.update(delta);
@@ -2418,6 +2419,179 @@ class DarkSoulsGame {
         });
     }
 
+    // ----------------------------------------------------
+    // 3D LORE ITEM BEACON SYSTEM & DROPS
+    // ----------------------------------------------------
+    spawnLoreItemBeacon(pos, loreId, loreTitle) {
+        if (!this.loreBeacons) this.loreBeacons = [];
+
+        const beaconGroup = new THREE.Group();
+        beaconGroup.position.copy(pos);
+
+        // 1. Vertical golden beam of light
+        const beamGeo = new THREE.CylinderGeometry(0.08, 0.08, 3.2, 8);
+        const beamMat = new THREE.MeshBasicMaterial({
+            color: 0xffd700,
+            transparent: true,
+            opacity: 0.65,
+            blending: THREE.AdditiveBlending
+        });
+        const beam = new THREE.Mesh(beamGeo, beamMat);
+        beam.position.y = 1.6;
+        beaconGroup.add(beam);
+
+        // 2. Floating spinning Soul Relic diamond
+        const diamondGeo = new THREE.OctahedronGeometry(0.22, 0);
+        const diamondMat = new THREE.MeshStandardMaterial({
+            color: 0xffe066,
+            emissive: 0xffaa00,
+            emissiveIntensity: 1.8,
+            roughness: 0.1,
+            metalness: 0.9
+        });
+        const diamond = new THREE.Mesh(diamondGeo, diamondMat);
+        diamond.position.y = 0.75;
+        beaconGroup.add(diamond);
+
+        // 3. Ground rune circle
+        const circleGeo = new THREE.RingGeometry(0.3, 0.55, 16);
+        const circleMat = new THREE.MeshBasicMaterial({
+            color: 0xffaa00,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.7
+        });
+        const circle = new THREE.Mesh(circleGeo, circleMat);
+        circle.rotation.x = -Math.PI / 2;
+        circle.position.y = 0.05;
+        beaconGroup.add(circle);
+
+        this.scene.add(beaconGroup);
+
+        this.loreBeacons.push({
+            group: beaconGroup,
+            diamond: diamond,
+            beam: beam,
+            circle: circle,
+            pos: pos.clone(),
+            loreId: loreId,
+            loreTitle: loreTitle,
+            baseY: 0.75,
+            time: 0
+        });
+    }
+
+    updateLoreBeacons(delta) {
+        if (!this.loreBeacons || this.loreBeacons.length === 0) return;
+        const playerPos = this.playerMesh.position;
+
+        for (let i = this.loreBeacons.length - 1; i >= 0; i--) {
+            const b = this.loreBeacons[i];
+            b.time += delta;
+            if (b.diamond) {
+                b.diamond.rotation.y += delta * 2.2;
+                b.diamond.rotation.x += delta * 1.1;
+                b.diamond.position.y = b.baseY + Math.sin(b.time * 3.5) * 0.15;
+            }
+            if (b.circle) {
+                b.circle.rotation.z += delta * 0.8;
+            }
+
+            // Pickup proximity check (within 2.4m)
+            const dist = playerPos.distanceTo(b.pos);
+            if (dist < 2.4) {
+                if (window.DarkSoulsLore && b.loreId) {
+                    const res = window.DarkSoulsLore.unlock(b.loreId);
+                    const title = (res && res.item && res.item.title) || b.loreTitle || 'Dark Souls Lore Item';
+                    this.showNotification(`📜 LORE ITEM ACQUIRED: ${title}`);
+                }
+                if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+                this.scene.remove(b.group);
+                this.loreBeacons.splice(i, 1);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // LORE CODEX MODAL & ENCYCLOPEDIA (30 MOBS & ITEMS)
+    // ----------------------------------------------------
+    openLoreCodexModal() {
+        const modal = document.getElementById('lore-codex-modal');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        this.renderLoreCodexContent('all');
+    }
+
+    closeLoreCodexModal() {
+        const modal = document.getElementById('lore-codex-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    renderLoreCodexContent(activeFilter = 'all') {
+        const container = document.getElementById('lore-cards-grid');
+        const statsElem = document.getElementById('lore-unlocked-count');
+        if (!container) return;
+
+        const allMobs = (window.DarkSoulsLore && window.DarkSoulsLore.mobs) || window.DARK_SOULS_MOBS || [];
+        const unlockedMap = (window.DarkSoulsLore && window.DarkSoulsLore.getUnlockedMap()) || {};
+
+        let unlockedCount = 0;
+        allMobs.forEach(m => {
+            if (unlockedMap[m.loreId]) unlockedCount++;
+        });
+
+        if (statsElem) {
+            statsElem.textContent = `${unlockedCount} / ${allMobs.length} Discovered`;
+        }
+
+        const filtered = allMobs.filter(m => {
+            if (activeFilter === 'all') return true;
+            return (m.loreCategory || '').toLowerCase() === activeFilter.toLowerCase();
+        });
+
+        container.innerHTML = filtered.map(m => {
+            const isUnlocked = !!unlockedMap[m.loreId];
+            if (isUnlocked) {
+                return `
+                    <div class="lore-card unlocked" style="background: linear-gradient(145deg, rgba(32, 24, 16, 0.95), rgba(18, 14, 10, 0.95)); border: 1.5px solid #d4af37; border-radius: 12px; padding: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.6), 0 0 12px rgba(212,175,55,0.25);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-size: 0.72rem; letter-spacing: 1px; color: #ffd778; font-weight: 800; text-transform: uppercase;">⚜️ ${m.loreCategory}</span>
+                            <span style="font-size: 0.72rem; color: #a5d6a7; font-weight: 700; background: rgba(76,175,80,0.2); padding: 2px 8px; border-radius: 9999px;">${m.loreBonus}</span>
+                        </div>
+                        <h4 style="margin: 0 0 6px 0; color: #fff3a8; font-family: 'Cinzel', serif; font-size: 1.02rem; font-weight: 800;">${m.loreTitle}</h4>
+                        <div style="font-size: 0.76rem; color: #b8a896; margin-bottom: 8px;">
+                            <span>Origin: <strong style="color: #ffd276;">${m.name}</strong></span> &bull; <span>Zone: ${m.zone}</span>
+                        </div>
+                        <p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #e0d0c0; font-style: italic; border-left: 2px solid #a87932; padding-left: 8px;">
+                            "${m.loreDesc}"
+                        </p>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="lore-card locked" style="background: rgba(15, 15, 18, 0.85); border: 1px dashed rgba(168, 121, 50, 0.4); border-radius: 12px; padding: 14px; opacity: 0.65;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-size: 0.72rem; color: #887d70; font-weight: 700; text-transform: uppercase;">🔒 ${m.loreCategory}</span>
+                            <span style="font-size: 0.7rem; color: #666;">UNDISCOVERED</span>
+                        </div>
+                        <h4 style="margin: 0 0 6px 0; color: #887d70; font-family: 'Cinzel', serif; font-size: 0.95rem;">??? Locked Lore Relic ???</h4>
+                        <div style="font-size: 0.76rem; color: #776e62;">
+                            Defeat <strong style="color: #c49a45;">${m.name}</strong> in <em>${m.zone}</em> to decipher ancient lore.
+                        </div>
+                    </div>
+                `;
+            }
+        }).join('');
+    }
+
+    adminUnlockAllLore() {
+        if (window.DarkSoulsLore && window.DarkSoulsLore.unlockAll) {
+            window.DarkSoulsLore.unlockAll();
+            this.showNotification("📜 ADMIN: ALL 30 DARK SOULS LORE ITEMS UNLOCKED!");
+            this.renderLoreCodexContent('all');
+        }
+    }
+
     onWindowResize() {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
@@ -2446,6 +2620,10 @@ window.adminToggleGodMode = () => { if (window.game) window.game.adminToggleGodM
 window.adminWarp = (d) => { if (window.game) window.game.adminWarp(d); };
 window.adminSummonBoss = (b) => { if (window.game) window.game.adminSummonBoss(b); };
 window.togglePerformanceMode = () => { if (window.game) window.game.togglePerformanceMode(); };
+window.openLoreCodexModal = () => { if (window.game) window.game.openLoreCodexModal(); };
+window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodexModal(); };
+window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
+window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
 
 // Global initialization
 if (document.readyState === 'loading') {

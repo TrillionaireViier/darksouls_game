@@ -491,36 +491,70 @@ class DarkSoulsCombat {
         });
         this.enemies = [];
 
-        // 1. Courtyard Left Hollow
-        this.createHollowSoldier(-10, -10, 0, 0);
+        // 30 MOBS COMPENDIUM SPANNING LORDRAN (CATACOMBS -5M, BRIDGE 0M, RAMPARTS +6M)
+        const mobList = (window.DarkSoulsLore && window.DarkSoulsLore.mobs) || window.DARK_SOULS_MOBS || [];
+        if (mobList.length > 0) {
+            mobList.forEach(mobDef => {
+                const pos = mobDef.defaultPos || [0, 0, 0];
+                this.createCustomMob(mobDef, pos[0], pos[2], 0, pos[1]);
+            });
+        } else {
+            // Fallback starter hollows if lore list is uninitialized
+            this.createHollowSoldier(-10, -10, 0, 0);
+            this.createHollowSoldier(2, 22, Math.PI, 0);
+            this.createHollowSoldier(-1, 55, Math.PI, 0);
+            this.createHollowSoldier(20, 48, Math.PI, 6.0);
+            this.createHollowSoldier(19, 78, Math.PI, 6.0);
+            this.createHollowSoldier(-20, 42, 0, -5.0);
+            this.createSkeletonWarriorEnemy(-20, 60, Math.PI, -5.0);
+            this.createSkeletonWarriorEnemy(-22, 82, 0, -5.0);
+            this.createSkeletonWarriorEnemy(-16, 108, Math.PI, -6.0);
+            this.createSkeletonWarriorEnemy(-24, 134, 0, -6.0);
+        }
 
-        // 2. Courtyard Exit Gate Hollow
-        this.createHollowSoldier(2, 22, Math.PI, 0);
-
-        // 3. Central Royal Bridge Hollow
-        this.createHollowSoldier(-1, 55, Math.PI, 0);
-
-        // 4. Upper Castle Ramparts Hollow 1 (Patrolling Wall at y=6.0)
-        this.createHollowSoldier(20, 48, Math.PI, 6.0);
-
-        // 5. Upper Castle Ramparts Hollow 2 (Watchtower Guard at y=6.0)
-        this.createHollowSoldier(19, 78, Math.PI, 6.0);
-
-        // 6. Flooded Subterranean Catacombs Hollow (Murky Waters at y=-5.0)
-        this.createHollowSoldier(-20, 42, 0, -5.0);
-
-        // 7. Catacombs Patrolling Skeleton Warriors
-        this.createSkeletonWarriorEnemy(-20, 60, Math.PI, -5.0);
-        this.createSkeletonWarriorEnemy(-22, 82, 0, -5.0);
-
-        // 8. Deep Catacombs Mausoleum Skeleton Sentinels (y=-6.0)
-        this.createSkeletonWarriorEnemy(-16, 108, Math.PI, -6.0);
-        this.createSkeletonWarriorEnemy(-24, 134, 0, -6.0);
-
-        // 9. Boss
+        // Boss
         if (!this.boss || this.boss.isDead) {
             this.spawnBoss(this.currentBossType || 'taurus');
         }
+    }
+
+    createCustomMob(mobDef, x, z, angle = 0, y = 0) {
+        const mesh = this.charFactory.createMob(mobDef, x, z, angle, y);
+        const isQaOneHp = (this.qaOneHpMobs || (window.qaSuite && window.qaSuite.qaOneHpMobsActive));
+        const isQaOneHpDmg = (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive));
+        const maxHp = isQaOneHp ? 1 : (mobDef.hp || 200);
+        const damage = isQaOneHpDmg ? 1 : (mobDef.damage || 35);
+
+        const enemy = {
+            def: mobDef,
+            id: mobDef.id,
+            type: mobDef.meshType || 'mob',
+            name: mobDef.name || 'Undead Mob',
+            loreId: mobDef.loreId,
+            loreTitle: mobDef.loreTitle,
+            loreCategory: mobDef.loreCategory,
+            loreBonus: mobDef.loreBonus,
+            mesh: mesh,
+            startPos: new THREE.Vector3(x, y, z),
+            maxHp: maxHp,
+            hp: maxHp,
+            damage: damage,
+            speed: mobDef.speed || 2.4,
+            attackReach: mobDef.attackReach || 2.2,
+            souls: mobDef.souls || 150,
+            state: 'PATROL',
+            stateTimer: 0,
+            cooldown: 0,
+            isDead: false,
+            isRiposteable: false,
+            riposteTimer: 0,
+            isStaggered: false,
+            staggerTimer: 0,
+            radius: 0.9,
+            animTime: Math.random() * 5
+        };
+        this.enemies.push(enemy);
+        return enemy;
     }
 
     createSkeletonWarriorEnemy(x, z, angle, y = -5.0) {
@@ -1252,17 +1286,32 @@ class DarkSoulsCombat {
     killEnemy(enemy) {
         enemy.isDead = true;
         enemy.state = 'DEAD';
-        const soulReward = 150;
+        const soulReward = enemy.souls || 150;
         this.souls += soulReward;
         this.game.showSoulsGained(soulReward);
+
+        // Dark Souls Lore Item Unlocking & Notification
+        if (enemy.loreId && window.DarkSoulsLore) {
+            const unlockResult = window.DarkSoulsLore.unlock(enemy.loreId);
+            if (unlockResult && unlockResult.wasNew) {
+                this.game.showNotification(`📜 LORE DISCOVERED: ${enemy.loreTitle || unlockResult.item.title}`);
+                if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+            }
+        }
+
+        // Spawn 3D glowing lore drop beacon at enemy position
+        if (this.game && this.game.spawnLoreItemBeacon && enemy.mesh) {
+            const dropPos = enemy.mesh.position.clone();
+            this.game.spawnLoreItemBeacon(dropPos, enemy.loreId, enemy.loreTitle || enemy.name);
+        }
 
         // Collapse mesh
         let t = 0;
         const sink = setInterval(() => {
             t += 0.05;
-            enemy.mesh.position.y -= 0.03;
+            if (enemy.mesh) enemy.mesh.position.y -= 0.03;
             if (t > 1.2) {
-                this.game.scene.remove(enemy.mesh);
+                if (enemy.mesh) this.game.scene.remove(enemy.mesh);
                 clearInterval(sink);
             }
         }, 50);
@@ -1613,9 +1662,10 @@ class DarkSoulsCombat {
                 const angle = Math.atan2(toPlayer.x, toPlayer.z);
                 e.mesh.rotation.y = angle;
 
-                if (dist > 1.8) {
-                    // Move forward
-                    const moveSpeed = 2.4;
+                const reach = e.attackReach || 2.0;
+                if (dist > reach) {
+                    // Move forward with mob-specific speed
+                    const moveSpeed = e.speed || 2.4;
                     e.mesh.position.x += Math.sin(angle) * moveSpeed * delta;
                     e.mesh.position.z += Math.cos(angle) * moveSpeed * delta;
                     e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z);
@@ -1634,8 +1684,9 @@ class DarkSoulsCombat {
                         this.audio.playSwing(false);
                         setTimeout(() => {
                             if (!e.isDead && !e.isRiposteable && !e.isStaggered) {
-                                if (this.game.playerMesh.position.distanceTo(e.mesh.position) < 2.3) {
-                                    this.damagePlayer(e.damage, e.mesh.position);
+                                if (this.game.playerMesh.position.distanceTo(e.mesh.position) < (reach + 0.6)) {
+                                    const dmg = (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive)) ? 1 : (e.damage || 35);
+                                    this.damagePlayer(dmg, e.mesh.position);
                                 }
                             }
                         }, 280);
