@@ -6478,5 +6478,5 @@
         unlockAll: unlockAllLore
     };
 
-    console.log(`[DarkSoulsLore] Initialized 300 Distinct Mobs & Lore Items Compendium across Lordran.`);
+    console.log(`[DarkSoulsLore] Initialized ${DARK_SOULS_MOBS.length} Distinct Mobs & Lore Items Compendium across Lordran.`);
 })();
