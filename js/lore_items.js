@@ -10186,7 +10186,7 @@
             loreCategory: 'Key Items',
             loreBonus: '+50 All Attributes & Estus Recovery',
             loreDesc: 'The spiritual echo of every champion who ever linked the First Flame or let it die. Adapts to all combat styles with relentless mastery.'
-        }
+        },
     
         {
             id: 'abyssal_darkwraith_501',
