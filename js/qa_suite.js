@@ -645,6 +645,51 @@ class DarkSoulsQASuite {
         this.updateStatsUI();
         this.logInfo("QA Logs cleared.");
     }
+
+        copyResultsToClipboard() {
+        const passed = (this.testResults && this.testResults.passed) || 0;
+        const failed = (this.testResults && this.testResults.failed) || 0;
+        const warnings = (this.testResults && this.testResults.warnings) || 0;
+
+        let outputText = "=== DARK SOULS QA AUDIT RESULTS ===\n";
+        outputText += "PASSED: " + passed + " | FAILED: " + failed + " | WARNINGS: " + warnings + "\n";
+        outputText += "TIMESTAMP: " + new Date().toISOString() + "\n";
+        outputText += "------------------------------------\n\n";
+
+        if (this.logs && this.logs.length > 0) {
+            outputText += this.logs.join('\n');
+        } else if (this.logContainerElem) {
+            outputText += this.logContainerElem.innerText;
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(outputText).then(() => {
+                this.logSuccess("📋 QA Test results copied to clipboard!");
+            }).catch(() => {
+                this.fallbackCopyText(outputText);
+            });
+        } else {
+            this.fallbackCopyText(outputText);
+        }
+        return outputText;
+    }
+
+    fallbackCopyText(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            document.execCommand('copy');
+            this.logSuccess("📋 QA Test results copied to clipboard!");
+        } catch(e) {
+            this.logWarn("Output printed to browser console.");
+            console.log(text);
+        }
+        document.body.removeChild(ta);
+    }
 }
 
 // Global exposure

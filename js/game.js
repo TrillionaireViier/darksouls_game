@@ -1388,48 +1388,105 @@ class DarkSoulsGame {
 
     resolvePlayerCollisions() {
         const pPos = this.playerMesh.position;
+        const playerRadius = 0.45;
         const playerBottom = pPos.y;
         const playerTop = pPos.y + 1.8;
 
-        for (const box of this.world.colliders) {
-            // Check vertical tier overlap:
-            if (playerBottom < box.max.y && playerTop > box.min.y) {
-                // Check horizontal penetration:
-                if (pPos.x >= box.min.x && pPos.x <= box.max.x &&
-                    pPos.z >= box.min.z && pPos.z <= box.max.z) {
-                    const dx1 = Math.abs(pPos.x - box.min.x);
-                    const dx2 = Math.abs(pPos.x - box.max.x);
-                    const dz1 = Math.abs(pPos.z - box.min.z);
-                    const dz2 = Math.abs(pPos.z - box.max.z);
+        // 1. Solid World Geometry & Pillar AABB Collisions with Swept Margin
+        if (this.world && this.world.colliders) {
+            for (let i = 0; i < this.world.colliders.length; i++) {
+                const box = this.world.colliders[i];
+                if (playerBottom < box.max.y && playerTop > box.min.y) {
+                    if (pPos.x > box.min.x - playerRadius && pPos.x < box.max.x + playerRadius &&
+                        pPos.z > box.min.z - playerRadius && pPos.z < box.max.z + playerRadius) {
+                        const overlapL = (pPos.x - (box.min.x - playerRadius));
+                        const overlapR = ((box.max.x + playerRadius) - pPos.x);
+                        const overlapT = (pPos.z - (box.min.z - playerRadius));
+                        const overlapB = ((box.max.z + playerRadius) - pPos.z);
 
-                    const minD = Math.min(dx1, dx2, dz1, dz2);
-                    if (minD === dx1) pPos.x = box.min.x - 0.45;
-                    else if (minD === dx2) pPos.x = box.max.x + 0.45;
-                    else if (minD === dz1) pPos.z = box.min.z - 0.45;
-                    else if (minD === dz2) pPos.z = box.max.z + 0.45;
+                        const minOverlap = Math.min(overlapL, overlapR, overlapT, overlapB);
+                        if (minOverlap === overlapL) pPos.x = box.min.x - playerRadius;
+                        else if (minOverlap === overlapR) pPos.x = box.max.x + playerRadius;
+                        else if (minOverlap === overlapT) pPos.z = box.min.z - playerRadius;
+                        else if (minOverlap === overlapB) pPos.z = box.max.z + playerRadius;
+                    }
                 }
             }
         }
 
-        // Architectural Bounds & Railing Collision Enforcements:
-        // 1. Royal Bridge Parapets (z in [28, 94]): Walkway width strictly clamped inside walls
-        if (pPos.z >= 28 && pPos.z <= 94) {
-            if (pPos.y >= -1.0 && pPos.y <= 3.5) {
-                pPos.x = Math.max(-6.55, Math.min(6.55, pPos.x));
+        // 2. Boss Solid Collider (Taurus Demon & Active Lords - prevents walking through boss)
+        if (this.combat && this.combat.boss && !this.combat.boss.isDead && this.combat.boss.mesh) {
+            const bPos = this.combat.boss.mesh.position;
+            const dx = pPos.x - bPos.x;
+            const dz = pPos.z - bPos.z;
+            const distSq = dx * dx + dz * dz;
+            const minBossDist = (this.combat.boss.radius || 2.2) + playerRadius;
+            if (distSq < minBossDist * minBossDist && distSq > 0.0001) {
+                const dist = Math.sqrt(distSq);
+                const push = (minBossDist - dist);
+                pPos.x += (dx / dist) * push;
+                pPos.z += (dz / dist) * push;
             }
         }
 
-        // 2. Flooded Catacombs Corridor (z in [22, 90], y < 1.0)
+        // 3. Enemy / Mob Solid Colliders (prevents walking through mobs)
+        if (this.combat && this.combat.enemies) {
+            for (let i = 0; i < this.combat.enemies.length; i++) {
+                const e = this.combat.enemies[i];
+                if (e.isDead || !e.mesh || !e.mesh.visible) continue;
+                const ePos = e.mesh.position;
+                const dx = pPos.x - ePos.x;
+                const dz = pPos.z - ePos.z;
+                const distSq = dx * dx + dz * dz;
+                const minMobDist = 0.88;
+                if (distSq < minMobDist * minMobDist && distSq > 0.0001) {
+                    const dist = Math.sqrt(distSq);
+                    const push = (minMobDist - dist) * 0.55;
+                    pPos.x += (dx / dist) * push;
+                    pPos.z += (dz / dist) * push;
+                    ePos.x -= (dx / dist) * (push * 0.45);
+                    ePos.z -= (dz / dist) * (push * 0.45);
+                }
+            }
+        }
+
+        // 4. Architectural Bounds & Railing Collision Enforcements:
+        // A. Royal Bridge Parapets (z in [28, 94])
+        if (pPos.z >= 28 && pPos.z <= 94) {
+            if (pPos.y >= -1.0 && pPos.y <= 3.5) {
+                pPos.x = Math.max(-6.45, Math.min(6.45, pPos.x));
+            }
+        }
+
+        // B. Surface Boss Arena (z in [95, 170])
+        if (pPos.z >= 95 && pPos.z <= 170 && pPos.y >= -1.0 && pPos.y <= 4.0) {
+            pPos.x = Math.max(-6.4, Math.min(17.5, pPos.x));
+            pPos.z = Math.min(168.0, pPos.z);
+        }
+
+        // C. Flooded Catacombs Corridor (z in [22, 90], y < 1.0)
         if (pPos.z >= 22 && pPos.z <= 90 && pPos.y < 1.0) {
-            pPos.x = Math.max(-23.6, Math.min(-16.4, pPos.x));
+            pPos.x = Math.max(-23.4, Math.min(-16.6, pPos.x));
         }
 
-        // 3. High Ramparts Walkway (z in [22, 90], y > 4.5)
+        // D. Deep Catacombs Crypt & Mausoleum (z in [90, 150], x in [-34, -7], y < -4.0)
+        if (pPos.z >= 90 && pPos.z <= 150 && pPos.y < -4.0) {
+            pPos.x = Math.max(-33.0, Math.min(-7.5, pPos.x));
+            pPos.z = Math.min(148.0, pPos.z);
+        }
+
+        // E. High Ramparts Walkway (z in [22, 90], y > 4.5)
         if (pPos.z >= 22 && pPos.z <= 90 && pPos.y > 4.5) {
-            pPos.x = Math.max(16.2, Math.min(23.8, pPos.x));
+            pPos.x = Math.max(16.5, Math.min(23.5, pPos.x));
         }
 
-        // 4. Abyss Fall Protection (falls out of bounds respawn at bonfire)
+        // F. Courtyard Starting Arena (z in [-30, 28], x in [-30, 30])
+        if (pPos.z < 28 && pPos.y > -2.0) {
+            pPos.x = Math.max(-28.0, Math.min(28.0, pPos.x));
+            pPos.z = Math.max(-28.0, pPos.z);
+        }
+
+        // 5. Abyss Fall Protection (falls out of bounds respawn at bonfire)
         if (pPos.y < -12) {
             this.respawnPlayer();
         }
