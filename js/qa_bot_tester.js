@@ -221,14 +221,17 @@ class QABotTester {
                 if (target.isAttacking && (!target.attackTime || target.attackTime < 0.38) &&
                     !this.combat.isRolling && !this.combat.isInvincible) {
                     this.currentAction = 'ROLL';
-                    this.combat.roll();
+                    if (this.combat.tryRoll) {
+                        const rollDir = toTarget.clone().negate().normalize();
+                        this.combat.tryRoll(rollDir);
+                    }
                     this.stepCounter++;
                     this.logStep(`Step ${this.stepCounter}: Incoming strike telegraphed by ${target.name}. Executed tactical i-frame roll.`);
                 }
                 // B. Estus Healing if HP drops below 350
                 else if (this.combat.hp < 350 && this.combat.estusFlasks > 0 && !this.combat.isDrinkingEstus) {
                     this.currentAction = 'ESTUS';
-                    this.combat.drinkEstus();
+                    if (this.combat.tryDrinkEstus) this.combat.tryDrinkEstus();
                     this.stepCounter++;
                     this.logStep(`Step ${this.stepCounter}: Critical HP (${this.combat.hp} HP). Simulated Estus flask drink.`);
                 }
@@ -239,23 +242,76 @@ class QABotTester {
                         this.stepCounter++;
                         if (Math.random() < 0.65) {
                             this.currentAction = 'LIGHT_ATTACK';
-                            this.combat.attack();
+                            if (this.combat.tryLightAttack) this.combat.tryLightAttack();
+                            else if (this.combat.tryAttack) this.combat.tryAttack();
                             this.logStep(`Step ${this.stepCounter}: Executed LIGHT_ATTACK R1 combo against ${target.name}.`);
                         } else {
                             this.currentAction = 'HEAVY_ATTACK';
-                            this.combat.heavyAttack();
+                            if (this.combat.tryHeavyAttack) this.combat.tryHeavyAttack();
                             this.logStep(`Step ${this.stepCounter}: Executed HEAVY_ATTACK R2 charged strike against ${target.name}.`);
                         }
                     } else if (Math.random() < 0.08 && !this.combat.isBlocking) {
                         // D. Shield Block & Parry test
                         this.currentAction = 'BLOCK';
-                        this.combat.isBlocking = true;
-                        setTimeout(() => { if (this.combat) this.combat.isBlocking = false; }, 350);
+                        if (this.combat.tryBlock) {
+                            this.combat.tryBlock(true);
+                            setTimeout(() => { if (this.combat && this.combat.tryBlock) this.combat.tryBlock(false); }, 350);
+                        }
                     }
                 }
             }
         } else {
             this.currentAction = 'IDLE';
+        }
+    }
+
+    simulateAction(action) {
+        if (!this.combat) return;
+        switch (action) {
+            case 'ATTACK_LIGHT':
+            case 'LIGHT_ATTACK':
+                if (this.combat.tryLightAttack) this.combat.tryLightAttack();
+                else if (this.combat.tryAttack) this.combat.tryAttack();
+                this.stepCounter++;
+                this.logStep(`Step ${this.stepCounter}: Simulated LIGHT_ATTACK (R1).`);
+                break;
+            case 'ATTACK_HEAVY':
+            case 'HEAVY_ATTACK':
+                if (this.combat.tryHeavyAttack) this.combat.tryHeavyAttack();
+                this.stepCounter++;
+                this.logStep(`Step ${this.stepCounter}: Simulated HEAVY_ATTACK (R2).`);
+                break;
+            case 'ROLL_EVADE':
+            case 'ROLL':
+                if (this.combat.tryRoll) {
+                    const dir = (this.game && this.game.calculateMovementDirection) ? this.game.calculateMovementDirection() : new THREE.Vector3(0,0,-1);
+                    this.combat.tryRoll(dir);
+                }
+                this.stepCounter++;
+                this.logStep(`Step ${this.stepCounter}: Simulated ROLL_EVADE (i-frame test).`);
+                break;
+            case 'BLOCK_SHIELD':
+            case 'BLOCK':
+                if (this.combat.tryBlock) {
+                    this.combat.tryBlock(true);
+                    setTimeout(() => { if (this.combat && this.combat.tryBlock) this.combat.tryBlock(false); }, 250);
+                }
+                this.stepCounter++;
+                this.logStep(`Step ${this.stepCounter}: Simulated BLOCK_SHIELD (L1).`);
+                break;
+            case 'DRINK_ESTUS':
+            case 'ESTUS':
+                if (this.combat.tryDrinkEstus) this.combat.tryDrinkEstus();
+                this.stepCounter++;
+                this.logStep(`Step ${this.stepCounter}: Simulated DRINK_ESTUS.`);
+                break;
+            case 'PARRY':
+                if (this.combat.tryParry) this.combat.tryParry();
+                this.stepCounter++;
+                this.logStep(`Step ${this.stepCounter}: Simulated PARRY.`);
+                break;
+            default:
+                this.logStep(`Simulated custom action: ${action}`);
         }
     }
 
