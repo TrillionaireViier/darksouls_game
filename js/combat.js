@@ -718,6 +718,7 @@ class DarkSoulsCombat {
     }
 
     teleportToNavMesh(e, playerPos) {
+        if (!e || !e.mesh) return;
         const p = e.mesh.position;
         // Identify zone corridor and clamp/snap to safe walkable mesh
         if (p.z >= 28 && p.z <= 95 && p.y >= -1.0 && p.y <= 3.5) {
@@ -726,13 +727,16 @@ class DarkSoulsCombat {
             p.x = Math.max(-14.0, Math.min(14.0, p.x));
             p.z = Math.max(98.0, Math.min(160.0, p.z));
         } else {
-            const toP = new THREE.Vector3().subVectors(playerPos, p).setY(0).normalize();
-            p.addScaledVector(toP, 1.2);
+            const toP = new THREE.Vector3().subVectors(playerPos, p).setY(0);
+            if (toP.lengthSq() < 0.01) toP.set(0, 0, 1);
+            p.addScaledVector(toP.normalize(), 1.5);
         }
         p.y = this.world.getGroundHeight(p.x, p.z, p.y);
         if (this.game && this.game.collisionSystem) {
             this.game.collisionSystem.enforceBoundaries(p, e.radius || 0.85, p.y);
         }
+        e.antiStuckTimer = 0;
+        e._stuckChaseTimer = 0;
     }
 
     // ----------------------------------------------------
@@ -1862,7 +1866,7 @@ class DarkSoulsCombat {
             const mob = this.enemies[k];
             if (!mob.isDead && mob.mesh && (mob.state === 'CHASE' || mob.state === 'WINDUP' || mob.state === 'STRIKE' || mob.state === 'RECOVERY')) {
                 const d = mob.mesh.position.distanceTo(playerPos);
-                if (d < 18.0) chasingMobs.push({ mob, dist: d });
+                if (d < 35.0) chasingMobs.push({ mob, dist: d });
             }
         }
         if (chasingMobs.length >= 3) {

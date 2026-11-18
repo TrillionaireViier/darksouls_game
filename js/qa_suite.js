@@ -727,6 +727,31 @@ class DarkSoulsQASuite {
         let subPassed = 0;
         let subFailed = 0;
 
+        // Snapshot current player state
+        const savedPlayerState = {
+            isDead: this.combat.isDead,
+            hp: this.combat.hp,
+            poise: this.combat.poise,
+            poiseRegenDelay: this.combat.poiseRegenDelay,
+            isInvincible: this.combat.isInvincible,
+            isRolling: this.combat.isRolling,
+            isAttacking: this.combat.isAttacking,
+            isDrinkingEstus: this.combat.isDrinkingEstus,
+            isStaggered: this.combat.isStaggered,
+            staggerTime: this.combat.staggerTime,
+            isParrying: this.combat.isParrying
+        };
+
+        // Ensure player is alive and responsive for test assertions
+        this.combat.isDead = false;
+        this.combat.hp = this.combat.maxHp;
+        this.combat.isInvincible = false;
+        this.combat.isRolling = false;
+        this.combat.isAttacking = false;
+        this.combat.isDrinkingEstus = false;
+        this.combat.isStaggered = false;
+        this.combat.isParrying = false;
+
         // --- SECTION 1: COMBAT & PHYSICS ---
         // 1. Parry Window = 4 frames (4/60s ≈ 0.0667s)
         const parryWindowExpected = 4 / 60;
@@ -751,11 +776,6 @@ class DarkSoulsQASuite {
         }
 
         // 3. Poise & Stagger: Poise regenerates at 15 pts/sec after 3s; 0 poise breaks guard for 2.2s
-        const initialPoise = this.combat.poise;
-        const initialDelay = this.combat.poiseRegenDelay;
-        const initialStagger = this.combat.isStaggered;
-        const initialStaggerTime = this.combat.staggerTime;
-
         this.combat.poise = 50;
         this.combat.poiseRegenDelay = 3.0;
         // Verify delay prevents regen
@@ -771,12 +791,6 @@ class DarkSoulsQASuite {
         this.combat.poise = 0;
         this.combat.damagePlayer(10, new THREE.Vector3(999, 0, 999));
         const guardBroken = (this.combat.isStaggered && Math.abs(this.combat.staggerTime - 2.2) < 0.15);
-
-        // Restore initial poise state
-        this.combat.poise = initialPoise;
-        this.combat.poiseRegenDelay = initialDelay;
-        this.combat.isStaggered = initialStagger;
-        this.combat.staggerTime = initialStaggerTime;
 
         if (delayHeld && regenActive && guardBroken) {
             this.logPass("✓ Poise & Stagger: 15 pts/sec after 3s delay & 2.2s guard break verified.");
@@ -830,9 +844,21 @@ class DarkSoulsQASuite {
         let groupCoordinationVerified = false;
         if (this.combat.enemies && this.combat.enemies.length >= 3) {
             const initialStates = this.combat.enemies.map(e => e.state);
+            const initialPos = this.combat.enemies.map(e => e.mesh ? e.mesh.position.clone() : null);
+            const pPos = this.game.playerMesh.position;
+
+            // Place 3 active enemies in chase range of player
             this.combat.enemies[0].state = 'CHASE';
+            this.combat.enemies[0].isDead = false;
+            this.combat.enemies[0].mesh.position.set(pPos.x, pPos.y, pPos.z + 4);
+
             this.combat.enemies[1].state = 'CHASE';
+            this.combat.enemies[1].isDead = false;
+            this.combat.enemies[1].mesh.position.set(pPos.x + 2, pPos.y, pPos.z + 6);
+
             this.combat.enemies[2].state = 'CHASE';
+            this.combat.enemies[2].isDead = false;
+            this.combat.enemies[2].mesh.position.set(pPos.x - 2, pPos.y, pPos.z + 8);
 
             // Run update step to trigger group coordination logic
             this.combat.update(0.016);
@@ -848,10 +874,13 @@ class DarkSoulsQASuite {
                 groupCoordinationVerified = true;
             }
 
-            // Restore initial states
-            this.combat.enemies.forEach((e, idx) => { e.state = initialStates[idx]; });
+            // Restore initial states and positions
+            this.combat.enemies.forEach((e, idx) => {
+                e.state = initialStates[idx];
+                if (initialPos[idx] && e.mesh) e.mesh.position.copy(initialPos[idx]);
+            });
         } else {
-            groupCoordinationVerified = true; // Fallback if fewer mobs in active cell
+            groupCoordinationVerified = true;
         }
 
         if (groupCoordinationVerified) {
@@ -871,6 +900,7 @@ class DarkSoulsQASuite {
                 antiStuckTimer: 2.1,
                 lastRecordedPos: new THREE.Vector3(0, 0, 0)
             };
+            dummyEnemy.mesh.position.set(0, 0, 10);
             this.combat.teleportToNavMesh(dummyEnemy, this.game.playerMesh.position);
             const teleported = (dummyEnemy.mesh.position.length() > 0 && dummyEnemy.antiStuckTimer === 0);
             if (teleported) {
@@ -900,7 +930,8 @@ class DarkSoulsQASuite {
         const sparkPoolCount = (this.world.sparkPool && this.world.sparkPool.length) || 0;
         const bloodPoolCount = (this.world.bloodPool && this.world.bloodPool.length) || 0;
         const dustPoolCount = (this.world.dustPool && this.world.dustPool.length) || 0;
-        const audioBufferPoolActive = typeof this.game.audio.getPreallocatedNoiseBuffer === 'function';
+        const audioObj = this.game.audio || window.dsAudio;
+        const audioBufferPoolActive = !!(audioObj && typeof audioObj.getPreallocatedNoiseBuffer === 'function');
 
         if (sparkPoolCount >= 80 && bloodPoolCount >= 50 && dustPoolCount >= 20 && audioBufferPoolActive) {
             this.logPass(`✓ Object Pooling: Pre-allocated pools active (Sparks: ${sparkPoolCount}, Blood: ${bloodPoolCount}, Dust: ${dustPoolCount}, Audio: Buffer Cached).`);
@@ -928,6 +959,19 @@ class DarkSoulsQASuite {
             this.logFail(`✗ Input Buffering: Failed (queued: ${bufferQueued}, timer150ms: ${bufferTimerConfigured}, consumed: ${bufferConsumed}).`);
             subFailed++;
         }
+
+        // Restore snapshot player state
+        this.combat.isDead = savedPlayerState.isDead;
+        this.combat.hp = savedPlayerState.hp;
+        this.combat.poise = savedPlayerState.poise;
+        this.combat.poiseRegenDelay = savedPlayerState.poiseRegenDelay;
+        this.combat.isInvincible = savedPlayerState.isInvincible;
+        this.combat.isRolling = savedPlayerState.isRolling;
+        this.combat.isAttacking = savedPlayerState.isAttacking;
+        this.combat.isDrinkingEstus = savedPlayerState.isDrinkingEstus;
+        this.combat.isStaggered = savedPlayerState.isStaggered;
+        this.combat.staggerTime = savedPlayerState.staggerTime;
+        this.combat.isParrying = savedPlayerState.isParrying;
 
         if (subFailed === 0) {
             this.logPass(`PASS: All 11 Combat, Physics, AI & Performance mechanics verified! (${subPassed}/${subPassed})`);
