@@ -42,6 +42,18 @@ class DarkSoulsGame {
             this.blacksmith = new BlacksmithForgeSystem(this);
         }
 
+        // Collision & Physics Module
+        if (typeof CollisionSystem !== 'undefined') {
+            this.collisionSystem = new CollisionSystem(this.world, this, this.combat);
+            window.collisionSystem = this.collisionSystem;
+        }
+
+        // Automated AI Testing Framework
+        if (typeof QABotTester !== 'undefined') {
+            this.qaBotTester = new QABotTester(this, this.combat, this.world);
+            window.qaBotTester = this.qaBotTester;
+        }
+
         // Comprehensive QA & Test Automation Suite
         if (typeof DarkSoulsQASuite !== 'undefined') {
             this.qaSuite = new DarkSoulsQASuite(this);
@@ -973,6 +985,8 @@ class DarkSoulsGame {
         // 1. Update Subsystems
         this.world.update(delta);
         this.combat.update(delta);
+        if (this.collisionSystem) this.collisionSystem.update(delta);
+        if (this.qaBotTester && this.qaBotTester.isActive) this.qaBotTester.update(delta);
         if (this.updateLoreBeacons) this.updateLoreBeacons(delta);
         if (this.siege) this.siege.update(delta);
         if (this.heraldry) this.heraldry.update(delta);
@@ -1503,6 +1517,10 @@ class DarkSoulsGame {
         if (pPos.z < 28 && pPos.y > -2.0) {
             pPos.x = Math.max(-28.0, Math.min(28.0, pPos.x));
             pPos.z = Math.max(-28.0, pPos.z);
+        }
+
+        if (this.collisionSystem) {
+            this.collisionSystem.enforceBoundaries(pPos, playerRadius, pPos.y);
         }
 
         // 5. Abyss Fall Protection (falls out of bounds respawn at bonfire)
@@ -2835,7 +2853,7 @@ class DarkSoulsGame {
     adminUnlockAllLore() {
         if (window.DarkSoulsLore && window.DarkSoulsLore.unlockAll) {
             window.DarkSoulsLore.unlockAll();
-            this.showNotification("📜 ADMIN: ALL 60 DARK SOULS LORE ITEMS UNLOCKED!");
+            this.showNotification("📜 ADMIN: ALL 400 DARK SOULS LORE ITEMS UNLOCKED!");
             this.renderLoreCodexContent('all');
         }
     }

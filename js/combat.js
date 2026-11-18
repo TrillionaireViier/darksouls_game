@@ -525,6 +525,12 @@ class DarkSoulsCombat {
         const maxHp = isQaOneHp ? 1 : (mobDef.hp || 200);
         const damage = isQaOneHpDmg ? 1 : (mobDef.damage || 35);
 
+        const behavior = mobDef.behaviorType || 'Swarm';
+        let defaultRadius = 0.88;
+        if (behavior === 'Heavy Tank') defaultRadius = 1.35;
+        else if (behavior === 'Flanker') defaultRadius = 0.75;
+        else if (behavior === 'Caster' || behavior === 'Ranged') defaultRadius = 0.82;
+
         const enemy = {
             def: mobDef,
             id: mobDef.id,
@@ -542,6 +548,10 @@ class DarkSoulsCombat {
             speed: mobDef.speed || 2.4,
             attackReach: mobDef.attackReach || 2.2,
             souls: mobDef.souls || 150,
+            behaviorType: behavior,
+            attackPhase: 'IDLE',
+            attackPhaseTimer: 0,
+            flankDir: Math.random() < 0.5 ? -1 : 1,
             state: 'PATROL',
             stateTimer: 0,
             cooldown: 0,
@@ -550,7 +560,7 @@ class DarkSoulsCombat {
             riposteTimer: 0,
             isStaggered: false,
             staggerTimer: 0,
-            radius: 0.9,
+            radius: mobDef.radius || defaultRadius,
             animTime: Math.random() * 5
         };
         this.enemies.push(enemy);
@@ -580,7 +590,11 @@ class DarkSoulsCombat {
             patrolRadius: 6,
             aggroRadius: 13,
             attackReach: 2.4,
-            souls: 350
+            souls: 350,
+            behaviorType: 'Flanker',
+            attackPhase: 'IDLE',
+            flankDir: -1,
+            radius: 0.85
         };
         this.enemies.push(enemy);
         return enemy;
@@ -605,6 +619,9 @@ class DarkSoulsCombat {
             isStaggered: false,
             staggerTimer: 0,
             radius: 0.8,
+            behaviorType: 'Swarm',
+            attackPhase: 'IDLE',
+            flankDir: 1,
             animTime: Math.random() * 5
         };
         this.enemies.push(enemy);
@@ -1767,71 +1784,131 @@ class DarkSoulsCombat {
             const heightDiff = Math.abs(playerPos.y - e.mesh.position.y);
             const reach = e.attackReach || 2.0;
 
-            // 4. Attack Animation (Telegraphed Windup, Cleave Strike & Recovery)
+            // Mob Matrix Behavior Configuration
+            const behavior = e.behaviorType || 'Swarm';
+            let windupEnd = 0.26;
+            let strikeEnd = 0.44;
+            let totalDur = 0.72;
+            let aggroRange = 15;
+            let speedMult = 1.05;
+            let preferredDist = reach;
+
+            if (behavior === 'Heavy Tank') {
+                windupEnd = 0.65;
+                strikeEnd = 0.92;
+                totalDur = 1.65;
+                aggroRange = 16;
+                speedMult = 0.78;
+                preferredDist = reach + 0.3;
+            } else if (behavior === 'Flanker') {
+                windupEnd = 0.28;
+                strikeEnd = 0.48;
+                totalDur = 0.78;
+                aggroRange = 18;
+                speedMult = 1.25;
+                preferredDist = reach;
+            } else if (behavior === 'Ranged') {
+                windupEnd = 0.55;
+                strikeEnd = 0.70;
+                totalDur = 1.15;
+                aggroRange = 22;
+                speedMult = 0.95;
+                preferredDist = 8.5;
+            } else if (behavior === 'Caster') {
+                windupEnd = 0.75;
+                strikeEnd = 0.95;
+                totalDur = 1.45;
+                aggroRange = 20;
+                speedMult = 0.90;
+                preferredDist = 7.0;
+            }
+
+            // 4. Attack Animation (Telegraphed Windup, Strike Impact & Recovery Phases)
             if (e.isAttacking) {
                 e.attackTime += delta;
-                const windupEnd = 0.36;
-                const strikeEnd = 0.56;
-                const totalDur = 0.90;
 
                 if (e.attackTime < windupEnd) {
-                    // Phase 1: High Windup & Coiling Torso
+                    // Phase 1: High Windup & Coiling Torso (Telegraph window)
+                    e.state = 'WINDUP';
+                    e.attackPhase = 'WINDUP';
                     const t = e.attackTime / windupEnd;
-                    if (u.torso) {
-                        u.torso.rotation.y = -0.65 * t;
-                        u.torso.rotation.x = -0.22 * t;
-                    }
-                    if (u.head) {
-                        u.head.rotation.x = 0.15 * t;
-                        u.head.rotation.y = 0.25 * t;
-                    }
-                    if (u.rightShoulder) {
-                        u.rightShoulder.rotation.x = -2.1 * t;
-                        u.rightShoulder.rotation.z = 0.45 * t;
-                        u.rightShoulder.rotation.y = -0.25 * t;
-                    }
-                    if (u.leftShoulder) {
-                        u.leftShoulder.rotation.x = 0.35 * t;
-                        u.leftShoulder.rotation.z = -0.35 * t;
+
+                    if (behavior === 'Heavy Tank') {
+                        // Crushing 2-handed raise
+                        if (u.torso) { u.torso.rotation.x = -0.35 * t; u.torso.rotation.y = -0.3 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.6 * t; u.rightShoulder.rotation.z = 0.6 * t; }
+                        if (u.leftShoulder) { u.leftShoulder.rotation.x = -2.2 * t; u.leftShoulder.rotation.z = -0.5 * t; }
+                    } else if (behavior === 'Caster') {
+                        // Catalyst channeling glow & staff elevation
+                        if (u.torso) { u.torso.rotation.x = -0.2 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.8 * t; u.rightShoulder.rotation.z = 0.8 * t; }
+                        if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 * t; u.leftShoulder.rotation.z = -0.8 * t; }
+                    } else if (behavior === 'Ranged') {
+                        // Drawing bowstring / sighting line
+                        if (u.torso) { u.torso.rotation.y = 0.75 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.4 * t; u.rightShoulder.rotation.y = -0.4 * t; }
+                        if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 * t; u.leftShoulder.rotation.z = -0.7 * t; }
+                    } else {
+                        // Flanker / Swarm / default
+                        if (u.torso) { u.torso.rotation.y = -0.65 * t; u.torso.rotation.x = -0.22 * t; }
+                        if (u.head) { u.head.rotation.x = 0.15 * t; u.head.rotation.y = 0.25 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.1 * t; u.rightShoulder.rotation.z = 0.45 * t; u.rightShoulder.rotation.y = -0.25 * t; }
+                        if (u.leftShoulder) { u.leftShoulder.rotation.x = 0.35 * t; u.leftShoulder.rotation.z = -0.35 * t; }
                     }
                     if (u.rightHip && u.leftHip) {
                         u.rightHip.rotation.x = -0.3 * t;
                         u.leftHip.rotation.x = 0.3 * t;
                     }
                 } else if (e.attackTime < strikeEnd) {
-                    // Phase 2: Explosive Forward Slash & Cleave
+                    // Phase 2: Explosive Forward Slash & Cleave (Damage frame)
+                    e.state = 'STRIKE';
+                    e.attackPhase = 'STRIKE';
                     const t = (e.attackTime - windupEnd) / (strikeEnd - windupEnd);
-                    if (u.torso) {
-                        u.torso.rotation.y = -0.65 + 1.25 * t;
-                        u.torso.rotation.x = -0.22 + 0.65 * t;
-                    }
-                    if (u.head) {
-                        u.head.rotation.x = 0.15 - 0.35 * t;
-                        u.head.rotation.y = 0.25 - 0.45 * t;
-                    }
-                    if (u.rightShoulder) {
-                        u.rightShoulder.rotation.x = -2.1 + 3.45 * t;
-                        u.rightShoulder.rotation.z = 0.45 - 0.75 * t;
-                    }
-                    if (u.leftShoulder) {
-                        u.leftShoulder.rotation.x = 0.35 - 0.7 * t;
+
+                    if (behavior === 'Heavy Tank') {
+                        // Crushing 2-handed slam
+                        if (u.torso) { u.torso.rotation.x = -0.35 + 0.95 * t; u.torso.rotation.y = -0.3 + 0.4 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.6 + 4.2 * t; u.rightShoulder.rotation.z = 0.6 - 0.9 * t; }
+                        if (u.leftShoulder) { u.leftShoulder.rotation.x = -2.2 + 3.8 * t; u.leftShoulder.rotation.z = -0.5 + 0.7 * t; }
+                    } else if (behavior === 'Caster') {
+                        // Cast blast
+                        if (u.torso) { u.torso.rotation.x = -0.2 + 0.45 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.8 + 2.5 * t; }
+                        if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 + 2.0 * t; }
+                    } else if (behavior === 'Ranged') {
+                        // Release shot
+                        if (u.torso) { u.torso.rotation.y = 0.75 - 0.3 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.4 + 1.2 * t; }
+                    } else {
+                        // Flanker / Swarm
+                        if (u.torso) { u.torso.rotation.y = -0.65 + 1.25 * t; u.torso.rotation.x = -0.22 + 0.65 * t; }
+                        if (u.head) { u.head.rotation.x = 0.15 - 0.35 * t; u.head.rotation.y = 0.25 - 0.45 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.1 + 3.45 * t; u.rightShoulder.rotation.z = 0.45 - 0.75 * t; }
+                        if (u.leftShoulder) { u.leftShoulder.rotation.x = 0.35 - 0.7 * t; }
                     }
 
                     // Strike Impact Frame
-                    if (!e._damageDelivered && t >= 0.5) {
+                    if (!e._damageDelivered && t >= 0.45) {
                         e._damageDelivered = true;
-                        this.audio.playSwing(false);
+                        this.audio.playSwing(behavior === 'Heavy Tank');
                         const playerDist = this.game.playerMesh.position.distanceTo(e.mesh.position);
-                        if (playerDist < (reach + 0.7) && !this.isRolling && !this.isInvincible) {
+                        const effectiveReach = (behavior === 'Ranged' || behavior === 'Caster') ? preferredDist + 2.0 : (reach + (behavior === 'Heavy Tank' ? 1.1 : 0.7));
+
+                        if (playerDist < effectiveReach && !this.isRolling && !this.isInvincible) {
                             const dmg = (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive)) ? 1 : (e.damage || 35);
                             this.damagePlayer(dmg, e.mesh.position);
                             if (this.world && this.world.spawnHitSparks) {
                                 this.world.spawnHitSparks(this.game.playerMesh.position, false);
                             }
+                            if (behavior === 'Heavy Tank' && this.game.shakeCamera) {
+                                this.game.shakeCamera(0.3, 0.25);
+                            }
                         }
                     }
                 } else if (e.attackTime < totalDur) {
-                    // Phase 3: Follow-through and recovery
+                    // Phase 3: Follow-through and recovery (Vulnerable counterattack window)
+                    e.state = 'RECOVERY';
+                    e.attackPhase = 'RECOVERY';
                     const t = (e.attackTime - strikeEnd) / (totalDur - strikeEnd);
                     const inv = 1 - t;
                     if (u.torso) {
@@ -1848,61 +1925,99 @@ class DarkSoulsCombat {
                 } else {
                     e.isAttacking = false;
                     e._damageDelivered = false;
-                    e.cooldown = 1.4 + Math.random() * 0.8;
+                    e.attackPhase = 'IDLE';
+                    e.state = 'CHASE';
+                    const baseCd = behavior === 'Heavy Tank' ? 1.9 : (behavior === 'Flanker' ? 0.9 : 1.3);
+                    e.cooldown = baseCd + Math.random() * 0.6;
                 }
                 continue;
             }
 
-            // 5. Aggro & Locomotion Logic
-            if (dist < 14 && heightDiff < 3.8) {
+            // 5. Aggro & Locomotion Logic (Mob Matrix 5 Archetypes)
+            if (dist < aggroRange && heightDiff < 4.2) {
                 e.state = 'CHASE';
-                const angle = Math.atan2(this._scratchMobVec.x, this._scratchMobVec.z);
-                e.mesh.rotation.y = angle;
+                e.attackPhase = 'IDLE';
 
-                if (dist > reach) {
-                    const moveSpeed = e.speed || 2.4;
-                    e.mesh.position.x += Math.sin(angle) * moveSpeed * delta;
-                    e.mesh.position.z += Math.cos(angle) * moveSpeed * delta;
-                    e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z);
+                let targetAngle = Math.atan2(this._scratchMobVec.x, this._scratchMobVec.z);
 
-                    // Authentic Dark Souls Shambling Undead Locomotion
-                    const freq = 7.2;
-                    const stride = e.animTime * freq;
+                if (behavior === 'Flanker') {
+                    // Circle around player while closing in
+                    const flankOffset = (e.flankDir || 1) * 0.78;
+                    targetAngle += flankOffset;
+                }
 
-                    if (u.rightHip && u.leftHip) {
-                        u.rightHip.rotation.x = Math.sin(stride) * 0.68;
-                        u.leftHip.rotation.x = -Math.sin(stride) * 0.68;
-                        u.rightHip.rotation.z = Math.sin(stride) * 0.06;
-                        u.leftHip.rotation.z = -Math.sin(stride) * 0.06;
-                    }
-                    if (u.torso) {
-                        u.torso.rotation.x = 0.25;
-                        u.torso.rotation.z = Math.sin(stride) * 0.09;
-                        u.torso.position.y = Math.abs(Math.sin(stride)) * 0.08;
-                    }
-                    if (u.leftShoulder) {
-                        u.leftShoulder.rotation.x = Math.sin(stride) * 0.45;
-                        u.leftShoulder.rotation.z = -0.25;
-                    }
-                    if (u.rightShoulder) {
-                        u.rightShoulder.rotation.x = -0.38 + Math.cos(stride) * 0.25;
-                        u.rightShoulder.rotation.z = 0.25;
-                    }
-                    if (u.head) {
-                        u.head.rotation.x = 0.12 + Math.sin(stride * 2) * 0.06;
-                        u.head.rotation.y = Math.sin(e.animTime * 2.2) * 0.12;
+                e.mesh.rotation.y = targetAngle;
+
+                let shouldAdvance = false;
+                let shouldRetreat = false;
+
+                if (behavior === 'Ranged' || behavior === 'Caster') {
+                    if (dist < 4.5) {
+                        shouldRetreat = true;
+                    } else if (dist > preferredDist + 1.5) {
+                        shouldAdvance = true;
                     }
                 } else {
+                    if (dist > preferredDist) {
+                        shouldAdvance = true;
+                    }
+                }
+
+                if (shouldAdvance) {
+                    const moveSpeed = (e.speed || 2.4) * speedMult;
+                    e.mesh.position.x += Math.sin(targetAngle) * moveSpeed * delta;
+                    e.mesh.position.z += Math.cos(targetAngle) * moveSpeed * delta;
+                    e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z, e.mesh.position.y);
+                } else if (shouldRetreat) {
+                    const moveSpeed = (e.speed || 2.4) * 0.85;
+                    e.mesh.position.x -= Math.sin(targetAngle) * moveSpeed * delta;
+                    e.mesh.position.z -= Math.cos(targetAngle) * moveSpeed * delta;
+                    e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z, e.mesh.position.y);
+                }
+
+                // If in attack range, trigger attack when cooldown expires
+                const canAttack = (behavior === 'Ranged' || behavior === 'Caster') ? (dist >= 4.0 && dist <= preferredDist + 2.5) : (dist <= preferredDist + 0.35);
+                if (canAttack) {
                     e.cooldown -= delta;
                     if (e.cooldown <= 0 && !e.isAttacking) {
                         e.isAttacking = true;
                         e.attackTime = 0;
                         e._damageDelivered = false;
+                        e.state = 'WINDUP';
+                        e.attackPhase = 'WINDUP';
                     }
+                }
+
+                // Shambling / locomotion animation kinetics
+                const freq = behavior === 'Heavy Tank' ? 4.8 : (behavior === 'Flanker' ? 9.5 : 7.2);
+                const stride = e.animTime * freq;
+                if (u.rightHip && u.leftHip) {
+                    u.rightHip.rotation.x = Math.sin(stride) * 0.68;
+                    u.leftHip.rotation.x = -Math.sin(stride) * 0.68;
+                    u.rightHip.rotation.z = Math.sin(stride) * 0.06;
+                    u.leftHip.rotation.z = -Math.sin(stride) * 0.06;
+                }
+                if (u.torso) {
+                    u.torso.rotation.x = behavior === 'Heavy Tank' ? 0.35 : 0.25;
+                    u.torso.rotation.z = Math.sin(stride) * 0.09;
+                    u.torso.position.y = Math.abs(Math.sin(stride)) * 0.08;
+                }
+                if (u.leftShoulder) {
+                    u.leftShoulder.rotation.x = Math.sin(stride) * 0.45;
+                    u.leftShoulder.rotation.z = -0.25;
+                }
+                if (u.rightShoulder) {
+                    u.rightShoulder.rotation.x = -0.38 + Math.cos(stride) * 0.25;
+                    u.rightShoulder.rotation.z = 0.25;
+                }
+                if (u.head) {
+                    u.head.rotation.x = 0.12 + Math.sin(stride * 2) * 0.06;
+                    u.head.rotation.y = Math.sin(e.animTime * 2.2) * 0.12;
                 }
             } else {
                 // 6. Idle / Patrol Breathing & Scanning Animation
                 e.state = 'PATROL';
+                e.attackPhase = 'IDLE';
                 const breath = Math.sin(e.animTime * 2.2 + e.idleSeed);
                 if (u.torso) {
                     u.torso.position.y = breath * 0.035;
