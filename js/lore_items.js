@@ -10226,7 +10226,7 @@
             loreTitle: 'Dragonslayer Arrow #502',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #502 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #502 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_503',
@@ -10386,7 +10386,7 @@
             loreTitle: 'Dragonslayer Arrow #510',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #510 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #510 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_511',
@@ -10546,7 +10546,7 @@
             loreTitle: 'Dragonslayer Arrow #518',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #518 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #518 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_519',
@@ -10706,7 +10706,7 @@
             loreTitle: 'Dragonslayer Arrow #526',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #526 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #526 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_527',
@@ -10866,7 +10866,7 @@
             loreTitle: 'Dragonslayer Arrow #534',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #534 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #534 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_535',
@@ -11026,7 +11026,7 @@
             loreTitle: 'Dragonslayer Arrow #542',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #542 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #542 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_543',
@@ -11186,7 +11186,7 @@
             loreTitle: 'Dragonslayer Arrow #550',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #550 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #550 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_551',
@@ -11346,7 +11346,7 @@
             loreTitle: 'Dragonslayer Arrow #558',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #558 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #558 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_559',
@@ -11506,7 +11506,7 @@
             loreTitle: 'Dragonslayer Arrow #566',
             loreCategory: 'Archery',
             loreBonus: '+40 Piercing DMG',
-            loreDesc: 'Gwyn's personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #566 roaming the depths of Lordran.'
+            loreDesc: 'Gwyn\'s personal vanguard armed with colossal steel greatbows that launch iron spears. Specimen #566 roaming the depths of Lordran.'
         },
         {
             id: 'black_knight_greataxe_567',
