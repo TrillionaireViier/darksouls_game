@@ -2853,7 +2853,7 @@ class DarkSoulsGame {
     adminUnlockAllLore() {
         if (window.DarkSoulsLore && window.DarkSoulsLore.unlockAll) {
             window.DarkSoulsLore.unlockAll();
-            this.showNotification("📜 ADMIN: ALL 400 DARK SOULS LORE ITEMS UNLOCKED!");
+            this.showNotification("📜 ADMIN: ALL 500 DARK SOULS LORE ITEMS UNLOCKED!");
             this.renderLoreCodexContent('all');
         }
     }
