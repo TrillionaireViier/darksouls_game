@@ -2395,7 +2395,7 @@
     </div>
 
     <!-- 📜 DARK SOULS LORE CODEX & 500 MOBS COMPENDIUM -->
-    <div id="lore-codex-modal" class="modal-overlay">
+    <div id="lore-codex-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center;">
         <div class="modal-box" style="max-width: 860px; max-height: 88vh; display: flex; flex-direction: column; border-color: #d4af37; box-shadow: 0 0 35px rgba(212, 175, 55, 0.35); background: linear-gradient(180deg, #16120d 0%, #0a0806 100%);">
             <div class="modal-header" style="color: #ffd778; text-shadow: 0 0 14px rgba(212, 175, 55, 0.6); display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #a87932; padding-bottom: 10px; margin-bottom: 12px;">
                 <span>📜 LORDRAN LORE CODEX & REMNANTS</span>
@@ -3348,6 +3348,44 @@
             } else {
                 const m = document.getElementById('next-lord-modal');
                 if (m) m.style.display = 'none';
+            }
+        }
+
+        // Lore Codex Modal Helpers
+        function openLoreCodexModal() {
+            if (window.game && typeof window.game.openLoreCodexModal === 'function') {
+                window.game.openLoreCodexModal();
+            } else {
+                const modal = document.getElementById('lore-codex-modal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    if (window.game && typeof window.game.renderLoreCodexContent === 'function') {
+                        window.game.renderLoreCodexContent('all');
+                    }
+                }
+            }
+        }
+
+        function closeLoreCodexModal() {
+            if (window.game && typeof window.game.closeLoreCodexModal === 'function') {
+                window.game.closeLoreCodexModal();
+            } else {
+                const modal = document.getElementById('lore-codex-modal');
+                if (modal) modal.style.display = 'none';
+            }
+        }
+
+        function filterLoreCodex(cat) {
+            if (window.game && typeof window.game.renderLoreCodexContent === 'function') {
+                window.game.renderLoreCodexContent(cat);
+            }
+        }
+
+        function adminUnlockAllLore() {
+            if (window.game && typeof window.game.adminUnlockAllLore === 'function') {
+                window.game.adminUnlockAllLore();
+            } else if (window.DarkSoulsLore && typeof window.DarkSoulsLore.unlockAll === 'function') {
+                window.DarkSoulsLore.unlockAll();
             }
         }
 
