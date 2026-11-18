@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261115_v15_16_BOSSES_60FPS_TURBO';
+            var TARGET_BUILD = '20261118_CLEAN_HUD';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -23,6 +23,9 @@
                 window.location.replace(freshUrl);
             } else {
                 localStorage.setItem('ds_build_version', TARGET_BUILD);
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
             }
         })();
     </script>
@@ -1506,6 +1509,36 @@
                 padding: 12px 14px;
             }
         }
+
+        /* ==========================================================================
+           CLEAN GAMEPLAY HUD OVERRIDES
+           Hides top toolbar, action pills, debug meters, and dev suite indicators
+           ========================================================================== */
+        #top-header,
+        #escape-hint-pill,
+        #pathfinder-bar,
+        #build-status-indicator,
+        #fps-meter {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* Standard Dark Souls Top-Left HUD placement */
+        #player-hud {
+            position: absolute !important;
+            top: 24px !important;
+            left: 24px !important;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -1520,10 +1553,10 @@
     <div id="lockon-reticle"></div>
 
     <!-- Escape Hint Pill (Visual Indicator for Desktop Controls) -->
-    <div id="escape-hint-pill">⚜️ [ESC] UNLOCK CURSOR & SCROLL BUTTONS</div>
+    <div id="escape-hint-pill" style="display: none !important;">⚜️ [ESC] UNLOCK CURSOR & SCROLL BUTTONS</div>
 
     <!-- Top Navigation & Action Header -->
-    <header id="top-header">
+    <header id="top-header" style="display: none !important;">
         <div class="header-title-group">
             <h1 class="header-title">DARK SOULS</h1>
             <p class="header-sub">Lordran &bull; 16 Lords</p>
@@ -1563,7 +1596,7 @@
     </header>
 
     <!-- PATHFINDER / ROUTE COMPASS BAR (LIT PATHWAYS & VERTICAL ELEVATIONS) -->
-    <div id="pathfinder-bar">
+    <div id="pathfinder-bar" style="display: none !important;">
         <div id="route-catacombs" class="route-pill" onclick="teleportOrHighlightPath('catacombs')" title="West Sunken Crypt: Depth -5m, Murky Waters, Ancient Tombs" style="background: rgba(8, 28, 24, 0.88); border: 1px solid #00ffaa; color: #77ffcc; font-family: 'Cinzel', serif; cursor: pointer; border-radius: 9999px; text-shadow: 0 0 8px rgba(0,255,170,0.6); display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(0,255,170,0.25); transition: all 0.25s ease;">
             <span>▼</span> <span class="route-full-name">CATACOMBS (DOWN: -5m)</span><span class="route-short-name">CATACOMBS -5M</span>
         </div>
@@ -1629,16 +1662,13 @@
 
     <!-- Souls Counter (Bottom-Right) -->
     <div id="souls-hud" style="display: flex; align-items: center; gap: 8px;">
-        <div id="fps-meter" title="Live Rendering Frame Rate" style="font-family: 'Roboto Mono', monospace; font-size: 0.72rem; font-weight: 700; color: #00ffaa; background: rgba(8, 16, 12, 0.85); border: 1px solid #1b5e20; padding: 3px 7px; border-radius: 3px; letter-spacing: 1px;">60 FPS</div>
+        <div id="fps-meter" style="display: none !important;"></div>
         <div class="soul-orb"></div>
         <div id="souls-count">0</div>
     </div>
 
     <!-- Build & Daylight Status Indicator -->
-    <div id="build-status-indicator" style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 50; pointer-events: auto; display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 0.68rem; color: #ffd276; background: rgba(18, 14, 10, 0.85); border: 1px solid rgba(255, 210, 118, 0.35); padding: 3px 10px; border-radius: 3px; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); white-space: nowrap;">
-        <span>⚡ LORDRAN V13.0 • 60 FPS TURBO & DEV SUITE</span>
-        <button onclick="localStorage.clear(); if ('caches' in window) { caches.keys().then(function(k){ k.forEach(function(c){ caches.delete(c); }); }); } window.location.href = window.location.origin + window.location.pathname + '?b=20261114_v14_SCULPTED_3D_WARRIOR&r=' + Date.now()" style="background: rgba(255,210,118,0.25); border: 1px solid #ffd276; color: #ffd276; font-size: 0.65rem; padding: 2px 7px; cursor: pointer; border-radius: 2px; font-family: inherit; font-weight: bold;">HARD RELOAD</button>
-    </div>
+    <div id="build-status-indicator" style="display: none !important;"></div>
 
     <!-- Boss HUD (Bottom Center, activated when Taurus Demon wakes) -->
     <div id="boss-hud">
