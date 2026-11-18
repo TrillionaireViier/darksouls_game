@@ -355,6 +355,116 @@ class DarkSoulsQASuite {
     }
 
     // ------------------------------------------------------------------------
+    // SEQUENTIAL 16-BOSS UNLOCK & PROGRESSION TEST
+    // Verifies bosses open strictly one after another without admin mode
+    // ------------------------------------------------------------------------
+    async testSequentialBossUnlocking() {
+        this.logInfo("==================================================");
+        this.logInfo("⚔️ TESTING SEQUENTIAL 16-BOSS UNLOCK PROGRESSION");
+        this.logInfo("==================================================");
+
+        if (!this.combat || !this.combat.bossRoster || this.combat.bossRoster.length === 0) {
+            this.logFail("FAIL: Combat boss roster is empty or uninitialized.");
+            return false;
+        }
+
+        // Save original state
+        const originalAdminMode = this.combat.adminModeUnlocked;
+        const originalDefeated = [...(this.combat.defeatedBosses || [])];
+        const originalBossType = this.combat.currentBossType;
+
+        try {
+            // Strictly test in normal progression mode
+            this.combat.adminModeUnlocked = false;
+            this.combat.defeatedBosses = [];
+
+            const roster = this.combat.bossRoster;
+            this.logInfo(`Total Lords to verify: ${roster.length}`);
+
+            for (let i = 0; i < roster.length; i++) {
+                const currentBossDef = roster[i];
+
+                // 1. Current boss MUST be unlocked
+                const isCurrentUnlocked = this.combat.isBossUnlocked(currentBossDef.id);
+                if (!isCurrentUnlocked) {
+                    throw new Error(`Boss [${i + 1}/${roster.length}] ${currentBossDef.name} (${currentBossDef.id}) is unexpectedly LOCKED at step ${i + 1}!`);
+                }
+
+                // 2. All subsequent bosses MUST be locked right now
+                for (let j = i + 1; j < roster.length; j++) {
+                    const nextDef = roster[j];
+                    if (this.combat.isBossUnlocked(nextDef.id)) {
+                        throw new Error(`Boss [${j + 1}/${roster.length}] ${nextDef.name} (${nextDef.id}) was unlocked prematurely before ${currentBossDef.name} was defeated!`);
+                    }
+                }
+
+                // 3. Spawn and switch to current boss
+                const spawnedBoss = this.combat.switchBoss(currentBossDef.id);
+                if (!spawnedBoss || !spawnedBoss.mesh) {
+                    throw new Error(`Failed to spawn Lord [${currentBossDef.name}]. Mesh not created!`);
+                }
+
+                // Verify mesh in scene and non-NaN coords
+                const pos = spawnedBoss.mesh.position;
+                if (isNaN(pos.x) || isNaN(pos.y) || isNaN(pos.z) || !isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+                    throw new Error(`Lord [${currentBossDef.name}] spawned with NaN coordinates: (${pos.x}, ${pos.y}, ${pos.z})`);
+                }
+
+                this.logInfo(`▶ Lord [${i + 1}/${roster.length}] ${currentBossDef.name} ACTIVE at (${pos.x.toFixed(1)}, ${pos.y.toFixed(1)}, ${pos.z.toFixed(1)}). Slaying...`);
+
+                // 4. Slay current boss
+                this.combat.killBoss();
+
+                // 5. Verify current boss is registered in defeatedBosses
+                if (!this.combat.defeatedBosses.includes(currentBossDef.id)) {
+                    throw new Error(`Lord ${currentBossDef.name} was not recorded in defeatedBosses!`);
+                }
+
+                // 6. If there is a next boss, verify it is NOW UNLOCKED
+                if (i + 1 < roster.length) {
+                    const nextDef = roster[i + 1];
+                    const isNextUnlocked = this.combat.isBossUnlocked(nextDef.id);
+                    if (!isNextUnlocked) {
+                        throw new Error(`Lord [${i + 2}/${roster.length}] ${nextDef.name} failed to unlock after slaying ${currentBossDef.name}!`);
+                    }
+                    this.logPass(`✓ Step ${i + 1}: ${currentBossDef.name} Slain -> Next Lord ${nextDef.name} UNLOCKED!`);
+                    this.testResults.passed++;
+                } else {
+                    this.logPass(`✓ Final Lord ${currentBossDef.name} Slain! ALL 16 LORDS SLAIN SEQUENTIALLY!`);
+                    this.testResults.passed++;
+                }
+
+                await new Promise(r => setTimeout(r, 60));
+            }
+
+            this.logInfo("==================================================");
+            this.logPass("🏆 SEQUENTIAL 16-BOSS PROGRESSION FULLY VERIFIED: ALL LORDS UNLOCK ONE AFTER ANOTHER!");
+            this.logInfo("==================================================");
+            this.updateStatsUI();
+
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification("🏆 16 BOSSES SEQUENTIAL UNLOCK: 100% PASSED!");
+            }
+            return true;
+        } catch (err) {
+            this.logFail(`❌ SEQUENTIAL BOSS TEST FAILED: ${err.message}`);
+            this.testResults.failed++;
+            this.updateStatsUI();
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification(`❌ BOSS PROGRESSION FAIL: ${err.message}`);
+            }
+            return false;
+        } finally {
+            // Restore original state
+            this.combat.adminModeUnlocked = originalAdminMode;
+            this.combat.defeatedBosses = originalDefeated;
+            if (originalBossType) {
+                this.combat.spawnBoss(originalBossType);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------------
     // 2. HIT DETECTION VERIFICATION
     // Triggers an attack within distance < weaponReach and verifies boss HP reduction,
     // flagging weapon collision bugs if damage fails outside i-frames.
@@ -576,6 +686,10 @@ class DarkSoulsQASuite {
     // ------------------------------------------------------------------------
     // LOGGING & UI TERMINAL SYSTEM
     // ------------------------------------------------------------------------
+    logSuccess(msg) {
+        this.logPass(msg);
+    }
+
     logPass(msg) {
         console.log(`%c[QA PASS] ${msg}`, 'color: #00ffaa; font-weight: bold;');
         this.appendLog('PASS', msg, '#00ffaa');
@@ -646,18 +760,21 @@ class DarkSoulsQASuite {
         this.logInfo("QA Logs cleared.");
     }
 
-        copyResultsToClipboard() {
+    copyResultsToClipboard() {
         const passed = (this.testResults && this.testResults.passed) || 0;
         const failed = (this.testResults && this.testResults.failed) || 0;
         const warnings = (this.testResults && this.testResults.warnings) || 0;
 
         let outputText = "=== DARK SOULS QA AUDIT RESULTS ===\n";
-        outputText += "PASSED: " + passed + " | FAILED: " + failed + " | WARNINGS: " + warnings + "\n";
-        outputText += "TIMESTAMP: " + new Date().toISOString() + "\n";
+        outputText += `PASSED: ${passed} | FAILED: ${failed} | WARNINGS: ${warnings}\n`;
+        outputText += `TIMESTAMP: ${new Date().toISOString()}\n`;
         outputText += "------------------------------------\n\n";
 
         if (this.logs && this.logs.length > 0) {
-            outputText += this.logs.join('\n');
+            outputText += this.logs.map(l => {
+                if (typeof l === 'string') return l;
+                return `[${l.time || ''}] [${l.type || 'INFO'}] ${l.msg || ''}`;
+            }).join('\n');
         } else if (this.logContainerElem) {
             outputText += this.logContainerElem.innerText;
         }
@@ -665,6 +782,9 @@ class DarkSoulsQASuite {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(outputText).then(() => {
                 this.logSuccess("📋 QA Test results copied to clipboard!");
+                if (this.game && this.game.showNotification) {
+                    this.game.showNotification("📋 QA Test results copied to clipboard!");
+                }
             }).catch(() => {
                 this.fallbackCopyText(outputText);
             });
@@ -684,6 +804,9 @@ class DarkSoulsQASuite {
         try {
             document.execCommand('copy');
             this.logSuccess("📋 QA Test results copied to clipboard!");
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification("📋 QA Test results copied to clipboard!");
+            }
         } catch(e) {
             this.logWarn("Output printed to browser console.");
             console.log(text);

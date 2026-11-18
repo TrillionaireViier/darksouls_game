@@ -607,7 +607,7 @@ class DarkSoulsWorld {
         this.createTorch(6.5, 2.5, 25, { interactive: true, isLit: false });
     }
 
-    getGroundHeight(x, z) {
+    getGroundHeight(x, z, currentY = null) {
         // 1. East Upper Ramparts & Stairs
         // Ascending Stairs from Courtyard (z in [4, 22], x in [15, 25])
         if (x >= 15 && x <= 25 && z >= 4 && z <= 22) {
@@ -635,7 +635,9 @@ class DarkSoulsWorld {
             return -5.0;
         }
         // Deep Catacombs Subterranean Mausoleum Arena & Crypt (z in [90, 150], x in [-34, -7])
-        if (x >= -34 && x <= -7 && z >= 90 && z <= 150) {
+        // Elevation disambiguation: Only active if player is submerged in subterranean crypt (currentY < -2.5) or west of surface arena (x < -17.5)
+        const inCryptBounds = (x >= -34 && x <= -7 && z >= 90 && z <= 150);
+        if (inCryptBounds && (currentY === null ? (x < -17.5) : (currentY < -2.5 || x < -17.5))) {
             // Crypt Exit Ascent Stairs back to surface fog gate (x in [-20, -12], z in [90, 96])
             if (x >= -20 && x <= -12 && z >= 90 && z <= 96) {
                 const t = (z - 90) / 6;
@@ -655,8 +657,8 @@ class DarkSoulsWorld {
             return 0.0;
         }
 
-        // 4. Surface Boss Arena (z in [95, 170], x in [-6.8, 18])
-        if (x >= -6.8 && x <= 18 && z >= 95 && z <= 170) {
+        // 4. Surface Boss Arena (z in [94.5, 170], full 34m wide arena span x in [-17.5, 17.5])
+        if (x >= -17.5 && x <= 17.5 && z >= 94.5 && z <= 170) {
             return 0.0;
         }
 

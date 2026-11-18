@@ -51,7 +51,7 @@ class DarkSoulsCombat {
         this.enemies = [];
         this.boss = null;
         this.lockedTarget = null;
-        this.currentBossType = 'taurus';
+        this.currentBossType = 'asylum';
         this.defeatedBosses = [];
         this.adminModeUnlocked = (localStorage.getItem('darksouls_admin_mode') === 'true');
         this.isGodMode = false;
@@ -388,7 +388,7 @@ class DarkSoulsCombat {
     // Check sequential boss progression (override if admin mode active)
     isBossUnlocked(bossId) {
         if (this.adminModeUnlocked) return true;
-        if (!bossId || bossId === 'asylum' || bossId === 'taurus') return true;
+        if (!bossId || bossId === this.bossRoster[0].id) return true;
         const idx = this.bossRoster.findIndex(b => b.id === bossId);
         if (idx <= 0) return true;
         const prevBoss = this.bossRoster[idx - 1];
@@ -459,13 +459,13 @@ class DarkSoulsCombat {
 
         // Warp player to the entrance of the arena or catacombs mausoleum
         if (bossId === 'nito') {
-            this.game.playerMesh.position.set(-20, -5.8, 93);
+            this.game.playerMesh.position.set(-20, -5.8, 98);
             this.game.playerMesh.rotation.y = 0;
             this.game.cameraYaw = 0;
             this.game.cameraPitch = 0.15;
             this.game.showNotification("WARPED TO CATACOMBS SANCTUM OF THE DEAD");
         } else {
-            this.game.playerMesh.position.set(0, 0, 93);
+            this.game.playerMesh.position.set(0, 0, 100);
             this.game.playerMesh.rotation.y = 0;
             this.game.cameraYaw = 0;
             this.game.cameraPitch = 0.15;

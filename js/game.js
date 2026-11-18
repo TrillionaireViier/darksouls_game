@@ -1039,7 +1039,7 @@ class DarkSoulsGame {
                     uData.rightShoulder.rotation.x = tuck * 1.1;
                 }
 
-                const groundY = this.world.getGroundHeight(this.playerMesh.position.x, this.playerMesh.position.z);
+                const groundY = this.world.getGroundHeight(this.playerMesh.position.x, this.playerMesh.position.z, this.playerMesh.position.y);
                 this.playerMesh.position.y = groundY; // Keep feet grounded on terrain during roll
 
                 if (this.combat.isInvincible && Math.random() < 0.45) {
@@ -1051,7 +1051,7 @@ class DarkSoulsGame {
 
         // 3. TERRAIN ELEVATION & GRAVITY
         const pPos = this.playerMesh.position;
-        const targetGroundY = this.world.getGroundHeight(pPos.x, pPos.z);
+        const targetGroundY = this.world.getGroundHeight(pPos.x, pPos.z, pPos.y);
         const heightDiff = pPos.y - targetGroundY;
 
         if (heightDiff > 0.16 || this.playerVelocity.y < -0.2) {
@@ -1409,23 +1409,25 @@ class DarkSoulsGame {
         const playerBottom = pPos.y;
         const playerTop = pPos.y + 1.8;
 
-        // 1. Solid World Geometry & Pillar AABB Collisions with Swept Margin
+        // 1. Solid World Geometry & Pillar AABB Collisions with Swept Margin (2-pass solver to prevent corner trapping)
         if (this.world && this.world.colliders) {
-            for (let i = 0; i < this.world.colliders.length; i++) {
-                const box = this.world.colliders[i];
-                if (playerBottom < box.max.y && playerTop > box.min.y) {
-                    if (pPos.x > box.min.x - playerRadius && pPos.x < box.max.x + playerRadius &&
-                        pPos.z > box.min.z - playerRadius && pPos.z < box.max.z + playerRadius) {
-                        const overlapL = (pPos.x - (box.min.x - playerRadius));
-                        const overlapR = ((box.max.x + playerRadius) - pPos.x);
-                        const overlapT = (pPos.z - (box.min.z - playerRadius));
-                        const overlapB = ((box.max.z + playerRadius) - pPos.z);
+            for (let iter = 0; iter < 2; iter++) {
+                for (let i = 0; i < this.world.colliders.length; i++) {
+                    const box = this.world.colliders[i];
+                    if (playerBottom < box.max.y && playerTop > box.min.y) {
+                        if (pPos.x > box.min.x - playerRadius && pPos.x < box.max.x + playerRadius &&
+                            pPos.z > box.min.z - playerRadius && pPos.z < box.max.z + playerRadius) {
+                            const overlapL = (pPos.x - (box.min.x - playerRadius));
+                            const overlapR = ((box.max.x + playerRadius) - pPos.x);
+                            const overlapT = (pPos.z - (box.min.z - playerRadius));
+                            const overlapB = ((box.max.z + playerRadius) - pPos.z);
 
-                        const minOverlap = Math.min(overlapL, overlapR, overlapT, overlapB);
-                        if (minOverlap === overlapL) pPos.x = box.min.x - playerRadius;
-                        else if (minOverlap === overlapR) pPos.x = box.max.x + playerRadius;
-                        else if (minOverlap === overlapT) pPos.z = box.min.z - playerRadius;
-                        else if (minOverlap === overlapB) pPos.z = box.max.z + playerRadius;
+                            const minOverlap = Math.min(overlapL, overlapR, overlapT, overlapB);
+                            if (minOverlap === overlapL) pPos.x = box.min.x - playerRadius;
+                            else if (minOverlap === overlapR) pPos.x = box.max.x + playerRadius;
+                            else if (minOverlap === overlapT) pPos.z = box.min.z - playerRadius;
+                            else if (minOverlap === overlapB) pPos.z = box.max.z + playerRadius;
+                        }
                     }
                 }
             }
@@ -1468,17 +1470,17 @@ class DarkSoulsGame {
         }
 
         // 4. Architectural Bounds & Railing Collision Enforcements:
-        // A. Royal Bridge Parapets (z in [28, 94])
-        if (pPos.z >= 28 && pPos.z <= 94) {
+        // A. Royal Bridge Parapets (z in [28, 95.0])
+        if (pPos.z >= 28 && pPos.z <= 95.0) {
             if (pPos.y >= -1.0 && pPos.y <= 3.5) {
                 pPos.x = Math.max(-6.45, Math.min(6.45, pPos.x));
             }
         }
 
-        // B. Surface Boss Arena (z in [95, 170])
-        if (pPos.z >= 95 && pPos.z <= 170 && pPos.y >= -1.0 && pPos.y <= 4.0) {
-            pPos.x = Math.max(-6.4, Math.min(17.5, pPos.x));
-            pPos.z = Math.min(168.0, pPos.z);
+        // B. Surface Boss Arena (z in [94.8, 168.0]) - Full width access (-16.8 to +16.8) without floor clipping
+        if (pPos.z >= 94.8 && pPos.z <= 168.0 && pPos.y >= -1.0 && pPos.y <= 4.0) {
+            pPos.x = Math.max(-16.8, Math.min(16.8, pPos.x));
+            pPos.z = Math.min(164.0, pPos.z);
         }
 
         // C. Flooded Catacombs Corridor (z in [22, 90], y < 1.0)
@@ -1820,7 +1822,7 @@ class DarkSoulsGame {
 
     warpToArena() {
         // Warp player near the surface fog gate (z = 94)
-        this.playerMesh.position.set(0, 0, 94);
+        this.playerMesh.position.set(0, 0, 98);
         this.cameraYaw = 0;
         this.cameraPitch = 0.28;
         this.showNotification("WARPED TO THE ARENA FOG GATE");

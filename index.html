@@ -2463,6 +2463,9 @@
                 <button class="btn-fight-boss" onclick="qaTestBossProgressionAudit()" style="border-color: #c084fc; color: #f3e8ff; background: rgba(59,7,100,0.7);">
                     👑 AUDIT 16 BOSSES
                 </button>
+                <button class="btn-fight-boss" onclick="qaTestSequentialBosses()" style="border-color: #38bdf8; color: #bae6fd; background: rgba(12,74,110,0.85); font-weight: 800; box-shadow: 0 0 12px rgba(56,189,248,0.4);">
+                    ⚔️ TEST 16 BOSSES SEQUENTIAL
+                </button>
                 <button class="btn-fight-boss" onclick="qaAuditSkinsIntegrity()" style="border-color: #38bdf8; color: #bae6fd; background: rgba(12,74,110,0.7);">
                     🛡️ AUDIT 6 SKINS & ASSETS
                 </button>
@@ -3361,6 +3364,12 @@
             if (window.qaSuite) window.qaSuite.runFullBossProgressionAudit();
         }
 
+        function qaTestSequentialBosses() {
+            if (window.qaSuite && typeof window.qaSuite.testSequentialBossUnlocking === 'function') {
+                window.qaSuite.testSequentialBossUnlocking();
+            }
+        }
+
         function qaAuditSkinsIntegrity() {
             if (window.qaSuite) window.qaSuite.verifyAssetIntegrity();
         }
@@ -4021,15 +4030,15 @@
     <script src="js/three.min.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
     <script src="js/audio.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
     <script src="js/lore_items.js?v=20261118_v320_MOBS"></script>
-    <script src="js/world.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
+    <script src="js/world.js?v=20261118_vCOLLISION_FIX"></script>
     <script src="js/character.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
     <script src="js/siege_warfare.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
     <script src="js/heraldry_nobility.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
     <script src="js/apothecary_crafting.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
-    <script src="js/combat.js?v=20261118_v19_BOT_ANIMATIONS_100"></script>
+    <script src="js/combat.js?v=20261118_vSEQ_BOSS"></script>
     <script src="js/postprocessing.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
-    <script src="js/qa_suite.js?v=20261118_v20_COPY_RESULTS"></script>
+    <script src="js/qa_suite.js?v=20261118_vSEQ_BOSS"></script>
     <script src="js/blacksmith_forge.js?v=20261118_v300_CONTENT"></script>
-    <script src="js/game.js?v=20261118_v20_COLLISION_FIX"></script>
+    <script src="js/game.js?v=20261118_vCOLLISION_FIX"></script>
 </body>
 </html>
