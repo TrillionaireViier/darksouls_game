@@ -395,6 +395,246 @@ class DarkSoulsCombat {
                 radius: 2.7,
                 spawnPos: { x: 0, z: 132 },
                 create: (cf, x, z) => cf.createGwynLordOfCinder(x, z)
+            },
+            {
+                id: 'stray_demon',
+                name: 'STRAY DEMON',
+                title: 'Northern Undead Asylum Depths &bull; Great Demon Hammer & Tremor Magic Explosions',
+                icon: '👹',
+                maxHp: 3200,
+                damage: 290,
+                souls: 12000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createStrayDemon(x, z)
+            },
+            {
+                id: 'demon_firesage',
+                name: 'DEMON FIRESAGE',
+                title: 'Demon Ruins &bull; Catalyst of Lost Izalith & Flame Wave Explosions',
+                icon: '🔥',
+                maxHp: 3400,
+                damage: 310,
+                souls: 14000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createDemonFiresage(x, z)
+            },
+            {
+                id: 'centipede',
+                name: 'CENTIPEDE DEMON',
+                title: 'Lava Lake &bull; Severed Arm Tail Whip, Lava Leaps & Magma Stomp',
+                icon: '🐛',
+                maxHp: 3600,
+                damage: 320,
+                souls: 16000,
+                radius: 2.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createCentipedeDemon(x, z)
+            },
+            {
+                id: 'bed_of_chaos',
+                name: 'BED OF CHAOS',
+                title: 'Lost Izalith Heart &bull; Sweeping Flame Limbs, Scythe Branches & Firestorm',
+                icon: '🌳',
+                maxHp: 2800,
+                damage: 340,
+                souls: 20000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createBedOfChaos(x, z)
+            },
+            {
+                id: 'ceaseless',
+                name: 'CEASLESS DISCHARGE',
+                title: 'Demon Ruins Magma Core &bull; Colossal Magma Fists & Fiery Lava Waves',
+                icon: '🌋',
+                maxHp: 4200,
+                damage: 360,
+                souls: 22000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createCeaselessDischarge(x, z)
+            },
+            {
+                id: 'seath',
+                name: 'SEATH THE SCALELESS',
+                title: 'Crystal Cave &bull; Primordial Crystal, Tail Sweep & Cursing White Dragon Breath',
+                icon: '🐉',
+                maxHp: 4400,
+                damage: 370,
+                souls: 25000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSeathTheScaleless(x, z)
+            },
+            {
+                id: 'four_kings',
+                name: 'FOUR KINGS',
+                title: 'The Abyss &bull; Darkwraith Greatswords, Lifedrain & Homing Void Blades',
+                icon: '👑',
+                maxHp: 4600,
+                damage: 380,
+                souls: 28000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createFourKings(x, z)
+            },
+            {
+                id: 'priscilla',
+                name: 'CROSSBREED PRISCILLA',
+                title: 'Painted World of Ariamis &bull; Lifehunt Scythe, Blizzard Veil & Snow Footsteps',
+                icon: '❄️',
+                maxHp: 3500,
+                damage: 350,
+                souls: 24000,
+                radius: 2.2,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createCrossbreedPriscilla(x, z)
+            },
+            {
+                id: 'gwyndolin',
+                name: 'DARK SUN GWYNDOLIN',
+                title: 'Anor Londo Darkmoon Tomb &bull; Moonlight Greatbow, Magic Orbs & Soul Spears',
+                icon: '🌙',
+                maxHp: 3300,
+                damage: 340,
+                souls: 26000,
+                radius: 2.3,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createDarkSunGwyndolin(x, z)
+            },
+            {
+                id: 'pinwheel',
+                name: 'PINWHEEL',
+                title: 'Catacombs Crypt &bull; Rite of Kindling, Triple Mask Clones & Fireball Barrage',
+                icon: '🎭',
+                maxHp: 2600,
+                damage: 280,
+                souls: 15000,
+                radius: 2.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createPinwheel(x, z)
+            },
+            {
+                id: 'sanctuary_guardian',
+                name: 'SANCTUARY GUARDIAN',
+                title: 'Oolacile Sanctuary &bull; Lightning Orbs, Wing Gusts & Venom Tail Sting',
+                icon: '🦁',
+                maxHp: 4000,
+                damage: 360,
+                souls: 30000,
+                radius: 2.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSanctuaryGuardian(x, z)
+            },
+            {
+                id: 'pursuer',
+                name: 'THE PURSUER',
+                title: 'Forest of Fallen Giants &bull; Cursed Greatsword, Greatshield & Levitation Rush',
+                icon: '🛡️',
+                maxHp: 4200,
+                damage: 370,
+                souls: 32000,
+                radius: 2.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createThePursuer(x, z)
+            },
+            {
+                id: 'mirror_knight',
+                name: 'LOOKING GLASS KNIGHT',
+                title: 'King\'s Passage &bull; Mirror Greatshield, Thunder Call & Mirror Phantom Summon',
+                icon: '🪞',
+                maxHp: 4600,
+                damage: 390,
+                souls: 35000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createLookingGlassKnight(x, z)
+            },
+            {
+                id: 'fume_knight',
+                name: 'FUME KNIGHT RAIME',
+                title: 'Brume Tower Core &bull; Fume Ultra Greatsword, Dark Fire Sweep & Flame Thrust',
+                icon: '⚔️',
+                maxHp: 5000,
+                damage: 420,
+                souls: 40000,
+                radius: 2.7,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createFumeKnight(x, z)
+            },
+            {
+                id: 'sir_alonne',
+                name: 'SIR ALONNE',
+                title: 'Memory of Old Iron King &bull; Bewitched Alonne Katana & Blood Dark Thrust',
+                icon: '🏯',
+                maxHp: 4800,
+                damage: 410,
+                souls: 38000,
+                radius: 2.3,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSirAlonne(x, z)
+            },
+            {
+                id: 'nameless_king',
+                name: 'THE NAMELESS KING',
+                title: 'Archdragon Peak &bull; Dragonslayer Swordspear, Storm Drake & Thunder Bolts',
+                icon: '⚡',
+                maxHp: 5200,
+                damage: 440,
+                souls: 45000,
+                radius: 2.7,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createNamelessKing(x, z)
+            },
+            {
+                id: 'abyss_watchers',
+                name: 'ABYSS WATCHERS',
+                title: 'Farron Keep Perimeter &bull; Wolf Knight Greatsword, Dagger Flurry & Flame Trails',
+                icon: '🐺',
+                maxHp: 4700,
+                damage: 400,
+                souls: 36000,
+                radius: 2.3,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createAbyssWatchers(x, z)
+            },
+            {
+                id: 'pontiff_sulyvahn',
+                name: 'PONTIFF SULYVAHN',
+                title: 'Irithyll Boreal Cathedral &bull; Profaned Flame Greatsword & Judgement Sorcery',
+                icon: '🕯️',
+                maxHp: 4900,
+                damage: 415,
+                souls: 39000,
+                radius: 2.6,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createPontiffSulyvahn(x, z)
+            },
+            {
+                id: 'slave_knight_gael',
+                name: 'SLAVE KNIGHT GAEL',
+                title: 'End of the World &bull; Executioner Greatsword, Blood Cape & Repeating Crossbow',
+                icon: '🩸',
+                maxHp: 5600,
+                damage: 460,
+                souls: 50000,
+                radius: 2.6,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSlaveKnightGael(x, z)
+            },
+            {
+                id: 'soul_of_cinder',
+                name: 'SOUL OF CINDER',
+                title: 'Kiln of First Flame &bull; Coiled Sword, All Player Classes & Gwyn Remnant',
+                icon: '🔥',
+                maxHp: 6000,
+                damage: 480,
+                souls: 60000,
+                radius: 2.7,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulOfCinder(x, z)
             }
         ];
     }
@@ -1568,7 +1808,7 @@ class DarkSoulsCombat {
             }, 3600);
         } else {
             setTimeout(() => {
-                this.game.showNotification("👑 ALL 16 LORDS OF LORDRAN SLAIN! YOU ARE THE LORD OF CINDER!");
+                this.game.showNotification(`👑 ALL ${this.bossRoster.length} LORDS OF LORDRAN SLAIN! YOU ARE THE LORD OF CINDER!`);
             }, 3600);
         }
     }
@@ -2324,23 +2564,23 @@ class DarkSoulsCombat {
 
         this.boss.cooldown -= delta;
 
-        // Dispatch to all 16 boss-specific AI behaviors
+        // Dispatch to all 36 boss-specific AI behaviors
         const id = this.boss.id;
-        if (id === 'asylum') this.updateAsylumAI(delta, dist, targetAngle);
-        else if (id === 'gargoyle') this.updateGargoyleAI(delta, dist, targetAngle);
+        if (id === 'asylum' || id === 'stray_demon' || id === 'demon_firesage') this.updateAsylumAI(delta, dist, targetAngle);
+        else if (id === 'gargoyle' || id === 'sanctuary_guardian') this.updateGargoyleAI(delta, dist, targetAngle);
         else if (id === 'capra') this.updateCapraAI(delta, dist, targetAngle);
-        else if (id === 'gaping') this.updateGapingAI(delta, dist, targetAngle);
-        else if (id === 'quelaag') this.updateQuelaagAI(delta, dist, targetAngle);
-        else if (id === 'butterfly') this.updateButterflyAI(delta, dist, targetAngle);
-        else if (id === 'iron_golem') this.updateIronGolemAI(delta, dist, targetAngle);
-        else if (id === 'ornstein') this.updateOrnsteinAI(delta, dist, targetAngle);
+        else if (id === 'gaping' || id === 'centipede') this.updateGapingAI(delta, dist, targetAngle);
+        else if (id === 'quelaag' || id === 'bed_of_chaos') this.updateQuelaagAI(delta, dist, targetAngle);
+        else if (id === 'butterfly' || id === 'gwyndolin' || id === 'pinwheel') this.updateButterflyAI(delta, dist, targetAngle);
+        else if (id === 'iron_golem' || id === 'ceaseless' || id === 'mirror_knight') this.updateIronGolemAI(delta, dist, targetAngle);
+        else if (id === 'ornstein' || id === 'nameless_king') this.updateOrnsteinAI(delta, dist, targetAngle);
         else if (id === 'smough') this.updateSmoughAI(delta, dist, targetAngle);
         else if (id === 'sif') this.updateSifAI(delta, dist, targetAngle);
-        else if (id === 'artorias') this.updateArtoriasAI(delta, dist, targetAngle);
-        else if (id === 'manus') this.updateManusAI(delta, dist, targetAngle);
-        else if (id === 'kalameet') this.updateKalameetAI(delta, dist, targetAngle);
+        else if (id === 'artorias' || id === 'abyss_watchers' || id === 'sir_alonne' || id === 'pursuer') this.updateArtoriasAI(delta, dist, targetAngle);
+        else if (id === 'manus' || id === 'four_kings') this.updateManusAI(delta, dist, targetAngle);
+        else if (id === 'kalameet' || id === 'seath') this.updateKalameetAI(delta, dist, targetAngle);
         else if (id === 'nito') this.updateNitoAI(delta, dist, targetAngle);
-        else if (id === 'gwyn') this.updateGwynAI(delta, dist, targetAngle);
+        else if (id === 'gwyn' || id === 'soul_of_cinder' || id === 'pontiff_sulyvahn' || id === 'fume_knight' || id === 'slave_knight_gael') this.updateGwynAI(delta, dist, targetAngle);
         else this.updateTaurusAI(delta, dist, targetAngle);
     }
 

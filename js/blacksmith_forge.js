@@ -1,8 +1,8 @@
 // ====================================================================
-// THE ROYAL BLACKSMITH, TITANITE FORGE & 300 RELICS COMPENDIUM (301–330)
+// THE ROYAL BLACKSMITH, TITANITE FORGE & 370 RELICS COMPENDIUM (301–330)
 // Complete Dark Souls Weapon Reinforcement, Elemental Infusions,
 // Boss Soul Transmutation, Estus Flask Fire Keeper Upgrades,
-// and Comprehensive 300 Lordran Relics, Artifacts & Armory Codex.
+// and Comprehensive 370 Lordran Relics, Artifacts & Armory Codex.
 // ====================================================================
 
 (function() {
@@ -147,11 +147,11 @@
         { id: 120, name: "Black Iron Helm", type: "ARMOR", rarity: "RARE", desc: "Tarkus' formidable black iron greathelm.", stat: "+38 Phys DEF / Fire Resist +25" }
     ];
 
-    // Autogenerate remaining entries up to 300 items with rich Dark Souls lore attributes
+    // Autogenerate remaining entries up to 370 items with rich Dark Souls lore attributes
     const PREFIXES = ["Divine", "Occult", "Raw", "Crystal", "Enchanted", "Cursed", "Bloodstained", "Hallowed", "Runic", "Sovereign"];
     const SUFFIXES = ["of Lordran", "of Astora", "of Catarina", "of Carim", "of Vinheim", "of the Abyss", "of the Sun", "of the Flame", "of Izalith", "of the Depths"];
 
-    for (let i = 121; i <= 300; i++) {
+    for (let i = 121; i <= 370; i++) {
         const cat = CATEGORIES[i % CATEGORIES.length];
         const p = PREFIXES[i % PREFIXES.length];
         const s = SUFFIXES[(i * 3) % SUFFIXES.length];

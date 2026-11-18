@@ -339,13 +339,13 @@ class DarkSoulsQASuite {
         return true;
     }
 
-    // Run Full Automated Audit across all 16 Bosses
+    // Run Full Automated Audit across all Bosses
     async runFullBossProgressionAudit() {
+        const roster = this.combat.bossRoster;
         this.logInfo("==================================================");
-        this.logInfo("👑 RUNNING FULL 16-BOSS SPAWN & PROGRESSION AUDIT");
+        this.logInfo(`👑 RUNNING FULL ${roster.length}-BOSS SPAWN & PROGRESSION AUDIT`);
         this.logInfo("==================================================");
 
-        const roster = this.combat.bossRoster;
         let totalPassed = 0;
 
         for (let i = 0; i < roster.length; i++) {
@@ -363,12 +363,13 @@ class DarkSoulsQASuite {
     }
 
     // ------------------------------------------------------------------------
-    // SEQUENTIAL 16-BOSS UNLOCK & PROGRESSION TEST
+    // SEQUENTIAL BOSS UNLOCK & PROGRESSION TEST
     // Verifies bosses open strictly one after another without admin mode
     // ------------------------------------------------------------------------
     async testSequentialBossUnlocking() {
+        const roster = (this.combat && this.combat.bossRoster) ? this.combat.bossRoster : [];
         this.logInfo("==================================================");
-        this.logInfo("⚔️ TESTING SEQUENTIAL 16-BOSS UNLOCK PROGRESSION");
+        this.logInfo(`⚔️ TESTING SEQUENTIAL ${roster.length}-BOSS UNLOCK PROGRESSION`);
         this.logInfo("==================================================");
 
         if (!this.combat || !this.combat.bossRoster || this.combat.bossRoster.length === 0) {
@@ -438,7 +439,7 @@ class DarkSoulsQASuite {
                     this.logPass(`✓ Step ${i + 1}: ${currentBossDef.name} Slain -> Next Lord ${nextDef.name} UNLOCKED!`);
                     this.testResults.passed++;
                 } else {
-                    this.logPass(`✓ Final Lord ${currentBossDef.name} Slain! ALL 16 LORDS SLAIN SEQUENTIALLY!`);
+                    this.logPass(`✓ Final Lord ${currentBossDef.name} Slain! ALL ${roster.length} LORDS SLAIN SEQUENTIALLY!`);
                     this.testResults.passed++;
                 }
 
@@ -446,12 +447,12 @@ class DarkSoulsQASuite {
             }
 
             this.logInfo("==================================================");
-            this.logPass("🏆 SEQUENTIAL 16-BOSS PROGRESSION FULLY VERIFIED: ALL LORDS UNLOCK ONE AFTER ANOTHER!");
+            this.logPass(`🏆 SEQUENTIAL ${roster.length}-BOSS PROGRESSION FULLY VERIFIED: ALL LORDS UNLOCK ONE AFTER ANOTHER!`);
             this.logInfo("==================================================");
             this.updateStatsUI();
 
             if (this.game && this.game.showNotification) {
-                this.game.showNotification("🏆 16 BOSSES SEQUENTIAL UNLOCK: 100% PASSED!");
+                this.game.showNotification(`🏆 ${roster.length} BOSSES SEQUENTIAL UNLOCK: 100% PASSED!`);
             }
             return true;
         } catch (err) {
