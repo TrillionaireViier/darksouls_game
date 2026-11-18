@@ -215,6 +215,9 @@ class DarkSoulsGame {
             }
             if (e.code === 'KeyJ') this.combat.tryLightAttack();
             if (e.code === 'KeyK') this.combat.tryHeavyAttack();
+            if (e.code === 'KeyL') {
+                this.openLoreCodexModal();
+            }
             if (e.code === 'KeyH') {
                 if (this.siege) this.siege.blowWarHorn();
             }

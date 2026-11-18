@@ -2411,7 +2411,7 @@
                     <button class="btn-icon-bar" onclick="filterLoreCodex('relic')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #ce93d8; color: #f3e5f5;">RELICS</button>
                     <button class="btn-icon-bar" onclick="filterLoreCodex('remnant')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #ffb74d; color: #ffe0b2;">REMNANTS</button>
                 </div>
-                <button class="btn-icon-bar" onclick="adminUnlockAllLore()" style="padding: 6px 12px; font-size: 0.74rem; font-weight: 800; border-color: #ffd700; color: #fff3a8; background: rgba(60, 45, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.35);">👑 UNLOCK ALL 500 LORE</button>
+                <button id="lore-admin-unlock-btn" class="btn-icon-bar" onclick="adminUnlockAllLore()" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border: 1px solid #ffd700; color: #fff3a8; background: rgba(60, 45, 10, 0.85); box-shadow: 0 0 10px rgba(255,215,0,0.35); cursor: pointer;">👑 UNLOCK ALL 500 LORE</button>
             </div>
 
             <!-- Lore Cards Scrollable Grid -->
@@ -2424,6 +2424,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Floating Lore Codex Button -->
+    <button id="lore-floating-btn" onclick="openLoreCodexModal()" title="Open Lore Codex [L]" style="position: fixed; bottom: 20px; right: 180px; z-index: 9999; background: rgba(40, 30, 10, 0.9); border: 1px solid #ffd778; color: #fff3a8; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(255, 215, 120, 0.4); cursor: pointer; transition: all 0.2s;">
+        📜 LORE (500) [L]
+    </button>
 
     <!-- Floating QA Button (always visible and accessible) -->
     <button id="qa-floating-btn" onclick="openQASuiteModal()" title="Open Automated QA Suite [F8]" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: rgba(0, 40, 60, 0.9); border: 1px solid #00e5ff; color: #80d8ff; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); cursor: pointer; transition: all 0.2s;">
