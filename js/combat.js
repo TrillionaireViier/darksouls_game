@@ -47,6 +47,20 @@ class DarkSoulsCombat {
         this.isPlungingAttack = false;
         this.guardCounterWindow = 0;
 
+        // Poise & Stagger System (15 pts/sec regen after 3s; 0 poise breaks guard for 2.2s)
+        this.maxPoise = 100;
+        this.poise = 100;
+        this.poiseRegenDelay = 0;
+
+        // Active Frames (Parry window = 4 frames; Roll i-frames = 12 frames)
+        this.parryStartup = 2 / 60; // 2 frames startup (~0.0333s)
+        this.parryActiveDuration = 4 / 60; // strictly 4 frames active window (~0.0667s)
+        this.rollIFramesDuration = 12 / 60; // strictly 12 frames (0.20s)
+
+        // Input Buffering (Queue 1 action up to 150ms before animation ends)
+        this.inputBuffer = null;
+        this.bufferTimer = 0;
+
         // Enemies & Boss Roster (5 Iconic Dark Souls Bosses)
         this.enemies = [];
         this.boss = null;
@@ -628,9 +642,104 @@ class DarkSoulsCombat {
     }
 
     // ----------------------------------------------------
+    // INPUT BUFFERING SYSTEM (150ms Queue Window)
+    // ----------------------------------------------------
+    bufferAction(actionName, payload = null) {
+        let canBuffer = false;
+        const windowSec = 0.150; // 150ms buffer window
+
+        if (this.isAttacking) {
+            const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
+            const totalDur = (this.attackCombo === 3 ? 0.70 : 0.45) / (wpn.speedMultiplier || 1.0);
+            const remaining = totalDur - this.attackTime;
+            if (remaining > 0 && remaining <= windowSec) canBuffer = true;
+        } else if (this.isRolling) {
+            const maxDuration = this.isBackstep ? 0.38 : 0.52;
+            const remaining = maxDuration - this.rollTime;
+            if (remaining > 0 && remaining <= windowSec) canBuffer = true;
+        } else if (this.isDrinkingEstus) {
+            const remaining = 1.25 - this.estusTime;
+            if (remaining > 0 && remaining <= windowSec) canBuffer = true;
+        } else if (this.isParrying) {
+            const remaining = 0.5 - this.parryTime;
+            if (remaining > 0 && remaining <= windowSec) canBuffer = true;
+        }
+
+        if (canBuffer) {
+            this.inputBuffer = { action: actionName, payload: payload, time: performance.now() };
+            this.bufferTimer = windowSec;
+            return true;
+        }
+        return false;
+    }
+
+    executeBufferedAction(action, payload) {
+        switch (action) {
+            case 'LIGHT_ATTACK':
+                this.tryLightAttack();
+                break;
+            case 'HEAVY_ATTACK':
+                this.tryHeavyAttack();
+                break;
+            case 'ROLL':
+                this.tryRoll(payload);
+                break;
+            case 'ESTUS':
+                this.tryDrinkEstus();
+                break;
+            case 'PARRY':
+                this.tryParry();
+                break;
+        }
+    }
+
+    // ----------------------------------------------------
+    // LINE OF SIGHT & PATHFINDING HELPERS
+    // ----------------------------------------------------
+    checkLineOfSight(pos1, pos2) {
+        if (!this.world || !this.world.colliders || this.world.colliders.length === 0) return true;
+        const colliders = this.world.colliders;
+        for (let i = 1; i <= 4; i++) {
+            const t = i / 5.0;
+            const sx = pos1.x + (pos2.x - pos1.x) * t;
+            const sy = (pos1.y + 0.9) + (pos2.y - pos1.y) * t;
+            const sz = pos1.z + (pos2.z - pos1.z) * t;
+
+            for (let c = 0; c < colliders.length; c++) {
+                const box = colliders[c];
+                if (sy >= box.min.y && sy <= box.max.y &&
+                    sx >= box.min.x && sx <= box.max.x &&
+                    sz >= box.min.z && sz <= box.max.z) {
+                    return false; // Occluded by world collider!
+                }
+            }
+        }
+        return true;
+    }
+
+    teleportToNavMesh(e, playerPos) {
+        const p = e.mesh.position;
+        // Identify zone corridor and clamp/snap to safe walkable mesh
+        if (p.z >= 28 && p.z <= 95 && p.y >= -1.0 && p.y <= 3.5) {
+            p.x = Math.max(-5.5, Math.min(5.5, p.x * 0.5));
+        } else if (p.z >= 95 && p.z <= 165) {
+            p.x = Math.max(-14.0, Math.min(14.0, p.x));
+            p.z = Math.max(98.0, Math.min(160.0, p.z));
+        } else {
+            const toP = new THREE.Vector3().subVectors(playerPos, p).setY(0).normalize();
+            p.addScaledVector(toP, 1.2);
+        }
+        p.y = this.world.getGroundHeight(p.x, p.z, p.y);
+        if (this.game && this.game.collisionSystem) {
+            this.game.collisionSystem.enforceBoundaries(p, e.radius || 0.85, p.y);
+        }
+    }
+
+    // ----------------------------------------------------
     // PLAYER ACTIONS
     // ----------------------------------------------------
     tryLightAttack() {
+        if (this.bufferAction('LIGHT_ATTACK')) return;
         if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
         const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
         const stamCost = wpn.lightStamina || 20;
@@ -693,6 +802,7 @@ class DarkSoulsCombat {
     }
 
     tryHeavyAttack() {
+        if (this.bufferAction('HEAVY_ATTACK')) return;
         if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
         const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
         const stamCost = wpn.heavyStamina || 34;
@@ -749,12 +859,21 @@ class DarkSoulsCombat {
         const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
         const pPos = this.game.playerMesh.position;
 
-        // Devastating impact: 3.2x heavy damage
-        const damage = Math.round(wpn.heavyDmg * 3.2);
+        // Plunging: 3x damage if falling vertical speed exceeds 8 m/s
+        const isMaxVelocity = Math.abs(fallSpeed) > 8.0;
+        const speedMult = isMaxVelocity ? 3.0 : 1.5;
+        const damage = Math.round(wpn.heavyDmg * speedMult);
+
         this.audio.playPlungingSlam();
         this.world.spawnPlungingShockwave(pPos);
         this.game.shakeCamera(0.35, 0.45);
-        this.game.showNotification(`💥 PLUNGING CRATER IMPACT • ${damage} DMG!`);
+        if (this.game.triggerHitstop) this.game.triggerHitstop(3);
+
+        if (isMaxVelocity) {
+            this.game.showNotification(`💥 MAXIMUM VELOCITY PLUNGING STRIKE (3x DMG: ${damage})!`);
+        } else {
+            this.game.showNotification(`⚔️ PLUNGING ATTACK • ${damage} DMG!`);
+        }
 
         // Damage Boss if in radius
         if (this.boss && !this.boss.isDead) {
@@ -829,6 +948,7 @@ class DarkSoulsCombat {
     }
 
     tryParry() {
+        if (this.bufferAction('PARRY')) return;
         if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered || this.isAttacking) return;
         if (this.stamina < 20) return;
 
@@ -840,6 +960,7 @@ class DarkSoulsCombat {
     }
 
     tryRoll(moveDir) {
+        if (this.bufferAction('ROLL', moveDir)) return;
         if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
         // Roll-cancel during attack recovery frames (after initial swing impact)
         if (this.isAttacking && this.attackTime < 0.20) return;
@@ -869,6 +990,7 @@ class DarkSoulsCombat {
     }
 
     tryDrinkEstus() {
+        if (this.bufferAction('ESTUS')) return;
         if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
         if (this.estusFlasks <= 0) {
             this.game.showNotification("NO ESTUS REMAINING");
@@ -1007,13 +1129,27 @@ class DarkSoulsCombat {
                     this.world.spawnHitSparks(e.mesh.position, this.attackCombo === 3 || hasTorchFire);
                     this.game.showDamageNumber(e.mesh.position, totalDmg, this.currentWeaponId === 'uchigatana');
                     this.game.shakeCamera(0.12 * poiseDmg, 0.15);
+                    if (this.game.triggerHitstop) this.game.triggerHitstop(3);
 
                     if (e.hp <= 0) {
                         this.killEnemy(e);
                     } else {
-                        e.isStaggered = true;
-                        e.staggerTimer = 0.5 * poiseDmg;
-                        e.maxStaggerTimer = e.staggerTimer;
+                        e.poise = (e.poise !== undefined) ? e.poise : (e.def && e.def.poise || 40);
+                        e.poise -= wpn.poiseBreak * 25;
+                        if (e.poise <= 0) {
+                            e.poise = 0;
+                            e.isStaggered = true;
+                            e.staggerTimer = 2.2; // Guard break: 2.2s stagger
+                            e.maxStaggerTimer = 2.2;
+                            e.state = 'STAGGER';
+                            e.attackPhase = 'IDLE';
+                        } else {
+                            e.isStaggered = true;
+                            e.staggerTimer = 0.5 * poiseDmg;
+                            e.maxStaggerTimer = e.staggerTimer;
+                            e.state = 'STAGGER';
+                            e.attackPhase = 'IDLE';
+                        }
                         e.isAttacking = false;
                         e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.25 + Math.random() * 0.2);
                     }
@@ -1036,6 +1172,7 @@ class DarkSoulsCombat {
                     this.world.spawnBlood(this.boss.mesh.position);
                     this.game.showDamageNumber(this.boss.mesh.position, totalDmg, false);
                     this.game.shakeCamera(0.18 * poiseDmg, 0.2);
+                    if (this.game.triggerHitstop) this.game.triggerHitstop(3);
 
                     if (this.boss.hp <= this.boss.maxHp * 0.5 && !this.boss.isPhase2) {
                         this.triggerBossPhase2();
@@ -1245,18 +1382,23 @@ class DarkSoulsCombat {
             damage = 1;
         }
 
-        // Check if player is actively Parrying
-        if (this.isParrying && this.parryTime > 0.05 && this.parryTime < 0.28) {
-            // SUCCESSFUL PARRY!
+        // Check if player is actively Parrying (Parry window = exactly 4 frames)
+        const isParryActive = this.isParrying && 
+                              this.parryTime >= this.parryStartup && 
+                              this.parryTime <= (this.parryStartup + this.parryActiveDuration);
+        if (isParryActive) {
+            // SUCCESSFUL PARRY (4 active frames)!
             this.audio.playParry();
             this.world.spawnHitSparks(this.game.playerMesh.position, true);
             this.game.shakeCamera(0.25, 0.3);
+            if (this.game.triggerHitstop) this.game.triggerHitstop(3);
 
             // Find attacker to stun
             for (const e of this.enemies) {
-                if (!e.isDead && e.mesh.position.distanceTo(attackerPos) < 1.0) {
+                if (!e.isDead && e.mesh && e.mesh.position.distanceTo(attackerPos) < 2.5) {
                     e.isRiposteable = true;
-                    e.riposteTimer = 2.6; // Stunned for 2.6 seconds
+                    e.riposteTimer = 2.6; // Stunned for riposte
+                    e.state = 'RIPOSTE';
                     this.game.showNotification("PARRY! RIPOSTE READY!");
                     break;
                 }
@@ -1266,7 +1408,6 @@ class DarkSoulsCombat {
 
         // Check if player is Blocking
         if (this.isBlocking && this.stamina > 15) {
-            // Check if facing attacker
             const playerRot = this.game.playerMesh.rotation.y;
             const forward = new THREE.Vector3(Math.sin(playerRot), 0, Math.cos(playerRot));
             const toAttacker = new THREE.Vector3().subVectors(attackerPos, this.game.playerMesh.position).normalize();
@@ -1279,14 +1420,21 @@ class DarkSoulsCombat {
                 this.audio.playBlock();
                 this.world.spawnHitSparks(this.game.playerMesh.position, false);
                 this.game.shakeCamera(0.15, 0.2);
+                if (this.game.triggerHitstop) this.game.triggerHitstop(3);
 
-                if (this.stamina <= 0) {
-                    // GUARD BROKEN!
+                // Poise damage while blocking
+                this.poise -= Math.round(damage * 0.25);
+                this.poiseRegenDelay = 3.0;
+
+                if (this.stamina <= 0 || this.poise <= 0) {
+                    // Guard broken for 2.2s!
+                    this.poise = 0;
                     this.isStaggered = true;
-                    this.staggerTime = 1.3;
+                    this.staggerTime = 2.2;
+                    this.maxStaggerTimer = 2.2;
                     this.isBlocking = false;
                     this.guardCounterWindow = 0;
-                    this.game.showNotification("GUARD BROKEN!");
+                    this.game.showNotification("⚠️ GUARD BROKEN! STAGGERED (2.2s)");
                 } else {
                     this.guardCounterWindow = 0.65;
                     this.game.showNotification("🛡️ BLOCKED • [LMB] GUARD COUNTER READY!");
@@ -1301,12 +1449,28 @@ class DarkSoulsCombat {
         this.world.spawnBlood(this.game.playerMesh.position);
         this.game.shakeCamera(0.25, 0.35);
         this.game.flashDamageScreen();
+        if (this.game.triggerHitstop) this.game.triggerHitstop(3);
+
+        // Poise & Stagger: Poise damage, regenerates after 3s delay
+        const directPoiseDmg = Math.max(20, Math.round(damage * 0.45));
+        this.poise -= directPoiseDmg;
+        this.poiseRegenDelay = 3.0;
 
         if (this.hp <= 0) {
             this.killPlayer();
+        } else if (this.poise <= 0) {
+            // Hitting 0 poise breaks guard for 2.2s
+            this.poise = 0;
+            this.isStaggered = true;
+            this.staggerTime = 2.2;
+            this.maxStaggerTimer = 2.2;
+            this.isAttacking = false;
+            this.isBlocking = false;
+            this.game.showNotification("⚠️ POISE BROKEN! STAGGERED (2.2s)");
         } else {
             this.isStaggered = true;
             this.staggerTime = 0.45;
+            this.maxStaggerTimer = 0.45;
             this.isAttacking = false;
         }
     }
@@ -1603,13 +1767,19 @@ class DarkSoulsCombat {
             this.stamina = Math.min(this.maxStamina, this.stamina + rate * delta);
         }
 
-        // 2. Roll Timer & Invincibility Frames (i-frames)
+        // 1b. Poise Regeneration (15 pts/sec after 3s delay)
+        if (this.poiseRegenDelay > 0) {
+            this.poiseRegenDelay -= delta;
+        } else if (this.poise < this.maxPoise) {
+            this.poise = Math.min(this.maxPoise, this.poise + 15 * delta);
+        }
+
+        // 2. Roll Timer & Invincibility Frames (strictly 12 frames = 0.20s)
         if (this.isRolling) {
             this.rollTime += delta;
             const maxDuration = this.isBackstep ? 0.38 : 0.52;
-            const iFrameStart = 0.04;
-            const iFrameEnd = this.isBackstep ? 0.28 : 0.42;
-            this.isInvincible = this.rollTime >= iFrameStart && this.rollTime <= iFrameEnd;
+            const iFrameDuration = this.rollIFramesDuration || (12 / 60); // strictly 12 frames (0.20s)
+            this.isInvincible = this.rollTime < iFrameDuration;
 
             // Move player in roll/backstep direction
             const rollSpeed = this.isBackstep ? 6.5 : 8.8;
@@ -1649,6 +1819,18 @@ class DarkSoulsCombat {
             }
         }
 
+        // 6. Input Buffering (Queue 1 action up to 150ms before animation ends)
+        if (this.bufferTimer > 0) {
+            this.bufferTimer -= delta;
+            if (this.bufferTimer <= 0) this.inputBuffer = null;
+        }
+        if (this.inputBuffer && !this.isAttacking && !this.isRolling && !this.isDrinkingEstus && !this.isStaggered && !this.isParrying) {
+            const buffered = this.inputBuffer;
+            this.inputBuffer = null;
+            this.bufferTimer = 0;
+            this.executeBufferedAction(buffered.action, buffered.payload);
+        }
+
         // 6. Stagger Timer
         if (this.isStaggered) {
             this.staggerTime -= delta;
@@ -1667,6 +1849,37 @@ class DarkSoulsCombat {
     updateHollowAI(delta) {
         const playerPos = this.game.playerMesh.position;
         if (!this._scratchMobVec) this._scratchMobVec = new THREE.Vector3();
+
+        // Frustum Culling Matrix Setup
+        if (!this._frustum) this._frustum = new THREE.Frustum();
+        if (!this._projScreenMatrix) this._projScreenMatrix = new THREE.Matrix4();
+        this._projScreenMatrix.multiplyMatrices(this.game.camera.projectionMatrix, this.game.camera.matrixWorldInverse);
+        this._frustum.setFromProjectionMatrix(this._projScreenMatrix);
+
+        // Group Coordination: 3+ mobs use flanking (1 flanks, 2 front)
+        const chasingMobs = [];
+        for (let k = 0; k < this.enemies.length; k++) {
+            const mob = this.enemies[k];
+            if (!mob.isDead && mob.mesh && (mob.state === 'CHASE' || mob.state === 'WINDUP' || mob.state === 'STRIKE' || mob.state === 'RECOVERY')) {
+                const d = mob.mesh.position.distanceTo(playerPos);
+                if (d < 18.0) chasingMobs.push({ mob, dist: d });
+            }
+        }
+        if (chasingMobs.length >= 3) {
+            chasingMobs.sort((a, b) => a.dist - b.dist);
+            // 2 front
+            chasingMobs[0].mob._groupFlankOffset = 0;
+            chasingMobs[1].mob._groupFlankOffset = 0;
+            // 1 flank
+            chasingMobs[2].mob._groupFlankOffset = 0.85 * (chasingMobs[2].mob.flankDir || 1);
+            for (let m = 3; m < chasingMobs.length; m++) {
+                chasingMobs[m].mob._groupFlankOffset = (m % 2 === 0 ? 0.75 : -0.75);
+            }
+        } else {
+            for (let k = 0; k < chasingMobs.length; k++) {
+                chasingMobs[k].mob._groupFlankOffset = 0;
+            }
+        }
 
         for (let i = 0; i < this.enemies.length; i++) {
             const e = this.enemies[i];
@@ -1724,11 +1937,13 @@ class DarkSoulsCombat {
             const dz = playerPos.z - e.mesh.position.z;
             const distSq = dx * dx + dz * dz;
 
-            if (distSq > 48 * 48) {
+            // Frustum Culling: Disable AI logic updates for off-screen mobs
+            const isVisibleInFrustum = this._frustum.containsPoint(e.mesh.position);
+            if (!isVisibleInFrustum && distSq > 18 * 18) {
                 if (e.mesh.visible) e.mesh.visible = false;
-                continue;
+                continue; // Skip AI logic update for off-screen mobs!
             } else {
-                if (!e.mesh.visible) e.mesh.visible = true;
+                if (!e.mesh.visible && distSq <= 48 * 48) e.mesh.visible = true;
             }
 
             e.animTime += delta;
@@ -1935,13 +2150,45 @@ class DarkSoulsCombat {
 
             // 5. Aggro & Locomotion Logic (Mob Matrix 5 Archetypes)
             if (dist < aggroRange && heightDiff < 4.2) {
+                // Line of Sight: Aggro drops if blocked by walls for >4s
+                const hasLoS = this.checkLineOfSight(e.mesh.position, playerPos);
+                if (!hasLoS) {
+                    e.losBlockedTimer = (e.losBlockedTimer || 0) + delta;
+                    if (e.losBlockedTimer > 4.0) {
+                        e.state = 'PATROL';
+                        e.attackPhase = 'IDLE';
+                        e.isAttacking = false;
+                        e.losBlockedTimer = 0;
+                        continue;
+                    }
+                } else {
+                    e.losBlockedTimer = 0;
+                }
+
+                // Anti-Stuck: Teleport entity to NavMesh if position doesn't change for 2s during chase
+                if (!e._lastChasePos) e._lastChasePos = e.mesh.position.clone();
+                const chaseDisp = e.mesh.position.distanceTo(e._lastChasePos);
+                if (chaseDisp < 0.08) {
+                    e._stuckChaseTimer = (e._stuckChaseTimer || 0) + delta;
+                    if (e._stuckChaseTimer >= 2.0) {
+                        this.teleportToNavMesh(e, playerPos);
+                        e._stuckChaseTimer = 0;
+                        e._lastChasePos.copy(e.mesh.position);
+                    }
+                } else {
+                    e._stuckChaseTimer = 0;
+                    e._lastChasePos.copy(e.mesh.position);
+                }
+
                 e.state = 'CHASE';
                 e.attackPhase = 'IDLE';
 
                 let targetAngle = Math.atan2(this._scratchMobVec.x, this._scratchMobVec.z);
 
-                if (behavior === 'Flanker') {
-                    // Circle around player while closing in
+                // Group coordination angle or individual flanker
+                if (e._groupFlankOffset) {
+                    targetAngle += e._groupFlankOffset;
+                } else if (behavior === 'Flanker') {
                     const flankOffset = (e.flankDir || 1) * 0.78;
                     targetAngle += flankOffset;
                 }

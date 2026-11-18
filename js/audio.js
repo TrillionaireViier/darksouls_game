@@ -81,20 +81,36 @@ class DarkSoulsAudio {
     }
 
     // ----------------------------------------------------
-    // SFX: WEAPON SWING
+    // AUDIO BUFFER POOLING (Zero Allocation in audio loop)
+    // ----------------------------------------------------
+    getPreallocatedNoiseBuffer(duration) {
+        if (!this.ctx) return null;
+        if (!this._cachedBuffers) this._cachedBuffers = {};
+        const key = Math.round(duration * 100);
+        if (!this._cachedBuffers[key]) {
+            const bufferSize = Math.round(this.ctx.sampleRate * duration);
+            const buf = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const output = buf.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            this._cachedBuffers[key] = buf;
+        }
+        return this._cachedBuffers[key];
+    }
+
+    // ----------------------------------------------------
+    // SFX: WEAPON SWING (Object / Buffer Pooled)
     // ----------------------------------------------------
     playSwing(isHeavy = false) {
         this.ensureContext();
         if (!this.ctx || this.isMuted) return;
         const now = this.ctx.currentTime;
 
-        // White noise swoosh with bandpass filter sweep
-        const bufferSize = this.ctx.sampleRate * (isHeavy ? 0.35 : 0.22);
-        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            output[i] = Math.random() * 2 - 1;
-        }
+        // Reuse pre-allocated noise buffer
+        const dur = isHeavy ? 0.35 : 0.22;
+        const noiseBuffer = this.getPreallocatedNoiseBuffer(dur);
+        if (!noiseBuffer) return;
 
         const whiteNoise = this.ctx.createBufferSource();
         whiteNoise.buffer = noiseBuffer;

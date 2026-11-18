@@ -17,7 +17,12 @@ class DarkSoulsWorld {
         this.sparkParticles = [];
         this.clock = new THREE.Clock();
 
+        this.sparkPool = [];
+        this.bloodPool = [];
+        this.dustPool = [];
+
         this.initMaterials();
+        this.initObjectPools();
         this.buildLighting();
         this.buildEnvironment();
         this.buildDistantFortress();
@@ -2154,23 +2159,72 @@ class DarkSoulsWorld {
     }
 
     // ----------------------------------------------------
-    // HIT / IMPACT PARTICLES
+    // OBJECT POOLING SYSTEM (Zero GC Allocation during combat)
+    // ----------------------------------------------------
+    initObjectPools() {
+        this.sparkPool = [];
+        this.bloodPool = [];
+        this.dustPool = [];
+
+        const sparkGeomNormal = new THREE.DodecahedronGeometry(0.05);
+        const sparkGeomCrit = new THREE.DodecahedronGeometry(0.08);
+        const sparkMatNormal = new THREE.MeshBasicMaterial({ color: 0xffcc33 });
+        const sparkMatCrit = new THREE.MeshBasicMaterial({ color: 0xff2200 });
+
+        const bloodGeom = new THREE.DodecahedronGeometry(0.06);
+        const bloodMat = new THREE.MeshBasicMaterial({ color: 0x880000 });
+
+        const dustGeom = new THREE.DodecahedronGeometry(0.12);
+        const dustMat = new THREE.MeshStandardMaterial({ color: 0x857d72, roughness: 0.9 });
+
+        // Pre-allocate 160 spark meshes in the scene
+        for (let i = 0; i < 160; i++) {
+            const isCrit = (i % 2 === 0);
+            const mesh = new THREE.Mesh(isCrit ? sparkGeomCrit : sparkGeomNormal, isCrit ? sparkMatCrit : sparkMatNormal);
+            mesh.visible = false;
+            this.scene.add(mesh);
+            this.sparkPool.push(mesh);
+        }
+
+        // Pre-allocate 100 blood meshes in the scene
+        for (let i = 0; i < 100; i++) {
+            const mesh = new THREE.Mesh(bloodGeom, bloodMat);
+            mesh.visible = false;
+            this.scene.add(mesh);
+            this.bloodPool.push(mesh);
+        }
+
+        // Pre-allocate 50 dust meshes in the scene
+        for (let i = 0; i < 50; i++) {
+            const mesh = new THREE.Mesh(dustGeom, dustMat);
+            mesh.visible = false;
+            this.scene.add(mesh);
+            this.dustPool.push(mesh);
+        }
+    }
+
+    // ----------------------------------------------------
+    // HIT / IMPACT PARTICLES (Object Pooled)
     // ----------------------------------------------------
     spawnHitSparks(pos, isCrit = false) {
-        const count = isCrit ? 28 : 14;
-        const color = isCrit ? 0xff2200 : 0xffcc33;
+        const count = isCrit ? 24 : 12;
         for (let i = 0; i < count; i++) {
-            const mesh = new THREE.Mesh(
-                new THREE.DodecahedronGeometry(isCrit ? 0.08 : 0.05),
-                new THREE.MeshBasicMaterial({ color: color })
-            );
+            let mesh = (this.sparkPool && this.sparkPool.length > 0) ? this.sparkPool.pop() : null;
+            if (!mesh) {
+                mesh = new THREE.Mesh(
+                    new THREE.DodecahedronGeometry(isCrit ? 0.08 : 0.05),
+                    new THREE.MeshBasicMaterial({ color: isCrit ? 0xff2200 : 0xffcc33 })
+                );
+                this.scene.add(mesh);
+            }
             mesh.position.copy(pos);
+            mesh.visible = true;
+            mesh.scale.set(1, 1, 1);
             const vel = new THREE.Vector3(
                 (Math.random() - 0.5) * 8,
                 Math.random() * 6 + 1,
                 (Math.random() - 0.5) * 8
             );
-            this.scene.add(mesh);
             this.sparkParticles.push({ mesh, vel, life: 0.4, maxLife: 0.4 });
         }
     }
@@ -2178,17 +2232,22 @@ class DarkSoulsWorld {
     spawnBlood(pos) {
         const count = 16;
         for (let i = 0; i < count; i++) {
-            const mesh = new THREE.Mesh(
-                new THREE.DodecahedronGeometry(0.06),
-                new THREE.MeshBasicMaterial({ color: 0x880000 })
-            );
+            let mesh = (this.bloodPool && this.bloodPool.length > 0) ? this.bloodPool.pop() : null;
+            if (!mesh) {
+                mesh = new THREE.Mesh(
+                    new THREE.DodecahedronGeometry(0.06),
+                    new THREE.MeshBasicMaterial({ color: 0x880000 })
+                );
+                this.scene.add(mesh);
+            }
             mesh.position.copy(pos);
+            mesh.visible = true;
+            mesh.scale.set(1, 1, 1);
             const vel = new THREE.Vector3(
                 (Math.random() - 0.5) * 5,
                 Math.random() * 4,
                 (Math.random() - 0.5) * 5
             );
-            this.scene.add(mesh);
             this.bloodParticles.push({ mesh, vel, life: 0.6, maxLife: 0.6 });
         }
     }
@@ -2268,7 +2327,9 @@ class DarkSoulsWorld {
             p.mesh.scale.set(scale, scale, scale);
 
             if (p.life <= 0) {
-                this.scene.remove(p.mesh);
+                p.mesh.visible = false;
+                if (this.sparkPool) this.sparkPool.push(p.mesh);
+                else this.scene.remove(p.mesh);
                 this.sparkParticles.splice(i, 1);
             }
         }
@@ -2287,7 +2348,9 @@ class DarkSoulsWorld {
             p.mesh.scale.set(scale, scale * 0.5, scale);
 
             if (p.life <= 0) {
-                this.scene.remove(p.mesh);
+                p.mesh.visible = false;
+                if (this.bloodPool) this.bloodPool.push(p.mesh);
+                else this.scene.remove(p.mesh);
                 this.bloodParticles.splice(i, 1);
             }
         }

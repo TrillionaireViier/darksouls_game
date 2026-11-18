@@ -121,8 +121,9 @@ class DarkSoulsGame {
         this.shakeIntensity = 0;
         this.shakeDuration = 0;
 
-        // Input State
+        // Input State & Hitstop
         this.keys = {};
+        this.hitstopFrames = 0;
         this.isPointerLocked = false;
         this.mouseDeltaX = 0;
         this.mouseDeltaY = 0;
@@ -967,8 +968,23 @@ class DarkSoulsGame {
     // ----------------------------------------------------
     // ANIMATION & FRAME LOOP
     // ----------------------------------------------------
+    triggerHitstop(frames = 3) {
+        this.hitstopFrames = Math.max(this.hitstopFrames, frames);
+    }
+
     animate() {
         requestAnimationFrame(this.animate);
+
+        // Hitstop Impact Freeze (freezes render/simulation for 3 frames on successful hit)
+        if (this.hitstopFrames > 0) {
+            this.hitstopFrames--;
+            this.renderer.render(this.scene, this.camera);
+            if (this.postProcessing && this.postProcessingEnabled) {
+                this.postProcessing.render();
+            }
+            return;
+        }
+
         const delta = Math.min(this.clock.getDelta(), 0.1);
 
         // Real-Time FPS Tracker & Diagnostics
