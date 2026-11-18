@@ -970,6 +970,10 @@ class DarkSoulsCombat {
         if (hasTorchFire) {
             totalDmg += 45; // Burning Torch fire damage bonus
         }
+        // Blacksmith Titanite Reinforcement & Infusion Buff (System 301-330)
+        if (this.game && this.game.blacksmith) {
+            totalDmg += this.game.blacksmith.getWeaponDamageBonus(this.currentWeaponId);
+        }
 
         // 1. Check Hollow Soldiers
         for (const e of this.enemies) {
@@ -1214,6 +1218,10 @@ class DarkSoulsCombat {
 
     damagePlayer(damage, attackerPos) {
         if (this.isDead || this.isInvincible || this.isGodMode) return;
+        // Blacksmith Armor Tempering Reduction (System 301-330)
+        if (this.game && this.game.blacksmith) {
+            damage = Math.max(1, Math.round(damage * this.game.blacksmith.getArmorDamageReduction()));
+        }
 
         // QA Test Mode Hook: Clamp incoming damage to 1 HP
         if (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive)) {

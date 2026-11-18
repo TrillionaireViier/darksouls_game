@@ -2889,6 +2889,147 @@
         </div>
     </div>
 
+    <!-- BLACKSMITH TITANITE FORGE & 300 RELICS MODAL (301–330) -->
+    <div id="blacksmith-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 860px; max-height: 90vh; overflow-y: auto; padding: 22px; border-color: #ff9900; box-shadow: 0 0 35px rgba(255,153,0,0.35);">
+            <div class="modal-header" style="color: #ffd276; text-shadow: 0 0 14px rgba(255,153,0,0.7); display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #ff9900; padding-bottom: 8px;">
+                <span>⚒️ ROYAL BLACKSMITH & TITANITE FORGE (301–330)</span>
+                <span style="font-size: 0.75rem; color: #ffaa44; border: 1px solid #ffaa44; padding: 2px 8px; border-radius: 3px;">ANDRE'S ANVIL</span>
+            </div>
+
+            <!-- Telemetry summary cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 14px 0;">
+                <div style="background: rgba(45, 25, 8, 0.85); border: 1px solid #ff9900; padding: 8px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.72rem; color: #b8a896;">WEAPON LEVEL</div>
+                    <div id="forge-weapon-lvl" style="font-size: 1.15rem; font-weight: 800; color: #ffd778;">+0</div>
+                </div>
+                <div style="background: rgba(45, 25, 8, 0.85); border: 1px solid #ff9900; padding: 8px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.72rem; color: #b8a896;">FORGE BONUS</div>
+                    <div id="forge-damage-bonus" style="font-size: 1.15rem; font-weight: 800; color: #ff5555;">+0 ATK</div>
+                </div>
+                <div style="background: rgba(45, 25, 8, 0.85); border: 1px solid #ff9900; padding: 8px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.72rem; color: #b8a896;">ELEMENT INFUSION</div>
+                    <div id="forge-infusion-name" style="font-size: 1.15rem; font-weight: 800; color: #00ffaa;">STANDARD</div>
+                </div>
+                <div style="background: rgba(45, 25, 8, 0.85); border: 1px solid #ff9900; padding: 8px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.72rem; color: #b8a896;">ESTUS FLASK</div>
+                    <div id="forge-estus-lvl" style="font-size: 1.15rem; font-weight: 800; color: #ffaa33;">+0 (500 HP)</div>
+                </div>
+                <div style="background: rgba(45, 25, 8, 0.85); border: 1px solid #ff9900; padding: 8px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.72rem; color: #b8a896;">ARMOR TEMPER</div>
+                    <div id="forge-armor-lvl" style="font-size: 1.15rem; font-weight: 800; color: #88ccff;">+0 (0% DEF)</div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div style="display: flex; gap: 8px; border-bottom: 1px solid rgba(255,153,0,0.3); padding-bottom: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+                <button class="btn-icon-bar" onclick="switchForgeTab('ascension')" id="tab-btn-ascension" style="border-color: #ffd700; color: #fff3a8; background: rgba(50,30,10,0.8);">⚒️ WEAPON REINFORCEMENT</button>
+                <button class="btn-icon-bar" onclick="switchForgeTab('infusion')" id="tab-btn-infusion" style="border-color: #ff7722; color: #ffaa66;">🔥 ELEMENTAL INFUSIONS</button>
+                <button class="btn-icon-bar" onclick="switchForgeTab('transmute')" id="tab-btn-transmute" style="border-color: #c084fc; color: #f3e8ff;">👑 BOSS SOUL TRANSMUTATION</button>
+                <button class="btn-icon-bar" onclick="switchForgeTab('relics')" id="tab-btn-relics" style="border-color: #00ffaa; color: #a5d6a7;">📜 300 RELICS CODEX</button>
+            </div>
+
+            <!-- Tab 1: Weapon Reinforcement (+1 to +15) -->
+            <div id="forge-tab-ascension">
+                <p style="font-size: 0.82rem; color: #c4b5a3; margin-bottom: 10px;">
+                    Reinforce your equipped weapon (+1 to +15) using Titanite Shards, Chunks, and Slabs. Each upgrade level permanently boosts physical attack power by +14 damage!
+                </p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+                    <button class="btn-fight-boss" onclick="forgeReinforceWeapon()" style="border-color: #ffd700; color: #fff3a8; background: rgba(70,45,15,0.8); font-weight: 800;">
+                        ⚒️ REINFORCE WEAPON (+1 LEVEL)
+                    </button>
+                    <button class="btn-fight-boss" onclick="forgeReinforceEstus()" style="border-color: #ffaa33; color: #ffe680; background: rgba(65,35,10,0.8); font-weight: 800;">
+                        🧪 REINFORCE ESTUS FLASK (+120 HP HEAL)
+                    </button>
+                    <button class="btn-fight-boss" onclick="forgeTemperArmor()" style="border-color: #88ccff; color: #e0f2fe; background: rgba(15,45,75,0.8); font-weight: 800;">
+                        🛡️ TEMPER ARMOR (+4% DAMAGE REDUCTION)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 2: Elemental Infusions -->
+            <div id="forge-tab-infusion" style="display: none;">
+                <p style="font-size: 0.82rem; color: #c4b5a3; margin-bottom: 10px;">
+                    Infuse your active weapon with primal elemental magic. Adds devastating elemental damage and unique weapon trail particle effects:
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 14px;">
+                    <button class="btn-fight-boss" onclick="forgeInfuse('fire')" style="border-color: #ff5522; color: #ff9977; background: rgba(80,25,10,0.75);">
+                        🔥 FIRE INFUSION (+45 Fire DMG)
+                    </button>
+                    <button class="btn-fight-boss" onclick="forgeInfuse('lightning')" style="border-color: #ffd700; color: #fff3a8; background: rgba(80,65,10,0.75);">
+                        ⚡ LIGHTNING INFUSION (+55 Lightning DMG)
+                    </button>
+                    <button class="btn-fight-boss" onclick="forgeInfuse('divine')" style="border-color: #00ffaa; color: #a5d6a7; background: rgba(10,65,40,0.75);">
+                        ✨ DIVINE INFUSION (+40 Divine DMG)
+                    </button>
+                    <button class="btn-fight-boss" onclick="forgeInfuse('chaos')" style="border-color: #f43f5e; color: #fecdd3; background: rgba(75,10,30,0.75);">
+                        🩸 CHAOS INFUSION (Scales with Humanity)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 3: Boss Soul Transmutation -->
+            <div id="forge-tab-transmute" style="display: none;">
+                <p style="font-size: 0.82rem; color: #c4b5a3; margin-bottom: 10px;">
+                    Transmute the souls of Lordran's defeated Archdemons into colossal legendary boss armaments:
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+                    <div style="background: rgba(35,22,12,0.85); border: 1px solid #7c5c2d; border-radius: 6px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <div style="font-weight: 800; color: #ffd778;">🪓 TAURUS DEMON GREATAXE</div>
+                            <div style="font-size: 0.74rem; color: #a89888;">Massive crushing demonic battleaxe. Deals +85 base shockwave damage.</div>
+                        </div>
+                        <button class="btn-icon-bar" onclick="forgeTransmute('taurus_axe', 'Taurus Greataxe', 2500)" style="border-color: #ffaa33; color: #ffaa33; font-weight: 800;">FORGE (2,500 Souls)</button>
+                    </div>
+                    <div style="background: rgba(35,22,12,0.85); border: 1px solid #7c5c2d; border-radius: 6px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <div style="font-weight: 800; color: #ffd778;">⚔️ GARGOYLE TAIL AXE</div>
+                            <div style="font-size: 0.74rem; color: #a89888;">Curved bronze tail axe severed in the Undead Parish belfry. High bleed rating.</div>
+                        </div>
+                        <button class="btn-icon-bar" onclick="forgeTransmute('gargoyle_halberd', 'Gargoyle Tail Axe', 3000)" style="border-color: #ffaa33; color: #ffaa33; font-weight: 800;">FORGE (3,000 Souls)</button>
+                    </div>
+                    <div style="background: rgba(35,22,12,0.85); border: 1px solid #7c5c2d; border-radius: 6px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <div style="font-weight: 800; color: #ffd778;">🗡️ GREATSWORD OF ARTORIAS</div>
+                            <div style="font-size: 0.74rem; color: #a89888;">Holy greatsword blessed by the Abysswalker. Pierces darkwraiths and abyss specters.</div>
+                        </div>
+                        <button class="btn-icon-bar" onclick="forgeTransmute('artorias_greatsword', 'Greatsword of Artorias', 6000)" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800;">FORGE (6,000 Souls)</button>
+                    </div>
+                    <div style="background: rgba(35,22,12,0.85); border: 1px solid #7c5c2d; border-radius: 6px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <div style="font-weight: 800; color: #ffd778;">☀️ GREAT LORD GREATSWORD (GWYN)</div>
+                            <div style="font-size: 0.74rem; color: #a89888;">Forged with the soul of the Lord of Sunlight. Imbued with everlasting sunlight flame.</div>
+                        </div>
+                        <button class="btn-icon-bar" onclick="forgeTransmute('gwyn_sunlight_blade', 'Great Lord Greatsword', 10000)" style="border-color: #ffd700; color: #fff3a8; font-weight: 800;">FORGE (10,000 Souls)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: 300 Relics Codex -->
+            <div id="forge-tab-relics" style="display: none;">
+                <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center;">
+                    <input type="text" id="forge-search-box" oninput="forgeFilterCodex()" placeholder="🔍 Search 300 Dark Souls relics..." style="background: rgba(20,15,10,0.9); border: 1px solid #a87932; color: #ffd276; padding: 6px 12px; border-radius: 4px; font-family: inherit; font-size: 0.82rem; flex: 1; min-width: 200px;">
+                    <select id="forge-cat-select" onchange="forgeFilterCodex()" style="background: rgba(20,15,10,0.9); border: 1px solid #a87932; color: #ffd276; padding: 6px 10px; border-radius: 4px; font-family: inherit; font-size: 0.82rem;">
+                        <option value="ALL">ALL (300 CONTENT)</option>
+                        <option value="WEAPONS">WEAPONS</option>
+                        <option value="SHIELDS">SHIELDS</option>
+                        <option value="ARMOR">ARMOR SETS</option>
+                        <option value="RINGS">RINGS</option>
+                        <option value="SPELLS">SPELLS & MIRACLES</option>
+                        <option value="TITANITE">TITANITE ORES</option>
+                        <option value="BOSS_SOULS">BOSS SOULS</option>
+                        <option value="RELICS">SACRED RELICS</option>
+                    </select>
+                </div>
+                <div id="forge-relics-list" style="max-height: 44vh; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; padding-right: 4px;">
+                    <!-- Rendered dynamically -->
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeBlacksmithModal()" style="margin-top: 14px;">RETURN TO GAME</button>
+        </div>
+    </div>
+
     <!-- DOWNLOAD GAME MODAL -->
     <div id="download-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 620px;">
@@ -3063,6 +3204,7 @@
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px;">
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDownloadModal();" style="border-color: #a87932; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 38, 18, 0.75);">📦 DOWNLOAD GAME</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBlacksmithModal();" style="border-color: #ff9900; color: #ffcc66; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 30, 8, 0.75); box-shadow: 0 0 12px rgba(255,153,0,0.35);">⚒️ TITANITE FORGE (301-330)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openQASuiteModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🛠️ QA SUITE</button>
                     <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800;">⚡ 60 FPS MODE</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
@@ -3233,6 +3375,76 @@
 
         function qaCaptureScreenshotProof() {
             if (window.qaSuite) window.qaSuite.captureScreenshot('qa_manual_capture');
+        }
+
+        function openBlacksmithModal() {
+            if (window.game) window.game.openBlacksmithModal();
+            renderForgeRelicsCodex('ALL', '');
+        }
+
+        function closeBlacksmithModal() {
+            if (window.game) window.game.closeBlacksmithModal();
+        }
+
+        function switchForgeTab(tabId) {
+            ['ascension', 'infusion', 'transmute', 'relics'].forEach(t => {
+                const el = document.getElementById('forge-tab-' + t);
+                const btn = document.getElementById('tab-btn-' + t);
+                if (el) el.style.display = (t === tabId) ? 'block' : 'none';
+                if (btn) btn.style.background = (t === tabId) ? 'rgba(50,30,10,0.85)' : 'transparent';
+            });
+            if (tabId === 'relics') renderForgeRelicsCodex('ALL', '');
+        }
+
+        function forgeReinforceWeapon() {
+            if (window.game && window.game.blacksmith) window.game.blacksmith.reinforceActiveWeapon();
+        }
+
+        function forgeInfuse(elem) {
+            if (window.game && window.game.blacksmith) window.game.blacksmith.infuseWeapon(elem);
+        }
+
+        function forgeReinforceEstus() {
+            if (window.game && window.game.blacksmith) window.game.blacksmith.reinforceEstus();
+        }
+
+        function forgeTemperArmor() {
+            if (window.game && window.game.blacksmith) window.game.blacksmith.temperArmor();
+        }
+
+        function forgeTransmute(key, name, cost) {
+            if (window.game && window.game.blacksmith) window.game.blacksmith.transmuteBossWeapon(key, name, cost);
+        }
+
+        function forgeFilterCodex() {
+            const query = (document.getElementById('forge-search-box').value || '').toLowerCase();
+            const cat = document.getElementById('forge-cat-select').value;
+            renderForgeRelicsCodex(cat, query);
+        }
+
+        function renderForgeRelicsCodex(cat, query) {
+            const container = document.getElementById('forge-relics-list');
+            if (!container || !window.BLACKSMITH_300_ITEMS) return;
+
+            const items = window.BLACKSMITH_300_ITEMS.filter(it => {
+                const matchCat = (cat === 'ALL' || it.type === cat);
+                const matchQ = (!query || it.name.toLowerCase().includes(query) || it.desc.toLowerCase().includes(query));
+                return matchCat && matchQ;
+            });
+
+            container.innerHTML = items.map(it => {
+                const rarityColor = it.rarity === 'MYTHIC' ? '#ff3366' : (it.rarity === 'LEGENDARY' ? '#ffd700' : (it.rarity === 'EPIC' ? '#c084fc' : (it.rarity === 'RARE' ? '#00e5ff' : '#88cc88')));
+                return `
+                    <div style="background: rgba(28,20,14,0.88); border: 1px solid ${rarityColor}55; border-radius: 5px; padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between; gap: 4px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 6px;">
+                            <span style="font-weight: 800; font-size: 0.8rem; color: #ffd778;">${it.name}</span>
+                            <span style="font-size: 0.62rem; color: ${rarityColor}; border: 1px solid ${rarityColor}; padding: 1px 4px; border-radius: 2px;">${it.rarity}</span>
+                        </div>
+                        <div style="font-size: 0.7rem; color: #a09080; line-height: 1.3;">${it.desc}</div>
+                        <div style="font-size: 0.72rem; font-weight: bold; color: ${rarityColor}; margin-top: 2px;">⚡ ${it.stat}</div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function qaCopyResults() {
@@ -3771,6 +3983,13 @@
         }
 
         window.addEventListener('keydown', (e) => {
+            if (e.key === 'F7' || e.key === 'b' || e.key === 'B') {
+                if (!e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    openBlacksmithModal();
+                    return;
+                }
+            }
             if (e.key === 'F8') {
                 e.preventDefault();
                 openQASuiteModal();
@@ -3810,6 +4029,7 @@
     <script src="js/combat.js?v=20261118_v19_BOT_ANIMATIONS_100"></script>
     <script src="js/postprocessing.js?v=20261115_v18_60_MOBS_30_LOCATIONS_ESC_SAVES"></script>
     <script src="js/qa_suite.js?v=20261118_v20_COPY_RESULTS"></script>
+    <script src="js/blacksmith_forge.js?v=20261118_v300_CONTENT"></script>
     <script src="js/game.js?v=20261118_v20_COLLISION_FIX"></script>
 </body>
 </html>

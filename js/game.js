@@ -38,6 +38,9 @@ class DarkSoulsGame {
         this.siege = new SiegeWarfareSystem(this);
         this.heraldry = new HeraldryNobilitySystem(this);
         this.apothecary = new ApothecaryCraftingSystem(this);
+        if (typeof BlacksmithForgeSystem !== 'undefined') {
+            this.blacksmith = new BlacksmithForgeSystem(this);
+        }
 
         // Comprehensive QA & Test Automation Suite
         if (typeof DarkSoulsQASuite !== 'undefined') {
@@ -634,6 +637,20 @@ class DarkSoulsGame {
     // ----------------------------------------------------
     // APOTHECARY & MEDIEVAL SURGERY MODAL (411–420)
     // ----------------------------------------------------
+    openBlacksmithModal() {
+        const modal = document.getElementById('blacksmith-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            if (this.blacksmith) this.blacksmith.updateForgeUI();
+            if (this.audio && this.audio.playAnvilStrike) this.audio.playAnvilStrike();
+        }
+    }
+
+    closeBlacksmithModal() {
+        const modal = document.getElementById('blacksmith-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
     openApothecaryModal() {
         const modal = document.getElementById('apothecary-modal');
         if (modal) {

@@ -1204,6 +1204,39 @@ class DarkSoulsAudio {
         g.connect(this.sfxGain);
         src.start(now);
     }
+    playAnvilStrike() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Rich metallic resonant ring of the Blacksmith anvil
+        [880, 1760, 3520, 5280].forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime(0.35 / (idx + 1), now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+            osc.connect(gain);
+            gain.connect(this.sfxGain);
+            osc.start(now);
+            osc.stop(now + 0.9);
+        });
+
+        // Impact transient noise
+        const dur = 0.08;
+        const b = this.ctx.createBuffer(1, this.ctx.sampleRate * dur, this.ctx.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1);
+        const src = this.ctx.createBufferSource();
+        src.buffer = b;
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.5, now);
+        g.gain.exponentialRampToValueAtTime(0.01, now + dur);
+        src.connect(g);
+        g.connect(this.sfxGain);
+        src.start(now);
+    }
 }
 
 // Global audio singleton
