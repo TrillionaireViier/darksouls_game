@@ -792,6 +792,12 @@ class DarkSoulsQASuite {
         this.combat.damagePlayer(10, new THREE.Vector3(999, 0, 999));
         const guardBroken = (this.combat.isStaggered && Math.abs(this.combat.staggerTime - 2.2) < 0.15);
 
+        // Clear stagger and restore poise so subsequent tests can execute player actions
+        this.combat.isStaggered = false;
+        this.combat.staggerTime = 0;
+        this.combat.poise = this.combat.maxPoise;
+        this.combat.poiseRegenDelay = 0;
+
         if (delayHeld && regenActive && guardBroken) {
             this.logPass("✓ Poise & Stagger: 15 pts/sec after 3s delay & 2.2s guard break verified.");
             subPassed++;
@@ -847,18 +853,21 @@ class DarkSoulsQASuite {
             const initialPos = this.combat.enemies.map(e => e.mesh ? e.mesh.position.clone() : null);
             const pPos = this.game.playerMesh.position;
 
-            // Place 3 active enemies in chase range of player
+            // Set all enemies to PATROL to isolate the 3 test mobs
+            this.combat.enemies.forEach(e => { e.state = 'PATROL'; });
+
+            // Place 3 active enemies in chase range of player with strictly ordered distances
             this.combat.enemies[0].state = 'CHASE';
             this.combat.enemies[0].isDead = false;
-            this.combat.enemies[0].mesh.position.set(pPos.x, pPos.y, pPos.z + 4);
+            this.combat.enemies[0].mesh.position.set(pPos.x, pPos.y, pPos.z + 3);
 
             this.combat.enemies[1].state = 'CHASE';
             this.combat.enemies[1].isDead = false;
-            this.combat.enemies[1].mesh.position.set(pPos.x + 2, pPos.y, pPos.z + 6);
+            this.combat.enemies[1].mesh.position.set(pPos.x + 2, pPos.y, pPos.z + 5);
 
             this.combat.enemies[2].state = 'CHASE';
             this.combat.enemies[2].isDead = false;
-            this.combat.enemies[2].mesh.position.set(pPos.x - 2, pPos.y, pPos.z + 8);
+            this.combat.enemies[2].mesh.position.set(pPos.x - 2, pPos.y, pPos.z + 7);
 
             // Run update step to trigger group coordination logic
             this.combat.update(0.016);
@@ -866,11 +875,10 @@ class DarkSoulsQASuite {
             const e0Offset = this.combat.enemies[0]._groupFlankOffset || 0;
             const e1Offset = this.combat.enemies[1]._groupFlankOffset || 0;
             const e2Offset = this.combat.enemies[2]._groupFlankOffset || 0;
-            const offsets = [e0Offset, e1Offset, e2Offset];
-            const frontCount = offsets.filter(o => o === 0).length;
-            const flankCount = offsets.filter(o => Math.abs(o) > 0.5).length;
+            const frontCount = (e0Offset === 0 ? 1 : 0) + (e1Offset === 0 ? 1 : 0);
+            const flankCount = (Math.abs(e2Offset) >= 0.5 ? 1 : 0);
 
-            if (frontCount >= 2 && flankCount >= 1) {
+            if (frontCount === 2 && flankCount === 1) {
                 groupCoordinationVerified = true;
             }
 
@@ -944,6 +952,11 @@ class DarkSoulsQASuite {
         // 11. Input Buffering: Queue 1 action up to 150ms before current animation ends
         this.combat.isAttacking = true;
         this.combat.attackTime = 0.35; // leaves 0.10s remaining (within 0.150s window)
+        this.combat.isRolling = false;
+        this.combat.isDrinkingEstus = false;
+        this.combat.isStaggered = false;
+        this.combat.isParrying = false;
+        this.combat.stamina = this.combat.maxStamina;
         const bufferQueued = this.combat.bufferAction('LIGHT_ATTACK');
         const bufferTimerConfigured = (Math.abs(this.combat.bufferTimer - 0.150) < 0.01);
 
