@@ -307,14 +307,16 @@ class DarkSoulsCharacters {
             roughness: 0.14
         });
 
-        // Hollow Soldier Materials
+        // Hollow Soldier Materials (Authentic ash-grey undead tone & weathered burlap)
         this.hollowSkinMat = new THREE.MeshStandardMaterial({
-            color: 0x5a554a,
-            roughness: 0.95
+            color: 0x827c6c,
+            roughness: 0.76,
+            metalness: 0.05
         });
         this.hollowRagsMat = new THREE.MeshStandardMaterial({
-            color: 0x2a241e,
-            roughness: 0.9
+            color: 0x544a3e,
+            roughness: 0.82,
+            metalness: 0.04
         });
         this.rustedIronMat = new THREE.MeshStandardMaterial({
             color: 0x483a32,
@@ -2616,36 +2618,41 @@ class DarkSoulsCharacters {
     attachHollowEyes(head, eyeColor = 0xc93010, isBloathead = false) {
         if (!head) return;
 
+        const socketMat = this.hollowSocketMat || new THREE.MeshStandardMaterial({
+            color: 0x221e1a,
+            roughness: 0.88
+        });
+
         // Dark sunken skeletal eye sockets
         const socketGeo = new THREE.BoxGeometry(0.065, 0.045, 0.02);
-        const socketL = new THREE.Mesh(socketGeo, this.hollowSocketMat || new THREE.MeshBasicMaterial({ color: 0x141010 }));
+        const socketL = new THREE.Mesh(socketGeo, socketMat);
         socketL.position.set(-0.075, 0.04, 0.148);
         head.add(socketL);
 
-        const socketR = new THREE.Mesh(socketGeo, this.hollowSocketMat || new THREE.MeshBasicMaterial({ color: 0x141010 }));
+        const socketR = new THREE.Mesh(socketGeo, socketMat);
         socketR.position.set(0.075, 0.04, 0.148);
         head.add(socketR);
 
-        // Subtle sunken soul embers recessed deep inside the sockets (no giant clown dots)
-        const emberGeo = new THREE.SphereGeometry(isBloathead ? 0.024 : 0.02, 6, 6);
+        // Subtle sunken soul embers recessed deep inside the sockets
+        const emberGeo = new THREE.SphereGeometry(isBloathead ? 0.020 : 0.015, 6, 6);
         const emberMat = new THREE.MeshBasicMaterial({ color: eyeColor });
         const emberL = new THREE.Mesh(emberGeo, emberMat);
-        emberL.position.set(-0.075, 0.04, 0.155);
+        emberL.position.set(-0.075, 0.04, 0.150);
         head.add(emberL);
 
         const emberR = new THREE.Mesh(emberGeo, emberMat);
-        emberR.position.set(0.075, 0.04, 0.155);
+        emberR.position.set(0.075, 0.04, 0.150);
         head.add(emberR);
 
-        // Subtle hollow brow ridge giving an authentic grim dark souls skull countenance
+        // Subtle hollow brow ridge
         const browGeo = new THREE.BoxGeometry(0.24, 0.03, 0.025);
-        const brow = new THREE.Mesh(browGeo, this.hollowSocketMat || new THREE.MeshBasicMaterial({ color: 0x141010 }));
+        const brow = new THREE.Mesh(browGeo, socketMat);
         brow.position.set(0, 0.075, 0.152);
         head.add(brow);
 
         // Sunken hollow mouth cavity
         const mouthGeo = new THREE.BoxGeometry(0.12, 0.018, 0.015);
-        const mouth = new THREE.Mesh(mouthGeo, this.hollowSocketMat || new THREE.MeshBasicMaterial({ color: 0x141010 }));
+        const mouth = new THREE.Mesh(mouthGeo, socketMat);
         mouth.position.set(0, -0.07, 0.15);
         head.add(mouth);
     }

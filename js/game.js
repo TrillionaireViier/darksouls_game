@@ -1716,7 +1716,8 @@ class DarkSoulsGame {
 
         // Lock-on Tracking
         if (this.combat.lockedTarget) {
-            if (this.combat.lockedTarget.isDead) {
+            const isOutOfRange = this.combat.lockedTarget.mesh && this.playerMesh.position.distanceTo(this.combat.lockedTarget.mesh.position) > 35;
+            if (this.combat.lockedTarget.isDead || isOutOfRange) {
                 this.combat.lockedTarget = null;
                 if (this.ui.lockonReticle) this.ui.lockonReticle.style.display = 'none';
             } else {
@@ -1740,10 +1741,23 @@ class DarkSoulsGame {
             }
         }
 
-        // Spherical camera placement
-        const cx = targetPos.x + this.cameraDistance * Math.sin(this.cameraYaw) * Math.cos(this.cameraPitch);
-        const cy = targetPos.y + this.cameraDistance * Math.sin(this.cameraPitch);
-        const cz = targetPos.z + this.cameraDistance * Math.cos(this.cameraYaw) * Math.cos(this.cameraPitch);
+        // Spherical camera placement with corridor-aware distance & collision prevention
+        let dist = this.cameraDistance;
+        if (targetPos.y < -1.0 && Math.abs(targetPos.x - (-20)) < 6) {
+            dist = Math.min(dist, 2.8);
+        }
+
+        let cx = targetPos.x + dist * Math.sin(this.cameraYaw) * Math.cos(this.cameraPitch);
+        let cy = targetPos.y + dist * Math.sin(this.cameraPitch);
+        let cz = targetPos.z + dist * Math.cos(this.cameraYaw) * Math.cos(this.cameraPitch);
+
+        // Subterranean ceiling & surface floor clamping
+        if (targetPos.y < -1.0) {
+            cy = Math.min(cy, 0.4);
+            cy = Math.max(cy, targetPos.y - 0.2);
+        } else {
+            cy = Math.max(cy, 0.6);
+        }
 
         // Screen shake
         let shakeOffset = new THREE.Vector3();

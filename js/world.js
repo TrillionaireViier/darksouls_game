@@ -1569,24 +1569,6 @@ class DarkSoulsWorld {
     }
 
     buildMapDetailEnhancements() {
-        // 1. Creeping 3D Ivy Vines on Courtyard and Ramparts Pillars
-        const ivyCoords = [
-            [-12, 0, -12], [12, 0, -12],
-            [-20, 0, -4], [20, 0, -4],
-            [-29, 0, 10], [29, 0, 10]
-        ];
-        ivyCoords.forEach(([ix, iy, iz]) => {
-            for (let v = 0; v < 4; v++) {
-                const ivyPatch = new THREE.Mesh(
-                    new THREE.PlaneGeometry(1.4, 2.2),
-                    this.ivyMat
-                );
-                ivyPatch.position.set(ix + (v % 2 === 0 ? 0.8 : -0.8), iy + 1.2 + v * 1.5, iz);
-                ivyPatch.rotation.y = (v % 2 === 0) ? Math.PI / 2 : -Math.PI / 2;
-                this.scene.add(ivyPatch);
-            }
-        });
-
         // 2. Gothic Perched Gargoyles on Ramparts Overlooking the Citadel
         const gargoyleCoords = [
             [15.4, 8.2, 35, -Math.PI / 2],
@@ -1795,24 +1777,6 @@ class DarkSoulsWorld {
         arenaBastion.position.set(0, -13.0, 131);
         arenaBastion.receiveShadow = true;
         distantGroup.add(arenaBastion);
-
-        // 5. Volumetric Golden Sunrays / Godrays
-        const godrayMat = new THREE.MeshBasicMaterial({
-            color: 0xffeed4,
-            transparent: true,
-            opacity: 0.12,
-            blending: THREE.AdditiveBlending,
-            side: THREE.DoubleSide,
-            depthWrite: false
-        });
-
-        for (let i = 0; i < 5; i++) {
-            const rayGeo = new THREE.CylinderGeometry(1.2, 18 + i * 4, 110, 8, 1, true);
-            const rayMesh = new THREE.Mesh(rayGeo, godrayMat);
-            rayMesh.position.set(55 + i * 4, 75, 38 + i * 3);
-            rayMesh.lookAt(i * 4 - 8, 0, 15 + i * 5);
-            distantGroup.add(rayMesh);
-        }
 
         // 5. Glossy Courtyard Rain Puddles (specular reflections on flagstones)
         const puddleMat = new THREE.MeshStandardMaterial({
