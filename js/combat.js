@@ -635,6 +635,18 @@ class DarkSoulsCombat {
                 radius: 2.7,
                 spawnPos: { x: 0, z: 132 },
                 create: (cf, x, z) => cf.createSoulOfCinder(x, z)
+            },
+            {
+                id: 'gorgon_medusa',
+                name: 'MEDUSA, GORGON MATRIARCH',
+                title: 'Sunken Serpent Sanctum &bull; Petrifying Gaze, Snake Hair & Venomous Tail Sweep',
+                icon: '🐍',
+                maxHp: 3200,
+                damage: 290,
+                souls: 12000,
+                radius: 2.4,
+                spawnPos: { x: 0, z: -95 },
+                create: (cf, x, z) => cf.createGorgonMedusa(x, z)
             }
         ];
     }
@@ -765,6 +777,110 @@ class DarkSoulsCombat {
             this.createSkeletonWarriorEnemy(-16, 108, Math.PI, -6.0);
             this.createSkeletonWarriorEnemy(-24, 134, 0, -6.0);
         }
+
+        // Spawn Gorgons & Serpents in the Sunken Serpent Sanctum & Temple of the Gorgon
+        const serpentSanctumMobs = [
+            {
+                id: 'gorgon_matriarch_elite',
+                name: 'GORGON MATRIARCH ELITE',
+                meshType: 'gorgon_medusa',
+                hp: 1200,
+                damage: 160,
+                souls: 3500,
+                speed: 2.8,
+                attackReach: 3.2,
+                behaviorType: 'Heavy Tank',
+                pos: [0, -4.0, -96.0]
+            },
+            {
+                id: 'gorgon_sister_viper_1',
+                name: 'GORGON VIPER-WITCH',
+                meshType: 'gorgon_medusa',
+                hp: 680,
+                damage: 95,
+                souls: 1800,
+                speed: 3.2,
+                attackReach: 2.5,
+                behaviorType: 'Flanker',
+                pos: [-14.0, -2.5, -52.0]
+            },
+            {
+                id: 'gorgon_sister_viper_2',
+                name: 'GORGON VIPER-WITCH',
+                meshType: 'gorgon_medusa',
+                hp: 680,
+                damage: 95,
+                souls: 1800,
+                speed: 3.2,
+                attackReach: 2.5,
+                behaviorType: 'Flanker',
+                pos: [14.0, -2.5, -52.0]
+            },
+            {
+                id: 'giant_pit_viper_1',
+                name: 'GIANT PIT VIPER',
+                meshType: 'giant_cobra',
+                hp: 550,
+                damage: 85,
+                souls: 1400,
+                speed: 3.0,
+                attackReach: 2.8,
+                behaviorType: 'Swarm',
+                pos: [-8.0, -2.5, -44.0]
+            },
+            {
+                id: 'giant_pit_viper_2',
+                name: 'GIANT PIT VIPER',
+                meshType: 'giant_cobra',
+                hp: 550,
+                damage: 85,
+                souls: 1400,
+                speed: 3.0,
+                attackReach: 2.8,
+                behaviorType: 'Swarm',
+                pos: [8.0, -2.5, -44.0]
+            },
+            {
+                id: 'giant_pit_viper_3',
+                name: 'COLOSSAL TEMPLE COBRA',
+                meshType: 'giant_cobra',
+                hp: 850,
+                damage: 120,
+                souls: 2200,
+                speed: 2.7,
+                attackReach: 3.4,
+                behaviorType: 'Heavy Tank',
+                pos: [0, -4.0, -84.0]
+            },
+            {
+                id: 'man_serpent_guard_1',
+                name: 'MAN-SERPENT TEMPLE GUARD',
+                meshType: 'man_serpent_warrior',
+                hp: 620,
+                damage: 110,
+                souls: 1600,
+                speed: 2.6,
+                attackReach: 2.8,
+                behaviorType: 'Heavy Tank',
+                pos: [-5.0, 0, -28.0]
+            },
+            {
+                id: 'man_serpent_guard_2',
+                name: 'MAN-SERPENT TEMPLE GUARD',
+                meshType: 'man_serpent_warrior',
+                hp: 620,
+                damage: 110,
+                souls: 1600,
+                speed: 2.6,
+                attackReach: 2.8,
+                behaviorType: 'Heavy Tank',
+                pos: [5.0, 0, -28.0]
+            }
+        ];
+
+        serpentSanctumMobs.forEach(sMob => {
+            this.createCustomMob(sMob, sMob.pos[0], sMob.pos[2], 0, sMob.pos[1]);
+        });
 
         // Boss
         if (!this.boss || this.boss.isDead) {
@@ -2505,6 +2621,26 @@ class DarkSoulsCombat {
                     u.head.rotation.x = 0.12 + Math.sin(stride * 2) * 0.06;
                     u.head.rotation.y = Math.sin(e.animTime * 2.2) * 0.12;
                 }
+
+                // Serpentine undulating slither kinetics
+                if (u.isSerpent && u.segments) {
+                    u.segments.forEach((seg, sIdx) => {
+                        seg.position.x = Math.sin(e.animTime * 8.0 + sIdx * 0.75) * (0.22 + sIdx * 0.025);
+                        seg.rotation.y = Math.cos(e.animTime * 8.0 + sIdx * 0.75) * 0.25;
+                    });
+                    if (u.tongue) {
+                        u.tongue.scale.z = 1.0 + Math.sin(e.animTime * 14) * 0.45;
+                    }
+                } else if (u.isGorgon && u.tailSegments) {
+                    u.tailSegments.forEach((seg, sIdx) => {
+                        seg.position.x = Math.sin(e.animTime * 7.0 + sIdx * 0.8) * 0.38;
+                    });
+                    if (u.snakeHair) {
+                        u.snakeHair.forEach((sn, snIdx) => {
+                            sn.rotation.z = Math.sin(e.animTime * 8.0 + snIdx) * 0.3;
+                        });
+                    }
+                }
             } else {
                 // 6. Idle / Patrol Breathing & Scanning Animation
                 e.state = 'PATROL';
@@ -2581,7 +2717,168 @@ class DarkSoulsCombat {
         else if (id === 'kalameet' || id === 'seath') this.updateKalameetAI(delta, dist, targetAngle);
         else if (id === 'nito') this.updateNitoAI(delta, dist, targetAngle);
         else if (id === 'gwyn' || id === 'soul_of_cinder' || id === 'pontiff_sulyvahn' || id === 'fume_knight' || id === 'slave_knight_gael') this.updateGwynAI(delta, dist, targetAngle);
+        else if (id === 'gorgon_medusa') this.updateGorgonMedusaAI(delta, dist, targetAngle);
         else this.updateTaurusAI(delta, dist, targetAngle);
+    }
+
+    // ----------------------------------------------------
+    // BOSS 37: MEDUSA, GORGON MATRIARCH AI
+    // Petrifying Gaze, Writhing Snake Hair, Venomous Tail Sweep & Kris Flurry
+    // ----------------------------------------------------
+    updateGorgonMedusaAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        const time = this.boss.animTime;
+
+        // 1. Serpentine Tail Slither Undulation
+        if (u.tailSegments) {
+            u.tailSegments.forEach((seg, idx) => {
+                seg.position.x = Math.sin(time * 6.5 + idx * 0.8) * 0.45;
+                seg.rotation.y = Math.cos(time * 6.5 + idx * 0.8) * 0.35;
+            });
+        }
+
+        // 2. Writhing Snake Hair Animation
+        if (u.snakeHair) {
+            u.snakeHair.forEach((sn, idx) => {
+                sn.rotation.z = Math.sin(time * 7.5 + idx * 1.2) * 0.35;
+                sn.rotation.x = Math.cos(time * 6.0 + idx * 0.9) * 0.25;
+            });
+        }
+
+        // 3. Movement towards player (slithering locomotion)
+        if (dist > 3.2 && !this.boss.isAttacking) {
+            const speed = 2.8;
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+
+            if (u.bodyGroup) {
+                u.bodyGroup.position.y = 1.35 + Math.sin(time * 8) * 0.08;
+            }
+        }
+
+        // 4. Attack Selection & Execution
+        if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            if (dist < 4.5 && Math.random() < 0.4) {
+                // Tail Sweep Attack
+                this.boss.isAttacking = true;
+                this.boss.attackType = 'TAIL_SWEEP';
+                this.boss.attackTime = 0;
+            } else if (dist < 22 && Math.random() < 0.65) {
+                // Petrifying Gaze (Stone Stare)
+                this.boss.isAttacking = true;
+                this.boss.attackType = 'PETRIFYING_GAZE';
+                this.boss.attackTime = 0;
+            } else {
+                // Venom Spit / Viper Strike
+                this.boss.isAttacking = true;
+                this.boss.attackType = 'VENOM_SPIT';
+                this.boss.attackTime = 0;
+            }
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            const aTime = this.boss.attackTime;
+
+            if (this.boss.attackType === 'PETRIFYING_GAZE') {
+                if (aTime < 0.9) {
+                    // Windup: Rears upper torso up, head tilts back
+                    const t = aTime / 0.9;
+                    if (u.torso) u.torso.position.y = 0.2 + t * 0.4;
+                    if (u.head) u.head.rotation.x = -0.45 * t;
+                    if (u.gazeLight) u.gazeLight.intensity = 2.5 + t * 4.0;
+                } else if (aTime < 2.0) {
+                    // Strike Phase: Volumetric Jade Beam Fires!
+                    if (u.gorgonGazeBeam) u.gorgonGazeBeam.visible = true;
+
+                    if (!this.boss._hasGazed) {
+                        this.boss._hasGazed = true;
+                        this.audio.playPetrifyingGaze();
+
+                        const pPos = this.game.playerMesh.position;
+                        const bPos = this.boss.mesh.position;
+                        const toBoss = new THREE.Vector3().subVectors(bPos, pPos).normalize();
+                        const pForward = new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0, 1, 0), this.game.playerMesh.rotation.y);
+                        const isFacing = pForward.dot(toBoss) > 0.25;
+
+                        if (dist < 22 && isFacing) {
+                            // Player looked into Medusa's eyes! PETRIFICATION!
+                            this.takeDamage(120, false);
+                            this.stamina = Math.max(0, this.stamina - 65);
+                            this.game.showDamageNumber(pPos, 120, true);
+                            if (this.game.triggerPetrifiedEffect) {
+                                this.game.triggerPetrifiedEffect();
+                            }
+                        }
+                    }
+                } else if (aTime < 2.6) {
+                    // Recovery Phase
+                    if (u.gorgonGazeBeam) u.gorgonGazeBeam.visible = false;
+                    this.boss._hasGazed = false;
+                    const t = (aTime - 2.0) / 0.6;
+                    if (u.torso) u.torso.position.y = 0.6 - t * 0.4;
+                    if (u.head) u.head.rotation.x = -0.45 * (1 - t);
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss.cooldown = 2.4;
+                }
+            } else if (this.boss.attackType === 'TAIL_SWEEP') {
+                if (aTime < 0.6) {
+                    // Coil windup
+                    const t = aTime / 0.6;
+                    this.boss.mesh.rotation.y = targetAngle - t * 1.5;
+                } else if (aTime < 1.0) {
+                    // Explosive 360 lash
+                    const t = (aTime - 0.6) / 0.4;
+                    this.boss.mesh.rotation.y = targetAngle - 1.5 + t * Math.PI * 2;
+                    if (!this.boss._hasSwept) {
+                        this.boss._hasSwept = true;
+                        this.audio.playTailSweep();
+                        if (dist < 5.8) {
+                            this.takeDamage(this.boss.damage * 0.9, false);
+                            this.game.showDamageNumber(this.game.playerMesh.position, Math.round(this.boss.damage * 0.9), false);
+                        }
+                    }
+                } else {
+                    this.boss._hasSwept = false;
+                    this.boss.isAttacking = false;
+                    this.boss.cooldown = 1.8;
+                }
+            } else {
+                // VENOM_SPIT
+                if (aTime < 0.5) {
+                    if (u.head) u.head.rotation.x = -0.3;
+                } else if (aTime < 0.9) {
+                    if (!this.boss._hasSpit) {
+                        this.boss._hasSpit = true;
+                        this.audio.playSnakeHiss();
+                        this.audio.playVenomSpit();
+                        // Launch 3 green venom projectiles
+                        const bPos = this.boss.mesh.position.clone().add(new THREE.Vector3(0, 1.8, 0));
+                        for (let p = -1; p <= 1; p++) {
+                            const pDir = new THREE.Vector3().subVectors(this.game.playerMesh.position, bPos).normalize();
+                            pDir.applyAxisAngle(new THREE.Vector3(0, 1, 0), p * 0.22);
+                            const pGeo = new THREE.SphereGeometry(0.24, 6, 6);
+                            const pMat = new THREE.MeshBasicMaterial({ color: 0x22ff55 });
+                            const pMesh = new THREE.Mesh(pGeo, pMat);
+                            pMesh.position.copy(bPos);
+                            this.game.scene.add(pMesh);
+                            this.projectiles.push({
+                                mesh: pMesh,
+                                dir: pDir,
+                                speed: 18,
+                                damage: 85,
+                                life: 2.5
+                            });
+                        }
+                    }
+                } else {
+                    this.boss._hasSpit = false;
+                    this.boss.isAttacking = false;
+                    this.boss.cooldown = 2.0;
+                }
+            }
+        }
     }
 
     // ----------------------------------------------------

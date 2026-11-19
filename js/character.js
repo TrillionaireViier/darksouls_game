@@ -656,6 +656,63 @@ class DarkSoulsCharacters {
         });
 
         // ----------------------------------------------------
+        // GORGONS & SERPENTS PROCEDURAL MATERIALS
+        // ----------------------------------------------------
+        this.serpentScaleMat = new THREE.MeshStandardMaterial({
+            color: 0x183820,
+            roughness: 0.38,
+            metalness: 0.32
+        });
+
+        this.serpentBellyMat = new THREE.MeshStandardMaterial({
+            color: 0xd6caa2,
+            roughness: 0.62,
+            metalness: 0.08
+        });
+
+        this.gorgonSkinMat = new THREE.MeshStandardMaterial({
+            color: 0xa8c2af,
+            roughness: 0.65,
+            metalness: 0.15
+        });
+
+        this.gorgonArmorMat = new THREE.MeshStandardMaterial({
+            color: 0x6e522e,
+            roughness: 0.32,
+            metalness: 0.88
+        });
+
+        this.gorgonSnakeHairMat = new THREE.MeshStandardMaterial({
+            color: 0x0f2214,
+            roughness: 0.28,
+            metalness: 0.45
+        });
+
+        this.gorgonGlowMat = new THREE.MeshBasicMaterial({
+            color: 0x00ff88
+        });
+
+        this.gorgonRubyEyeMat = new THREE.MeshBasicMaterial({
+            color: 0xff1122
+        });
+
+        this.petrifiedStoneMat = new THREE.MeshStandardMaterial({
+            color: 0x6e6a64,
+            roughness: 0.94,
+            metalness: 0.04
+        });
+
+        this.venomAcidMat = new THREE.MeshStandardMaterial({
+            color: 0x33ff66,
+            emissive: 0x11bb33,
+            emissiveIntensity: 1.4,
+            roughness: 0.15,
+            metalness: 0.2,
+            transparent: true,
+            opacity: 0.88
+        });
+
+        // ----------------------------------------------------
         // TORCH MATERIALS (MEDIEVAL WOOD & PITCH WRAPPING)
         // ----------------------------------------------------
         this.woodTorchMat = new THREE.MeshStandardMaterial({
@@ -2548,9 +2605,17 @@ class DarkSoulsCharacters {
     // Supports 30 distinct mob types with unique geometries, weapons & materials
     // ----------------------------------------------------
     createMob(mobDef, x, z, angle = 0, y = 0) {
-        const root = new THREE.Group();
         const type = (mobDef && (mobDef.meshType || mobDef.id)) || 'torch_hollow';
 
+        if (type.includes('gorgon')) {
+            return this.createGorgonMedusa(x, z, angle, y);
+        } else if (type.includes('giant_cobra') || type.includes('pit_viper') || type.includes('serpent_swarm') || type === 'snake' || type === 'serpent' || type.includes('viper')) {
+            return this.createGiantSerpent(x, z, angle, y);
+        } else if (type.includes('man_serpent')) {
+            return this.createManSerpent(x, z, angle, y);
+        }
+
+        const root = new THREE.Group();
         root.position.set(x, y, z);
         root.rotation.y = angle;
 
@@ -5688,6 +5753,549 @@ class DarkSoulsCharacters {
 
         root.position.set(x, 0, z);
         root.userData = { bodyGroup, torso, headGroup, rightShoulder, leftShoulder, kilnLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 37. MEDUSA, GORGON MATRIARCH (Sunken Serpent Sanctum)
+    createGorgonMedusa(x, z, angle = 0, y = 0) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.35;
+        root.add(bodyGroup);
+
+        // 1. Long Coiled Serpentine Tail (8 articulated spine segments)
+        const tailSegments = [];
+        const tailGroup = new THREE.Group();
+        bodyGroup.add(tailGroup);
+
+        const segCount = 8;
+        for (let i = 0; i < segCount; i++) {
+            const segRadius = 0.44 * (1.0 - (i / segCount) * 0.75);
+            const segLength = 0.55;
+            const segMesh = new THREE.Mesh(
+                new THREE.CylinderGeometry(segRadius, segRadius * 0.9, segLength, 10),
+                this.serpentScaleMat
+            );
+            segMesh.castShadow = true;
+            segMesh.receiveShadow = true;
+            
+            // Belly plates on bottom
+            const belly = new THREE.Mesh(
+                new THREE.PlaneGeometry(segRadius * 1.5, segLength * 0.95),
+                this.serpentBellyMat
+            );
+            belly.rotation.x = Math.PI / 2;
+            belly.position.set(0, -segRadius * 0.85, 0);
+            segMesh.add(belly);
+
+            // Natural initial serpentine S-curve trailing backwards
+            const t = i / segCount;
+            const sx = Math.sin(t * Math.PI * 2) * 0.45;
+            const sz = -i * 0.55;
+            const sy = -0.5 - t * 0.6;
+            segMesh.position.set(sx, sy, sz);
+            segMesh.rotation.x = 0.25;
+
+            tailGroup.add(segMesh);
+            tailSegments.push(segMesh);
+        }
+
+        // 2. Humanoid Torso with Antique Bronze Chitin Armor
+        const torso = new THREE.Group();
+        torso.position.y = 0.2;
+        bodyGroup.add(torso);
+
+        const breastplate = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.36, 0.42, 0.95, 8),
+            this.gorgonArmorMat
+        );
+        breastplate.castShadow = true;
+        torso.add(breastplate);
+
+        // Serpentine Rib Scales
+        const ribScales = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.38, 0.44, 0.4, 8),
+            this.serpentScaleMat
+        );
+        ribScales.position.y = -0.3;
+        torso.add(ribScales);
+
+        // 3. Gorgon Head with Glowing Jade Eyes & Fangs
+        const headGroup = new THREE.Group();
+        headGroup.position.set(0, 0.75, 0);
+        torso.add(headGroup);
+
+        const face = new THREE.Mesh(
+            new THREE.SphereGeometry(0.25, 8, 8),
+            this.gorgonSkinMat
+        );
+        face.scale.set(0.9, 1.15, 1.0);
+        headGroup.add(face);
+
+        // Piercing Emerald Gaze Eyes
+        const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 6), this.gorgonGlowMat);
+        leftEye.position.set(-0.1, 0.06, 0.22);
+        headGroup.add(leftEye);
+
+        const rightEye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 6), this.gorgonGlowMat);
+        rightEye.position.set(0.1, 0.06, 0.22);
+        headGroup.add(rightEye);
+
+        const gazeLight = new THREE.PointLight(0x00ff88, 2.5, 12);
+        gazeLight.position.set(0, 0.1, 0.4);
+        headGroup.add(gazeLight);
+
+        // Volumetric Petrifying Gaze Beam Cone (activated during Stone Stare)
+        const gazeBeamGeo = new THREE.ConeGeometry(3.5, 16, 16, 1, true);
+        gazeBeamGeo.rotateX(Math.PI / 2);
+        const gazeBeamMat = new THREE.MeshBasicMaterial({
+            color: 0x00ff88,
+            transparent: true,
+            opacity: 0.35,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+        });
+        const gorgonGazeBeam = new THREE.Mesh(gazeBeamGeo, gazeBeamMat);
+        gazeBeamGeo.translate(0, 0, 8.0);
+        gorgonGazeBeam.visible = false;
+        headGroup.add(gorgonGazeBeam);
+
+        // 4. Writhing Snake Hair (10 distinct articulated serpent tendrils)
+        const snakeHair = [];
+        for (let s = 0; s < 10; s++) {
+            const angle = (s / 10) * Math.PI * 2;
+            const snakeRoot = new THREE.Group();
+            snakeRoot.position.set(
+                Math.cos(angle) * 0.18,
+                0.15 + (s % 2) * 0.1,
+                Math.sin(angle) * 0.18 - 0.05
+            );
+
+            // Wavy snake body
+            const body = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.025, 0.035, 0.45, 5),
+                this.gorgonSnakeHairMat
+            );
+            body.position.set(Math.cos(angle) * 0.12, 0.18, Math.sin(angle) * 0.12);
+            body.rotation.z = Math.cos(angle) * 0.45;
+            body.rotation.x = Math.sin(angle) * 0.45;
+            snakeRoot.add(body);
+
+            // Snake head with ruby eyes
+            const sHead = new THREE.Mesh(
+                new THREE.BoxGeometry(0.06, 0.04, 0.09),
+                this.gorgonSnakeHairMat
+            );
+            sHead.position.set(Math.cos(angle) * 0.22, 0.38, Math.sin(angle) * 0.22);
+            const rEye = new THREE.Mesh(new THREE.SphereGeometry(0.015, 4, 4), this.gorgonRubyEyeMat);
+            rEye.position.set(0.025, 0.015, 0.035);
+            sHead.add(rEye);
+            const lEye = new THREE.Mesh(new THREE.SphereGeometry(0.015, 4, 4), this.gorgonRubyEyeMat);
+            lEye.position.set(-0.025, 0.015, 0.035);
+            sHead.add(lEye);
+            snakeRoot.add(sHead);
+
+            headGroup.add(snakeRoot);
+            snakeHair.push(snakeRoot);
+        }
+
+        // 5. Dual Serrated Viper Kris Daggers (Venom-dripping wavy blades)
+        const rightShoulder = new THREE.Group();
+        rightShoulder.position.set(0.55, 0.35, 0);
+        torso.add(rightShoulder);
+        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.08, 0.75, 6), this.gorgonSkinMat);
+        rArm.position.y = -0.38;
+        rightShoulder.add(rArm);
+
+        // Right Viper Kris
+        const rightKris = new THREE.Group();
+        rightKris.position.set(0, -0.75, 0.2);
+        rightKris.rotation.x = Math.PI / 3;
+        const rBlade = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.1, 0.16), this.darkSteelMat);
+        rBlade.position.y = 0.45;
+        rightKris.add(rBlade);
+        const rVenom = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.18), this.venomAcidMat);
+        rVenom.position.y = 0.55;
+        rightKris.add(rVenom);
+        rightShoulder.add(rightKris);
+
+        const leftShoulder = new THREE.Group();
+        leftShoulder.position.set(-0.55, 0.35, 0);
+        torso.add(leftShoulder);
+        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.08, 0.75, 6), this.gorgonSkinMat);
+        lArm.position.y = -0.38;
+        leftShoulder.add(lArm);
+
+        // Left Viper Kris
+        const leftKris = new THREE.Group();
+        leftKris.position.set(0, -0.75, 0.2);
+        leftKris.rotation.x = Math.PI / 3;
+        const lBlade = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.1, 0.16), this.darkSteelMat);
+        lBlade.position.y = 0.45;
+        leftKris.add(lBlade);
+        const lVenom = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.18), this.venomAcidMat);
+        lVenom.position.y = 0.55;
+        leftKris.add(lVenom);
+        leftShoulder.add(leftKris);
+
+        // Generic leg dummy groups for 100% animation safety
+        const rightHip = new THREE.Group();
+        const leftHip = new THREE.Group();
+        torso.add(rightHip);
+        torso.add(leftHip);
+
+        root.userData = {
+            bodyGroup,
+            torso,
+            head: headGroup,
+            headGroup,
+            rightShoulder,
+            leftShoulder,
+            rightHip,
+            leftHip,
+            weapon: rightKris,
+            tailSegments,
+            snakeHair,
+            gorgonGazeBeam,
+            gazeLight,
+            isGorgon: true
+        };
+
+        this.scene.add(root);
+        return root;
+    }
+
+    // GIANT PIT VIPER / COLOSSAL COBRA (12-segment articulated undulating serpent)
+    createGiantSerpent(x, z, angle = 0, y = 0) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.35;
+        root.add(bodyGroup);
+
+        const segments = [];
+        const segCount = 12;
+
+        for (let i = 0; i < segCount; i++) {
+            const segGroup = new THREE.Group();
+            const radius = 0.38 * (1.0 - (i / segCount) * 0.7);
+            const length = 0.5;
+
+            const segMesh = new THREE.Mesh(
+                new THREE.CylinderGeometry(radius, radius * 0.92, length, 8),
+                this.serpentScaleMat
+            );
+            segMesh.rotation.x = Math.PI / 2;
+            segMesh.castShadow = true;
+            segMesh.receiveShadow = true;
+            segGroup.add(segMesh);
+
+            const belly = new THREE.Mesh(
+                new THREE.PlaneGeometry(radius * 1.6, length * 0.95),
+                this.serpentBellyMat
+            );
+            belly.position.set(0, -radius * 0.88, 0);
+            belly.rotation.x = Math.PI / 2;
+            segGroup.add(belly);
+
+            // Flared Cobra Hood on Segments 1 & 2
+            if (i === 1 || i === 2) {
+                const hood = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.85 - (i - 1) * 0.25, 0.12, length * 0.9),
+                    this.serpentScaleMat
+                );
+                hood.position.y = 0.05;
+                segGroup.add(hood);
+            }
+
+            segGroup.position.set(0, 0, -i * 0.45);
+            bodyGroup.add(segGroup);
+            segments.push(segGroup);
+        }
+
+        // Head on segment 0
+        const headGroup = new THREE.Group();
+        headGroup.position.set(0, 0.15, 0.3);
+        segments[0].add(headGroup);
+
+        const skull = new THREE.Mesh(
+            new THREE.ConeGeometry(0.28, 0.65, 4),
+            this.serpentScaleMat
+        );
+        skull.rotation.x = -Math.PI / 2;
+        skull.rotation.y = Math.PI / 4;
+        skull.scale.set(1.2, 0.6, 1.0);
+        headGroup.add(skull);
+
+        // Glowing Yellow Eyes
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
+        const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.05, 5, 5), eyeMat);
+        leftEye.position.set(-0.16, 0.08, 0.12);
+        headGroup.add(leftEye);
+        const rightEye = new THREE.Mesh(new THREE.SphereGeometry(0.05, 5, 5), eyeMat);
+        rightEye.position.set(0.16, 0.08, 0.12);
+        headGroup.add(rightEye);
+
+        // Fangs & Forked Tongue
+        const fangMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 });
+        const leftFang = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.22, 4), fangMat);
+        leftFang.position.set(-0.1, -0.08, 0.25);
+        leftFang.rotation.x = Math.PI;
+        headGroup.add(leftFang);
+        const rightFang = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.22, 4), fangMat);
+        rightFang.position.set(0.1, -0.08, 0.25);
+        rightFang.rotation.x = Math.PI;
+        headGroup.add(rightFang);
+
+        // Forked Tongue
+        const tongue = new THREE.Mesh(
+            new THREE.BoxGeometry(0.04, 0.015, 0.35),
+            new THREE.MeshBasicMaterial({ color: 0xdd1122 })
+        );
+        tongue.position.set(0, -0.06, 0.38);
+        headGroup.add(tongue);
+
+        // Reusable dummy groups for generic animation safety
+        const torso = segments[0];
+        const rightShoulder = new THREE.Group();
+        const leftShoulder = new THREE.Group();
+        const rightHip = new THREE.Group();
+        const leftHip = new THREE.Group();
+        torso.add(rightShoulder);
+        torso.add(leftShoulder);
+        torso.add(rightHip);
+        torso.add(leftHip);
+
+        root.userData = {
+            bodyGroup,
+            torso,
+            head: headGroup,
+            rightShoulder,
+            leftShoulder,
+            rightHip,
+            leftHip,
+            weapon: segments[0],
+            segments,
+            tongue,
+            isSerpent: true
+        };
+
+        this.scene.add(root);
+        return root;
+    }
+
+    // MAN-SERPENT WARRIOR (Sen's Fortress bipedal serpent soldier)
+    createManSerpent(x, z, angle = 0, y = 0) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.0;
+        root.add(bodyGroup);
+
+        const torso = new THREE.Group();
+        bodyGroup.add(torso);
+
+        // Muscular Reptilian Chest
+        const chest = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.38, 0.48, 1.1, 8),
+            this.serpentScaleMat
+        );
+        chest.castShadow = true;
+        torso.add(chest);
+
+        // Serpentine Cobra Head & Snapping Jaw
+        const headGroup = new THREE.Group();
+        headGroup.position.set(0, 0.8, 0.15);
+        torso.add(headGroup);
+
+        const sSkull = new THREE.Mesh(
+            new THREE.BoxGeometry(0.32, 0.28, 0.48),
+            this.serpentScaleMat
+        );
+        headGroup.add(sSkull);
+
+        // Cobra Hood Flaring behind neck
+        const hood = new THREE.Mesh(
+            new THREE.BoxGeometry(0.75, 0.45, 0.1),
+            this.serpentScaleMat
+        );
+        hood.position.set(0, 0.1, -0.2);
+        headGroup.add(hood);
+
+        // Snapping lower jaw
+        const jaw = new THREE.Mesh(
+            new THREE.BoxGeometry(0.28, 0.12, 0.42),
+            this.serpentScaleMat
+        );
+        jaw.position.set(0, -0.16, 0.05);
+        headGroup.add(jaw);
+
+        // Eyes
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
+        const rEye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 4, 4), eyeMat);
+        rEye.position.set(0.16, 0.08, 0.15);
+        headGroup.add(rEye);
+        const lEye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 4, 4), eyeMat);
+        lEye.position.set(-0.16, 0.08, 0.15);
+        headGroup.add(lEye);
+
+        // Reptilian Tail extending backwards
+        const tail = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.18, 0.06, 1.4, 6),
+            this.serpentScaleMat
+        );
+        tail.position.set(0, -0.4, -0.65);
+        tail.rotation.x = -0.7;
+        torso.add(tail);
+
+        // Right Arm & Serpent Flamberge
+        const rightShoulder = new THREE.Group();
+        rightShoulder.position.set(0.55, 0.35, 0);
+        torso.add(rightShoulder);
+        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.85, 6), this.serpentScaleMat);
+        rArm.position.y = -0.42;
+        rightShoulder.add(rArm);
+
+        // Serpent Flamberge (Wavy Greatsword)
+        const flamberge = new THREE.Group();
+        flamberge.position.set(0, -0.85, 0.3);
+        flamberge.rotation.x = Math.PI / 3;
+        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.2, 0.28), this.darkSteelMat);
+        blade.position.y = 1.0;
+        flamberge.add(blade);
+        const guard = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.08, 0.12), this.gorgonArmorMat);
+        guard.position.y = 0.05;
+        flamberge.add(guard);
+        rightShoulder.add(flamberge);
+
+        // Left Arm & Spiked Shield
+        const leftShoulder = new THREE.Group();
+        leftShoulder.position.set(-0.55, 0.35, 0);
+        torso.add(leftShoulder);
+        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.85, 6), this.serpentScaleMat);
+        lArm.position.y = -0.42;
+        leftShoulder.add(lArm);
+
+        const shield = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.1, 0.65), this.gorgonArmorMat);
+        shield.position.set(-0.15, -0.45, 0.25);
+        leftShoulder.add(shield);
+
+        // Muscular Taloned Legs
+        const rightHip = new THREE.Group();
+        rightHip.position.set(0.24, -0.45, 0);
+        torso.add(rightHip);
+        const rLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.1, 0.95, 6), this.serpentScaleMat);
+        rLeg.position.y = -0.45;
+        rightHip.add(rLeg);
+
+        const leftHip = new THREE.Group();
+        leftHip.position.set(-0.24, -0.45, 0);
+        torso.add(leftHip);
+        const lLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.1, 0.95, 6), this.serpentScaleMat);
+        lLeg.position.y = -0.45;
+        leftHip.add(lLeg);
+
+        root.userData = {
+            bodyGroup,
+            torso,
+            head: headGroup,
+            headGroup,
+            rightShoulder,
+            leftShoulder,
+            rightHip,
+            leftHip,
+            weapon: flamberge,
+            isManSerpent: true
+        };
+
+        this.scene.add(root);
+        return root;
+    }
+
+    // PETRIFIED WARRIORS (Victims of Medusa's Petrifying Gaze)
+    createPetrifiedWarrior(x, z, angle = 0, y = 0, poseIndex = 0) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const stoneMat = this.petrifiedStoneMat;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.9;
+        root.add(bodyGroup);
+
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.75, 0.32), stoneMat);
+        torso.castShadow = true;
+        torso.receiveShadow = true;
+        bodyGroup.add(torso);
+
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.32, 0.28), stoneMat);
+        head.position.y = 0.55;
+        torso.add(head);
+
+        const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 0.38, 6), stoneMat);
+        helm.position.y = 0.12;
+        head.add(helm);
+
+        if (poseIndex === 0) {
+            // Shield-raised in terror
+            torso.rotation.x = -0.25;
+            head.rotation.x = -0.45;
+            const shieldArm = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.7, 0.14), stoneMat);
+            shieldArm.position.set(-0.35, 0.15, 0.35);
+            shieldArm.rotation.x = Math.PI / 3;
+            torso.add(shieldArm);
+            const shield = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.95, 0.6), stoneMat);
+            shield.position.set(-0.45, 0.3, 0.55);
+            torso.add(shield);
+        } else if (poseIndex === 1) {
+            // Reaching out screaming
+            torso.rotation.x = -0.4;
+            head.rotation.x = 0.6;
+            const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.75, 0.12), stoneMat);
+            rArm.position.set(0.38, 0.5, 0.3);
+            rArm.rotation.x = -Math.PI / 2.5;
+            torso.add(rArm);
+            const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.75, 0.12), stoneMat);
+            lArm.position.set(-0.38, 0.5, 0.3);
+            lArm.rotation.x = -Math.PI / 2.5;
+            torso.add(lArm);
+        } else if (poseIndex === 2) {
+            // Kneeling with broken sword
+            bodyGroup.position.y = 0.55;
+            torso.rotation.x = 0.35;
+            const sword = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.8, 0.15), stoneMat);
+            sword.position.set(0.2, -0.2, 0.4);
+            sword.rotation.x = Math.PI / 4;
+            torso.add(sword);
+        } else {
+            // Mid-slash frozen
+            torso.rotation.y = 0.5;
+            const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.8, 0.14), stoneMat);
+            rArm.position.set(0.35, 0.4, 0.2);
+            rArm.rotation.x = -Math.PI / 3;
+            torso.add(rArm);
+            const claymore = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.8, 0.2), stoneMat);
+            claymore.position.set(0.5, 0.8, 0.4);
+            claymore.rotation.x = -Math.PI / 4;
+            torso.add(claymore);
+        }
+
+        // Stone Base Plinth / Rubble
+        const plinth = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.8, 0.2, 8), stoneMat);
+        plinth.position.y = -0.85;
+        bodyGroup.add(plinth);
+
+        root.userData = { bodyGroup, torso, head, isPetrified: true };
         this.scene.add(root);
         return root;
     }

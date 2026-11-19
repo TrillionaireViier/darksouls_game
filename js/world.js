@@ -513,6 +513,62 @@ class DarkSoulsWorld {
             roughness: 0.38,
             metalness: 0.88
         });
+
+        // 6. SERPENTINE SANCTUM STONE & PROCEDURAL ASSETS
+        const sStoneCanvas = document.createElement('canvas');
+        sStoneCanvas.width = 512;
+        sStoneCanvas.height = 512;
+        const ssCtx = sStoneCanvas.getContext('2d');
+        ssCtx.fillStyle = '#1c261e';
+        ssCtx.fillRect(0, 0, 512, 512);
+        for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+                const rx = c * 64 + (r % 2) * 32 + 2;
+                const ry = r * 64 + 2;
+                ssCtx.fillStyle = (Math.random() < 0.4) ? '#243b2a' : '#1f2e23';
+                ssCtx.fillRect(rx, ry, 60, 60);
+                ssCtx.fillStyle = 'rgba(50, 110, 60, 0.35)';
+                ssCtx.fillRect(rx, ry, 60, 3);
+                ssCtx.fillRect(rx, ry, 3, 60);
+            }
+        }
+        const sStoneTex = new THREE.CanvasTexture(sStoneCanvas);
+        sStoneTex.wrapS = THREE.RepeatWrapping;
+        sStoneTex.wrapT = THREE.RepeatWrapping;
+        sStoneTex.repeat.set(8, 8);
+        this.serpentStoneMat = new THREE.MeshStandardMaterial({
+            map: sStoneTex,
+            roughness: 0.65,
+            metalness: 0.15
+        });
+
+        this.serpentJadeMat = new THREE.MeshStandardMaterial({
+            color: 0x0f2918,
+            roughness: 0.25,
+            metalness: 0.42
+        });
+
+        this.poisonWaterMat = new THREE.MeshStandardMaterial({
+            color: 0x184824,
+            emissive: 0x0a2812,
+            emissiveIntensity: 0.6,
+            roughness: 0.12,
+            metalness: 0.25,
+            transparent: true,
+            opacity: 0.85
+        });
+
+        this.petrifiedStoneMat = new THREE.MeshStandardMaterial({
+            color: 0x686460,
+            roughness: 0.94,
+            metalness: 0.04
+        });
+
+        this.ivyMat = new THREE.MeshStandardMaterial({
+            color: 0x1a4520,
+            roughness: 0.82,
+            side: THREE.DoubleSide
+        });
     }
 
     buildLighting() {
@@ -672,6 +728,26 @@ class DarkSoulsWorld {
             return 0.0;
         }
 
+        // 6. Serpent Sanctuary & Temple of the Gorgon (z in [-115, -30], x in [-38, 38])
+        // A. Descent Stairs from Courtyard (z in [-36, -30], x in [-12, 12])
+        if (x >= -12 && x <= 12 && z >= -36 && z <= -30) {
+            const t = (-30 - z) / 6.0;
+            return -t * 2.5;
+        }
+        // B. Sunken Serpent Courtyard (z in [-70, -36], x in [-32, 32])
+        if (x >= -32 && x <= 32 && z >= -70 && z < -36) {
+            return -2.5;
+        }
+        // C. Descent Stairs into Gorgon Inner Sanctum (z in [-78, -70], x in [-14, 14])
+        if (x >= -14 && x <= 14 && z >= -78 && z < -70) {
+            const t = (-70 - z) / 8.0;
+            return -2.5 - t * 1.5;
+        }
+        // D. Gorgon Inner Sanctum & Altar of Medusa (z in [-115, -78], x in [-38, 38])
+        if (x >= -38 && x <= 38 && z >= -115 && z < -78) {
+            return -4.0;
+        }
+
         // Beyond citadel architectural borders lies the bottomless chasm
         return -50.0;
     }
@@ -710,8 +786,10 @@ class DarkSoulsWorld {
         eastCourtyard.receiveShadow = true;
         this.scene.add(eastCourtyard);
 
-        // Outer Courtyard Fortress Walls with Openings for East/West Paths
-        this.createWall(0, 5, -30, 60, 10, 2);   // North wall
+        // Outer Courtyard Fortress Walls (North Gate open at x in [-7, 7] for Serpent Sanctuary)
+        this.createWall(-18.5, 5, -30, 23, 10, 2); // West segment of North wall (x: -30 to -7)
+        this.createWall(18.5, 5, -30, 23, 10, 2);  // East segment of North wall (x: 7 to 30)
+        this.createWall(0, 9.5, -30, 14, 3, 2);    // Overhead monumental arch lintel above doorway
         this.createWall(-30, 5, 0, 2, 10, 60);   // West wall
         this.createWall(30, 5, 0, 2, 10, 60);    // East wall
 
@@ -1157,6 +1235,383 @@ class DarkSoulsWorld {
         // Northern Throne Gate Braziers (at far end of Arena)
         this.createStandingBrazier(-5.5, 0, 163, 0xffaa33, 4.0, 28);
         this.createStandingBrazier(5.5, 0, 163, 0xffaa33, 4.0, 28);
+
+        // 4. North Path Beacon: Jade Serpent Beam & Serpentine Sanctum Banner (NORTH)
+        this.createPathBeacon(0, 0, -28.5, 0x10ff66, "🐍 GORGON'S SANCTUM & SERPENT RUINS [NORTH]", "SUNKEN TEMPLE • MEDUSA & COBRAS", "#10ff66");
+
+        // Build Massive Serpentine Sanctum & Atmospheric Map Details
+        this.buildSerpentSanctum();
+        this.buildMapDetailEnhancements();
+    }
+
+    buildSerpentSanctum() {
+        const sanctumGroup = new THREE.Group();
+
+        // 1. Grand Serpent Gate Arch & Twin 6-Meter Colossal Cobra Statues (z = -30, x in [-12, 12])
+        this.createColossalCobraStatue(-8.5, 0, -31, Math.PI / 4);
+        this.createColossalCobraStatue(8.5, 0, -31, -Math.PI / 4);
+
+        // Archway Columns flanking doorway
+        this.createPillar(-6.5, -30, 9);
+        this.createPillar(6.5, -30, 9);
+
+        // Wall sconces with emerald flames
+        this.createTorch(-6.5, 4.5, -29, { intensity: 3.2, radius: 20, color: 0x10ff66 });
+        this.createTorch(6.5, 4.5, -29, { intensity: 3.2, radius: 20, color: 0x10ff66 });
+
+        // 2. Descending Stone Staircase (z: -30 to -36, x: -12 to 12, y: 0 to -2.5)
+        const stairSteps = 12;
+        for (let s = 0; s < stairSteps; s++) {
+            const sz = -30 - (s / stairSteps) * 6.0;
+            const sy = - (s / stairSteps) * 2.5;
+            const step = new THREE.Mesh(new THREE.BoxGeometry(22, 0.28, 0.6), this.serpentStoneMat);
+            step.position.set(0, sy, sz);
+            step.receiveShadow = true;
+            sanctumGroup.add(step);
+        }
+
+        // Side balustrades for entrance stairs
+        this.createWall(-11.5, 0, -33, 1.2, 4.0, 7);
+        this.createWall(11.5, 0, -33, 1.2, 4.0, 7);
+
+        // 3. Sunken Serpent Courtyard Floor Slab (z: -36 to -70, x: -32 to 32, y = -2.5)
+        const courtyardFloorGeo = new THREE.PlaneGeometry(64, 34);
+        const courtyardFloor = new THREE.Mesh(courtyardFloorGeo, this.serpentStoneMat);
+        courtyardFloor.rotation.x = -Math.PI / 2;
+        courtyardFloor.position.set(0, -2.5, -53);
+        courtyardFloor.receiveShadow = true;
+        sanctumGroup.add(courtyardFloor);
+
+        // Perimeter Walls for Sunken Courtyard (y: -2.5, height: 10m)
+        this.createWall(-32, 2.5, -53, 2, 10, 36); // West Wall
+        this.createWall(32, 2.5, -53, 2, 10, 36);  // East Wall
+        // South retaining wall segments around stairs
+        this.createWall(-22, 2.5, -36, 20, 10, 2);
+        this.createWall(22, 2.5, -36, 20, 10, 2);
+
+        // 4. Toxic Swamp / Poison Marsh Pool at Center of Sunken Courtyard
+        const poolGeo = new THREE.CylinderGeometry(8.5, 8.5, 0.2, 16);
+        const poolMesh = new THREE.Mesh(poolGeo, this.poisonWaterMat);
+        poolMesh.position.set(0, -2.42, -53);
+        sanctumGroup.add(poolMesh);
+
+        // Poisonous light aura
+        const poisonLight = new THREE.PointLight(0x10ff66, 2.8, 20);
+        poisonLight.position.set(0, -1.8, -53);
+        sanctumGroup.add(poisonLight);
+
+        // 5. Four Stone Serpent Braziers with Emerald Flames in Sunken Courtyard
+        [[-16, -44], [16, -44], [-16, -62], [16, -62]].forEach(([bx, bz]) => {
+            this.createStandingBrazier(bx, -2.5, bz, 0x10ff66, 3.8, 24);
+        });
+
+        // 6. Eight Petrified Warriors Frozen in Dynamic Combat Poses
+        const petrifiedCoords = [
+            [-8, -42, 0, 0],    // Shield raised
+            [10, -46, 1.2, 1],  // Screaming reaching up
+            [-12, -56, -0.8, 2],// Kneeling with broken sword
+            [12, -58, 2.4, 3],  // Mid-slash frozen
+            [-4, -64, 0.4, 0],  // Shield defense
+            [6, -64, -1.4, 1],  // Screaming
+            [-18, -50, 1.8, 2], // Kneeling
+            [18, -52, -2.2, 3]  // Mid-slash
+        ];
+        petrifiedCoords.forEach(([px, pz, pang, ppose]) => {
+            if (this.scene && window.game && window.game.characters) {
+                window.game.characters.createPetrifiedWarrior(px, pz, pang, -2.5, ppose);
+                this.colliders.push(new THREE.Box3(
+                    new THREE.Vector3(px - 0.7, -2.5, pz - 0.7),
+                    new THREE.Vector3(px + 0.7, 0.0, pz + 0.7)
+                ));
+            }
+        });
+
+        // 7. Descending Stairs to Inner Sanctum (z: -70 to -78, x: -14 to 14, y: -2.5 to -4.0)
+        for (let s = 0; s < 12; s++) {
+            const sz = -70 - (s / 12) * 8.0;
+            const sy = -2.5 - (s / 12) * 1.5;
+            const step = new THREE.Mesh(new THREE.BoxGeometry(26, 0.26, 0.7), this.serpentStoneMat);
+            step.position.set(0, sy, sz);
+            step.receiveShadow = true;
+            sanctumGroup.add(step);
+        }
+        // Retaining walls beside inner stairs
+        this.createWall(-23, 2.5, -70, 20, 10, 2);
+        this.createWall(23, 2.5, -70, 20, 10, 2);
+        this.createWall(-13.5, 1.5, -74, 1.2, 8, 9);
+        this.createWall(13.5, 1.5, -74, 1.2, 8, 9);
+
+        // 8. Gorgon's Inner Sanctum Floor Slab (z: -78 to -115, x: -38 to 38, y = -4.0)
+        const innerFloorGeo = new THREE.PlaneGeometry(76, 37);
+        const innerFloor = new THREE.Mesh(innerFloorGeo, this.serpentStoneMat);
+        innerFloor.rotation.x = -Math.PI / 2;
+        innerFloor.position.set(0, -4.0, -96.5);
+        innerFloor.receiveShadow = true;
+        sanctumGroup.add(innerFloor);
+
+        // Perimeter Enclosing Walls for Inner Sanctum
+        this.createWall(-38, 1.0, -96.5, 2, 12, 39); // West Wall
+        this.createWall(38, 1.0, -96.5, 2, 12, 39);  // East Wall
+        this.createWall(0, 1.0, -115, 78, 12, 2);    // Far North Wall
+
+        // 9. Colonnade of Medusa (8 Colossal Columns wrapped in Stone Snakes)
+        const colonnadeCoords = [
+            [-16, -84], [16, -84],
+            [-22, -96], [22, -96],
+            [-16, -106], [16, -106],
+            [-8, -112], [8, -112]
+        ];
+        colonnadeCoords.forEach(([cx, cz]) => {
+            this.createSerpentPillar(cx, cz, -4.0, 11);
+        });
+
+        // 10. The Great Altar of the Gorgon (z = -108, x = 0, y = -4.0)
+        const altarDais = new THREE.Mesh(new THREE.BoxGeometry(14, 1.2, 8), this.serpentJadeMat);
+        altarDais.position.set(0, -3.4, -108);
+        altarDais.receiveShadow = true;
+        sanctumGroup.add(altarDais);
+
+        // Giant Carved Gorgon Relief Head above Altar
+        const reliefHead = new THREE.Mesh(new THREE.BoxGeometry(4.5, 5.5, 1.2), this.serpentStoneMat);
+        reliefHead.position.set(0, 0.5, -113.8);
+        sanctumGroup.add(reliefHead);
+
+        // Glowing Emerald Eyes on Wall Relief
+        const leftReliefEye = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff88 }));
+        leftReliefEye.position.set(-1.1, 1.2, -113.1);
+        sanctumGroup.add(leftReliefEye);
+        const rightReliefEye = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff88 }));
+        rightReliefEye.position.set(1.1, 1.2, -113.1);
+        sanctumGroup.add(rightReliefEye);
+
+        const altarGlow = new THREE.PointLight(0x00ff88, 4.5, 28);
+        altarGlow.position.set(0, 1.2, -110);
+        sanctumGroup.add(altarGlow);
+
+        // Sacrificial Basin with Glowing Venom
+        const basin = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.2, 1.0, 12), this.serpentJadeMat);
+        basin.position.set(0, -2.4, -106);
+        sanctumGroup.add(basin);
+        const basinLiquid = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.1, 12), this.poisonWaterMat);
+        basinLiquid.position.set(0, -1.85, -106);
+        sanctumGroup.add(basinLiquid);
+
+        // 11. Emerald Serpent Bonfire (z = -82, x = 0, y = -4.0)
+        this.createSerpentBonfire(0, -4.0, -82);
+
+        this.scene.add(sanctumGroup);
+    }
+
+    createColossalCobraStatue(x, y, z, rotY) {
+        const cobraGroup = new THREE.Group();
+        cobraGroup.position.set(x, y, z);
+        cobraGroup.rotation.y = rotY;
+
+        const stone = this.serpentJadeMat || this.stoneMat;
+
+        // Base Pedestal
+        const base = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 2.2, 1.4, 8), stone);
+        base.position.y = 0.7;
+        base.castShadow = true;
+        base.receiveShadow = true;
+        cobraGroup.add(base);
+
+        // Coiled Tail Base
+        const coil = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.45, 8, 16), stone);
+        coil.rotation.x = Math.PI / 2;
+        coil.position.y = 1.6;
+        cobraGroup.add(coil);
+
+        // Rising Serpentine Neck (Height 4.5m)
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.75, 4.2, 8), stone);
+        neck.position.set(0, 3.8, 0.2);
+        neck.rotation.x = 0.15;
+        cobraGroup.add(neck);
+
+        // Flared Cobra Hood
+        const hood = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.2, 0.35), stone);
+        hood.position.set(0, 5.2, 0.3);
+        cobraGroup.add(hood);
+
+        // Sculpted Snake Skull & Gaping Jaw
+        const skull = new THREE.Mesh(new THREE.ConeGeometry(0.7, 1.6, 4), stone);
+        skull.position.set(0, 5.5, 0.9);
+        skull.rotation.x = -Math.PI / 2.2;
+        skull.scale.set(1.4, 0.65, 1.0);
+        cobraGroup.add(skull);
+
+        // Glowing Emerald Eyes
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
+        const lEye = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 6), eyeMat);
+        lEye.position.set(-0.55, 5.65, 1.25);
+        cobraGroup.add(lEye);
+        const rEye = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 6), eyeMat);
+        rEye.position.set(0.55, 5.65, 1.25);
+        cobraGroup.add(rEye);
+
+        const eyeLight = new THREE.PointLight(0x00ff88, 2.8, 14);
+        eyeLight.position.set(0, 5.7, 1.6);
+        cobraGroup.add(eyeLight);
+
+        // Collision box for statue
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(x - 1.8, y, z - 1.8),
+            new THREE.Vector3(x + 1.8, y + 6.0, z + 1.8)
+        ));
+
+        this.scene.add(cobraGroup);
+    }
+
+    createSerpentPillar(x, z, y = 0, height = 8) {
+        const pillarGroup = new THREE.Group();
+        pillarGroup.position.set(x, y, z);
+
+        const stone = this.serpentStoneMat;
+
+        // Base plinth
+        const base = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.0, 2.0), stone);
+        base.position.y = 0.5;
+        base.castShadow = true;
+        base.receiveShadow = true;
+        pillarGroup.add(base);
+
+        // Fluted Column Shaft
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.85, height, 12), stone);
+        shaft.position.y = height / 2;
+        shaft.castShadow = true;
+        shaft.receiveShadow = true;
+        pillarGroup.add(shaft);
+
+        // Coiled Serpent wrapped around Column
+        for (let s = 0; s < 4; s++) {
+            const coilRing = new THREE.Mesh(new THREE.TorusGeometry(0.88, 0.18, 6, 12), this.serpentJadeMat);
+            coilRing.rotation.x = Math.PI / 2 + 0.25;
+            coilRing.position.y = 1.8 + s * 2.2;
+            pillarGroup.add(coilRing);
+        }
+
+        // Capital top
+        const capital = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.8, 2.2), stone);
+        capital.position.y = height + 0.4;
+        pillarGroup.add(capital);
+
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(x - 1.0, y, z - 1.0),
+            new THREE.Vector3(x + 1.0, y + height, z + 1.0)
+        ));
+
+        this.scene.add(pillarGroup);
+    }
+
+    createSerpentBonfire(x, y, z) {
+        const bonfireGroup = new THREE.Group();
+        bonfireGroup.position.set(x, y, z);
+
+        // Ash & Serpent Bones Mound
+        const ashGeo = new THREE.ConeGeometry(2.2, 0.7, 12);
+        const ashMesh = new THREE.Mesh(ashGeo, this.ashMat || this.stoneMat);
+        ashMesh.position.y = 0.35;
+        bonfireGroup.add(ashMesh);
+
+        // Serpent Coiled Sword
+        const sword = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.09, 2.6, 6), this.ironMat);
+        sword.position.set(0, 1.25, 0);
+        sword.rotation.z = -0.15;
+        bonfireGroup.add(sword);
+
+        // Emerald Flame
+        const flameCore = new THREE.Mesh(new THREE.DodecahedronGeometry(0.55), new THREE.MeshBasicMaterial({ color: 0x10ff66 }));
+        flameCore.position.set(0, 1.1, 0);
+        bonfireGroup.add(flameCore);
+
+        const flameLight = new THREE.PointLight(0x10ff66, 3.5, 18);
+        flameLight.position.set(0, 1.5, 0);
+        bonfireGroup.add(flameLight);
+
+        // Register as interactable bonfire
+        this.interactables.push({
+            type: 'bonfire',
+            position: new THREE.Vector3(x, y, z),
+            radius: 3.2,
+            prompt: '[ E ] REST AT SERPENT BONFIRE'
+        });
+
+        this.scene.add(bonfireGroup);
+    }
+
+    buildMapDetailEnhancements() {
+        // 1. Creeping 3D Ivy Vines on Courtyard and Ramparts Pillars
+        const ivyCoords = [
+            [-12, 0, -12], [12, 0, -12],
+            [-20, 0, -4], [20, 0, -4],
+            [-29, 0, 10], [29, 0, 10]
+        ];
+        ivyCoords.forEach(([ix, iy, iz]) => {
+            for (let v = 0; v < 4; v++) {
+                const ivyPatch = new THREE.Mesh(
+                    new THREE.PlaneGeometry(1.4, 2.2),
+                    this.ivyMat
+                );
+                ivyPatch.position.set(ix + (v % 2 === 0 ? 0.8 : -0.8), iy + 1.2 + v * 1.5, iz);
+                ivyPatch.rotation.y = (v % 2 === 0) ? Math.PI / 2 : -Math.PI / 2;
+                this.scene.add(ivyPatch);
+            }
+        });
+
+        // 2. Gothic Perched Gargoyles on Ramparts Overlooking the Citadel
+        const gargoyleCoords = [
+            [15.4, 8.2, 35, -Math.PI / 2],
+            [15.4, 8.2, 65, -Math.PI / 2],
+            [24.6, 9.4, 45, Math.PI / 2],
+            [24.6, 9.4, 75, Math.PI / 2]
+        ];
+        gargoyleCoords.forEach(([gx, gy, gz, grot]) => {
+            const gGroup = new THREE.Group();
+            gGroup.position.set(gx, gy, gz);
+            gGroup.rotation.y = grot;
+
+            // Gargoyle Torso
+            const gTorso = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.8, 0.45), this.stoneMat);
+            gGroup.add(gTorso);
+            // Horned Head
+            const gHead = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.4, 0.35), this.stoneMat);
+            gHead.position.set(0, 0.55, 0.15);
+            gGroup.add(gHead);
+            // Stone Wings
+            const rWing = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.4), this.stoneMat);
+            rWing.position.set(0.6, 0.4, -0.2);
+            rWing.rotation.y = 0.5;
+            gGroup.add(rWing);
+            const lWing = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.4), this.stoneMat);
+            lWing.position.set(-0.6, 0.4, -0.2);
+            lWing.rotation.y = -0.5;
+            gGroup.add(lWing);
+            // Glowing Red Eyes
+            const rEye = new THREE.Mesh(new THREE.SphereGeometry(0.04, 4, 4), new THREE.MeshBasicMaterial({ color: 0xff2200 }));
+            rEye.position.set(0.12, 0.6, 0.32);
+            gGroup.add(rEye);
+            const lEye = new THREE.Mesh(new THREE.SphereGeometry(0.04, 4, 4), new THREE.MeshBasicMaterial({ color: 0xff2200 }));
+            lEye.position.set(-0.12, 0.6, 0.32);
+            gGroup.add(lEye);
+
+            this.scene.add(gGroup);
+        });
+
+        // 3. Crumbled Masonry & Battlefield Rubble Blocks scattered naturally
+        const rubbleCoords = [
+            [-8, 0, -22], [7, 0, -18],
+            [-15, 0, 15], [14, 0, 18],
+            [-22, 0, -8], [21, 0, -6],
+            [-4, 0, 48], [4, 0, 72]
+        ];
+        rubbleCoords.forEach(([rx, ry, rz]) => {
+            const block = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.45, 0.7), this.stoneMat);
+            block.position.set(rx, ry + 0.22, rz);
+            block.rotation.set(0.1, Math.random() * Math.PI, 0.05);
+            block.castShadow = true;
+            block.receiveShadow = true;
+            this.scene.add(block);
+        });
     }
 
     buildDistantFortress() {

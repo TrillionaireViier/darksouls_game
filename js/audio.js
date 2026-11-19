@@ -1253,6 +1253,140 @@ class DarkSoulsAudio {
         g.connect(this.sfxGain);
         src.start(now);
     }
+
+    // ==========================================
+    // SERPENT & GORGON PROCEDURAL AUDIO SYNTHESIS
+    // ==========================================
+
+    playSnakeHiss() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+        const dur = 0.85;
+
+        const b = this.ctx.createBuffer(1, this.ctx.sampleRate * dur, this.ctx.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) {
+            const env = Math.sin(Math.PI * (i / d.length));
+            d[i] = (Math.random() * 2 - 1) * env * (1.0 + 0.3 * Math.sin(i * 0.05));
+        }
+
+        const src = this.ctx.createBufferSource();
+        src.buffer = b;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(3600, now);
+        filter.frequency.exponentialRampToValueAtTime(2200, now + dur);
+        filter.Q.setValueAtTime(3.8, now);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.45, now + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        src.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.sfxGain);
+        src.start(now);
+    }
+
+    playVenomSpit() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Downward wet squelch sweep
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(750, now);
+        osc.frequency.exponentialRampToValueAtTime(140, now + 0.22);
+
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+        // Bubbly sizzle noise
+        const dur = 0.35;
+        const b = this.ctx.createBuffer(1, this.ctx.sampleRate * dur, this.ctx.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1);
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = b;
+        const nFilter = this.ctx.createBiquadFilter();
+        nFilter.type = 'highpass';
+        nFilter.frequency.setValueAtTime(1200, now);
+        const nGain = this.ctx.createGain();
+        nGain.gain.setValueAtTime(0.3, now);
+        nGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        noise.connect(nFilter);
+        nFilter.connect(nGain);
+        nGain.connect(this.sfxGain);
+
+        osc.start(now);
+        osc.stop(now + 0.22);
+        noise.start(now);
+    }
+
+    playPetrifyingGaze() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Eerie harmonic crystalline hum & petrifying glass drone
+        [220, 440, 660, 920, 1320].forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = (idx % 2 === 0) ? 'sine' : 'triangle';
+            osc.frequency.setValueAtTime(freq, now);
+            osc.frequency.linearRampToValueAtTime(freq * 1.05, now + 1.6);
+
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.35 / (idx + 1), now + 0.25);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+
+            osc.connect(gain);
+            gain.connect(this.sfxGain);
+            osc.start(now);
+            osc.stop(now + 1.85);
+        });
+
+        // Sub-bass dread rumble
+        const sub = this.ctx.createOscillator();
+        const subGain = this.ctx.createGain();
+        sub.type = 'sine';
+        sub.frequency.setValueAtTime(55, now);
+        sub.frequency.exponentialRampToValueAtTime(35, now + 1.5);
+        subGain.gain.setValueAtTime(0.5, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+        sub.connect(subGain);
+        subGain.connect(this.sfxGain);
+        sub.start(now);
+        sub.stop(now + 1.55);
+    }
+
+    playTailSweep() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(45, now + 0.35);
+
+        gain.gain.setValueAtTime(0.65, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start(now);
+        osc.stop(now + 0.36);
+    }
 }
 
 // Global audio singleton

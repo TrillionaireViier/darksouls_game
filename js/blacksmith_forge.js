@@ -147,11 +147,11 @@
         { id: 120, name: "Black Iron Helm", type: "ARMOR", rarity: "RARE", desc: "Tarkus' formidable black iron greathelm.", stat: "+38 Phys DEF / Fire Resist +25" }
     ];
 
-    // Autogenerate remaining entries up to 370 items with rich Dark Souls lore attributes
-    const PREFIXES = ["Divine", "Occult", "Raw", "Crystal", "Enchanted", "Cursed", "Bloodstained", "Hallowed", "Runic", "Sovereign"];
-    const SUFFIXES = ["of Lordran", "of Astora", "of Catarina", "of Carim", "of Vinheim", "of the Abyss", "of the Sun", "of the Flame", "of Izalith", "of the Depths"];
+    // Autogenerate remaining entries up to 380 items with rich Dark Souls lore attributes
+    const PREFIXES = ["Divine", "Occult", "Raw", "Crystal", "Enchanted", "Cursed", "Bloodstained", "Hallowed", "Runic", "Sovereign", "Gorgon", "Serpentine", "Medusan", "Viper-Blessed"];
+    const SUFFIXES = ["of Lordran", "of Astora", "of Catarina", "of Carim", "of Vinheim", "of the Abyss", "of the Sun", "of the Flame", "of Izalith", "of the Depths", "of the Sunken Sanctum", "of Medusa", "of the Great Serpent"];
 
-    for (let i = 121; i <= 370; i++) {
+    for (let i = 121; i <= 380; i++) {
         const cat = CATEGORIES[i % CATEGORIES.length];
         const p = PREFIXES[i % PREFIXES.length];
         const s = SUFFIXES[(i * 3) % SUFFIXES.length];

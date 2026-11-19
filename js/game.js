@@ -1126,6 +1126,7 @@ class DarkSoulsGame {
             isSprinting = (this.keys['ShiftLeft'] || this.keys['ShiftRight']) && this.combat.stamina > 5;
             let speed = isSprinting ? this.sprintSpeed : (this.combat.isBlocking ? this.moveSpeed * 0.55 : this.moveSpeed);
             speed *= speedBonus;
+            if (this.combat && this.combat.isPetrified) speed *= 0.45;
 
             const isInWater = this.playerMesh.position.y <= -4.0;
             if (isInWater) speed *= 0.88;
@@ -1533,9 +1534,21 @@ class DarkSoulsGame {
         }
 
         // F. Courtyard Starting Arena (z in [-30, 28], x in [-30, 30])
-        if (pPos.z < 28 && pPos.y > -2.0) {
+        if (pPos.z >= -30.0 && pPos.z < 28 && pPos.y > -2.0) {
             pPos.x = Math.max(-28.0, Math.min(28.0, pPos.x));
-            pPos.z = Math.max(-28.0, pPos.z);
+            if (pPos.x < -9.5 || pPos.x > 9.5) {
+                pPos.z = Math.max(-28.0, pPos.z);
+            }
+        }
+
+        // G. Serpent Sanctuary & Gorgon Temple (z in [-115, -30], x in [-38, 38])
+        if (pPos.z < -30.0) {
+            if (pPos.z >= -70.0) {
+                pPos.x = Math.max(-31.0, Math.min(31.0, pPos.x));
+            } else {
+                pPos.x = Math.max(-37.0, Math.min(37.0, pPos.x));
+                pPos.z = Math.max(-113.0, pPos.z);
+            }
         }
 
         if (this.collisionSystem) {
@@ -1789,6 +1802,32 @@ class DarkSoulsGame {
 
     showSoulsGained(amount) {
         this.showNotification(`+${amount} SOULS ACQUIRED`);
+    }
+
+    triggerPetrifiedEffect() {
+        this.showNotification("🗿 PETRIFIED! MEDUSA'S GAZE HAS FROZEN THY FLESH!");
+        this.shakeCamera(0.4, 0.35);
+
+        // Slow player movement for 2.8s
+        if (this.combat) {
+            this.combat.isPetrified = true;
+            setTimeout(() => {
+                if (this.combat) this.combat.isPetrified = false;
+            }, 2800);
+        }
+
+        // Screen stone-gray vignette
+        let overlay = document.getElementById('petrified-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'petrified-overlay';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;box-shadow:inset 0 0 120px rgba(50,80,60,0.85);backdrop-filter:grayscale(65%) contrast(120%);transition:opacity 0.4s ease;opacity:0;';
+            document.body.appendChild(overlay);
+        }
+        overlay.style.opacity = '1';
+        setTimeout(() => {
+            if (overlay) overlay.style.opacity = '0';
+        }, 2400);
     }
 
     spawnRollDust() {

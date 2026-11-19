@@ -81,11 +81,29 @@ class CollisionSystem {
         }
 
         // F. Courtyard Starting Arena (z in [-28.0, 28.0], x in [-28.0, 28.0])
-        if (pos.z < 28.0 && y > -2.0) {
+        if (pos.z >= -30.0 && pos.z < 28.0 && y > -2.0) {
             const minX = -28.0 + radius;
             const maxX = 28.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            pos.z = Math.max(minX, pos.z);
+            if (pos.x < -9.5 || pos.x > 9.5) {
+                pos.z = Math.max(minX, pos.z);
+            }
+        }
+
+        // G. Serpent Sanctuary & Gorgon Temple (z in [-115.0, -30.0], x in [-38.0, 38.0])
+        if (pos.z < -30.0) {
+            if (pos.z >= -70.0) {
+                // Sunken Serpent Courtyard
+                const minX = -31.0 + radius;
+                const maxX = 31.0 - radius;
+                pos.x = Math.max(minX, Math.min(maxX, pos.x));
+            } else {
+                // Gorgon Inner Sanctum
+                const minX = -37.0 + radius;
+                const maxX = 37.0 - radius;
+                pos.x = Math.max(minX, Math.min(maxX, pos.x));
+                pos.z = Math.max(-113.0 + radius, pos.z);
+            }
         }
 
         if (pos.x !== initialX || pos.z !== initialZ) {

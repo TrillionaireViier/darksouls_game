@@ -10251,7 +10251,7 @@
         {
             id: 'channeleer_sorcerer_504',
             name: 'Channeler Sorcerer #504',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [6.0, 0.0, 116.0],
             hp: 324,
@@ -10271,7 +10271,7 @@
         {
             id: 'serpent_lightning_mage_505',
             name: 'Man-Serpent Mage #505',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [-6.0, 0.0, 120.0],
             hp: 345,
@@ -10411,7 +10411,7 @@
         {
             id: 'channeleer_sorcerer_512',
             name: 'Channeler Sorcerer #512',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [0.0, 0.0, 116.0],
             hp: 332,
@@ -10431,7 +10431,7 @@
         {
             id: 'serpent_lightning_mage_513',
             name: 'Man-Serpent Mage #513',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [3.0, 0.0, 120.0],
             hp: 353,
@@ -10571,7 +10571,7 @@
         {
             id: 'channeleer_sorcerer_520',
             name: 'Channeler Sorcerer #520',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [-6.0, 0.0, 116.0],
             hp: 340,
@@ -10591,7 +10591,7 @@
         {
             id: 'serpent_lightning_mage_521',
             name: 'Man-Serpent Mage #521',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [-3.0, 0.0, 120.0],
             hp: 361,
@@ -10731,7 +10731,7 @@
         {
             id: 'channeleer_sorcerer_528',
             name: 'Channeler Sorcerer #528',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [3.0, 0.0, 116.0],
             hp: 348,
@@ -10751,7 +10751,7 @@
         {
             id: 'serpent_lightning_mage_529',
             name: 'Man-Serpent Mage #529',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [6.0, 0.0, 120.0],
             hp: 369,
@@ -10891,7 +10891,7 @@
         {
             id: 'channeleer_sorcerer_536',
             name: 'Channeler Sorcerer #536',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [-3.0, 0.0, 116.0],
             hp: 356,
@@ -10911,7 +10911,7 @@
         {
             id: 'serpent_lightning_mage_537',
             name: 'Man-Serpent Mage #537',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [0.0, 0.0, 120.0],
             hp: 377,
@@ -11051,7 +11051,7 @@
         {
             id: 'channeleer_sorcerer_544',
             name: 'Channeler Sorcerer #544',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [6.0, 0.0, 116.0],
             hp: 364,
@@ -11071,7 +11071,7 @@
         {
             id: 'serpent_lightning_mage_545',
             name: 'Man-Serpent Mage #545',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [-6.0, 0.0, 120.0],
             hp: 385,
@@ -11211,7 +11211,7 @@
         {
             id: 'channeleer_sorcerer_552',
             name: 'Channeler Sorcerer #552',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [0.0, 0.0, 116.0],
             hp: 372,
@@ -11231,7 +11231,7 @@
         {
             id: 'serpent_lightning_mage_553',
             name: 'Man-Serpent Mage #553',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [3.0, 0.0, 120.0],
             hp: 393,
@@ -11371,7 +11371,7 @@
         {
             id: 'channeleer_sorcerer_560',
             name: 'Channeler Sorcerer #560',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [-6.0, 0.0, 116.0],
             hp: 380,
@@ -11391,7 +11391,7 @@
         {
             id: 'serpent_lightning_mage_561',
             name: 'Man-Serpent Mage #561',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [-3.0, 0.0, 120.0],
             hp: 401,
@@ -11531,7 +11531,7 @@
         {
             id: 'channeleer_sorcerer_568',
             name: 'Channeler Sorcerer #568',
-            zone: 'Duke's Archives',
+            zone: 'Duke\'s Archives',
             tier: 'archives',
             defaultPos: [3.0, 0.0, 116.0],
             hp: 388,
@@ -11551,7 +11551,7 @@
         {
             id: 'serpent_lightning_mage_569',
             name: 'Man-Serpent Mage #569',
-            zone: 'Sen's Fortress',
+            zone: 'Sen\'s Fortress',
             tier: 'sens_fortress',
             defaultPos: [6.0, 0.0, 120.0],
             hp: 409,
