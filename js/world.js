@@ -39,7 +39,7 @@ class DarkSoulsWorld {
         // Diffuse, Bump, Roughness & Emissive Maps
         // ==========================================
 
-        // 1. ANCIENT GOTHIC COURTYARD COBBLESTONE (1024x1024)
+        // 1. ANCIENT GOTHIC COURTYARD MONUMENTAL FLAGSTONES (1024x1024)
         const stoneCanvas = document.createElement('canvas');
         stoneCanvas.width = 1024;
         stoneCanvas.height = 1024;
@@ -55,92 +55,88 @@ class DarkSoulsWorld {
         stoneRoughCanvas.height = 1024;
         const srCtx = stoneRoughCanvas.getContext('2d');
 
-        // Deep mortar base - dark recessed mortar for crisp slab separation
-        sCtx.fillStyle = '#231e18';
+        // Deep recessed aged mortar base
+        sCtx.fillStyle = '#110f0e';
         sCtx.fillRect(0, 0, 1024, 1024);
-        sbCtx.fillStyle = '#202020'; // Recessed mortar
+        sbCtx.fillStyle = '#181818';
         sbCtx.fillRect(0, 0, 1024, 1024);
-        srCtx.fillStyle = '#dddddd'; // Matte dry mortar
+        srCtx.fillStyle = '#cccccc';
         srCtx.fillRect(0, 0, 1024, 1024);
 
-        const rows = 16;
-        const cols = 8;
+        // Large fortress flagstone slabs (heavy, irregular dark stones)
+        const rows = 6;
+        const cols = 4;
         const rh = 1024 / rows;
         const cw = 1024 / cols;
 
         for (let r = 0; r < rows; r++) {
-            const rowOffset = (r % 2) * (cw / 2) + Math.sin(r * 1.5) * 6;
+            const rowOffset = (r % 2) * (cw / 2) + Math.sin(r * 2.1) * 8;
             for (let c = -1; c <= cols + 1; c++) {
-                const bx = c * cw + rowOffset + 3;
-                const by = r * rh + 3;
-                const bw = cw - 6;
-                const bh = rh - 6;
+                const bx = c * cw + rowOffset + 4;
+                const by = r * rh + 4;
+                const bw = cw - 8;
+                const bh = rh - 8;
 
-                // Rich high-definition Lordran limestone & weathered granite palette (RGB 85-115)
+                // Authentic grim Dark Souls flagstone palette (Dark slate, weathered basalt & aged granite)
                 const palSeed = Math.random();
                 let baseR, baseG, baseB;
                 if (palSeed < 0.35) {
-                    baseR = 88 + Math.floor(Math.random() * 16); // Weathered basalt / granite
-                    baseG = 90 + Math.floor(Math.random() * 16);
-                    baseB = 96 + Math.floor(Math.random() * 16);
+                    baseR = 40 + Math.floor(Math.random() * 8);
+                    baseG = 38 + Math.floor(Math.random() * 8);
+                    baseB = 36 + Math.floor(Math.random() * 8);
                 } else if (palSeed < 0.7) {
-                    baseR = 105 + Math.floor(Math.random() * 18); // Warm aged limestone
-                    baseG = 98 + Math.floor(Math.random() * 16);
-                    baseB = 86 + Math.floor(Math.random() * 14);
+                    baseR = 46 + Math.floor(Math.random() * 10);
+                    baseG = 43 + Math.floor(Math.random() * 8);
+                    baseB = 39 + Math.floor(Math.random() * 8);
                 } else {
-                    baseR = 94 + Math.floor(Math.random() * 14); // Slate cobblestone
-                    baseG = 94 + Math.floor(Math.random() * 14);
-                    baseB = 92 + Math.floor(Math.random() * 14);
+                    baseR = 35 + Math.floor(Math.random() * 6);
+                    baseG = 34 + Math.floor(Math.random() * 6);
+                    baseB = 33 + Math.floor(Math.random() * 6);
                 }
 
                 // Fill stone slab
                 sCtx.fillStyle = `rgb(${baseR}, ${baseG}, ${baseB})`;
                 sCtx.fillRect(bx, by, bw, bh);
 
-                // Bump map: elevated slab (180-220)
-                const bumpH = 190 + Math.floor(Math.random() * 35);
+                // Subtle bump map: gently raised slab without jarring stepped ridges
+                const bumpH = 110 + Math.floor(Math.random() * 25);
                 sbCtx.fillStyle = `rgb(${bumpH}, ${bumpH}, ${bumpH})`;
                 sbCtx.fillRect(bx, by, bw, bh);
 
-                // Roughness map: damp polished stone tops (100-140 = 0.4-0.55 roughness)
-                const roughVal = 100 + Math.floor(Math.random() * 40);
+                // Rough matte surface
+                const roughVal = 180 + Math.floor(Math.random() * 40);
                 srCtx.fillStyle = `rgb(${roughVal}, ${roughVal}, ${roughVal})`;
                 srCtx.fillRect(bx, by, bw, bh);
 
-                // Chiseled beveled edges: top-left highlight, bottom-right shadow
-                sCtx.fillStyle = 'rgba(255, 255, 255, 0.22)';
-                sCtx.fillRect(bx, by, bw, 3);
-                sCtx.fillRect(bx, by, 3, bh);
-                sCtx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+                // Soft weathered bevel (subtle shadow & micro-highlight, NO white subway lines)
+                sCtx.fillStyle = 'rgba(160, 150, 140, 0.06)';
+                sCtx.fillRect(bx, by, bw, 2);
+                sCtx.fillRect(bx, by, 2, bh);
+                sCtx.fillStyle = 'rgba(0, 0, 0, 0.45)';
                 sCtx.fillRect(bx, by + bh - 3, bw, 3);
                 sCtx.fillRect(bx + bw - 3, by, 3, bh);
 
-                sbCtx.fillStyle = '#ffffff';
+                sbCtx.fillStyle = '#888888';
                 sbCtx.fillRect(bx, by, bw, 2);
                 sbCtx.fillRect(bx, by, 2, bh);
-                sbCtx.fillStyle = '#444444';
+                sbCtx.fillStyle = '#222222';
                 sbCtx.fillRect(bx, by + bh - 2, bw, 2);
                 sbCtx.fillRect(bx + bw - 2, by, 2, bh);
 
-                // Natural limestone pores & mineral texture
-                for (let k = 0; k < 28; k++) {
+                // Weathering, fissures & surface grit
+                for (let k = 0; k < 20; k++) {
                     const gx = bx + Math.random() * bw;
                     const gy = by + Math.random() * bh;
-                    const gw = 1 + Math.random() * 4;
-                    const gh = 1 + Math.random() * 3;
-                    const isDark = Math.random() > 0.45;
-                    sCtx.fillStyle = isDark ? 'rgba(20, 16, 12, 0.16)' : 'rgba(255, 255, 255, 0.10)';
+                    const gw = 2 + Math.random() * 8;
+                    const gh = 1 + Math.random() * 4;
+                    sCtx.fillStyle = Math.random() > 0.5 ? 'rgba(10, 8, 6, 0.25)' : 'rgba(80, 75, 70, 0.08)';
                     sCtx.fillRect(gx, gy, gw, gh);
-                    sbCtx.fillStyle = isDark ? '#404040' : '#ffffff';
-                    sbCtx.fillRect(gx, gy, gw, gh);
                 }
 
-                // Damp surface noise / grit
-                for (let g = 0; g < 18; g++) {
-                    const gx = bx + Math.random() * bw;
-                    const gy = by + Math.random() * bh;
-                    sCtx.fillStyle = Math.random() > 0.5 ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.06)';
-                    sCtx.fillRect(gx, gy, 2, 2);
+                // Moss & grime in joints and crevices
+                if (Math.random() > 0.4) {
+                    sCtx.fillStyle = 'rgba(25, 32, 22, 0.22)';
+                    sCtx.fillRect(bx, by + bh - 5, bw, 4);
                 }
             }
         }
@@ -148,25 +144,25 @@ class DarkSoulsWorld {
         const stoneTexture = new THREE.CanvasTexture(stoneCanvas);
         stoneTexture.wrapS = THREE.RepeatWrapping;
         stoneTexture.wrapT = THREE.RepeatWrapping;
-        stoneTexture.repeat.set(12, 12);
+        stoneTexture.repeat.set(4, 3);
 
         const stoneBumpTexture = new THREE.CanvasTexture(stoneBumpCanvas);
         stoneBumpTexture.wrapS = THREE.RepeatWrapping;
         stoneBumpTexture.wrapT = THREE.RepeatWrapping;
-        stoneBumpTexture.repeat.set(12, 12);
+        stoneBumpTexture.repeat.set(4, 3);
 
         const stoneRoughTexture = new THREE.CanvasTexture(stoneRoughCanvas);
         stoneRoughTexture.wrapS = THREE.RepeatWrapping;
         stoneRoughTexture.wrapT = THREE.RepeatWrapping;
-        stoneRoughTexture.repeat.set(12, 12);
+        stoneRoughTexture.repeat.set(4, 3);
 
         this.stoneMat = new THREE.MeshStandardMaterial({
             map: stoneTexture,
             bumpMap: stoneBumpTexture,
-            bumpScale: 0.08,
+            bumpScale: 0.04,
             roughnessMap: stoneRoughTexture,
-            roughness: 0.85,
-            metalness: 0.02
+            roughness: 0.88,
+            metalness: 0.06
         });
 
         // 2. GOTHIC ASHLAR FORTRESS WALL (1024x1024 AAA Realistic Masonry)
@@ -673,16 +669,16 @@ class DarkSoulsWorld {
         sunAura.lookAt(0, 0, 0);
         this.scene.add(sunAura);
 
-        // Perimeter courtyard torches for clear visibility across starting zone
+        // Perimeter courtyard torches mounted flush on walls (archway is at x: -7 to 7, so NO floating torch at x=0!)
         const courtyardTorches = [
-            // North perimeter wall
-            [-26, 3.5, -28], [-13, 3.5, -28], [0, 3.5, -28], [13, 3.5, -28], [26, 3.5, -28],
+            // North perimeter wall (flanking doorway)
+            [-26, 3.5, -29], [-13, 3.5, -29], [13, 3.5, -29], [26, 3.5, -29],
             // West wall
-            [-28, 3.5, -14], [-28, 3.5, 0], [-28, 3.5, 14],
+            [-29, 3.5, -14], [-29, 3.5, 0], [-29, 3.5, 14],
             // East wall
-            [28, 3.5, -14], [28, 3.5, 0], [28, 3.5, 14],
+            [29, 3.5, -14], [29, 3.5, 0], [29, 3.5, 14],
             // South wall flanking bridge arch
-            [-12, 3.5, 28], [12, 3.5, 28]
+            [-12, 3.5, 29], [12, 3.5, 29]
         ];
         courtyardTorches.forEach(([tx, ty, tz]) => {
             this.createTorch(tx, ty, tz, { intensity: 2.8, radius: 22 });
@@ -1280,8 +1276,8 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-5.5, 0, 163, 0xffaa33, 4.0, 28);
         this.createStandingBrazier(5.5, 0, 163, 0xffaa33, 4.0, 28);
 
-        // 4. North Path Beacon: Jade Serpent Beam & Serpentine Sanctum Banner (NORTH)
-        this.createPathBeacon(0, 0, -28.5, 0x10ff66, "🐍 GORGON'S SANCTUM & SERPENT RUINS [NORTH]", "SUNKEN TEMPLE • MEDUSA & COBRAS", "#10ff66");
+        // 4. North Path Beacon: Jade Serpent Beam & Serpentine Sanctum Banner (Flanking North Archway)
+        this.createPathBeacon(-5.8, 0, -28.0, 0x1e824c, "🐍 GORGON'S SANCTUM & SERPENT RUINS [NORTH]", "SUNKEN TEMPLE • MEDUSA & COBRAS", "#2ecc71");
 
         // Build Massive Serpentine Sanctum & Atmospheric Map Details
         this.buildSerpentSanctum();
@@ -1299,9 +1295,9 @@ class DarkSoulsWorld {
         this.createPillar(-6.5, -30, 9);
         this.createPillar(6.5, -30, 9);
 
-        // Wall sconces with emerald flames
-        this.createTorch(-6.5, 4.5, -29, { intensity: 3.2, radius: 20, color: 0x10ff66 });
-        this.createTorch(6.5, 4.5, -29, { intensity: 3.2, radius: 20, color: 0x10ff66 });
+        // Wall sconces with atmospheric serpentine flames
+        this.createTorch(-6.5, 4.5, -29, { intensity: 1.6, radius: 12, color: 0x1e824c });
+        this.createTorch(6.5, 4.5, -29, { intensity: 1.6, radius: 12, color: 0x1e824c });
 
         // 2. Descending Stone Staircase (z: -30 to -36, x: -12 to 12, y: 0 to -2.5)
         const stairSteps = 12;
@@ -1420,15 +1416,15 @@ class DarkSoulsWorld {
         reliefHead.position.set(0, 0.5, -113.8);
         sanctumGroup.add(reliefHead);
 
-        // Glowing Emerald Eyes on Wall Relief
-        const leftReliefEye = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff88 }));
+        // Glowing Emerald Eyes on Wall Relief (Subtle serpentine glow)
+        const leftReliefEye = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), new THREE.MeshStandardMaterial({ color: 0x1e824c, emissive: 0x1e824c, emissiveIntensity: 0.6 }));
         leftReliefEye.position.set(-1.1, 1.2, -113.1);
         sanctumGroup.add(leftReliefEye);
-        const rightReliefEye = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff88 }));
+        const rightReliefEye = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), new THREE.MeshStandardMaterial({ color: 0x1e824c, emissive: 0x1e824c, emissiveIntensity: 0.6 }));
         rightReliefEye.position.set(1.1, 1.2, -113.1);
         sanctumGroup.add(rightReliefEye);
 
-        const altarGlow = new THREE.PointLight(0x00ff88, 4.5, 28);
+        const altarGlow = new THREE.PointLight(0x1e824c, 2.0, 16);
         altarGlow.position.set(0, 1.2, -110);
         sanctumGroup.add(altarGlow);
 
@@ -1484,8 +1480,8 @@ class DarkSoulsWorld {
         skull.scale.set(1.4, 0.65, 1.0);
         cobraGroup.add(skull);
 
-        // Glowing Emerald Eyes
-        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
+        // Glowing Emerald Eyes (Atmospheric verdigris glow)
+        const eyeMat = new THREE.MeshStandardMaterial({ color: 0x1e824c, emissive: 0x1e824c, emissiveIntensity: 0.7 });
         const lEye = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 6), eyeMat);
         lEye.position.set(-0.55, 5.65, 1.25);
         cobraGroup.add(lEye);
@@ -1493,7 +1489,7 @@ class DarkSoulsWorld {
         rEye.position.set(0.55, 5.65, 1.25);
         cobraGroup.add(rEye);
 
-        const eyeLight = new THREE.PointLight(0x00ff88, 2.8, 14);
+        const eyeLight = new THREE.PointLight(0x1e824c, 1.2, 8);
         eyeLight.position.set(0, 5.7, 1.6);
         cobraGroup.add(eyeLight);
 
@@ -1872,22 +1868,34 @@ class DarkSoulsWorld {
     createPathBeacon(x, y, z, colorHex, title, desc, titleColor) {
         const beaconGroup = new THREE.Group();
 
-        // 1. Glowing Core Flame Brazier
-        const flameCore = new THREE.Mesh(
-            new THREE.DodecahedronGeometry(0.45),
-            new THREE.MeshBasicMaterial({ color: colorHex })
+        // 1. Lordran Wrought-Iron Brazier & Ember Core
+        const ironDish = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.55, 0.35, 0.28, 8),
+            this.darkSteelMat || this.stoneMat
         );
-        flameCore.position.y = 2.1;
+        ironDish.position.y = 1.65;
+        beaconGroup.add(ironDish);
+
+        const flameCore = new THREE.Mesh(
+            new THREE.SphereGeometry(0.24, 8, 8),
+            new THREE.MeshStandardMaterial({
+                color: colorHex,
+                emissive: colorHex,
+                emissiveIntensity: 0.8,
+                roughness: 0.4
+            })
+        );
+        flameCore.position.y = 1.82;
         beaconGroup.add(flameCore);
 
-        // Warm beacon flame light
-        const beaconLight = new THREE.PointLight(colorHex, 2.0, 10);
-        beaconLight.position.set(0, 2.2, 0);
+        // Warm beacon flame light (atmospheric, contained radius)
+        const beaconLight = new THREE.PointLight(colorHex, 1.4, 9);
+        beaconLight.position.set(0, 1.9, 0);
         beaconGroup.add(beaconLight);
 
-        // Stone Brazier Pedestal Base
-        const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.85, 1.8, 8), this.stoneMat);
-        pedestal.position.y = 0.9;
+        // Slender Stone Pedestal Base
+        const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.58, 1.5, 8), this.stoneMat);
+        pedestal.position.y = 0.75;
         pedestal.receiveShadow = true;
         beaconGroup.add(pedestal);
 
@@ -3006,35 +3014,37 @@ class DarkSoulsWorld {
         group.name = 'return_waystone_portal';
         group.position.set(x, y, z);
 
-        // 1. Slender Lordran Return Obelisk
+        // 1. Weathered Basalt Return Obelisk
         const obeliskGeo = new THREE.CylinderGeometry(0.3, 0.55, 3.4, 6);
         const obeliskMat = new THREE.MeshStandardMaterial({
-            color: 0x182430,
-            roughness: 0.35,
-            metalness: 0.7,
-            emissive: 0x004466,
-            emissiveIntensity: 0.6
+            color: 0x1a1612,
+            roughness: 0.85,
+            metalness: 0.15,
+            emissive: 0x221408,
+            emissiveIntensity: 0.3
         });
         const obelisk = new THREE.Mesh(obeliskGeo, obeliskMat);
         obelisk.position.set(0, 1.7, 0);
         group.add(obelisk);
 
-        // 2. Cyan Beacon Core
-        const coreGeo = new THREE.OctahedronGeometry(0.45);
-        const coreMat = new THREE.MeshBasicMaterial({
-            color: 0x00ffcc,
-            wireframe: false
+        // 2. Lordran Ember Soul Beacon Core (Warm gothic ember instead of neon cyan)
+        const coreGeo = new THREE.OctahedronGeometry(0.35);
+        const coreMat = new THREE.MeshStandardMaterial({
+            color: 0x2a1808,
+            emissive: 0xff8822,
+            emissiveIntensity: 0.85,
+            roughness: 0.4
         });
         const core = new THREE.Mesh(coreGeo, coreMat);
-        core.position.set(0, 3.6, 0);
+        core.position.set(0, 3.5, 0);
         group.add(core);
 
-        // 3. Ground Returning Ring
-        const ringGeo = new THREE.RingGeometry(0.6, 2.2, 18);
+        // 3. Ground Returning Soapstone Ring
+        const ringGeo = new THREE.RingGeometry(0.6, 2.0, 18);
         const ringMat = new THREE.MeshBasicMaterial({
-            color: 0x00e5ff,
+            color: 0xffaa33,
             transparent: true,
-            opacity: 0.85,
+            opacity: 0.65,
             side: THREE.DoubleSide
         });
         const ring = new THREE.Mesh(ringGeo, ringMat);
@@ -3043,7 +3053,7 @@ class DarkSoulsWorld {
         group.add(ring);
 
         // 4. Return Portal Beacon Light
-        const rLight = new THREE.PointLight(0x00ffcc, 2.4, 12);
+        const rLight = new THREE.PointLight(0xff8822, 1.8, 10);
         rLight.position.set(0, 2.4, 0);
         group.add(rLight);
 

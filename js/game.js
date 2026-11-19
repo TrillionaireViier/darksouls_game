@@ -1606,9 +1606,9 @@ class DarkSoulsGame {
         let targetPosX = 0.02, targetPosY = 0.04, targetPosZ = 0.06;
 
         if (wpnId === 'halberd') {
-            // Held forward-up at a natural 45 deg thrust-ready stance (NEVER 90 deg sideways into wall)
-            targetRotX = 0.85; targetRotY = 0.08; targetRotZ = -0.15;
-            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.04;
+            // Authentic Dark Souls halberd polearm stance (held upright & forward, never skewering backwards)
+            targetRotX = 0.18; targetRotY = 0.05; targetRotZ = -0.06;
+            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.02;
         } else if (wpnId === 'zweihander') {
             targetRotX = 0.50; targetRotY = 0.12; targetRotZ = -0.20;
             targetPosX = 0.02; targetPosY = 0.05; targetPosZ = 0.08;
@@ -3577,12 +3577,13 @@ class DarkSoulsGame {
             this.lastBonfirePos = this.playerMesh.position.clone();
 
             // Spawn return waystone behind player if traveling outside hub
-            if (locationId !== 'royal_bridge_arena' && this.world && this.world.spawnReturnWaystone) {
+            const isHub = (locationId === 'royal_bridge_arena' || locationId === 'undead_burg_courtyard' || locationId === 'undead_burg');
+            if (!isHub && this.world && this.world.spawnReturnWaystone) {
                 const rx = loc.pos[0] - 2.0;
                 const rz = loc.pos[2] - 2.5;
                 const ry = this.playerMesh.position.y;
                 this.world.spawnReturnWaystone(rx, ry, rz);
-            } else if (locationId === 'royal_bridge_arena') {
+            } else if (isHub) {
                 if (this.world && this.world.removeReturnWaystone) {
                     this.world.removeReturnWaystone();
                 }

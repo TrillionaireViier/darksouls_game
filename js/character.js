@@ -1328,8 +1328,8 @@ class DarkSoulsCharacters {
         const newWeapon = this.createWeaponMesh(weaponId);
         // Realistic initial weapon rigging (refined further in game.js per weapon class)
         if (weaponId === 'halberd') {
-            newWeapon.rotation.set(0.85, 0.08, -0.15);
-            newWeapon.position.set(0.02, 0.04, 0.04);
+            newWeapon.rotation.set(0.18, 0.05, -0.06);
+            newWeapon.position.set(0.02, 0.04, 0.02);
         } else if (weaponId === 'zweihander') {
             newWeapon.rotation.set(0.50, 0.12, -0.20);
             newWeapon.position.set(0.02, 0.05, 0.08);
@@ -6563,7 +6563,12 @@ class DarkSoulsCharacters {
                 segGroup.add(hood);
             }
 
-            segGroup.position.set(0, 0, -i * 0.45);
+            // S-curve natural serpentine resting posture (undulating & coiled, alive)
+            const curveX = Math.sin(i * 0.72) * 0.35;
+            const curveY = (i < 2 ? 0.18 : 0.0);
+            const curveZ = -i * 0.42;
+            segGroup.position.set(curveX, curveY, curveZ);
+            segGroup.rotation.y = Math.cos(i * 0.72) * 0.30;
             bodyGroup.add(segGroup);
             segments.push(segGroup);
         }

@@ -3335,6 +3335,18 @@ class DarkSoulsCombat {
                 }
                 if (u.rightHip) u.rightHip.rotation.x = 0;
                 if (u.leftHip) u.leftHip.rotation.x = 0;
+
+                // Idle Serpentine Breathing & Coiling kinetics
+                if (u.isSerpent && u.segments) {
+                    u.segments.forEach((seg, sIdx) => {
+                        const idleWave = Math.sin(e.animTime * 1.8 + sIdx * 0.65 + e.idleSeed);
+                        seg.position.x = Math.sin(sIdx * 0.72) * 0.35 + idleWave * 0.08;
+                        seg.rotation.y = Math.cos(sIdx * 0.72) * 0.30 + idleWave * 0.06;
+                    });
+                    if (u.tongue) {
+                        u.tongue.scale.z = 1.0 + Math.sin(e.animTime * 5.0) * 0.3;
+                    }
+                }
             }
         }
     }
