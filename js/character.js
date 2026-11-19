@@ -1049,20 +1049,78 @@ class DarkSoulsCharacters {
             return this.createTorchMesh(true);
 
         } else {
-            // Astora Straight Sword (Default)
-            const guard = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.06, 0.08), this.goldTrimMat);
-            root.add(guard);
-            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.25, 8), this.leatherMat);
-            hilt.position.y = -0.14;
-            root.add(hilt);
-            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.25, 0.03), this.bladeMat);
-            blade.position.y = 0.68;
-            blade.castShadow = true;
-            root.add(blade);
-            const tip = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.2, 4), this.bladeMat);
-            tip.position.y = 1.38;
+            // Astora Straight Sword (High-Fidelity 3D Model Upgrade)
+            const swordRoot = new THREE.Group();
+            root.add(swordRoot);
+
+            // 1. Crossguard with swept quillons and gold lion studs
+            const guard = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.055, 0.075), this.goldTrimMat);
+            guard.castShadow = true;
+            swordRoot.add(guard);
+
+            const quillonL = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.12, 6), this.goldTrimMat);
+            quillonL.position.set(-0.24, 0.03, 0);
+            quillonL.rotation.z = 0.55;
+            swordRoot.add(quillonL);
+
+            const quillonR = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.12, 6), this.goldTrimMat);
+            quillonR.position.set(0.24, 0.03, 0);
+            quillonR.rotation.z = -0.55;
+            swordRoot.add(quillonR);
+
+            // 2. Wire-wrapped hilt
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.030, 0.32, 10), this.leatherMat);
+            hilt.position.y = -0.17;
+            hilt.castShadow = true;
+            swordRoot.add(hilt);
+
+            for (let wi = 0; wi < 6; wi++) {
+                const wire = new THREE.Mesh(new THREE.TorusGeometry(0.029, 0.005, 4, 12), this.goldTrimMat);
+                wire.position.y = -0.06 - wi * 0.042;
+                wire.rotation.x = Math.PI / 2;
+                swordRoot.add(wire);
+            }
+
+            // 3. Faceted octagonal pommel with inset ruby gemstone
+            const pommel = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.038, 0.08, 8), this.steelMat);
+            pommel.position.y = -0.36;
+            pommel.castShadow = true;
+            swordRoot.add(pommel);
+
+            const rubyGem = new THREE.Mesh(
+                new THREE.SphereGeometry(0.024, 8, 8),
+                new THREE.MeshStandardMaterial({
+                    color: 0xee1133,
+                    emissive: 0x880011,
+                    emissiveIntensity: 0.6,
+                    roughness: 0.1,
+                    metalness: 0.2
+                })
+            );
+            rubyGem.position.y = -0.36;
+            swordRoot.add(rubyGem);
+
+            // 4. Double-edged blade with deep central fuller groove
+            const bladeLeft = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.38, 0.026), this.bladeMat);
+            bladeLeft.position.set(-0.032, 0.74, 0);
+            bladeLeft.castShadow = true;
+            swordRoot.add(bladeLeft);
+
+            const bladeRight = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.38, 0.026), this.bladeMat);
+            bladeRight.position.set(0.032, 0.74, 0);
+            bladeRight.castShadow = true;
+            swordRoot.add(bladeRight);
+
+            const fuller = new THREE.Mesh(new THREE.BoxGeometry(0.022, 1.15, 0.030), this.darkSteelMat);
+            fuller.position.set(0, 0.65, 0);
+            swordRoot.add(fuller);
+
+            // 5. Tapered tip
+            const tip = new THREE.Mesh(new THREE.ConeGeometry(0.068, 0.28, 4), this.bladeMat);
+            tip.position.y = 1.54;
             tip.rotation.y = Math.PI / 4;
-            root.add(tip);
+            tip.castShadow = true;
+            swordRoot.add(tip);
         }
 
         root.userData = { weaponId };
@@ -1418,6 +1476,62 @@ class DarkSoulsCharacters {
         pommelSpoke.position.y = 0.42;
         greatswordHiltGroup.add(pommelSpoke);
 
+        // 7. Dynamic 3D Knight's Cape with Jointed Wind Physics
+        const capeGroup = new THREE.Group();
+        capeGroup.position.set(0, 0.28, -0.16);
+        torso.add(capeGroup);
+
+        const capeMat = new THREE.MeshStandardMaterial({
+            color: 0x801418, // Royal crimson velvet
+            roughness: 0.82,
+            metalness: 0.08,
+            side: THREE.DoubleSide
+        });
+
+        const capeGoldMat = new THREE.MeshStandardMaterial({
+            color: 0xd4a84e,
+            roughness: 0.35,
+            metalness: 0.8
+        });
+
+        // 3 articulated vertical segments that simulate realistic cloth waving
+        const capeSeg1 = new THREE.Mesh(new THREE.PlaneGeometry(0.50, 0.36, 4, 2), capeMat);
+        capeSeg1.position.y = -0.18;
+        capeSeg1.castShadow = true;
+        capeGroup.add(capeSeg1);
+
+        const capeJoint1 = new THREE.Group();
+        capeJoint1.position.y = -0.36;
+        capeGroup.add(capeJoint1);
+
+        const capeSeg2 = new THREE.Mesh(new THREE.PlaneGeometry(0.54, 0.38, 4, 2), capeMat);
+        capeSeg2.position.y = -0.19;
+        capeSeg2.castShadow = true;
+        capeJoint1.add(capeSeg2);
+
+        const capeJoint2 = new THREE.Group();
+        capeJoint2.position.y = -0.38;
+        capeJoint1.add(capeJoint2);
+
+        const capeSeg3 = new THREE.Mesh(new THREE.PlaneGeometry(0.58, 0.38, 4, 2), capeMat);
+        capeSeg3.position.y = -0.19;
+        capeSeg3.castShadow = true;
+        capeJoint2.add(capeSeg3);
+
+        const capeHem = new THREE.Mesh(new THREE.BoxGeometry(0.60, 0.035, 0.015), capeGoldMat);
+        capeHem.position.y = -0.37;
+        capeJoint2.add(capeHem);
+
+        const broochL = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.025, 8), capeGoldMat);
+        broochL.position.set(-0.18, 0, 0.03);
+        broochL.rotation.x = Math.PI / 2;
+        capeGroup.add(broochL);
+
+        const broochR = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.025, 8), capeGoldMat);
+        broochR.position.set(0.18, 0, 0.03);
+        broochR.rotation.x = Math.PI / 2;
+        capeGroup.add(broochR);
+
         // Assign core animation nodes
         root.userData = {
             bodyGroup,
@@ -1435,6 +1549,9 @@ class DarkSoulsCharacters {
             offhandTorch,
             estusFlask,
             backScabbardGroup,
+            capeGroup,
+            capeJoint1,
+            capeJoint2,
             skinMeshes: [],
             currentSkin: 'warrior'
         };
@@ -2117,9 +2234,15 @@ class DarkSoulsCharacters {
 
             const visorSlit = addPart(u.headGroup, new THREE.Mesh(
                 new THREE.BoxGeometry(0.24, 0.024, 0.04),
-                new THREE.MeshBasicMaterial({ color: 0x88ccff })
+                new THREE.MeshBasicMaterial({ color: 0x66ddff })
             ));
             visorSlit.position.set(0, 0.015, 0.17);
+
+            // Radiant cyan eye-gaze illumination
+            const knightEyeLight = new THREE.PointLight(0x44ddff, 0.75, 1.8);
+            knightEyeLight.position.set(0, 0.02, 0.22);
+            u.headGroup.add(knightEyeLight);
+            u.skinMeshes.push(knightEyeLight);
 
             const bevor = addPart(u.headGroup, new THREE.Mesh(
                 new THREE.CylinderGeometry(0.17, 0.15, 0.14, 14, 1, false, -Math.PI * 0.40, Math.PI * 0.80),
@@ -2146,6 +2269,14 @@ class DarkSoulsCharacters {
                 this.goldTrimMat
             ));
             chestKeel.position.set(0, 0.14, 0.17);
+
+            // Golden Lion Crest Emblem on breastplate
+            const chestEmblem = addPart(u.torso, new THREE.Mesh(
+                new THREE.CylinderGeometry(0.075, 0.075, 0.025, 12),
+                this.goldTrimMat
+            ));
+            chestEmblem.position.set(0, 0.18, 0.175);
+            chestEmblem.rotation.x = Math.PI / 2;
 
             const abdomen = addPart(u.torso, new THREE.Mesh(
                 new THREE.CylinderGeometry(0.22, 0.195, 0.22, 16),
@@ -2243,6 +2374,16 @@ class DarkSoulsCharacters {
                     this.leatherMat
                 ));
                 glove.position.set(0, -0.58, 0);
+
+                // Articulated 3D Gauntlet Fingers
+                for (let fi = 0; fi < 4; fi++) {
+                    const fingerPlate = addPart(sh, new THREE.Mesh(
+                        new THREE.BoxGeometry(0.018, 0.055, 0.022),
+                        this.steelMat
+                    ));
+                    fingerPlate.position.set(-0.027 + fi * 0.018, -0.62, 0.038);
+                    fingerPlate.rotation.x = 0.5;
+                }
             });
 
             // 4. Contoured Legs & Leather Boots
@@ -2260,6 +2401,13 @@ class DarkSoulsCharacters {
                     this.steelMat
                 ));
                 knee.position.set(0, -0.33, 0.05);
+
+                // Fluted poleyn side wing
+                const kneeFan = addPart(hip, new THREE.Mesh(
+                    new THREE.BoxGeometry(0.025, 0.10, 0.06),
+                    this.goldTrimMat
+                ));
+                kneeFan.position.set(hipKey === 'rightHip' ? 0.09 : -0.09, -0.33, 0.03);
 
                 const greave = addPart(hip, new THREE.Mesh(
                     new THREE.CylinderGeometry(0.088, 0.072, 0.30, 12),

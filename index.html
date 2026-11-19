@@ -1577,6 +1577,7 @@
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
                 <button class="btn-icon-bar" onclick="openLoreCodexModal()" title="Dark Souls Lore Codex & 300 Mobs/Zombies Drops" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">📜 <span class="btn-label-text">LORE (570)</span></button>
                 <button class="btn-icon-bar" onclick="openLocationsModal()" title="30 Lordran Locations & Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (30)</span></button>
+                <button class="btn-icon-bar" id="btn-touch-toggle" onclick="toggleVirtualControls()" title="Toggle On-Screen Virtual Joystick & Buttons" style="border-color: #ffd700; color: #ffe680; font-weight: 700;">🕹️ <span class="btn-label-text">CONTROLS PAD</span></button>
                 <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
                 <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 <span class="btn-label-text">SHOP</span></button>
                 <button class="btn-icon-bar header-desktop-only" onclick="openSiegeModal()" style="border-color: #e65100; color: #ffb74d; font-weight: 700;">🏰 <span class="btn-label-text">SIEGE (391-400)</span></button>
@@ -4248,8 +4249,21 @@
             }
         }
 
-        // Auto detect touch screen or mobile screen size and enable mobile overlay
+        // Auto detect touch screen or mobile screen size and enable mobile overlay (with manual toggle support)
+        let virtualControlsManualState = null;
+        function toggleVirtualControls() {
+            const overlay = document.getElementById('mobile-touch-overlay');
+            if (!overlay) return;
+            if (overlay.style.display === 'block') {
+                overlay.style.display = 'none';
+                virtualControlsManualState = false;
+            } else {
+                overlay.style.display = 'block';
+                virtualControlsManualState = true;
+            }
+        }
         function checkMobileOverlay() {
+            if (virtualControlsManualState !== null) return;
             const isTouchOrSmall = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1200);
             const overlay = document.getElementById('mobile-touch-overlay');
             if (overlay) overlay.style.display = isTouchOrSmall ? 'block' : 'none';
@@ -4387,20 +4401,20 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/audio.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/lore_items.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/world.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/character.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/siege_warfare.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/heraldry_nobility.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/apothecary_crafting.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/collision_system.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/qa_bot_tester.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/combat.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/postprocessing.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/qa_suite.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/blacksmith_forge.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
-    <script src="js/game.js?v=20261119_FINAL_GORGON_SNAKE_ZERO_ERRORS"></script>
+    <script src="js/three.min.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/audio.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/lore_items.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/world.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/character.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/siege_warfare.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/heraldry_nobility.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/apothecary_crafting.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/collision_system.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/qa_bot_tester.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/combat.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/postprocessing.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/qa_suite.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/blacksmith_forge.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
+    <script src="js/game.js?v=20261119_NEW_3D_MODELS_ANIMATIONS_FIX_MOVE"></script>
 </body>
 </html>

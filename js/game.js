@@ -186,60 +186,92 @@ class DarkSoulsGame {
     }
 
     bindEvents() {
-        // Keyboard inputs
+        // Keyboard inputs (Full English & Cyrillic Russian Layout Support)
         window.addEventListener('keydown', (e) => {
-            this.keys[e.code] = true;
+            if (e.code) this.keys[e.code] = true;
+            if (e.key) {
+                this.keys[e.key.toLowerCase()] = true;
+                this.keys[e.key] = true;
+            }
 
-            if (e.code === 'Escape') {
+            // Defocus any HTML button so keys are never trapped by UI elements
+            if (document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                const k = (e.key || '').toLowerCase();
+                if (['w', 'a', 's', 'd', 'ц', 'ф', 'ы', 'в', ' ', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift', 'e', 'q', 'r', 'f', 'j', 'k'].includes(k) ||
+                    ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'ShiftLeft', 'ShiftRight', 'KeyE', 'KeyQ', 'KeyR', 'KeyF', 'KeyJ', 'KeyK', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+                    document.activeElement.blur();
+                }
+            }
+
+            if (e.code === 'Escape' || e.key === 'Escape') {
                 e.preventDefault();
                 this.handleEscapeKey();
                 return;
             }
-            if (e.code === 'KeyE') this.handleInteraction();
-            if (e.code === 'KeyT') this.toggleTorch();
-            if (e.code === 'KeyR' || e.code === 'Digit1') this.combat.tryDrinkEstus();
-            if (e.code === 'Digit2' || e.code === 'KeyX') this.cycleEquippedWeapon(1);
-            if (e.code === 'KeyZ') this.cycleEquippedWeapon(-1);
-            if (e.code === 'KeyC') this.openWeaponArsenalModal();
-            if (e.code === 'KeyQ' || e.code === 'Tab') {
+            if (e.code === 'KeyE' || e.key === 'e' || e.key === 'E' || e.key === 'у' || e.key === 'У') this.handleInteraction();
+            if (e.code === 'KeyT' || e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') this.toggleTorch();
+            if (e.code === 'KeyR' || e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К' || e.code === 'Digit1') this.combat.tryDrinkEstus();
+            if (e.code === 'Digit2' || e.code === 'KeyX' || e.key === 'x' || e.key === 'X' || e.key === 'ч' || e.key === 'Ч') this.cycleEquippedWeapon(1);
+            if (e.code === 'KeyZ' || e.key === 'z' || e.key === 'Z' || e.key === 'я' || e.key === 'Я') this.cycleEquippedWeapon(-1);
+            if (e.code === 'KeyC' || e.key === 'c' || e.key === 'C' || e.key === 'с' || e.key === 'С') this.openWeaponArsenalModal();
+            if (e.code === 'KeyQ' || e.key === 'q' || e.key === 'Q' || e.key === 'й' || e.key === 'Й' || e.code === 'Tab') {
                 e.preventDefault();
                 this.combat.tryParry();
             }
-            if (e.code === 'KeyF') this.toggleLockOn();
-            if (e.code === 'Space' || ((e.code === 'ShiftLeft' || e.code === 'ShiftRight') && !e.repeat)) {
-                if (e.code === 'Space') e.preventDefault();
+            if (e.code === 'KeyF' || e.key === 'f' || e.key === 'F' || e.key === 'а' || e.key === 'А') this.toggleLockOn();
+            if (e.code === 'Space' || e.key === ' ' || ((e.code === 'ShiftLeft' || e.code === 'ShiftRight') && !e.repeat)) {
+                if (e.code === 'Space' || e.key === ' ') e.preventDefault();
                 if (this.combat.isDead) {
                     this.respawnPlayer();
                 } else if (!this.combat.isRolling) {
                     this.triggerRoll();
                 }
             }
-            if (e.code === 'KeyJ') this.combat.tryLightAttack();
-            if (e.code === 'KeyK') this.combat.tryHeavyAttack();
-            if (e.code === 'KeyL') {
+            if (e.code === 'KeyJ' || e.key === 'j' || e.key === 'J' || e.key === 'о' || e.key === 'О') this.combat.tryLightAttack();
+            if (e.code === 'KeyK' || e.key === 'k' || e.key === 'K' || e.key === 'л' || e.key === 'Л') this.combat.tryHeavyAttack();
+            if (e.code === 'KeyL' || e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д') {
                 this.openLoreCodexModal();
             }
-            if (e.code === 'KeyH') {
+            if (e.code === 'KeyH' || e.key === 'h' || e.key === 'H' || e.key === 'р' || e.key === 'Р') {
                 if (this.siege) this.siege.blowWarHorn();
             }
-            if (e.code === 'KeyV') {
+            if (e.code === 'KeyV' || e.key === 'v' || e.key === 'V' || e.key === 'м' || e.key === 'М') {
                 if (this.siege) this.siege.deployCaltrops();
             }
-            if (e.code === 'KeyB') {
+            if (e.code === 'KeyB' || e.key === 'b' || e.key === 'B' || e.key === 'и' || e.key === 'И') {
                 if (this.apothecary) this.apothecary.applySterileBandage();
             }
         });
 
         window.addEventListener('keyup', (e) => {
-            this.keys[e.code] = false;
+            if (e.code) this.keys[e.code] = false;
+            if (e.key) {
+                this.keys[e.key.toLowerCase()] = false;
+                this.keys[e.key] = false;
+            }
         });
 
-        // Mouse controls
+        window.addEventListener('blur', () => {
+            this.keys = {};
+        });
+
+        // Mouse Drag-To-Look (Works BOTH with and without pointer lock!)
+        let isMouseDownLook = false;
+        let lastMouseX = 0, lastMouseY = 0;
+
         this.renderer.domElement.addEventListener('mousedown', (e) => {
-            // Lock pointer if not locked
+            if (document.activeElement && document.activeElement.blur && document.activeElement !== document.body) {
+                document.activeElement.blur();
+            }
+
+            // Lock pointer if requested and not locked
             if (!this.isPointerLocked && document.pointerLockElement !== this.renderer.domElement) {
                 this.renderer.domElement.requestPointerLock().catch(() => {});
             }
+
+            isMouseDownLook = true;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
 
             if (e.button === 0) { // LMB -> Light Attack
                 this.combat.tryLightAttack();
@@ -252,6 +284,7 @@ class DarkSoulsGame {
         });
 
         window.addEventListener('mouseup', (e) => {
+            isMouseDownLook = false;
             if (e.button === 2) {
                 this.combat.tryBlock(false);
             }
@@ -274,10 +307,18 @@ class DarkSoulsGame {
                 const sensitivity = 0.0022;
                 this.cameraYaw -= e.movementX * sensitivity;
                 this.cameraPitch = Math.max(-0.25, Math.min(1.2, this.cameraPitch + e.movementY * sensitivity));
+            } else if (isMouseDownLook) {
+                const dx = e.clientX - lastMouseX;
+                const dy = e.clientY - lastMouseY;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                const sensitivity = 0.0035;
+                this.cameraYaw -= dx * sensitivity;
+                this.cameraPitch = Math.max(-0.25, Math.min(1.2, this.cameraPitch + dy * sensitivity));
             }
         });
 
-        // Touch Virtual Controls for Mobile
+        // Touch Virtual Controls for Mobile & Desktop
         this.setupTouchControls();
     }
 
@@ -307,6 +348,42 @@ class DarkSoulsGame {
             currentMaxDist = Math.max(30, rect.width * 0.38);
             if (navigator.vibrate) navigator.vibrate(8);
         }, { passive: false });
+
+        // Mouse Drag Support on Joystick (Allows Desktop click-and-drag to move!)
+        let isMouseJoy = false;
+        joyBase.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            isMouseJoy = true;
+            this.touchJoyActive = true;
+            const rect = joyBase.getBoundingClientRect();
+            startX = rect.left + rect.width / 2;
+            startY = rect.top + rect.height / 2;
+            currentMaxDist = Math.max(30, rect.width * 0.38);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isMouseJoy) {
+                let dx = e.clientX - startX;
+                let dy = e.clientY - startY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > currentMaxDist) {
+                    dx = (dx / dist) * currentMaxDist;
+                    dy = (dy / dist) * currentMaxDist;
+                }
+                joyStick.style.transform = `translate(${dx}px, ${dy}px)`;
+                this.touchJoyVector.set(dx / currentMaxDist, dy / currentMaxDist);
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isMouseJoy) {
+                isMouseJoy = false;
+                this.touchJoyActive = false;
+                this.touchJoyVector.set(0, 0);
+                joyStick.style.transform = `translate(0px, 0px)`;
+            }
+        });
 
         // 2. Camera Touch Drag: touch anywhere outside joystick and buttons
         window.addEventListener('touchstart', (e) => {
@@ -380,7 +457,7 @@ class DarkSoulsGame {
         window.addEventListener('touchend', onTouchEnd, { passive: true });
         window.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
-        // 4. Mobile Buttons with tactile feedback and aim assist
+        // 4. On-Screen Action Buttons (Touch + Mouse Support)
         const bindTouchBtn = (id, onDown, onUp) => {
             const btn = document.getElementById(id);
             if (!btn) return;
@@ -396,6 +473,20 @@ class DarkSoulsGame {
                     e.stopPropagation();
                     onUp();
                 }, { passive: false });
+            }
+
+            // Mouse click/down support for desktop on-screen controls
+            btn.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (onDown) onDown();
+            });
+            if (onUp) {
+                btn.addEventListener('mouseup', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onUp();
+                });
             }
         };
 
@@ -937,11 +1028,11 @@ class DarkSoulsGame {
         let fwd = 0;
         let right = 0;
 
-        // Keyboard
-        if (this.keys['KeyW'] || this.keys['ArrowUp']) fwd += 1;
-        if (this.keys['KeyS'] || this.keys['ArrowDown']) fwd -= 1;
-        if (this.keys['KeyD'] || this.keys['ArrowRight']) right += 1;
-        if (this.keys['KeyA'] || this.keys['ArrowLeft']) right -= 1;
+        // Keyboard (English WASD + Cyrillic Russian ц, ы, в, ф + Arrow Keys)
+        if (this.keys['KeyW'] || this.keys['ArrowUp'] || this.keys['w'] || this.keys['W'] || this.keys['ц'] || this.keys['Ц']) fwd += 1;
+        if (this.keys['KeyS'] || this.keys['ArrowDown'] || this.keys['s'] || this.keys['S'] || this.keys['ы'] || this.keys['Ы']) fwd -= 1;
+        if (this.keys['KeyD'] || this.keys['ArrowRight'] || this.keys['d'] || this.keys['D'] || this.keys['в'] || this.keys['В']) right += 1;
+        if (this.keys['KeyA'] || this.keys['ArrowLeft'] || this.keys['a'] || this.keys['A'] || this.keys['ф'] || this.keys['Ф']) right -= 1;
 
         // Touch Joystick (y > 0 is down/back, y < 0 is up/forward)
         if (this.touchJoyActive) {
@@ -1031,6 +1122,25 @@ class DarkSoulsGame {
     updatePlayer(delta) {
         const uData = this.playerMesh.userData;
         const time = this.clock.getElapsedTime();
+
+        // 0. Anti-Stuck Safety Watchdog for Player Combat & Locomotion Flags
+        if (this.combat) {
+            if (this.combat.isAttacking && (!this.combat.attackTime || this.combat.attackTime > 1.2 || isNaN(this.combat.attackTime))) {
+                this.combat.isAttacking = false;
+                this.combat.attackCombo = 0;
+            }
+            if (this.combat.isStaggered && (typeof this.combat.staggerTime !== 'number' || this.combat.staggerTime <= 0 || isNaN(this.combat.staggerTime))) {
+                this.combat.isStaggered = false;
+            }
+            if (this.combat.isDrinkingEstus && (typeof this.combat.estusTime !== 'number' || this.combat.estusTime > 2.0 || isNaN(this.combat.estusTime))) {
+                this.combat.isDrinkingEstus = false;
+            }
+            if (this.combat.isRolling && (typeof this.combat.rollTime !== 'number' || this.combat.rollTime > 1.0 || isNaN(this.combat.rollTime))) {
+                this.combat.isRolling = false;
+                this.combat.isInvincible = false;
+                this.combat.isBackstep = false;
+            }
+        }
 
         // 1. DEATH COLLAPSE
         if (this.combat.isDead) {
@@ -1154,21 +1264,32 @@ class DarkSoulsGame {
             const armSwing = isSprinting ? 0.85 : 0.48;
             const phase = time * freq;
 
-            // Alternating hips
+            // Alternating hips with lateral tilt & pelvic bounce
             if (uData.rightHip && uData.leftHip) {
                 uData.rightHip.rotation.x = Math.sin(phase) * stride;
+                uData.rightHip.rotation.z = Math.sin(phase) * 0.08;
                 uData.leftHip.rotation.x = -Math.sin(phase) * stride;
+                uData.leftHip.rotation.z = -Math.sin(phase) * 0.08;
             }
 
             // Pelvic bounce & forward lean
             if (uData.bodyGroup) {
-                uData.bodyGroup.position.y = 1.0 + Math.abs(Math.sin(phase)) * (isSprinting ? 0.07 : 0.04);
+                uData.bodyGroup.position.y = 1.0 + Math.abs(Math.sin(phase)) * (isSprinting ? 0.08 : 0.045);
             }
             if (uData.torso) {
-                uData.torso.rotation.x = isSprinting ? 0.22 : 0.07;
-                uData.torso.rotation.y = -Math.sin(phase) * 0.12;
-                uData.torso.rotation.z = Math.cos(phase) * 0.03;
+                uData.torso.rotation.x = isSprinting ? 0.24 : 0.08;
+                uData.torso.rotation.y = -Math.sin(phase) * 0.14;
+                uData.torso.rotation.z = Math.cos(phase) * 0.04;
                 uData.torso.scale.set(1, 1, 1);
+            }
+
+            // Dynamic 3D Knight's Cape Wind Simulation (Flutter & Stream)
+            if (uData.capeGroup) {
+                const wind = Math.sin(time * 6) * 0.14 + Math.cos(time * 3.5) * 0.08;
+                const speedFactor = isSprinting ? 0.82 : 0.45;
+                uData.capeGroup.rotation.x = speedFactor + wind * 0.4;
+                if (uData.capeJoint1) uData.capeJoint1.rotation.x = (speedFactor * 0.75) + Math.sin(time * 8 + 0.5) * 0.18;
+                if (uData.capeJoint2) uData.capeJoint2.rotation.x = (speedFactor * 0.85) + Math.sin(time * 10 + 1.0) * 0.22;
             }
 
             // Opposite arm swinging
@@ -1392,6 +1513,14 @@ class DarkSoulsGame {
             if (uData.shieldGroup) {
                 uData.shieldGroup.position.set(-0.04, 0.06, 0.16);
                 uData.shieldGroup.rotation.set(0.08, Math.PI / 8, -0.05);
+            }
+
+            // Dynamic idle cape flutter
+            if (uData.capeGroup) {
+                const wind = Math.sin(time * 2.5) * 0.08 + Math.cos(time * 1.6) * 0.05;
+                uData.capeGroup.rotation.x = 0.12 + wind;
+                if (uData.capeJoint1) uData.capeJoint1.rotation.x = 0.09 + Math.sin(time * 3.0 + 0.5) * 0.10;
+                if (uData.capeJoint2) uData.capeJoint2.rotation.x = 0.07 + Math.sin(time * 3.5 + 1.0) * 0.12;
             }
         }
 
