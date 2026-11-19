@@ -846,6 +846,11 @@ class DarkSoulsCharacters {
             map: sunTex,
             roughness: 0.85
         });
+        this.hollowSocketMat = new THREE.MeshStandardMaterial({
+            color: 0x141010,
+            roughness: 0.95,
+            metalness: 0.1
+        });
         this.solairePlumeMat = new THREE.MeshStandardMaterial({
             color: 0xc62828,
             roughness: 0.75
@@ -2607,6 +2612,43 @@ class DarkSoulsCharacters {
     // ----------------------------------------------------
     // CREATE HOLLOW UNDEAD SOLDIER
     // ----------------------------------------------------
+    attachHollowEyes(head, eyeColor = 0xc93010, isBloathead = false) {
+        if (!head) return;
+
+        // Dark sunken skeletal eye sockets
+        const socketGeo = new THREE.BoxGeometry(0.065, 0.045, 0.02);
+        const socketL = new THREE.Mesh(socketGeo, this.hollowSocketMat || new THREE.MeshBasicMaterial({ color: 0x141010 }));
+        socketL.position.set(-0.075, 0.04, 0.148);
+        head.add(socketL);
+
+        const socketR = new THREE.Mesh(socketGeo, this.hollowSocketMat || new THREE.MeshBasicMaterial({ color: 0x141010 }));
+        socketR.position.set(0.075, 0.04, 0.148);
+        head.add(socketR);
+
+        // Subtle sunken soul embers recessed deep inside the sockets (no giant clown dots)
+        const emberGeo = new THREE.SphereGeometry(isBloathead ? 0.024 : 0.02, 6, 6);
+        const emberMat = new THREE.MeshBasicMaterial({ color: eyeColor });
+        const emberL = new THREE.Mesh(emberGeo, emberMat);
+        emberL.position.set(-0.075, 0.04, 0.155);
+        head.add(emberL);
+
+        const emberR = new THREE.Mesh(emberGeo, emberMat);
+        emberR.position.set(0.075, 0.04, 0.155);
+        head.add(emberR);
+
+        // Subtle hollow brow ridge giving an authentic grim dark souls skull countenance
+        const browGeo = new THREE.BoxGeometry(0.24, 0.03, 0.025);
+        const brow = new THREE.Mesh(browGeo, this.hollowSocketMat || new THREE.MeshBasicMaterial({ color: 0x141010 }));
+        brow.position.set(0, 0.075, 0.152);
+        head.add(brow);
+
+        // Sunken hollow mouth cavity
+        const mouthGeo = new THREE.BoxGeometry(0.12, 0.018, 0.015);
+        const mouth = new THREE.Mesh(mouthGeo, this.hollowSocketMat || new THREE.MeshBasicMaterial({ color: 0x141010 }));
+        mouth.position.set(0, -0.07, 0.15);
+        head.add(mouth);
+    }
+
     createHollow(x, z, angle = 0, y = 0) {
         const root = new THREE.Group();
         const bodyGroup = new THREE.Group();
@@ -2623,13 +2665,8 @@ class DarkSoulsCharacters {
         head.position.y = 0.5;
         torso.add(head);
 
-        // Red glowing undead hollow eyes
-        const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.04), new THREE.MeshBasicMaterial({ color: 0xff1100 }));
-        eyeL.position.set(-0.08, 0.05, 0.16);
-        head.add(eyeL);
-        const eyeR = eyeL.clone();
-        eyeR.position.x = 0.08;
-        head.add(eyeR);
+        // Authentic Dark Souls sunken eye sockets with deep soul embers
+        this.attachHollowEyes(head, 0xc93010);
 
         // Broken helm
         const brokenHelm = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.18, 0.34), this.rustedIronMat);
@@ -2729,14 +2766,8 @@ class DarkSoulsCharacters {
         cowl.position.set(0, 0.04, -0.04);
         headGroup.add(cowl);
 
-        // Glowing red hollow eye sockets with soul ember light
-        const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 6), new THREE.MeshBasicMaterial({ color: 0xff2200 }));
-        eyeL.position.set(-0.07, 0.04, 0.15);
-        headGroup.add(eyeL);
-
-        const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 6), new THREE.MeshBasicMaterial({ color: 0xff2200 }));
-        eyeR.position.set(0.07, 0.04, 0.15);
-        headGroup.add(eyeR);
+        // Authentic Dark Souls sunken eye sockets with deep soul embers
+        this.attachHollowEyes(headGroup, 0xc93010);
 
         const soulLight = new THREE.PointLight(0xff2200, 0.45, 1.8);
         soulLight.position.set(0, 0.04, 0.18);
@@ -3068,16 +3099,9 @@ class DarkSoulsCharacters {
             cranium.castShadow = true;
             head.add(cranium);
 
-            // Glowing Undead Eyes
-            const eyeColor = type.includes('crystal') ? 0x00ffff : (type.includes('ghost') ? 0x88ffff : 0xff1100);
-            const eyeGeo = new THREE.SphereGeometry(0.04);
-            const eyeMat = new THREE.MeshBasicMaterial({ color: eyeColor });
-            const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
-            eyeL.position.set(-0.08, 0.05, 0.16);
-            head.add(eyeL);
-            const eyeR = eyeL.clone();
-            eyeR.position.x = 0.08;
-            head.add(eyeR);
+            // Authentic Dark Souls sunken hollow eye sockets with soul embers
+            const eyeColor = type.includes('crystal') ? 0x00ffff : (type.includes('ghost') ? 0x88ffff : 0xc93010);
+            this.attachHollowEyes(head, eyeColor, type === 'chasm_bloathead');
 
             const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.45, 0.13), skinMat);
             rArm.position.y = -0.22;
@@ -3223,12 +3247,8 @@ class DarkSoulsCharacters {
                 rightShoulder.add(cleaver);
                 weapon = cleaver;
             } else if (type === 'chasm_bloathead') {
-                head.scale.set(1.4, 1.4, 1.4);
-                for (let i = 0; i < 6; i++) {
-                    const mEye = new THREE.Mesh(new THREE.SphereGeometry(0.03), new THREE.MeshBasicMaterial({ color: 0xff0022 }));
-                    mEye.position.set((Math.random() - 0.5) * 0.3, (Math.random() - 0.5) * 0.3, 0.16);
-                    head.add(mEye);
-                }
+                head.scale.set(1.35, 1.35, 1.35);
+                // Bloathead: deep sunken eye sockets (random red multi-dots removed)
                 const wand = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.03, 0.9, 6), this.darkSteelMat);
                 wand.position.set(0, -0.2, 0.3);
                 wand.rotation.x = Math.PI / 2.2;

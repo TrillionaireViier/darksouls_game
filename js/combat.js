@@ -1203,17 +1203,7 @@ class DarkSoulsCombat {
     teleportToNavMesh(e, playerPos) {
         if (!e || !e.mesh) return;
         const p = e.mesh.position;
-        // Identify zone corridor and clamp/snap to safe walkable mesh
-        if (p.z >= 28 && p.z <= 95 && p.y >= -1.0 && p.y <= 3.5) {
-            p.x = Math.max(-5.5, Math.min(5.5, p.x * 0.5));
-        } else if (p.z >= 95 && p.z <= 165) {
-            p.x = Math.max(-14.0, Math.min(14.0, p.x));
-            p.z = Math.max(98.0, Math.min(160.0, p.z));
-        } else {
-            const toP = new THREE.Vector3().subVectors(playerPos, p).setY(0);
-            if (toP.lengthSq() < 0.01) toP.set(0, 0, 1);
-            p.addScaledVector(toP.normalize(), 1.5);
-        }
+        // Never jump or teleport towards the player; safely clamp vertical elevation to terrain
         p.y = this.world.getGroundHeight(p.x, p.z, p.y);
         if (this.game && this.game.collisionSystem) {
             this.game.collisionSystem.enforceBoundaries(p, e.radius || 0.85, p.y);
@@ -3049,13 +3039,14 @@ class DarkSoulsCombat {
                     e.losBlockedTimer = 0;
                 }
 
-                // Anti-Stuck: Teleport entity to NavMesh if position doesn't change for 2s during chase
+                // Anti-Stuck: Intelligent lateral steering around obstacles / allies (NO TELEPORTATION)
                 if (!e._lastChasePos) e._lastChasePos = e.mesh.position.clone();
                 const chaseDisp = e.mesh.position.distanceTo(e._lastChasePos);
                 if (chaseDisp < 0.08) {
                     e._stuckChaseTimer = (e._stuckChaseTimer || 0) + delta;
-                    if (e._stuckChaseTimer >= 2.0) {
-                        this.teleportToNavMesh(e, playerPos);
+                    if (e._stuckChaseTimer >= 1.2) {
+                        // Dynamically steer laterally around the obstruction with a random flank offset
+                        e._groupFlankOffset = (Math.random() > 0.5 ? 1 : -1) * (0.8 + Math.random() * 0.6);
                         e._stuckChaseTimer = 0;
                         e._lastChasePos.copy(e.mesh.position);
                     }

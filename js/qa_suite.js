@@ -20,7 +20,7 @@ class DarkSoulsQASuite {
         this.qaOneHpMobsActive = false;
         this.qaOneHpDamageActive = false;
         this.autoBotActive = false;
-        this.watchdogActive = true;
+        this.watchdogActive = false; // Disabled by default in gameplay; activated only in QA Suite mode
 
         // Watchdog & Geometry Stuck Tracking State
         this.lastWatchdogPos = new THREE.Vector3();

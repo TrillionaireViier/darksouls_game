@@ -1703,8 +1703,8 @@ class DarkSoulsGame {
             this.collisionSystem.enforceBoundaries(pPos, playerRadius, pPos.y);
         }
 
-        // 5. Abyss Fall Protection (falls out of bounds respawn at bonfire)
-        if (pPos.y < -12) {
+        // 5. Abyss Fall Protection (falls out of bounds respawn at bonfire, safe above -28m)
+        if (pPos.y < -28.0) {
             this.respawnPlayer();
         }
     }
@@ -2349,9 +2349,10 @@ class DarkSoulsGame {
                 this.selectSkin(data.equippedSkin, false);
             }
 
-            // Restore position and rotation
+            // Restore position and rotation (preserve subterranean Catacombs depth)
             if (data.playerPos && typeof data.playerPos.x === 'number' && typeof data.playerPos.z === 'number') {
-                this.playerMesh.position.set(data.playerPos.x, data.playerPos.y || 0, data.playerPos.z);
+                const targetY = typeof data.playerPos.y === 'number' ? data.playerPos.y : this.world.getGroundHeight(data.playerPos.x, data.playerPos.z);
+                this.playerMesh.position.set(data.playerPos.x, targetY, data.playerPos.z);
             } else {
                 this.playerMesh.position.set(0, 0, 5);
             }
