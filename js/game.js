@@ -1602,28 +1602,28 @@ class DarkSoulsGame {
         if (!uData || !uData.swordGroup) return;
 
         const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
-        let targetRotX = -0.15, targetRotY = 0.05, targetRotZ = -0.12;
+        let targetRotX = 0.35, targetRotY = 0.08, targetRotZ = -0.15;
         let targetPosX = 0.02, targetPosY = 0.04, targetPosZ = 0.06;
 
         if (wpnId === 'halberd') {
-            // Authentic Dark Souls halberd polearm stance (held upright & forward, never skewering backwards)
-            targetRotX = -0.10; targetRotY = 0.04; targetRotZ = -0.05;
+            // Authentic Dark Souls halberd polearm stance (held upright, balanced forward)
+            targetRotX = 0.16; targetRotY = 0.05; targetRotZ = -0.06;
             targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.02;
         } else if (wpnId === 'zweihander' || wpnId === 'dark_moon_greatsword') {
-            // Colossal greatsword held naturally forward in high ready stance
-            targetRotX = -0.16; targetRotY = 0.08; targetRotZ = -0.14;
-            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
+            // Colossal greatsword held upright in ready posture
+            targetRotX = 0.32; targetRotY = 0.10; targetRotZ = -0.16;
+            targetPosX = 0.02; targetPosY = 0.05; targetPosZ = 0.06;
         } else if (wpnId === 'dragontooth') {
-            targetRotX = -0.12; targetRotY = 0.08; targetRotZ = -0.10;
+            targetRotX = 0.28; targetRotY = 0.10; targetRotZ = -0.14;
             targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
         } else if (wpnId === 'torch') {
-            targetRotX = -0.10; targetRotY = 0.0; targetRotZ = -0.05;
+            targetRotX = 0.12; targetRotY = 0.0; targetRotZ = -0.05;
             targetPosX = 0.0; targetPosY = 0.06; targetPosZ = 0.04;
         } else if (wpnId === 'uchigatana' || wpnId === 'rivers_of_blood') {
-            targetRotX = -0.18; targetRotY = 0.06; targetRotZ = -0.10;
+            targetRotX = 0.32; targetRotY = 0.08; targetRotZ = -0.12;
             targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
         } else if (wpnId === 'moonlight') {
-            targetRotX = -0.16; targetRotY = 0.08; targetRotZ = -0.14;
+            targetRotX = 0.32; targetRotY = 0.08; targetRotZ = -0.14;
             targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
         }
 
