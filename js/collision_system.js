@@ -41,8 +41,8 @@ class CollisionSystem {
         const initialX = pos.x;
         const initialZ = pos.z;
 
-        // A. Royal Bridge Parapets (z in [28.0, 95.0])
-        if (pos.z >= 28.0 && pos.z <= 95.0) {
+        // A. Royal Bridge Parapets (z in [22.0, 95.0])
+        if (pos.z >= 22.0 && pos.z <= 95.0) {
             if (y >= -1.0 && y <= 3.5) {
                 const minX = -6.45 + radius;
                 const maxX = 6.45 - radius;
@@ -73,11 +73,12 @@ class CollisionSystem {
             pos.z = Math.min(148.0 - radius, pos.z);
         }
 
-        // E. High Ramparts Walkway (z in [22.0, 90.0], y > 4.5)
-        if (pos.z >= 22.0 && pos.z <= 90.0 && y > 4.5) {
+        // E. High Ramparts Walkway (z in [22.0, 95.0], y > 4.5)
+        if (pos.z >= 22.0 && pos.z <= 95.0 && y > 4.5) {
             const minX = 16.5 + radius;
             const maxX = 23.5 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
+            pos.z = Math.min(94.5 - radius, pos.z);
         }
 
         // F. Courtyard Starting Arena (z in [-28.0, 28.0], x in [-28.0, 28.0])
@@ -259,6 +260,12 @@ class CollisionSystem {
         const playerPos = (this.game && this.game.playerMesh) ? this.game.playerMesh.position : null;
         const enemies = (this.combat && this.combat.enemies) ? this.combat.enemies : [];
         const boss = (this.combat && this.combat.boss) ? this.combat.boss : null;
+
+        // 0. Player obstacle and boundary resolution
+        if (playerPos) {
+            this.resolveObstacles(playerPos, 0.45, playerPos.y, playerPos.y + 1.8);
+            this.enforceBoundaries(playerPos, 0.45, playerPos.y);
+        }
 
         // 1. Entity pairwise separation force
         this.resolveSeparation(enemies, playerPos, 0.45, boss);

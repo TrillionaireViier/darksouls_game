@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL';
+            var TARGET_BUILD = '20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -53,6 +53,13 @@
             box-sizing: border-box;
             user-select: none;
             -webkit-user-select: none;
+        }
+
+        /* Allow full text selection in QA terminal logs, textareas, inputs, and modals */
+        input, textarea, pre, code, #qa-terminal-logs, #qa-terminal-logs *, #qa-copy-textarea, #qa-copy-results-display, #qa-copy-results-display *, .selectable-text {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            cursor: text !important;
         }
 
         body, html {
@@ -2767,13 +2774,16 @@
     </button>
 
     <!-- Visible Results Toast / Overlay when copying results -->
-    <div id="qa-copy-results-display" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: #0b1320; border: 2px solid #00e5ff; box-shadow: 0 0 35px rgba(0,229,255,0.5); border-radius: 6px; padding: 16px; width: 90%; max-width: 600px; color: #fff;">
+    <div id="qa-copy-results-display" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: #0b1320; border: 2px solid #00e5ff; box-shadow: 0 0 35px rgba(0,229,255,0.5); border-radius: 6px; padding: 16px; width: 90%; max-width: 640px; color: #fff;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span style="font-weight: 700; color: #80d8ff; font-family: 'Cinzel', serif;">📋 QA TEST RESULTS</span>
-            <button onclick="document.getElementById('qa-copy-results-display').style.display='none'" style="background: none; border: 1px solid #ff5555; color: #ff5555; padding: 2px 8px; cursor: pointer; border-radius: 3px;">✕ CLOSE</button>
+            <div style="display: flex; gap: 8px;">
+                <button id="btn-qa-copy-manual" onclick="qaManualCopyText()" style="background: #00e5ff; color: #000; font-weight: 800; border: none; padding: 5px 14px; cursor: pointer; border-radius: 4px; font-size: 0.8rem; box-shadow: 0 0 10px rgba(0,229,255,0.5);">📋 COPY TO CLIPBOARD</button>
+                <button onclick="document.getElementById('qa-copy-results-display').style.display='none'" style="background: none; border: 1px solid #ff5555; color: #ff5555; padding: 5px 12px; cursor: pointer; border-radius: 4px; font-size: 0.8rem;">✕ CLOSE</button>
+            </div>
         </div>
-        <textarea id="qa-copy-textarea" readonly style="width: 100%; height: 240px; background: #06090f; color: #00ffaa; border: 1px solid #1e293b; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; padding: 8px; box-sizing: border-box; resize: none;"></textarea>
-        <div style="margin-top: 10px; font-size: 0.75rem; color: #94a3b8; text-align: center;">Results have been copied to clipboard and displayed above.</div>
+        <textarea id="qa-copy-textarea" style="width: 100%; height: 260px; background: #06090f; color: #00ffaa; border: 1px solid #1e293b; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; padding: 10px; box-sizing: border-box; resize: vertical; user-select: text !important; -webkit-user-select: text !important;"></textarea>
+        <div style="margin-top: 10px; font-size: 0.75rem; color: #94a3b8; text-align: center;">Text is fully selectable (Ctrl+A / Cmd+A) and auto-copied to clipboard.</div>
     </div>
 
     <!-- 🛠️ QA TEST AUTOMATION & 1-HP SANDBOX SUITE -->
@@ -3894,6 +3904,55 @@
             if (disp && ta) {
                 ta.value = res;
                 disp.style.display = 'block';
+                setTimeout(() => {
+                    ta.focus();
+                    ta.select();
+                    ta.setSelectionRange(0, 99999);
+                }, 50);
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(res).then(() => {
+                    if (window.game && window.game.showNotification) {
+                        window.game.showNotification("📋 QA TEST RESULTS COPIED TO CLIPBOARD!");
+                    }
+                }).catch(() => {
+                    try {
+                        if (ta) {
+                            ta.select();
+                            document.execCommand('copy');
+                        }
+                    } catch (e) {}
+                });
+            } else {
+                try {
+                    if (ta) {
+                        ta.select();
+                        document.execCommand('copy');
+                        if (window.game && window.game.showNotification) {
+                            window.game.showNotification("📋 QA TEST RESULTS COPIED TO CLIPBOARD!");
+                        }
+                    }
+                } catch (e) {}
+            }
+        }
+
+        function qaManualCopyText() {
+            const ta = document.getElementById('qa-copy-textarea');
+            const btn = document.getElementById('btn-qa-copy-manual');
+            if (ta) {
+                ta.focus();
+                ta.select();
+                ta.setSelectionRange(0, 99999);
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(ta.value).catch(() => {});
+                }
+                document.execCommand('copy');
+                if (btn) btn.textContent = '✅ COPIED!';
+                setTimeout(() => { if (btn) btn.textContent = '📋 COPY TO CLIPBOARD'; }, 2000);
+                if (window.game && window.game.showNotification) {
+                    window.game.showNotification("📋 COPIED TO CLIPBOARD!");
+                }
             }
         }
 
@@ -4469,21 +4528,21 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/audio.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/lore_items.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/world.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/character.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/siege_warfare.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/heraldry_nobility.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/apothecary_crafting.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/collision_system.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/qa_bot_tester.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/combat.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/postprocessing.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/qa_suite.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/blacksmith_forge.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
-    <script src="js/game.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/three.min.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/audio.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/lore_items.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/world.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/character.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/siege_warfare.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/heraldry_nobility.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/apothecary_crafting.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/collision_system.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/qa_bot_tester.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/combat.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/postprocessing.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/qa_suite.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/blacksmith_forge.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
+    <script src="js/game.js?v=20261119_DARK_SOULS_COLLISION_AND_QA_COPY_FIX"></script>
 </body>
 </html>
 <!-- Vercel Connect trigger sync: Thu Nov 19 11:40:54 UTC 2026 -->

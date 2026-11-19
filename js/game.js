@@ -1680,8 +1680,8 @@ class DarkSoulsGame {
         }
 
         // 4. Architectural Bounds & Railing Collision Enforcements:
-        // A. Royal Bridge Parapets (z in [28, 95.0])
-        if (pPos.z >= 28 && pPos.z <= 95.0) {
+        // A. Royal Bridge Parapets (z in [22, 95.0])
+        if (pPos.z >= 22 && pPos.z <= 95.0) {
             if (pPos.y >= -1.0 && pPos.y <= 3.5) {
                 pPos.x = Math.max(-6.45, Math.min(6.45, pPos.x));
             }
@@ -1704,9 +1704,10 @@ class DarkSoulsGame {
             pPos.z = Math.min(148.0, pPos.z);
         }
 
-        // E. High Ramparts Walkway (z in [22, 90], y > 4.5)
-        if (pPos.z >= 22 && pPos.z <= 90 && pPos.y > 4.5) {
+        // E. High Ramparts Walkway (z in [22, 95], y > 4.5)
+        if (pPos.z >= 22 && pPos.z <= 95 && pPos.y > 4.5) {
             pPos.x = Math.max(16.5, Math.min(23.5, pPos.x));
+            pPos.z = Math.min(94.5, pPos.z);
         }
 
         // F. Courtyard Starting Arena (z in [-30, 28], x in [-30, 30])
@@ -1731,8 +1732,9 @@ class DarkSoulsGame {
             this.collisionSystem.enforceBoundaries(pPos, playerRadius, pPos.y);
         }
 
-        // 5. Abyss Fall Protection (falls out of bounds respawn at bonfire, safe above -28m)
-        if (pPos.y < -28.0) {
+        // 5. Abyss Fall Protection (fatal fall into chasm respawns at bonfire)
+        if (pPos.y < -9.5) {
+            this.showNotification("💀 PLUNGED INTO THE ABYSS");
             this.respawnPlayer();
         }
     }

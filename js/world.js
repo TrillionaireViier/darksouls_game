@@ -777,6 +777,20 @@ class DarkSoulsWorld {
             return -4.0;
         }
 
+        // 7. Dynamic Fast-Travel Lordran Realm Ground Height
+        if (window.DARK_SOULS_LOCATIONS) {
+            for (let i = 0; i < window.DARK_SOULS_LOCATIONS.length; i++) {
+                const loc = window.DARK_SOULS_LOCATIONS[i];
+                const dx = x - loc.pos[0];
+                const dz = z - loc.pos[2];
+                if (dx * dx + dz * dz < 35 * 35) {
+                    if (currentY !== null && Math.abs(currentY - loc.pos[1]) < 4.5) {
+                        return loc.pos[1];
+                    }
+                }
+            }
+        }
+
         // Beyond citadel architectural borders lies the bottomless chasm
         return -50.0;
     }
@@ -916,9 +930,10 @@ class DarkSoulsWorld {
         rampartFloor.receiveShadow = true;
         this.scene.add(rampartFloor);
 
-        // Outer Fortress Wall with Crenellations (x=24.6, y=6.0 to 10.0)
-        this.createWall(24.6, 8.0, 56.5, 1.2, 4.0, 69);
-        for (let cz = 24; cz <= 88; cz += 4) {
+        // Outer Fortress Wall with Crenellations (x=24.6, y=6.0 to 10.0, z=22 to 96)
+        this.createWall(24.6, 8.0, 59.0, 1.2, 4.0, 74);
+        this.createWall(20.0, 8.0, 95.5, 8.5, 4.0, 1.2); // North containment wall of High Ramparts Walkway
+        for (let cz = 24; cz <= 94; cz += 4) {
             const cren = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.0, 2.0), this.wallMat);
             cren.position.set(24.6, 10.5, cz);
             cren.castShadow = true;
