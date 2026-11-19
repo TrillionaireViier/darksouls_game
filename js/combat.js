@@ -74,6 +74,14 @@ class DarkSoulsCombat {
         this.arrows = [];
         this.ragdolls = [];
 
+        // Poison, Toxic & Status Effect Engine
+        this.isPoisoned = false;
+        this.poisonTimer = 0;
+        this.poisonTickTimer = 0;
+        this.poisonBuildup = 0;
+        this.maxPoisonBuildup = 100;
+        this.isPetrified = false;
+
         // Weapon Arsenal System (6 Distinct Weapons)
         this.weapons = {
             sword: {
@@ -774,11 +782,36 @@ class DarkSoulsCombat {
             this.ragdolls = [];
         }
 
-        // 30 MOBS COMPENDIUM SPANNING LORDRAN (CATACOMBS -5M, BRIDGE 0M, RAMPARTS +6M)
+        // Balanced Tactical Mob Spawning (No 570-mob swarm dog-piles at spawn)
         const mobList = (window.DarkSoulsLore && window.DarkSoulsLore.mobs) || window.DARK_SOULS_MOBS || [];
         if (mobList.length > 0) {
+            let starterZoneCount = 0;
+            const spawnedCoords = [];
+
             mobList.forEach(mobDef => {
-                const pos = mobDef.defaultPos || [0, 0, 0];
+                const pos = mobDef.defaultPos;
+                if (!pos || (pos[0] === 0 && pos[1] === 0 && pos[2] === 0)) return;
+
+                const dist = Math.sqrt(pos[0] * pos[0] + pos[2] * pos[2]);
+
+                // Safe sanctuary zone: no mobs within 14m of bonfire / player start
+                if (dist < 14.0) return;
+
+                // Starter Bridge Encounter: Max 3 hollows along the roadway
+                if (dist < 35.0) {
+                    if (starterZoneCount >= 3) return;
+                    starterZoneCount++;
+                }
+
+                // Minimum spacing between mobs (at least 9 meters) to prevent clumping
+                const isTooClose = spawnedCoords.some(c => {
+                    const dx = c[0] - pos[0];
+                    const dz = c[1] - pos[2];
+                    return (dx * dx + dz * dz) < 81.0;
+                });
+                if (isTooClose) return;
+
+                spawnedCoords.push([pos[0], pos[2]]);
                 this.createCustomMob(mobDef, pos[0], pos[2], 0, pos[1]);
             });
         } else {
@@ -1415,18 +1448,21 @@ class DarkSoulsCombat {
 
     tryRoll(moveDir) {
         if (this.bufferAction('ROLL', moveDir)) return;
-        if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
-        // Roll-cancel during attack recovery frames (after initial swing impact)
-        if (this.isAttacking && this.attackTime < 0.20) return;
-        if (this.stamina < 22) return;
+        if (this.isDead || this.isRolling || this.isDrinkingEstus) return;
+        // Roll-escape: allow breaking out of minor stagger after 0.1s!
+        if (this.isStaggered && this.staggerTime > 0.40) return;
+        // Roll-cancel during attack recovery frames
+        if (this.isAttacking && this.attackTime < 0.16) return;
+        if (this.stamina < 16) return;
 
+        this.isStaggered = false; // Immediately breaks free from flinch/stunlock!
         this.isRolling = true;
         this.rollTime = 0;
         this.isInvincible = true;
         this.isAttacking = false;
         this.isBlocking = false;
-        this.stamina = Math.max(0, this.stamina - 22);
-        this.staminaDelay = 0.45;
+        this.stamina = Math.max(0, this.stamina - 18);
+        this.staminaDelay = 0.35;
 
         // Directional Roll or Dark Souls Backstep
         if (moveDir && moveDir.lengthSq() > 0.01) {
@@ -1445,16 +1481,18 @@ class DarkSoulsCombat {
 
     tryDrinkEstus() {
         if (this.bufferAction('ESTUS')) return;
-        if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered) return;
+        if (this.isDead || this.isRolling || this.isDrinkingEstus) return;
+        if (this.isStaggered && this.staggerTime > 0.35) return;
         if (this.estusFlasks <= 0) {
             this.game.showNotification("NO ESTUS REMAINING");
             return;
         }
-        if (this.hp >= this.maxHp) {
+        if (this.hp >= this.maxHp && !this.isPoisoned) {
             this.game.showNotification("HEALTH ALREADY FULL");
             return;
         }
 
+        this.isStaggered = false;
         this.isDrinkingEstus = true;
         this.estusTime = 0;
         this.isBlocking = false;
@@ -1462,15 +1500,52 @@ class DarkSoulsCombat {
         this.estusFlasks--;
         this.audio.playEstusDrink();
 
-        // Heal after 0.5s drinking animation
+        // Heal and cleanse toxins after drinking animation
         setTimeout(() => {
             if (!this.isDead) {
                 const healAmt = Math.round(this.maxHp * 0.65);
                 this.hp = Math.min(this.maxHp, this.hp + healAmt);
                 this.world.spawnEstusParticles(this.game.playerMesh.position);
                 this.game.showNotification(`+${healAmt} HP RESTORED`);
+                if (this.isPoisoned) {
+                    this.isPoisoned = false;
+                    this.poisonTimer = 0;
+                    this.game.showNotification("✨ ESTUS CLEANSED POISON & VENOM!");
+                }
+                if (this.isPetrified) this.isPetrified = false;
             }
         }, 550);
+    }
+
+    // ----------------------------------------------------
+    // QUICK ANTIDOTE USE (Key T or HUD Button)
+    // Instant purge of poison, toxic, and serpent venom
+    // ----------------------------------------------------
+    tryDrinkAntidote() {
+        if (this.isDead || this.isRolling) return;
+
+        const apoth = (this.game && this.game.apothecary) ? this.game.apothecary : null;
+        let count = (apoth && apoth.craftedMeds) ? apoth.craftedMeds.venomAntidotes : 5;
+        if (count <= 0) {
+            this.game.showNotification("⚠️ NO ANTIDOTES LEFT IN POUCH!");
+            return;
+        }
+        if (apoth && apoth.craftedMeds) {
+            apoth.craftedMeds.venomAntidotes--;
+            const antiEl = document.getElementById('antidote-count');
+            if (antiEl) antiEl.textContent = `x ${apoth.craftedMeds.venomAntidotes}`;
+        }
+
+        this.isPoisoned = false;
+        this.poisonTimer = 0;
+        this.poisonBuildup = 0;
+        this.isPetrified = false;
+        this.isStaggered = false;
+        if (this.audio && this.audio.playEstusDrink) this.audio.playEstusDrink();
+        this.game.showNotification("🌿 SOVEREIGN ANTIDOTE: ALL POISONS & VENOM PURGED!");
+        if (this.world && this.world.spawnHitSparks && this.game.playerMesh) {
+            this.world.spawnHitSparks(this.game.playerMesh.position, true);
+        }
     }
 
     // ----------------------------------------------------
@@ -1905,27 +1980,32 @@ class DarkSoulsCombat {
         this.game.flashDamageScreen();
         if (this.game.triggerHitstop) this.game.triggerHitstop(3);
 
-        // Poise & Stagger: Poise damage, regenerates after 3s delay
-        const directPoiseDmg = Math.max(20, Math.round(damage * 0.45));
+        // Poise & Stagger: Poise damage, regenerates after 2.5s delay
+        const directPoiseDmg = Math.max(15, Math.round(damage * 0.35));
         this.poise -= directPoiseDmg;
-        this.poiseRegenDelay = 3.0;
+        this.poiseRegenDelay = 2.5;
 
         if (this.hp <= 0) {
             this.killPlayer();
         } else if (this.poise <= 0) {
-            // Hitting 0 poise breaks guard for 2.2s
+            // Hitting 0 poise breaks guard for brief moment (0.55s max, not 2.2s!)
             this.poise = 0;
             this.isStaggered = true;
-            this.staggerTime = 2.2;
-            this.maxStaggerTimer = 2.2;
+            this.staggerTime = 0.55;
+            this.maxStaggerTimer = 0.55;
             this.isAttacking = false;
             this.isBlocking = false;
-            this.game.showNotification("⚠️ POISE BROKEN! STAGGERED (2.2s)");
+            this.game.showNotification("⚠️ POISE BROKEN!");
         } else {
-            this.isStaggered = true;
-            this.staggerTime = 0.45;
-            this.maxStaggerTimer = 0.45;
-            this.isAttacking = false;
+            // Player still has poise! Only stagger on colossal boss hits (damage >= 85)
+            if (damage >= 85) {
+                this.isStaggered = true;
+                this.staggerTime = 0.22;
+                this.maxStaggerTimer = 0.22;
+            } else {
+                // Poise absorbs impact! Player retains full movement, attack, and roll freedom!
+                this.isStaggered = false;
+            }
         }
     }
 
@@ -2063,6 +2143,19 @@ class DarkSoulsCombat {
             }
         }
 
+        // Cleanse status effects & replenish supplies
+        this.poise = this.maxPoise;
+        this.isPoisoned = false;
+        this.poisonTimer = 0;
+        this.poisonBuildup = 0;
+        this.isPetrified = false;
+        this.isStaggered = false;
+        if (this.game && this.game.apothecary) {
+            this.game.apothecary.craftedMeds.venomAntidotes = 5;
+            const antiEl = document.getElementById('antidote-count');
+            if (antiEl) antiEl.textContent = 'x 5';
+        }
+
         // Resets regular hollow soldiers
         this.spawnEnemies();
         this.audio.playBonfireIgnite();
@@ -2167,6 +2260,27 @@ class DarkSoulsCombat {
                 if (b.hp <= 0) this.killBoss();
             }
             if (b.burnTimer <= 0) b.isBurning = false;
+        }
+
+        // Poison & Toxic Status Tick Processing (Does NOT stagger player!)
+        if (this.isPoisoned) {
+            this.poisonTimer -= delta;
+            this.poisonTickTimer = (this.poisonTickTimer || 0) + delta;
+            if (this.poisonTickTimer >= 1.5) {
+                this.poisonTickTimer = 0;
+                const pDmg = 5;
+                this.hp = Math.max(1, this.hp - pDmg);
+                if (this.game && this.game.showDamageNumber && this.game.playerMesh) {
+                    this.game.showDamageNumber(this.game.playerMesh.position, pDmg, false);
+                }
+                if (this.world && this.world.spawnHitSparks && this.game.playerMesh) {
+                    this.world.spawnHitSparks(this.game.playerMesh.position, false);
+                }
+            }
+            if (this.poisonTimer <= 0) {
+                this.isPoisoned = false;
+                if (this.game) this.game.showNotification("✨ POISON PURGED FROM BLOODSTREAM!");
+            }
         }
 
         // Pine Resin Fire Buff Timer
@@ -2624,6 +2738,15 @@ class DarkSoulsCombat {
             }
         }
 
+        // Active melee attacker throttle (prevent 5 mobs striking simultaneously)
+        let activeMeleeStrikes = 0;
+        for (let k = 0; k < chasingMobs.length; k++) {
+            const m = chasingMobs[k].mob;
+            if (m.isAttacking && m.behaviorType !== 'Ranged' && !m.isArcher) {
+                activeMeleeStrikes++;
+            }
+        }
+
         for (let i = 0; i < this.enemies.length; i++) {
             const e = this.enemies[i];
             if (!e.mesh) continue;
@@ -2941,7 +3064,9 @@ class DarkSoulsCombat {
                 }
 
                 // If in attack range, trigger attack when cooldown expires
-                const canAttack = (behavior === 'Ranged' || behavior === 'Caster' || e.isArcher) ? (dist >= 3.0 && dist <= aggroRange) : (dist <= preferredDist + 0.35);
+                const canAttack = (behavior === 'Ranged' || behavior === 'Caster' || e.isArcher) ? 
+                    (dist >= 3.0 && dist <= aggroRange) : 
+                    (dist <= preferredDist + 0.35 && activeMeleeStrikes < 2);
                 if (canAttack) {
                     e.cooldown -= delta;
                     if (e.cooldown <= 0 && !e.isAttacking) {

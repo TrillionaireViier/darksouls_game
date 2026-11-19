@@ -1654,9 +1654,13 @@
             <div class="eq-slot eq-right active" onclick="cycleWeapon()" title="Equipped Weapon (Click to cycle, or press 2 / X)" style="cursor: pointer; border-color: #ffd276;">
                 <span class="eq-icon">⚔️</span>
             </div>
-            <div class="eq-slot eq-bottom active" title="Estus Flask (Press R or 1)">
+            <div class="eq-slot eq-bottom active" onclick="if(window.game&&window.game.combat)window.game.combat.tryDrinkEstus()" title="Estus Flask (Press R or 1)" style="cursor: pointer;">
                 <span class="eq-icon">🧪</span>
                 <span class="eq-count" id="estus-count">x 5</span>
+            </div>
+            <div class="eq-slot active" id="antidote-hud-btn" onclick="if(window.game&&window.game.combat)window.game.combat.tryDrinkAntidote()" title="Sovereign Antidote [P / V] (Purge Poison & Venom)" style="cursor: pointer; border-color: #33ff88; background: rgba(20,50,30,0.55); position: absolute; left: 88px; bottom: 0;">
+                <span class="eq-icon">🌿</span>
+                <span class="eq-count" id="antidote-count">x 5</span>
             </div>
         </div>
     </div>
@@ -3587,6 +3591,7 @@
 
             <!-- Row 4: Equipment Stance -->
             <button class="touch-action-btn" id="touch-btn-weapon" title="Cycle Equipped Weapon">🔄<span class="touch-label">Swap</span></button>
+            <button class="touch-action-btn" id="touch-btn-antidote" onclick="if(window.game&&window.game.combat)window.game.combat.tryDrinkAntidote()" title="Antidote Cleanse [P]" style="border-color: #33ff88; color: #a5ffbe;">🌿<span class="touch-label">Antidote</span></button>
         </div>
     </div>
 
@@ -4401,20 +4406,20 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/audio.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/lore_items.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/world.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/character.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/siege_warfare.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/heraldry_nobility.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/apothecary_crafting.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/collision_system.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/qa_bot_tester.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/combat.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/postprocessing.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/qa_suite.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/blacksmith_forge.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
-    <script src="js/game.js?v=20261119_BOSS_ATTACKS_RAGDOLL_ARCHERS"></script>
+    <script src="js/three.min.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/audio.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/lore_items.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/world.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/character.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/siege_warfare.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/heraldry_nobility.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/apothecary_crafting.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/collision_system.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/qa_bot_tester.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/combat.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/postprocessing.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/qa_suite.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/blacksmith_forge.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
+    <script src="js/game.js?v=20261119_POISE_ANTIDOTE_BALANCE_UNFUCK"></script>
 </body>
 </html>

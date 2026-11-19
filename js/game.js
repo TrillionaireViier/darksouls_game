@@ -197,7 +197,7 @@ class DarkSoulsGame {
             // Defocus any HTML button so keys are never trapped by UI elements
             if (document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                 const k = (e.key || '').toLowerCase();
-                if (['w', 'a', 's', 'd', 'ц', 'ф', 'ы', 'в', ' ', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift', 'e', 'q', 'r', 'f', 'j', 'k'].includes(k) ||
+                if (['w', 'a', 's', 'd', 'ц', 'ф', 'ы', 'в', ' ', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift', 'e', 'q', 'r', 'f', 'j', 'k', 'p', 'v', 't', 'з', 'м', 'е'].includes(k) ||
                     ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'ShiftLeft', 'ShiftRight', 'KeyE', 'KeyQ', 'KeyR', 'KeyF', 'KeyJ', 'KeyK', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
                     document.activeElement.blur();
                 }
@@ -211,6 +211,7 @@ class DarkSoulsGame {
             if (e.code === 'KeyE' || e.key === 'e' || e.key === 'E' || e.key === 'у' || e.key === 'У') this.handleInteraction();
             if (e.code === 'KeyT' || e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') this.toggleTorch();
             if (e.code === 'KeyR' || e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К' || e.code === 'Digit1') this.combat.tryDrinkEstus();
+            if (e.code === 'KeyP' || e.key === 'p' || e.key === 'P' || e.key === 'з' || e.key === 'З' || e.code === 'KeyV' || e.key === 'v' || e.key === 'V' || e.key === 'м' || e.key === 'М' || e.code === 'Digit4') this.combat.tryDrinkAntidote();
             if (e.code === 'Digit2' || e.code === 'KeyX' || e.key === 'x' || e.key === 'X' || e.key === 'ч' || e.key === 'Ч') this.cycleEquippedWeapon(1);
             if (e.code === 'KeyZ' || e.key === 'z' || e.key === 'Z' || e.key === 'я' || e.key === 'Я') this.cycleEquippedWeapon(-1);
             if (e.code === 'KeyC' || e.key === 'c' || e.key === 'C' || e.key === 'с' || e.key === 'С') this.openWeaponArsenalModal();
@@ -1232,11 +1233,13 @@ class DarkSoulsGame {
 
         let isSprinting = false;
 
-        if (isMoving && !this.combat.isAttacking && !this.combat.isDrinkingEstus && !this.combat.isStaggered) {
+        const cannotMove = this.combat.isDrinkingEstus || (this.combat.isStaggered && this.combat.staggerTime > 0.35);
+        if (isMoving && !this.combat.isAttacking && !cannotMove) {
             isSprinting = (this.keys['ShiftLeft'] || this.keys['ShiftRight']) && this.combat.stamina > 5;
             let speed = isSprinting ? this.sprintSpeed : (this.combat.isBlocking ? this.moveSpeed * 0.55 : this.moveSpeed);
             speed *= speedBonus;
-            if (this.combat && this.combat.isPetrified) speed *= 0.45;
+            if (this.combat && this.combat.isPetrified) speed *= 0.65;
+            if (this.combat && this.combat.isStaggered) speed *= 0.70;
 
             const isInWater = this.playerMesh.position.y <= -4.0;
             if (isInWater) speed *= 0.88;
