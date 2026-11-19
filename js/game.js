@@ -357,6 +357,7 @@ class DarkSoulsGame {
         // Pointer Lock & Mouse Look
         document.addEventListener('pointerlockchange', () => {
             this.isPointerLocked = document.pointerLockElement === this.renderer.domElement;
+            document.body.classList.toggle('is-pointer-locked', this.isPointerLocked);
             const hint = document.getElementById('escape-hint-pill');
             if (hint) {
                 hint.style.display = this.isPointerLocked ? 'flex' : 'none';

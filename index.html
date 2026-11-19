@@ -1098,8 +1098,70 @@
         #touch-btn-attack   { grid-column: 2; grid-row: 3; width: 66px; height: 66px; margin: -5px; border-color: #ffd276; background: radial-gradient(circle, rgba(95, 60, 22, 0.95) 0%, rgba(35, 20, 8, 0.95) 100%); font-size: 0.82rem; font-weight: 900; box-shadow: 0 0 18px rgba(255, 210, 118, 0.65); z-index: 2; }
         #touch-btn-roll     { grid-column: 3; grid-row: 3; border-color: rgba(80, 175, 255, 0.85); color: #c8e5ff; background: rgba(14, 28, 48, 0.88); }
 
-        /* Row 4: Equipment Stance */
+        /* Row 4: Equipment Stance & Mobile Command Menu */
+        #touch-btn-menu     { grid-column: 1; grid-row: 4; border-color: rgba(255, 215, 0, 0.75); color: #ffd778; }
         #touch-btn-weapon   { grid-column: 2; grid-row: 4; border-color: rgba(255, 215, 120, 0.75); color: #ffd778; }
+        #touch-btn-antidote { grid-column: 3; grid-row: 4; border-color: #33ff88; color: #a5ffbe; }
+
+        /* =================================================== */
+        /* BOTTOM ACTION DOCK (INVENTORY, BOSSES, LORE, QA)    */
+        /* Clean auto-hide during gameplay                     */
+        /* =================================================== */
+        #bottom-dock-hover-zone {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 20px;
+            z-index: 9998;
+            pointer-events: auto;
+        }
+
+        #desktop-bottom-action-dock {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%) translateY(95px);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            max-width: calc(100vw - 40px);
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Peek bottom dock on desktop only when cursor is unlocked and hovered */
+        #bottom-dock-hover-zone:hover ~ #desktop-bottom-action-dock,
+        #desktop-bottom-action-dock:hover {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Strictly hidden during active gameplay with pointer locked */
+        body.is-pointer-locked #desktop-bottom-action-dock,
+        body.is-pointer-locked #bottom-dock-hover-zone {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* On mobile / touch screen: completely hide bottom dock to prevent UI clutter */
+        @media (hover: none) and (pointer: coarse) {
+            #desktop-bottom-action-dock,
+            #bottom-dock-hover-zone {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            #desktop-bottom-action-dock,
+            #bottom-dock-hover-zone {
+                display: none !important;
+            }
+        }
 
         /* =================================================== */
         /* RESPONSIVE DESIGN: TABLET & MOBILE ADAPTIVE ENGINE  */
@@ -2880,8 +2942,11 @@
         </div>
     </div>
 
-    <!-- Central Bottom Action Dock (Cleanly centered, never collides with edge controls) -->
-    <div id="desktop-bottom-action-dock" style="position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; gap: 8px; align-items: center; justify-content: center; max-width: calc(100vw - 40px); pointer-events: auto;">
+    <!-- Invisible Bottom Screen Hover Trigger Zone (Desktop peek) -->
+    <div id="bottom-dock-hover-zone"></div>
+
+    <!-- Central Bottom Action Dock (Cleanly auto-hidden during gameplay) -->
+    <div id="desktop-bottom-action-dock">
         <!-- Floating Inventory Button -->
         <button id="inventory-floating-btn" onclick="if(window.inventory)window.inventory.toggle();" title="Open Interactive Inventory [I] / [Tab]" style="background: rgba(30, 20, 10, 0.9); border: 1px solid #ffd700; color: #fff3a8; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); cursor: pointer; transition: all 0.2s; white-space: nowrap;">
             🎒 INVENTORY [I]
@@ -2897,7 +2962,7 @@
             📜 LORE (570) [L]
         </button>
 
-        <!-- Floating QA Button (always visible and accessible) -->
+        <!-- Floating QA Button (accessible via hover, F8, or ESC menu) -->
         <button id="qa-floating-btn" onclick="openQASuiteModal()" title="Open Automated QA Suite [F8]" style="background: rgba(0, 40, 60, 0.9); border: 1px solid #00e5ff; color: #80d8ff; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); cursor: pointer; transition: all 0.2s; white-space: nowrap;">
             🛠️ QA SUITE [F8]
         </button>
@@ -3719,6 +3784,7 @@
                     ⚔️ ALL LORDRAN COMMAND SYSTEMS ⚔️
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px;">
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); if(window.inventory)window.inventory.toggle();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">🎒 INVENTORY [I]</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDownloadModal();" style="border-color: #a87932; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 38, 18, 0.75);">📦 DOWNLOAD GAME</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBlacksmithModal();" style="border-color: #ff9900; color: #ffcc66; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 30, 8, 0.75); box-shadow: 0 0 12px rgba(255,153,0,0.35);">⚒️ TITANITE FORGE (301-330)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openQASuiteModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🛠️ QA SUITE</button>
@@ -3794,7 +3860,8 @@
             <button class="touch-action-btn" id="touch-btn-attack" title="Light Attack">⚔️<span class="touch-label">Attack</span></button>
             <button class="touch-action-btn" id="touch-btn-roll" title="Dodge Roll">🌀<span class="touch-label">Roll</span></button>
 
-            <!-- Row 4: Equipment Stance -->
+            <!-- Row 4: Equipment Stance & Tactical Command Menu -->
+            <button class="touch-action-btn" id="touch-btn-menu" onclick="openQuickMenuModal()" title="Open Lordran Command Menu [ESC]">📜<span class="touch-label">Menu</span></button>
             <button class="touch-action-btn" id="touch-btn-weapon" title="Cycle Equipped Weapon">🔄<span class="touch-label">Swap</span></button>
             <button class="touch-action-btn" id="touch-btn-antidote" onclick="if(window.game&&window.game.combat)window.game.combat.tryDrinkAntidote()" title="Antidote Cleanse [P]" style="border-color: #33ff88; color: #a5ffbe;">🌿<span class="touch-label">Antidote</span></button>
         </div>
