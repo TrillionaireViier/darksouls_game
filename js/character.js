@@ -193,9 +193,9 @@ class DarkSoulsCharacters {
 
         this.darkSteelMat = new THREE.MeshStandardMaterial({
             map: armorTex,
-            color: 0x828c98, // Polished dark steel
-            metalness: 0.88,
-            roughness: 0.3
+            color: 0x545e6c, // Rich dark tempered steel with visible diffuse form
+            metalness: 0.35,
+            roughness: 0.45
         });
 
         this.clothMat = new THREE.MeshStandardMaterial({
@@ -762,9 +762,9 @@ class DarkSoulsCharacters {
 
         this.blackKnightMat = new THREE.MeshStandardMaterial({
             map: bkTex,
-            color: 0x18181c,
-            metalness: 0.88,
-            roughness: 0.55
+            color: 0x363842, // Charred obsidian iron with metallic sheen
+            metalness: 0.38,
+            roughness: 0.48
         });
         this.blackKnightHornMat = new THREE.MeshStandardMaterial({
             color: 0x221f1d,
@@ -2979,7 +2979,7 @@ class DarkSoulsCharacters {
             torsoMat = this.mobWhiteRobeMat;
             skinMat = this.hollowSkinMat;
             weaponMat = this.darkSteelMat;
-        } else if (type.includes('skeleton')) {
+        } else if (type.includes('skeleton') || type.includes('skeletal')) {
             torsoMat = this.boneMat;
             skinMat = this.boneMat;
             weaponMat = this.rustedIronMat;
@@ -3063,26 +3063,71 @@ class DarkSoulsCharacters {
             rightShoulder.add(scim);
             weapon = scim;
         } else if (type === 'skeletal_beast') {
+            // Sculpted 3D Skeletal Beast (Tomb of the Giants Bone Quadruped)
             bodyGroup.position.y = 0.55;
-            torso.rotation.x = 0.35;
-            const spine = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.3, 0.8), torsoMat);
+            torso.rotation.x = 0.25;
+
+            // Ribbed spine & vertebral column
+            const spine = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.95, 6), this.boneMat);
+            spine.rotation.x = Math.PI / 2;
             torso.add(spine);
-            head.position.set(0, 0.2, 0.55);
-            const skull = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.22, 0.45), skinMat);
-            head.add(skull);
-            const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.45, 0.1), skinMat);
-            rArm.position.set(0.18, -0.25, 0.25);
+
+            // Arching ribcage
+            for (let rb = 0; rb < 5; rb++) {
+                const rib = new THREE.Mesh(new THREE.TorusGeometry(0.22 - rb * 0.02, 0.025, 5, 8, Math.PI), this.boneMat);
+                rib.position.set(0, -0.05, -0.28 + rb * 0.14);
+                rib.rotation.x = Math.PI;
+                torso.add(rib);
+            }
+
+            // Terrifying Beast Skull with protruding snout & fangs
+            head.position.set(0, 0.18, 0.55);
+            const cranium = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.20, 0.28), this.boneMat);
+            head.add(cranium);
+
+            const snout = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.12, 0.26), this.boneMat);
+            snout.position.set(0, -0.04, 0.22);
+            head.add(snout);
+
+            // Sunken glowing red ember eyes
+            const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.03, 6, 6), this.emberGlowMat || new THREE.MeshBasicMaterial({ color: 0xff2200 }));
+            eyeL.position.set(-0.08, 0.04, 0.12);
+            head.add(eyeL);
+            const eyeR = eyeL.clone();
+            eyeR.position.x = 0.08;
+            head.add(eyeR);
+
+            // Upper and lower jagged fangs
+            for (let f = 0; f < 4; f++) {
+                const fang = new THREE.Mesh(new THREE.ConeGeometry(0.018, 0.09, 4), this.boneMat);
+                fang.position.set((f % 2 === 0 ? -0.06 : 0.06), -0.10, 0.20 + Math.floor(f / 2) * 0.10);
+                fang.rotation.x = Math.PI;
+                head.add(fang);
+            }
+
+            // Articulated forelegs
+            const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.52, 6), this.boneMat);
+            rArm.position.set(0.22, -0.26, 0.28);
+            rArm.rotation.x = -0.2;
             torso.add(rArm);
-            const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.45, 0.1), skinMat);
-            lArm.position.set(-0.18, -0.25, 0.25);
+
+            const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.52, 6), this.boneMat);
+            lArm.position.set(-0.22, -0.26, 0.28);
+            lArm.rotation.x = -0.2;
             torso.add(lArm);
-            const rLeg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.45, 0.1), skinMat);
-            rLeg.position.set(0.18, -0.25, -0.25);
+
+            // Articulated hindlegs
+            const rLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.035, 0.55, 6), this.boneMat);
+            rLeg.position.set(0.20, -0.26, -0.28);
+            rLeg.rotation.x = 0.25;
             rightHip.add(rLeg);
-            const lLeg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.45, 0.1), skinMat);
-            lLeg.position.set(-0.18, -0.25, -0.25);
+
+            const lLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.035, 0.55, 6), this.boneMat);
+            lLeg.position.set(-0.20, -0.26, -0.28);
+            lLeg.rotation.x = 0.25;
             leftHip.add(lLeg);
-            weapon = skull;
+
+            weapon = snout;
         } else {
             // Standard Humanoid Geometry Framework
             if (type === 'berenike_knight') root.scale.set(1.35, 1.35, 1.35);
@@ -3218,11 +3263,41 @@ class DarkSoulsCharacters {
                 sShield.position.set(0, -0.2, 0.2);
                 leftShoulder.add(sShield);
                 weapon = spear;
-            } else if (type === 'black_knight_mob') {
-                const bAxe = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.4, 0.06), this.darkSteelMat);
+            } else if (type === 'black_knight_mob' || type.includes('black_knight')) {
+                // Authentic 3D Black Knight of Gwyn: Curved horns, armet helm, pauldrons & shield
+                const bkHelm = new THREE.Mesh(new THREE.SphereGeometry(0.19, 12, 10), this.blackKnightMat);
+                bkHelm.scale.set(0.9, 1.05, 0.95);
+                head.add(bkHelm);
+
+                const hornL = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.28, 5), this.blackKnightHornMat);
+                hornL.position.set(-0.16, 0.16, 0);
+                hornL.rotation.z = 0.55;
+                hornL.rotation.x = -0.2;
+                head.add(hornL);
+
+                const hornR = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.28, 5), this.blackKnightHornMat);
+                hornR.position.set(0.16, 0.16, 0);
+                hornR.rotation.z = -0.55;
+                hornR.rotation.x = -0.2;
+                head.add(hornR);
+
+                const pL = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 6), this.blackKnightMat);
+                pL.position.set(-0.06, 0.05, 0);
+                leftShoulder.add(pL);
+
+                const pR = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 6), this.blackKnightMat);
+                pR.position.set(0.06, 0.05, 0);
+                rightShoulder.add(pR);
+
+                const bAxe = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.4, 0.06), this.blackKnightMat);
                 bAxe.position.set(0, -0.35, 0.5);
                 bAxe.rotation.x = Math.PI / 2.3;
                 rightShoulder.add(bAxe);
+
+                const bkShield = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.85, 0.05), this.blackKnightMat);
+                bkShield.position.set(0, -0.2, 0.18);
+                leftShoulder.add(bkShield);
+
                 weapon = bAxe;
             } else if (type === 'lantern_necromancer') {
                 const cowl = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.38, 0.34), this.darkSteelMat);

@@ -322,37 +322,66 @@ class DarkSoulsWorld {
         arenaEmissiveCanvas.height = 1024;
         const aeCtx = arenaEmissiveCanvas.getContext('2d');
 
-        // Scorched arena base
-        aCtx.fillStyle = '#64564c';
+        // Dark aged Lordran fortress granite base (Authentic Dark Souls rampart flagstones)
+        aCtx.fillStyle = '#262320';
         aCtx.fillRect(0, 0, 1024, 1024);
-        abCtx.fillStyle = '#808080';
+        abCtx.fillStyle = '#3a3a3a';
         abCtx.fillRect(0, 0, 1024, 1024);
         aeCtx.fillStyle = '#000000';
         aeCtx.fillRect(0, 0, 1024, 1024);
 
-        // Circular burned epicenter
-        const burnGrad = aCtx.createRadialGradient(512, 512, 40, 512, 512, 480);
-        burnGrad.addColorStop(0, '#c8baa6');
-        burnGrad.addColorStop(0.5, '#d6c8b6');
-        burnGrad.addColorStop(1, '#dfd2c0');
-        aCtx.fillStyle = burnGrad;
-        aCtx.fillRect(0, 0, 1024, 1024);
+        // Weathered irregular medieval stone flagstones (staggered running bond, NO modern bathroom tiles)
+        const rowHeight = 128;
+        const colWidth = 256;
+        for (let row = 0; row < 1024; row += rowHeight) {
+            const rowOffset = (Math.floor(row / rowHeight) % 2) * (colWidth / 2);
+            for (let col = -colWidth; col < 1024 + colWidth; col += colWidth) {
+                const sx = col + rowOffset + 6;
+                const sy = row + 6;
+                const sw = colWidth - 12;
+                const sh = rowHeight - 12;
 
-        // Ancient arena stone flagstone seams
-        aCtx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
-        aCtx.lineWidth = 3;
-        for (let x = 0; x <= 1024; x += 128) {
-            aCtx.beginPath();
-            aCtx.moveTo(x, 0);
-            aCtx.lineTo(x, 1024);
-            aCtx.stroke();
+                // Natural stone shade variations (dark charcoal, aged basalt and warm slate)
+                const stoneTone = Math.floor(42 + Math.random() * 22);
+                const rTone = stoneTone + Math.floor(Math.random() * 8);
+                const gTone = stoneTone + Math.floor(Math.random() * 4);
+                const bTone = stoneTone;
+                aCtx.fillStyle = ;
+                aCtx.fillRect(sx, sy, sw, sh);
+
+                // Stone grain & micro-texture
+                for (let k = 0; k < 60; k++) {
+                    const gx = sx + Math.random() * sw;
+                    const gy = sy + Math.random() * sh;
+                    const isDark = Math.random() > 0.5;
+                    aCtx.fillStyle = isDark ? 'rgba(0, 0, 0, 0.28)' : 'rgba(255, 255, 255, 0.08)';
+                    aCtx.fillRect(gx, gy, 2 + Math.random() * 6, 2 + Math.random() * 4);
+                }
+
+                // Chiseled 3D beveled edges & deep shadow grooves
+                aCtx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+                aCtx.fillRect(sx, sy, sw, 3);
+                aCtx.fillRect(sx, sy, 3, sh);
+                aCtx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+                aCtx.fillRect(sx, sy + sh - 3, sw, 3);
+                aCtx.fillRect(sx + sw - 3, sy, 3, sh);
+
+                // Bump map depth
+                abCtx.fillStyle = '#7a7a7a';
+                abCtx.fillRect(sx, sy, sw, sh);
+                abCtx.fillStyle = '#101010';
+                abCtx.fillRect(sx - 3, sy - 3, sw + 6, 4);
+                abCtx.fillRect(sx - 3, sy - 3, 4, sh + 6);
+            }
         }
-        for (let y = 0; y <= 1024; y += 64) {
-            aCtx.beginPath();
-            aCtx.moveTo(0, y);
-            aCtx.lineTo(1024, y);
-            aCtx.stroke();
-        }
+
+        // Soot & scorch marks radiating from Taurus Demon impacts
+        const scorchGrad = aCtx.createRadialGradient(512, 512, 60, 512, 512, 480);
+        scorchGrad.addColorStop(0, 'rgba(14, 12, 10, 0.65)');
+        scorchGrad.addColorStop(0.6, 'rgba(24, 20, 16, 0.35)');
+        scorchGrad.addColorStop(1, 'rgba(26, 22, 20, 0)');
+        aCtx.fillStyle = scorchGrad;
+        aCtx.fillRect(0, 0, 1024, 1024);
 
         // Blood pools and splatters of fallen champions
         const bloodPools = [
@@ -420,27 +449,27 @@ class DarkSoulsWorld {
         const arenaTex = new THREE.CanvasTexture(arenaCanvas);
         arenaTex.wrapS = THREE.RepeatWrapping;
         arenaTex.wrapT = THREE.RepeatWrapping;
-        arenaTex.repeat.set(4, 8);
+        arenaTex.repeat.set(2, 4);
 
         const arenaBumpTex = new THREE.CanvasTexture(arenaBumpCanvas);
         arenaBumpTex.wrapS = THREE.RepeatWrapping;
         arenaBumpTex.wrapT = THREE.RepeatWrapping;
-        arenaBumpTex.repeat.set(4, 8);
+        arenaBumpTex.repeat.set(2, 4);
 
         const arenaEmissiveTex = new THREE.CanvasTexture(arenaEmissiveCanvas);
         arenaEmissiveTex.wrapS = THREE.RepeatWrapping;
         arenaEmissiveTex.wrapT = THREE.RepeatWrapping;
-        arenaEmissiveTex.repeat.set(4, 8);
+        arenaEmissiveTex.repeat.set(2, 4);
 
         this.arenaMat = new THREE.MeshStandardMaterial({
             map: arenaTex,
             bumpMap: arenaBumpTex,
-            bumpScale: 0.1,
+            bumpScale: 0.18,
             emissiveMap: arenaEmissiveTex,
             emissive: 0xff3300,
-            emissiveIntensity: 0.4,
-            roughness: 0.82,
-            metalness: 0.15
+            emissiveIntensity: 0.25,
+            roughness: 0.88,
+            metalness: 0.06
         });
 
         // 4. WEATHERED MEDIEVAL TIMBER (512x512)
