@@ -3140,9 +3140,11 @@ class DarkSoulsCombat {
                 }
 
                 if (shouldAdvance) {
-                    const moveSpeed = (e.speed || 2.4) * speedMult;
-                    e.mesh.position.x += Math.sin(targetAngle) * moveSpeed * delta;
-                    e.mesh.position.z += Math.cos(targetAngle) * moveSpeed * delta;
+                    if (dist > (e.radius || 0.65) + 0.55) {
+                        const moveSpeed = (e.speed || 2.4) * speedMult;
+                        e.mesh.position.x += Math.sin(targetAngle) * moveSpeed * delta;
+                        e.mesh.position.z += Math.cos(targetAngle) * moveSpeed * delta;
+                    }
                     if (e.startPos && e.startPos.y > 2.0) {
                         e.mesh.position.y = e.startPos.y; // Keep sniper roost perch height
                     } else {
@@ -3153,6 +3155,26 @@ class DarkSoulsCombat {
                     e.mesh.position.x -= Math.sin(targetAngle) * moveSpeed * delta;
                     e.mesh.position.z -= Math.cos(targetAngle) * moveSpeed * delta;
                     e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z, e.mesh.position.y);
+                }
+
+                // Pairwise Mob-to-Mob repulsion during active chase (prevents crowding inside each other)
+                for (let j = i + 1; j < this.enemies.length; j++) {
+                    const other = this.enemies[j];
+                    if (!other.mesh || !other.mesh.visible || other.isDead) continue;
+                    const sepDx = e.mesh.position.x - other.mesh.position.x;
+                    const sepDz = e.mesh.position.z - other.mesh.position.z;
+                    const sepDistSq = sepDx * sepDx + sepDz * sepDz;
+                    const minSep = (e.radius || 0.65) + (other.radius || 0.65) + 0.1;
+                    if (sepDistSq < minSep * minSep && sepDistSq > 0.0001) {
+                        const sepDist = Math.sqrt(sepDistSq);
+                        const push = (minSep - sepDist) * 0.5;
+                        const pushX = (sepDx / sepDist) * push;
+                        const pushZ = (sepDz / sepDist) * push;
+                        e.mesh.position.x += pushX;
+                        e.mesh.position.z += pushZ;
+                        other.mesh.position.x -= pushX;
+                        other.mesh.position.z -= pushZ;
+                    }
                 }
 
                 // If in attack range, trigger attack when cooldown expires
@@ -4466,6 +4488,8 @@ class DarkSoulsCombat {
             const speed = this.boss.isPhase2 ? 5.2 : 4.0;
             this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+            this.boss.mesh.position.x = Math.max(-15.0, Math.min(15.0, this.boss.mesh.position.x));
+            this.boss.mesh.position.z = Math.max(98.0, Math.min(162.0, this.boss.mesh.position.z));
 
             // Leg stride animation
             if (u.rightHip && u.leftHip) {
@@ -4495,7 +4519,12 @@ class DarkSoulsCombat {
             this.boss.attackTime += delta;
             if (this.boss.attackType === 'SUPERSONIC_THRUST') {
                 if (this.boss.attackTime < 0.38) {
-                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 8.5 * delta);
+                    const toPlayerDist = this.boss.mesh.position.distanceTo(this.game.playerMesh.position);
+                    if (toPlayerDist > (this.boss.radius || 2.0) + 0.8) {
+                        this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 8.5 * delta);
+                    }
+                    this.boss.mesh.position.x = Math.max(-15.0, Math.min(15.0, this.boss.mesh.position.x));
+                    this.boss.mesh.position.z = Math.max(98.0, Math.min(162.0, this.boss.mesh.position.z));
                 }
                 if (this.boss.attackTime >= 0.38 && !this.boss._hit1) {
                     this.boss._hit1 = true;

@@ -205,7 +205,7 @@ class CollisionSystem {
             }
         }
 
-        // D. Player-to-Boss separation
+        // D. Player-to-Boss separation (Two-way mutual pushback prevents overlap)
         if (boss && boss.mesh && !boss.isDead && playerPos && Math.abs(playerPos.y - boss.mesh.position.y) <= 3.5) {
             const bPos = boss.mesh.position;
             const bRadius = boss.radius || 2.2;
@@ -217,8 +217,10 @@ class CollisionSystem {
             if (distSq < minDist * minDist && distSq > 0.00001) {
                 const dist = Math.sqrt(distSq);
                 const overlap = minDist - dist;
-                playerPos.x += (dx / dist) * overlap;
-                playerPos.z += (dz / dist) * overlap;
+                playerPos.x += (dx / dist) * overlap * 0.65;
+                playerPos.z += (dz / dist) * overlap * 0.65;
+                bPos.x -= (dx / dist) * overlap * 0.35;
+                bPos.z -= (dz / dist) * overlap * 0.35;
                 this.totalSeparationEvents++;
             }
         }
@@ -226,28 +228,43 @@ class CollisionSystem {
 
     // ------------------------------------------------------------------------
     // 3. STATIC WORLD OBSTACLE AABB COLLISION RESOLUTION (PILLARS, WALLS)
+    // Continuous Sphere-to-AABB distance & penetration resolution (sliding along walls)
     // ------------------------------------------------------------------------
     resolveObstacles(pos, radius = 0.45, bottom = pos.y, top = pos.y + 1.8) {
         if (!this.world || !this.world.colliders) return;
         const colliders = this.world.colliders;
 
-        for (let iter = 0; iter < 2; iter++) {
+        for (let iter = 0; iter < 3; iter++) {
             for (let i = 0; i < colliders.length; i++) {
                 const box = colliders[i];
-                if (bottom < box.max.y && top > box.min.y) {
-                    if (pos.x > box.min.x - radius && pos.x < box.max.x + radius &&
-                        pos.z > box.min.z - radius && pos.z < box.max.z + radius) {
-                        const overlapL = pos.x - (box.min.x - radius);
-                        const overlapR = (box.max.x + radius) - pos.x;
-                        const overlapT = pos.z - (box.min.z - radius);
-                        const overlapB = (box.max.z + radius) - pos.z;
+                if (top <= box.min.y || bottom >= box.max.y) continue;
 
-                        const minOverlap = Math.min(overlapL, overlapR, overlapT, overlapB);
-                        if (minOverlap === overlapL) pos.x = box.min.x - radius;
-                        else if (minOverlap === overlapR) pos.x = box.max.x + radius;
-                        else if (minOverlap === overlapT) pos.z = box.min.z - radius;
-                        else if (minOverlap === overlapB) pos.z = box.max.z + radius;
-                    }
+                // Find closest point on 2D AABB in X-Z plane
+                const cx = Math.max(box.min.x, Math.min(box.max.x, pos.x));
+                const cz = Math.max(box.min.z, Math.min(box.max.z, pos.z));
+
+                const dx = pos.x - cx;
+                const dz = pos.z - cz;
+                const distSq = dx * dx + dz * dz;
+
+                if (distSq < radius * radius && distSq > 0.000001) {
+                    // Entity center is outside box: push out along closest normal
+                    const dist = Math.sqrt(distSq);
+                    const push = radius - dist;
+                    pos.x += (dx / dist) * push;
+                    pos.z += (dz / dist) * push;
+                } else if (distSq <= 0.000001) {
+                    // Entity center is inside box: eject along minimum penetration axis
+                    const dLeft = pos.x - box.min.x;
+                    const dRight = box.max.x - pos.x;
+                    const dBottom = pos.z - box.min.z;
+                    const dTop = box.max.z - pos.z;
+                    const minPen = Math.min(dLeft, dRight, dBottom, dTop);
+
+                    if (minPen === dLeft) pos.x = box.min.x - radius;
+                    else if (minPen === dRight) pos.x = box.max.x + radius;
+                    else if (minPen === dBottom) pos.z = box.min.z - radius;
+                    else pos.z = box.max.z + radius;
                 }
             }
         }

@@ -2874,6 +2874,53 @@ class DarkSoulsWorld {
     // ----------------------------------------------------
     // IN-WORLD FAST-TRAVEL WAYSTONES & EXPEDITION PORTALS
     // ----------------------------------------------------
+    spawnArenaBonfire(x = 0, y = 0, z = 138) {
+        if (this.arenaBonfireGroup) {
+            return;
+        }
+
+        const bonfireGroup = new THREE.Group();
+        bonfireGroup.name = 'arena_victory_bonfire';
+        bonfireGroup.position.set(x, y, z);
+
+        // Ash & charred bones mound
+        const ashGeo = new THREE.ConeGeometry(2.4, 0.75, 14);
+        const ashMesh = new THREE.Mesh(ashGeo, this.ashMat || this.stoneMat);
+        ashMesh.position.y = 0.38;
+        bonfireGroup.add(ashMesh);
+
+        // Coiled Sword thrust into ashes
+        const sword = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.09, 2.6, 6), this.ironMat);
+        sword.position.set(0, 1.25, 0);
+        sword.rotation.z = -0.15;
+        bonfireGroup.add(sword);
+
+        // Warm Golden Lordran Victory Flame
+        const flameCore = new THREE.Mesh(new THREE.DodecahedronGeometry(0.55), new THREE.MeshBasicMaterial({ color: 0xffaa22 }));
+        flameCore.position.set(0, 1.1, 0);
+        bonfireGroup.add(flameCore);
+
+        const flameLight = new THREE.PointLight(0xff7722, 3.8, 20);
+        flameLight.position.set(0, 1.6, 0);
+        bonfireGroup.add(flameLight);
+
+        // Register as interactable victory bonfire
+        this.interactables.push({
+            type: 'bonfire',
+            position: new THREE.Vector3(x, y, z),
+            radius: 3.4,
+            prompt: '🔥 [ E ] REST AT ARENA VICTORY BONFIRE'
+        });
+
+        this.particles.push({
+            mesh: flameCore,
+            seed: Math.random() * 20
+        });
+
+        this.scene.add(bonfireGroup);
+        this.arenaBonfireGroup = bonfireGroup;
+    }
+
     spawnDiscoveredWaystone(x, y, z, loc) {
         if (!loc) return;
         this.removeDiscoveredWaystone();

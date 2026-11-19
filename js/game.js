@@ -43,6 +43,17 @@ class DarkSoulsGame {
             this.blacksmith = new BlacksmithForgeSystem(this);
         }
 
+        // Interactive Inventory & Equipment System
+        if (typeof DarkSoulsInventory !== 'undefined') {
+            this.inventory = new DarkSoulsInventory(this);
+            window.inventory = this.inventory;
+        }
+
+        // Camera Obstacle Raycasting Scratch Objects
+        this._camDir = new THREE.Vector3();
+        this._camRay = new THREE.Ray();
+        this._camHit = new THREE.Vector3();
+
         // Collision & Physics Module
         if (typeof CollisionSystem !== 'undefined') {
             this.collisionSystem = new CollisionSystem(this.world, this, this.combat);
@@ -256,7 +267,15 @@ class DarkSoulsGame {
             if (e.code === 'Digit2' || e.code === 'KeyX' || e.key === 'x' || e.key === 'X' || e.key === 'ч' || e.key === 'Ч') this.cycleEquippedWeapon(1);
             if (e.code === 'KeyZ' || e.key === 'z' || e.key === 'Z' || e.key === 'я' || e.key === 'Я') this.cycleEquippedWeapon(-1);
             if (e.code === 'KeyC' || e.key === 'c' || e.key === 'C' || e.key === 'с' || e.key === 'С') this.openWeaponArsenalModal();
-            if (e.code === 'KeyQ' || e.key === 'q' || e.key === 'Q' || e.key === 'й' || e.key === 'Й' || e.code === 'Tab') {
+            if (e.code === 'KeyI' || e.key === 'i' || e.key === 'I' || e.key === 'ш' || e.key === 'Ш' || e.code === 'Tab') {
+                e.preventDefault();
+                if (this.inventory) {
+                    this.inventory.toggle();
+                } else if (window.inventory) {
+                    window.inventory.toggle();
+                }
+            }
+            if (e.code === 'KeyQ' || e.key === 'q' || e.key === 'Q' || e.key === 'й' || e.key === 'Й') {
                 e.preventDefault();
                 this.combat.tryParry();
             }
@@ -1159,6 +1178,7 @@ class DarkSoulsGame {
         if (this.siege) this.siege.update(delta);
         if (this.heraldry) this.heraldry.update(delta);
         if (this.apothecary) this.apothecary.update(delta);
+        if (this.inventory) this.inventory.update(delta);
 
         // 2. Update Player Position & Rotation
         this.updatePlayer(delta);
@@ -1619,31 +1639,42 @@ class DarkSoulsGame {
         const playerBottom = pPos.y;
         const playerTop = pPos.y + 1.8;
 
-        // 1. Solid World Geometry & Pillar AABB Collisions with Swept Margin (2-pass solver to prevent corner trapping)
+        // 1. Solid World Geometry & Pillar Sphere-to-AABB Continuous Resolution
         if (this.world && this.world.colliders) {
-            for (let iter = 0; iter < 2; iter++) {
+            for (let iter = 0; iter < 3; iter++) {
                 for (let i = 0; i < this.world.colliders.length; i++) {
                     const box = this.world.colliders[i];
-                    if (playerBottom < box.max.y && playerTop > box.min.y) {
-                        if (pPos.x > box.min.x - playerRadius && pPos.x < box.max.x + playerRadius &&
-                            pPos.z > box.min.z - playerRadius && pPos.z < box.max.z + playerRadius) {
-                            const overlapL = (pPos.x - (box.min.x - playerRadius));
-                            const overlapR = ((box.max.x + playerRadius) - pPos.x);
-                            const overlapT = (pPos.z - (box.min.z - playerRadius));
-                            const overlapB = ((box.max.z + playerRadius) - pPos.z);
+                    if (playerTop <= box.min.y || playerBottom >= box.max.y) continue;
 
-                            const minOverlap = Math.min(overlapL, overlapR, overlapT, overlapB);
-                            if (minOverlap === overlapL) pPos.x = box.min.x - playerRadius;
-                            else if (minOverlap === overlapR) pPos.x = box.max.x + playerRadius;
-                            else if (minOverlap === overlapT) pPos.z = box.min.z - playerRadius;
-                            else if (minOverlap === overlapB) pPos.z = box.max.z + playerRadius;
-                        }
+                    const cx = Math.max(box.min.x, Math.min(box.max.x, pPos.x));
+                    const cz = Math.max(box.min.z, Math.min(box.max.z, pPos.z));
+
+                    const dx = pPos.x - cx;
+                    const dz = pPos.z - cz;
+                    const distSq = dx * dx + dz * dz;
+
+                    if (distSq < playerRadius * playerRadius && distSq > 0.000001) {
+                        const dist = Math.sqrt(distSq);
+                        const push = playerRadius - dist;
+                        pPos.x += (dx / dist) * push;
+                        pPos.z += (dz / dist) * push;
+                    } else if (distSq <= 0.000001) {
+                        const dLeft = pPos.x - box.min.x;
+                        const dRight = box.max.x - pPos.x;
+                        const dBottom = pPos.z - box.min.z;
+                        const dTop = box.max.z - pPos.z;
+                        const minPen = Math.min(dLeft, dRight, dBottom, dTop);
+
+                        if (minPen === dLeft) pPos.x = box.min.x - playerRadius;
+                        else if (minPen === dRight) pPos.x = box.max.x + playerRadius;
+                        else if (minPen === dBottom) pPos.z = box.min.z - playerRadius;
+                        else pPos.z = box.max.z + playerRadius;
                     }
                 }
             }
         }
 
-        // 2. Boss Solid Collider (Taurus Demon & Active Lords - prevents walking through boss)
+        // 2. Boss Solid Collider (Mutual two-way pushback prevents walking through or standing inside boss)
         if (this.combat && this.combat.boss && !this.combat.boss.isDead && this.combat.boss.mesh) {
             const bPos = this.combat.boss.mesh.position;
             const dx = pPos.x - bPos.x;
@@ -1653,8 +1684,10 @@ class DarkSoulsGame {
             if (distSq < minBossDist * minBossDist && distSq > 0.0001) {
                 const dist = Math.sqrt(distSq);
                 const push = (minBossDist - dist);
-                pPos.x += (dx / dist) * push;
-                pPos.z += (dz / dist) * push;
+                pPos.x += (dx / dist) * push * 0.65;
+                pPos.z += (dz / dist) * push * 0.65;
+                bPos.x -= (dx / dist) * push * 0.35;
+                bPos.z -= (dz / dist) * push * 0.35;
             }
         }
 
@@ -1667,14 +1700,14 @@ class DarkSoulsGame {
                 const dx = pPos.x - ePos.x;
                 const dz = pPos.z - ePos.z;
                 const distSq = dx * dx + dz * dz;
-                const minMobDist = 0.88;
+                const minMobDist = (e.radius || 0.65) + playerRadius + 0.15;
                 if (distSq < minMobDist * minMobDist && distSq > 0.0001) {
                     const dist = Math.sqrt(distSq);
-                    const push = (minMobDist - dist) * 0.55;
-                    pPos.x += (dx / dist) * push;
-                    pPos.z += (dz / dist) * push;
-                    ePos.x -= (dx / dist) * (push * 0.45);
-                    ePos.z -= (dz / dist) * (push * 0.45);
+                    const push = (minMobDist - dist);
+                    pPos.x += (dx / dist) * push * 0.55;
+                    pPos.z += (dz / dist) * push * 0.55;
+                    ePos.x -= (dx / dist) * push * 0.45;
+                    ePos.z -= (dz / dist) * push * 0.45;
                 }
             }
         }
@@ -1687,10 +1720,10 @@ class DarkSoulsGame {
             }
         }
 
-        // B. Surface Boss Arena (z in [94.8, 168.0]) - Full width access (-16.8 to +16.8) without floor clipping
+        // B. Surface Boss Arena (z in [94.8, 168.0]) - Full width access (-16.2 to +16.2) without floor/chasm clipping
         if (pPos.z >= 94.8 && pPos.z <= 168.0 && pPos.y >= -1.0 && pPos.y <= 4.0) {
-            pPos.x = Math.max(-16.8, Math.min(16.8, pPos.x));
-            pPos.z = Math.min(164.0, pPos.z);
+            pPos.x = Math.max(-16.2, Math.min(16.2, pPos.x));
+            pPos.z = Math.max(96.0, Math.min(163.5, pPos.z));
         }
 
         // C. Flooded Catacombs Corridor (z in [22, 90], y < 1.0)
@@ -1775,9 +1808,37 @@ class DarkSoulsGame {
             dist = Math.min(dist, 2.8);
         }
 
-        let cx = targetPos.x + dist * Math.sin(this.cameraYaw) * Math.cos(this.cameraPitch);
-        let cy = targetPos.y + dist * Math.sin(this.cameraPitch);
-        let cz = targetPos.z + dist * Math.cos(this.cameraYaw) * Math.cos(this.cameraPitch);
+        // Camera direction vector pointing from player target towards camera
+        if (!this._camDir) this._camDir = new THREE.Vector3();
+        if (!this._camRay) this._camRay = new THREE.Ray();
+        if (!this._camHit) this._camHit = new THREE.Vector3();
+
+        this._camDir.set(
+            Math.sin(this.cameraYaw) * Math.cos(this.cameraPitch),
+            Math.sin(this.cameraPitch),
+            Math.cos(this.cameraYaw) * Math.cos(this.cameraPitch)
+        ).normalize();
+
+        // Continuous Obstacle Raycasting against world colliders (prevents camera clipping through walls/pillars)
+        let allowedDist = dist;
+        if (this.world && this.world.colliders) {
+            this._camRay.origin.copy(targetPos);
+            this._camRay.direction.copy(this._camDir);
+
+            for (let i = 0; i < this.world.colliders.length; i++) {
+                const box = this.world.colliders[i];
+                if (this._camRay.intersectBox(box, this._camHit)) {
+                    const hitDist = targetPos.distanceTo(this._camHit);
+                    if (hitDist < allowedDist) {
+                        allowedDist = Math.max(0.65, hitDist - 0.32); // 32cm safety clearance buffer
+                    }
+                }
+            }
+        }
+
+        let cx = targetPos.x + allowedDist * this._camDir.x;
+        let cy = targetPos.y + allowedDist * this._camDir.y;
+        let cz = targetPos.z + allowedDist * this._camDir.z;
 
         // Subterranean ceiling & surface floor clamping
         if (targetPos.y < -1.0) {
@@ -2165,6 +2226,16 @@ class DarkSoulsGame {
             }
         }
 
+        // Spawn in-world physical arena victory bonfire
+        if (this.world && this.world.spawnArenaBonfire) {
+            const pPos = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
+            if (pPos.y <= -3.5) {
+                this.world.spawnArenaBonfire(-20, -5.0, 115);
+            } else {
+                this.world.spawnArenaBonfire(0, 0, 138);
+            }
+        }
+
         return targetLoc;
     }
 
@@ -2461,6 +2532,20 @@ class DarkSoulsGame {
                 try {
                     localStorage.setItem('ds_unlocked_locations', JSON.stringify(this.unlockedLocations));
                 } catch (e) {}
+            }
+
+            // Restore persistent arena gateway portal & victory bonfire if lords defeated
+            if (this.combat.defeatedBosses && this.combat.defeatedBosses.length > 0) {
+                const lastBossId = this.combat.defeatedBosses[this.combat.defeatedBosses.length - 1];
+                const def = this.combat.bossRoster.find(b => b.id === lastBossId);
+                const locs = window.DARK_SOULS_LOCATIONS || [];
+                const targetLoc = locs.find(l => l.id === (def ? def.unlockLocationId : 'undead_asylum'));
+                if (targetLoc && this.world && this.world.spawnDiscoveredWaystone) {
+                    this.world.spawnDiscoveredWaystone(0, 0, 154, targetLoc);
+                }
+                if (this.world && this.world.spawnArenaBonfire) {
+                    this.world.spawnArenaBonfire(0, 0, 138);
+                }
             }
             this.combat.isDead = false;
 
