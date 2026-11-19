@@ -2120,14 +2120,14 @@ class DarkSoulsCombat {
         if (this.hp <= 0) {
             this.killPlayer();
         } else if (this.poise <= 0) {
-            // Hitting 0 poise breaks guard for brief moment (0.55s max, not 2.2s!)
+            // Hitting 0 poise breaks guard and staggers player for 2.2s (riposte / vulnerability window)
             this.poise = 0;
             this.isStaggered = true;
-            this.staggerTime = 0.55;
-            this.maxStaggerTimer = 0.55;
+            this.staggerTime = 2.2;
+            this.maxStaggerTimer = 2.2;
             this.isAttacking = false;
             this.isBlocking = false;
-            this.game.showNotification("⚠️ POISE BROKEN!");
+            this.game.showNotification("⚠️ POISE BROKEN! STAGGERED (2.2s)");
         } else {
             // Player still has poise! Only stagger on colossal boss hits (damage >= 85)
             if (damage >= 85) {

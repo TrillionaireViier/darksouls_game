@@ -1853,19 +1853,24 @@ class DarkSoulsWorld {
     createWall(x, y, z, w, h, d) {
         const geo = new THREE.BoxGeometry(w, h, d);
         
-        // Dynamically scaled PBR stone material matching architectural dimensions (1.8m x 1.4m blocks)
-        const mat = this.wallMat.clone();
-        mat.map = mat.map.clone();
-        mat.bumpMap = mat.bumpMap.clone();
-        if (mat.roughnessMap) mat.roughnessMap = mat.roughnessMap.clone();
-
         const horizDim = Math.max(w, d);
         // Monumental Gothic Ashlar masonry scaling (1.5m x 0.8m heavy stone blocks)
         const repeatX = Math.max(1, Math.round(horizDim / 6.0));
         const repeatY = Math.max(1, Math.round(h / 6.0));
-        mat.map.repeat.set(repeatX, repeatY);
-        mat.bumpMap.repeat.set(repeatX, repeatY);
-        if (mat.roughnessMap) mat.roughnessMap.repeat.set(repeatX, repeatY);
+        const cacheKey = `${repeatX}_${repeatY}`;
+
+        if (!this._wallMatCache) this._wallMatCache = {};
+        if (!this._wallMatCache[cacheKey]) {
+            const mat = this.wallMat.clone();
+            mat.map = mat.map.clone();
+            mat.bumpMap = mat.bumpMap.clone();
+            if (mat.roughnessMap) mat.roughnessMap = mat.roughnessMap.clone();
+            mat.map.repeat.set(repeatX, repeatY);
+            mat.bumpMap.repeat.set(repeatX, repeatY);
+            if (mat.roughnessMap) mat.roughnessMap.repeat.set(repeatX, repeatY);
+            this._wallMatCache[cacheKey] = mat;
+        }
+        const mat = this._wallMatCache[cacheKey];
 
         const mesh = new THREE.Mesh(geo, mat);
         mesh.position.set(x, y, z);

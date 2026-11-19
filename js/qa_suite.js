@@ -1005,6 +1005,7 @@ class DarkSoulsQASuite {
 
         this.testResults = { passed: 0, failed: 0, warnings: 0 };
         this.updateStatsUI();
+        this.captureMemoryBaseline(); // Capture baseline with world and active scene loaded
 
         // Step 1: Enable 1-HP Sandbox
         this.toggleOneHpMode(true);
