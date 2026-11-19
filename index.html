@@ -2893,31 +2893,7 @@
         </div>
     </div>
 
-    <!-- Invisible Bottom Screen Hover Trigger Zone (Desktop peek) -->
-    <div id="bottom-dock-hover-zone"></div>
 
-    <!-- Central Bottom Action Dock (Cleanly auto-hidden during gameplay) -->
-    <div id="desktop-bottom-action-dock">
-        <!-- Floating Inventory Button -->
-        <button id="inventory-floating-btn" onclick="if(window.inventory)window.inventory.toggle();" title="Open Interactive Inventory [I] / [Tab]" style="background: rgba(30, 20, 10, 0.9); border: 1px solid #ffd700; color: #fff3a8; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); cursor: pointer; transition: all 0.2s; white-space: nowrap;">
-            🎒 INVENTORY [I]
-        </button>
-
-        <!-- Floating Boss Selection Button -->
-        <button id="boss-floating-btn" onclick="openBossSelectModal()" title="Open 40 Lords of Lordran Roster" style="background: rgba(50, 10, 40, 0.9); border: 1px solid #c084fc; color: #f3e8ff; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(192, 132, 252, 0.4); cursor: pointer; transition: all 0.2s; white-space: nowrap;">
-            👑 BOSSES (40)
-        </button>
-
-        <!-- Floating Lore Codex Button -->
-        <button id="lore-floating-btn" onclick="openLoreCodexModal()" title="Open Lore Codex [L]" style="background: rgba(40, 30, 10, 0.9); border: 1px solid #ffd778; color: #fff3a8; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(255, 215, 120, 0.4); cursor: pointer; transition: all 0.2s; white-space: nowrap;">
-            📜 LORE (570) [L]
-        </button>
-
-        <!-- Floating QA Button (accessible via hover, F8, or ESC menu) -->
-        <button id="qa-floating-btn" onclick="openQASuiteModal()" title="Open Automated QA Suite [F8]" style="background: rgba(0, 40, 60, 0.9); border: 1px solid #00e5ff; color: #80d8ff; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); cursor: pointer; transition: all 0.2s; white-space: nowrap;">
-            🛠️ QA SUITE [F8]
-        </button>
-    </div>
 
     <!-- Visible Results Toast / Overlay when copying results -->
     <div id="qa-copy-results-display" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: #0b1320; border: 2px solid #00e5ff; box-shadow: 0 0 35px rgba(0,229,255,0.5); border-radius: 6px; padding: 16px; width: 90%; max-width: 640px; color: #fff;">
@@ -3820,6 +3796,12 @@
 
     <!-- UI Action Scripts -->
     <script>
+        // Ensure bottom action dock is completely purged from DOM
+        ['desktop-bottom-action-dock', 'bottom-dock-hover-zone'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        });
+
         function openQuickMenuModal() {
             const modal = document.getElementById('quick-menu-modal');
             if (modal) modal.style.display = 'flex';
