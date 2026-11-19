@@ -1513,6 +1513,9 @@ class DarkSoulsCombat {
                     this.game.showNotification("✨ ESTUS CLEANSED POISON & VENOM!");
                 }
                 if (this.isPetrified) this.isPetrified = false;
+                if (this.game && this.game.triggerAutoSave) {
+                    this.game.triggerAutoSave('ESTUS_DRINK');
+                }
             }
         }, 550);
     }
@@ -1545,6 +1548,9 @@ class DarkSoulsCombat {
         this.game.showNotification("🌿 SOVEREIGN ANTIDOTE: ALL POISONS & VENOM PURGED!");
         if (this.world && this.world.spawnHitSparks && this.game.playerMesh) {
             this.world.spawnHitSparks(this.game.playerMesh.position, true);
+        }
+        if (this.game && this.game.triggerAutoSave) {
+            this.game.triggerAutoSave('ANTIDOTE_USE');
         }
     }
 
@@ -1760,7 +1766,9 @@ class DarkSoulsCombat {
         this.audio.playRoll();
         this.game.showNotification(`EQUIPPED: ${wpn.name.toUpperCase()} (${wpn.icon})`);
 
-        if (this.game && this.game.saveGame) {
+        if (this.game && this.game.triggerAutoSave) {
+            this.game.triggerAutoSave('WEAPON_EQUIP');
+        } else if (this.game && this.game.saveGame) {
             this.game.saveGame(false);
         }
         return true;
@@ -2052,6 +2060,11 @@ class DarkSoulsCombat {
             this.game.spawnLoreItemBeacon(dropPos, enemy.loreId, enemy.loreTitle || enemy.name);
         }
 
+        // Auto-save progress and gained souls
+        if (this.game && this.game.triggerAutoSave) {
+            this.game.triggerAutoSave('ENEMY_DEFEAT');
+        }
+
         // Trigger realistic Dark Souls ragdoll collapse
         enemy.deathProgress = 0;
         enemy.isAttacking = false;
@@ -2141,6 +2154,10 @@ class DarkSoulsCombat {
             pos: this.game.playerMesh.position.clone()
         };
         this.souls = 0;
+
+        if (this.game && this.game.triggerAutoSave) {
+            this.game.triggerAutoSave('PLAYER_DEATH');
+        }
 
         this.audio.playYouDied();
         this.game.triggerDeathScreen();

@@ -153,6 +153,26 @@ class DarkSoulsGame {
         const savedSkin = localStorage.getItem('darksouls_equipped_skin') || 'warrior';
         this.selectSkin(savedSkin, false);
 
+        // Auto-Save Management (Periodic 15s & Event-Driven)
+        this.autoSaveInterval = 15.0;
+        this.autoSaveTimer = 0.0;
+        this.lastAutoSaveTime = Date.now();
+        this.autoSaveIndicatorTimeout = null;
+        this.currentZoneName = 'Royal Bridge (0m)';
+
+        // Auto-save on page exit / tab blur
+        window.addEventListener('beforeunload', () => {
+            if (this.triggerAutoSave) this.triggerAutoSave('BEFOREUNLOAD');
+        });
+        window.addEventListener('pagehide', () => {
+            if (this.triggerAutoSave) this.triggerAutoSave('PAGEHIDE');
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && this.triggerAutoSave) {
+                this.triggerAutoSave('TAB_BLUR');
+            }
+        });
+
         // Auto-restore saved journey if present
         if (this.hasSaveData()) {
             this.loadGame(false);
@@ -1096,6 +1116,15 @@ class DarkSoulsGame {
         // 1. Update Subsystems
         this.world.update(delta);
         this.combat.update(delta);
+
+        // Continuous 15-Second Auto-Save Engine
+        if (this.combat && !this.combat.isDead) {
+            this.autoSaveTimer = (this.autoSaveTimer || 0) + delta;
+            if (this.autoSaveTimer >= (this.autoSaveInterval || 15.0)) {
+                this.autoSaveTimer = 0;
+                this.triggerAutoSave('PERIODIC_15S');
+            }
+        }
         if (this.collisionSystem) this.collisionSystem.update(delta);
         if (this.qaBotTester && this.qaBotTester.isActive) this.qaBotTester.update(delta);
         if (this.updateLoreBeacons) this.updateLoreBeacons(delta);
@@ -2176,19 +2205,57 @@ class DarkSoulsGame {
         this.combat.spawnEnemies();
         this.audio.playBonfireIgnite();
         this.showNotification("AWAKENED AT THE BONFIRE");
+
+        if (this.triggerAutoSave) {
+            this.triggerAutoSave('RESPAWN');
+        }
     }
 
     // ----------------------------------------------------
     // SAVE / LOAD SYSTEM (LOCALSTORAGE PERSISTENCE & MULTI-SLOT ARCHIVE)
     // ----------------------------------------------------
+    triggerAutoSave(context = 'AUTOSAVE') {
+        if (!this.combat || this.combat.isDead) return false;
+
+        const now = Date.now();
+        const isUnload = (context === 'BEFOREUNLOAD' || context === 'PAGEHIDE');
+
+        // Throttle saves so they do not cause frame drops (minimum 2.2s between saves)
+        if (!isUnload && this.lastAutoSaveTime && (now - this.lastAutoSaveTime < 2200)) {
+            return false;
+        }
+        this.lastAutoSaveTime = now;
+
+        const success = this.saveGame(false, context, 'darksouls_autosave');
+        if (success && !isUnload) {
+            this.flashAutoSaveIndicator(context);
+        }
+        return success;
+    }
+
+    flashAutoSaveIndicator(context = '') {
+        const indicator = document.getElementById('autosave-indicator');
+        if (!indicator) return;
+
+        if (this.autoSaveIndicatorTimeout) {
+            clearTimeout(this.autoSaveIndicatorTimeout);
+        }
+
+        indicator.classList.add('active');
+        this.autoSaveIndicatorTimeout = setTimeout(() => {
+            indicator.classList.remove('active');
+        }, 1600);
+    }
+
     saveGame(showNotification = true, context = 'MANUAL', slotKey = 'darksouls_save_v1') {
         if (!this.combat) return false;
 
         const p = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
+        const rotY = this.playerMesh ? this.playerMesh.rotation.y : 0;
         const zoneName = p.y <= -3.5 ? 'Catacombs (-5m Depth)' : (p.x > 12 ? 'High Ramparts (+6m)' : (p.z > 95 ? 'Boss Arena' : 'Royal Bridge (0m)'));
 
         const saveData = {
-            version: 1,
+            version: 2,
             timestamp: Date.now(),
             date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
             level: this.combat.level,
@@ -2202,6 +2269,11 @@ class DarkSoulsGame {
             maxStamina: this.combat.maxStamina,
             estusFlasks: this.combat.estusFlasks,
             maxEstus: this.combat.maxEstus,
+            antidotes: (this.apothecary && this.apothecary.craftedMeds && this.apothecary.craftedMeds.venomAntidotes !== undefined) ? this.apothecary.craftedMeds.venomAntidotes : 5,
+            bloodstain: this.combat.bloodstain ? {
+                souls: this.combat.bloodstain.souls,
+                pos: { x: this.combat.bloodstain.pos.x, y: this.combat.bloodstain.pos.y, z: this.combat.bloodstain.pos.z }
+            } : null,
             currentBossType: this.combat.currentBossType,
             defeatedBosses: this.combat.defeatedBosses || [],
             adminModeUnlocked: !!(this.combat && this.combat.adminModeUnlocked),
@@ -2217,10 +2289,11 @@ class DarkSoulsGame {
             trebuchet: this.siege ? { counterweightKg: this.siege.trebuchet.counterweightKg, winchAngleDeg: this.siege.trebuchet.winchAngleDeg } : null,
             locationName: zoneName,
             playerPos: {
-                x: Number(this.playerMesh.position.x.toFixed(2)),
-                y: Number(this.playerMesh.position.y.toFixed(2)),
-                z: Number(this.playerMesh.position.z.toFixed(2))
-            }
+                x: Number(p.x.toFixed(2)),
+                y: Number(p.y.toFixed(2)),
+                z: Number(p.z.toFixed(2))
+            },
+            playerRot: Number(rotY.toFixed(3))
         };
 
         try {
@@ -2228,6 +2301,9 @@ class DarkSoulsGame {
             if (slotKey !== 'darksouls_save_v1') {
                 localStorage.setItem('darksouls_save_v1', JSON.stringify(saveData));
             }
+            // Always keep autosave mirror updated
+            localStorage.setItem('darksouls_autosave', JSON.stringify(saveData));
+
             if (showNotification) {
                 const prefix = context ? `[${context}] ` : '';
                 this.showNotification(`💾 ${prefix}JOURNEY SAVED &bull; LEVEL ${saveData.level}`);
@@ -2246,7 +2322,7 @@ class DarkSoulsGame {
         try {
             let raw = localStorage.getItem(slotKey);
             if (!raw && slotKey === 'darksouls_save_v1') {
-                raw = localStorage.getItem('darksouls_save_slot_1');
+                raw = localStorage.getItem('darksouls_autosave') || localStorage.getItem('darksouls_save_slot_1');
             }
             if (!raw) {
                 if (showNotification) this.showNotification("NO SAVED JOURNEY FOUND IN BONFIRE ASHES");
@@ -2286,11 +2362,22 @@ class DarkSoulsGame {
                 this.selectSkin(data.equippedSkin, false);
             }
 
-            // Restore position (validate bounded)
+            // Restore position and rotation
             if (data.playerPos && typeof data.playerPos.x === 'number' && typeof data.playerPos.z === 'number') {
-                this.playerMesh.position.set(data.playerPos.x, 0, data.playerPos.z);
+                this.playerMesh.position.set(data.playerPos.x, data.playerPos.y || 0, data.playerPos.z);
             } else {
                 this.playerMesh.position.set(0, 0, 5);
+            }
+            if (typeof data.playerRot === 'number' && this.playerMesh) {
+                this.playerMesh.rotation.y = data.playerRot;
+            }
+
+            // Restore bloodstain
+            if (data.bloodstain && data.bloodstain.pos) {
+                this.combat.bloodstain = {
+                    souls: Number(data.bloodstain.souls) || 0,
+                    pos: new THREE.Vector3(data.bloodstain.pos.x, data.bloodstain.pos.y, data.bloodstain.pos.z)
+                };
             }
 
             // Restore active boss
@@ -2315,9 +2402,15 @@ class DarkSoulsGame {
                 this.heraldry.customizeHeraldry();
             }
 
-            // Restore Apothecary Medicines
+            // Restore Apothecary Medicines & Antidotes
             if (data.craftedMeds && this.apothecary) {
                 this.apothecary.craftedMeds = data.craftedMeds;
+            }
+            if (data.antidotes !== undefined && this.apothecary) {
+                if (!this.apothecary.craftedMeds) this.apothecary.craftedMeds = {};
+                this.apothecary.craftedMeds.venomAntidotes = data.antidotes;
+                const antiEl = document.getElementById('antidote-count');
+                if (antiEl) antiEl.textContent = `x ${data.antidotes}`;
             }
 
             // Restore Siege Settings
@@ -2345,24 +2438,26 @@ class DarkSoulsGame {
     }
 
     saveToSlot(slotId = 1) {
-        const slotKey = `darksouls_save_slot_${slotId}`;
-        this.saveGame(false, `SLOT ${slotId}`, slotKey);
-        this.showNotification(`💾 EXPEDITION ARCHIVED IN SLOT ${slotId}`);
+        const slotKey = (slotId === 'auto' || slotId === 0) ? 'darksouls_autosave' : `darksouls_save_slot_${slotId}`;
+        const slotName = (slotId === 'auto' || slotId === 0) ? 'AUTO-SAVE' : `SLOT ${slotId}`;
+        this.saveGame(false, slotName, slotKey);
+        this.showNotification(`💾 EXPEDITION ARCHIVED IN ${slotName}`);
         if (this.audio) this.audio.playRoll();
         this.updateEscapeMenuUI();
         this.updateSaveUI();
     }
 
     loadFromSlot(slotId = 1) {
-        const slotKey = `darksouls_save_slot_${slotId}`;
+        const slotKey = (slotId === 'auto' || slotId === 0) ? 'darksouls_autosave' : `darksouls_save_slot_${slotId}`;
+        const slotName = (slotId === 'auto' || slotId === 0) ? 'AUTO-SAVE' : `SAVE SLOT ${slotId}`;
         const success = this.loadGame(false, slotKey);
         if (success) {
-            this.showNotification(`📂 LOADED SAVE SLOT ${slotId} • LEVEL ${this.combat.level}`);
+            this.showNotification(`📂 RESTORED ${slotName} • LEVEL ${this.combat.level}`);
             this.updateEscapeMenuUI();
             this.updateSaveUI();
             if (typeof closeQuickMenuModal === 'function') closeQuickMenuModal();
         } else {
-            this.showNotification(`⚠️ NO DATA IN SAVE SLOT ${slotId}`);
+            this.showNotification(`⚠️ NO DATA IN ${slotName}`);
         }
     }
 
@@ -2420,6 +2515,7 @@ class DarkSoulsGame {
         localStorage.removeItem('darksouls_save_slot_1');
         localStorage.removeItem('darksouls_save_slot_2');
         localStorage.removeItem('darksouls_save_slot_3');
+        localStorage.removeItem('darksouls_autosave');
         location.reload();
     }
 
@@ -2497,6 +2593,36 @@ class DarkSoulsGame {
         const unlockedLoreMap = (window.DarkSoulsLore && window.DarkSoulsLore.getUnlockedMap()) || {};
         const loreCount = Object.keys(unlockedLoreMap).length;
         if (elLore) elLore.textContent = `${loreCount} / 60`;
+
+        // Update Auto-Save Slot Status
+        const autoKey = 'darksouls_autosave';
+        const rawAuto = localStorage.getItem(autoKey);
+        const metaAuto = document.getElementById('esc-slot-auto-meta');
+        const loadBtnAuto = document.getElementById('esc-slot-auto-load-btn');
+        if (rawAuto) {
+            try {
+                const autoData = JSON.parse(rawAuto);
+                const elapsedSec = Math.max(0, Math.round((Date.now() - (autoData.timestamp || Date.now())) / 1000));
+                const timeStr = elapsedSec < 60 ? `${elapsedSec}s ago` : `${Math.round(elapsedSec/60)}m ago`;
+                if (metaAuto) {
+                    metaAuto.innerHTML = `<span style="color: #ffaa33; font-weight: 700;">🔥 RECENT CHECKPOINT</span> &bull; LVL ${autoData.level} &bull; ${Number(autoData.souls).toLocaleString()} Souls &bull; <span style="color: #bbb;">${autoData.date || 'RECENT'} (${timeStr})</span>`;
+                }
+                if (loadBtnAuto) {
+                    loadBtnAuto.disabled = false;
+                    loadBtnAuto.style.opacity = '1';
+                    loadBtnAuto.style.cursor = 'pointer';
+                }
+            } catch(e) {
+                if (metaAuto) metaAuto.textContent = 'AUTO-SAVE CORRUPTED';
+            }
+        } else {
+            if (metaAuto) metaAuto.innerHTML = `<span style="color: #888;">NO AUTO-SAVE RECORDED YET (TRIGGERS IN 15s OR ON COMBAT)</span>`;
+            if (loadBtnAuto) {
+                loadBtnAuto.disabled = true;
+                loadBtnAuto.style.opacity = '0.5';
+                loadBtnAuto.style.cursor = 'not-allowed';
+            }
+        }
 
         // 2. Update Save Slots List
         [1, 2, 3].forEach(slotId => {
@@ -2653,6 +2779,10 @@ class DarkSoulsGame {
 
         // Update UI modal cards
         this.updateSkinsModalUI();
+
+        if (this.triggerAutoSave) {
+            this.triggerAutoSave('SKIN_EQUIP');
+        }
 
         if (showNotification) {
             this.showNotification(`🛡️ EQUIPPED 3D ARMOR: ${costume.name}`);
@@ -2964,6 +3094,9 @@ class DarkSoulsGame {
                 if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
                 this.scene.remove(b.group);
                 this.loreBeacons.splice(i, 1);
+                if (this.triggerAutoSave) {
+                    this.triggerAutoSave('LORE_ACQUIRED');
+                }
             }
         }
     }

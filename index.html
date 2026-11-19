@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261118_CLEAN_HUD';
+            var TARGET_BUILD = '20261119_AUTOSAVE_CONTINUOUS';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1111,6 +1111,15 @@
                 display: block;
             }
 
+            .autosave-flame-indicator {
+                top: 50px;
+                right: 10px;
+                padding: 4px 8px;
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
+
             #top-header {
                 padding: 8px 16px;
                 padding-top: max(8px, env(safe-area-inset-top));
@@ -1269,6 +1278,15 @@
             #mobile-touch-overlay {
                 display: block;
             }
+
+            .autosave-flame-indicator {
+                top: 50px;
+                right: 10px;
+                padding: 4px 8px;
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
 
             #top-header {
                 padding: 5px 8px;
@@ -1690,6 +1708,12 @@
     </div>
 
     <!-- Notification Banner -->
+        <!-- Auto-Save Flame Indicator (Subtle Dark Souls Corner Glow) -->
+    <div id="autosave-indicator" class="autosave-flame-indicator" aria-hidden="true">
+        <span class="flame-symbol">🔥</span>
+        <span class="autosave-label">SAVING...</span>
+    </div>
+
     <div id="game-notification">WELCOME TO LORDRAN</div>
 
     <!-- ==============================================
@@ -3458,6 +3482,20 @@
 
                 <!-- Save Slots List -->
                 <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+                    <!-- Auto-Save Slot (Continuous Protection) -->
+                    <div style="background: rgba(35, 22, 10, 0.9); border: 1.5px solid #ff9900; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; box-shadow: 0 0 10px rgba(255,153,0,0.2);">
+                        <div>
+                            <div style="font-weight: 800; font-size: 0.85rem; color: #ffaa33; display: flex; align-items: center; gap: 6px;">
+                                <span>🔥 AUTO-SAVE ARCHIVE</span>
+                                <span style="font-size: 0.65rem; background: rgba(76, 175, 80, 0.25); border: 1px solid #4caf50; color: #a5d6a7; padding: 1px 6px; border-radius: 3px; font-weight: 600;">ACTIVE (15s & COMBAT)</span>
+                            </div>
+                            <div id="esc-slot-auto-meta" style="font-size: 0.75rem; color: #d0c0a0;">Checking auto-save...</div>
+                        </div>
+                        <div style="display: flex; gap: 6px;">
+                            <button class="btn-icon-bar" id="esc-slot-auto-load-btn" onclick="loadFromSlot('auto')" style="padding: 4px 10px; font-size: 0.72rem; border-color: #ffaa33; color: #ffaa33; cursor: pointer;">📂 RESTORE AUTO-SAVE</button>
+                        </div>
+                    </div>
+
                     <!-- Slot 1 -->
                     <div style="background: rgba(28, 20, 14, 0.85); border: 1px solid #7c5c2d; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                         <div>
@@ -4406,21 +4444,21 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/audio.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/lore_items.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/world.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/character.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/siege_warfare.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/heraldry_nobility.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/apothecary_crafting.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/collision_system.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/qa_bot_tester.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/combat.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/postprocessing.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/qa_suite.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/blacksmith_forge.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
-    <script src="js/game.js?v=20261119_MOB_POISE_STAGGER_TUNING"></script>
+    <script src="js/three.min.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/audio.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/lore_items.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/world.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/character.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/siege_warfare.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/heraldry_nobility.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/apothecary_crafting.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/collision_system.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/qa_bot_tester.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/combat.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/postprocessing.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/qa_suite.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/blacksmith_forge.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
+    <script src="js/game.js?v=20261119_AUTOSAVE_CONTINUOUS"></script>
 </body>
 </html>
 <!-- Vercel Connect trigger sync: Thu Nov 19 11:40:54 UTC 2026 -->
