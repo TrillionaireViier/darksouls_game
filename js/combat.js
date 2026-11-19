@@ -1663,24 +1663,45 @@ class DarkSoulsCombat {
                     if (e.hp <= 0) {
                         this.killEnemy(e);
                     } else {
-                        e.poise = (e.poise !== undefined) ? e.poise : (e.def && e.def.poise || 40);
-                        e.poise -= wpn.poiseBreak * 25;
+                        const currentWpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
+                        const wpnPoiseMult = (currentWpn && currentWpn.poiseBreak) || 1.0;
+                        const behavior = e.behaviorType || 'Swarm';
+
+                        // Authentic mob poise pools: random mobs do NOT stagger so easily!
+                        let baseMaxPoise = 50;
+                        if (behavior === 'Heavy Tank') baseMaxPoise = 115;
+                        else if (behavior === 'Flanker') baseMaxPoise = 65;
+                        else if (behavior === 'Ranged' || e.isArcher) baseMaxPoise = 42;
+                        else if (e.type && (e.type.includes('knight') || e.type.includes('serpent') || e.type.includes('gorgon'))) baseMaxPoise = 100;
+
+                        if (e.maxPoise === undefined) {
+                            e.maxPoise = (e.def && e.def.poise) || baseMaxPoise;
+                            e.poise = e.maxPoise;
+                        }
+
+                        // Calculate poise damage: heavy combo or Zweihander delivers major poise damage
+                        const isHeavySlash = (this.attackCombo === 3 || this.currentWeaponId === 'zweihander');
+                        const basePoiseHit = isHeavySlash ? 48 : 20;
+                        const totalPoiseHit = Math.round(basePoiseHit * wpnPoiseMult * poiseDmg);
+
+                        e.poise -= totalPoiseHit;
+                        e.poiseRegenTimer = 3.2; // Delay before poise recovers
+
                         if (e.poise <= 0) {
+                            // POISE BROKEN! Only genuine poise break triggers stagger!
                             e.poise = 0;
                             e.isStaggered = true;
-                            e.staggerTimer = 2.2; // Guard break: 2.2s stagger
-                            e.maxStaggerTimer = 2.2;
-                            e.state = 'STAGGER';
-                            e.attackPhase = 'IDLE';
-                        } else {
-                            e.isStaggered = true;
-                            e.staggerTimer = 0.5 * poiseDmg;
+                            e.staggerTimer = isHeavySlash ? 0.70 : 0.45;
                             e.maxStaggerTimer = e.staggerTimer;
                             e.state = 'STAGGER';
                             e.attackPhase = 'IDLE';
+                            e.isAttacking = false;
+                            e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.35 + Math.random() * 0.2);
+                        } else {
+                            // POISE HOLDS! Random mobs do NOT stagger easily on casual light hits!
+                            // They take damage, bleed, and can trade blows with authentic poise hyperarmor!
+                            e.isStaggered = false;
                         }
-                        e.isAttacking = false;
-                        e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.25 + Math.random() * 0.2);
                     }
                 }
             }
@@ -2814,10 +2835,19 @@ class DarkSoulsCombat {
 
                 if (e.staggerTimer <= 0) {
                     e.isStaggered = false;
+                    e.poise = e.maxPoise || 50; // Full poise reset on recovery
                     if (u.torso) u.torso.rotation.set(0, 0, 0);
                     if (u.head) u.head.rotation.set(0, 0, 0);
                 }
                 continue;
+            }
+
+            // Mob poise natural regeneration over time
+            if (e.poise !== undefined && e.maxPoise !== undefined && e.poise < e.maxPoise && !e.isStaggered) {
+                e.poiseRegenTimer = (e.poiseRegenTimer || 0) - delta;
+                if (e.poiseRegenTimer <= 0) {
+                    e.poise = Math.min(e.maxPoise, e.poise + delta * 25.0);
+                }
             }
 
             this._scratchMobVec.subVectors(playerPos, e.mesh.position);
