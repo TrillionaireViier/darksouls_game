@@ -1326,27 +1326,33 @@ class DarkSoulsCharacters {
         }
 
         const newWeapon = this.createWeaponMesh(weaponId);
-        // Realistic initial weapon rigging (refined further in game.js per weapon class)
+        // Authentic combat-ready weapon rigging (held naturally forward, never tilted backward into camera)
         if (weaponId === 'halberd') {
-            newWeapon.rotation.set(0.18, 0.05, -0.06);
+            newWeapon.rotation.set(-0.10, 0.04, -0.05);
             newWeapon.position.set(0.02, 0.04, 0.02);
-        } else if (weaponId === 'zweihander') {
-            newWeapon.rotation.set(0.50, 0.12, -0.20);
-            newWeapon.position.set(0.02, 0.05, 0.08);
+        } else if (weaponId === 'zweihander' || weaponId === 'dark_moon_greatsword') {
+            newWeapon.rotation.set(-0.16, 0.08, -0.14);
+            newWeapon.position.set(0.02, 0.04, 0.06);
         } else if (weaponId === 'dragontooth') {
-            newWeapon.rotation.set(0.40, 0.12, -0.18);
+            newWeapon.rotation.set(-0.12, 0.08, -0.10);
             newWeapon.position.set(0.02, 0.04, 0.06);
         } else if (weaponId === 'torch') {
-            newWeapon.rotation.set(0.12, 0, -0.06);
+            newWeapon.rotation.set(-0.10, 0, -0.05);
             newWeapon.position.set(0, 0.06, 0.04);
-        } else if (weaponId === 'uchigatana') {
-            newWeapon.rotation.set(0.45, 0.10, -0.16);
+        } else if (weaponId === 'uchigatana' || weaponId === 'rivers_of_blood') {
+            newWeapon.rotation.set(-0.18, 0.06, -0.10);
             newWeapon.position.set(0.02, 0.04, 0.06);
         } else {
-            newWeapon.rotation.set(0.45, 0.10, -0.18);
+            newWeapon.rotation.set(-0.15, 0.05, -0.12);
             newWeapon.position.set(0.02, 0.04, 0.06);
         }
         rHand.add(newWeapon);
+
+        // Hide back sword hilt when holding any bladed sword to prevent double-sword clipping
+        if (playerMesh.userData && playerMesh.userData.greatswordHiltGroup) {
+            const isHoldingBlade = (weaponId === 'sword' || weaponId === 'zweihander' || weaponId === 'moonlight' || weaponId === 'dark_moon_greatsword' || weaponId === 'uchigatana' || weaponId === 'rivers_of_blood');
+            playerMesh.userData.greatswordHiltGroup.visible = !isHoldingBlade;
+        }
 
         playerMesh.userData.swordGroup = newWeapon;
         playerMesh.userData.currentWeaponId = weaponId;
@@ -1382,7 +1388,7 @@ class DarkSoulsCharacters {
         rightShoulder.add(rHand);
 
         const swordGroup = this.createWeaponMesh('sword');
-        swordGroup.rotation.set(0.45, 0.10, -0.18);
+        swordGroup.rotation.set(-0.15, 0.05, -0.12);
         swordGroup.position.set(0.02, 0.04, 0.06);
         rHand.add(swordGroup);
 
@@ -1564,6 +1570,7 @@ class DarkSoulsCharacters {
             offhandTorch,
             estusFlask,
             backScabbardGroup,
+            greatswordHiltGroup,
             capeGroup: null,
             capeJoint1: null,
             capeJoint2: null,

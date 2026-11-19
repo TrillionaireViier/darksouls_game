@@ -2698,15 +2698,27 @@ class DarkSoulsCombat {
                         
                         // Flatten body naturally onto ground
                         rd.rot.x = Math.PI / 2;
-                        rd.rot.z = (Math.random() - 0.5) * 0.4;
-                        if (u.bodyGroup) u.bodyGroup.position.y = 0.15;
+                        rd.rot.z = (Math.random() - 0.5) * 0.3;
+                        if (u.bodyGroup) u.bodyGroup.position.y = 0.12;
+
+                        // Relax limbs naturally onto ground
+                        if (u.rightShoulder) u.rightShoulder.rotation.set(-0.1, 0, 0.15);
+                        if (u.leftShoulder) u.leftShoulder.rotation.set(-0.1, 0, -0.15);
+                        if (u.rightHip) u.rightHip.rotation.set(0.08, 0, 0.08);
+                        if (u.leftHip) u.leftHip.rotation.set(0.08, 0, -0.08);
+                        if (u.head) u.head.rotation.set(0.15, 0.2, 0);
+                        if (u.notchedArrow) u.notchedArrow.visible = false;
+                        if (u.bowGroup) {
+                            u.bowGroup.position.set(0, -0.2, 0);
+                            u.bowGroup.rotation.set(0, 0, 0);
+                        }
                     }
                 }
             } else {
-                // Settled: wait and smoothly dissolve into soul energy
+                // Settled: smoothly dissolve into soul energy (authentic Dark Souls soul dissipation)
                 rd.settleTimer += delta;
-                if (rd.settleTimer > 3.2) {
-                    const fade = Math.max(0, 1.0 - (rd.settleTimer - 3.2) / 1.2);
+                if (rd.settleTimer > 1.2) {
+                    const fade = Math.max(0, 1.0 - (rd.settleTimer - 1.2) / 0.8);
                     rd.mesh.scale.setScalar(fade);
                     if (fade <= 0) {
                         this.game.scene.remove(rd.mesh);

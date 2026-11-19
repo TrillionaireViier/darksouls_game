@@ -921,7 +921,18 @@ class DarkSoulsWorld {
 
         // Upper Ramparts Walkway Elevated Floor Slab (z=22 to z=91 at y=5.5)
         const rampartFloorGeo = new THREE.BoxGeometry(9, 1.0, 69);
-        const rampartFloor = new THREE.Mesh(rampartFloorGeo, this.stoneMat);
+        const rampartFloorMat = this.stoneMat.clone();
+        rampartFloorMat.map = rampartFloorMat.map.clone();
+        rampartFloorMat.map.repeat.set(3, 23);
+        if (rampartFloorMat.bumpMap) {
+            rampartFloorMat.bumpMap = rampartFloorMat.bumpMap.clone();
+            rampartFloorMat.bumpMap.repeat.set(3, 23);
+        }
+        if (rampartFloorMat.roughnessMap) {
+            rampartFloorMat.roughnessMap = rampartFloorMat.roughnessMap.clone();
+            rampartFloorMat.roughnessMap.repeat.set(3, 23);
+        }
+        const rampartFloor = new THREE.Mesh(rampartFloorGeo, rampartFloorMat);
         rampartFloor.position.set(20, 5.5, 56.5);
         rampartFloor.receiveShadow = true;
         this.scene.add(rampartFloor);
@@ -1849,8 +1860,9 @@ class DarkSoulsWorld {
         if (mat.roughnessMap) mat.roughnessMap = mat.roughnessMap.clone();
 
         const horizDim = Math.max(w, d);
-        const repeatX = Math.max(1, Math.round(horizDim / 2.0));
-        const repeatY = Math.max(1, Math.round(h / 1.6));
+        // Monumental Gothic Ashlar masonry scaling (1.5m x 0.8m heavy stone blocks)
+        const repeatX = Math.max(1, Math.round(horizDim / 6.0));
+        const repeatY = Math.max(1, Math.round(h / 6.0));
         mat.map.repeat.set(repeatX, repeatY);
         mat.bumpMap.repeat.set(repeatX, repeatY);
         if (mat.roughnessMap) mat.roughnessMap.repeat.set(repeatX, repeatY);
