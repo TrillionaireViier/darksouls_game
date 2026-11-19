@@ -1177,25 +1177,27 @@ class DarkSoulsCharacters {
         const coreMesh = new THREE.Mesh(new THREE.DodecahedronGeometry(0.1), coreMat);
         flameGroup.add(coreMesh);
 
-        // Amber-gold mid flame
+        // Amber-gold mid flame (natural compact teardrop shape)
         const midMat = new THREE.MeshStandardMaterial({
-            color: 0xff8800,
-            emissive: 0xff7700,
-            emissiveIntensity: 2.8,
-            roughness: 0.15
+            color: 0xffa020,
+            emissive: 0xff6600,
+            emissiveIntensity: 2.4,
+            roughness: 0.2,
+            metalness: 0.05
         });
-        const midMesh = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.45, 8), midMat);
-        midMesh.position.y = 0.14;
+        const midMesh = new THREE.Mesh(new THREE.ConeGeometry(0.075, 0.20, 8), midMat);
+        midMesh.position.y = 0.10;
         flameGroup.add(midMesh);
 
-        // Outer flickering orange flame tip
+        // Soft flickering flame envelope with additive blending
         const tipMat = new THREE.MeshBasicMaterial({
-            color: 0xff4400,
+            color: 0xff7711,
             transparent: true,
-            opacity: 0.85
+            opacity: 0.65,
+            blending: THREE.AdditiveBlending
         });
-        const tipMesh = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.58, 8), tipMat);
-        tipMesh.position.y = 0.22;
+        const tipMesh = new THREE.Mesh(new THREE.ConeGeometry(0.088, 0.25, 8), tipMat);
+        tipMesh.position.y = 0.12;
         flameGroup.add(tipMesh);
 
         // 5. Dynamic Warm PointLight
@@ -1476,61 +1478,7 @@ class DarkSoulsCharacters {
         pommelSpoke.position.y = 0.42;
         greatswordHiltGroup.add(pommelSpoke);
 
-        // 7. Dynamic 3D Knight's Cape with Jointed Wind Physics
-        const capeGroup = new THREE.Group();
-        capeGroup.position.set(0, 0.28, -0.16);
-        torso.add(capeGroup);
-
-        const capeMat = new THREE.MeshStandardMaterial({
-            color: 0x801418, // Royal crimson velvet
-            roughness: 0.82,
-            metalness: 0.08,
-            side: THREE.DoubleSide
-        });
-
-        const capeGoldMat = new THREE.MeshStandardMaterial({
-            color: 0xd4a84e,
-            roughness: 0.35,
-            metalness: 0.8
-        });
-
-        // 3 articulated vertical segments that simulate realistic cloth waving
-        const capeSeg1 = new THREE.Mesh(new THREE.PlaneGeometry(0.50, 0.36, 4, 2), capeMat);
-        capeSeg1.position.y = -0.18;
-        capeSeg1.castShadow = true;
-        capeGroup.add(capeSeg1);
-
-        const capeJoint1 = new THREE.Group();
-        capeJoint1.position.y = -0.36;
-        capeGroup.add(capeJoint1);
-
-        const capeSeg2 = new THREE.Mesh(new THREE.PlaneGeometry(0.54, 0.38, 4, 2), capeMat);
-        capeSeg2.position.y = -0.19;
-        capeSeg2.castShadow = true;
-        capeJoint1.add(capeSeg2);
-
-        const capeJoint2 = new THREE.Group();
-        capeJoint2.position.y = -0.38;
-        capeJoint1.add(capeJoint2);
-
-        const capeSeg3 = new THREE.Mesh(new THREE.PlaneGeometry(0.58, 0.38, 4, 2), capeMat);
-        capeSeg3.position.y = -0.19;
-        capeSeg3.castShadow = true;
-        capeJoint2.add(capeSeg3);
-
-        const capeHem = new THREE.Mesh(new THREE.BoxGeometry(0.60, 0.035, 0.015), capeGoldMat);
-        capeHem.position.y = -0.37;
-        capeJoint2.add(capeHem);
-
-        const broochL = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.025, 8), capeGoldMat);
-        broochL.position.set(-0.18, 0, 0.03);
-        broochL.rotation.x = Math.PI / 2;
-        capeGroup.add(broochL);
-
-        const broochR = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.025, 8), capeGoldMat);
-        broochR.position.set(0.18, 0, 0.03);
-        broochR.rotation.x = Math.PI / 2;
-        capeGroup.add(broochR);
+// Clean Dark Souls Nordic knight back: unhindered fur mantle & scabbard
 
         // Assign core animation nodes
         root.userData = {
@@ -1549,9 +1497,9 @@ class DarkSoulsCharacters {
             offhandTorch,
             estusFlask,
             backScabbardGroup,
-            capeGroup,
-            capeJoint1,
-            capeJoint2,
+            capeGroup: null,
+            capeJoint1: null,
+            capeJoint2: null,
             skinMeshes: [],
             currentSkin: 'warrior'
         };

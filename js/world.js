@@ -2147,8 +2147,8 @@ class DarkSoulsWorld {
         const coreMesh = new THREE.Mesh(coreGeo, coreMat);
         flameGroup.add(coreMesh);
 
-        // Outer vibrant flame body
-        const flameGeo = new THREE.ConeGeometry(0.16, 0.48, 8);
+        // Outer vibrant flame body (natural teardrop proportion)
+        const flameGeo = new THREE.ConeGeometry(0.085, 0.26, 8);
         const flameMat = new THREE.MeshStandardMaterial({
             color: colorHex,
             emissive: colorHex,

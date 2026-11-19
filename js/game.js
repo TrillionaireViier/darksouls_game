@@ -107,11 +107,11 @@ class DarkSoulsGame {
 
         this.brightnessLevel = 0; // 0: Noon Sun, 1: Maximum+, 2: Daylight
 
-        // Handheld Medieval Pitch Torch State - ACTIVE BY DEFAULT FOR INSTANT VISION!
-        this.isTorchActive = true;
+        // Handheld Medieval Pitch Torch State - Default to false so shield is shown
+        this.isTorchActive = false;
         this.torchFuel = 100.0;
         this.maxTorchFuel = 100.0;
-        this.charFactory.setPlayerTorchVisible(this.playerMesh, true);
+        this.charFactory.setPlayerTorchVisible(this.playerMesh, false);
 
         // Camera Parameters
         this.cameraDistance = 4.2;
@@ -1315,14 +1315,7 @@ class DarkSoulsGame {
                 uData.torso.scale.set(1, 1, 1);
             }
 
-            // Dynamic 3D Knight's Cape Wind Simulation (Flutter & Stream)
-            if (uData.capeGroup) {
-                const wind = Math.sin(time * 6) * 0.14 + Math.cos(time * 3.5) * 0.08;
-                const speedFactor = isSprinting ? 0.82 : 0.45;
-                uData.capeGroup.rotation.x = speedFactor + wind * 0.4;
-                if (uData.capeJoint1) uData.capeJoint1.rotation.x = (speedFactor * 0.75) + Math.sin(time * 8 + 0.5) * 0.18;
-                if (uData.capeJoint2) uData.capeJoint2.rotation.x = (speedFactor * 0.85) + Math.sin(time * 10 + 1.0) * 0.22;
-            }
+
 
             // Opposite arm swinging
             if (!this.combat.isBlocking) {
@@ -1547,13 +1540,7 @@ class DarkSoulsGame {
                 uData.shieldGroup.rotation.set(0.08, Math.PI / 8, -0.05);
             }
 
-            // Dynamic idle cape flutter
-            if (uData.capeGroup) {
-                const wind = Math.sin(time * 2.5) * 0.08 + Math.cos(time * 1.6) * 0.05;
-                uData.capeGroup.rotation.x = 0.12 + wind;
-                if (uData.capeJoint1) uData.capeJoint1.rotation.x = 0.09 + Math.sin(time * 3.0 + 0.5) * 0.10;
-                if (uData.capeJoint2) uData.capeJoint2.rotation.x = 0.07 + Math.sin(time * 3.5 + 1.0) * 0.12;
-            }
+            // Dynamic idle breathing animation
         }
 
         // 7. WEAPON STANCE STABILIZATION (Active for both moving and idle)
