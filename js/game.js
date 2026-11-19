@@ -172,7 +172,7 @@ class DarkSoulsGame {
         } catch (e) {}
         this.unlockedLocations = Array.isArray(savedLocs) && savedLocs.length > 0 
             ? savedLocs 
-            : ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'];
+            : ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'];
 
         // Auto-Save Management (Periodic 15s & Event-Driven)
         this.autoSaveInterval = 15.0;
@@ -1631,6 +1631,9 @@ class DarkSoulsGame {
         uData.swordGroup.position.x = THREE.MathUtils.lerp(uData.swordGroup.position.x, targetPosX, blend);
         uData.swordGroup.position.y = THREE.MathUtils.lerp(uData.swordGroup.position.y, targetPosY, blend);
         uData.swordGroup.position.z = THREE.MathUtils.lerp(uData.swordGroup.position.z, targetPosZ, blend);
+
+        // Continuous mutual collision resolution (runs every frame even when standing still, drinking Estus, or parrying)
+        this.resolvePlayerCollisions();
     }
 
     resolvePlayerCollisions() {
@@ -1714,7 +1717,7 @@ class DarkSoulsGame {
 
         // 4. Architectural Bounds & Railing Collision Enforcements:
         // A. Royal Bridge Parapets (z in [22, 95.0])
-        if (pPos.z >= 22 && pPos.z <= 95.0) {
+        if (pPos.z >= 22 && pPos.z <= 95.0 && Math.abs(pPos.x) <= 8.5) {
             if (pPos.y >= -1.0 && pPos.y <= 3.5) {
                 pPos.x = Math.max(-6.45, Math.min(6.45, pPos.x));
             }
@@ -2200,7 +2203,7 @@ class DarkSoulsGame {
     unlockLocationForBoss(bossId, locId) {
         if (!locId) return null;
         if (!this.unlockedLocations) {
-            this.unlockedLocations = ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'];
+            this.unlockedLocations = ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'];
         }
         if (!this.unlockedLocations.includes(locId)) {
             this.unlockedLocations.push(locId);
@@ -2378,8 +2381,29 @@ class DarkSoulsGame {
         this.combat.stamina = this.combat.maxStamina;
         this.combat.estusFlasks = this.combat.maxEstus;
 
-        // Reset position to Bonfire
-        this.playerMesh.position.set(0, 0, 5);
+        // Reset position to last rested bonfire / Arena Bonfire (0, 0, 134) avoiding the long 140m run from (0, 0, 5)
+        if (this.lastBonfirePos) {
+            this.playerMesh.position.copy(this.lastBonfirePos);
+        } else if (this.world && this.world.arenaBonfireGroup) {
+            this.playerMesh.position.set(0, 0, 134);
+        } else {
+            this.playerMesh.position.set(0, 0, 134);
+        }
+
+        if (this.playerVelocity) this.playerVelocity.set(0, 0, 0);
+
+        // Snap camera immediately without lerping from far away
+        const targetPos = this.playerMesh.position.clone().add(new THREE.Vector3(0, 1.4, 0));
+        const dist = this.cameraDistance || 4.2;
+        this.cameraYaw = 0;
+        this.cameraPitch = 0.22;
+        this.camera.position.set(
+            targetPos.x,
+            targetPos.y + dist * Math.sin(0.22),
+            targetPos.z + dist * Math.cos(0.22)
+        );
+        this.camera.lookAt(targetPos);
+
         if (this.playerMesh.userData.torso) {
             this.playerMesh.userData.torso.rotation.x = 0;
             this.playerMesh.userData.torso.position.y = 0;
@@ -2460,7 +2484,7 @@ class DarkSoulsGame {
             } : null,
             currentBossType: this.combat.currentBossType,
             defeatedBosses: this.combat.defeatedBosses || [],
-            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'],
+            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'],
             adminModeUnlocked: !!(this.combat && this.combat.adminModeUnlocked),
             isGodMode: !!(this.combat && this.combat.isGodMode),
             equippedSkin: localStorage.getItem('darksouls_equipped_skin') || 'warrior',
@@ -3412,7 +3436,7 @@ class DarkSoulsGame {
         if (!container) return;
 
         const locs = window.DARK_SOULS_LOCATIONS || [];
-        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'];
+        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'];
 
         const filtered = locs.filter(l => {
             if (activeFilter === 'all') return true;
@@ -3485,41 +3509,97 @@ class DarkSoulsGame {
         if (!loc || !this.playerMesh) return;
 
         // Check unlock status
-        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'];
+        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'];
         if (!unlocked.includes(locationId) && locationId !== 'royal_bridge_arena') {
             this.showNotification(`🔒 THIS REALM IS LOCKED! DEFEAT ITS WARDEN TO UNLOCK.`);
             if (this.audio && this.audio.playParry) this.audio.playParry();
             return;
         }
 
-        this.playerMesh.position.set(loc.pos[0], loc.pos[1], loc.pos[2]);
-        this.playerMesh.position.y = this.world.getGroundHeight(loc.pos[0], loc.pos[2]);
-        this.cameraYaw = 0;
-        this.cameraPitch = 0.22;
-
-        if (loc.light && this.renderer) {
-            this.renderer.toneMappingExposure = loc.light;
+        // Cinematic Dark Souls Teleport Fade Overlay
+        let fadeEl = document.getElementById('teleport-fade-overlay');
+        if (!fadeEl) {
+            fadeEl = document.createElement('div');
+            fadeEl.id = 'teleport-fade-overlay';
+            fadeEl.style.position = 'fixed';
+            fadeEl.style.top = '0';
+            fadeEl.style.left = '0';
+            fadeEl.style.width = '100vw';
+            fadeEl.style.height = '100vh';
+            fadeEl.style.backgroundColor = '#040302';
+            fadeEl.style.zIndex = '999999';
+            fadeEl.style.opacity = '0';
+            fadeEl.style.pointerEvents = 'none';
+            fadeEl.style.transition = 'opacity 0.18s ease-in-out';
+            document.body.appendChild(fadeEl);
         }
 
-        // Spawn return waystone behind player if traveling outside hub
-        if (locationId !== 'royal_bridge_arena' && this.world && this.world.spawnReturnWaystone) {
-            const rx = loc.pos[0] - 2.0;
-            const rz = loc.pos[2] - 2.5;
-            const ry = this.world.getGroundHeight(rx, rz);
-            this.world.spawnReturnWaystone(rx, ry, rz);
-        } else if (locationId === 'royal_bridge_arena') {
-            if (this.world && this.world.removeReturnWaystone) {
-                this.world.removeReturnWaystone();
+        fadeEl.style.opacity = '1.0';
+
+        setTimeout(() => {
+            const targetY = typeof loc.pos[1] === 'number' ? loc.pos[1] : 0;
+            this.playerMesh.position.set(loc.pos[0], targetY, loc.pos[2]);
+
+            // Ensure ground height receives target elevation so it never falls into the void
+            const groundY = this.world.getGroundHeight(loc.pos[0], loc.pos[2], targetY);
+            if (groundY > -20.0) {
+                this.playerMesh.position.y = groundY;
+            } else {
+                this.playerMesh.position.y = targetY;
             }
-        }
 
-        if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
-        this.showNotification(`🗺️ FAST-TRAVEL: ${loc.name.toUpperCase()} (${loc.elev})`);
+            // Zero velocity and cancel rolling/stagger to prevent carrying motion
+            if (this.playerVelocity) this.playerVelocity.set(0, 0, 0);
+            if (this.combat) {
+                this.combat.isRolling = false;
+                this.combat.isAttacking = false;
+                this.combat.isStaggered = false;
+            }
 
-        this.closeLocationsModal();
-        if (typeof closeQuickMenuModal === 'function') closeQuickMenuModal();
-        this.updateHUD();
-        this.updateEscapeMenuUI();
+            this.cameraYaw = 0;
+            this.cameraPitch = 0.22;
+
+            // Immediately snap camera position to prevent flying across the world from far away
+            const targetPos = this.playerMesh.position.clone().add(new THREE.Vector3(0, 1.4, 0));
+            const dist = this.cameraDistance || 4.2;
+            this.camera.position.set(
+                targetPos.x,
+                targetPos.y + dist * Math.sin(0.22),
+                targetPos.z + dist * Math.cos(0.22)
+            );
+            this.camera.lookAt(targetPos);
+
+            if (loc.light && this.renderer) {
+                this.renderer.toneMappingExposure = loc.light;
+            }
+
+            // Save last active bonfire checkpoint
+            this.lastBonfirePos = this.playerMesh.position.clone();
+
+            // Spawn return waystone behind player if traveling outside hub
+            if (locationId !== 'royal_bridge_arena' && this.world && this.world.spawnReturnWaystone) {
+                const rx = loc.pos[0] - 2.0;
+                const rz = loc.pos[2] - 2.5;
+                const ry = this.playerMesh.position.y;
+                this.world.spawnReturnWaystone(rx, ry, rz);
+            } else if (locationId === 'royal_bridge_arena') {
+                if (this.world && this.world.removeReturnWaystone) {
+                    this.world.removeReturnWaystone();
+                }
+            }
+
+            if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+            this.showNotification(`🗺️ FAST-TRAVEL: ${loc.name.toUpperCase()} (${loc.elev})`);
+
+            this.closeLocationsModal();
+            if (typeof closeQuickMenuModal === 'function') closeQuickMenuModal();
+            this.updateHUD();
+            this.updateEscapeMenuUI();
+
+            setTimeout(() => {
+                fadeEl.style.opacity = '0';
+            }, 60);
+        }, 180);
     }
 
     onWindowResize() {
@@ -3555,12 +3635,12 @@ window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodex
 window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
 window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
 
-// 45 Authentic Lordran, Drangleic, Lothric & Oolacile Fast-Travel Locations
+// 75 Authentic Lordran, Drangleic, Lothric, Boletaria & Yharnam Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
     // ----------------------------------------------------
     // SANCTUARIES & HUB REALMS
     // ----------------------------------------------------
-    { id: 'royal_bridge_arena', name: 'Royal Bridge - Grand Citadel Arena (Hub)', zone: 'Royal Citadel', pos: [0, 0, 105], elev: '0m', danger: 'Sanctuary & War Arena (Hub)', boss: 'Arena Colosseum', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and the nexus bonfire.', light: 1.10 },
+    { id: 'royal_bridge_arena', name: 'Royal Bridge - Grand Citadel Arena (Hub)', zone: 'Royal Citadel', pos: [0, 0, 134], elev: '0m', danger: 'Sanctuary & War Arena (Hub)', boss: 'Arena Colosseum', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and the nexus bonfire.', light: 1.10 },
     { id: 'firelink_shrine', name: 'Firelink Shrine - Ruined Bonfire', zone: 'Firelink Shrine', pos: [0, 0, 5], elev: '0m', danger: 'Sanctuary (Safe)', boss: 'None (Crestfallen Warrior)', desc: 'The historic nexus of Lordran where weary pilgrims gather around the warm embers of the bonfire.', light: 1.10 },
     { id: 'undead_parish_altar', name: 'Undead Parish - Sunlit Altar', zone: 'Undead Parish', pos: [4, 0, 40], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Armored Fang Boar', desc: 'The shattered altar of the Warriors of Sunlight bathed in the golden radiance of the ancient sun.', light: 1.25 },
     { id: 'high_ramparts_watchtower', name: 'High Ramparts - Solar Overlook', zone: 'High Ramparts', pos: [24, 6.0, 35], elev: '+6m', danger: 'Tier II (Moderate)', boss: 'Knight Solaire', desc: 'The elevated eastern battlements where Knight Solaire gazes upon his incandescent sun.', light: 1.25 },
@@ -3608,7 +3688,41 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'irithyll_cathedral', name: 'Irithyll of Boreal Valley - Frozen Spire', zone: 'Boreal Valley', pos: [-10, 0, 140], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Pontiff Sulyvahn', desc: 'A moonlit gothic city of frost and pale moonlight, under the tyrannical grasp of the Pontiff.', light: 1.10 },
     { id: 'world_end', name: 'The Ringed City - Ash Desert at the End of Time', zone: 'The Ringed City', pos: [18, 6.0, 175], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Slave Knight Gael', desc: 'An endless dune desert of white ash stretching to the horizon where the remnants of humanity bleed.', light: 0.90 },
     { id: 'first_flame_summit', name: 'Kiln of First Flame - Zenith of Cinder', zone: 'Kiln of First Flame', pos: [0, 6.0, 180], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Soul of Cinder', desc: 'The true epicenter of the fading world where the combined incarnation of every Lord awaits.', light: 1.15 },
-    { id: 'serpent_sanctum', name: 'Sunken Serpent Sanctum - Altar of the Gorgon', zone: 'Sunken Sanctum', pos: [-25, -5.0, 130], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Medusa, Gorgon Matriarch', desc: 'Subterranean serpentine water temple steeped in venomous mist and guarded by petrifying cobras.', light: 0.60 }
+    { id: 'serpent_sanctum', name: 'Sunken Serpent Sanctum - Altar of the Gorgon', zone: 'Sunken Sanctum', pos: [-25, -5.0, 130], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Medusa, Gorgon Matriarch', desc: 'Subterranean serpentine water temple steeped in venomous mist and guarded by petrifying cobras.', light: 0.60 },
+
+    // ----------------------------------------------------
+    // 30 EXPEDITION REALMS (DRANGLEIC, LOTHRIC, BOLETARIA & YHARNAM)
+    // ----------------------------------------------------
+    { id: 'majula_cliffside', name: 'Majula - Seaside Cliff Bonfire', zone: 'Majula', pos: [2, 0, -10], elev: '0m', danger: 'Sanctuary (Safe)', boss: 'Emerald Herald', desc: 'Sun-drenched coastal ruins overlooking the boundless sea where souls find solace under the dying sun.', light: 1.30 },
+    { id: 'heides_tower_ruins', name: "Heide's Tower of Flame - Sunken Ruin", zone: 'Heide', pos: [6, 0, 15], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Dragonrider of Heide', desc: 'Submerged ancient aqueducts and soaring lighthouses guarded by lumbering Old Knights in massive green stone plate.', light: 1.25 },
+    { id: 'no_mans_wharf', name: "No-man's Wharf - Pirate Harbor", zone: "No-man's Wharf", pos: [-12, -5.0, 50], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Flexile Sentry', desc: 'A dark subterranean pirate port cut into sea cliffs, infested with darkdwellers terrified of firelight.', light: 0.65 },
+    { id: 'lost_bastille_cells', name: 'The Lost Bastille - Exile Holding Cells', zone: 'Lost Bastille', pos: [18, 6.0, 45], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'Ruin Sentinel Trio', desc: 'A colossal ocean penitentiary where cursed hollows were locked away to rot behind iron bars.', light: 0.90 },
+    { id: 'sinners_rise_prison', name: "Sinner's Rise - Saltfort Water Prison", zone: "Sinner's Rise", pos: [-22, -5.0, 110], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Lost Sinner', desc: 'A flooded stone spire rising from dark waters, where the chained Sinner punishes herself in eternal darkness.', light: 0.40 },
+    { id: 'huntsmans_copse', name: "Huntsman's Copse - Undead Lockaway", zone: "Huntsman's Copse", pos: [8, 0, 30], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Skeleton Lords', desc: 'A misty pine forest where royalty held barbaric hunts of Undead victims across suspension bridges.', light: 0.70 },
+    { id: 'earthen_peak_summit', name: 'Earthen Peak - Poison Windmill Summit', zone: 'Earthen Peak', pos: [25, 6.0, 80], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'Mytha, the Baneful Queen', desc: 'A towering iron-and-wood windmill harvesting toxic venom and embalming oils beneath heavy green smog.', light: 0.85 },
+    { id: 'iron_keep_molten', name: 'Iron Keep - Molten Threshold Bridge', zone: 'Iron Keep', pos: [0, 0, 115], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Old Iron King & Smelter Demon', desc: 'A sinking obsidian fortress submerged in a bubbling lake of molten basalt and magma flows.', light: 1.15 },
+    { id: 'shrine_of_amana', name: 'Shrine of Amana - Priestess Prayer Altar', zone: 'Shrine of Amana', pos: [-16, -5.0, 100], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Demon of Song', desc: 'Submerged marble ruins where Milfanito priestesses sing melancholy lullabies across bioluminescent water lilies.', light: 0.80 },
+    { id: 'undead_crypt_entrance', name: 'Undead Crypt - Entrance of the Dead', zone: 'Undead Crypt', pos: [-26, -5.0, 140], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Velstadt, the Royal Aegis', desc: 'The hallowed burial vault where lights are forbidden, guarded by the devoted royal bell hammer.', light: 0.45 },
+    { id: 'dragon_shrine_summit', name: 'Dragon Shrine - Ancient Sky Altar', zone: 'Dragon Shrine', pos: [14, 6.0, 150], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Ancient Dragon', desc: 'Colossal floating mountain sanctuary where noble Drakekeepers and golden Dragonfang knights test pilgrims.', light: 1.30 },
+    { id: 'frozen_eleum_loyce', name: 'Frozen Eleum Loyce - Grand Cathedral of Ice', zone: 'Eleum Loyce', pos: [-6, 0, 85], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Burnt Ivory King', desc: 'An ivory citadel encased in eternal blizzards, built atop the mouth of the Old Chaos to contain its wrath.', light: 1.20 },
+    { id: 'cathedral_of_deep', name: 'Cathedral of the Deep - Cleansing Chapel', zone: 'Cathedral of Deep', pos: [12, 0, 55], elev: '0m', danger: 'Tier III (Advanced)', boss: 'Deacons of the Deep', desc: 'A monumental gothic cathedral tainted by the abyssal sludge of Aldrich and teeming with wretched deacon thralls.', light: 0.85 },
+    { id: 'catacombs_of_carthus', name: 'Catacombs of Carthus - Desert King Crypt', zone: 'Carthus', pos: [-18, -5.0, 75], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'High Lord Wolnir', desc: 'Sunken subterranean tombs of the sand kingdom of Carthus, littered with rolling bone boulders and giant curved swords.', light: 0.50 },
+    { id: 'smouldering_lake', name: 'Smouldering Lake - Demon Ruins Basin', zone: 'Smouldering Lake', pos: [-8, -5.0, 120], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Old Demon King', desc: 'A cavernous subterranean sea of embers and weeping ruins where the last embers of Chaos fizzle out under giant ballista fire.', light: 0.75 },
+    { id: 'irithyll_dungeon', name: 'Irithyll Dungeon - Cell Block of Jailers', zone: 'Irithyll Dungeon', pos: [-24, -5.0, 85], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Branding Iron Jailers', desc: 'A grim subterranean torture complex where cloaked jailers brand prisoners with flesh-melting searing irons.', light: 0.45 },
+    { id: 'profaned_capital', name: 'Profaned Capital - Sunken Throne', zone: 'Profaned Capital', pos: [-15, -5.0, 155], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Yhorm the Giant', desc: 'The burnt-out metropolis consumed by the Profaned Flame, filled with gold-leaf treasures and monstrous horrors.', light: 0.65 },
+    { id: 'lothric_castle_barracks', name: 'Lothric Castle - Dragon Barracks Ramparts', zone: 'Lothric Castle', pos: [24, 6.0, 115], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Dragonslayer Armour', desc: 'The fortified exterior bastions of Lothric guarded by twin wyverns breathing fire across the gatehouse.', light: 1.15 },
+    { id: 'grand_archives_roof', name: 'Grand Archives - Gargoyle Rooftop', zone: 'Grand Archives', pos: [16, 6.0, 135], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Twin Princes Lothric & Lorian', desc: 'The steeply pitched slate roofs high above the crystal-coated library, hunted by Winged Knights and gargoyles.', light: 1.10 },
+    { id: 'untended_graves', name: 'Untended Graves - Dark Firelink Shrine', zone: 'Untended Graves', pos: [0, 0, -18], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Champion Gundyr', desc: 'An eerie pitch-black mirror world of the Cemetery of Ash where the flame has died and black eyes weep.', light: 0.30 },
+    { id: 'ariandel_snowfield', name: 'Painted World of Ariandel - Rope Bridge Overlook', zone: 'Ariandel', pos: [-10, 0, 70], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Sister Friede & Father Ariandel', desc: 'A rotting canvas world of frozen rot and snowdrifts where Corvian settlers huddle beneath a precarious rope bridge.', light: 1.15 },
+    { id: 'dreg_heap_ruins', name: 'The Dreg Heap - Converging Ruins', zone: 'The Dreg Heap', pos: [10, 6.0, 120], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Demon Prince', desc: 'The crumpled detritus of every historic kingdom piled atop one another as time itself collapses inwards.', light: 0.85 },
+    { id: 'ringed_inner_wall', name: 'The Ringed City - Ringed Inner Wall', zone: 'The Ringed City', pos: [22, 6.0, 155], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Darkeater Midir', desc: 'Gilded spires and abyssal swamps nestled in the hidden valley gifted to early humanity by Gwyn.', light: 0.95 },
+    { id: 'boletaria_palace_gate', name: 'Boletarian Palace - Gates of the Nexus', zone: 'Boletaria', pos: [0, 0, 10], elev: '0m', danger: 'Sanctuary & War Gates', boss: 'Phalanx & Tower Knight', desc: 'The monolithic stone gates of King Allant XII palace enveloped in the demonic colorless deep fog.', light: 1.05 },
+    { id: 'stonefang_tunnel', name: 'Stonefang Tunnel - Smithing Grounds', zone: 'Stonefang', pos: [-12, -5.0, 60], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Armor Spider & Flamelurker', desc: 'Deep volcanic mining shafts where scale miners excavate hardstone under searing geothermal steam blasts.', light: 0.80 },
+    { id: 'tower_of_latria', name: 'Tower of Latria - Prison of Hope', zone: 'Tower of Latria', pos: [-20, -5.0, 125], elev: '-5m', danger: 'Tier IV (Severe)', boss: "Fool's Idol & Maneater", desc: 'A nightmarish panopticon prison illuminated by eerie green chandeliers where Mind Flayers ring their paralyzing bells.', light: 0.50 },
+    { id: 'valley_of_defilement', name: 'Valley of Defilement - Swamp of Sorrow', zone: 'Valley of Defilement', pos: [-14, -5.0, 110], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Maiden Astraea & Garl Vinland', desc: 'A stinking cesspool of poison sludge and rotting shanties where the discarded dregs of humanity weep.', light: 0.40 },
+    { id: 'central_yharnam_bridge', name: 'Central Yharnam - Great Bridge', zone: 'Yharnam', pos: [4, 0, 25], elev: '0m', danger: 'Sanctuary & Beast Bridge', boss: 'Cleric Beast & Father Gascoigne', desc: 'A soaring Victorian bridge littered with abandoned burning carriages and howling lycanthropic beasts.', light: 0.90 },
+    { id: 'byrgenwerth_moonside', name: 'Byrgenwerth - Moonside Lake Observatory', zone: 'Byrgenwerth', pos: [-2, 0, 100], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Rom, the Vacuous Spider', desc: 'An ancient collegiate academy overlooking a serene moonlit lake that conceals all eldritch horrors.', light: 1.05 },
+    { id: 'cainhurst_castle_roof', name: 'Forsaken Cainhurst Castle - Frost Rooftops', zone: 'Cainhurst', pos: [14, 6.0, 85], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Martyr Logarius', desc: 'An isolated snow-covered gothic palace towering above a frozen lake, realm of the immortal Vileblood Queen.', light: 1.15 }
 ];
 
 // Locations & Save Slot Global Window Helpers

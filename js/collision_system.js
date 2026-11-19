@@ -42,7 +42,7 @@ class CollisionSystem {
         const initialZ = pos.z;
 
         // A. Royal Bridge Parapets (z in [22.0, 95.0])
-        if (pos.z >= 22.0 && pos.z <= 95.0) {
+        if (pos.z >= 22.0 && pos.z <= 95.0 && Math.abs(pos.x) <= 8.5) {
             if (y >= -1.0 && y <= 3.5) {
                 const minX = -6.45 + radius;
                 const maxX = 6.45 - radius;

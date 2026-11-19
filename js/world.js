@@ -783,8 +783,8 @@ class DarkSoulsWorld {
                 const loc = window.DARK_SOULS_LOCATIONS[i];
                 const dx = x - loc.pos[0];
                 const dz = z - loc.pos[2];
-                if (dx * dx + dz * dz < 35 * 35) {
-                    if (currentY !== null && Math.abs(currentY - loc.pos[1]) < 4.5) {
+                if (dx * dx + dz * dz < 40 * 40) {
+                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 8.0) {
                         return loc.pos[1];
                     }
                 }
