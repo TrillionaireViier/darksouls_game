@@ -1296,7 +1296,11 @@ class DarkSoulsGame {
                 }
             }
         } else {
-            pPos.y = THREE.MathUtils.lerp(pPos.y, targetGroundY, Math.min(1.0, delta * 20));
+            if (pPos.y < targetGroundY) {
+                pPos.y = targetGroundY; // Snap feet to solid ground immediately if below floor
+            } else {
+                pPos.y = THREE.MathUtils.lerp(pPos.y, targetGroundY, Math.min(1.0, delta * 20));
+            }
             this.playerVelocity.y = 0;
         }
 

@@ -73,10 +73,10 @@ class CollisionSystem {
             pos.z = Math.min(148.0 - radius, pos.z);
         }
 
-        // E. High Ramparts Walkway (z in [22.0, 95.0], y > 4.5)
-        if (pos.z >= 22.0 && pos.z <= 95.0 && y > 4.5) {
-            const minX = 16.5 + radius;
-            const maxX = 23.5 - radius;
+        // E. High Ramparts Walkway (z in [22.0, 95.0], y > 2.0)
+        if (pos.z >= 22.0 && pos.z <= 95.0 && y > 2.0) {
+            const minX = 14.8 + radius;
+            const maxX = 25.2 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
             pos.z = Math.min(94.5 - radius, pos.z);
         }

@@ -695,17 +695,26 @@ class DarkSoulsWorld {
 
     getGroundHeight(x, z, currentY = null) {
         // 1. East Upper Ramparts & Stairs
-        // Ascending Stairs from Courtyard (z in [4, 22], x in [15, 25])
-        if (x >= 15 && x <= 25 && z >= 4 && z <= 22) {
+        // Ramparts Elevation Lock (If player is already elevated on ramparts, prevent falling through gaps)
+        if (currentY !== null && currentY >= 2.5 && x >= 14.2 && x <= 25.8 && z >= 18 && z <= 96) {
+            if (z > 91) {
+                const t = (96 - z) / 5;
+                return Math.max(0, t * 6.0);
+            }
+            return 6.0;
+        }
+
+        // Ascending Stairs from Courtyard (z in [4, 22], x in [14.6, 25.4])
+        if (x >= 14.6 && x <= 25.4 && z >= 4 && z <= 22) {
             const t = (z - 4) / 18;
             return t * 6.0;
         }
-        // High Ramparts Battlement Walkway (z in [22, 91], x in [15, 25])
-        if (x >= 15 && x <= 25 && z > 22 && z <= 91) {
+        // High Ramparts Battlement Walkway (z in [22, 91], x in [14.6, 25.4])
+        if (x >= 14.6 && x <= 25.4 && z > 22 && z <= 91) {
             return 6.0;
         }
-        // Watchtower & Descent Ramp to Fog Gate (z in [91, 96], x in [13, 25])
-        if (x >= 13 && x <= 25 && z > 91 && z <= 96) {
+        // Watchtower & Descent Ramp to Fog Gate (z in [91, 96], x in [13, 25.4])
+        if (x >= 13 && x <= 25.4 && z > 91 && z <= 96) {
             const t = (96 - z) / 5;
             return Math.max(0, t * 6.0);
         }
@@ -862,7 +871,7 @@ class DarkSoulsWorld {
         for (let i = 0; i < 18; i++) {
             const stepZ = 4.5 + i * 1.0;
             const stepH = (i + 1) * (6.0 / 18);
-            const stepGeo = new THREE.BoxGeometry(8, stepH, 1.05);
+            const stepGeo = new THREE.BoxGeometry(9.8, stepH, 1.05);
             const stepMesh = new THREE.Mesh(stepGeo, this.stoneMat);
             stepMesh.position.set(20, stepH / 2, stepZ);
             stepMesh.receiveShadow = true;
@@ -920,7 +929,7 @@ class DarkSoulsWorld {
         ));
 
         // Upper Ramparts Walkway Elevated Floor Slab (z=22 to z=91 at y=5.5)
-        const rampartFloorGeo = new THREE.BoxGeometry(9, 1.0, 69);
+        const rampartFloorGeo = new THREE.BoxGeometry(10.0, 1.0, 69);
         const rampartFloorMat = this.stoneMat.clone();
         rampartFloorMat.map = rampartFloorMat.map.clone();
         rampartFloorMat.map.repeat.set(3, 23);

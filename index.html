@@ -1105,62 +1105,13 @@
 
         /* =================================================== */
         /* BOTTOM ACTION DOCK (INVENTORY, BOSSES, LORE, QA)    */
-        /* Clean auto-hide during gameplay                     */
+        /* Permanently hidden during gameplay (Clean HUD)      */
         /* =================================================== */
-        #bottom-dock-hover-zone {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100vw;
-            height: 20px;
-            z-index: 9998;
-            pointer-events: auto;
-        }
-
+        #bottom-dock-hover-zone,
         #desktop-bottom-action-dock {
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%) translateY(95px);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 9999;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-            max-width: calc(100vw - 40px);
-            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* Peek bottom dock on desktop only when cursor is unlocked and hovered */
-        #bottom-dock-hover-zone:hover ~ #desktop-bottom-action-dock,
-        #desktop-bottom-action-dock:hover {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Strictly hidden during active gameplay with pointer locked */
-        body.is-pointer-locked #desktop-bottom-action-dock,
-        body.is-pointer-locked #bottom-dock-hover-zone {
             display: none !important;
             opacity: 0 !important;
             pointer-events: none !important;
-        }
-
-        /* On mobile / touch screen: completely hide bottom dock to prevent UI clutter */
-        @media (hover: none) and (pointer: coarse) {
-            #desktop-bottom-action-dock,
-            #bottom-dock-hover-zone {
-                display: none !important;
-            }
-        }
-        @media (max-width: 768px) {
-            #desktop-bottom-action-dock,
-            #bottom-dock-hover-zone {
-                display: none !important;
-            }
         }
 
         /* =================================================== */
