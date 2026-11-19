@@ -2749,6 +2749,196 @@ class DarkSoulsCharacters {
     }
 
     // ----------------------------------------------------
+    // CREATE UNDEAD HOLLOW ARCHER (RANGED SNIPER)
+    // ----------------------------------------------------
+    createHollowArcher(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.95;
+        root.add(bodyGroup);
+
+        const torsoMat = this.hollowRagsMat || this.quiltedSkirtMat;
+        const skinMat = this.hollowSkinMat;
+
+        // 1. Torso wearing tattered archer cowl
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.58, 0.28), torsoMat);
+        torso.castShadow = true;
+        bodyGroup.add(torso);
+
+        // 2. Head with archer cowl / hood
+        const headGroup = new THREE.Group();
+        headGroup.position.y = 0.48;
+        torso.add(headGroup);
+
+        const skull = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.32, 0.28), skinMat);
+        skull.castShadow = true;
+        headGroup.add(skull);
+
+        const cowl = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.38, 0.34), torsoMat);
+        cowl.position.set(0, 0.04, -0.04);
+        headGroup.add(cowl);
+
+        // Glowing red hollow eye sockets with soul ember light
+        const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 6), new THREE.MeshBasicMaterial({ color: 0xff2200 }));
+        eyeL.position.set(-0.07, 0.04, 0.15);
+        headGroup.add(eyeL);
+
+        const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 6), new THREE.MeshBasicMaterial({ color: 0xff2200 }));
+        eyeR.position.set(0.07, 0.04, 0.15);
+        headGroup.add(eyeR);
+
+        const soulLight = new THREE.PointLight(0xff2200, 0.45, 1.8);
+        soulLight.position.set(0, 0.04, 0.18);
+        headGroup.add(soulLight);
+
+        // 3. Quiver with Bodkin Arrows on Back
+        const quiverGroup = new THREE.Group();
+        quiverGroup.position.set(0.12, 0.10, -0.18);
+        quiverGroup.rotation.set(-0.15, 0, -0.38);
+        torso.add(quiverGroup);
+
+        const quiverBody = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.065, 0.72, 8), this.leatherMat);
+        quiverBody.castShadow = true;
+        quiverGroup.add(quiverBody);
+
+        for (let a = 0; a < 5; a++) {
+            const arrowShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.75, 5), this.leatherMat);
+            arrowShaft.position.set(-0.03 + (a % 3) * 0.03, 0.32 + (a % 2) * 0.06, (a > 2 ? 0.03 : -0.03));
+            quiverGroup.add(arrowShaft);
+
+            const fletch = new THREE.Mesh(new THREE.BoxGeometry(0.005, 0.12, 0.05), new THREE.MeshStandardMaterial({ color: 0xdd2222 }));
+            fletch.position.set(-0.03 + (a % 3) * 0.03, 0.65, (a > 2 ? 0.03 : -0.03));
+            quiverGroup.add(fletch);
+        }
+
+        // 4. Left Arm holding the Longbow
+        const leftShoulder = new THREE.Group();
+        leftShoulder.position.set(-0.32, 0.20, 0);
+        torso.add(leftShoulder);
+
+        const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.46, 0.11), skinMat);
+        lArm.position.y = -0.23;
+        leftShoulder.add(lArm);
+
+        const bowGroup = new THREE.Group();
+        bowGroup.position.set(0, -0.42, 0.15);
+        leftShoulder.add(bowGroup);
+
+        const bowCurve = new THREE.Mesh(
+            new THREE.TorusGeometry(0.55, 0.024, 6, 14, Math.PI * 0.72),
+            new THREE.MeshStandardMaterial({ color: 0x5a3d28, roughness: 0.7 })
+        );
+        bowCurve.rotation.z = Math.PI * 0.64;
+        bowGroup.add(bowCurve);
+
+        const bowString = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.004, 0.004, 0.95, 4),
+            new THREE.MeshBasicMaterial({ color: 0xeeeeee })
+        );
+        bowString.position.x = 0.16;
+        bowGroup.add(bowString);
+
+        // 5. Right Arm (Draw Arm & Notched Arrow)
+        const rightShoulder = new THREE.Group();
+        rightShoulder.position.set(0.32, 0.20, 0);
+        torso.add(rightShoulder);
+
+        const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.46, 0.11), skinMat);
+        rArm.position.y = -0.23;
+        rightShoulder.add(rArm);
+
+        const notchedArrow = new THREE.Group();
+        notchedArrow.position.set(0, -0.42, 0.1);
+        rightShoulder.add(notchedArrow);
+
+        const nShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.85, 6), this.leatherMat);
+        nShaft.rotation.x = Math.PI / 2;
+        nShaft.position.z = 0.42;
+        notchedArrow.add(nShaft);
+
+        const nTip = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.14, 4), this.steelMat);
+        nTip.rotation.x = -Math.PI / 2;
+        nTip.position.z = 0.88;
+        notchedArrow.add(nTip);
+
+        // 6. Legs
+        const rightHip = new THREE.Group();
+        rightHip.position.set(0.15, -0.32, 0);
+        torso.add(rightHip);
+        const rLeg = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.58, 0.12), skinMat);
+        rLeg.position.y = -0.29;
+        rightHip.add(rLeg);
+
+        const leftHip = new THREE.Group();
+        leftHip.position.set(-0.15, -0.32, 0);
+        torso.add(leftHip);
+        const lLeg = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.58, 0.12), skinMat);
+        lLeg.position.y = -0.29;
+        leftHip.add(lLeg);
+
+        root.userData = {
+            type: 'archer',
+            mobType: 'ranged',
+            bodyGroup,
+            torso,
+            head: headGroup,
+            rightShoulder,
+            leftShoulder,
+            rightHip,
+            leftHip,
+            bowGroup,
+            bowString,
+            notchedArrow,
+            quiverGroup
+        };
+
+        this.scene.add(root);
+        return root;
+    }
+
+    createArrowMesh() {
+        const arrow = new THREE.Group();
+
+        // 1. Ash wood shaft (length 0.85m)
+        const shaft = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.014, 0.014, 0.82, 6),
+            new THREE.MeshStandardMaterial({ color: 0x6e4e3a, roughness: 0.75 })
+        );
+        shaft.castShadow = true;
+        arrow.add(shaft);
+
+        // 2. Steel pyramid bodkin point
+        const bodkin = new THREE.Mesh(
+            new THREE.ConeGeometry(0.038, 0.15, 4),
+            this.steelMat
+        );
+        bodkin.position.y = 0.45;
+        bodkin.castShadow = true;
+        arrow.add(bodkin);
+
+        // 3. Fletching (3 vanes)
+        for (let f = 0; f < 3; f++) {
+            const feather = new THREE.Mesh(
+                new THREE.BoxGeometry(0.005, 0.14, 0.045),
+                new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.8 })
+            );
+            feather.position.y = -0.32;
+            feather.rotation.y = (f * Math.PI * 2) / 3;
+            arrow.add(feather);
+        }
+
+        // Speed trail glow
+        const glow = new THREE.PointLight(0xffeedd, 0.4, 1.2);
+        glow.position.y = 0.2;
+        arrow.add(glow);
+
+        return arrow;
+    }
+
+    // ----------------------------------------------------
     // CREATE PROCEDURAL MOB (30 MOBS COMPENDIUM)
     // Supports 30 distinct mob types with unique geometries, weapons & materials
     // ----------------------------------------------------
@@ -2761,6 +2951,8 @@ class DarkSoulsCharacters {
             return this.createGiantSerpent(x, z, angle, y);
         } else if (type.includes('man_serpent')) {
             return this.createManSerpent(x, z, angle, y);
+        } else if (type.includes('archer') || (mobDef && mobDef.isArcher) || (mobDef && mobDef.aiType === 'Ranged')) {
+            return this.createHollowArcher(x, z, angle, y, mobDef);
         }
 
         const root = new THREE.Group();

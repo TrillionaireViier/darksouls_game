@@ -70,6 +70,10 @@ class DarkSoulsCombat {
         this.adminModeUnlocked = (localStorage.getItem('darksouls_admin_mode') === 'true');
         this.isGodMode = false;
 
+        // Physical Ballistic Arrows & Articulated Ragdolls Engine
+        this.arrows = [];
+        this.ragdolls = [];
+
         // Weapon Arsenal System (6 Distinct Weapons)
         this.weapons = {
             sword: {
@@ -751,11 +755,24 @@ class DarkSoulsCombat {
     }
 
     spawnEnemies() {
-        // Clear any remaining enemies
+        // Clear any remaining enemies, arrows, and ragdolls
         this.enemies.forEach(e => {
             if (e.mesh) this.game.scene.remove(e.mesh);
         });
         this.enemies = [];
+
+        if (this.arrows) {
+            this.arrows.forEach(a => {
+                if (a.mesh) this.game.scene.remove(a.mesh);
+            });
+            this.arrows = [];
+        }
+        if (this.ragdolls) {
+            this.ragdolls.forEach(r => {
+                if (r.mesh) this.game.scene.remove(r.mesh);
+            });
+            this.ragdolls = [];
+        }
 
         // 30 MOBS COMPENDIUM SPANNING LORDRAN (CATACOMBS -5M, BRIDGE 0M, RAMPARTS +6M)
         const mobList = (window.DarkSoulsLore && window.DarkSoulsLore.mobs) || window.DARK_SOULS_MOBS || [];
@@ -880,6 +897,83 @@ class DarkSoulsCombat {
 
         serpentSanctumMobs.forEach(sMob => {
             this.createCustomMob(sMob, sMob.pos[0], sMob.pos[2], 0, sMob.pos[1]);
+        });
+
+        // Tactical Undead Hollow Archers on High Ramparts (+6m), Overlooks, and Parapets
+        const lordranArchers = [
+            {
+                id: 'undead_archer_tower',
+                name: 'UNDEAD BURG RAMPART ARCHER',
+                meshType: 'archer',
+                isArcher: true,
+                behaviorType: 'Ranged',
+                aiType: 'Ranged',
+                hp: 220,
+                damage: 48,
+                souls: 180,
+                speed: 1.8,
+                attackReach: 32.0,
+                pos: [12.0, 6.0, 32.0]
+            },
+            {
+                id: 'undead_archer_parapet',
+                name: 'PARAPET HOLLOW SNIPER',
+                meshType: 'archer',
+                isArcher: true,
+                behaviorType: 'Ranged',
+                aiType: 'Ranged',
+                hp: 240,
+                damage: 52,
+                souls: 220,
+                speed: 1.8,
+                attackReach: 35.0,
+                pos: [-14.0, 6.0, 56.0]
+            },
+            {
+                id: 'undead_archer_bridge',
+                name: 'BRIDGE AMBUSH ARCHER',
+                meshType: 'archer',
+                isArcher: true,
+                behaviorType: 'Ranged',
+                aiType: 'Ranged',
+                hp: 200,
+                damage: 44,
+                souls: 160,
+                speed: 2.0,
+                attackReach: 28.0,
+                pos: [2.0, 3.8, 88.0]
+            },
+            {
+                id: 'undead_archer_lookout',
+                name: 'CASTLE LOOKOUT MARKSMAN',
+                meshType: 'archer',
+                isArcher: true,
+                behaviorType: 'Ranged',
+                aiType: 'Ranged',
+                hp: 260,
+                damage: 55,
+                souls: 250,
+                speed: 1.6,
+                attackReach: 38.0,
+                pos: [18.0, 6.0, 72.0]
+            },
+            {
+                id: 'silver_knight_greatbowman',
+                name: 'ANOR LONDO GREATBOW ARCHER',
+                meshType: 'archer',
+                isArcher: true,
+                behaviorType: 'Ranged',
+                aiType: 'Ranged',
+                hp: 420,
+                damage: 85,
+                souls: 800,
+                speed: 1.5,
+                attackReach: 44.0,
+                pos: [0.0, 6.5, -45.0]
+            }
+        ];
+        lordranArchers.forEach(aMob => {
+            this.createCustomMob(aMob, aMob.pos[0], aMob.pos[2], 0, aMob.pos[1]);
         });
 
         // Boss
@@ -1861,6 +1955,10 @@ class DarkSoulsCombat {
         enemy.deathProgress = 0;
         enemy.isAttacking = false;
         enemy.isStaggered = false;
+
+        // Launch Articulated 3D Ragdoll Physics
+        const isHeavyWeapon = (this.attackCombo === 3 || this.currentWeapon === 'zweihander');
+        this.initRagdoll(enemy, null, isHeavyWeapon);
     }
 
     triggerBossPhase2() {
@@ -2019,6 +2117,10 @@ class DarkSoulsCombat {
     // UPDATE TICK (COMBAT TIMERS & ENEMY AI)
     // ----------------------------------------------------
     update(delta) {
+        // 0. Update Physics Entities (Articulated Ragdolls & Ballistic Projectiles)
+        this.updateRagdolls(delta);
+        this.updateArrows(delta);
+
         if (this.isDead) return;
 
         // Admin God Mode: ensure infinite HP and stamina
@@ -2206,6 +2308,287 @@ class DarkSoulsCombat {
         this.updateBossAI(delta);
     }
 
+    // ----------------------------------------------------
+    // ARTICULATED 3D RAGDOLL PHYSICS ENGINE
+    // Handles procedural joint tumbling, bounce restitution,
+    // limb flailing, and soul dissipation upon death
+    // ----------------------------------------------------
+    initRagdoll(entity, hitImpulse = null, isHeavy = false) {
+        if (!entity || !entity.mesh) return;
+        const mesh = entity.mesh;
+        const userData = mesh.userData || {};
+
+        let vel;
+        if (hitImpulse) {
+            vel = hitImpulse.clone();
+        } else {
+            const playerRot = (this.game && this.game.playerMesh) ? this.game.playerMesh.rotation.y : 0;
+            const playerPos = (this.game && this.game.playerMesh) ? this.game.playerMesh.position : new THREE.Vector3();
+            const dir = mesh.position.clone().sub(playerPos).setY(0);
+            if (dir.lengthSq() < 0.001) {
+                dir.set(Math.sin(playerRot), 0, Math.cos(playerRot));
+            } else {
+                dir.normalize();
+            }
+
+            const horizPower = isHeavy ? (7.5 + Math.random() * 2.2) : (3.6 + Math.random() * 1.5);
+            const vertPower = isHeavy ? (4.8 + Math.random() * 1.8) : (2.4 + Math.random() * 1.2);
+            vel = dir.multiplyScalar(horizPower).add(new THREE.Vector3(0, vertPower, 0));
+        }
+
+        const angVel = new THREE.Vector3(
+            (Math.random() - 0.5) * (isHeavy ? 12 : 7),
+            (Math.random() - 0.5) * (isHeavy ? 9 : 5),
+            (Math.random() - 0.5) * (isHeavy ? 12 : 7)
+        );
+
+        const ragdoll = {
+            entity: entity,
+            mesh: mesh,
+            userData: userData,
+            pos: mesh.position,
+            vel: vel,
+            rot: mesh.rotation,
+            angVel: angVel,
+            isHeavy: isHeavy,
+            bounces: 0,
+            maxBounces: 3,
+            settled: false,
+            settleTimer: 0,
+            totalTime: 0
+        };
+
+        this.ragdolls.push(ragdoll);
+    }
+
+    updateRagdolls(delta) {
+        if (!this.ragdolls || this.ragdolls.length === 0) return;
+
+        for (let i = this.ragdolls.length - 1; i >= 0; i--) {
+            const rd = this.ragdolls[i];
+            rd.totalTime += delta;
+
+            if (!rd.settled) {
+                // Gravity & Aerodynamic Drag
+                rd.vel.y -= 19.6 * delta;
+                const drag = Math.pow(0.96, delta * 60);
+                rd.vel.x *= drag;
+                rd.vel.z *= drag;
+
+                // Position update
+                rd.pos.x += rd.vel.x * delta;
+                rd.pos.y += rd.vel.y * delta;
+                rd.pos.z += rd.vel.z * delta;
+
+                // Rotation tumble
+                rd.rot.x += rd.angVel.x * delta;
+                rd.rot.y += rd.angVel.y * delta;
+                rd.rot.z += rd.angVel.z * delta;
+
+                // Procedural limb flailing with inertia
+                const u = rd.userData;
+                const t = rd.totalTime;
+                if (u.head) {
+                    u.head.rotation.x = Math.sin(t * 15) * 0.45;
+                    u.head.rotation.z = Math.cos(t * 12) * 0.35;
+                }
+                if (u.torso) {
+                    u.torso.rotation.x = Math.sin(t * 10) * 0.3;
+                    u.torso.rotation.z = Math.cos(t * 11) * 0.25;
+                }
+                if (u.rightShoulder) {
+                    u.rightShoulder.rotation.x = Math.sin(t * 16) * 0.85;
+                    u.rightShoulder.rotation.z = 1.2 + Math.cos(t * 12) * 0.5;
+                }
+                if (u.leftShoulder) {
+                    u.leftShoulder.rotation.x = -Math.sin(t * 15) * 0.85;
+                    u.leftShoulder.rotation.z = -1.2 + Math.sin(t * 13) * 0.5;
+                }
+                if (u.rightHip) {
+                    u.rightHip.rotation.x = Math.sin(t * 13) * 0.7;
+                    u.rightHip.rotation.z = 0.4;
+                }
+                if (u.leftHip) {
+                    u.leftHip.rotation.x = -Math.cos(t * 12) * 0.7;
+                    u.leftHip.rotation.z = -0.4;
+                }
+
+                // Ground Collision against terrain
+                const groundY = this.world.getGroundHeight(rd.pos.x, rd.pos.z) + 0.32;
+                if (rd.pos.y <= groundY) {
+                    rd.pos.y = groundY;
+                    if (Math.abs(rd.vel.y) > 2.0 && rd.bounces < rd.maxBounces) {
+                        // Elastic Bounce with restitution
+                        rd.bounces++;
+                        rd.vel.y = -rd.vel.y * 0.36;
+                        rd.vel.x *= 0.62;
+                        rd.vel.z *= 0.62;
+                        rd.angVel.multiplyScalar(0.48);
+                        if (this.audio && this.audio.playRagdollThud) this.audio.playRagdollThud();
+                        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(rd.pos, false);
+                    } else {
+                        // Settled on ground
+                        rd.vel.set(0, 0, 0);
+                        rd.angVel.set(0, 0, 0);
+                        rd.settled = true;
+                        if (this.audio && this.audio.playRagdollThud) this.audio.playRagdollThud();
+                        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(rd.pos, false);
+                        
+                        // Flatten body naturally onto ground
+                        rd.rot.x = Math.PI / 2;
+                        rd.rot.z = (Math.random() - 0.5) * 0.4;
+                        if (u.bodyGroup) u.bodyGroup.position.y = 0.15;
+                    }
+                }
+            } else {
+                // Settled: wait and smoothly dissolve into soul energy
+                rd.settleTimer += delta;
+                if (rd.settleTimer > 3.2) {
+                    const fade = Math.max(0, 1.0 - (rd.settleTimer - 3.2) / 1.2);
+                    rd.mesh.scale.setScalar(fade);
+                    if (fade <= 0) {
+                        this.game.scene.remove(rd.mesh);
+                        this.ragdolls.splice(i, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BALLISTIC ARROW & PROJECTILE SYSTEM
+    // Physics trajectory, shield deflections, and arrow impacts
+    // ----------------------------------------------------
+    spawnArrow(fromPos, targetPos, shooter) {
+        if (!this.charFactory) return;
+        const arrowMesh = this.charFactory.createArrowMesh();
+        arrowMesh.position.copy(fromPos);
+
+        // Aim towards player chest
+        const target = targetPos.clone().add(new THREE.Vector3(0, 1.1, 0));
+        const dist = fromPos.distanceTo(target);
+        const arrowSpeed = 32.0;
+        const flightTime = Math.max(0.1, dist / arrowSpeed);
+        const upComp = 0.5 * 9.8 * flightTime; // Ballistic parabolic curve compensation
+
+        const dir = target.clone().sub(fromPos).normalize();
+        const vel = dir.clone().multiplyScalar(arrowSpeed).add(new THREE.Vector3(0, upComp, 0));
+
+        // Orient mesh along velocity vector
+        arrowMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), vel.clone().normalize());
+
+        this.game.scene.add(arrowMesh);
+
+        this.arrows.push({
+            mesh: arrowMesh,
+            pos: fromPos.clone(),
+            vel: vel,
+            shooter: shooter,
+            damage: shooter ? (shooter.damage || 45) : 45,
+            life: 7.0,
+            stuck: false,
+            stuckTimer: 0
+        });
+    }
+
+    updateArrows(delta) {
+        if (!this.arrows || this.arrows.length === 0) return;
+        const playerPos = (this.game && this.game.playerMesh) ? this.game.playerMesh.position : null;
+
+        for (let i = this.arrows.length - 1; i >= 0; i--) {
+            const arr = this.arrows[i];
+            arr.life -= delta;
+
+            if (arr.stuck) {
+                arr.stuckTimer += delta;
+                // Subtle quiver vibration on impact
+                if (arr.stuckTimer < 0.35) {
+                    arr.mesh.rotation.z += Math.sin(arr.stuckTimer * 45) * 0.04 * (1 - arr.stuckTimer / 0.35);
+                }
+                if (arr.stuckTimer > 3.0 || arr.life <= 0) {
+                    const fade = Math.max(0, 1.0 - (arr.stuckTimer - 3.0) / 0.8);
+                    arr.mesh.scale.setScalar(fade);
+                    if (fade <= 0 || arr.life <= 0) {
+                        this.game.scene.remove(arr.mesh);
+                        this.arrows.splice(i, 1);
+                    }
+                }
+                continue;
+            }
+
+            // Ballistic flight with gravity
+            arr.vel.y -= 9.8 * delta;
+            arr.pos.x += arr.vel.x * delta;
+            arr.pos.y += arr.vel.y * delta;
+            arr.pos.z += arr.vel.z * delta;
+            arr.mesh.position.copy(arr.pos);
+
+            // Orient arrow to velocity vector
+            const normVel = arr.vel.clone().normalize();
+            if (normVel.lengthSq() > 0.001) {
+                arr.mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), normVel);
+            }
+
+            // Check Player Collision
+            if (playerPos && !this.isDead) {
+                const chestPos = playerPos.clone().add(new THREE.Vector3(0, 1.1, 0));
+                const distToPlayer = arr.pos.distanceTo(chestPos);
+
+                if (distToPlayer < 0.95) {
+                    // Check if player is blocking
+                    if (this.isBlocking && this.stamina > 10) {
+                        const playerRot = this.game.playerMesh.rotation.y;
+                        const playerFacing = new THREE.Vector3(Math.sin(playerRot), 0, Math.cos(playerRot));
+                        const incomingDir = arr.vel.clone().negate().setY(0).normalize();
+
+                        if (playerFacing.dot(incomingDir) > 0.25) {
+                            // BLOCKED WITH SHIELD!
+                            if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(true);
+                            if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, true);
+                            if (this.game && this.game.shakeCamera) this.game.shakeCamera(0.18, 0.2);
+
+                            this.stamina = Math.max(0, this.stamina - 18);
+                            this.staminaDelay = 0.8;
+
+                            // Deflect arrow away realistically
+                            arr.vel.reflect(playerFacing).multiplyScalar(0.35);
+                            arr.vel.y += 2.0;
+                            continue;
+                        }
+                    }
+
+                    // UNBLOCKED HIT!
+                    if (!this.isRolling && !this.isInvincible) {
+                        if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(false);
+                        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, false);
+                        const attackerPos = arr.shooter ? (arr.shooter.mesh ? arr.shooter.mesh.position : arr.pos) : arr.pos;
+                        this.damagePlayer(arr.damage, attackerPos);
+
+                        arr.stuck = true;
+                        continue;
+                    }
+                }
+            }
+
+            // Check Ground / Terrain Collision
+            const groundY = this.world.getGroundHeight(arr.pos.x, arr.pos.z);
+            if (arr.pos.y <= groundY + 0.15) {
+                arr.pos.y = groundY + 0.1;
+                arr.mesh.position.y = arr.pos.y;
+                arr.stuck = true;
+                if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(false);
+                if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, false);
+                continue;
+            }
+
+            // Expire out of bounds
+            if (arr.life <= 0 || arr.pos.y < -30) {
+                this.game.scene.remove(arr.mesh);
+                this.arrows.splice(i, 1);
+            }
+        }
+    }
+
     updateHollowAI(delta) {
         const playerPos = this.game.playerMesh.position;
         if (!this._scratchMobVec) this._scratchMobVec = new THREE.Vector3();
@@ -2247,48 +2630,8 @@ class DarkSoulsCombat {
 
             const u = e.mesh.userData;
 
-            // 1. Realistic Ragdoll Collapse Animation upon Death
+            // 1. Articulated Ragdoll Physics handles deceased entities in updateRagdolls
             if (e.isDead || e.state === 'DEAD') {
-                e.deathProgress = (e.deathProgress || 0) + delta;
-                const p = Math.min(1.0, e.deathProgress / 0.65);
-                const ease = 1 - Math.pow(1 - p, 3); // Smooth cubic ease-out
-
-                if (u.bodyGroup) {
-                    u.bodyGroup.position.y = 0.95 - 0.78 * ease; // Sinks to floor
-                }
-                if (u.torso) {
-                    u.torso.rotation.x = -1.15 * ease; // Collapses backwards
-                    u.torso.rotation.z = 0.42 * ease;  // Slumps sideways
-                }
-                if (u.head) {
-                    u.head.rotation.x = 0.75 * ease;   // Head rolls back
-                    u.head.rotation.y = 0.45 * ease;
-                }
-                if (u.rightHip) {
-                    u.rightHip.rotation.x = -1.25 * ease; // Knees buckle
-                    u.rightHip.rotation.z = 0.45 * ease;
-                }
-                if (u.leftHip) {
-                    u.leftHip.rotation.x = -0.95 * ease;
-                    u.leftHip.rotation.z = -0.35 * ease;
-                }
-                if (u.rightShoulder) {
-                    u.rightShoulder.rotation.x = -0.3 * ease;
-                    u.rightShoulder.rotation.z = 1.35 * ease; // Weapon arm drops limp
-                }
-                if (u.leftShoulder) {
-                    u.leftShoulder.rotation.x = -0.2 * ease;
-                    u.leftShoulder.rotation.z = -1.25 * ease;
-                }
-
-                // After lying on the ground for 2.8s, dissipate
-                if (e.deathProgress > 2.8) {
-                    const fade = Math.max(0, 1.0 - (e.deathProgress - 2.8) / 0.8);
-                    e.mesh.scale.setScalar(fade);
-                    if (e.deathProgress > 3.6) {
-                        this.game.scene.remove(e.mesh);
-                    }
-                }
                 continue;
             }
 
@@ -2382,13 +2725,13 @@ class DarkSoulsCombat {
                 aggroRange = 18;
                 speedMult = 1.25;
                 preferredDist = reach;
-            } else if (behavior === 'Ranged') {
-                windupEnd = 0.55;
-                strikeEnd = 0.70;
-                totalDur = 1.15;
-                aggroRange = 22;
-                speedMult = 0.95;
-                preferredDist = 8.5;
+            } else if (behavior === 'Ranged' || e.isArcher) {
+                windupEnd = 0.70;
+                strikeEnd = 0.90;
+                totalDur = 1.35;
+                aggroRange = 38;
+                speedMult = 0.85;
+                preferredDist = 18.0;
             } else if (behavior === 'Caster') {
                 windupEnd = 0.75;
                 strikeEnd = 0.95;
@@ -2418,11 +2761,13 @@ class DarkSoulsCombat {
                         if (u.torso) { u.torso.rotation.x = -0.2 * t; }
                         if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.8 * t; u.rightShoulder.rotation.z = 0.8 * t; }
                         if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 * t; u.leftShoulder.rotation.z = -0.8 * t; }
-                    } else if (behavior === 'Ranged') {
+                    } else if (behavior === 'Ranged' || e.isArcher) {
                         // Drawing bowstring / sighting line
                         if (u.torso) { u.torso.rotation.y = 0.75 * t; }
                         if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.4 * t; u.rightShoulder.rotation.y = -0.4 * t; }
                         if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 * t; u.leftShoulder.rotation.z = -0.7 * t; }
+                        if (u.bowString) { u.bowString.position.x = 0.16 + 0.22 * t; }
+                        if (u.notchedArrow) { u.notchedArrow.position.z = 0.42 - 0.25 * t; }
                     } else {
                         // Flanker / Swarm / default
                         if (u.torso) { u.torso.rotation.y = -0.65 * t; u.torso.rotation.x = -0.22 * t; }
@@ -2450,10 +2795,12 @@ class DarkSoulsCombat {
                         if (u.torso) { u.torso.rotation.x = -0.2 + 0.45 * t; }
                         if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.8 + 2.5 * t; }
                         if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 + 2.0 * t; }
-                    } else if (behavior === 'Ranged') {
-                        // Release shot
-                        if (u.torso) { u.torso.rotation.y = 0.75 - 0.3 * t; }
-                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.4 + 1.2 * t; }
+                    } else if (behavior === 'Ranged' || e.isArcher) {
+                        // Release shot & bowstring recoil
+                        if (u.torso) { u.torso.rotation.y = 0.75 - 0.25 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.4 + 0.8 * t; }
+                        if (u.bowString) { u.bowString.position.x = 0.16; }
+                        if (u.notchedArrow) { u.notchedArrow.position.z = 0.42; }
                     } else {
                         // Flanker / Swarm
                         if (u.torso) { u.torso.rotation.y = -0.65 + 1.25 * t; u.torso.rotation.x = -0.22 + 0.65 * t; }
@@ -2463,20 +2810,27 @@ class DarkSoulsCombat {
                     }
 
                     // Strike Impact Frame
-                    if (!e._damageDelivered && t >= 0.45) {
+                    if (!e._damageDelivered && t >= 0.35) {
                         e._damageDelivered = true;
-                        this.audio.playSwing(behavior === 'Heavy Tank');
-                        const playerDist = this.game.playerMesh.position.distanceTo(e.mesh.position);
-                        const effectiveReach = (behavior === 'Ranged' || behavior === 'Caster') ? preferredDist + 2.0 : (reach + (behavior === 'Heavy Tank' ? 1.1 : 0.7));
+                        if (behavior === 'Ranged' || e.isArcher) {
+                            if (this.audio && this.audio.playArrowRelease) this.audio.playArrowRelease();
+                            const arrowSpawn = e.mesh.position.clone();
+                            arrowSpawn.y += 1.35; // Shoulder & bow height
+                            this.spawnArrow(arrowSpawn, playerPos, e);
+                        } else {
+                            this.audio.playSwing(behavior === 'Heavy Tank');
+                            const playerDist = this.game.playerMesh.position.distanceTo(e.mesh.position);
+                            const effectiveReach = (behavior === 'Caster') ? preferredDist + 2.0 : (reach + (behavior === 'Heavy Tank' ? 1.1 : 0.7));
 
-                        if (playerDist < effectiveReach && !this.isRolling && !this.isInvincible) {
-                            const dmg = (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive)) ? 1 : (e.damage || 35);
-                            this.damagePlayer(dmg, e.mesh.position);
-                            if (this.world && this.world.spawnHitSparks) {
-                                this.world.spawnHitSparks(this.game.playerMesh.position, false);
-                            }
-                            if (behavior === 'Heavy Tank' && this.game.shakeCamera) {
-                                this.game.shakeCamera(0.3, 0.25);
+                            if (playerDist < effectiveReach && !this.isRolling && !this.isInvincible) {
+                                const dmg = (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive)) ? 1 : (e.damage || 35);
+                                this.damagePlayer(dmg, e.mesh.position);
+                                if (this.world && this.world.spawnHitSparks) {
+                                    this.world.spawnHitSparks(this.game.playerMesh.position, false);
+                                }
+                                if (behavior === 'Heavy Tank' && this.game.shakeCamera) {
+                                    this.game.shakeCamera(0.3, 0.25);
+                                }
                             }
                         }
                     }
@@ -2509,7 +2863,7 @@ class DarkSoulsCombat {
             }
 
             // 5. Aggro & Locomotion Logic (Mob Matrix 5 Archetypes)
-            if (dist < aggroRange && heightDiff < 4.2) {
+            if (dist < aggroRange && (heightDiff < 4.2 || behavior === 'Ranged' || e.isArcher || behavior === 'Caster')) {
                 // Line of Sight: Aggro drops if blocked by walls for >4s
                 const hasLoS = this.checkLineOfSight(e.mesh.position, playerPos);
                 if (!hasLoS) {
@@ -2574,7 +2928,11 @@ class DarkSoulsCombat {
                     const moveSpeed = (e.speed || 2.4) * speedMult;
                     e.mesh.position.x += Math.sin(targetAngle) * moveSpeed * delta;
                     e.mesh.position.z += Math.cos(targetAngle) * moveSpeed * delta;
-                    e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z, e.mesh.position.y);
+                    if (e.startPos && e.startPos.y > 2.0) {
+                        e.mesh.position.y = e.startPos.y; // Keep sniper roost perch height
+                    } else {
+                        e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z, e.mesh.position.y);
+                    }
                 } else if (shouldRetreat) {
                     const moveSpeed = (e.speed || 2.4) * 0.85;
                     e.mesh.position.x -= Math.sin(targetAngle) * moveSpeed * delta;
@@ -2583,7 +2941,7 @@ class DarkSoulsCombat {
                 }
 
                 // If in attack range, trigger attack when cooldown expires
-                const canAttack = (behavior === 'Ranged' || behavior === 'Caster') ? (dist >= 4.0 && dist <= preferredDist + 2.5) : (dist <= preferredDist + 0.35);
+                const canAttack = (behavior === 'Ranged' || behavior === 'Caster' || e.isArcher) ? (dist >= 3.0 && dist <= aggroRange) : (dist <= preferredDist + 0.35);
                 if (canAttack) {
                     e.cooldown -= delta;
                     if (e.cooldown <= 0 && !e.isAttacking) {
@@ -2925,21 +3283,209 @@ class DarkSoulsCombat {
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
             this.boss.attackTime = 0;
-            this.boss.attackType = Math.random() < 0.6 ? 'SLAM' : 'CLEAVE';
-            this.boss.cooldown = this.boss.isPhase2 ? 1.8 : 2.6;
+            this.boss.cooldown = this.boss.isPhase2 ? 1.7 : 2.4;
+            this.boss._slamDelivered = false;
+            this.boss._cleaveDelivered = false;
+            this.boss._stomp1Delivered = false;
+            this.boss._stomp2Delivered = false;
+            this.boss._chargeHitDelivered = false;
+            this.boss._jumpTargetPos = (this.game && this.game.playerMesh) ? this.game.playerMesh.position.clone() : new THREE.Vector3();
+            this.boss._jumpStartPos = this.boss.mesh.position.clone();
 
-            if (this.boss.attackType === 'SLAM') {
+            const rand = Math.random();
+            if (dist > 7.0) {
+                // Long range: Meteor Jump Slam or Demonic Charge
+                this.boss.attackType = rand < 0.65 ? 'JUMP_SLAM' : 'CHARGE_THRUST';
+            } else {
+                if (rand < 0.30) this.boss.attackType = 'SLAM';
+                else if (rand < 0.58) this.boss.attackType = 'CLEAVE';
+                else if (rand < 0.82) this.boss.attackType = 'BERSERK_STOMP';
+                else this.boss.attackType = 'JUMP_SLAM';
+            }
+
+            if (this.boss.attackType === 'JUMP_SLAM') {
+                this.audio.playBossRoar();
+                this.game.showNotification("TAURUS DEMON METEOR JUMP SLAM!");
+            } else if (this.boss.attackType === 'BERSERK_STOMP') {
+                this.audio.playBossRoar();
+                this.game.showNotification("TAURUS DEMON BERSERK GROUND STOMP!");
+            } else if (this.boss.attackType === 'CHARGE_THRUST') {
+                this.audio.playBossRoar();
+                this.game.showNotification("TAURUS DEMON DEMONIC CHARGE!");
+            } else if (this.boss.attackType === 'SLAM') {
                 this.audio.playBossRoar();
             } else {
                 this.audio.playSwing(true);
             }
         }
 
-        // Active Taurus Demon Attack Animation
+        // Active Taurus Demon Attack Animation Execution
         if (this.boss.isAttacking) {
             this.boss.attackTime = (this.boss.attackTime || 0) + delta;
 
-            if (this.boss.attackType === 'SLAM') {
+            if (this.boss.attackType === 'JUMP_SLAM') {
+                const windupEnd = 0.65;
+                const jumpEnd = 1.35;
+                const totalDur = 2.15;
+
+                if (this.boss.attackTime < windupEnd) {
+                    // Deep crouch and charge up
+                    const t = this.boss.attackTime / windupEnd;
+                    if (u.torso) {
+                        u.torso.rotation.x = -0.55 * t;
+                        u.torso.position.y = -0.65 * t;
+                    }
+                    if (u.rightHip && u.leftHip) {
+                        u.rightHip.rotation.x = -0.75 * t;
+                        u.leftHip.rotation.x = -0.75 * t;
+                    }
+                    if (u.rightShoulder) {
+                        u.rightShoulder.rotation.x = -2.4 * t;
+                        u.rightShoulder.rotation.z = 0.35 * t;
+                    }
+                    if (u.leftShoulder) {
+                        u.leftShoulder.rotation.x = -2.2 * t;
+                    }
+                } else if (this.boss.attackTime < jumpEnd) {
+                    // Airborne Leap & Meteor Descent
+                    const jt = (this.boss.attackTime - windupEnd) / (jumpEnd - windupEnd);
+                    const arcHeight = Math.sin(jt * Math.PI) * 4.6;
+
+                    this.boss.mesh.position.x = THREE.MathUtils.lerp(this.boss._jumpStartPos.x, this.boss._jumpTargetPos.x, jt);
+                    this.boss.mesh.position.z = THREE.MathUtils.lerp(this.boss._jumpStartPos.z, this.boss._jumpTargetPos.z, jt);
+                    const baseGroundY = this.world.getGroundHeight(this.boss.mesh.position.x, this.boss.mesh.position.z);
+                    this.boss.mesh.position.y = baseGroundY + arcHeight;
+
+                    if (u.torso) {
+                        u.torso.rotation.x = 0.45 * Math.sin(jt * Math.PI);
+                        u.torso.position.y = 0;
+                    }
+                    if (u.rightShoulder) {
+                        u.rightShoulder.rotation.x = -2.85;
+                    }
+                    if (u.leftShoulder) {
+                        u.leftShoulder.rotation.x = -2.65;
+                    }
+
+                    // Impact frame near apex landing
+                    if (!this.boss._slamDelivered && jt >= 0.95) {
+                        this.boss._slamDelivered = true;
+                        this.boss.mesh.position.y = baseGroundY;
+                        if (this.audio && this.audio.playBossJumpSlam) this.audio.playBossJumpSlam();
+                        else this.audio.playBossSlam();
+                        this.game.shakeCamera(0.85, 0.95);
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 6.8 && !this.isRolling && !this.isInvincible) {
+                            this.damagePlayer(Math.round(this.boss.damage * 1.35), this.boss.mesh.position);
+                        }
+                    }
+                } else if (this.boss.attackTime < totalDur) {
+                    // Heavy recovery from crater squash
+                    const t = (this.boss.attackTime - jumpEnd) / (totalDur - jumpEnd);
+                    if (u.torso) {
+                        u.torso.rotation.x = THREE.MathUtils.lerp(0.65, 0.18, t);
+                        u.torso.position.y = THREE.MathUtils.lerp(-0.4, 0, t);
+                    }
+                    if (u.rightHip && u.leftHip) {
+                        u.rightHip.rotation.x = THREE.MathUtils.lerp(-0.4, 0, t);
+                        u.leftHip.rotation.x = THREE.MathUtils.lerp(-0.4, 0, t);
+                    }
+                    if (u.rightShoulder) {
+                        u.rightShoulder.rotation.x = THREE.MathUtils.lerp(1.4, -0.45, t);
+                    }
+                    if (u.leftShoulder) {
+                        u.leftShoulder.rotation.x = THREE.MathUtils.lerp(1.1, 0, t);
+                    }
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss._slamDelivered = false;
+                }
+            } else if (this.boss.attackType === 'BERSERK_STOMP') {
+                const totalDur = 1.95;
+                const stomp1Time = 0.55;
+                const stomp2Time = 1.15;
+
+                if (this.boss.attackTime < stomp1Time) {
+                    const t = this.boss.attackTime / stomp1Time;
+                    if (u.leftHip) u.leftHip.rotation.x = -1.15 * t;
+                    if (u.torso) { u.torso.rotation.x = -0.35 * t; u.torso.rotation.z = 0.25 * t; }
+                } else if (this.boss.attackTime < stomp2Time) {
+                    if (!this.boss._stomp1Delivered) {
+                        this.boss._stomp1Delivered = true;
+                        this.audio.playBossSlam();
+                        this.game.shakeCamera(0.42, 0.38);
+                        this.world.spawnHitSparks(this.boss.mesh.position, false);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 4.5 && !this.isRolling && !this.isInvincible) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.5), this.boss.mesh.position);
+                        }
+                    }
+                    const t = (this.boss.attackTime - stomp1Time) / (stomp2Time - stomp1Time);
+                    if (u.leftHip) u.leftHip.rotation.x = -1.15 * (1 - t);
+                    if (u.rightHip) u.rightHip.rotation.x = -1.25 * t;
+                    if (u.torso) { u.torso.rotation.x = -0.45 * t; u.torso.rotation.z = -0.3 * t; }
+                    if (u.rightShoulder) u.rightShoulder.rotation.x = -2.2 * t;
+                } else if (this.boss.attackTime < totalDur) {
+                    if (!this.boss._stomp2Delivered) {
+                        this.boss._stomp2Delivered = true;
+                        if (this.audio && this.audio.playBossJumpSlam) this.audio.playBossJumpSlam();
+                        else this.audio.playBossSlam();
+                        this.game.shakeCamera(0.72, 0.65);
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                        if (hitDist < 5.8 && !this.isRolling && !this.isInvincible) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.95), this.boss.mesh.position);
+                        }
+                    }
+                    const t = (this.boss.attackTime - stomp2Time) / (totalDur - stomp2Time);
+                    if (u.rightHip) u.rightHip.rotation.x = -1.25 * (1 - t);
+                    if (u.torso) {
+                        u.torso.rotation.x = THREE.MathUtils.lerp(0.5, 0.18, t);
+                        u.torso.rotation.z = THREE.MathUtils.lerp(-0.3, 0, t);
+                    }
+                    if (u.rightShoulder) u.rightShoulder.rotation.x = THREE.MathUtils.lerp(1.2, -0.45, t);
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss._stomp1Delivered = false;
+                    this.boss._stomp2Delivered = false;
+                }
+            } else if (this.boss.attackType === 'CHARGE_THRUST') {
+                const windupEnd = 0.35;
+                const chargeEnd = 1.15;
+                const totalDur = 1.65;
+
+                if (this.boss.attackTime < windupEnd) {
+                    const t = this.boss.attackTime / windupEnd;
+                    if (u.torso) u.torso.rotation.x = 0.45 * t;
+                    if (u.headGroup) u.headGroup.rotation.x = 0.65 * t;
+                    if (u.rightShoulder) u.rightShoulder.rotation.x = -1.3 * t;
+                } else if (this.boss.attackTime < chargeEnd) {
+                    const chargeSpeed = 9.2;
+                    this.boss.mesh.position.x += Math.sin(targetAngle) * chargeSpeed * delta;
+                    this.boss.mesh.position.z += Math.cos(targetAngle) * chargeSpeed * delta;
+
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 3.8 && !this.boss._chargeHitDelivered) {
+                        this.boss._chargeHitDelivered = true;
+                        this.audio.playBossSlam();
+                        this.game.shakeCamera(0.55, 0.45);
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+                        if (!this.isRolling && !this.isInvincible) {
+                            this.damagePlayer(Math.round(this.boss.damage * 0.85), this.boss.mesh.position);
+                        }
+                    }
+                } else if (this.boss.attackTime < totalDur) {
+                    const t = (this.boss.attackTime - chargeEnd) / (totalDur - chargeEnd);
+                    if (u.torso) u.torso.rotation.x = THREE.MathUtils.lerp(0.45, 0.18, t);
+                    if (u.headGroup) u.headGroup.rotation.x = THREE.MathUtils.lerp(0.65, 0, t);
+                    if (u.rightShoulder) u.rightShoulder.rotation.x = THREE.MathUtils.lerp(-1.3, -0.45, t);
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss._chargeHitDelivered = false;
+                }
+            } else if (this.boss.attackType === 'SLAM') {
                 const windupEnd = 0.75;
                 const strikeEnd = 0.95;
                 const totalDur = 1.35;
