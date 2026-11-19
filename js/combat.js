@@ -218,8 +218,9 @@ class DarkSoulsCombat {
         this.bossRoster = [
             {
                 id: 'asylum',
-                name: 'ASYLUM DEMON',
-                title: 'Northern Undead Asylum &bull; Great Demon Hammer & Butt Slam',
+                name: 'VANGUARD OF ASH: ASYLUM DEMON',
+                title: 'Northern Undead Asylum &bull; Colossal Hammer of Torment & Ash Slam',
+                unlockLocationId: 'undead_asylum',
                 icon: '👹',
                 maxHp: 2000,
                 damage: 230,
@@ -230,8 +231,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'taurus',
-                name: 'TAURUS DEMON',
-                title: 'Undead Burg Bridge &bull; Great Stone Hammer & Ground Slam',
+                name: 'TAURUS DEMON, TITAN OF THE BURG',
+                title: 'Undead Burg High Battlements &bull; Great Stone Greataxe & Parapet Cleave',
+                unlockLocationId: 'undead_burg_bridge',
                 icon: '🐂',
                 maxHp: 2400,
                 damage: 270,
@@ -242,8 +244,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'gargoyle',
-                name: 'BELL GARGOYLE',
-                title: 'Undead Parish Belfry &bull; Bronze Halberd, Stone Wings & Flame Breath',
+                name: 'TWIN BELFRY GARGOYLES, SENTINELS OF AWAKENING',
+                title: 'Undead Parish Belfry &bull; Weathered Bronze Halberd, Stone Wings & Flame Surge',
+                unlockLocationId: 'undead_parish_belfry',
                 icon: '🗿',
                 maxHp: 2600,
                 damage: 260,
@@ -254,8 +257,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'capra',
-                name: 'CAPRA DEMON',
-                title: 'Lower Undead Burg &bull; Dual Jagged Demon Great Machetes',
+                name: 'CAPRA DEMON, BUTCHER OF THE LOWER BURG',
+                title: 'Lower Undead Burg Alleys &bull; Twin Jagged Cleavers & Savage Hound Flank',
+                unlockLocationId: 'undead_burg_aqueduct',
                 icon: '🐐',
                 maxHp: 2500,
                 damage: 310,
@@ -266,8 +270,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'gaping',
-                name: 'GAPING DRAGON',
-                title: 'Depths &bull; Colossal Ribcage Maw, Acid Spit & Tail Sweep',
+                name: 'GAPING DRAGON, CORRUPTED MAW OF THE DEPTHS',
+                title: 'Subterranean Sewers of Lordran &bull; Colossal Ribcage Maw & Toxic Bile',
+                unlockLocationId: 'the_depths',
                 icon: '🐉',
                 maxHp: 3200,
                 damage: 300,
@@ -278,8 +283,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'quelaag',
-                name: 'CHAOS WITCH QUELAAG',
-                title: 'Blighttown Swamps &bull; Flaming Furysword & Magma Lava Pools',
+                name: 'CHAOS WITCH QUELAAG, DAUGHTER OF FLAME',
+                title: 'Domain of Quelaag &bull; Molten Spider Carapace & Curved Furysword',
+                unlockLocationId: 'quelaags_domain',
                 icon: '🕷️',
                 maxHp: 3100,
                 damage: 310,
@@ -290,8 +296,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'butterfly',
-                name: 'MOONLIGHT BUTTERFLY',
-                title: 'Darkroot Ruins &bull; Luminescent Wings, Homing Magic & Crystal Laser',
+                name: 'MOONLIGHT BUTTERFLY, DREAM-WEAVER OF SEATH',
+                title: 'Darkroot Moonlit Grove &bull; Crystalline Laser Beams & Lunar Homing Volleys',
+                unlockLocationId: 'darkroot_garden',
                 icon: '🦋',
                 maxHp: 2700,
                 damage: 270,
@@ -302,8 +309,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'iron_golem',
-                name: 'IRON GOLEM',
-                title: "Sen's Fortress Ramparts &bull; Giant Core Axe & Wind Wave Whirlwind",
+                name: 'IRON GOLEM, BULWARK OF SEN\'S FORTRESS',
+                title: 'Sen\'s Fortress Rooftop &bull; Core of Iron, Wind-Cutter Axe & Colossal Stomp',
+                unlockLocationId: 'sens_fortress_roof',
                 icon: '🤖',
                 maxHp: 3400,
                 damage: 340,
@@ -314,8 +322,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'ornstein',
-                name: 'DRAGONSLAYER ORNSTEIN',
-                title: 'Anor Londo Cathedral &bull; Lightning Cross-Spear & Supersonic Thrust',
+                name: 'DRAGONSLAYER ORNSTEIN, LION OF GWYN\'S FOUR',
+                title: 'Anor Londo Grand Cathedral &bull; Cross-Spear of Sunlight Lightning & Lightning Thrust',
+                unlockLocationId: 'anor_londo_courtyard',
                 icon: '⚡',
                 maxHp: 3000,
                 damage: 330,
@@ -326,8 +335,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'smough',
-                name: 'EXECUTIONER SMOUGH',
-                title: 'Anor Londo Cathedral &bull; Colossal Gilded War Hammer & Butt Slam',
+                name: 'EXECUTIONER SMOUGH, THE BRUTAL CANNIBAL',
+                title: 'Anor Londo Hall of the Great Lord &bull; Colossal Golden Smough Hammer & Leaping Crush',
+                unlockLocationId: 'anor_londo_hall',
                 icon: '🔨',
                 maxHp: 3800,
                 damage: 360,
@@ -338,8 +348,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'sif',
-                name: 'GREAT GREY WOLF SIF',
-                title: 'Darkroot Garden &bull; Artorias Greatsword & 360° Whirlwind Spin',
+                name: 'GREAT GREY WOLF SIF, LOYAL WARDEN OF THE GRAVE',
+                title: 'Darkroot Basin &bull; Sweeping Greatsword of Artorias & Howling Moonlight Spin',
+                unlockLocationId: 'darkroot_basin',
                 icon: '🐺',
                 maxHp: 3300,
                 damage: 340,
@@ -350,8 +361,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'artorias',
-                name: 'KNIGHT ARTORIAS',
-                title: 'Oolacile Abyss &bull; Somersault Abyss Slam, Sludge Blast & Dark Thrust',
+                name: 'KNIGHT ARTORIAS, THE CORRUPTED ABYSSWALKER',
+                title: 'Oolacile Township Colosseum &bull; Greatsword of Artorias & Frenzied Somersault Flurry',
+                unlockLocationId: 'oolacile_township',
                 icon: '🗡️',
                 maxHp: 3600,
                 damage: 370,
@@ -362,8 +374,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'manus',
-                name: 'MANUS, FATHER OF THE ABYSS',
-                title: 'Chasm of Abyss &bull; Primeval Monstrous Dark Arm, Claws & Dark Beads',
+                name: 'MANUS, PRIMEVAL FATHER OF THE ABYSS',
+                title: 'Chasm of the Abyss &bull; Shadow Catalyst, Frenzied Dark Bead & Slam Rampage',
+                unlockLocationId: 'chasm_of_the_abyss',
                 icon: '👁️',
                 maxHp: 4200,
                 damage: 390,
@@ -374,8 +387,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'kalameet',
-                name: 'BLACK DRAGON KALAMEET',
-                title: 'Royal Wood &bull; Black Flame Breath, 4 Wings & Calamity Telekinesis',
+                name: 'BLACK DRAGON KALAMEET, THE BRINGER OF CALAMITY',
+                title: 'Royal Wood Gorge &bull; Calamity Eye Telekinesis, Obsidian Dive & Black Fire',
+                unlockLocationId: 'royal_wood',
                 icon: '🦇',
                 maxHp: 4000,
                 damage: 380,
@@ -386,8 +400,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'nito',
-                name: 'GRAVELORD NITO',
-                title: 'Tomb of the Dead &bull; Sarcophagus of Skeletons, Miasma & Gravelord Greatsword',
+                name: 'GRAVELORD NITO, FIRST OF THE DEAD',
+                title: 'Tomb of the Giants Altar &bull; Greatsword of Nito, Toxic Miasma & Skeleton Army',
+                unlockLocationId: 'nitos_domain',
                 icon: '💀',
                 maxHp: 3800,
                 damage: 360,
@@ -398,8 +413,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'gwyn',
-                name: 'GWYN, LORD OF CINDER',
-                title: 'Kiln of First Flame &bull; Flaming Sunlight Greatsword & Sun Burst',
+                name: 'GWYN, LORD OF CINDER, GUARDIAN OF THE FIRST FLAME',
+                title: 'Kiln of the First Flame &bull; Flaming Sunlight Greatsword, Grab Explosion & Flame Slashes',
+                unlockLocationId: 'kiln_of_first_flame',
                 icon: '☀️',
                 maxHp: 4500,
                 damage: 410,
@@ -410,8 +426,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'stray_demon',
-                name: 'STRAY DEMON',
-                title: 'Northern Undead Asylum Depths &bull; Great Demon Hammer & Tremor Magic Explosions',
+                name: 'STRAY DEMON, FORGOTTEN CELL WARDEN',
+                title: 'Asylum Subterranean Vaults &bull; Explosive Fire Wave, Demon Great Hammer & Shockwaves',
+                unlockLocationId: 'asylum_depths',
                 icon: '👹',
                 maxHp: 3200,
                 damage: 290,
@@ -422,8 +439,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'demon_firesage',
-                name: 'DEMON FIRESAGE',
-                title: 'Demon Ruins &bull; Catalyst of Lost Izalith & Flame Wave Explosions',
+                name: 'DEMON FIRESAGE, ARCH-MASTER OF LOST FLAME',
+                title: 'Demon Ruins Sanctum &bull; Red Demon Catalyst & Ancient Flame Sorcery Bursts',
+                unlockLocationId: 'demon_ruins',
                 icon: '🔥',
                 maxHp: 3400,
                 damage: 310,
@@ -434,8 +452,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'centipede',
-                name: 'CENTIPEDE DEMON',
-                title: 'Lava Lake &bull; Severed Arm Tail Whip, Lava Leaps & Magma Stomp',
+                name: 'CENTIPEDE DEMON, SPAWN OF THE LAVA TIDES',
+                title: 'Blighttown Lava Caverns &bull; Magma Tail Sweep, Stretching Limbs & Orange Charred Ring',
+                unlockLocationId: 'blighttown_swamp',
                 icon: '🐛',
                 maxHp: 3600,
                 damage: 320,
@@ -446,8 +465,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'bed_of_chaos',
-                name: 'BED OF CHAOS',
-                title: 'Lost Izalith Heart &bull; Sweeping Flame Limbs, Scythe Branches & Firestorm',
+                name: 'BED OF CHAOS, HEART OF THE CORRUPTED FLAME',
+                title: 'Lost Izalith Abyss &bull; Sweeping Fire Scythes, Collapsing Ground & Fiery Tempest',
+                unlockLocationId: 'lost_izalith',
                 icon: '🌳',
                 maxHp: 2800,
                 damage: 340,
@@ -458,8 +478,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'ceaseless',
-                name: 'CEASLESS DISCHARGE',
-                title: 'Demon Ruins Magma Core &bull; Colossal Magma Fists & Fiery Lava Waves',
+                name: 'CEASELESS DISCHARGE, WEEPING SON OF CHAOS',
+                title: 'Demon Ruins Magma Lake &bull; Colossal Molten Tentacle Slams & Fire Eruptions',
+                unlockLocationId: 'demon_ruins_basin',
                 icon: '🌋',
                 maxHp: 4200,
                 damage: 360,
@@ -470,8 +491,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'seath',
-                name: 'SEATH THE SCALELESS',
-                title: 'Crystal Cave &bull; Primordial Crystal, Tail Sweep & Cursing White Dragon Breath',
+                name: 'SEATH THE SCALELESS, BETRAYER OF DRAGONS',
+                title: 'Crystal Cave Depths &bull; Primordial Crystal, White Dragon Breath & Curse Shards',
+                unlockLocationId: 'crystal_cave',
                 icon: '🐉',
                 maxHp: 4400,
                 damage: 370,
@@ -482,8 +504,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'four_kings',
-                name: 'FOUR KINGS',
-                title: 'The Abyss &bull; Darkwraith Greatswords, Lifedrain & Homing Void Blades',
+                name: 'THE FOUR KINGS, VOID LORDS OF NEW LONDO',
+                title: 'The Abyss of New Londo &bull; Dark Magic Discs, Life Drain Grab & Void Swarm',
+                unlockLocationId: 'the_abyss',
                 icon: '👑',
                 maxHp: 4600,
                 damage: 380,
@@ -494,8 +517,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'priscilla',
-                name: 'CROSSBREED PRISCILLA',
-                title: 'Painted World of Ariamis &bull; Lifehunt Scythe, Blizzard Veil & Snow Footsteps',
+                name: 'CROSSBREED PRISCILLA, EXILED OF ARIAMIS',
+                title: 'Painted World Tower &bull; Lifehunt Scythe, Invisibility Veil & Flurry Blizzard',
+                unlockLocationId: 'painted_world',
                 icon: '❄️',
                 maxHp: 3500,
                 damage: 350,
@@ -506,8 +530,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'gwyndolin',
-                name: 'DARK SUN GWYNDOLIN',
-                title: 'Anor Londo Darkmoon Tomb &bull; Moonlight Greatbow, Magic Orbs & Soul Spears',
+                name: 'DARK SUN GWYNDOLIN, ILLUSIONIST OF ANOR LONDO',
+                title: 'Darkmoon Tomb &bull; Endless Hallway, Soul Spears, Homing Arrows & Moonlight Miracles',
+                unlockLocationId: 'darkmoon_tomb',
                 icon: '🌙',
                 maxHp: 3300,
                 damage: 340,
@@ -518,8 +543,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'pinwheel',
-                name: 'PINWHEEL',
-                title: 'Catacombs Crypt &bull; Rite of Kindling, Triple Mask Clones & Fireball Barrage',
+                name: 'PINWHEEL, GRAVEROBBER OF NITO\'S VAULT',
+                title: 'The Catacombs Crypt &bull; Triple Lantern Masks, Fireball Projectiles & Illusion Clones',
+                unlockLocationId: 'the_catacombs',
                 icon: '🎭',
                 maxHp: 2600,
                 damage: 280,
@@ -530,8 +556,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'sanctuary_guardian',
-                name: 'SANCTUARY GUARDIAN',
-                title: 'Oolacile Sanctuary &bull; Lightning Orbs, Wing Gusts & Venom Tail Sting',
+                name: 'SANCTUARY GUARDIAN, WHITE BEAST OF OOLACILE',
+                title: 'Oolacile Sanctuary River &bull; Lightning Orbs, Sweeping Talons & Toxic Tail Lash',
+                unlockLocationId: 'oolacile_sanctuary',
                 icon: '🦁',
                 maxHp: 4000,
                 damage: 360,
@@ -542,8 +569,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'pursuer',
-                name: 'THE PURSUER',
-                title: 'Forest of Fallen Giants &bull; Cursed Greatsword, Greatshield & Levitation Rush',
+                name: 'THE PURSUER, RELENTLESS CURSE-BEARER',
+                title: 'Forest of Fallen Giants &bull; Floating Levitation, Blue Curse Impale & Tower Shield',
+                unlockLocationId: 'fallen_giants',
                 icon: '🛡️',
                 maxHp: 4200,
                 damage: 370,
@@ -554,8 +582,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'mirror_knight',
-                name: 'LOOKING GLASS KNIGHT',
-                title: 'King\'s Passage &bull; Mirror Greatshield, Thunder Call & Mirror Phantom Summon',
+                name: 'LOOKING GLASS KNIGHT, REFLECTOR OF SOULS',
+                title: 'King\'s Passage &bull; Storm Greatsword, Thunder Calls & Mirror Shield Phantom Summons',
+                unlockLocationId: 'kings_passage',
                 icon: '🪞',
                 maxHp: 4600,
                 damage: 390,
@@ -566,8 +595,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'fume_knight',
-                name: 'FUME KNIGHT RAIME',
-                title: 'Brume Tower Core &bull; Fume Ultra Greatsword, Dark Fire Sweep & Flame Thrust',
+                name: 'FUME KNIGHT RAIME, REBEL OF THE HEAVY MIST',
+                title: 'Brume Tower Summit &bull; Dual-Wield Fume Ultra Greatsword & Dark Fire Buff Phase',
+                unlockLocationId: 'brume_tower',
                 icon: '⚔️',
                 maxHp: 5000,
                 damage: 420,
@@ -578,8 +608,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'sir_alonne',
-                name: 'SIR ALONNE',
-                title: 'Memory of Old Iron King &bull; Bewitched Alonne Katana & Blood Dark Thrust',
+                name: 'SIR ALONNE, SWORD SAINT OF THE IRON KEEP',
+                title: 'Memory of the Old Iron King &bull; Polished Katana Thrusts, Leaping Slashes & Honor',
+                unlockLocationId: 'alonne_keep',
                 icon: '🏯',
                 maxHp: 4800,
                 damage: 410,
@@ -590,8 +621,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'nameless_king',
-                name: 'THE NAMELESS KING',
-                title: 'Archdragon Peak &bull; Dragonslayer Swordspear, Storm Drake & Thunder Bolts',
+                name: 'THE NAMELESS KING, GOD OF WAR & STORMS',
+                title: 'Archdragon Peak &bull; Storm Drake Mount, Swordspear of Lightning & Thunderstorms',
+                unlockLocationId: 'archdragon_peak',
                 icon: '⚡',
                 maxHp: 5200,
                 damage: 440,
@@ -602,8 +634,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'abyss_watchers',
-                name: 'ABYSS WATCHERS',
-                title: 'Farron Keep Perimeter &bull; Wolf Knight Greatsword, Dagger Flurry & Flame Trails',
+                name: 'ABYSS WATCHERS, LEGION OF FARRON',
+                title: 'Farron Keep Mausoleum &bull; Greatsword & Dagger Acrobatics, Fire Trails & Blood Oath',
+                unlockLocationId: 'farron_keep',
                 icon: '🐺',
                 maxHp: 4700,
                 damage: 400,
@@ -614,8 +647,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'pontiff_sulyvahn',
-                name: 'PONTIFF SULYVAHN',
-                title: 'Irithyll Boreal Cathedral &bull; Profaned Flame Greatsword & Judgement Sorcery',
+                name: 'PONTIFF SULYVAHN, TYRANT OF BOREAL VALLEY',
+                title: 'Irithyll Cathedral &bull; Greatsword of Judgement, Profaned Greatsword & Shadow Clone',
+                unlockLocationId: 'irithyll_cathedral',
                 icon: '🕯️',
                 maxHp: 4900,
                 damage: 415,
@@ -626,8 +660,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'slave_knight_gael',
-                name: 'SLAVE KNIGHT GAEL',
-                title: 'End of the World &bull; Executioner Greatsword, Blood Cape & Repeating Crossbow',
+                name: 'SLAVE KNIGHT GAEL, SEEKER OF THE DARK SOUL',
+                title: 'End of the World &bull; Executioner Greatsword, Crimson Cape Flurry, Crossbow & Red Skulls',
+                unlockLocationId: 'world_end',
                 icon: '🩸',
                 maxHp: 5600,
                 damage: 460,
@@ -638,8 +673,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'soul_of_cinder',
-                name: 'SOUL OF CINDER',
-                title: 'Kiln of First Flame &bull; Coiled Sword, All Player Classes & Gwyn Remnant',
+                name: 'SOUL OF CINDER, AMALGAM OF ALL LORDS',
+                title: 'Kiln of the First Flame Zenith &bull; All 4 Weapon Stances, Sunlight Spears & 5-Hit Juggler',
+                unlockLocationId: 'first_flame_summit',
                 icon: '🔥',
                 maxHp: 6000,
                 damage: 480,
@@ -650,8 +686,9 @@ class DarkSoulsCombat {
             },
             {
                 id: 'gorgon_medusa',
-                name: 'MEDUSA, GORGON MATRIARCH',
-                title: 'Sunken Serpent Sanctum &bull; Petrifying Gaze, Snake Hair & Venomous Tail Sweep',
+                name: 'MEDUSA, GORGON MATRIARCH OF THE SUNKEN SANCTUM',
+                title: 'Sunken Serpent Sanctum &bull; Petro-Gaze Beam, Dual Serpent Daggers & Viper Spawn',
+                unlockLocationId: 'serpent_sanctum',
                 icon: '🐍',
                 maxHp: 3200,
                 damage: 290,
@@ -2108,6 +2145,13 @@ class DarkSoulsCombat {
         this.audio.setBossMusic(false);
         this.game.triggerVictoryBanner(this.boss.name);
 
+        // Unlock corresponding realm & spawn Waystone portal
+        const def = this.bossRoster.find(b => b.id === this.boss.id);
+        let unlockedLoc = null;
+        if (def && def.unlockLocationId && this.game && this.game.unlockLocationForBoss) {
+            unlockedLoc = this.game.unlockLocationForBoss(this.boss.id, def.unlockLocationId);
+        }
+
         // Auto-save on boss victory
         if (this.game && this.game.saveGame) {
             this.game.saveGame(true, `VICTORY OVER ${this.boss.name}`);
@@ -2122,7 +2166,7 @@ class DarkSoulsCombat {
             const nextBoss = this.bossRoster[currentIdx + 1];
             setTimeout(() => {
                 if (this.game && this.game.showNextLordUnlockedModal) {
-                    this.game.showNextLordUnlockedModal(this.boss, nextBoss);
+                    this.game.showNextLordUnlockedModal(this.boss, nextBoss, unlockedLoc);
                 } else {
                     this.game.showNotification(`⚔️ NEXT LORD UNLOCKED: ${nextBoss.name}!`);
                 }

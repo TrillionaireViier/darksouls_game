@@ -2855,4 +2855,154 @@ class DarkSoulsWorld {
             });
         }
     }
+
+    // ----------------------------------------------------
+    // IN-WORLD FAST-TRAVEL WAYSTONES & EXPEDITION PORTALS
+    // ----------------------------------------------------
+    spawnDiscoveredWaystone(x, y, z, loc) {
+        if (!loc) return;
+        this.removeDiscoveredWaystone();
+
+        const group = new THREE.Group();
+        group.name = 'discovered_waystone_portal';
+        group.position.set(x, y, z);
+
+        // 1. Carved Ash-Granite Fluted Pillars
+        const pillarGeo = new THREE.CylinderGeometry(0.38, 0.48, 4.2, 10);
+        const pillarMat = new THREE.MeshStandardMaterial({
+            color: 0x221f1d,
+            roughness: 0.88,
+            metalness: 0.15
+        });
+        const leftPillar = new THREE.Mesh(pillarGeo, pillarMat);
+        leftPillar.position.set(-1.6, 2.1, 0);
+        const rightPillar = new THREE.Mesh(pillarGeo, pillarMat);
+        rightPillar.position.set(1.6, 2.1, 0);
+        group.add(leftPillar, rightPillar);
+
+        // 2. Heavy Archway Lintel & Keystone
+        const lintelGeo = new THREE.BoxGeometry(4.0, 0.55, 0.9);
+        const lintel = new THREE.Mesh(lintelGeo, pillarMat);
+        lintel.position.set(0, 4.2, 0);
+        group.add(lintel);
+
+        // 3. Golden Core / Veil of the Lordran Realm
+        const veilGeo = new THREE.PlaneGeometry(2.7, 3.8);
+        const veilMat = new THREE.MeshBasicMaterial({
+            color: 0xffd700,
+            transparent: true,
+            opacity: 0.75,
+            side: THREE.DoubleSide
+        });
+        const veil = new THREE.Mesh(veilGeo, veilMat);
+        veil.position.set(0, 2.1, 0);
+        group.add(veil);
+
+        // 4. Ground Soapstone Inscription Circle
+        const runeGeo = new THREE.RingGeometry(0.8, 2.6, 20);
+        const runeMat = new THREE.MeshBasicMaterial({
+            color: 0xffaa22,
+            transparent: true,
+            opacity: 0.85,
+            side: THREE.DoubleSide
+        });
+        const rune = new THREE.Mesh(runeGeo, runeMat);
+        rune.rotation.x = -Math.PI / 2;
+        rune.position.set(0, 0.06, 0);
+        group.add(rune);
+
+        // 5. Radiant Golden Warmth PointLight
+        const pLight = new THREE.PointLight(0xffcc44, 2.8, 14);
+        pLight.position.set(0, 2.2, 0);
+        group.add(pLight);
+
+        this.scene.add(group);
+        this.discoveredWaystoneMesh = group;
+
+        // Register interactable
+        this.interactables.push({
+            type: 'discovered_waystone',
+            position: new THREE.Vector3(x, y, z),
+            radius: 4.2,
+            prompt: `[ E ] TRAVEL TO ${loc.name.toUpperCase()} [ENTER]`,
+            targetLocationId: loc.id
+        });
+    }
+
+    removeDiscoveredWaystone() {
+        if (this.discoveredWaystoneMesh) {
+            this.scene.remove(this.discoveredWaystoneMesh);
+            this.discoveredWaystoneMesh = null;
+        }
+        this.interactables = this.interactables.filter(item => item.type !== 'discovered_waystone');
+    }
+
+    spawnReturnWaystone(x, y, z) {
+        this.removeReturnWaystone();
+
+        const group = new THREE.Group();
+        group.name = 'return_waystone_portal';
+        group.position.set(x, y, z);
+
+        // 1. Slender Lordran Return Obelisk
+        const obeliskGeo = new THREE.CylinderGeometry(0.3, 0.55, 3.4, 6);
+        const obeliskMat = new THREE.MeshStandardMaterial({
+            color: 0x182430,
+            roughness: 0.35,
+            metalness: 0.7,
+            emissive: 0x004466,
+            emissiveIntensity: 0.6
+        });
+        const obelisk = new THREE.Mesh(obeliskGeo, obeliskMat);
+        obelisk.position.set(0, 1.7, 0);
+        group.add(obelisk);
+
+        // 2. Cyan Beacon Core
+        const coreGeo = new THREE.OctahedronGeometry(0.45);
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc,
+            wireframe: false
+        });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        core.position.set(0, 3.6, 0);
+        group.add(core);
+
+        // 3. Ground Returning Ring
+        const ringGeo = new THREE.RingGeometry(0.6, 2.2, 18);
+        const ringMat = new THREE.MeshBasicMaterial({
+            color: 0x00e5ff,
+            transparent: true,
+            opacity: 0.85,
+            side: THREE.DoubleSide
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.set(0, 0.06, 0);
+        group.add(ring);
+
+        // 4. Return Portal Beacon Light
+        const rLight = new THREE.PointLight(0x00ffcc, 2.4, 12);
+        rLight.position.set(0, 2.4, 0);
+        group.add(rLight);
+
+        this.scene.add(group);
+        this.returnWaystoneMesh = group;
+
+        // Register interactable
+        this.interactables.push({
+            type: 'return_waystone',
+            position: new THREE.Vector3(x, y, z),
+            radius: 4.0,
+            prompt: '[ E ] RETURN TO ROYAL CITADEL & ARENA [ENTER]',
+            targetLocationId: 'royal_bridge_arena'
+        });
+    }
+
+    removeReturnWaystone() {
+        if (this.returnWaystoneMesh) {
+            this.scene.remove(this.returnWaystoneMesh);
+            this.returnWaystoneMesh = null;
+        }
+        this.interactables = this.interactables.filter(item => item.type !== 'return_waystone');
+    }
 }

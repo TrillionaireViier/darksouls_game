@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261119_DARK_SOULS_FINAL_PERFECTION_POLISH';
+            var TARGET_BUILD = '20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1740,6 +1740,21 @@
         </div>
     </div>
 
+    <!-- NEW REALM DISCOVERED BANNER -->
+    <div id="location-unlocked-banner" class="cinematic-banner" style="display: none;">
+        <div class="banner-strip" style="background: rgba(12, 10, 6, 0.94); border-top: 2px solid #ffd700; border-bottom: 2px solid #ffd700; box-shadow: 0 0 35px rgba(255, 215, 0, 0.45);">
+            <div style="font-size: clamp(0.75rem, 1.8vw, 1.1rem); letter-spacing: 5px; color: #a5d6a7; margin-bottom: 4px; font-weight: 700;">
+                ✦ NEW REALM DISCOVERED ✦
+            </div>
+            <div id="location-unlocked-title" class="victory-title" style="color: #fff3a8; text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);">
+                UNDEAD ASYLUM
+            </div>
+            <div id="location-unlocked-subtitle" style="font-size: clamp(0.7rem, 1.4vw, 0.9rem); letter-spacing: 2px; color: #ffd276; margin-top: 4px; font-style: italic;">
+                Fast-Travel Waystone awakened. Return anytime via [ M ] or Waystone.
+            </div>
+        </div>
+    </div>
+
     <!-- ==============================================
          MODALS
          ============================================== -->
@@ -2684,7 +2699,17 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <!-- Discovered Realm Box -->
+            <div id="next-lord-unlocked-loc-box" style="display: none; background: rgba(18, 32, 18, 0.95); border: 1.5px solid #4ade80; border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center; box-shadow: 0 0 15px rgba(74, 222, 128, 0.25);">
+                <div style="font-size: 0.72rem; letter-spacing: 2px; color: #86efac; font-weight: 800; text-transform: uppercase;">✦ NEW REALM DISCOVERED & OPENED ✦</div>
+                <div id="next-lord-unlocked-loc-name" style="font-size: 1.1rem; font-weight: 800; color: #fef08a; font-family: 'Cinzel', serif; margin: 4px 0;">REALM NAME</div>
+                <div id="next-lord-unlocked-loc-desc" style="font-size: 0.8rem; color: #cbd5e1; font-style: italic;">Realm description</div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button id="btn-next-lord-travel" class="btn-fight-boss" style="display: none; padding: 12px 20px; font-size: 0.95rem; font-weight: 800; border-color: #4ade80; color: #dcfce7; background: linear-gradient(180deg, #14532d 0%, #052e16 100%); box-shadow: 0 0 15px rgba(74, 222, 128, 0.4);">
+                    ⚡ EXPEDITION TO REALM
+                </button>
                 <button id="btn-next-lord-fight" class="btn-fight-boss" style="padding: 12px 24px; font-size: 0.95rem; font-weight: 800; border-color: #ffd700; color: #fff3a8; background: linear-gradient(180deg, #553311 0%, #221100 100%); box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);">
                     ⚔️ ADVANCE & CHALLENGE NOW
                 </button>
@@ -3582,7 +3607,7 @@
     <!-- 30 LORDRAN LOCATIONS & FAST-TRAVEL EXPEDITIONS MODAL -->
     <div id="locations-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 900px; max-height: 85vh; overflow-y: auto; padding: 24px; scrollbar-width: thin; scrollbar-color: #a87932 rgba(18, 14, 10, 0.85);">
-            <div class="modal-header">🗺️ 30 LORDRAN EXPEDITIONS & FAST-TRAVEL 🗺️</div>
+            <div class="modal-header">🗺️ 45 LORDRAN & BEYOND EXPEDITIONS & FAST-TRAVEL 🗺️</div>
             <p style="font-size: 0.85rem; color: #b8a896; text-align: center; margin-bottom: 14px;">
                 Instant fast-travel across all 30 sacred zones, sunken catacombs, elevated ramparts and primeval depths of Lordran. Select any expedition to warp immediately.
             </p>
@@ -4444,21 +4469,21 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/audio.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/lore_items.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/world.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/character.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/siege_warfare.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/heraldry_nobility.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/apothecary_crafting.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/collision_system.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/qa_bot_tester.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/combat.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/postprocessing.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/qa_suite.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/blacksmith_forge.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
-    <script src="js/game.js?v=20261119_DARK_SOULS_FINAL_PERFECTION_POLISH"></script>
+    <script src="js/three.min.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/audio.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/lore_items.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/world.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/character.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/siege_warfare.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/heraldry_nobility.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/apothecary_crafting.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/collision_system.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/qa_bot_tester.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/combat.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/postprocessing.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/qa_suite.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/blacksmith_forge.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
+    <script src="js/game.js?v=20261119_DARK_SOULS_NEW_BOSS_NAMES_AND_REALM_TRAVEL"></script>
 </body>
 </html>
 <!-- Vercel Connect trigger sync: Thu Nov 19 11:40:54 UTC 2026 -->

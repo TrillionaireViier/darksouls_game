@@ -154,6 +154,15 @@ class DarkSoulsGame {
         const savedSkin = localStorage.getItem('darksouls_equipped_skin') || 'warrior';
         this.selectSkin(savedSkin, false);
 
+        // Unlocked Fast-Travel Lordran Realms
+        let savedLocs = null;
+        try {
+            savedLocs = JSON.parse(localStorage.getItem('ds_unlocked_locations'));
+        } catch (e) {}
+        this.unlockedLocations = Array.isArray(savedLocs) && savedLocs.length > 0 
+            ? savedLocs 
+            : ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'];
+
         // Auto-Save Management (Periodic 15s & Event-Driven)
         this.autoSaveInterval = 15.0;
         this.autoSaveTimer = 0.0;
@@ -202,7 +211,10 @@ class DarkSoulsGame {
             bossBarLag: document.getElementById('boss-bar-lag'),
             bossName: document.getElementById('boss-name'),
             levelModal: document.getElementById('level-up-modal'),
-            lockonReticle: document.getElementById('lockon-reticle')
+            lockonReticle: document.getElementById('lockon-reticle'),
+            locationUnlockedBanner: document.getElementById('location-unlocked-banner'),
+            locationUnlockedTitle: document.getElementById('location-unlocked-title'),
+            locationUnlockedSubtitle: document.getElementById('location-unlocked-subtitle')
         };
     }
 
@@ -228,6 +240,14 @@ class DarkSoulsGame {
                 e.preventDefault();
                 this.handleEscapeKey();
                 return;
+            }
+            if (e.code === 'KeyM' || e.key === 'm' || e.key === 'M' || e.key === 'ь' || e.key === 'Ь' || e.code === 'KeyO' || e.key === 'o' || e.key === 'O') {
+                const locModal = document.getElementById('locations-modal');
+                if (locModal && locModal.style.display === 'flex') {
+                    this.closeLocationsModal();
+                } else {
+                    this.openLocationsModal();
+                }
             }
             if (e.code === 'KeyE' || e.key === 'e' || e.key === 'E' || e.key === 'у' || e.key === 'У') this.handleInteraction();
             if (e.code === 'KeyT' || e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') this.toggleTorch();
@@ -612,6 +632,12 @@ class DarkSoulsGame {
                     this.combat.restAtBonfire();
                     this.refuelTorch(100);
                     this.openBonfireModal();
+                    return;
+                } else if (item.type === 'discovered_waystone') {
+                    this.travelToLocation(item.targetLocationId, true);
+                    return;
+                } else if (item.type === 'return_waystone') {
+                    this.travelToLocation('royal_bridge_arena');
                     return;
                 } else if (item.type === 'torch_sconce') {
                     if (!item.isLit) {
@@ -2108,7 +2134,67 @@ class DarkSoulsGame {
         }
     }
 
-    showNextLordUnlockedModal(defeatedBoss, nextBoss) {
+    unlockLocationForBoss(bossId, locId) {
+        if (!locId) return null;
+        if (!this.unlockedLocations) {
+            this.unlockedLocations = ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'];
+        }
+        if (!this.unlockedLocations.includes(locId)) {
+            this.unlockedLocations.push(locId);
+            try {
+                localStorage.setItem('ds_unlocked_locations', JSON.stringify(this.unlockedLocations));
+            } catch (e) {}
+        }
+
+        const locs = window.DARK_SOULS_LOCATIONS || [];
+        const targetLoc = locs.find(l => l.id === locId);
+
+        if (targetLoc) {
+            this.triggerLocationUnlockedBanner(targetLoc);
+        }
+
+        // Spawn in-world physical golden waystone archway in arena
+        if (this.world && this.world.spawnDiscoveredWaystone && targetLoc) {
+            const pPos = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
+            if (pPos.y <= -3.5) {
+                this.world.spawnDiscoveredWaystone(-20, -5.0, 125, targetLoc);
+            } else {
+                this.world.spawnDiscoveredWaystone(0, 0, 154, targetLoc);
+            }
+        }
+
+        return targetLoc;
+    }
+
+    triggerLocationUnlockedBanner(loc) {
+        if (!loc) return;
+        const banner = document.getElementById('location-unlocked-banner');
+        const title = document.getElementById('location-unlocked-title');
+        const subtitle = document.getElementById('location-unlocked-subtitle');
+
+        if (banner && title) {
+            title.textContent = loc.name.toUpperCase();
+            if (subtitle) {
+                subtitle.textContent = `📍 ${loc.zone} • Fast-Travel Portal awakened! Return anytime via [ M ] or in-world Waystone.`;
+            }
+            banner.style.display = 'flex';
+            banner.classList.add('active');
+            setTimeout(() => {
+                banner.classList.remove('active');
+                setTimeout(() => {
+                    banner.style.display = 'none';
+                }, 1000);
+            }, 5000);
+        } else {
+            this.showNotification(`✦ NEW REALM DISCOVERED: ${loc.name.toUpperCase()}! ✦`);
+        }
+
+        if (this.audio && this.audio.playBellToll) {
+            this.audio.playBellToll();
+        }
+    }
+
+    showNextLordUnlockedModal(defeatedBoss, nextBoss, unlockedLoc = null) {
         if (!nextBoss) return;
         const modal = document.getElementById('next-lord-modal');
         if (modal) {
@@ -2125,6 +2211,28 @@ class DarkSoulsGame {
             if (iconElem) iconElem.textContent = nextBoss.icon;
             if (hpElem) hpElem.textContent = `HP: ${nextBoss.maxHp.toLocaleString()}`;
             if (soulsElem) soulsElem.textContent = `REWARD: ${nextBoss.souls.toLocaleString()} SOULS`;
+
+            // Realm discovery notification inside modal
+            const locBox = document.getElementById('next-lord-unlocked-loc-box');
+            const locName = document.getElementById('next-lord-unlocked-loc-name');
+            const locDesc = document.getElementById('next-lord-unlocked-loc-desc');
+            const btnTravel = document.getElementById('btn-next-lord-travel');
+
+            if (unlockedLoc && locBox && locName) {
+                locBox.style.display = 'block';
+                locName.textContent = unlockedLoc.name;
+                if (locDesc) locDesc.textContent = `"${unlockedLoc.desc}"`;
+                if (btnTravel) {
+                    btnTravel.style.display = 'inline-block';
+                    btnTravel.onclick = () => {
+                        this.closeNextLordModal();
+                        this.travelToLocation(unlockedLoc.id);
+                    };
+                }
+            } else if (locBox) {
+                locBox.style.display = 'none';
+                if (btnTravel) btnTravel.style.display = 'none';
+            }
 
             const btnFight = document.getElementById('btn-next-lord-fight');
             if (btnFight) {
@@ -2279,6 +2387,7 @@ class DarkSoulsGame {
             } : null,
             currentBossType: this.combat.currentBossType,
             defeatedBosses: this.combat.defeatedBosses || [],
+            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'],
             adminModeUnlocked: !!(this.combat && this.combat.adminModeUnlocked),
             isGodMode: !!(this.combat && this.combat.isGodMode),
             equippedSkin: localStorage.getItem('darksouls_equipped_skin') || 'warrior',
@@ -2345,6 +2454,12 @@ class DarkSoulsGame {
             this.combat.maxEstus = data.maxEstus || 5;
             this.combat.estusFlasks = this.combat.maxEstus;
             this.combat.defeatedBosses = Array.isArray(data.defeatedBosses) ? data.defeatedBosses : [];
+            if (data.unlockedLocations && Array.isArray(data.unlockedLocations)) {
+                this.unlockedLocations = data.unlockedLocations;
+                try {
+                    localStorage.setItem('ds_unlocked_locations', JSON.stringify(this.unlockedLocations));
+                } catch (e) {}
+            }
             this.combat.isDead = false;
 
             // Restore Admin Mode & God Mode
@@ -2846,13 +2961,18 @@ class DarkSoulsGame {
     adminUnlockAllBosses() {
         if (!this.combat) return;
         this.combat.adminModeUnlocked = true;
-        this.combat.defeatedBosses = ['taurus', 'gargoyle', 'capra', 'nito', 'sif', 'gwyn'];
-        localStorage.setItem('darksouls_admin_mode', 'true');
-        this.saveGame(false, 'ADMIN UNLOCK');
+        this.combat.defeatedBosses = this.combat.bossRoster.map(b => b.id);
+        const locs = window.DARK_SOULS_LOCATIONS || [];
+        this.unlockedLocations = locs.map(l => l.id);
+        try {
+            localStorage.setItem('darksouls_admin_mode', 'true');
+            localStorage.setItem('ds_unlocked_locations', JSON.stringify(this.unlockedLocations));
+        } catch (e) {}
+        this.saveGame(false, 'ADMIN UNLOCK ALL BOSSES & REALMS');
         this.updateBossRosterUI();
         this.updateAdminModalUI();
-        this.showNotification("👑 ADMIN: ALL 6 LORDS UNLOCKED PERMANENTLY!");
-        if (this.audio) this.audio.playBellToll();
+        this.showNotification(`👑 ADMIN: ALL ${this.combat.bossRoster.length} BOSSES & ALL REALMS UNLOCKED!`);
+        if (this.audio) this.audio.playVictory();
     }
 
     adminLockBosses() {
@@ -3205,8 +3325,11 @@ class DarkSoulsGame {
         if (!container) return;
 
         const locs = window.DARK_SOULS_LOCATIONS || [];
+        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'];
+
         const filtered = locs.filter(l => {
             if (activeFilter === 'all') return true;
+            if (activeFilter === 'unlocked') return unlocked.includes(l.id) || l.id === 'royal_bridge_arena';
             if (activeFilter === 'depths') return l.pos[1] < -1;
             if (activeFilter === 'high') return l.pos[1] > 2;
             if (activeFilter === 'surface') return l.pos[1] >= -1 && l.pos[1] <= 2;
@@ -3214,35 +3337,73 @@ class DarkSoulsGame {
             return true;
         });
 
-        container.innerHTML = filtered.map(l => {
+        // Top Return-To-Arena Hero Banner
+        let html = `
+            <div style="grid-column: 1 / -1; background: linear-gradient(90deg, rgba(45,30,12,0.96), rgba(70,45,15,0.96), rgba(45,30,12,0.96)); border: 2px solid #ffd700; border-radius: 12px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 22px rgba(255,215,0,0.35); margin-bottom: 8px;">
+                <div>
+                    <div style="font-size: 0.72rem; letter-spacing: 2.5px; color: #ffd700; font-weight: 800; text-transform: uppercase;">🏛️ ROYAL CITADEL SANCTUARY & ARENA HUB</div>
+                    <div style="font-size: 1.05rem; font-weight: 800; color: #fff3a8; font-family: 'Cinzel', serif;">Grand Lordran Battle Hub & War Arena</div>
+                    <div style="font-size: 0.76rem; color: #cbd5e1; margin-top: 2px;">Return here anytime to rest, switch weapons, and challenge the Lords of Lordran.</div>
+                </div>
+                <button onclick="travelToLordranLocation('royal_bridge_arena')" style="padding: 10px 20px; border: 1.5px solid #ffd700; border-radius: 6px; font-weight: 800; font-family: 'Cinzel', serif; font-size: 0.9rem; color: #fff3a8; background: linear-gradient(180deg, #664411 0%, #332205 100%); cursor: pointer; box-shadow: 0 0 14px rgba(255,215,0,0.45); white-space: nowrap;">
+                    ⚡ RETURN TO ARENA
+                </button>
+            </div>
+        `;
+
+        html += filtered.map(l => {
+            const isUnlocked = unlocked.includes(l.id) || l.id === 'royal_bridge_arena';
             const elevColor = l.pos[1] < -1 ? '#00ffaa' : (l.pos[1] > 2 ? '#ffd700' : '#ff7722');
+            const borderColor = isUnlocked ? '#a87932' : '#443528';
+            const bgOpacity = isUnlocked ? '0.95' : '0.65';
+
+            const unlockBadge = isUnlocked
+                ? `<span style="font-size: 0.7rem; color: #86efac; font-weight: 800; background: rgba(34,197,94,0.2); border: 1px solid rgba(74,222,128,0.4); padding: 2px 8px; border-radius: 9999px;">✨ DISCOVERED</span>`
+                : `<span style="font-size: 0.7rem; color: #f87171; font-weight: 800; background: rgba(239,68,68,0.2); border: 1px solid rgba(248,113,113,0.4); padding: 2px 8px; border-radius: 9999px;">🔒 LOCKED</span>`;
+
+            const actionButton = isUnlocked
+                ? `<button class="btn-icon-bar" onclick="travelToLordranLocation('${l.id}')" style="width: 100%; justify-content: center; border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.3); padding: 8px 12px; cursor: pointer;">
+                    ⚡ FAST-TRAVEL TO THIS REALM
+                   </button>`
+                : `<button class="btn-icon-bar" disabled style="width: 100%; justify-content: center; border-color: #554433; color: #776655; font-weight: 700; background: rgba(25, 20, 16, 0.6); padding: 8px 12px; cursor: not-allowed; opacity: 0.55;">
+                    🔒 DEFEAT ${l.boss ? l.boss.toUpperCase() : 'LORD'} TO UNLOCK
+                   </button>`;
+
             return `
-                <div class="location-card" style="background: linear-gradient(145deg, rgba(28, 22, 16, 0.95), rgba(15, 12, 10, 0.95)); border: 1.5px solid #a87932; border-radius: 12px; padding: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: space-between;">
+                <div class="location-card" style="background: linear-gradient(145deg, rgba(28, 22, 16, ${bgOpacity}), rgba(15, 12, 10, ${bgOpacity})); border: 1.5px solid ${borderColor}; border-radius: 12px; padding: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: space-between; ${isUnlocked ? '' : 'filter: grayscale(0.25);'}">
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                             <span style="font-size: 0.72rem; letter-spacing: 1px; color: ${elevColor}; font-weight: 800; text-transform: uppercase;">📍 ${l.zone} • ${l.elev}</span>
-                            <span style="font-size: 0.7rem; color: #ffd276; font-weight: 700; background: rgba(168,121,50,0.25); border: 1px solid rgba(168,121,50,0.4); padding: 2px 8px; border-radius: 9999px;">${l.danger}</span>
+                            ${unlockBadge}
                         </div>
-                        <h4 style="margin: 0 0 6px 0; color: #fff3a8; font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 800;">${l.name}</h4>
+                        <h4 style="margin: 0 0 6px 0; color: ${isUnlocked ? '#fff3a8' : '#aaa'}; font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 800;">${l.name}</h4>
                         <div style="font-size: 0.76rem; color: #b8a896; margin-bottom: 8px;">
-                            <span>Key Encounters: <strong style="color: #ff9944;">${l.boss}</strong></span>
+                            <span>Key Encounters: <strong style="color: ${isUnlocked ? '#ff9944' : '#887766'};">${l.boss || 'None'}</strong></span>
                         </div>
-                        <p style="margin: 0 0 12px 0; font-size: 0.8rem; line-height: 1.4; color: #d0c0b0; font-style: italic;">
+                        <p style="margin: 0 0 12px 0; font-size: 0.8rem; line-height: 1.4; color: ${isUnlocked ? '#d0c0b0' : '#776b60'}; font-style: italic;">
                             "${l.desc}"
                         </p>
                     </div>
-                    <button class="btn-icon-bar" onclick="travelToLordranLocation('${l.id}')" style="width: 100%; justify-content: center; border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.3); padding: 8px 12px;">
-                        ⚡ TRAVEL TO THIS LOCATION
-                    </button>
+                    ${actionButton}
                 </div>
             `;
         }).join('');
+
+        container.innerHTML = html;
     }
 
-    travelToLocation(locationId) {
+    travelToLocation(locationId, keepDiscoveredWaystone = false) {
         const locs = window.DARK_SOULS_LOCATIONS || [];
         const loc = locs.find(l => l.id === locationId);
         if (!loc || !this.playerMesh) return;
+
+        // Check unlock status
+        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge'];
+        if (!unlocked.includes(locationId) && locationId !== 'royal_bridge_arena') {
+            this.showNotification(`🔒 THIS REALM IS LOCKED! DEFEAT ITS WARDEN TO UNLOCK.`);
+            if (this.audio && this.audio.playParry) this.audio.playParry();
+            return;
+        }
 
         this.playerMesh.position.set(loc.pos[0], loc.pos[1], loc.pos[2]);
         this.playerMesh.position.y = this.world.getGroundHeight(loc.pos[0], loc.pos[2]);
@@ -3251,6 +3412,18 @@ class DarkSoulsGame {
 
         if (loc.light && this.renderer) {
             this.renderer.toneMappingExposure = loc.light;
+        }
+
+        // Spawn return waystone behind player if traveling outside hub
+        if (locationId !== 'royal_bridge_arena' && this.world && this.world.spawnReturnWaystone) {
+            const rx = loc.pos[0] - 2.0;
+            const rz = loc.pos[2] - 2.5;
+            const ry = this.world.getGroundHeight(rx, rz);
+            this.world.spawnReturnWaystone(rx, ry, rz);
+        } else if (locationId === 'royal_bridge_arena') {
+            if (this.world && this.world.removeReturnWaystone) {
+                this.world.removeReturnWaystone();
+            }
         }
 
         if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
@@ -3295,38 +3468,60 @@ window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodex
 window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
 window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
 
-// 30 Authentic Lordran Locations Fast-Travel Compendium
+// 45 Authentic Lordran, Drangleic, Lothric & Oolacile Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
-    { id: 'undead_asylum', name: 'Undead Asylum - Northern Courtyard', zone: 'Undead Asylum', pos: [0, 0, -25], elev: '0m', danger: 'Tier I (Novice)', boss: 'Asylum Demon', desc: 'The remote fortress asylum where the Undead are locked away to await the end of the world.', light: 0.95 },
+    // ----------------------------------------------------
+    // SANCTUARIES & HUB REALMS
+    // ----------------------------------------------------
+    { id: 'royal_bridge_arena', name: 'Royal Bridge - Grand Citadel Arena (Hub)', zone: 'Royal Citadel', pos: [0, 0, 105], elev: '0m', danger: 'Sanctuary & War Arena (Hub)', boss: 'Arena Colosseum', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and the nexus bonfire.', light: 1.10 },
     { id: 'firelink_shrine', name: 'Firelink Shrine - Ruined Bonfire', zone: 'Firelink Shrine', pos: [0, 0, 5], elev: '0m', danger: 'Sanctuary (Safe)', boss: 'None (Crestfallen Warrior)', desc: 'The historic nexus of Lordran where weary pilgrims gather around the warm embers of the bonfire.', light: 1.10 },
-    { id: 'undead_burg_aqueduct', name: 'Undead Burg - Lower Aqueduct', zone: 'Undead Burg', pos: [-10, 0, -15], elev: '0m', danger: 'Tier I (Novice)', boss: 'Hollow Ambush', desc: 'Narrow mossy brick conduits bridging Firelink Shrine to the lower quarters of the Undead settlement.', light: 0.85 },
-    { id: 'undead_burg_bridge', name: 'Undead Burg - Watchtower Bridge', zone: 'Undead Burg', pos: [0, 0, 20], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Hellkite Wyvern', desc: 'The scorched stone causeway where the crimson dragon rains incandescent flame upon all who cross.', light: 1.15 },
     { id: 'undead_parish_altar', name: 'Undead Parish - Sunlit Altar', zone: 'Undead Parish', pos: [4, 0, 40], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Armored Fang Boar', desc: 'The shattered altar of the Warriors of Sunlight bathed in the golden radiance of the ancient sun.', light: 1.25 },
-    { id: 'undead_parish_belfry', name: 'Undead Parish - Bell Tower Roof', zone: 'Undead Parish', pos: [20, 6.0, 50], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'Bell Gargoyles', desc: 'The precipitous rooftop of the parish cathedral where the First Bell of Awakening tolls across Lordran.', light: 1.20 },
-    { id: 'darkroot_garden', name: 'Darkroot Garden - Moonlit Grove', zone: 'Darkroot Garden', pos: [12, 0, 25], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Moonlight Butterfly', desc: 'A serene yet treacherous forest glowing with bioluminescent foliage and ancient stone guardians.', light: 0.75 },
-    { id: 'darkroot_basin', name: 'Darkroot Basin - Hydra Lagoon', zone: 'Darkroot Basin', pos: [-12, -5.0, 20], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Lake Hydra & Havel', desc: 'Deep mountain chasm where roaring waterfalls crash into a lagoon guarded by the primeval hydra.', light: 0.80 },
-    { id: 'the_depths', name: 'The Depths - Slimy Sewers', zone: 'The Depths', pos: [-18, -5.0, 35], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Gaping Dragon', desc: 'The suffocating subterranean runoff of the Burg, inhabited by butchers, slime and cursed basilisks.', light: 0.65 },
-    { id: 'blighttown_upper', name: 'Blighttown - Upper Scaffolding', zone: 'Blighttown', pos: [15, 6.0, 65], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Blowdart Snipers', desc: 'Creaking wooden walkways clinging to damp ravine cliffs, riddled with toxic snipers and ghoul nests.', light: 0.60 },
-    { id: 'blighttown_swamp', name: 'Blighttown - Poison Swamp Bottom', zone: 'Blighttown', pos: [-24, -5.0, 55], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Maneater Mildred', desc: 'A vast expanse of poisonous sludge stretching beneath the great hollow, boiling with magma flies.', light: 0.55 },
-    { id: 'quelaags_domain', name: "Quelaag's Domain - Lava Cavern", zone: "Quelaag's Domain", pos: [-18, -5.0, 65], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Chaos Witch Quelaag', desc: 'Cavern of petrified spiderwebs and boiling volcanic magma where the Second Bell of Awakening hangs.', light: 0.90 },
-    { id: 'sens_fortress_gate', name: "Sen's Fortress - Pendulum Gate", zone: "Sen's Fortress", pos: [16, 6.0, 75], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Man-Serpents', desc: 'A deadly gauntlet of swinging pendulum axes, rolling boulders, and pitfall spikes testing undead pilgrims.', light: 0.90 },
-    { id: 'sens_fortress_roof', name: "Sen's Fortress - Rooftop Battlements", zone: "Sen's Fortress", pos: [24, 6.0, 95], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Iron Golem', desc: 'The gale-swept fortress roof overlooking Lordran, guarded by a colossal automaton forged of dragon bone.', light: 1.10 },
-    { id: 'anor_londo_courtyard', name: 'Anor Londo - Grand Cathedral Steps', zone: 'Anor Londo', pos: [-6, 0, 80], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Royal Sentinels', desc: 'The breathtaking marble city of the gods, illuminated by eternal sunlight atop the mountain plateau.', light: 1.30 },
-    { id: 'anor_londo_hall', name: 'Anor Londo - Hall of the Great Lord', zone: 'Anor Londo', pos: [0, 0, 110], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Ornstein & Smough', desc: 'The majestic throne room where Dragon Slayer Ornstein and Executioner Smough guard the Lordvessel.', light: 1.25 },
-    { id: 'painted_world', name: 'Painted World of Ariamis - Snow Courtyard', zone: 'Painted World', pos: [-8, 0, 50], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Crossbreed Priscilla', desc: 'A quiet, snowbound exile sealed within an immense oil canvas inside the Anor Londo cathedral.', light: 1.05 },
-    { id: 'the_catacombs', name: 'The Catacombs - Bone Crypt', zone: 'The Catacombs', pos: [-20, -5.0, 45], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Pinwheel', desc: 'A pitch-black necropolis of winding tunnels carved with skull mosaics and animated skeleton sentinels.', light: 0.50 },
-    { id: 'tomb_of_the_giants', name: 'Tomb of the Giants - Stygian Crypt', zone: 'Tomb of the Giants', pos: [-15, -5.0, 90], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Skeletal Beasts', desc: 'A realm of absolute suffocating blackness where giant four-legged skeletons hunt travelers by sound alone.', light: 0.35 },
-    { id: 'nitos_domain', name: "Gravelord Nito's Domain - Altar of Death", zone: 'Gravelord Domain', pos: [-22, -5.0, 140], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Gravelord Nito', desc: 'The deepest ossuary of Lordran where the First of the Dead rests inside his subterranean sarcophagus.', light: 0.40 },
-    { id: 'new_londo_ruins', name: 'New Londo Ruins - Flooded City', zone: 'New Londo Ruins', pos: [-20, -5.0, 145], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Drowned Ghosts & Darkwraiths', desc: 'The drowned city submerged under tons of lake water to contain the spread of the Darkwraiths.', light: 0.55 },
-    { id: 'the_abyss', name: 'The Abyss - Void of the Four Kings', zone: 'The Abyss', pos: [0, 0, 65], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Four Kings', desc: 'An infinite dimension of pure void where matter and time dissolve into primordial darkness.', light: 0.25 },
-    { id: 'demon_ruins', name: 'Demon Ruins - Magma Riverbanks', zone: 'Demon Ruins', pos: [-26, -5.0, 75], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Ceaseless Discharge', desc: "The scorched red riverbeds directly beneath Quelaag's domain, flooded with fiery molten rock.", light: 1.00 },
-    { id: 'lost_izalith', name: 'Lost Izalith - Bed of Chaos Sanctuary', zone: 'Lost Izalith', pos: [-22, -5.0, 120], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Bed of Chaos', desc: 'The ancient capital of flame swallowed by mutant vegetation and chaotic demons after the fire went wild.', light: 0.95 },
-    { id: 'dukes_archives', name: "The Duke's Archives - Grand Library", zone: "Duke's Archives", pos: [22, 6.0, 35], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Channelers & Pisacas', desc: 'Vast multi-tiered library towers filled with esoteric sorcery tomes where Seath descended into madness.', light: 1.15 },
-    { id: 'crystal_cave', name: 'Crystal Cave - Invisible Crystal Bridges', zone: 'Crystal Cave', pos: [-2, 0, 90], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Seath the Scaleless', desc: 'A glistening underground cavern of blue titanite crystals and invisible walkways spanning bottomless drops.', light: 0.90 },
-    { id: 'kiln_of_first_flame', name: 'Kiln of the First Flame - Ash Field', zone: 'Kiln of the First Flame', pos: [14, 6.0, 140], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Gwyn, Lord of Cinder', desc: 'The white ash desert where the First Flame was ignited and where Lord Gwyn waits at the end of time.', light: 1.05 },
-    { id: 'royal_bridge_arena', name: 'Royal Bridge - Taurus Arena', zone: 'Royal Bridge', pos: [0, 0, 105], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Taurus Demon', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and parapets.', light: 1.10 },
     { id: 'high_ramparts_watchtower', name: 'High Ramparts - Solar Overlook', zone: 'High Ramparts', pos: [24, 6.0, 35], elev: '+6m', danger: 'Tier II (Moderate)', boss: 'Knight Solaire', desc: 'The elevated eastern battlements where Knight Solaire gazes upon his incandescent sun.', light: 1.25 },
-    { id: 'chasm_of_the_abyss', name: 'Chasm of the Abyss - Primeval Dark', zone: 'Oolacile', pos: [-28, -5.0, 160], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Manus, Father of the Abyss', desc: 'The primordial birthplace of dark humanity deep beneath the ancient ruins of Oolacile.', light: 0.30 }
+    { id: 'dukes_archives', name: "The Duke's Archives - Grand Library", zone: "Duke's Archives", pos: [22, 6.0, 35], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Channelers & Pisacas', desc: 'Vast multi-tiered library towers filled with esoteric sorcery tomes where Seath descended into madness.', light: 1.15 },
+    { id: 'new_londo_ruins', name: 'New Londo Ruins - Flooded City', zone: 'New Londo Ruins', pos: [-20, -5.0, 145], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Drowned Ghosts & Darkwraiths', desc: 'The drowned city submerged under tons of lake water to contain the spread of the Darkwraiths.', light: 0.55 },
+    { id: 'tomb_of_the_giants', name: 'Tomb of the Giants - Stygian Crypt', zone: 'Tomb of the Giants', pos: [-15, -5.0, 90], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Skeletal Beasts', desc: 'A realm of absolute suffocating blackness where giant four-legged skeletons hunt travelers by sound alone.', light: 0.35 },
+    { id: 'blighttown_upper', name: 'Blighttown - Upper Scaffolding', zone: 'Blighttown', pos: [15, 6.0, 65], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Blowdart Snipers', desc: 'Creaking wooden walkways clinging to damp ravine cliffs, riddled with toxic snipers and ghoul nests.', light: 0.60 },
+
+    // ----------------------------------------------------
+    // 37 BOSS-UNLOCKED EXPEDITION REALMS
+    // ----------------------------------------------------
+    { id: 'undead_asylum', name: 'Undead Asylum - Northern Courtyard', zone: 'Undead Asylum', pos: [0, 0, -25], elev: '0m', danger: 'Tier I (Novice)', boss: 'Asylum Demon', desc: 'The remote fortress asylum where the Undead are locked away to await the end of the world.', light: 0.95 },
+    { id: 'undead_burg_bridge', name: 'Undead Burg - Watchtower Bridge', zone: 'Undead Burg', pos: [0, 0, 20], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Taurus Demon', desc: 'The scorched stone causeway where the crimson dragon rains incandescent flame upon all who cross.', light: 1.15 },
+    { id: 'undead_parish_belfry', name: 'Undead Parish - Bell Tower Roof', zone: 'Undead Parish', pos: [20, 6.0, 50], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'Twin Belfry Gargoyles', desc: 'The precipitous rooftop of the parish cathedral where the First Bell of Awakening tolls across Lordran.', light: 1.20 },
+    { id: 'undead_burg_aqueduct', name: 'Undead Burg - Lower Aqueduct', zone: 'Undead Burg', pos: [-10, 0, -15], elev: '0m', danger: 'Tier I (Novice)', boss: 'Capra Demon', desc: 'Narrow mossy brick conduits bridging Firelink Shrine to the lower quarters of the Undead settlement.', light: 0.85 },
+    { id: 'the_depths', name: 'The Depths - Slimy Sewers', zone: 'The Depths', pos: [-18, -5.0, 35], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Gaping Dragon', desc: 'The suffocating subterranean runoff of the Burg, inhabited by butchers, slime and cursed basilisks.', light: 0.65 },
+    { id: 'quelaags_domain', name: "Quelaag's Domain - Lava Cavern", zone: "Quelaag's Domain", pos: [-18, -5.0, 65], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Chaos Witch Quelaag', desc: 'Cavern of petrified spiderwebs and boiling volcanic magma where the Second Bell of Awakening hangs.', light: 0.90 },
+    { id: 'darkroot_garden', name: 'Darkroot Garden - Moonlit Grove', zone: 'Darkroot Garden', pos: [12, 0, 25], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Moonlight Butterfly', desc: 'A serene yet treacherous forest glowing with bioluminescent foliage and ancient stone guardians.', light: 0.75 },
+    { id: 'sens_fortress_roof', name: "Sen's Fortress - Rooftop Battlements", zone: "Sen's Fortress", pos: [24, 6.0, 95], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Iron Golem', desc: 'The gale-swept fortress roof overlooking Lordran, guarded by a colossal automaton forged of dragon bone.', light: 1.10 },
+    { id: 'anor_londo_courtyard', name: 'Anor Londo - Grand Cathedral Steps', zone: 'Anor Londo', pos: [-6, 0, 80], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Dragonslayer Ornstein', desc: 'The breathtaking marble city of the gods, illuminated by eternal sunlight atop the mountain plateau.', light: 1.30 },
+    { id: 'anor_londo_hall', name: 'Anor Londo - Hall of the Great Lord', zone: 'Anor Londo', pos: [0, 0, 110], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Executioner Smough', desc: 'The majestic throne room where Dragon Slayer Ornstein and Executioner Smough guard the Lordvessel.', light: 1.25 },
+    { id: 'darkroot_basin', name: 'Darkroot Basin - Hydra Lagoon & Grave', zone: 'Darkroot Basin', pos: [-12, -5.0, 20], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Great Grey Wolf Sif', desc: 'Deep mountain chasm where roaring waterfalls crash into a lagoon guarded by Artorias loyal companion.', light: 0.80 },
+    { id: 'oolacile_township', name: 'Oolacile Township - Colosseum Grounds', zone: 'Oolacile', pos: [18, 6.0, 115], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Knight Artorias', desc: 'The ancient golden city of sorcery engulfed in the rampant spread of primeval Dark humanity.', light: 0.85 },
+    { id: 'chasm_of_the_abyss', name: 'Chasm of the Abyss - Primeval Dark', zone: 'Oolacile', pos: [-28, -5.0, 160], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Manus, Father of the Abyss', desc: 'The primordial birthplace of dark humanity deep beneath the ancient ruins of Oolacile.', light: 0.30 },
+    { id: 'royal_wood', name: 'Royal Wood - Dragon Waterfall Gorge', zone: 'Royal Wood', pos: [16, 6.0, 130], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Black Dragon Kalameet', desc: 'Lush prehistoric woodland fed by subterranean streams where the last ancient calamity dragon nests.', light: 0.90 },
+    { id: 'nitos_domain', name: "Gravelord Nito's Domain - Altar of Death", zone: 'Gravelord Domain', pos: [-22, -5.0, 140], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Gravelord Nito', desc: 'The deepest ossuary of Lordran where the First of the Dead rests inside his subterranean sarcophagus.', light: 0.40 },
+    { id: 'kiln_of_first_flame', name: 'Kiln of the First Flame - Ash Field', zone: 'Kiln of the First Flame', pos: [14, 6.0, 140], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Gwyn, Lord of Cinder', desc: 'The white ash desert where the First Flame was ignited and where Lord Gwyn waits at the end of time.', light: 1.05 },
+    { id: 'asylum_depths', name: 'Undead Asylum - Subterranean Vaults', zone: 'Undead Asylum', pos: [0, -5.0, -25], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Stray Demon', desc: 'The collapsed stone cellars beneath the Northern Undead Asylum, sealed beneath fragile stone flooring.', light: 0.70 },
+    { id: 'demon_ruins', name: 'Demon Ruins - Magma Riverbanks', zone: 'Demon Ruins', pos: [-26, -5.0, 75], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Demon Firesage', desc: 'The scorched red riverbeds directly beneath Quelaags domain, flooded with fiery molten rock.', light: 1.00 },
+    { id: 'blighttown_swamp', name: 'Blighttown - Poison Swamp Bottom', zone: 'Blighttown', pos: [-24, -5.0, 55], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Centipede Demon', desc: 'A vast expanse of poisonous sludge stretching beneath the great hollow, boiling with magma flies.', light: 0.55 },
+    { id: 'lost_izalith', name: 'Lost Izalith - Bed of Chaos Sanctuary', zone: 'Lost Izalith', pos: [-22, -5.0, 120], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Bed of Chaos', desc: 'The ancient capital of flame swallowed by mutant vegetation and chaotic demons after the fire went wild.', light: 0.95 },
+    { id: 'demon_ruins_basin', name: 'Demon Ruins - Lava Basin Overlook', zone: 'Demon Ruins', pos: [-30, -5.0, 95], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Ceaseless Discharge', desc: 'A blistering precipice of cooled obsidian overlooking the endless subterranean sea of boiling magma.', light: 1.05 },
+    { id: 'crystal_cave', name: 'Crystal Cave - Invisible Crystal Bridges', zone: 'Crystal Cave', pos: [-2, 0, 90], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Seath the Scaleless', desc: 'A glistening underground cavern of blue titanite crystals and invisible walkways spanning bottomless drops.', light: 0.90 },
+    { id: 'the_abyss', name: 'The Abyss - Void of the Four Kings', zone: 'The Abyss', pos: [0, 0, 65], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Four Kings', desc: 'An infinite dimension of pure void where matter and time dissolve into primordial darkness.', light: 0.25 },
+    { id: 'painted_world', name: 'Painted World of Ariamis - Snow Courtyard', zone: 'Painted World', pos: [-8, 0, 50], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Crossbreed Priscilla', desc: 'A quiet, snowbound exile sealed within an immense oil canvas inside the Anor Londo cathedral.', light: 1.05 },
+    { id: 'darkmoon_tomb', name: 'Anor Londo - Darkmoon Tomb of Gwyn', zone: 'Anor Londo', pos: [-4, 0, 125], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Dark Sun Gwyndolin', desc: 'The sacred illusory mausoleum consecrated to Lord Gwyn, guarded by the blade of the Darkmoon.', light: 0.80 },
+    { id: 'the_catacombs', name: 'The Catacombs - Bone Crypt', zone: 'The Catacombs', pos: [-20, -5.0, 45], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Pinwheel', desc: 'A pitch-black necropolis of winding tunnels carved with skull mosaics and animated skeleton sentinels.', light: 0.50 },
+    { id: 'oolacile_sanctuary', name: 'Oolacile Sanctuary - Floral Clearing', zone: 'Oolacile', pos: [10, 6.0, 105], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Sanctuary Guardian', desc: 'A tranquil river glade at the threshold of Royal Wood where Elizabeth the talking mushroom tends the waters.', light: 1.15 },
+    { id: 'fallen_giants', name: 'Forest of Fallen Giants - High Ramparts', zone: 'Drangleic', pos: [22, 6.0, 60], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'The Pursuer', desc: 'Overgrown ramparts pierced by petrified giant trees and crumbling battlements of an ancient war.', light: 1.00 },
+    { id: 'kings_passage', name: "King's Passage - Thunder Colonnade", zone: 'Drangleic', pos: [8, 0, 95], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Looking Glass Knight', desc: 'A rain-lashed outdoor colonnade leading to the royal throne, assaulted by ceaseless lightning strikes.', light: 0.85 },
+    { id: 'brume_tower', name: 'Brume Tower - Ash Wasteland Summit', zone: 'Brume Tower', pos: [26, 6.0, 145], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Fume Knight Raime', desc: 'A towering iron spire rising through volcanic ash clouds, haunted by the fiery spirit of Nadalia.', light: 0.95 },
+    { id: 'alonne_keep', name: 'Memory of the Old Iron King - Polished Hall', zone: 'Iron Keep', pos: [6, 0, 135], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Sir Alonne', desc: 'A pristine mirrored marble hall from the golden age of the Iron King, spotless and immaculate.', light: 1.20 },
+    { id: 'archdragon_peak', name: 'Archdragon Peak - Cloud Sanctuary', zone: 'Archdragon Peak', pos: [20, 6.0, 160], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'The Nameless King', desc: 'Ancient ruinous temple standing high above the cloud layer, sanctuary to dragon worshippers.', light: 1.35 },
+    { id: 'farron_keep', name: 'Farron Keep - Mausoleum of Blood', zone: 'Farron Keep', pos: [-14, -5.0, 80], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Abyss Watchers', desc: 'Poisonous swamp leading to the wolf mausoleum where the Undead Legion performs their endless duel.', light: 0.70 },
+    { id: 'irithyll_cathedral', name: 'Irithyll of Boreal Valley - Frozen Spire', zone: 'Boreal Valley', pos: [-10, 0, 140], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Pontiff Sulyvahn', desc: 'A moonlit gothic city of frost and pale moonlight, under the tyrannical grasp of the Pontiff.', light: 1.10 },
+    { id: 'world_end', name: 'The Ringed City - Ash Desert at the End of Time', zone: 'The Ringed City', pos: [18, 6.0, 175], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Slave Knight Gael', desc: 'An endless dune desert of white ash stretching to the horizon where the remnants of humanity bleed.', light: 0.90 },
+    { id: 'first_flame_summit', name: 'Kiln of First Flame - Zenith of Cinder', zone: 'Kiln of First Flame', pos: [0, 6.0, 180], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Soul of Cinder', desc: 'The true epicenter of the fading world where the combined incarnation of every Lord awaits.', light: 1.15 },
+    { id: 'serpent_sanctum', name: 'Sunken Serpent Sanctum - Altar of the Gorgon', zone: 'Sunken Sanctum', pos: [-25, -5.0, 130], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Medusa, Gorgon Matriarch', desc: 'Subterranean serpentine water temple steeped in venomous mist and guarded by petrifying cobras.', light: 0.60 }
 ];
 
 // Locations & Save Slot Global Window Helpers
