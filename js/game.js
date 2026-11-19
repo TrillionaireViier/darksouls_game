@@ -1582,10 +1582,10 @@ class DarkSoulsGame {
                 uData.headGroup.rotation.x = 0;
             }
 
-            // Normal shield posture
+            // Normal shield posture (facing forward toward enemies)
             if (uData.shieldGroup) {
                 uData.shieldGroup.position.set(-0.04, 0.06, 0.16);
-                uData.shieldGroup.rotation.set(0.08, Math.PI / 8, -0.05);
+                uData.shieldGroup.rotation.set(0.08, -0.12, -0.05);
             }
 
             // Dynamic idle breathing animation

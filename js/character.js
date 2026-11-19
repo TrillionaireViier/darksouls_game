@@ -1401,7 +1401,7 @@ class DarkSoulsCharacters {
         lHand.position.y = -0.44;
         leftShoulder.add(lHand);
 
-        // Authentic Curved Heater Shield (Anatomically curved plate facing forward)
+        // Authentic Curved Heater Shield (Anatomically curved plate facing forward toward enemies)
         const shieldGroup = new THREE.Group();
         const shieldPlate = new THREE.Mesh(
             new THREE.CylinderGeometry(0.48, 0.38, 0.78, 14, 1, false, -Math.PI * 0.26, Math.PI * 0.52),
@@ -1409,7 +1409,6 @@ class DarkSoulsCharacters {
         );
         shieldPlate.castShadow = true;
         shieldPlate.receiveShadow = true;
-        shieldPlate.rotation.y = Math.PI;
         shieldGroup.add(shieldPlate);
 
         // Shield heraldic gold border rims
@@ -1418,7 +1417,6 @@ class DarkSoulsCharacters {
             this.goldTrimMat
         );
         shieldBorderTop.position.y = 0.38;
-        shieldBorderTop.rotation.y = Math.PI;
         shieldGroup.add(shieldBorderTop);
 
         const shieldBorderBot = new THREE.Mesh(
@@ -1426,7 +1424,6 @@ class DarkSoulsCharacters {
             this.goldTrimMat
         );
         shieldBorderBot.position.y = -0.38;
-        shieldBorderBot.rotation.y = Math.PI;
         shieldGroup.add(shieldBorderBot);
 
         // Forearm inner leather straps
@@ -1438,7 +1435,7 @@ class DarkSoulsCharacters {
         shieldGroup.add(strap2);
 
         shieldGroup.position.set(-0.04, 0.06, 0.16);
-        shieldGroup.rotation.set(0.08, Math.PI / 8, -0.05);
+        shieldGroup.rotation.set(0.08, -0.12, -0.05);
         lHand.add(shieldGroup);
 
         // Offhand Torch
