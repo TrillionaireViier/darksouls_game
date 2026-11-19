@@ -1601,7 +1601,7 @@
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
                 <button class="btn-icon-bar" onclick="openLoreCodexModal()" title="Dark Souls Lore Codex & 300 Mobs/Zombies Drops" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">📜 <span class="btn-label-text">LORE (570)</span></button>
-                <button class="btn-icon-bar" onclick="openLocationsModal()" title="75 Lordran & Beyond Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (75)</span></button>
+                <button class="btn-icon-bar" onclick="openLocationsModal()" title="100 Lordran & Beyond Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (100)</span></button>
                 <button class="btn-icon-bar" id="btn-touch-toggle" onclick="toggleVirtualControls()" title="Toggle On-Screen Virtual Joystick & Buttons" style="border-color: #ffd700; color: #ffe680; font-weight: 700;">🕹️ <span class="btn-label-text">CONTROLS PAD</span></button>
                 <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
                 <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 <span class="btn-label-text">SHOP</span></button>
@@ -2326,6 +2326,45 @@
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('gorgon_medusa')">CHALLENGE</button>
                 </div>
+
+                <!-- Boss 38: Malenia, Blade of Miquella -->
+                <div class="boss-card" data-boss-id="malenia">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🪷</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">38. MALENIA, BLADE OF MIQUELLA</div>
+                            <div class="boss-card-desc">Haligtree Roots &bull; Waterfowl Dance, Prosthetic Katana, Scarlet Aeonia & Lifesteal</div>
+                            <div class="boss-card-stats">HP: 6,400 &bull; REWARD: 120,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('malenia')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 39: General Radahn -->
+                <div class="boss-card" data-boss-id="radahn">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">☄️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">39. GENERAL RADAHN, STARCOURGE</div>
+                            <div class="boss-card-desc">Caelid Redmane Wastes &bull; Gravitational Starcall, Twin Colossal Blades & Meteor Slam</div>
+                            <div class="boss-card-stats">HP: 7,200 &bull; REWARD: 150,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('radahn')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 40: False King Allant -->
+                <div class="boss-card" data-boss-id="king_allant">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👑</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">40. FALSE KING ALLANT</div>
+                            <div class="boss-card-desc">Boletaria Palace Pinnacle &bull; Soul Drain Blast, Soulbrant Sonic Wave & Demonic Aura</div>
+                            <div class="boss-card-stats">HP: 8,000 &bull; REWARD: 200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('king_allant')">CHALLENGE</button>
+                </div>
             </div>
 
             <button class="btn-modal-close" onclick="closeBossSelectModal()">CLOSE</button>
@@ -2413,6 +2452,32 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss btn-merchant-action">BUY (10,000)</button>
+                </div>
+
+                <!-- Weapon: Rivers of Blood -->
+                <div class="boss-card merchant-weapon-card" data-weapon-id="rivers_of_blood">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🩸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RIVERS OF BLOOD</div>
+                            <div class="boss-card-desc">Cursed Red Katana &bull; Rapid Corpse Piler bleed slashes & blood-flame DoT</div>
+                            <div class="boss-card-stats">DMG: 215 / 395 &bull; SPEED: 1.45x &bull; COST: 8,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-merchant-action">BUY (8,000)</button>
+                </div>
+
+                <!-- Weapon: Dark Moon Greatsword -->
+                <div class="boss-card merchant-weapon-card" data-weapon-id="dark_moon_greatsword">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌙</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DARK MOON GREATSWORD</div>
+                            <div class="boss-card-desc">Ranni's Moonlight Blade &bull; Freezing waves of moonlight rime & high poise shatter</div>
+                            <div class="boss-card-stats">DMG: 280 / 520 &bull; POISE: 2.4x &bull; COST: 12,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-merchant-action">BUY (12,000)</button>
                 </div>
 
                 <!-- Consumable: Estus Shard -->
@@ -2583,6 +2648,32 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('torch')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 8: Rivers of Blood -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="rivers_of_blood">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🩸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RIVERS OF BLOOD</div>
+                            <div class="boss-card-desc">Cursed Red Katana &bull; Rapid Corpse Piler bleed slashes & blood-flame DoT</div>
+                            <div class="boss-card-stats">DMG: 215 / 395 &bull; SPEED: 1.45x &bull; STAMINA: 18 &bull; BLEED: 45</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('rivers_of_blood')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 9: Dark Moon Greatsword -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="dark_moon_greatsword">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌙</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DARK MOON GREATSWORD</div>
+                            <div class="boss-card-desc">Ranni's Moonlight Blade &bull; Freezing waves of moonlight rime & high poise shatter</div>
+                            <div class="boss-card-stats">DMG: 280 / 520 &bull; POISE: 2.4x &bull; SPEED: 0.90x &bull; STAMINA: 32</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('dark_moon_greatsword')">EQUIP</button>
                 </div>
             </div>
 
@@ -2803,8 +2894,8 @@
     </button>
 
     <!-- Floating Boss Selection Button -->
-    <button id="boss-floating-btn" onclick="openBossSelectModal()" title="Open 37 Lords of Lordran Roster" style="position: fixed; bottom: 20px; right: 340px; z-index: 9999; background: rgba(50, 10, 40, 0.9); border: 1px solid #c084fc; color: #f3e8ff; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(192, 132, 252, 0.4); cursor: pointer; transition: all 0.2s;">
-        👑 BOSSES (37)
+    <button id="boss-floating-btn" onclick="openBossSelectModal()" title="Open 40 Lords of Lordran Roster" style="position: fixed; bottom: 20px; right: 340px; z-index: 9999; background: rgba(50, 10, 40, 0.9); border: 1px solid #c084fc; color: #f3e8ff; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; box-shadow: 0 0 15px rgba(192, 132, 252, 0.4); cursor: pointer; transition: all 0.2s;">
+        👑 BOSSES (40)
     </button>
 
     <!-- Floating Lore Codex Button -->
@@ -2963,7 +3054,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="font-size: 0.82rem; font-weight: 700; color: #ffd778; letter-spacing: 1.5px;">🗡️ 3. WEAPON ARSENAL:</span>
                         <button class="btn-upgrade" onclick="triggerAdminUnlockWeapons()" style="border-color: #ffd700; color: #fff3a8; padding: 4px 10px; font-size: 0.72rem;">
-                            ⚔️ UNLOCK ALL 7 WEAPONS
+                            ⚔️ UNLOCK ALL 9 WEAPONS
                         </button>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
@@ -2974,6 +3065,8 @@
                         <button class="btn-upgrade" onclick="equipArsenalWeapon('dragontooth')">🦴 DRAGON TOOTH</button>
                         <button class="btn-upgrade" onclick="equipArsenalWeapon('moonlight')">✨ MOONLIGHT</button>
                         <button class="btn-upgrade" onclick="equipArsenalWeapon('torch')">🔥 TORCH</button>
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('rivers_of_blood')">🩸 RIVERS BLOOD</button>
+                        <button class="btn-upgrade" onclick="equipArsenalWeapon('dark_moon_greatsword')">🌙 DARK MOON</button>
                         <button class="btn-upgrade" onclick="toggleTorch()">💡 TOGGLE TORCH</button>
                     </div>
                 </div>
@@ -3636,8 +3729,8 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openQASuiteModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🛠️ QA SUITE</button>
                     <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800;">⚡ 60 FPS MODE</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 16 BOSS ROSTER</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 75 LOCATIONS</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 40 BOSS ROSTER</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 100 LOCATIONS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLoreCodexModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">📜 LORE (570 MOBS)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSkinsModal();" style="border-color: #64b5f6; color: #bbdefb; justify-content: center; padding: 10px 12px; font-weight: 700;">🛡️ 3D SKINS & SETS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 12px; font-weight: 700;">🗡️ WEAPON ARSENAL</button>
@@ -3661,14 +3754,14 @@
     <!-- 75 LORDRAN & BEYOND LOCATIONS & FAST-TRAVEL EXPEDITIONS MODAL -->
     <div id="locations-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 900px; max-height: 85vh; overflow-y: auto; padding: 24px; scrollbar-width: thin; scrollbar-color: #a87932 rgba(18, 14, 10, 0.85);">
-            <div class="modal-header">🗺️ 75 LORDRAN & BEYOND EXPEDITIONS & FAST-TRAVEL 🗺️</div>
+            <div class="modal-header">🗺️ 100 LORDRAN & BEYOND EXPEDITIONS & FAST-TRAVEL 🗺️</div>
             <p style="font-size: 0.85rem; color: #b8a896; text-align: center; margin-bottom: 14px;">
                 Instant fast-travel across all 75 sacred zones, sunken catacombs, elevated ramparts and primeval depths of Lordran, Drangleic, Lothric, Boletaria and Yharnam. Select any expedition to warp immediately.
             </p>
 
             <!-- Filter Categories -->
             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px;">
-                <button class="btn-icon-bar" onclick="filterLocations('all')" style="border-color: #ffd700; color: #fff3a8; padding: 6px 14px; font-size: 0.78rem; font-weight: 800;">ALL 75 LOCATIONS</button>
+                <button class="btn-icon-bar" onclick="filterLocations('all')" style="border-color: #ffd700; color: #fff3a8; padding: 6px 14px; font-size: 0.78rem; font-weight: 800;">ALL 100 LOCATIONS</button>
                 <button class="btn-icon-bar" onclick="filterLocations('surface')" style="border-color: #ff7722; color: #ffaa66; padding: 6px 14px; font-size: 0.78rem; font-weight: 700;">SURFACE HIGHWAYS (0m)</button>
                 <button class="btn-icon-bar" onclick="filterLocations('depths')" style="border-color: #00ffaa; color: #77ffcc; padding: 6px 14px; font-size: 0.78rem; font-weight: 700;">CATACOMBS & DEPTHS (-5m)</button>
                 <button class="btn-icon-bar" onclick="filterLocations('high')" style="border-color: #ffd700; color: #ffe680; padding: 6px 14px; font-size: 0.78rem; font-weight: 700;">RAMPARTS & SPIRES (+6m)</button>
@@ -4572,22 +4665,22 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/audio.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/lore_items.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/world.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/character.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/siege_warfare.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/heraldry_nobility.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/apothecary_crafting.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/collision_system.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/qa_bot_tester.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/combat.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/postprocessing.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/qa_suite.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/blacksmith_forge.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/inventory_system.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
-    <script src="js/game.js?v=20261119_DARK_SOULS_75_LOCATIONS_TELEPORT_FIX"></script>
+    <script src="js/three.min.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/audio.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/lore_items.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/world.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/character.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/siege_warfare.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/heraldry_nobility.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/apothecary_crafting.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/collision_system.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/qa_bot_tester.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/combat.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/postprocessing.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/qa_suite.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/blacksmith_forge.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/inventory_system.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
+    <script src="js/game.js?v=20261119_DARK_SOULS_100_LOCATIONS_40_BOSSES"></script>
 </body>
 </html>
 <!-- Vercel Connect trigger sync: Thu Nov 19 11:40:54 UTC 2026 -->

@@ -117,6 +117,26 @@ class DarkSoulsInventory {
                 desc: 'Pitch-soaked wooden torch illuminating pitch-black catacombs, igniting spiderwebs and scorching creeping vermin with bright fire.',
                 action: 'EQUIP'
             },
+            rivers_of_blood: {
+                id: 'rivers_of_blood',
+                category: 'weapons',
+                name: 'Rivers of Blood',
+                icon: '🩸',
+                type: 'Cursed Katana',
+                stats: { dmg: '215 / 395', stamina: '16', poise: '1.4x', speed: '1.45x' },
+                desc: 'Cursed red-metal katana of Okina. Rapid consecutive Corpse Piler blood slashes that cause massive hemorrhaging and ignite scarlet blood-flame.',
+                action: 'EQUIP'
+            },
+            dark_moon_greatsword: {
+                id: 'dark_moon_greatsword',
+                category: 'weapons',
+                name: 'Dark Moon Greatsword',
+                icon: '🌙',
+                type: 'Lunar Frost Greatsword',
+                stats: { dmg: '280 / 520', stamina: '28', poise: '2.4x', speed: '1.0x' },
+                desc: 'Lunar ceremonial greatsword gifted by Ranni the Witch. Heavy attacks unleash freezing waves of moonlight rime and shatter poise.',
+                action: 'EQUIP'
+            },
 
             // ----------------------------------------------------------------
             // 2. ARMOR SETS

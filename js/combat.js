@@ -202,6 +202,40 @@ class DarkSoulsCombat {
                 poiseBreak: 1.3,
                 cost: 400,
                 unlocked: true
+            },
+            rivers_of_blood: {
+                id: 'rivers_of_blood',
+                name: 'Rivers of Blood',
+                type: 'Cursed Katana',
+                icon: '🩸',
+                desc: 'Cursed red-metal katana of Okina. Rapid consecutive Corpse Piler blood slashes that cause massive hemorrhaging and ignite scarlet blood-flame.',
+                lightDmg: 215,
+                heavyDmg: 395,
+                reach: 3.6,
+                bossReachBonus: 2.5,
+                lightStamina: 16,
+                heavyStamina: 28,
+                speedMultiplier: 1.45,
+                poiseBreak: 1.4,
+                cost: 8000,
+                unlocked: false
+            },
+            dark_moon_greatsword: {
+                id: 'dark_moon_greatsword',
+                name: 'Dark Moon Greatsword',
+                type: 'Lunar Frost Greatsword',
+                icon: '🌙',
+                desc: 'Lunar ceremonial greatsword gifted by Ranni the Witch. Heavy attacks unleash freezing waves of moonlight rime and shatter poise.',
+                lightDmg: 280,
+                heavyDmg: 520,
+                reach: 4.4,
+                bossReachBonus: 3.2,
+                lightStamina: 28,
+                heavyStamina: 46,
+                speedMultiplier: 1.0,
+                poiseBreak: 2.4,
+                cost: 12000,
+                unlocked: false
             }
         };
         this.currentWeaponId = 'sword';
@@ -696,6 +730,45 @@ class DarkSoulsCombat {
                 radius: 2.4,
                 spawnPos: { x: 0, z: -95 },
                 create: (cf, x, z) => cf.createGorgonMedusa(x, z)
+            },
+            {
+                id: 'malenia',
+                name: 'MALENIA, BLADE OF MIQUELLA',
+                title: 'Roots of the Haligtree &bull; Waterfowl Dance, Prosthetic Blade & Scarlet Aeonia',
+                unlockLocationId: 'haligtree_roots',
+                icon: '🪷',
+                maxHp: 6400,
+                damage: 520,
+                souls: 120000,
+                radius: 2.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createMalenia(x, z)
+            },
+            {
+                id: 'radahn',
+                name: 'GENERAL RADAHN, CONQUEROR OF THE STARS',
+                title: 'Caelid Redmane Wastes &bull; Gravitational Starcall, Twin Starscourge Blades & Meteor Re-entry',
+                unlockLocationId: 'caelid_redmane_castle',
+                icon: '☄️',
+                maxHp: 7200,
+                damage: 560,
+                souls: 150000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createRadahn(x, z)
+            },
+            {
+                id: 'king_allant',
+                name: 'FALSE KING ALLANT, REGENT OF THE OLD ONE',
+                title: 'Boletaria Throne Pinnacle &bull; Soul Drain Blast, Soulbrant Sonic Wave & Demonic Shockwave',
+                unlockLocationId: 'boletaria_kings_tower',
+                icon: '👑',
+                maxHp: 8000,
+                damage: 600,
+                souls: 200000,
+                radius: 2.6,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createKingAllant(x, z)
             }
         ];
     }
@@ -3318,6 +3391,9 @@ class DarkSoulsCombat {
         else if (id === 'nito') this.updateNitoAI(delta, dist, targetAngle);
         else if (id === 'gwyn' || id === 'soul_of_cinder' || id === 'pontiff_sulyvahn' || id === 'fume_knight' || id === 'slave_knight_gael') this.updateGwynAI(delta, dist, targetAngle);
         else if (id === 'gorgon_medusa') this.updateGorgonMedusaAI(delta, dist, targetAngle);
+        else if (id === 'malenia') this.updateMaleniaAI(delta, dist, targetAngle);
+        else if (id === 'radahn') this.updateRadahnAI(delta, dist, targetAngle);
+        else if (id === 'king_allant') this.updateKingAllantAI(delta, dist, targetAngle);
         else this.updateTaurusAI(delta, dist, targetAngle);
     }
 
@@ -3476,6 +3552,212 @@ class DarkSoulsCombat {
                     this.boss._hasSpit = false;
                     this.boss.isAttacking = false;
                     this.boss.cooldown = 2.0;
+                }
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 38: MALENIA, BLADE OF MIQUELLA AI
+    // Waterfowl Dance Flurry, Scarlet Aeonia Dive & Lifesteal
+    // ----------------------------------------------------
+    updateMaleniaAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        const speed = this.boss.isPhase2 ? 4.8 : 3.8;
+
+        if (dist > 3.6 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+            if (u.headGroup) u.headGroup.rotation.y = Math.sin(this.boss.animTime * 6) * 0.15;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._hit2 = false;
+            this.boss.attackType = Math.random() < 0.5 ? 'WATERFOWL_DANCE' : 'SCARLET_AEONIA';
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            const aTime = this.boss.attackTime;
+
+            if (this.boss.attackType === 'WATERFOWL_DANCE') {
+                if (aTime < 0.5) {
+                    this.boss.mesh.position.y = (aTime / 0.5) * 2.2;
+                } else if (aTime < 1.2) {
+                    this.boss.mesh.position.y = Math.max(0, this.boss.mesh.position.y - delta * 4);
+                    this.boss.mesh.position.x += Math.sin(targetAngle) * 6.5 * delta;
+                    this.boss.mesh.position.z += Math.cos(targetAngle) * 6.5 * delta;
+                    if (!this.boss._hit1) {
+                        this.boss._hit1 = true;
+                        this.audio.playSwing();
+                        if (dist < 4.8) {
+                            this.takeDamage(this.boss.damage * 0.75, false);
+                            this.boss.hp = Math.min(this.boss.maxHp, this.boss.hp + 120);
+                            this.world.spawnHitSparks(this.game.playerMesh.position, true);
+                        }
+                    }
+                } else if (aTime < 1.9) {
+                    if (!this.boss._hit2) {
+                        this.boss._hit2 = true;
+                        this.audio.playSwing();
+                        this.game.shakeCamera(0.3, 0.4);
+                        if (dist < 4.8) {
+                            this.takeDamage(this.boss.damage * 0.85, false);
+                            this.boss.hp = Math.min(this.boss.maxHp, this.boss.hp + 150);
+                            this.world.spawnHitSparks(this.game.playerMesh.position, true);
+                        }
+                    }
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss.mesh.position.y = 0;
+                    this.boss.cooldown = 2.0;
+                }
+            } else {
+                if (aTime < 0.7) {
+                    this.boss.mesh.position.y = (aTime / 0.7) * 4.2;
+                } else if (aTime < 1.1) {
+                    this.boss.mesh.position.y = Math.max(0, this.boss.mesh.position.y - delta * 12);
+                    if (!this.boss._hit1 && this.boss.mesh.position.y <= 0.2) {
+                        this.boss._hit1 = true;
+                        this.audio.playBossSlam();
+                        this.game.shakeCamera(0.6, 0.7);
+                        this.world.spawnSunlightBurst(this.boss.mesh.position);
+                        if (dist < 6.5) {
+                            this.takeDamage(this.boss.damage * 1.15, false);
+                            this.isPoisoned = true;
+                            this.poisonTimer = 8.0;
+                        }
+                    }
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss.mesh.position.y = 0;
+                    this.boss.cooldown = 2.6;
+                }
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 39: STARCOURGE RADAHN AI
+    // Gravitational Starcall Pull & Meteor Slam
+    // ----------------------------------------------------
+    updateRadahnAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        const speed = 2.6;
+
+        if (dist > 4.5 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss.attackType = Math.random() < 0.5 ? 'STARCALL_GRAVITY' : 'METEOR_SLAM';
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            const aTime = this.boss.attackTime;
+
+            if (this.boss.attackType === 'STARCALL_GRAVITY') {
+                if (aTime < 0.8) {
+                    const pullDir = new THREE.Vector3().subVectors(this.boss.mesh.position, this.game.playerMesh.position).normalize();
+                    this.game.playerMesh.position.addScaledVector(pullDir, 4.5 * delta);
+                } else if (aTime < 1.3) {
+                    if (!this.boss._hit1) {
+                        this.boss._hit1 = true;
+                        this.audio.playBossRoar();
+                        this.audio.playBossSlam();
+                        this.game.shakeCamera(0.55, 0.6);
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+                        if (dist < 5.8) {
+                            this.takeDamage(this.boss.damage * 1.0, false);
+                        }
+                    }
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss.cooldown = 2.4;
+                }
+            } else {
+                if (aTime < 0.6) {
+                    this.boss.mesh.position.y = (aTime / 0.6) * 5.0;
+                } else if (aTime < 1.2) {
+                    this.boss.mesh.position.y = Math.max(0, this.boss.mesh.position.y - delta * 10);
+                    if (!this.boss._hit1 && this.boss.mesh.position.y <= 0.2) {
+                        this.boss._hit1 = true;
+                        this.audio.playBossSlam();
+                        this.game.shakeCamera(0.7, 0.8);
+                        this.world.spawnSunlightBurst(this.boss.mesh.position);
+                        if (dist < 7.2) {
+                            this.takeDamage(this.boss.damage * 1.25, false);
+                        }
+                    }
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss.mesh.position.y = 0;
+                    this.boss.cooldown = 2.8;
+                }
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // BOSS 40: FALSE KING ALLANT AI
+    // Soul Drain Energy & Soulbrant Sonic Wave
+    // ----------------------------------------------------
+    updateKingAllantAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        const speed = 3.6;
+
+        if (dist > 4.0 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss.attackType = Math.random() < 0.5 ? 'SOUL_DRAIN' : 'SOULBRANT_WAVE';
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            const aTime = this.boss.attackTime;
+
+            if (this.boss.attackType === 'SOUL_DRAIN') {
+                if (aTime < 0.7) {
+                    if (u.leftShoulder) u.leftShoulder.rotation.x = -1.2;
+                } else if (aTime < 1.2) {
+                    if (!this.boss._hit1) {
+                        this.boss._hit1 = true;
+                        this.audio.playBellToll();
+                        this.world.spawnSunlightBurst(this.boss.mesh.position);
+                        if (dist < 4.2) {
+                            this.takeDamage(this.boss.damage * 1.3, false);
+                            this.souls = Math.max(0, this.souls - 500);
+                            this.game.showNotification("⚠️ FALSE KING ALLANT DRAINED 500 SOULS!");
+                        }
+                    }
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss.cooldown = 2.6;
+                }
+            } else {
+                if (aTime < 0.5) {
+                    if (u.rightShoulder) u.rightShoulder.rotation.x = 1.0;
+                } else if (aTime < 1.0) {
+                    if (!this.boss._hit1) {
+                        this.boss._hit1 = true;
+                        this.audio.playSwing();
+                        this.game.shakeCamera(0.4, 0.5);
+                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+                        if (dist < 6.5) {
+                            this.takeDamage(this.boss.damage * 0.95, false);
+                        }
+                    }
+                } else {
+                    this.boss.isAttacking = false;
+                    this.boss.cooldown = 2.2;
                 }
             }
         }

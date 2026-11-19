@@ -172,7 +172,7 @@ class DarkSoulsGame {
         } catch (e) {}
         this.unlockedLocations = Array.isArray(savedLocs) && savedLocs.length > 0 
             ? savedLocs 
-            : ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'];
+            : ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
 
         // Auto-Save Management (Periodic 15s & Event-Driven)
         this.autoSaveInterval = 15.0;
@@ -2203,7 +2203,7 @@ class DarkSoulsGame {
     unlockLocationForBoss(bossId, locId) {
         if (!locId) return null;
         if (!this.unlockedLocations) {
-            this.unlockedLocations = ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'];
+            this.unlockedLocations = ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
         }
         if (!this.unlockedLocations.includes(locId)) {
             this.unlockedLocations.push(locId);
@@ -2484,7 +2484,7 @@ class DarkSoulsGame {
             } : null,
             currentBossType: this.combat.currentBossType,
             defeatedBosses: this.combat.defeatedBosses || [],
-            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'],
+            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'],
             adminModeUnlocked: !!(this.combat && this.combat.adminModeUnlocked),
             isGodMode: !!(this.combat && this.combat.isGodMode),
             equippedSkin: localStorage.getItem('darksouls_equipped_skin') || 'warrior',
@@ -3100,11 +3100,11 @@ class DarkSoulsGame {
 
     adminUnlockAllWeapons() {
         if (!this.combat) return;
-        this.combat.unlockedWeapons = ['sword', 'zweihander', 'uchigatana', 'halberd', 'dragontooth', 'moonlight', 'torch'];
+        this.combat.unlockedWeapons = ['sword', 'zweihander', 'uchigatana', 'halberd', 'dragontooth', 'moonlight', 'torch', 'rivers_of_blood', 'dark_moon_greatsword'];
         this.saveGame(false, 'ADMIN WEAPONS');
         if (this.updateWeaponArsenalUI) this.updateWeaponArsenalUI();
         this.updateAdminModalUI();
-        this.showNotification("🗡️ ADMIN: ALL 7 WEAPONS UNLOCKED PERMANENTLY!");
+        this.showNotification("🗡️ ADMIN: ALL 9 WEAPONS UNLOCKED PERMANENTLY!");
         if (this.audio) this.audio.playBonfireIgnite();
     }
 
@@ -3436,7 +3436,7 @@ class DarkSoulsGame {
         if (!container) return;
 
         const locs = window.DARK_SOULS_LOCATIONS || [];
-        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'];
+        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
 
         const filtered = locs.filter(l => {
             if (activeFilter === 'all') return true;
@@ -3509,7 +3509,7 @@ class DarkSoulsGame {
         if (!loc || !this.playerMesh) return;
 
         // Check unlock status
-        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge'];
+        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
         if (!unlocked.includes(locationId) && locationId !== 'royal_bridge_arena') {
             this.showNotification(`🔒 THIS REALM IS LOCKED! DEFEAT ITS WARDEN TO UNLOCK.`);
             if (this.audio && this.audio.playParry) this.audio.playParry();
@@ -3635,7 +3635,7 @@ window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodex
 window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
 window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
 
-// 75 Authentic Lordran, Drangleic, Lothric, Boletaria & Yharnam Fast-Travel Locations
+// 100 Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
     // ----------------------------------------------------
     // SANCTUARIES & HUB REALMS
@@ -3722,7 +3722,36 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'valley_of_defilement', name: 'Valley of Defilement - Swamp of Sorrow', zone: 'Valley of Defilement', pos: [-14, -5.0, 110], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Maiden Astraea & Garl Vinland', desc: 'A stinking cesspool of poison sludge and rotting shanties where the discarded dregs of humanity weep.', light: 0.40 },
     { id: 'central_yharnam_bridge', name: 'Central Yharnam - Great Bridge', zone: 'Yharnam', pos: [4, 0, 25], elev: '0m', danger: 'Sanctuary & Beast Bridge', boss: 'Cleric Beast & Father Gascoigne', desc: 'A soaring Victorian bridge littered with abandoned burning carriages and howling lycanthropic beasts.', light: 0.90 },
     { id: 'byrgenwerth_moonside', name: 'Byrgenwerth - Moonside Lake Observatory', zone: 'Byrgenwerth', pos: [-2, 0, 100], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Rom, the Vacuous Spider', desc: 'An ancient collegiate academy overlooking a serene moonlit lake that conceals all eldritch horrors.', light: 1.05 },
-    { id: 'cainhurst_castle_roof', name: 'Forsaken Cainhurst Castle - Frost Rooftops', zone: 'Cainhurst', pos: [14, 6.0, 85], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Martyr Logarius', desc: 'An isolated snow-covered gothic palace towering above a frozen lake, realm of the immortal Vileblood Queen.', light: 1.15 }
+    { id: 'cainhurst_castle_roof', name: 'Forsaken Cainhurst Castle - Frost Rooftops', zone: 'Cainhurst', pos: [14, 6.0, 85], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Martyr Logarius', desc: 'An isolated snow-covered gothic palace towering above a frozen lake, realm of the immortal Vileblood Queen.', light: 1.15 },
+
+    // ----------------------------------------------------
+    // 25 ELDEN RING, SHADOW OF ERDTREE & BLOODBORNE REALMS (76–100)
+    // ----------------------------------------------------
+    { id: 'limgrave_first_step', name: 'Limgrave - The First Step & Golden Bough', zone: 'Limgrave', pos: [2, 0, 5], elev: '0m', danger: 'Sanctuary & Golden Bough', boss: 'Tree Sentinel', desc: 'Lush golden-grass hills bathed in the warm radiance of the towering Erdtree.', light: 1.35 },
+    { id: 'stormveil_cliffside', name: 'Stormveil Castle - Cliffside Ramparts', zone: 'Stormveil', pos: [20, 6.0, 70], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'Margit the Fell Omen', desc: 'A battered gale-swept castle perched on seaside bluffs, scarred by thorn brambles and exiled banishers.', light: 1.05 },
+    { id: 'stormveil_throne', name: "Stormveil Castle - Godrick's Scion Hall", zone: 'Stormveil', pos: [4, 0, 105], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Godrick the Grafted', desc: 'The desecrated court where dragon-headed Godrick grafts rotting arms to harvest divine strength.', light: 1.15 },
+    { id: 'raya_lucaria_gate', name: 'Academy of Raya Lucaria - Debate Parlor', zone: 'Raya Lucaria', pos: [-10, 0, 95], elev: '0m', danger: 'Tier III (Advanced)', boss: 'Red Wolf of Radagon', desc: 'Submerged crystal lake academy of Glintstone sorcerers beneath a dome of shimmering midnight blue.', light: 0.95 },
+    { id: 'raya_lucaria_grand_library', name: 'Academy of Raya Lucaria - Grand Library', zone: 'Raya Lucaria', pos: [-5, 0, 130], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Rennala, Queen of Full Moon', desc: 'An amber-lit circular library where cradle-bound scholars crawl beneath a giant glowing moon.', light: 1.10 },
+    { id: 'caelid_redmane_castle', name: 'Caelid - Redmane Castle Plaza', zone: 'Caelid', pos: [16, 0, 110], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Starscourge Radahn', desc: 'Scarlet Rot blighted desert fortress hosting the great combat festival beneath bleeding red skies.', light: 0.90 },
+    { id: 'nokron_eternal_city', name: 'Nokron, Eternal City - Ancestral Woods', zone: 'Nokron', pos: [-15, -5.0, 90], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Mimic Tear & Ancestor Spirit', desc: 'A subterranean sunken city roofed with an illusory sky of glowing silver stars and fallen spires.', light: 0.70 },
+    { id: 'leyndell_capital_rampart', name: 'Leyndell, Royal Capital - East Capital Rampart', zone: 'Leyndell', pos: [22, 6.0, 100], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Godfrey, First Elden Lord', desc: 'The dazzling golden metropolis of the Erdtree, paved in gilded stone and guarded by divine Oracle Envoys.', light: 1.40 },
+    { id: 'leyndell_erdtree_sanctuary', name: 'Leyndell - Erdtree Sanctuary & Roots', zone: 'Leyndell', pos: [0, 6.0, 160], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Morgott, the Omen King', desc: 'The hallowed chamber at the foot of the impenetrable thorn-sealed roots of the Great Erdtree.', light: 1.30 },
+    { id: 'mountaintops_giants', name: 'Mountaintops of the Giants - Freezing Lake', zone: 'Mountaintops', pos: [-12, 0, 115], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Fire Giant & Borealis', desc: 'Howling blizzards on frozen mountain crags where ancient frost dragons and giant golems sleep.', light: 1.20 },
+    { id: 'crumbling_farum_azula', name: 'Crumbling Farum Azula - Dragon Temple', zone: 'Farum Azula', pos: [18, 6.0, 140], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Dragonlord Placidusax & Maliketh', desc: 'A timeless flying temple suspended in an eternal tornado vortex where ancient dragons rule the storm.', light: 1.25 },
+    { id: 'haligtree_roots', name: "Miquella's Haligtree - Roots of the Rot Goddess", zone: 'Haligtree', pos: [-20, -5.0, 135], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Malenia, Blade of Miquella', desc: 'A colossal rotting sacred tree where the unalloyed needle shattered and the scarlet flower blooms.', light: 0.90 },
+    { id: 'mohgwyn_dynasty', name: 'Mohgwyn Palace - Blood Mausoleum', zone: 'Mohgwyn Palace', pos: [-24, -5.0, 145], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Mohg, Lord of Blood', desc: 'Subterranean blood ocean cavern where the Formless Mother demands sacrificial sanguinary rites.', light: 0.60 },
+    { id: 'belurat_tower_settlement', name: 'Belurat Tower Settlement - Stage Front', zone: 'Belurat', pos: [8, 0, 80], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Divine Beast Dancing Lion', desc: 'Sprawling hornsent stone city veiled in mist beneath the towering shadow of the spiral spire.', light: 0.95 },
+    { id: 'shadow_keep_plaza', name: 'Shadow Keep - Specimen Storehouse', zone: 'Shadow Keep', pos: [22, 6.0, 130], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Messmer the Impaler', desc: 'A vast black fortress library of stuffed beast specimens and floating tablets burning with blasphemous flame.', light: 0.85 },
+    { id: 'abyssal_woods', name: "Abyssal Woods - Midra's Manse", zone: 'Abyssal Woods', pos: [-16, -5.0, 125], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Midra, Lord of Frenzied Flame', desc: 'Suffocating golden-leaf twilight swamp where winter lanterns hunt travelers and drive them mad with frenzied flame.', light: 0.50 },
+    { id: 'enir_ilim_sanctum', name: 'Enir-Ilim - Gate of Divinity', zone: 'Enir-Ilim', pos: [0, 6.0, 175], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Promised Consort Radahn', desc: 'The spiraling heavenly staircase reaching the divine altar of corpses where gods are ascended.', light: 1.45 },
+    { id: 'hunters_dream', name: "Hunter's Dream - Workshop Garden", zone: "Hunter's Dream", pos: [0, 0, 8], elev: '0m', danger: 'Sanctuary (Dream Hub)', boss: 'Gehrman, the First Hunter', desc: 'Serene flowering garden sanctuary nestled beneath pillars of celestial fog where hunters awaken.', light: 1.15 },
+    { id: 'fishing_hamlet', name: 'Fishing Hamlet - Coastline of the Great One', zone: 'Fishing Hamlet', pos: [-14, 0, 65], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Orphan of Kos', desc: 'A rotting barnacle-encrusted coastal village washed by cold sea rain, sacred to the dead Great One Kos.', light: 0.80 },
+    { id: 'research_hall', name: 'Research Hall - Astral Clocktower Steps', zone: 'Clocktower', pos: [14, 6.0, 75], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Lady Maria of Astral Clocktower', desc: 'Vast patient ward of bandaged heads and soaring staircases guarding the dark secrets of the Healing Church.', light: 0.90 },
+    { id: 'chalice_ptumeru', name: 'Pthumeru Ihyll - Cursed Defiled Depth', zone: 'Chalice Dungeon', pos: [-22, -5.0, 105], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Yharnam, Pthumerian Queen', desc: 'Ancient subterranean labyrinth of blood-soaked crypts and labyrinth warriors beneath modern Yharnam.', light: 0.40 },
+    { id: 'boletaria_kings_tower', name: "Boletaria - King's High Tower", zone: 'Boletaria', pos: [18, 6.0, 150], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'False King Allant', desc: 'The pinnacle spire of the Boletarian palace where the soul-draining sword of King Allant strikes.', light: 1.20 },
+    { id: 'latria_ivory_tower', name: 'Tower of Latria - Heart of the Panopticon', zone: 'Tower of Latria', pos: [-18, -5.0, 135], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Old Monk & Mindflayers', desc: 'A colossal beating organic heart suspended in chains inside the spiraling blood tower.', light: 0.65 },
+    { id: 'storm_altar', name: 'Shrine of Storms - Monolith Altar of the Sky', zone: 'Shrine of Storms', pos: [10, 6.0, 140], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Storm King', desc: 'A wind-whipped seaside cliff battered by rain and lightning where giant flying shadow rays swarm.', light: 0.85 },
+    { id: 'lands_between_nexus', name: 'Lands Between - Elden Throne & Fractured Marika', zone: 'Elden Throne', pos: [0, 6.0, 190], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Elden Beast & Radagon', desc: 'The golden cosmic sea inside the Erdtree where the physical incarnation of the Greater Will resides.', light: 1.40 }
 ];
 
 // Locations & Save Slot Global Window Helpers
