@@ -346,7 +346,7 @@ class DarkSoulsWorld {
                 const rTone = stoneTone + Math.floor(Math.random() * 8);
                 const gTone = stoneTone + Math.floor(Math.random() * 4);
                 const bTone = stoneTone;
-                aCtx.fillStyle = ;
+                aCtx.fillStyle = `rgb(${rTone}, ${gTone}, ${bTone})`;
                 aCtx.fillRect(sx, sy, sw, sh);
 
                 // Stone grain & micro-texture
@@ -1683,20 +1683,20 @@ class DarkSoulsWorld {
         });
 
         const distantSpires = [
-            [-85, 22, -90, 7, 55], [-45, 28, -115, 6, 68], [55, 26, -110, 6.5, 62], [95, 20, -85, 7.5, 52],
-            [-125, 18, 110, 8, 50], [125, 18, 110, 8, 50],
-            [-70, 32, 185, 9, 78], [70, 32, 185, 9, 78], [0, 40, 210, 11, 95]
+            [-85, 0, -90, 7, 55], [-45, 0, -115, 6, 68], [55, 0, -110, 6.5, 62], [95, 0, -85, 7.5, 52],
+            [-125, -5, 110, 8, 50], [125, -5, 110, 8, 50],
+            [-80, 0, 195, 9, 78], [80, 0, 195, 9, 78]
         ];
 
         distantSpires.forEach(([tx, ty, tz, tr, th]) => {
-            // Tower shaft
+            // Tower shaft firmly grounded into bedrock
             const tBody = new THREE.Mesh(new THREE.CylinderGeometry(tr * 0.9, tr, th, 10), spireTowerMat);
-            tBody.position.set(tx, ty + th / 2, tz);
+            tBody.position.set(tx, ty + th / 2 - 10, tz);
             distantGroup.add(tBody);
 
             // Conical spire roof
             const tRoof = new THREE.Mesh(new THREE.ConeGeometry(tr * 1.05, th * 0.45, 10), spireRoofMat);
-            tRoof.position.set(tx, ty + th + (th * 0.45) / 2, tz);
+            tRoof.position.set(tx, ty + th - 10 + (th * 0.45) / 2, tz);
             distantGroup.add(tRoof);
         });
 
@@ -1789,6 +1789,12 @@ class DarkSoulsWorld {
             buttressW.rotation.z = 0.22;
             distantGroup.add(buttressW);
         }
+
+        // Colossal foundation bastion beneath the Boss Arena (x=[-18, 18], z=[95, 168])
+        const arenaBastion = new THREE.Mesh(new THREE.BoxGeometry(37, 24, 74), this.wallMat);
+        arenaBastion.position.set(0, -13.0, 131);
+        arenaBastion.receiveShadow = true;
+        distantGroup.add(arenaBastion);
 
         // 5. Volumetric Golden Sunrays / Godrays
         const godrayMat = new THREE.MeshBasicMaterial({
@@ -1887,38 +1893,29 @@ class DarkSoulsWorld {
     createPathBeacon(x, y, z, colorHex, title, desc, titleColor) {
         const beaconGroup = new THREE.Group();
 
-        // 1. Towering vertical light beam reaching 36m into the sky
-        const beamGeo = new THREE.CylinderGeometry(0.55, 1.4, 36, 16, 1, true);
-        const beamMat = new THREE.MeshBasicMaterial({
-            color: colorHex,
-            transparent: true,
-            opacity: 0.38,
-            blending: THREE.AdditiveBlending,
-            side: THREE.DoubleSide,
-            depthWrite: false
-        });
-        const beam = new THREE.Mesh(beamGeo, beamMat);
-        beam.position.y = 18;
-        beaconGroup.add(beam);
-
-        // 2. Glowing Core Flame Brazier
+        // 1. Glowing Core Flame Brazier
         const flameCore = new THREE.Mesh(
-            new THREE.DodecahedronGeometry(0.55),
+            new THREE.DodecahedronGeometry(0.45),
             new THREE.MeshBasicMaterial({ color: colorHex })
         );
-        flameCore.position.y = 2.2;
+        flameCore.position.y = 2.1;
         beaconGroup.add(flameCore);
 
+        // Warm beacon flame light
+        const beaconLight = new THREE.PointLight(colorHex, 2.0, 10);
+        beaconLight.position.set(0, 2.2, 0);
+        beaconGroup.add(beaconLight);
+
         // Stone Brazier Pedestal Base
-        const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 1.0, 2.0, 8), this.stoneMat);
-        pedestal.position.y = 1.0;
+        const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.85, 1.8, 8), this.stoneMat);
+        pedestal.position.y = 0.9;
         pedestal.receiveShadow = true;
         beaconGroup.add(pedestal);
 
         beaconGroup.position.set(x, y, z);
         this.scene.add(beaconGroup);
 
-        // 3. Authentic Floor Soapstone Guidance Rune lying flat on cobblestone
+        // 2. Authentic Floor Soapstone Guidance Rune lying flat on cobblestone
         this.createFloorSoapstone(x, y, z + 2.5, titleColor || ('#' + colorHex.toString(16).padStart(6, '0')), title, desc);
 
         this.particles.push({

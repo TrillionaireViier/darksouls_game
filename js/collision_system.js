@@ -123,18 +123,26 @@ class CollisionSystem {
             const eA = enemies[i];
             if (!eA.mesh || !eA.mesh.visible || eA.isDead || eA.state === 'DEAD') continue;
             const posA = eA.mesh.position;
+
+            // Only test separation if mob is within 24m of player
+            if (playerPos) {
+                const pDistSq = (posA.x - playerPos.x) * (posA.x - playerPos.x) + (posA.z - playerPos.z) * (posA.z - playerPos.z);
+                if (pDistSq > 24 * 24) continue;
+            }
+
             const rA = eA.radius || 0.45;
 
-            // Test against every other mob (O(N^2) over active nearby mobs)
+            // Test against nearby mobs
             for (let j = i + 1; j < count; j++) {
                 const eB = enemies[j];
                 if (!eB.mesh || !eB.mesh.visible || eB.isDead || eB.state === 'DEAD') continue;
                 const posB = eB.mesh.position;
+
+                // Fast AABB check before expensive distance check
+                if (Math.abs(posA.x - posB.x) > 1.8 || Math.abs(posA.z - posB.z) > 1.8) continue;
+                if (Math.abs(posA.y - posB.y) > 2.0) continue;
+
                 const rB = eB.radius || 0.45;
-
-                // Height check: only separate if on similar elevation level
-                if (Math.abs(posA.y - posB.y) > 2.2) continue;
-
                 const dx = posA.x - posB.x;
                 const dz = posA.z - posB.z;
                 const distSq = dx * dx + dz * dz;
@@ -260,6 +268,13 @@ class CollisionSystem {
             const e = enemies[i];
             if (!e.mesh || !e.mesh.visible || e.isDead || e.state === 'DEAD') continue;
             const pos = e.mesh.position;
+
+            // Only test static obstacles for mobs within active player radius (24m)
+            if (playerPos) {
+                const pDistSq = (pos.x - playerPos.x) * (pos.x - playerPos.x) + (pos.z - playerPos.z) * (pos.z - playerPos.z);
+                if (pDistSq > 24 * 24) continue;
+            }
+
             const r = e.radius || 0.45;
 
             this.resolveObstacles(pos, r, pos.y, pos.y + 1.8);

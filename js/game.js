@@ -18,8 +18,9 @@ class DarkSoulsGame {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
         // Adaptive High-FPS Resolution: Default to 60 FPS Turbo Mode for ultra-smooth 60 FPS
+        const isMobile = (typeof window !== 'undefined') && (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth < 1024));
         const savedPerf = localStorage.getItem('darksouls_perf_mode');
-        this.performanceMode = savedPerf !== null ? (savedPerf === 'true') : true;
+        this.performanceMode = isMobile ? true : (savedPerf !== null ? (savedPerf === 'true') : true);
 
         const effectivePr = 1.0; // 1.0 CSS pixel ratio eliminates Retina GPU fillrate bottlenecks
         this.renderer.setPixelRatio(effectivePr);
@@ -1090,9 +1091,10 @@ class DarkSoulsGame {
         // Hitstop Impact Freeze (freezes render/simulation for 3 frames on successful hit)
         if (this.hitstopFrames > 0) {
             this.hitstopFrames--;
-            this.renderer.render(this.scene, this.camera);
-            if (this.postProcessing && this.postProcessingEnabled) {
-                this.postProcessing.render();
+            if (!this.performanceMode && this.postProcessingEnabled && this.postProcessing) {
+                this.postProcessing.render(0.016);
+            } else {
+                this.renderer.render(this.scene, this.camera);
             }
             return;
         }

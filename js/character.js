@@ -509,20 +509,21 @@ class DarkSoulsCharacters {
 
         // 6. Dragonslayer Ornstein (Lion-Crested Royal Gold)
         this.ornsteinGoldMat = new THREE.MeshStandardMaterial({
-            color: 0xd4af37,
-            metalness: 0.92,
-            roughness: 0.22
+            color: 0x9b7a32,
+            metalness: 0.42,
+            roughness: 0.52
         });
         this.ornsteinPlumeMat = new THREE.MeshStandardMaterial({
-            color: 0xbb1122,
-            roughness: 0.85
+            color: 0x6e141c,
+            roughness: 0.92,
+            metalness: 0.08
         });
 
         // 7. Executioner Smough (Gilded Grotesque Armor)
         this.smoughGoldMat = new THREE.MeshStandardMaterial({
-            color: 0xc89830,
-            metalness: 0.88,
-            roughness: 0.28
+            color: 0x8a6a2a,
+            metalness: 0.45,
+            roughness: 0.48
         });
 
         // 8. Knight Artorias (Abyss Corrupted Plate & Cobalt Cloak)
@@ -4625,96 +4626,194 @@ class DarkSoulsCharacters {
         bodyGroup.position.y = 2.1;
         root.add(bodyGroup);
 
-        // Slender golden lion plate cuirass
-        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.58, 1.5, 10), this.ornsteinGoldMat);
+        // 1. Lion-Crested Gilded Cuirass (Layered pectoral plates & waist faulds)
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.48, 1.35, 10), this.ornsteinGoldMat);
         torso.castShadow = true;
         bodyGroup.add(torso);
 
-        // Golden Lion Helmet with flowing Crimson Plume
+        // Pectoral Lion Ridge
+        const chestPlate = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.48, 0.35), this.ornsteinGoldMat);
+        chestPlate.position.set(0, 0.28, 0.16);
+        chestPlate.castShadow = true;
+        torso.add(chestPlate);
+
+        // Gilded waist faulds / tassets protecting hips
+        const tassets = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.58, 0.42, 8), this.ornsteinGoldMat);
+        tassets.position.set(0, -0.65, 0);
+        tassets.castShadow = true;
+        torso.add(tassets);
+
+        // 2. Sculpted Lion Helmet & Flowing Crimson Plume
         const headGroup = new THREE.Group();
-        headGroup.position.set(0, 1.05, 0);
+        headGroup.position.set(0, 0.98, 0);
         torso.add(headGroup);
 
-        const helm = new THREE.Mesh(new THREE.ConeGeometry(0.38, 0.7, 8), this.ornsteinGoldMat);
-        helm.castShadow = true;
-        headGroup.add(helm);
+        const helmDome = new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 8), this.ornsteinGoldMat);
+        helmDome.scale.set(0.9, 1.1, 1.05);
+        helmDome.castShadow = true;
+        headGroup.add(helmDome);
 
-        // Long flowing red tassel plume
+        // Lion snout & visor beak
+        const visor = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.22, 0.26), this.ornsteinGoldMat);
+        visor.position.set(0, -0.06, 0.22);
+        visor.castShadow = true;
+        headGroup.add(visor);
+
+        // Dark recessed eye slit
+        const eyeSlit = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.035, 0.05), new THREE.MeshBasicMaterial({ color: 0x110e08 }));
+        eyeSlit.position.set(0, 0.01, 0.34);
+        headGroup.add(eyeSlit);
+
+        // Lion cheek crests
+        const crestL = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.26, 4), this.ornsteinGoldMat);
+        crestL.position.set(-0.24, 0.14, 0.08);
+        crestL.rotation.z = 0.5;
+        headGroup.add(crestL);
+        const crestR = crestL.clone();
+        crestR.position.x = 0.24;
+        crestR.rotation.z = -0.5;
+        headGroup.add(crestR);
+
+        // Flowing Crimson Plume (curved gracefully down the back of helm)
         const plumeGroup = new THREE.Group();
-        plumeGroup.position.set(0, 0.35, -0.2);
+        plumeGroup.position.set(0, 0.26, -0.16);
         headGroup.add(plumeGroup);
-        const plume = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.22, 1.1, 6), this.ornsteinPlumeMat);
-        plume.rotation.x = -0.7;
-        plumeGroup.add(plume);
 
-        // Curved golden pauldrons
-        const pauldL = new THREE.Mesh(new THREE.SphereGeometry(0.42, 8, 8), this.ornsteinGoldMat);
-        pauldL.position.set(-0.8, 0.5, 0);
+        const plume1 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.15, 0.55, 6), this.ornsteinPlumeMat);
+        plume1.position.set(0, -0.08, -0.18);
+        plume1.rotation.x = -0.75;
+        plumeGroup.add(plume1);
+
+        const plume2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.12, 0.45, 6), this.ornsteinPlumeMat);
+        plume2.position.set(0, -0.32, -0.42);
+        plume2.rotation.x = -1.15;
+        plumeGroup.add(plume2);
+
+        // 3. Ornate Layered Pauldrons
+        const pauldGeo = new THREE.CylinderGeometry(0.22, 0.38, 0.45, 8);
+        const pauldL = new THREE.Mesh(pauldGeo, this.ornsteinGoldMat);
+        pauldL.position.set(-0.68, 0.45, 0);
+        pauldL.rotation.z = 0.35;
+        pauldL.castShadow = true;
         torso.add(pauldL);
-        const pauldR = pauldL.clone();
-        pauldR.position.x = 0.8;
+
+        const pauldR = new THREE.Mesh(pauldGeo, this.ornsteinGoldMat);
+        pauldR.position.set(0.68, 0.45, 0);
+        pauldR.rotation.z = -0.35;
+        pauldR.castShadow = true;
         torso.add(pauldR);
 
-        // Right Arm wielding Dragonslayer Cross-Spear
+        // 4. Right Arm & Dragonslayer Cross-Spear
         const rightShoulder = new THREE.Group();
-        rightShoulder.position.set(0.75, 0.45, 0);
+        rightShoulder.position.set(0.72, 0.38, 0);
         torso.add(rightShoulder);
-        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.2, 0.95, 6), this.ornsteinGoldMat);
-        rArm.position.y = -0.48;
-        rightShoulder.add(rArm);
+
+        const rBicep = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.65, 6), this.ornsteinGoldMat);
+        rBicep.position.y = -0.35;
+        rBicep.castShadow = true;
+        rightShoulder.add(rBicep);
+
+        const rForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.18, 0.65, 6), this.ornsteinGoldMat);
+        rForearm.position.y = -0.85;
+        rForearm.castShadow = true;
+        rightShoulder.add(rForearm);
 
         const weaponGroup = new THREE.Group();
-        weaponGroup.position.y = -0.95;
+        weaponGroup.position.set(0, -1.05, 0.1);
         rightShoulder.add(weaponGroup);
 
-        const spearShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 4.2, 8), this.ornsteinGoldMat);
-        spearShaft.position.y = 1.4;
+        // Ash wood polearm shaft
+        const shaftMat = new THREE.MeshStandardMaterial({ color: 0x221810, roughness: 0.85 });
+        const spearShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 3.8, 8), shaftMat);
+        spearShaft.position.y = 1.2;
+        spearShaft.castShadow = true;
         weaponGroup.add(spearShaft);
 
-        const spearTip = new THREE.Mesh(new THREE.ConeGeometry(0.22, 1.2, 6), this.steelMat);
-        spearTip.position.y = 3.6;
-        spearTip.castShadow = true;
-        weaponGroup.add(spearTip);
+        // Crossguard lion boss & cross prongs
+        const crossBoss = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.28, 0.24), this.ornsteinGoldMat);
+        crossBoss.position.y = 2.9;
+        weaponGroup.add(crossBoss);
 
-        // Crossguard prongs
-        const prongL = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.1, 0.1), this.ornsteinGoldMat);
-        prongL.position.y = 3.0;
-        weaponGroup.add(prongL);
+        const crossWings = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.08, 0.08), this.ornsteinGoldMat);
+        crossWings.position.y = 2.9;
+        weaponGroup.add(crossWings);
 
-        // Lightning spark aura
-        const spearLight = new THREE.PointLight(0xffea00, 2.5, 10);
+        // Razor diamond thrusting spearhead
+        const spearHead = new THREE.Mesh(new THREE.ConeGeometry(0.14, 1.25, 4), this.steelMat);
+        spearHead.position.y = 3.65;
+        spearHead.castShadow = true;
+        weaponGroup.add(spearHead);
+
+        // Lightning point light
+        const spearLight = new THREE.PointLight(0xffea00, 1.5, 8);
         spearLight.position.set(0, 3.5, 0);
         weaponGroup.add(spearLight);
 
-        // Left Arm (Gauntleted guard)
+        // 5. Left Arm (Gauntleted Guard)
         const leftShoulder = new THREE.Group();
-        leftShoulder.position.set(-0.75, 0.45, 0);
+        leftShoulder.position.set(-0.72, 0.38, 0);
         torso.add(leftShoulder);
-        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.2, 0.95, 6), this.ornsteinGoldMat);
-        lArm.position.y = -0.48;
-        leftShoulder.add(lArm);
 
-        // Legs
+        const lBicep = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.65, 6), this.ornsteinGoldMat);
+        lBicep.position.y = -0.35;
+        lBicep.castShadow = true;
+        leftShoulder.add(lBicep);
+
+        const lForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.18, 0.65, 6), this.ornsteinGoldMat);
+        lForearm.position.y = -0.85;
+        lForearm.castShadow = true;
+        leftShoulder.add(lForearm);
+
+        // 6. Articulated Legs (Cuisses, Poleyn Knees, Greaves & Sabatons)
         const rightHip = new THREE.Group();
-        rightHip.position.set(0.35, -0.75, 0);
+        rightHip.position.set(0.32, -0.72, 0);
         torso.add(rightHip);
-        const rLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.25, 1.3, 6), this.ornsteinGoldMat);
-        rLeg.position.y = -0.65;
-        rightHip.add(rLeg);
+
+        const rThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.21, 0.75, 6), this.ornsteinGoldMat);
+        rThigh.position.y = -0.4;
+        rThigh.castShadow = true;
+        rightHip.add(rThigh);
+
+        const rKnee = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.22, 0.18), this.ornsteinGoldMat);
+        rKnee.position.set(0, -0.82, 0.08);
+        rightHip.add(rKnee);
+
+        const rCalf = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.15, 0.75, 6), this.ornsteinGoldMat);
+        rCalf.position.y = -1.22;
+        rCalf.castShadow = true;
+        rightHip.add(rCalf);
+
+        const rBoot = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.16, 0.44), this.ornsteinGoldMat);
+        rBoot.position.set(0, -1.62, 0.08);
+        rightHip.add(rBoot);
 
         const leftHip = new THREE.Group();
-        leftHip.position.set(-0.35, -0.75, 0);
+        leftHip.position.set(-0.32, -0.72, 0);
         torso.add(leftHip);
-        const lLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.25, 1.3, 6), this.ornsteinGoldMat);
-        lLeg.position.y = -0.65;
-        leftHip.add(lLeg);
+
+        const lThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.21, 0.75, 6), this.ornsteinGoldMat);
+        lThigh.position.y = -0.4;
+        lThigh.castShadow = true;
+        leftHip.add(lThigh);
+
+        const lKnee = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.22, 0.18), this.ornsteinGoldMat);
+        lKnee.position.set(0, -0.82, 0.08);
+        leftHip.add(lKnee);
+
+        const lCalf = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.15, 0.75, 6), this.ornsteinGoldMat);
+        lCalf.position.y = -1.22;
+        lCalf.castShadow = true;
+        leftHip.add(lCalf);
+
+        const lBoot = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.16, 0.44), this.ornsteinGoldMat);
+        lBoot.position.set(0, -1.62, 0.08);
+        leftHip.add(lBoot);
 
         root.position.set(x, 0, z);
         root.userData = { bodyGroup, torso, headGroup, rightShoulder, leftShoulder, rightHip, leftHip, plumeGroup, weaponGroup, spearLight };
         this.scene.add(root);
         return root;
     }
-
     // 7. EXECUTIONER SMOUGH (Anor Londo Cathedral)
     createExecutionerSmough(x, z) {
         const root = new THREE.Group();

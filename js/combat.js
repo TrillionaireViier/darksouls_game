@@ -797,6 +797,9 @@ class DarkSoulsCombat {
                 // Safe sanctuary zone: no mobs within 14m of bonfire / player start
                 if (dist < 14.0) return;
 
+                // Boss Arena sanctuary: NEVER spawn regular hollow mobs inside the Boss Arena (z in [94, 168], x in [-18, 18])
+                if (pos[0] >= -18 && pos[0] <= 18 && pos[2] >= 94 && pos[2] <= 168) return;
+
                 // Starter Bridge Encounter: Max 3 hollows along the roadway
                 if (dist < 35.0) {
                     if (starterZoneCount >= 3) return;
@@ -2791,13 +2794,20 @@ class DarkSoulsCombat {
             const dz = playerPos.z - e.mesh.position.z;
             const distSq = dx * dx + dz * dz;
 
-            // Frustum Culling: Disable AI logic updates for off-screen mobs
-            const isVisibleInFrustum = this._frustum.containsPoint(e.mesh.position);
-            if (!isVisibleInFrustum && distSq > 18 * 18) {
+            // 1. Far distance culling (>28m): completely freeze AI & hide mesh
+            if (distSq > 28 * 28) {
                 if (e.mesh.visible) e.mesh.visible = false;
-                continue; // Skip AI logic update for off-screen mobs!
-            } else {
-                if (!e.mesh.visible && distSq <= 48 * 48) e.mesh.visible = true;
+                continue;
+            }
+
+            // 2. Frustum Culling: hide mesh if off-screen and not right next to player
+            const isVisibleInFrustum = this._frustum.containsPoint(e.mesh.position);
+            e.mesh.visible = isVisibleInFrustum || (distSq < 9 * 9);
+
+            // 3. Off-screen AI throttle: update off-screen enemies only once every 5 frames
+            if (!e.mesh.visible && distSq > 10 * 10) {
+                e._aiThrottle = (e._aiThrottle || 0) + 1;
+                if (e._aiThrottle % 5 !== 0) continue;
             }
 
             e.animTime += delta;
@@ -3215,9 +3225,12 @@ class DarkSoulsCombat {
 
         this.boss.animTime += delta;
 
-        // Smoothly face player
+        // Smoothly face player with shortest angular distance (prevents 360 spin jitter)
         const targetAngle = Math.atan2(this._scratchToPlayer.x, this._scratchToPlayer.z);
-        this.boss.mesh.rotation.y = THREE.MathUtils.lerp(this.boss.mesh.rotation.y, targetAngle, 0.1);
+        let angleDiff = (targetAngle - this.boss.mesh.rotation.y) % (Math.PI * 2);
+        if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+        if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        this.boss.mesh.rotation.y += angleDiff * Math.min(1.0, delta * 6.0);
 
         this.boss.cooldown -= delta;
 
@@ -3438,9 +3451,8 @@ class DarkSoulsCombat {
             }
 
             if (Math.sin(stride) > 0.96) {
-                if (!this.boss._lastStepShake || this.boss.animTime - this.boss._lastStepShake > 0.38) {
-                    this.boss._lastStepShake = this.boss.animTime;
-                    this.game.shakeCamera(0.14, 0.16);
+                if (!this.boss._lastStepTime || this.boss.animTime - this.boss._lastStepTime > 0.45) {
+                    this.boss._lastStepTime = this.boss.animTime;
                 }
             }
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
@@ -3767,7 +3779,6 @@ class DarkSoulsCombat {
     // ----------------------------------------------------
     updateGargoyleAI(delta, dist, targetAngle) {
         const u = this.boss.mesh.userData;
-        // Wing flapping & tail swaying animation
         if (u.leftWingGroup && u.rightWingGroup) {
             const flapSpeed = this.boss.isPhase2 ? 8 : 5;
             u.leftWingGroup.rotation.y = Math.sin(this.boss.animTime * flapSpeed) * 0.4;
@@ -3783,71 +3794,75 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._chargeDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
             this.boss.cooldown = this.boss.isPhase2 ? 2.0 : 2.8;
 
             const roll = Math.random();
             if (roll < 0.45) {
-                // Halberd Thrust & Aerial Lunge
+                this.boss.attackType = 'HALBERD_LUNGE';
                 this.audio.playSwing(false);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.25, 0.35);
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 5.2) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 450);
             } else if (roll < 0.8) {
-                // Fire Breath Stream (Iconic Gargoyle Flame)
+                this.boss.attackType = 'FIRE_BREATH';
                 this.audio.playFireBreath();
                 if (u.throatFlame) u.throatFlame.intensity = 4.0;
+            } else {
+                this.boss.attackType = 'TAIL_SWEEP';
+                this.audio.playSwing(true);
+            }
+        }
 
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'HALBERD_LUNGE') {
+                if (this.boss.attackTime < 0.45) {
+                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 4.0 * delta);
+                }
+                if (this.boss.attackTime >= 0.45 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.25, 0.35);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.2) {
+                        this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                    }
+                }
+                if (this.boss.attackTime >= 0.9) this.boss.isAttacking = false;
+            } else if (this.boss.attackType === 'FIRE_BREATH') {
                 const headPos = this.boss.mesh.position.clone().add(new THREE.Vector3(0, 2.5, 0));
                 const fireDir = new THREE.Vector3(Math.sin(targetAngle), -0.15, Math.cos(targetAngle)).normalize();
-
-                // Spray fire particles over 1.0 second
-                const fireInterval = setInterval(() => {
-                    if (this.boss && !this.boss.isDead && this.boss.isAttacking) {
-                        this.world.spawnFlameBreath(headPos, fireDir);
+                if (Math.floor(this.boss.attackTime * 8) !== Math.floor((this.boss.attackTime - delta) * 8)) {
+                    this.world.spawnFlameBreath(headPos, fireDir);
+                }
+                if (this.boss.attackTime >= 1.0 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    if (u.throatFlame) u.throatFlame.intensity = 0;
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    const toPlayer = new THREE.Vector3().subVectors(this.game.playerMesh.position, this.boss.mesh.position).normalize();
+                    const forward = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
+                    if (hitDist < 6.8 && forward.dot(toPlayer) > 0.3) {
+                        this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
                     }
-                }, 120);
-
-                setTimeout(() => {
-                    clearInterval(fireInterval);
-                    if (this.boss && !this.boss.isDead) {
-                        if (u.throatFlame) u.throatFlame.intensity = 0;
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        // Forward cone check
-                        const toPlayer = new THREE.Vector3().subVectors(this.game.playerMesh.position, this.boss.mesh.position).normalize();
-                        const forward = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
-                        if (hitDist < 6.8 && forward.dot(toPlayer) > 0.3) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 1000);
+                }
+                if (this.boss.attackTime >= 1.2) {
+                    if (u.throatFlame) u.throatFlame.intensity = 0;
+                    this.boss.isAttacking = false;
+                }
             } else {
-                // Tail-Axe Sweep
-                this.audio.playSwing(true);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.3, 0.4);
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 4.2) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.75), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
+                if (u.tailGroup) u.tailGroup.rotation.y = Math.sin(this.boss.attackTime * 10) * 1.2;
+                if (this.boss.attackTime >= 0.5 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.3, 0.4);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.2) {
+                        this.damagePlayer(Math.round(this.boss.damage * 0.75), this.boss.mesh.position);
                     }
-                }, 500);
+                }
+                if (this.boss.attackTime >= 0.95) this.boss.isAttacking = false;
             }
         }
     }
 
-    // ----------------------------------------------------
-    // BOSS 3: CAPRA DEMON AI (Dual Jagged Machetes & Jumping Slams)
-    // ----------------------------------------------------
     updateCapraAI(delta, dist, targetAngle) {
         if (dist > 3.6 && !this.boss.isAttacking) {
             const speed = this.boss.isPhase2 ? 4.6 : 3.4;
@@ -3855,61 +3870,64 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._hit2 = false;
+            this.boss._chargeDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
             this.boss.cooldown = this.boss.isPhase2 ? 1.6 : 2.4;
 
             const roll = Math.random();
             if (roll < 0.55) {
-                // Leaping Dual Overhead Chop
+                this.boss.attackType = 'JUMP_CHOP';
                 this.audio.playBossRoar();
-                // Forward jump burst
-                const jumpDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
-                this.boss.mesh.position.addScaledVector(jumpDir, 2.0);
-
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.5, 0.65);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 4.5) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 580);
             } else {
-                // Dual Machete Flurry (Double Slice)
+                this.boss.attackType = 'FLURRY';
                 this.audio.playSwing(false);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 3.8) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.5), this.boss.mesh.position);
-                        }
-                    }
-                }, 220);
+            }
+        }
 
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playSwing(true);
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 4.0) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.65), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'JUMP_CHOP') {
+                if (this.boss.attackTime < 0.58) {
+                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 3.8 * delta);
+                    this.boss.mesh.position.y = Math.sin((this.boss.attackTime / 0.58) * Math.PI) * 1.8;
+                }
+                if (this.boss.attackTime >= 0.58 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.boss.mesh.position.y = 0;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.45, 0.55);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.5) {
+                        this.damagePlayer(this.boss.damage, this.boss.mesh.position);
                     }
-                }, 480);
+                }
+                if (this.boss.attackTime >= 1.0) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime >= 0.22 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 3.8) {
+                        this.damagePlayer(Math.round(this.boss.damage * 0.5), this.boss.mesh.position);
+                    }
+                }
+                if (this.boss.attackTime >= 0.48 && !this.boss._hit2) {
+                    this.boss._hit2 = true;
+                    this.audio.playSwing(true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.0) {
+                        this.damagePlayer(Math.round(this.boss.damage * 0.65), this.boss.mesh.position);
+                    }
+                }
+                if (this.boss.attackTime >= 0.85) this.boss.isAttacking = false;
             }
         }
     }
 
-    // ----------------------------------------------------
-    // BOSS 4: GREAT GREY WOLF SIF AI (Artorias Greatsword & 360° Spin)
-    // ----------------------------------------------------
     updateSifAI(delta, dist, targetAngle) {
         const u = this.boss.mesh.userData;
-        // 4-legged running animation
         if (u.frontLeft && u.frontRight && u.rearLeft && u.rearRight) {
             const runSpeed = 10;
             u.frontLeft.rotation.x = Math.sin(this.boss.animTime * runSpeed) * 0.45;
@@ -3927,68 +3945,67 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._hit2 = false;
+            this.boss._chargeDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
             this.boss.cooldown = this.boss.isPhase2 ? 2.2 : 3.0;
 
             const roll = Math.random();
             if (roll < 0.6) {
-                // ICONIC 360° ARTORIAS GREATSWORD WHIRLWIND SPIN!
+                this.boss.attackType = 'WHIRLWIND';
                 this.audio.playWolfHowl();
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playSwing(true);
-                        this.game.shakeCamera(0.4, 0.55);
-
-                        // Full 360 sweep visual burst
-                        this.boss.mesh.rotation.y += Math.PI * 2;
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 5.8) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-
-                        // Phase 2: Follow-up second spin!
-                        if (this.boss.isPhase2) {
-                            setTimeout(() => {
-                                if (this.boss && !this.boss.isDead) {
-                                    this.audio.playSwing(true);
-                                    this.game.shakeCamera(0.4, 0.5);
-                                    const hitDist2 = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                                    if (hitDist2 < 5.8) {
-                                        this.damagePlayer(Math.round(this.boss.damage * 0.8), this.boss.mesh.position);
-                                    }
-                                    this.boss.isAttacking = false;
-                                }
-                            }, 450);
-                        } else {
-                            this.boss.isAttacking = false;
-                        }
-                    }
-                }, 400);
             } else {
-                // Leaping Overhead Sword Pounce
-                const jumpDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
-                this.boss.mesh.position.addScaledVector(jumpDir, 3.2);
+                this.boss.attackType = 'POUNCE';
                 this.audio.playSwing(false);
+            }
+        }
 
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.35, 0.45);
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 4.8) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'WHIRLWIND') {
+                this.boss.mesh.rotation.y += delta * 12;
+                if (this.boss.attackTime >= 0.4 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.audio.playSwing(true);
+                    this.game.shakeCamera(0.35, 0.45);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.8) {
+                        this.damagePlayer(this.boss.damage, this.boss.mesh.position);
                     }
-                }, 420);
+                }
+                if (this.boss.isPhase2 && this.boss.attackTime >= 0.85 && !this.boss._hit2) {
+                    this.boss._hit2 = true;
+                    this.audio.playSwing(true);
+                    this.game.shakeCamera(0.35, 0.45);
+                    const hitDist2 = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist2 < 5.8) {
+                        this.damagePlayer(Math.round(this.boss.damage * 0.8), this.boss.mesh.position);
+                    }
+                }
+                const maxDur = this.boss.isPhase2 ? 1.3 : 0.8;
+                if (this.boss.attackTime >= maxDur) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime < 0.42) {
+                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 5.5 * delta);
+                    this.boss.mesh.position.y = Math.sin((this.boss.attackTime / 0.42) * Math.PI) * 1.5;
+                }
+                if (this.boss.attackTime >= 0.42 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.boss.mesh.position.y = 0;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.35, 0.45);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.8) {
+                        this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
+                    }
+                }
+                if (this.boss.attackTime >= 0.8) this.boss.isAttacking = false;
             }
         }
     }
 
-    // ----------------------------------------------------
-    // BOSS 5: GWYN, LORD OF CINDER AI (Sunlight Combos & Sun Burst)
-    // ----------------------------------------------------
     updateGwynAI(delta, dist, targetAngle) {
         if (dist > 3.8 && !this.boss.isAttacking) {
             const speed = this.boss.isPhase2 ? 4.8 : 3.8;
@@ -3996,83 +4013,72 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._hit2 = false;
+            this.boss._hit3 = false;
+            this.boss._chargeDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
             this.boss.cooldown = this.boss.isPhase2 ? 1.5 : 2.2;
 
             const roll = Math.random();
             if (roll < 0.5) {
-                // 3-HIT FLAMING SUNLIGHT COMBO
-                // Hit 1: Horizontal slash
+                this.boss.attackType = 'SUNLIGHT_COMBO';
                 this.audio.playSwing(false);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 4.0) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.4), this.boss.mesh.position);
-                        }
-                    }
-                }, 200);
-
-                // Hit 2: Upward cross cut
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playSwing(false);
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 4.0) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.4), this.boss.mesh.position);
-                        }
-                    }
-                }, 440);
-
-                // Hit 3: Overhead flame strike
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playSunlightFlame();
-                        this.game.shakeCamera(0.4, 0.5);
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 4.5) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.7), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 720);
             } else if (roll < 0.8) {
-                // RADIANT SUNLIGHT BURST (Golden Shockwave Ring)
+                this.boss.attackType = 'SUNLIGHT_BURST';
                 this.audio.playSunlightFlame();
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.5, 0.65);
-                        this.world.spawnSunlightBurst(this.boss.mesh.position);
-
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 5.5) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 450);
             } else {
-                // Lunging Flame Thrust (Fast gap closer)
-                const thrustDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
-                this.boss.mesh.position.addScaledVector(thrustDir, 3.0);
+                this.boss.attackType = 'FLAME_THRUST';
                 this.audio.playSwing(true);
+            }
+        }
 
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.3, 0.4);
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 4.2) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.85), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 350);
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'SUNLIGHT_COMBO') {
+                if (this.boss.attackTime >= 0.20 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.0) this.damagePlayer(Math.round(this.boss.damage * 0.4), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.44 && !this.boss._hit2) {
+                    this.boss._hit2 = true;
+                    this.audio.playSwing(false);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.0) this.damagePlayer(Math.round(this.boss.damage * 0.4), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.72 && !this.boss._hit3) {
+                    this.boss._hit3 = true;
+                    this.audio.playSunlightFlame();
+                    this.game.shakeCamera(0.4, 0.5);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.5) this.damagePlayer(Math.round(this.boss.damage * 0.7), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.05) this.boss.isAttacking = false;
+            } else if (this.boss.attackType === 'SUNLIGHT_BURST') {
+                if (this.boss.attackTime >= 0.45 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.4, 0.55);
+                    this.world.spawnSunlightBurst(this.boss.mesh.position);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.5) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.85) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime < 0.35) {
+                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 6.0 * delta);
+                }
+                if (this.boss.attackTime >= 0.35 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.3, 0.4);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.2) this.damagePlayer(Math.round(this.boss.damage * 0.85), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.7) this.boss.isAttacking = false;
             }
         }
     }
 
-    // ----------------------------------------------------
-    // BOSS 4: GRAVELORD NITO AI (Miasma Nova, Sword Dance, Cleaves)
-    // ----------------------------------------------------
     updateNitoAI(delta, dist, targetAngle) {
         const u = this.boss.mesh.userData;
         if (u.maskFather) u.maskFather.rotation.y = Math.sin(this.boss.animTime * 2.0) * 0.25;
@@ -4083,85 +4089,73 @@ class DarkSoulsCombat {
             const speed = this.boss.isPhase2 ? 3.2 : 2.2;
             this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
-
-            if (Math.sin(this.boss.animTime * 3) > 0.95) {
-                this.game.shakeCamera(0.06, 0.1);
-            }
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
             this.boss.cooldown = this.boss.isPhase2 ? 1.6 : 2.4;
 
             const roll = Math.random();
             if (roll < 0.45) {
-                // GRAVELORD GREATSWORD SWEEPING CLEAVE
+                this.boss.attackType = 'CLEAVE';
                 if (u.rightShoulder) {
                     u.rightShoulder.rotation.x = -0.8;
                     u.rightShoulder.rotation.y = 0.5;
                 }
                 this.audio.playSwing(true);
-
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        if (u.rightShoulder) {
-                            u.rightShoulder.rotation.x = 1.2;
-                            u.rightShoulder.rotation.y = -0.6;
-                        }
-                        this.game.shakeCamera(0.35, 0.45);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 5.2) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        setTimeout(() => {
-                            if (u.rightShoulder) u.rightShoulder.rotation.set(0, 0, 0);
-                            this.boss.isAttacking = false;
-                        }, 300);
-                    }
-                }, 650);
             } else if (roll < 0.75) {
-                // GRAVELORD SWORD DANCE (Toxic red spikes erupt beneath player)
+                this.boss.attackType = 'SWORD_DANCE';
                 this.audio.playBossRoar();
                 this.game.showNotification("GRAVELORD SWORD DANCE ERUPTION!");
-
-                const targetPos = this.game.playerMesh.position.clone();
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.48, 0.6);
-                        this.world.spawnSunlightBurst(targetPos);
-
-                        const hitDist = this.game.playerMesh.position.distanceTo(targetPos);
-                        if (hitDist < 3.2) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.9), targetPos);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 850);
+                this.boss._targetPos = this.game.playerMesh.position.clone();
             } else {
-                // MIASMA DEATH NOVA (360 degree dark burst)
+                this.boss.attackType = 'MIASMA_NOVA';
                 this.game.showNotification("MIASMA DEATH NOVA!");
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.55, 0.75);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
+            }
+        }
 
-                        const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
-                        if (hitDist < 6.2) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'CLEAVE') {
+                if (this.boss.attackTime >= 0.65 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    if (u.rightShoulder) {
+                        u.rightShoulder.rotation.x = 1.2;
+                        u.rightShoulder.rotation.y = -0.6;
                     }
-                }, 900);
+                    this.game.shakeCamera(0.35, 0.45);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.2) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.95) {
+                    if (u.rightShoulder) u.rightShoulder.rotation.set(0, 0, 0);
+                    this.boss.isAttacking = false;
+                }
+            } else if (this.boss.attackType === 'SWORD_DANCE') {
+                if (this.boss.attackTime >= 0.85 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.4, 0.55);
+                    const target = this.boss._targetPos || this.boss.mesh.position;
+                    this.world.spawnSunlightBurst(target);
+                    const hitDist = this.game.playerMesh.position.distanceTo(target);
+                    if (hitDist < 3.2) this.damagePlayer(Math.round(this.boss.damage * 0.9), target);
+                }
+                if (this.boss.attackTime >= 1.2) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime >= 0.9 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.5, 0.65);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 6.2) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.35) this.boss.isAttacking = false;
             }
         }
     }
 
-    // ----------------------------------------------------
-    // 10 NEW BOSSES AI BEHAVIORS
-    // ----------------------------------------------------
-
-    // 1. ASYLUM DEMON AI (Hammer Slam, Jump Butt-Crush)
     updateAsylumAI(delta, dist, targetAngle) {
         const u = this.boss.mesh.userData;
         if (u.leftWingGroup && u.rightWingGroup) {
@@ -4175,46 +4169,51 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
             this.boss.cooldown = this.boss.isPhase2 ? 1.8 : 2.5;
 
             const roll = Math.random();
             if (roll < 0.55) {
-                // Great Hammer Overhead Smash
+                this.boss.attackType = 'HAMMER_SMASH';
                 this.audio.playBossRoar();
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.45, 0.55);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 4.8) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 680);
             } else {
-                // ICONIC JUMP BUTT-STOMP (Rises into air, crashes down with shockwave)
+                this.boss.attackType = 'JUMP_STOMP';
                 this.audio.playBossRoar();
                 this.game.showNotification("ASYLUM DEMON JUMP STOMP!");
-                this.boss.mesh.position.y += 3.0; // Jump up
+            }
+        }
 
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.boss.mesh.position.y = 0; // Slam down!
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.6, 0.7);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 5.8) {
-                            this.damagePlayer(Math.round(this.boss.damage * 1.1), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 750);
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'HAMMER_SMASH') {
+                if (this.boss.attackTime >= 0.68 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.45, 0.55);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.8) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.1) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime < 0.75) {
+                    this.boss.mesh.position.y = Math.sin((this.boss.attackTime / 0.75) * Math.PI) * 3.0;
+                }
+                if (this.boss.attackTime >= 0.75 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.boss.mesh.position.y = 0;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.55, 0.65);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.8) this.damagePlayer(Math.round(this.boss.damage * 1.1), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.3) this.boss.isAttacking = false;
             }
         }
     }
 
-    // 2. GAPING DRAGON AI (Ribcage Maw Chomp, Tail Swipe & Acid Vomit)
     updateGapingAI(delta, dist, targetAngle) {
         const u = this.boss.mesh.userData;
         if (u.tailGroup) u.tailGroup.rotation.y = Math.sin(this.boss.animTime * 3) * 0.4;
@@ -4229,44 +4228,50 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._chargeDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
             this.boss.cooldown = this.boss.isPhase2 ? 2.0 : 2.8;
 
             const roll = Math.random();
             if (roll < 0.5) {
-                // Gaping Maw Charge & Tooth Chomp
+                this.boss.attackType = 'CHOMP';
                 this.audio.playBossRoar();
                 this.game.showNotification("GAPING DRAGON RIBCAGE CHOMP!");
-                const chargeDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
-                this.boss.mesh.position.addScaledVector(chargeDir, 3.0);
-
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.5, 0.6);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 5.5) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 600);
             } else {
-                // Spiked Tail Sweep
+                this.boss.attackType = 'TAIL_SWEEP';
                 this.audio.playSwing(true);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.35, 0.45);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 4.8) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.8), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 450);
+            }
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'CHOMP') {
+                if (this.boss.attackTime < 0.6) {
+                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 5.0 * delta);
+                }
+                if (this.boss.attackTime >= 0.6 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.4, 0.5);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.5) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.2) this.boss.isAttacking = false;
+            } else {
+                if (u.tailGroup) u.tailGroup.rotation.y = Math.sin(this.boss.attackTime * 8) * 1.2;
+                if (this.boss.attackTime >= 0.45 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.3, 0.4);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.8) this.damagePlayer(Math.round(this.boss.damage * 0.8), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.9) this.boss.isAttacking = false;
             }
         }
     }
 
-    // 3. CHAOS WITCH QUELAAG AI (Flaming Furysword & Lava Pools)
     updateQuelaagAI(delta, dist, targetAngle) {
         const u = this.boss.mesh.userData;
         if (u.legGroups) {
@@ -4281,56 +4286,57 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._hit2 = false;
             this.boss.cooldown = this.boss.isPhase2 ? 1.6 : 2.3;
 
             const roll = Math.random();
             if (roll < 0.6) {
-                // Furysword 2-Hit Blazing Slash
+                this.boss.attackType = 'FURYSWORD';
                 this.audio.playSwing(false);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 4.2) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.5), this.boss.mesh.position);
-                        }
-                    }
-                }, 250);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playSwing(true);
-                        this.game.shakeCamera(0.3, 0.4);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 4.5) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.7), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 520);
             } else {
-                // Magma Lava Pool Spit
+                this.boss.attackType = 'MAGMA';
                 this.audio.playSunlightFlame();
                 this.game.showNotification("QUELAAG CHAOS MAGMA ERUPTION!");
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.world.spawnSunlightBurst(this.boss.mesh.position);
-                        this.game.shakeCamera(0.45, 0.55);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 5.4) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 600);
+            }
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'FURYSWORD') {
+                if (this.boss.attackTime >= 0.25 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.2) this.damagePlayer(Math.round(this.boss.damage * 0.5), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.52 && !this.boss._hit2) {
+                    this.boss._hit2 = true;
+                    this.audio.playSwing(true);
+                    this.game.shakeCamera(0.3, 0.4);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.5) this.damagePlayer(Math.round(this.boss.damage * 0.7), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.85) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime >= 0.6 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.world.spawnSunlightBurst(this.boss.mesh.position);
+                    this.game.shakeCamera(0.4, 0.5);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.4) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.1) this.boss.isAttacking = false;
             }
         }
     }
 
-    // 4. MOONLIGHT BUTTERFLY AI (Luminescent Wings & Crystal Darts)
     updateButterflyAI(delta, dist, targetAngle) {
         const u = this.boss.mesh.userData;
         if (u.leftWingGroup && u.rightWingGroup) {
             u.leftWingGroup.rotation.y = Math.sin(this.boss.animTime * 6) * 0.45;
             u.rightWingGroup.rotation.y = -Math.sin(this.boss.animTime * 6) * 0.45;
         }
-
-        // Floating hovering motion
         this.boss.mesh.position.y = 3.6 + Math.sin(this.boss.animTime * 2) * 0.6;
 
         if (dist > 7.0 && !this.boss.isAttacking) {
@@ -4339,164 +4345,193 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
             this.boss.cooldown = 2.4;
-
-            // Homing Magic Crystal Darts
             this.audio.playBellToll();
             this.game.showNotification("MOONLIGHT HOMING CRYSTAL DARTS!");
+        }
 
-            setTimeout(() => {
-                if (this.boss && !this.boss.isDead) {
-                    this.world.spawnHitSparks(this.boss.mesh.position, true);
-                    this.game.shakeCamera(0.25, 0.35);
-                    if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 9.0) {
-                        this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                    }
-                    this.boss.isAttacking = false;
-                }
-            }, 700);
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.7 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.world.spawnHitSparks(this.boss.mesh.position, true);
+                this.game.shakeCamera(0.2, 0.3);
+                const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                if (hitDist < 9.0) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.1) this.boss.isAttacking = false;
         }
     }
 
-    // 5. IRON GOLEM AI (Core Greataxe & Wind Wave)
     updateIronGolemAI(delta, dist, targetAngle) {
         if (dist > 4.2 && !this.boss.isAttacking) {
             const speed = this.boss.isPhase2 ? 3.2 : 2.2;
             this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
-            if (Math.sin(this.boss.animTime * 3) > 0.95) this.game.shakeCamera(0.06, 0.08);
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
             this.boss.cooldown = this.boss.isPhase2 ? 1.8 : 2.6;
 
             const roll = Math.random();
             if (roll < 0.55) {
-                // Giant Core Axe Slam
+                this.boss.attackType = 'AXE_SLAM';
                 this.audio.playBossSlam();
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.5, 0.6);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 4.8) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 650);
             } else {
-                // Vacuum Wind Wave Slice
+                this.boss.attackType = 'WIND_WAVE';
                 this.audio.playSwing(true);
                 this.game.showNotification("IRON GOLEM VACUUM WIND SLICE!");
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.4, 0.5);
-                        this.world.spawnHitSparks(this.boss.mesh.position, false);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 7.2) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.85), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 480);
+            }
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'AXE_SLAM') {
+                if (this.boss.attackTime >= 0.65 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.45, 0.55);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.8) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.15) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime >= 0.48 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.35, 0.45);
+                    this.world.spawnHitSparks(this.boss.mesh.position, false);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 7.2) this.damagePlayer(Math.round(this.boss.damage * 0.85), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.9) this.boss.isAttacking = false;
             }
         }
     }
 
-    // 6. DRAGONSLAYER ORNSTEIN AI (Lightning Spear & Supersonic Dash)
     updateOrnsteinAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        // Plume undulation
+        if (u.plumeGroup) {
+            u.plumeGroup.rotation.y = Math.sin(this.boss.animTime * 6) * 0.25;
+        }
+
         if (dist > 4.5 && !this.boss.isAttacking) {
             const speed = this.boss.isPhase2 ? 5.2 : 4.0;
             this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+
+            // Leg stride animation
+            if (u.rightHip && u.leftHip) {
+                const stride = Math.sin(this.boss.animTime * 8);
+                u.rightHip.rotation.x = stride * 0.55;
+                u.leftHip.rotation.x = -stride * 0.55;
+            }
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._chargeDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
             this.boss.cooldown = this.boss.isPhase2 ? 1.5 : 2.2;
 
             const roll = Math.random();
             if (roll < 0.6) {
-                // Supersonic Lightning Cross-Spear Thrust
+                this.boss.attackType = 'SUPERSONIC_THRUST';
                 this.audio.playSwing(false);
-                const dashDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
-                this.boss.mesh.position.addScaledVector(dashDir, 3.5);
-
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playParry();
-                        this.game.shakeCamera(0.35, 0.45);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 4.8) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 380);
             } else {
-                // Thunder Arc Jump Impale
+                this.boss.attackType = 'LIGHTNING_IMPALE';
                 this.audio.playBellToll();
                 this.game.showNotification("ORNSTEIN LIGHTNING IMPALE!");
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.48, 0.6);
-                        this.world.spawnSunlightBurst(this.boss.mesh.position);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 5.2) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 550);
+            }
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'SUPERSONIC_THRUST') {
+                if (this.boss.attackTime < 0.38) {
+                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 8.5 * delta);
+                }
+                if (this.boss.attackTime >= 0.38 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.audio.playParry();
+                    this.game.shakeCamera(0.3, 0.4);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.8) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.7) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime < 0.55) {
+                    this.boss.mesh.position.y = Math.sin((this.boss.attackTime / 0.55) * Math.PI) * 2.2;
+                }
+                if (this.boss.attackTime >= 0.55 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.boss.mesh.position.y = 0;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.45, 0.55);
+                    this.world.spawnSunlightBurst(this.boss.mesh.position);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.2) this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.95) this.boss.isAttacking = false;
             }
         }
     }
 
-    // 7. EXECUTIONER SMOUGH AI (Locomotive Hammer Charge & Butt Slam)
     updateSmoughAI(delta, dist, targetAngle) {
         if (dist > 4.2 && !this.boss.isAttacking) {
             const speed = this.boss.isPhase2 ? 3.8 : 2.8;
             this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
-            if (Math.sin(this.boss.animTime * 4) > 0.92) this.game.shakeCamera(0.08, 0.1);
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
             this.boss.cooldown = this.boss.isPhase2 ? 1.7 : 2.5;
 
             const roll = Math.random();
             if (roll < 0.55) {
-                // Colossal Hammer Sweep
+                this.boss.attackType = 'HAMMER_SWEEP';
                 this.audio.playSwing(true);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.5, 0.65);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 5.2) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 600);
             } else {
-                // SMOUGH LIGHTNING BUTT SLAM
+                this.boss.attackType = 'BUTT_SLAM';
                 this.audio.playBossRoar();
                 this.game.showNotification("SMOUGH LIGHTNING BUTT SLAM!");
-                this.boss.mesh.position.y += 2.5;
+            }
+        }
 
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.boss.mesh.position.y = 0;
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.65, 0.8);
-                        this.world.spawnSunlightBurst(this.boss.mesh.position);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 6.0) {
-                            this.damagePlayer(Math.round(this.boss.damage * 1.1), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 720);
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'HAMMER_SWEEP') {
+                if (this.boss.attackTime >= 0.6 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.45, 0.55);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.2) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.1) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime < 0.72) {
+                    this.boss.mesh.position.y = Math.sin((this.boss.attackTime / 0.72) * Math.PI) * 2.8;
+                }
+                if (this.boss.attackTime >= 0.72 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.boss.mesh.position.y = 0;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.55, 0.7);
+                    this.world.spawnSunlightBurst(this.boss.mesh.position);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 6.0) this.damagePlayer(Math.round(this.boss.damage * 1.1), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.25) this.boss.isAttacking = false;
             }
         }
     }
 
-    // 8. KNIGHT ARTORIAS AI (Somersault Abyss Slam & Piercing Thrust)
     updateArtoriasAI(delta, dist, targetAngle) {
         if (dist > 4.5 && !this.boss.isAttacking) {
             const speed = this.boss.isPhase2 ? 5.0 : 3.8;
@@ -4504,46 +4539,56 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._chargeDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
             this.boss.cooldown = this.boss.isPhase2 ? 1.6 : 2.2;
 
             const roll = Math.random();
             if (roll < 0.6) {
-                // ICONIC ARTORIAS TRIPLE SOMERSAULT ABYSS SLAM!
+                this.boss.attackType = 'SOMERSAULT_SLAM';
                 this.audio.playWolfHowl();
                 this.game.showNotification("ARTORIAS SOMERSAULT ABYSS SLAM!");
-                this.boss.mesh.rotation.x += Math.PI * 2; // Acrobatic forward flip
-
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.5, 0.65);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 5.2) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 520);
             } else {
-                // Piercing Abyss Thrust
+                this.boss.attackType = 'PIERCING_THRUST';
                 this.audio.playSwing(false);
-                const thrustDir = new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle));
-                this.boss.mesh.position.addScaledVector(thrustDir, 3.2);
+            }
+        }
 
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.35, 0.45);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 4.4) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.85), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 360);
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'SOMERSAULT_SLAM') {
+                if (this.boss.attackTime < 0.52) {
+                    this.boss.mesh.rotation.x += delta * (Math.PI * 2 / 0.52);
+                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 4.5 * delta);
+                    this.boss.mesh.position.y = Math.sin((this.boss.attackTime / 0.52) * Math.PI) * 2.2;
+                }
+                if (this.boss.attackTime >= 0.52 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.boss.mesh.position.y = 0;
+                    this.boss.mesh.rotation.x = 0;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.45, 0.55);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.2) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.95) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime < 0.36) {
+                    this.boss.mesh.position.addScaledVector(this.boss._chargeDir, 7.5 * delta);
+                }
+                if (this.boss.attackTime >= 0.36 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.3, 0.4);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.4) this.damagePlayer(Math.round(this.boss.damage * 0.85), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.7) this.boss.isAttacking = false;
             }
         }
     }
 
-    // 9. MANUS, FATHER OF THE ABYSS AI (Monstrous Claw Combos & Dark Beads)
     updateManusAI(delta, dist, targetAngle) {
         if (dist > 4.5 && !this.boss.isAttacking) {
             const speed = this.boss.isPhase2 ? 4.5 : 3.2;
@@ -4551,49 +4596,52 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+            this.boss._hit2 = false;
             this.boss.cooldown = this.boss.isPhase2 ? 1.6 : 2.4;
 
             const roll = Math.random();
             if (roll < 0.6) {
-                // 3-HIT DEMONIC CLAW RAKE & CRUSH
+                this.boss.attackType = 'CLAW_RAKE';
                 this.audio.playBossRoar();
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 4.8) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.45), this.boss.mesh.position);
-                        }
-                    }
-                }, 220);
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.55, 0.7);
-                        this.world.spawnHitSparks(this.boss.mesh.position, true);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 5.5) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.8), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 580);
             } else {
-                // DARK BEAD BARRAGE
+                this.boss.attackType = 'DARK_BEAD';
                 this.audio.playSunlightFlame();
                 this.game.showNotification("MANUS DARK BEAD VOID BARRAGE!");
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.45, 0.55);
-                        this.world.spawnSunlightBurst(this.boss.mesh.position);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 7.0) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 650);
+            }
+        }
+
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'CLAW_RAKE') {
+                if (this.boss.attackTime >= 0.22 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 4.8) this.damagePlayer(Math.round(this.boss.damage * 0.45), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.58 && !this.boss._hit2) {
+                    this.boss._hit2 = true;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.45, 0.55);
+                    this.world.spawnHitSparks(this.boss.mesh.position, true);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 5.5) this.damagePlayer(Math.round(this.boss.damage * 0.8), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 0.95) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime >= 0.65 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.4, 0.5);
+                    this.world.spawnSunlightBurst(this.boss.mesh.position);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 7.0) this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.1) this.boss.isAttacking = false;
             }
         }
     }
 
-    // 10. BLACK DRAGON KALAMEET AI (Black Flame & Calamity Telekinesis)
     updateKalameetAI(delta, dist, targetAngle) {
         const u = this.boss.mesh.userData;
         if (u.leftWingGroup && u.rightWingGroup) {
@@ -4607,41 +4655,48 @@ class DarkSoulsCombat {
             this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
         } else if (this.boss.cooldown <= 0 && !this.boss.isAttacking) {
             this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
             this.boss.cooldown = this.boss.isPhase2 ? 1.8 : 2.5;
 
             const roll = Math.random();
             if (roll < 0.5) {
-                // Black Dragon Flame Stream
+                this.boss.attackType = 'BLACK_FLAME';
                 this.audio.playFireBreath();
                 this.game.showNotification("KALAMEET BLACK FLAME BREATH!");
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        this.game.shakeCamera(0.4, 0.5);
-                        this.world.spawnFlameBreath(this.boss.mesh.position, new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle)));
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 6.8) {
-                            this.damagePlayer(this.boss.damage, this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 600);
             } else {
-                // CALAMITY EYE TELEKINESIS PULSE
+                this.boss.attackType = 'CALAMITY_CURSE';
                 this.audio.playWolfHowl();
                 this.game.showNotification("CALAMITY EYE TELEKINETIC CURSE!");
                 if (u.eyeLight) u.eyeLight.intensity = 8.0;
+            }
+        }
 
-                setTimeout(() => {
-                    if (this.boss && !this.boss.isDead) {
-                        if (u.eyeLight) u.eyeLight.intensity = 3.5;
-                        this.audio.playBossSlam();
-                        this.game.shakeCamera(0.55, 0.7);
-                        this.world.spawnSunlightBurst(this.game.playerMesh.position);
-                        if (this.game.playerMesh.position.distanceTo(this.boss.mesh.position) < 8.0) {
-                            this.damagePlayer(Math.round(this.boss.damage * 0.95), this.boss.mesh.position);
-                        }
-                        this.boss.isAttacking = false;
-                    }
-                }, 680);
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackType === 'BLACK_FLAME') {
+                if (this.boss.attackTime >= 0.6 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    this.game.shakeCamera(0.35, 0.45);
+                    this.world.spawnFlameBreath(this.boss.mesh.position, new THREE.Vector3(Math.sin(targetAngle), 0, Math.cos(targetAngle)));
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 6.8) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.1) this.boss.isAttacking = false;
+            } else {
+                if (this.boss.attackTime >= 0.68 && !this.boss._hit1) {
+                    this.boss._hit1 = true;
+                    if (u.eyeLight) u.eyeLight.intensity = 3.5;
+                    this.audio.playBossSlam();
+                    this.game.shakeCamera(0.45, 0.55);
+                    this.world.spawnSunlightBurst(this.game.playerMesh.position);
+                    const hitDist = this.game.playerMesh.position.distanceTo(this.boss.mesh.position);
+                    if (hitDist < 8.0) this.damagePlayer(Math.round(this.boss.damage * 0.95), this.boss.mesh.position);
+                }
+                if (this.boss.attackTime >= 1.2) {
+                    if (u.eyeLight) u.eyeLight.intensity = 0;
+                    this.boss.isAttacking = false;
+                }
             }
         }
     }
