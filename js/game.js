@@ -92,7 +92,6 @@ class DarkSoulsGame {
         this.playerMesh = this.charFactory.createPlayer();
         this.playerMesh.position.set(0, 0, 5); // Courtyard start near bonfire
         this.playerMesh.rotation.y = Math.PI; // Face forward into Lordran towards bonfire
-        this.heraldry.applyHeraldryTo3DPlayer();
         this.playerVelocity = new THREE.Vector3();
         this.moveSpeed = 4.8;
         this.sprintSpeed = 7.2;

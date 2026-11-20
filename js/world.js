@@ -1869,6 +1869,17 @@ class DarkSoulsWorld {
         return mesh;
     }
 
+    createSpotlight(x, y, z, targetX, targetY, targetZ, colorHex = 0xffaa44, intensity = 3.5, distance = 45, angle = 0.55) {
+        const spot = new THREE.SpotLight(colorHex, intensity, distance, angle, 0.5, 1.5);
+        spot.position.set(x, y, z);
+        const targetObj = new THREE.Object3D();
+        targetObj.position.set(x + targetX, y + targetY, z + targetZ);
+        this.scene.add(targetObj);
+        spot.target = targetObj;
+        this.scene.add(spot);
+        return spot;
+    }
+
     createGoldenBrazier(x, y, z, intensity = 2.2) {
         const flame = new THREE.Mesh(
             new THREE.DodecahedronGeometry(0.35),

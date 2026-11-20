@@ -11,9 +11,10 @@ class HeraldryNobilitySystem {
         this.audio = window.dsAudio;
 
         // 401. Tabard & Coat of Arms Customization State
+        this.customized = false;
         this.heraldry = {
-            tincture: 'gules',        // 'gules' (red), 'azure' (blue), 'sable' (black), 'vert' (green), 'purpure' (purple), 'or' (gold), 'argent' (silver)
-            sigil: 'lion',            // 'lion', 'sun', 'dragon', 'swords', 'crown', 'raven', 'tower'
+            tincture: 'azure',        // 'azure' (Astora royal blue), 'sable' (black), 'gules' (red), 'vert' (green), 'purpure' (purple), 'or' (gold), 'argent' (silver)
+            sigil: 'sun',             // 'sun', 'swords', 'dragon', 'crown', 'falcon', 'lion', 'tower'
             division: 'plain',        // 'plain', 'pale', 'fess', 'chevron', 'saltire', 'quartered'
             secondaryColor: 'or',     // Gold
             motto: 'Virtus In Aeternum'
@@ -95,6 +96,7 @@ class HeraldryNobilitySystem {
     // 401. TABARD & COAT OF ARMS RENDERING (CANVAS BLAZON ENGINE)
     // ----------------------------------------------------------------
     customizeHeraldry(tincture, sigil, division, secondaryColor) {
+        this.customized = true;
         this.heraldry.tincture = tincture || this.heraldry.tincture;
         this.heraldry.sigil = sigil || this.heraldry.sigil;
         this.heraldry.division = division || this.heraldry.division;
@@ -116,7 +118,7 @@ class HeraldryNobilitySystem {
 
         const colorMap = {
             gules: '#9b1c1c',      // Crimson
-            azure: '#1b3b6f',      // Royal Blue
+            azure: '#152b47',      // Astora Royal Blue
             sable: '#141416',      // Black
             vert: '#1e5e2e',       // Forest Green
             purpure: '#4d1e5e',    // Imperial Purple
@@ -124,7 +126,7 @@ class HeraldryNobilitySystem {
             argent: '#d9e2ec'      // Silver/White
         };
 
-        const primaryCol = colorMap[this.heraldry.tincture] || '#1b3b6f';
+        const primaryCol = colorMap[this.heraldry.tincture] || '#152b47';
         const secondaryCol = colorMap[this.heraldry.secondaryColor] || '#d4af37';
 
         // 1. Draw Field / Shield Partition
@@ -160,65 +162,70 @@ class HeraldryNobilitySystem {
             ctx.fillRect(0, h * 0.5, w * 0.5, h * 0.5);
         }
 
-        // 2. Gold/Silver Orle Border Frame
+        // 2. Gold/Silver Orle Border Frame with Rivets
         ctx.strokeStyle = secondaryCol;
         ctx.lineWidth = 20;
         ctx.strokeRect(10, 10, w - 20, h - 20);
 
-        // 3. Heraldic Charge / Sigil (Drawn in center)
+        // 3. Heraldic Charge / Sigil (Drawn in authentic medieval vector blazon style)
         ctx.save();
         ctx.translate(w * 0.5, h * 0.5);
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = 'rgba(0,0,0,0.6)';
-        ctx.shadowBlur = 12;
+        ctx.fillStyle = secondaryCol;
+        ctx.strokeStyle = secondaryCol;
 
-        if (this.heraldry.sigil === 'lion') {
-            // Bohemian Crowned Two-Tailed Lion
-            ctx.font = 'bold 220px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('🦁', 0, -10);
-        } else if (this.heraldry.sigil === 'sun') {
-            // Warrior of Sunlight Crest
-            ctx.font = 'bold 220px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('☀️', 0, -10);
-        } else if (this.heraldry.sigil === 'dragon') {
-            // Ancient Dragon Crest
-            ctx.font = 'bold 220px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('🐉', 0, -10);
+        if (this.heraldry.sigil === 'sun') {
+            // Warrior of Sunlight Radiant Sunburst
+            ctx.beginPath();
+            ctx.arc(0, 0, 50, 0, Math.PI * 2);
+            ctx.fill();
+            for (let i = 0; i < 16; i++) {
+                const angle = (i * Math.PI) / 8;
+                const r1 = 60, r2 = i % 2 === 0 ? 115 : 90;
+                ctx.lineWidth = 7;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(angle) * r1, Math.sin(angle) * r1);
+                ctx.lineTo(Math.cos(angle) * r2, Math.sin(angle) * r2);
+                ctx.stroke();
+            }
         } else if (this.heraldry.sigil === 'swords') {
-            // Crossed Broadswords
-            ctx.font = 'bold 220px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('⚔️', 0, -10);
+            // Crossed Knightly Broadswords
+            ctx.lineWidth = 14;
+            ctx.beginPath();
+            ctx.moveTo(-90, -90); ctx.lineTo(90, 90);
+            ctx.moveTo(90, -90); ctx.lineTo(-90, 90);
+            ctx.stroke();
+            // Guards
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(-50, -25); ctx.lineTo(-25, -50);
+            ctx.moveTo(50, -25); ctx.lineTo(25, -50);
+            ctx.stroke();
         } else if (this.heraldry.sigil === 'crown') {
-            // High Sovereign Crown
-            ctx.font = 'bold 220px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('👑', 0, -10);
-        } else if (this.heraldry.sigil === 'raven') {
-            // Velka Black Raven
-            ctx.font = 'bold 220px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('🦅', 0, -10);
+            // High Sovereign 3-Spire Crown
+            ctx.beginPath();
+            ctx.moveTo(-80, 40);
+            ctx.lineTo(-90, -35);
+            ctx.lineTo(-40, 5);
+            ctx.lineTo(0, -60);
+            ctx.lineTo(40, 5);
+            ctx.lineTo(90, -35);
+            ctx.lineTo(80, 40);
+            ctx.closePath();
+            ctx.fill();
         } else {
-            // Fortified Watchtower
-            ctx.font = 'bold 220px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('🏰', 0, -10);
+            // Sacred Astora Falcon & Cross
+            ctx.fillRect(-14, -100, 28, 200);
+            ctx.fillRect(-70, -40, 140, 26);
+            ctx.beginPath();
+            ctx.moveTo(0, -70); ctx.lineTo(25, -45); ctx.lineTo(0, -20); ctx.lineTo(-25, -45);
+            ctx.closePath();
+            ctx.fill();
         }
         ctx.restore();
     }
 
     applyHeraldryTo3DPlayer() {
+        if (!this.customized) return;
         if (!this.game || !this.game.character || !this.game.character.crestShieldMat) return;
         const newTex = new THREE.CanvasTexture(this.heraldryCanvas);
         this.game.character.crestShieldMat.map = newTex;
