@@ -2564,12 +2564,35 @@ class DarkSoulsCombat {
         this.isRolling = false;
         this.isDrinkingEstus = false;
 
+        // Choose random comical LOL animation style
+        const animNames = [
+            "THE DRAMATIC HOLLYWOOD SPIN FLOP",
+            "THE YEET / RAGDOLL CARTWHEEL LAUNCH",
+            "THE MELODRAMATIC SHAKESPEAREAN KNEEL",
+            "THE BREAKDANCE TURTLE SPIN",
+            "THE MATRIX LIMBO BACKFALL",
+            "THE SLAPSTICK BANANA PEEL SLIP"
+        ];
+        const styleIdx = Math.floor(Math.random() * animNames.length);
+        if (this.game) {
+            this.game.deathAnimStyle = styleIdx;
+            this.game.deathAnimName = animNames[styleIdx];
+            this.game.deathAnimTimer = 0;
+            this.game.deathAnimVelY = (styleIdx === 1) ? 5.8 : (styleIdx === 5 ? 3.5 : 0);
+        }
+
         // Store bloodstain with all current souls
         this.bloodstain = {
             souls: this.souls,
             pos: this.game.playerMesh.position.clone()
         };
+        const droppedSouls = this.souls;
         this.souls = 0;
+
+        // Spawn 3D Bloodstain & Lost Stuff Beacon in the world
+        if (this.game && this.game.spawnBloodstainMarker) {
+            this.game.spawnBloodstainMarker(this.bloodstain.pos, droppedSouls);
+        }
 
         if (this.game && this.game.triggerAutoSave) {
             this.game.triggerAutoSave('PLAYER_DEATH');

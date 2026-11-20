@@ -716,6 +716,17 @@
             opacity: 1;
         }
 
+        #death-quote-container {
+            opacity: 0;
+            transform: translateY(14px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s;
+        }
+
+        #death-screen.active #death-quote-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .btn-respawn:hover {
             border-color: #ff3333;
             color: #fff;
@@ -1733,10 +1744,25 @@
          CINEMATIC OVERLAYS
          ============================================== -->
 
-    <!-- YOU DIED SCREEN -->
+    <!-- YOU DIED SCREEN (WITH 300 DEATH QUOTES & LOST STUFF RESTS TRACKER) -->
     <div id="death-screen" class="cinematic-banner">
         <div class="death-title">YOU DIED</div>
-        <button class="btn-respawn" onclick="window.game.respawnPlayer()">[ SPACE ] RESPAWN AT BONFIRE</button>
+        <div id="death-quote-container" style="margin: 18px 0 10px 0; text-align: center; max-width: 720px; padding: 0 20px;">
+            <div id="death-quote-text" style="font-family: 'Cinzel', serif; font-size: clamp(1.0rem, 2.4vw, 1.3rem); color: #ffcccc; text-shadow: 0 0 18px rgba(255,40,40,0.7); font-style: italic; letter-spacing: 1px; line-height: 1.45;">
+                "Better luck next time, Chosen Undead..."
+            </div>
+            <div id="death-lost-stuff" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; background: rgba(35, 10, 10, 0.85); border: 1px solid #ff4444; padding: 6px 18px; border-radius: 20px; font-size: 0.82rem; color: #ffd276; box-shadow: 0 0 14px rgba(255,0,0,0.4);">
+                🩸 <span id="death-lost-stuff-text">And your lost stuff at this place rests (0 Souls)</span>
+            </div>
+            <div style="margin-top: 10px;">
+                <span id="death-anim-label" style="font-size: 0.72rem; color: #88ccff; text-transform: uppercase; letter-spacing: 1px; background: rgba(10,25,45,0.75); padding: 3px 12px; border-radius: 4px; border: 1px solid rgba(136,204,255,0.35);">🎬 LOL ANIMATION: THE DRAMATIC HOLLYWOOD SPIN FLOP</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+            <button class="btn-respawn" onclick="window.game.respawnPlayer()">[ SPACE ] RESPAWN AT BONFIRE</button>
+            <button class="btn-respawn" id="btn-next-death-quote" onclick="if(window.cycleDeathQuote)window.cycleDeathQuote()" style="border-color: #ffd700; color: #ffe680; background: rgba(50,40,15,0.85); box-shadow: 0 0 12px rgba(255,215,0,0.3);">🎲 NEXT QUOTE (1/300)</button>
+            <button class="btn-respawn" onclick="if(window.openDeathQuotesModal)window.openDeathQuotesModal()" style="border-color: #64b5f6; color: #bbdefb; background: rgba(15,35,60,0.85); box-shadow: 0 0 12px rgba(100,181,246,0.3);">📜 ALL 300 EPITAPHS</button>
+        </div>
     </div>
 
     <!-- BONFIRE LIT BANNER -->
@@ -1922,6 +1948,35 @@
             </div>
 
             <button class="btn-modal-close" onclick="closeCompendiumModal()" style="margin-top: 12px;">CLOSE COMPENDIUM</button>
+        </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- 300 DEATH SCREEN EPITAPHS & QUIPS MODAL              -->
+    <!-- ==================================================== -->
+    <div id="death-quotes-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="max-width: 780px; width: 92%; max-height: 88vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="color: #ff5555; font-size: 1.3rem; letter-spacing: 2px;">
+                💀 300 DEATH SCREEN EPITAPHS & QUIPS
+            </div>
+            <p style="font-size: 0.85rem; color: #b8a896; line-height: 1.4; text-align: center; margin: 0 0 10px 0;">
+                Complete compendium of 300 randomized death screen quotes, hilarious roasts, and lost stuff markers across Lordran.
+            </p>
+
+            <!-- Search and Filter Bar -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center;">
+                <input type="text" id="death-quotes-search-input" placeholder="🔍 Search 300 quotes (e.g. 'better luck', 'lost stuff', 'gravity', 'parry')..." 
+                       oninput="onDeathQuotesSearchInput(this.value)" 
+                       style="flex: 1; min-width: 220px; padding: 8px 12px; background: rgba(15, 12, 10, 0.9); border: 1px solid #7c4848; color: #fff; font-family: 'Cinzel', serif; font-size: 0.82rem; border-radius: 4px; outline: none;">
+                <button class="btn-fight-boss" onclick="if(window.cycleDeathQuote)window.cycleDeathQuote();" style="border-color: #ffd700; color: #ffe680; font-size: 0.74rem; padding: 7px 12px;">🎲 RANDOM QUOTE</button>
+            </div>
+
+            <!-- Quotes List Container -->
+            <div id="death-quotes-list-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 8px; max-height: 52vh; overflow-y: auto; padding-right: 4px;">
+                <!-- Populated dynamically by renderDeathQuotesGrid() -->
+            </div>
+
+            <button class="btn-modal-close" onclick="closeDeathQuotesModal()" style="margin-top: 12px;">RETURN TO BATTLE [ESC]</button>
         </div>
     </div>
 
@@ -4059,6 +4114,7 @@
                     <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800;">⚡ 60 FPS MODE</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openCompendiumModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">🗿 300 3D MODELS (ARMORS, NPCS, MOBS)</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDeathQuotesModal();" style="border-color: #ff5555; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">💀 300 DEATH EPITAPHS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 60 BOSS ROSTER</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 100 LOCATIONS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLoreCodexModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">📜 LORE (570 MOBS)</button>
@@ -5032,7 +5088,67 @@
     <script src="js/blacksmith_forge.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
     <script src="js/inventory_system.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
     <script src="js/compendium_300_models.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES_300_MODELS"></script>
+    <script src="js/death_quotes_300.js?v=20261120_300_DEATH_QUOTES"></script>
     <script src="js/game.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
+    <script>
+        // 300 Death Quotes UI Logic
+        window.openDeathQuotesModal = function() {
+            const modal = document.getElementById('death-quotes-modal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+            renderDeathQuotesGrid('');
+        };
+
+        window.closeDeathQuotesModal = function() {
+            const modal = document.getElementById('death-quotes-modal');
+            if (modal) modal.style.display = 'none';
+        };
+
+        window.onDeathQuotesSearchInput = function(query) {
+            renderDeathQuotesGrid(query);
+        };
+
+        window.renderDeathQuotesGrid = function(query) {
+            const container = document.getElementById('death-quotes-list-grid');
+            if (!container || !window.DARK_SOULS_DEATH_QUOTES) return;
+            const q = (query || '').toLowerCase().trim();
+            const quotes = window.DARK_SOULS_DEATH_QUOTES;
+            
+            let html = '';
+            quotes.forEach((text, idx) => {
+                const num = idx + 1;
+                if (!q || text.toLowerCase().includes(q) || num.toString().includes(q)) {
+                    html += `
+                        <div style="background: rgba(22, 16, 14, 0.85); border: 1px solid rgba(180, 50, 50, 0.35); border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.68rem; font-weight: 800; color: #ff8888; background: rgba(80, 20, 20, 0.6); padding: 2px 6px; border-radius: 3px; border: 1px solid #ff4444;">EPITAPH #${num}</span>
+                                <span style="font-size: 0.72rem; color: #ffd778;">🩸 LOST STUFF RESTS</span>
+                            </div>
+                            <div style="font-family: 'Cinzel', serif; font-size: 0.82rem; color: #f0e0d0; line-height: 1.35; font-style: italic;">
+                                "${text}"
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (!html) {
+                html = '<div style="grid-column: 1 / -1; text-align: center; color: #a08080; padding: 20px;">No epitaphs matched your search query.</div>';
+            }
+            container.innerHTML = html;
+        };
+
+        window.cycleDeathQuote = function() {
+            if (!window.DARK_SOULS_DEATH_QUOTES) return;
+            const quotes = window.DARK_SOULS_DEATH_QUOTES;
+            window._quoteIdx = ((window._quoteIdx !== undefined ? window._quoteIdx : 0) + 1) % quotes.length;
+            const quoteEl = document.getElementById('death-quote-text');
+            const nextBtn = document.getElementById('btn-next-death-quote');
+            if (quoteEl) quoteEl.textContent = `"${quotes[window._quoteIdx]}"`;
+            if (nextBtn) nextBtn.textContent = `🎲 NEXT QUOTE (${window._quoteIdx + 1}/300)`;
+            if (window.dsAudio && window.dsAudio.playRoll) window.dsAudio.playRoll();
+        };
+    </script>
 </body>
 </html>
 <!-- Vercel Connect trigger sync: Thu Nov 19 11:40:54 UTC 2026 -->

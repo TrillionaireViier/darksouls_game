@@ -1176,6 +1176,7 @@ class DarkSoulsGame {
         if (this.collisionSystem) this.collisionSystem.update(delta);
         if (this.qaBotTester && this.qaBotTester.isActive) this.qaBotTester.update(delta);
         if (this.updateLoreBeacons) this.updateLoreBeacons(delta);
+        if (this.updateBloodstainMarker) this.updateBloodstainMarker(delta);
         if (this.siege) this.siege.update(delta);
         if (this.heraldry) this.heraldry.update(delta);
         if (this.apothecary) this.apothecary.update(delta);
@@ -1221,16 +1222,98 @@ class DarkSoulsGame {
             }
         }
 
-        // 1. DEATH COLLAPSE
+        // 1. DEATH COLLAPSE & PROCEDURAL LOL ANIMATIONS
         if (this.combat.isDead) {
-            if (this.playerMesh.position.y > 0.1) {
-                this.playerMesh.position.y = Math.max(0, this.playerMesh.position.y - delta * 2);
+            this.deathAnimTimer = (this.deathAnimTimer || 0) + delta;
+            const t = this.deathAnimTimer;
+            const style = this.deathAnimStyle !== undefined ? this.deathAnimStyle : 0;
+            const groundY = this.world.getGroundHeight(this.playerMesh.position.x, this.playerMesh.position.z, this.playerMesh.position.y);
+
+            if (style === 0) {
+                // Style 0: "The Dramatic Hollywood Spin Flop"
+                // Spins on Y axis, wobbles arms upward, then dramatically flops onto back
+                if (t < 0.65) {
+                    this.playerMesh.rotation.y += delta * 9.5 * (1.0 - t / 0.65);
+                    if (uData.torso) uData.torso.rotation.x = Math.sin(t * 16) * 0.28;
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.z = Math.min(1.4, t * 2.8);
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.z = Math.max(-1.4, -t * 2.8);
+                } else {
+                    if (uData.torso) uData.torso.rotation.x = -Math.min(Math.PI / 2.1, (t - 0.65) * 4.5);
+                    this.playerMesh.position.y = Math.max(groundY, this.playerMesh.position.y - delta * 2.5);
+                    if (uData.head) uData.head.rotation.x = -0.45;
+                }
+            } else if (style === 1) {
+                // Style 1: "The Yeet / Ragdoll Cartwheel Launch"
+                // Launched into the air cartwheeling backwards with flailing limbs
+                this.deathAnimVelY = (this.deathAnimVelY || 5.8) - 18 * delta;
+                this.playerMesh.position.y = Math.max(groundY, this.playerMesh.position.y + this.deathAnimVelY * delta);
+                this.playerMesh.position.z -= 1.8 * delta;
+                this.playerMesh.rotation.x -= delta * 6.5;
+                this.playerMesh.rotation.z += delta * 4.2;
+                if (uData.leftShoulder) uData.leftShoulder.rotation.x = Math.sin(t * 18) * 1.5;
+                if (uData.rightShoulder) uData.rightShoulder.rotation.x = -Math.sin(t * 18) * 1.5;
+                if (uData.leftHip) uData.leftHip.rotation.x = Math.cos(t * 16) * 1.4;
+                if (uData.rightHip) uData.rightHip.rotation.x = -Math.cos(t * 16) * 1.4;
+            } else if (style === 2) {
+                // Style 2: "The Melodramatic Shakespearean Kneel"
+                // Falls to knees first, clutches chest, gazes up in agony, then collapses forward
+                if (t < 0.95) {
+                    this.playerMesh.position.y = Math.max(groundY - 0.42, this.playerMesh.position.y - delta * 2.5);
+                    if (uData.leftHip && uData.rightHip) {
+                        uData.leftHip.rotation.x = -1.2;
+                        uData.rightHip.rotation.x = -1.2;
+                    }
+                    if (uData.torso) uData.torso.rotation.x = -0.32;
+                    if (uData.head) uData.head.rotation.x = -0.65;
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.z = 0.85;
+                } else {
+                    if (uData.torso) uData.torso.rotation.x = Math.min(Math.PI / 2.1, uData.torso.rotation.x + delta * 3.8);
+                    this.playerMesh.position.y = groundY;
+                }
+            } else if (style === 3) {
+                // Style 3: "The Breakdance Turtle Spin"
+                // Drops flat onto back and spins like a turtle shell on the floor, kicking legs
+                this.playerMesh.position.y = groundY;
+                this.playerMesh.rotation.x = -Math.PI / 2;
+                this.playerMesh.rotation.z += delta * 14 * Math.max(0.1, 1.0 - t / 3.0);
+                if (uData.leftHip) uData.leftHip.rotation.x = Math.sin(t * 16) * 0.9;
+                if (uData.rightHip) uData.rightHip.rotation.x = -Math.sin(t * 16) * 0.9;
+                if (uData.leftShoulder) uData.leftShoulder.rotation.z = Math.sin(t * 12) * 0.8;
+                if (uData.rightShoulder) uData.rightShoulder.rotation.z = -Math.sin(t * 12) * 0.8;
+            } else if (style === 4) {
+                // Style 4: "The Matrix Limbo Backfall"
+                // Ultra slow-mo backwards bend until the helmet touches the cobblestones
+                const bend = Math.min(Math.PI * 0.65, t * 1.8);
+                if (uData.torso) uData.torso.rotation.x = -bend;
+                if (uData.head) uData.head.rotation.x = -bend * 0.5;
+                if (uData.leftShoulder) uData.leftShoulder.rotation.set(-0.5, 0, 0.9);
+                if (uData.rightShoulder) uData.rightShoulder.rotation.set(-0.5, 0, -0.9);
+                this.playerMesh.position.y = Math.max(groundY, this.playerMesh.position.y - delta * 1.2);
+            } else {
+                // Style 5: "The Slapstick Banana Peel Slip"
+                // Feet fly forward into the air, player lands with comical flat thud
+                if (t < 0.35) {
+                    this.playerMesh.position.y = Math.max(groundY, this.playerMesh.position.y + delta * 3.5);
+                    this.playerMesh.rotation.x = -Math.min(Math.PI / 2, t * 5.0);
+                    if (uData.leftHip && uData.rightHip) {
+                        uData.leftHip.rotation.x = 1.4;
+                        uData.rightHip.rotation.x = 1.4;
+                    }
+                } else {
+                    this.playerMesh.position.y = groundY;
+                    this.playerMesh.rotation.x = -Math.PI / 2;
+                    if (uData.leftHip && uData.rightHip) {
+                        uData.leftHip.rotation.x = 0.9;
+                        uData.rightHip.rotation.x = 0.7;
+                    }
+                }
             }
-            if (uData.torso) {
-                uData.torso.rotation.x = Math.min(Math.PI / 2.2, uData.torso.rotation.x + delta * 3);
+
+            // Drop weapon naturally during comical death animation
+            if (uData.swordGroup && t > 0.15) {
+                uData.swordGroup.rotation.x = Math.min(Math.PI / 2, uData.swordGroup.rotation.x + delta * 6);
+                uData.swordGroup.position.y = Math.max(-0.6, uData.swordGroup.position.y - delta * 3);
             }
-            if (uData.leftShoulder) uData.leftShoulder.rotation.z = Math.min(0.7, uData.leftShoulder.rotation.z + delta * 2);
-            if (uData.rightShoulder) uData.rightShoulder.rotation.z = Math.max(-0.7, uData.rightShoulder.rotation.z - delta * 2);
             return;
         }
 
@@ -2173,6 +2256,31 @@ class DarkSoulsGame {
 
     triggerDeathScreen() {
         if (this.ui.deathScreen) {
+            // Pick random death quote from 300 Death Quotes library
+            if (window.getRandomDeathQuote) {
+                const quoteObj = window.getRandomDeathQuote();
+                this.currentDeathQuote = quoteObj;
+                window._quoteIdx = quoteObj.index - 1;
+                const quoteEl = document.getElementById('death-quote-text');
+                const nextBtn = document.getElementById('btn-next-death-quote');
+                if (quoteEl) quoteEl.textContent = `"${quoteObj.text}"`;
+                if (nextBtn) nextBtn.textContent = `🎲 NEXT QUOTE (${quoteObj.index}/300)`;
+            }
+
+            // Display lost souls & lost stuff status
+            const lostStuffEl = document.getElementById('death-lost-stuff-text');
+            if (lostStuffEl && this.combat && this.combat.bloodstain) {
+                const soulsCount = this.combat.bloodstain.souls || 0;
+                const p = this.combat.bloodstain.pos || (this.playerMesh ? this.playerMesh.position : { x: 0, z: 0 });
+                lostStuffEl.textContent = `And your lost stuff at this place rests (${soulsCount.toLocaleString()} Souls at [X:${p.x.toFixed(1)}, Z:${p.z.toFixed(1)}])`;
+            }
+
+            // Update death animation label
+            const animLabel = document.getElementById('death-anim-label');
+            if (animLabel && this.deathAnimName) {
+                animLabel.textContent = `🎬 LOL ANIMATION: ${this.deathAnimName}`;
+            }
+
             this.ui.deathScreen.style.display = 'flex';
             setTimeout(() => {
                 this.ui.deathScreen.classList.add('active');
@@ -2415,9 +2523,16 @@ class DarkSoulsGame {
         );
         this.camera.lookAt(targetPos);
 
-        if (this.playerMesh.userData.torso) {
-            this.playerMesh.userData.torso.rotation.x = 0;
-            this.playerMesh.userData.torso.position.y = 0;
+        if (this.playerMesh && this.playerMesh.userData) {
+            const uData = this.playerMesh.userData;
+            this.playerMesh.rotation.set(0, 0, 0);
+            if (uData.torso) { uData.torso.rotation.set(0, 0, 0); uData.torso.position.set(0, 0.95, 0); }
+            if (uData.head) uData.head.rotation.set(0, 0, 0);
+            if (uData.leftShoulder) uData.leftShoulder.rotation.set(0, 0, 0);
+            if (uData.rightShoulder) uData.rightShoulder.rotation.set(0, 0, 0);
+            if (uData.leftHip) uData.leftHip.rotation.set(0, 0, 0);
+            if (uData.rightHip) uData.rightHip.rotation.set(0, 0, 0);
+            if (uData.swordGroup) { uData.swordGroup.rotation.set(0, 0, 0); uData.swordGroup.position.set(0.35, 0.5, 0.35); }
         }
 
         // Respawns hollow soldiers
@@ -3342,6 +3457,118 @@ class DarkSoulsGame {
                 this.loreBeacons.splice(i, 1);
                 if (this.triggerAutoSave) {
                     this.triggerAutoSave('LORE_ACQUIRED');
+                }
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // 3D BLOODSTAIN MARKER SYSTEM (RECOVER LOST STUFF & SOULS)
+    // ----------------------------------------------------
+    spawnBloodstainMarker(pos, souls) {
+        if (this.bloodstainMarker && this.bloodstainMarker.group) {
+            this.scene.remove(this.bloodstainMarker.group);
+        }
+
+        const markerGroup = new THREE.Group();
+        markerGroup.position.copy(pos);
+
+        // 1. Glowing Blood Pool on floor
+        const poolGeo = new THREE.CircleGeometry(0.85, 18);
+        const poolMat = new THREE.MeshStandardMaterial({
+            color: 0x880000,
+            emissive: 0x440000,
+            roughness: 0.2,
+            metalness: 0.8,
+            side: THREE.DoubleSide
+        });
+        const pool = new THREE.Mesh(poolGeo, poolMat);
+        pool.rotation.x = -Math.PI / 2;
+        pool.position.y = 0.04;
+        markerGroup.add(pool);
+
+        // 2. Glowing Red & Amber Rune Circle
+        const runeGeo = new THREE.RingGeometry(0.75, 1.05, 24);
+        const runeMat = new THREE.MeshBasicMaterial({
+            color: 0xff3333,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.85
+        });
+        const rune = new THREE.Mesh(runeGeo, runeMat);
+        rune.rotation.x = -Math.PI / 2;
+        rune.position.y = 0.05;
+        markerGroup.add(rune);
+
+        // 3. Floating pulsing Soul Ember Orb
+        const orbGeo = new THREE.DodecahedronGeometry(0.26);
+        const orbMat = new THREE.MeshStandardMaterial({
+            color: 0xff2222,
+            emissive: 0xff4422,
+            emissiveIntensity: 2.8,
+            roughness: 0.1,
+            metalness: 0.9
+        });
+        const orb = new THREE.Mesh(orbGeo, orbMat);
+        orb.position.y = 0.8;
+        markerGroup.add(orb);
+
+        // 4. Vertical Crimson Pillar of Light
+        const beamGeo = new THREE.CylinderGeometry(0.06, 0.06, 4.2, 8);
+        const beamMat = new THREE.MeshBasicMaterial({
+            color: 0xff2222,
+            transparent: true,
+            opacity: 0.55,
+            blending: THREE.AdditiveBlending
+        });
+        const beam = new THREE.Mesh(beamGeo, beamMat);
+        beam.position.y = 2.1;
+        markerGroup.add(beam);
+
+        this.scene.add(markerGroup);
+
+        this.bloodstainMarker = {
+            group: markerGroup,
+            orb: orb,
+            rune: rune,
+            pool: pool,
+            beam: beam,
+            pos: pos.clone(),
+            souls: souls,
+            baseY: 0.8,
+            time: 0
+        };
+    }
+
+    updateBloodstainMarker(delta) {
+        if (!this.bloodstainMarker || !this.bloodstainMarker.group) return;
+        const bm = this.bloodstainMarker;
+        bm.time += delta;
+
+        if (bm.orb) {
+            bm.orb.rotation.y += delta * 2.5;
+            bm.orb.rotation.z += delta * 1.2;
+            bm.orb.position.y = bm.baseY + Math.sin(bm.time * 3.8) * 0.14;
+        }
+        if (bm.rune) {
+            bm.rune.rotation.z += delta * 0.6;
+        }
+
+        // Proximity check: retrieve lost stuff & souls when player touches bloodstain
+        if (this.playerMesh && this.combat && !this.combat.isDead) {
+            const dist = this.playerMesh.position.distanceTo(bm.pos);
+            if (dist < 2.4) {
+                const recoveredSouls = bm.souls || 0;
+                this.combat.souls += recoveredSouls;
+                this.showSoulsGained(recoveredSouls);
+                this.showNotification(`🩸 RETRIEVED ${recoveredSouls.toLocaleString()} LOST SOULS & RECOVERED LOST STUFF!`);
+                if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+                this.scene.remove(bm.group);
+                this.bloodstainMarker = null;
+                this.combat.bloodstain = null;
+
+                if (this.triggerAutoSave) {
+                    this.triggerAutoSave('BLOODSTAIN_RECOVERED');
                 }
             }
         }
