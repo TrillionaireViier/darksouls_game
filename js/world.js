@@ -720,6 +720,22 @@ class DarkSoulsWorld {
         }
 
         // 2. West Lower Flooded Catacombs & Deep Subterranean Mausoleum
+        // Sunken Catacombs Elevation Lock: If player is underground (currentY <= -1.2) and in catacombs corridor/stairs range,
+        // preserve underground elevation and prevent snapping up to surface courtyard height (y = 0).
+        if (currentY !== null && currentY <= -1.2 && x >= -27.5 && x <= -12.5 && z >= 4 && z <= 96) {
+            if (z >= 4 && z <= 22) {
+                const t = (z - 4) / 18;
+                return -t * 5.0;
+            }
+            if (z > 22 && z <= 90) {
+                return -5.0;
+            }
+            if (z > 90 && z <= 96) {
+                const t = (z - 90) / 6;
+                return -5.0 + t * 5.0;
+            }
+        }
+
         // Descending Sunken Stairs from Courtyard (z in [4, 22], x in [-25, -15])
         if (x >= -25 && x <= -15 && z >= 4 && z <= 22) {
             const t = (z - 4) / 18;

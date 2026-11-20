@@ -769,6 +769,266 @@ class DarkSoulsCombat {
                 radius: 2.6,
                 spawnPos: { x: 0, z: 132 },
                 create: (cf, x, z) => cf.createKingAllant(x, z)
+            },
+{
+                id: 'ludwig',
+                name: 'LUDWIG THE ACCURSED & HOLY BLADE',
+                title: 'Underground Corpse Pile &bull; Moonlight Arcane Beams, Bestial Charge & Moonlight Greatsword',
+                unlockLocationId: 'hunter_nightmare_pile',
+                icon: '🐴',
+                maxHp: 8500,
+                damage: 620,
+                souls: 220000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createLudwig(x, z)
+            },
+            {
+                id: 'lady_maria',
+                name: 'LADY MARIA OF THE ASTRAL CLOCKTOWER',
+                title: 'Astral Clocktower &bull; Rakuyo Dual-Blade Dance, Bloodflame Waves & Visceral Thrust',
+                unlockLocationId: 'astral_clocktower',
+                icon: '🩸',
+                maxHp: 8800,
+                damage: 640,
+                souls: 240000,
+                radius: 2.3,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createLadyMaria(x, z)
+            },
+            {
+                id: 'orphan_of_kos',
+                name: 'ORPHAN OF KOS, CHILD OF THE SEA',
+                title: 'Coast of the Hunter Nightmare &bull; Placenta Blade Cleave, Oceanic Lightning Call & Aerial Smash',
+                unlockLocationId: 'fishing_hamlet_coast',
+                icon: '🌊',
+                maxHp: 9200,
+                damage: 660,
+                souls: 260000,
+                radius: 2.6,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createOrphanOfKos(x, z)
+            },
+            {
+                id: 'father_gascoigne',
+                name: 'FATHER GASCOIGNE, THE BEAST HUNTER',
+                title: 'Oedon Tomb &bull; Beast Blunderbuss Scatter, Hunter Axe Extension & Bestial Claws',
+                unlockLocationId: 'tomb_of_oedon',
+                icon: '🪓',
+                maxHp: 9500,
+                damage: 680,
+                souls: 280000,
+                radius: 2.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createFatherGascoigne(x, z)
+            },
+            {
+                id: 'darklurker',
+                name: 'DARKLURKER, SHADOW OF THE PILGRIMS',
+                title: 'Dark Chasm of Old &bull; Soul Greatsword, Shadow Teleportation & Dark Soul Clones',
+                unlockLocationId: 'dark_chasm_of_old',
+                icon: '🌑',
+                maxHp: 9800,
+                damage: 700,
+                souls: 300000,
+                radius: 2.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createDarklurker(x, z)
+            },
+            {
+                id: 'velstadt',
+                name: 'VELSTADT, THE ROYAL AEGIS',
+                title: 'Undead Crypt Entrance &bull; Sacred Chime Hammer, Resonant Hex Wave & Dark Bell Toll',
+                unlockLocationId: 'undead_crypt',
+                icon: '🔔',
+                maxHp: 10200,
+                damage: 720,
+                souls: 320000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createVelstadt(x, z)
+            },
+            {
+                id: 'burnt_ivory_king',
+                name: 'THE BURNT IVORY KING',
+                title: 'The Old Chaos &bull; Radiant Sunlight Blade, Chaos Portal Cleave & Flame Arc Sweep',
+                unlockLocationId: 'the_old_chaos',
+                icon: '⚔️',
+                maxHp: 10600,
+                damage: 740,
+                souls: 350000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createIvoryKing(x, z)
+            },
+            {
+                id: 'dragonrider',
+                name: 'DRAGONRIDER OF HEIDE',
+                title: 'Heide Tower of Flame &bull; Colossal Twin Halberd Cleave, Tower Shield Bash & Ground Stomp',
+                unlockLocationId: 'heide_tower_of_flame',
+                icon: '🛡️',
+                maxHp: 11000,
+                damage: 760,
+                souls: 380000,
+                radius: 2.7,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createDragonrider(x, z)
+            },
+            {
+                id: 'twin_princes',
+                name: 'LOTHRIC & LORIAN, TWIN PRINCES',
+                title: 'Grand Archives Pinnacle &bull; Flame Greatsword Teleport, Holy Soul Barrage & Revival',
+                unlockLocationId: 'lothric_throne_pinnacle',
+                icon: '✨',
+                maxHp: 11500,
+                damage: 780,
+                souls: 400000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createTwinPrinces(x, z)
+            },
+            {
+                id: 'dragonslayer_armour',
+                name: 'DRAGONSLAYER ARMOUR',
+                title: 'Lothric Castle Gate &bull; Lightning Greataxe Slam, Pilgrim Butterfly Volley & Shield Bash',
+                unlockLocationId: 'lothric_castle_ramparts',
+                icon: '⚡',
+                maxHp: 12000,
+                damage: 800,
+                souls: 430000,
+                radius: 2.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createDragonslayerArmour(x, z)
+            },
+            {
+                id: 'sister_friede',
+                name: 'SISTER FRIEDE & FATHER ARIANDEL',
+                title: 'Painted World Chapel &bull; Blackflame Scythe Whirlwind, Frostbite Ice Wave & Great Bowl Slam',
+                unlockLocationId: 'ariandel_chapel',
+                icon: '❄️',
+                maxHp: 12500,
+                damage: 820,
+                souls: 460000,
+                radius: 2.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSisterFriede(x, z)
+            },
+            {
+                id: 'champion_gundyr',
+                name: 'CHAMPION GUNDYR, THE UNTENDED TITAN',
+                title: 'Untended Graves &bull; Shoulder Charge, Martial Roundhouse Kick & Halberd Air Juggle',
+                unlockLocationId: 'untended_graves',
+                icon: '🥋',
+                maxHp: 13000,
+                damage: 850,
+                souls: 500000,
+                radius: 2.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createChampionGundyr(x, z)
+            },
+            {
+                id: 'darkeater_midir',
+                name: 'DARK-EATER MIDIR, ABYSSAL DRAGON',
+                title: 'Ringed City Chasm &bull; Abyssal Laser Ray, Dark Flame Breath & Colossal Wing Slams',
+                unlockLocationId: 'ringed_city_abyssal_chasm',
+                icon: '🐉',
+                maxHp: 14000,
+                damage: 900,
+                souls: 550000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createDarkeaterMidir(x, z)
+            },
+            {
+                id: 'godfrey',
+                name: 'GODFREY, FIRST ELDEN LORD & HOARAH LOUX',
+                title: 'Elden Throne Citadel &bull; Earthshaker Axe Shockwave, Fissure Stomp & Chieftain Grapple',
+                unlockLocationId: 'elden_throne_sanctum',
+                icon: '🦁',
+                maxHp: 15000,
+                damage: 930,
+                souls: 600000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createGodfrey(x, z)
+            },
+            {
+                id: 'maliketh',
+                name: 'MALIKETH, THE BLACK BLADE',
+                title: 'Crumbling Farum Azula &bull; Destined Death Crimson Waves, Acrobatic Pillar Leaps & Black Blade',
+                unlockLocationId: 'crumbling_farum_azula',
+                icon: '🗡️',
+                maxHp: 16000,
+                damage: 960,
+                souls: 650000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createMaliketh(x, z)
+            },
+            {
+                id: 'mohg',
+                name: 'MOHG, LORD OF BLOOD',
+                title: 'Mohgwyn Palace Mausoleum &bull; Bloodboon Sacred Spear, NIHIL Curse & Bloodflame Spray',
+                unlockLocationId: 'mohgwyn_palace',
+                icon: '🔱',
+                maxHp: 17000,
+                damage: 990,
+                souls: 700000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createMohg(x, z)
+            },
+            {
+                id: 'morgott',
+                name: 'MORGOTT, THE OMEN KING',
+                title: 'Leyndell Royal Capital Throne &bull; Cursed Blood Slice, Golden Dagger Rain & Holy Greathammer',
+                unlockLocationId: 'leyndell_royal_capital',
+                icon: '👑',
+                maxHp: 18000,
+                damage: 1020,
+                souls: 750000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createMorgott(x, z)
+            },
+            {
+                id: 'rykard',
+                name: 'RYKARD, LORD OF BLASPHEMY',
+                title: 'Volcano Manor Temple &bull; Blasphemous Blade, Magma Geysers & Flaming Skull Rain',
+                unlockLocationId: 'volcano_manor_magma_temple',
+                icon: '🌋',
+                maxHp: 19000,
+                damage: 1050,
+                souls: 800000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createRykard(x, z)
+            },
+            {
+                id: 'isshin_sword_saint',
+                name: 'SWORD SAINT ISSHIN, ASHINA LEGEND',
+                title: 'Silvergrass Field &bull; Ashina Cross, Dragon Flash Wind Blades & Cross Spear Thrust',
+                unlockLocationId: 'ashina_silvergrass_field',
+                icon: '🥷',
+                maxHp: 20000,
+                damage: 1100,
+                souls: 900000,
+                radius: 2.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createIsshin(x, z)
+            },
+            {
+                id: 'elden_beast',
+                name: 'ELDEN BEAST, VASSAL OF THE GREATER WILL',
+                title: 'Fractured Marika Erdtree Realm &bull; Sacred Relic Sword Golden Waves, Elden Stars & Nebula Wave',
+                unlockLocationId: 'erdtree_fractured_core',
+                icon: '🌌',
+                maxHp: 22000,
+                damage: 1200,
+                souls: 1000000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createEldenBeast(x, z)
             }
         ];
     }
@@ -3418,6 +3678,26 @@ class DarkSoulsCombat {
         else if (id === 'malenia') this.updateMaleniaAI(delta, dist, targetAngle);
         else if (id === 'radahn') this.updateRadahnAI(delta, dist, targetAngle);
         else if (id === 'king_allant') this.updateKingAllantAI(delta, dist, targetAngle);
+        else if (id === 'ludwig') this.updateLudwigAI(delta, dist, targetAngle);
+        else if (id === 'lady_maria') this.updateLadyMariaAI(delta, dist, targetAngle);
+        else if (id === 'orphan_of_kos') this.updateOrphanOfKosAI(delta, dist, targetAngle);
+        else if (id === 'father_gascoigne') this.updateFatherGascoigneAI(delta, dist, targetAngle);
+        else if (id === 'darklurker') this.updateDarklurkerAI(delta, dist, targetAngle);
+        else if (id === 'velstadt') this.updateVelstadtAI(delta, dist, targetAngle);
+        else if (id === 'burnt_ivory_king') this.updateIvoryKingAI(delta, dist, targetAngle);
+        else if (id === 'dragonrider') this.updateDragonriderAI(delta, dist, targetAngle);
+        else if (id === 'twin_princes') this.updateTwinPrincesAI(delta, dist, targetAngle);
+        else if (id === 'dragonslayer_armour') this.updateDragonslayerArmourAI(delta, dist, targetAngle);
+        else if (id === 'sister_friede') this.updateSisterFriedeAI(delta, dist, targetAngle);
+        else if (id === 'champion_gundyr') this.updateChampionGundyrAI(delta, dist, targetAngle);
+        else if (id === 'darkeater_midir') this.updateDarkeaterMidirAI(delta, dist, targetAngle);
+        else if (id === 'godfrey') this.updateGodfreyAI(delta, dist, targetAngle);
+        else if (id === 'maliketh') this.updateMalikethAI(delta, dist, targetAngle);
+        else if (id === 'mohg') this.updateMohgAI(delta, dist, targetAngle);
+        else if (id === 'morgott') this.updateMorgottAI(delta, dist, targetAngle);
+        else if (id === 'rykard') this.updateRykardAI(delta, dist, targetAngle);
+        else if (id === 'isshin_sword_saint') this.updateIsshinAI(delta, dist, targetAngle);
+        else if (id === 'elden_beast') this.updateEldenBeastAI(delta, dist, targetAngle);
         else this.updateTaurusAI(delta, dist, targetAngle);
     }
 
@@ -5079,4 +5359,520 @@ class DarkSoulsCombat {
             }
         }
     }
+
+    // ====================================================
+    // BOSS 41-60 AI CONTROLLERS (BLOODBORNE, DS2, DS3, SEKIRO, ELDEN RING)
+    // ====================================================
+
+    updateLudwigAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        const speed = 4.0;
+        if (dist > 4.5 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.65 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.game.shakeCamera(0.4, 0.5);
+                this.world.spawnSunlightBurst(this.boss.mesh.position);
+                if (dist < 5.5) this.damagePlayer(Math.round(this.boss.damage * 1.1), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.1) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.0;
+            }
+        }
+    }
+
+    updateLadyMariaAI(delta, dist, targetAngle) {
+        const u = this.boss.mesh.userData;
+        const speed = 5.2; // Hyper-agile hunter
+        if (dist > 3.2 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.45 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playAttack();
+                this.world.spawnBloodSparks(this.game.playerMesh.position);
+                if (dist < 4.5) this.damagePlayer(Math.round(this.boss.damage * 0.95), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 0.85) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.4;
+            }
+        }
+    }
+
+    updateOrphanOfKosAI(delta, dist, targetAngle) {
+        const speed = 4.8;
+        if (dist > 4.2 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.55 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.game.shakeCamera(0.45, 0.5);
+                this.world.spawnHitSparks(this.boss.mesh.position, true);
+                if (dist < 5.2) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.0) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.8;
+            }
+        }
+    }
+
+    updateFatherGascoigneAI(delta, dist, targetAngle) {
+        const speed = 4.4;
+        if (dist > 3.6 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.5 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playAttack();
+                this.world.spawnHitSparks(this.boss.mesh.position, false);
+                if (dist < 4.8) this.damagePlayer(Math.round(this.boss.damage * 0.9), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 0.9) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.6;
+            }
+        }
+    }
+
+    updateDarklurkerAI(delta, dist, targetAngle) {
+        const speed = 3.6;
+        if (dist > 5.0 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.65 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBellToll();
+                this.world.spawnSunlightBurst(this.boss.mesh.position);
+                if (dist < 6.0) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.1) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.2;
+            }
+        }
+    }
+
+    updateVelstadtAI(delta, dist, targetAngle) {
+        const speed = 3.2;
+        if (dist > 4.2 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.75 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBellToll();
+                this.game.shakeCamera(0.5, 0.6);
+                if (dist < 5.5) this.damagePlayer(Math.round(this.boss.damage * 1.2), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.3) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.2;
+            }
+        }
+    }
+
+    updateIvoryKingAI(delta, dist, targetAngle) {
+        const speed = 4.2;
+        if (dist > 4.0 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.6 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.world.spawnSunlightBurst(this.boss.mesh.position);
+                if (dist < 5.2) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.05) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.9;
+            }
+        }
+    }
+
+    updateDragonriderAI(delta, dist, targetAngle) {
+        const speed = 3.3;
+        if (dist > 4.0 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.65 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.game.shakeCamera(0.35, 0.4);
+                if (dist < 5.0) this.damagePlayer(Math.round(this.boss.damage * 0.95), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.1) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.0;
+            }
+        }
+    }
+
+    updateTwinPrincesAI(delta, dist, targetAngle) {
+        const speed = 3.8;
+        if (dist > 4.2 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.7 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBellToll();
+                this.world.spawnSunlightBurst(this.boss.mesh.position);
+                if (dist < 5.6) this.damagePlayer(Math.round(this.boss.damage * 1.15), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.2) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.1;
+            }
+        }
+    }
+
+    updateDragonslayerArmourAI(delta, dist, targetAngle) {
+        const speed = 3.6;
+        if (dist > 4.4 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.75 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.game.shakeCamera(0.55, 0.65);
+                this.world.spawnHitSparks(this.boss.mesh.position, true);
+                if (dist < 5.8) this.damagePlayer(Math.round(this.boss.damage * 1.25), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.35) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.3;
+            }
+        }
+    }
+
+    updateSisterFriedeAI(delta, dist, targetAngle) {
+        const speed = 5.0;
+        if (dist > 3.6 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.45 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playAttack();
+                this.world.spawnBloodSparks(this.game.playerMesh.position);
+                if (dist < 4.8) this.damagePlayer(Math.round(this.boss.damage * 0.95), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 0.85) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.5;
+            }
+        }
+    }
+
+    updateChampionGundyrAI(delta, dist, targetAngle) {
+        const speed = 4.6;
+        if (dist > 4.0 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.55 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.game.shakeCamera(0.45, 0.5);
+                if (dist < 5.2) this.damagePlayer(Math.round(this.boss.damage * 1.1), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.0) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.7;
+            }
+        }
+    }
+
+    updateDarkeaterMidirAI(delta, dist, targetAngle) {
+        const speed = 3.6;
+        if (dist > 6.0 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.8 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.game.shakeCamera(0.6, 0.7);
+                this.world.spawnSunlightBurst(this.boss.mesh.position);
+                if (dist < 7.5) this.damagePlayer(Math.round(this.boss.damage * 1.3), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.45) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.5;
+            }
+        }
+    }
+
+    updateGodfreyAI(delta, dist, targetAngle) {
+        const speed = 4.2;
+        if (dist > 4.4 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.7 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.game.shakeCamera(0.6, 0.65);
+                this.world.spawnHitSparks(this.boss.mesh.position, true);
+                if (dist < 6.0) this.damagePlayer(Math.round(this.boss.damage * 1.2), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.3) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.1;
+            }
+        }
+    }
+
+    updateMalikethAI(delta, dist, targetAngle) {
+        const speed = 5.2; // Acrobatic & lethal
+        if (dist > 4.2 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.55 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playAttack();
+                this.game.shakeCamera(0.45, 0.5);
+                this.world.spawnHitSparks(this.boss.mesh.position, true);
+                if (dist < 5.5) this.damagePlayer(Math.round(this.boss.damage * 1.15), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.0) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.7;
+            }
+        }
+    }
+
+    updateMohgAI(delta, dist, targetAngle) {
+        const speed = 3.6;
+        if (dist > 4.4 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.65 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBellToll();
+                this.world.spawnBloodSparks(this.game.playerMesh.position);
+                if (dist < 5.8) this.damagePlayer(Math.round(this.boss.damage * 1.1), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.2) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.0;
+            }
+        }
+    }
+
+    updateMorgottAI(delta, dist, targetAngle) {
+        const speed = 4.4;
+        if (dist > 4.0 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.55 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playAttack();
+                this.world.spawnSunlightBurst(this.boss.mesh.position);
+                if (dist < 5.2) this.damagePlayer(this.boss.damage, this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.05) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.8;
+            }
+        }
+    }
+
+    updateRykardAI(delta, dist, targetAngle) {
+        const speed = 3.0;
+        if (dist > 5.5 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.85 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBossSlam();
+                this.game.shakeCamera(0.65, 0.7);
+                this.world.spawnSunlightBurst(this.boss.mesh.position);
+                if (dist < 7.0) this.damagePlayer(Math.round(this.boss.damage * 1.25), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.5) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.4;
+            }
+        }
+    }
+
+    updateIsshinAI(delta, dist, targetAngle) {
+        const speed = 5.2; // Sword saint agility
+        if (dist > 3.8 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.45 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playAttack();
+                this.game.shakeCamera(0.35, 0.4);
+                this.world.spawnHitSparks(this.game.playerMesh.position, false);
+                if (dist < 5.2) this.damagePlayer(Math.round(this.boss.damage * 1.05), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 0.9) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 1.4;
+            }
+        }
+    }
+
+    updateEldenBeastAI(delta, dist, targetAngle) {
+        const speed = 3.5;
+        if (dist > 6.0 && !this.boss.isAttacking) {
+            this.boss.mesh.position.x += Math.sin(targetAngle) * speed * delta;
+            this.boss.mesh.position.z += Math.cos(targetAngle) * speed * delta;
+        } else if (!this.boss.isAttacking && this.boss.cooldown <= 0) {
+            this.boss.isAttacking = true;
+            this.boss.attackTime = 0;
+            this.boss._hit1 = false;
+        }
+        if (this.boss.isAttacking) {
+            this.boss.attackTime += delta;
+            if (this.boss.attackTime >= 0.85 && !this.boss._hit1) {
+                this.boss._hit1 = true;
+                this.audio.playBellToll();
+                this.game.shakeCamera(0.65, 0.75);
+                this.world.spawnSunlightBurst(this.boss.mesh.position);
+                if (dist < 7.5) this.damagePlayer(Math.round(this.boss.damage * 1.35), this.boss.mesh.position);
+            }
+            if (this.boss.attackTime >= 1.5) {
+                this.boss.isAttacking = false;
+                this.boss.cooldown = 2.6;
+            }
+        }
+    }
+
 }
