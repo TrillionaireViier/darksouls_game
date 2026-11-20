@@ -2433,6 +2433,18 @@ class DarkSoulsCombat {
         enemy.isAttacking = false;
         enemy.isStaggered = false;
 
+        // Guaranteed fallback removal: if ragdoll or entity mesh still exists after 2.8s, remove it
+        if (enemy.mesh) {
+            const enemyMesh = enemy.mesh;
+            setTimeout(() => {
+                if (enemyMesh && enemyMesh.parent) {
+                    enemyMesh.parent.remove(enemyMesh);
+                } else if (enemyMesh && this.game && this.game.scene) {
+                    this.game.scene.remove(enemyMesh);
+                }
+            }, 2800);
+        }
+
         // Launch Articulated 3D Ragdoll Physics
         const isHeavyWeapon = (this.attackCombo === 3 || this.currentWeapon === 'zweihander');
         this.initRagdoll(enemy, null, isHeavyWeapon);
@@ -2477,6 +2489,40 @@ class DarkSoulsCombat {
         this.audio.playVictory();
         this.audio.setBossMusic(false);
         this.game.triggerVictoryBanner(this.boss.name);
+
+        // Soul Dissipation: Dissolve boss 3D model into soul energy and remove from world
+        const dyingMesh = this.boss.mesh;
+        if (dyingMesh) {
+            const startScale = dyingMesh.scale.clone();
+            const startY = dyingMesh.position.y;
+            const startTime = performance.now();
+            const dissolveDur = 2500; // 2.5s authentic boss death dissolution
+            
+            const dissolveStep = () => {
+                const elapsed = performance.now() - startTime;
+                const progress = Math.min(1.0, elapsed / dissolveDur);
+                const fade = Math.max(0, 1.0 - progress);
+                
+                if (dyingMesh && dyingMesh.parent) {
+                    dyingMesh.scale.set(startScale.x * fade, startScale.y * fade, startScale.z * fade);
+                    dyingMesh.position.y = startY - progress * 0.8;
+                    
+                    if (progress < 1.0) {
+                        requestAnimationFrame(dissolveStep);
+                    } else {
+                        if (dyingMesh.parent) dyingMesh.parent.remove(dyingMesh);
+                        else this.game.scene.remove(dyingMesh);
+                    }
+                }
+            };
+            requestAnimationFrame(dissolveStep);
+            
+            // Hard safety timeout fallback
+            setTimeout(() => {
+                if (dyingMesh && dyingMesh.parent) dyingMesh.parent.remove(dyingMesh);
+                else if (dyingMesh && this.game && this.game.scene) this.game.scene.remove(dyingMesh);
+            }, 3000);
+        }
 
         // Unlock corresponding realm & spawn Waystone portal
         const def = this.bossRoster.find(b => b.id === this.boss.id);
@@ -2888,7 +2934,16 @@ class DarkSoulsCombat {
 
         for (let i = this.ragdolls.length - 1; i >= 0; i--) {
             const rd = this.ragdolls[i];
-            rd.totalTime += delta;
+            rd.totalTime = (rd.totalTime || 0) + delta;
+
+            // Safety timeout: If ragdoll has been airborne / falling for > 1.6s, force settle
+            // Prevents any mob or archer from remaining frozen or stuck in an infinite tumble
+            if (!rd.settled && rd.totalTime > 1.6) {
+                rd.settled = true;
+                rd.vel.set(0, 0, 0);
+                rd.angVel.set(0, 0, 0);
+                rd.settleTimer = 0;
+            }
 
             if (!rd.settled) {
                 // Gravity & Aerodynamic Drag
@@ -2935,8 +2990,8 @@ class DarkSoulsCombat {
                     u.leftHip.rotation.z = -0.4;
                 }
 
-                // Ground Collision against terrain
-                const groundY = this.world.getGroundHeight(rd.pos.x, rd.pos.z) + 0.32;
+                // Ground Collision against terrain (pass rd.pos.y to resolve elevations accurately)
+                const groundY = this.world.getGroundHeight(rd.pos.x, rd.pos.z, rd.pos.y) + 0.32;
                 if (rd.pos.y <= groundY) {
                     rd.pos.y = groundY;
                     if (Math.abs(rd.vel.y) > 2.0 && rd.bounces < rd.maxBounces) {
@@ -2976,12 +3031,16 @@ class DarkSoulsCombat {
                 }
             } else {
                 // Settled: smoothly dissolve into soul energy (authentic Dark Souls soul dissipation)
-                rd.settleTimer += delta;
-                if (rd.settleTimer > 1.2) {
-                    const fade = Math.max(0, 1.0 - (rd.settleTimer - 1.2) / 0.8);
-                    rd.mesh.scale.setScalar(fade);
-                    if (fade <= 0) {
-                        this.game.scene.remove(rd.mesh);
+                rd.settleTimer = (rd.settleTimer || 0) + delta;
+                if (rd.settleTimer > 0.6) {
+                    const fade = Math.max(0, 1.0 - (rd.settleTimer - 0.6) / 0.8);
+                    if (rd.mesh) rd.mesh.scale.setScalar(fade);
+                    if (fade <= 0 || rd.settleTimer > 2.2) {
+                        if (rd.mesh && rd.mesh.parent) {
+                            rd.mesh.parent.remove(rd.mesh);
+                        } else if (rd.mesh) {
+                            this.game.scene.remove(rd.mesh);
+                        }
                         this.ragdolls.splice(i, 1);
                     }
                 }

@@ -694,9 +694,9 @@ class DarkSoulsWorld {
     }
 
     getGroundHeight(x, z, currentY = null) {
-        // 1. East Upper Ramparts & Stairs
-        // Ramparts Elevation Lock (If player is already elevated on ramparts, prevent falling through gaps)
-        if (currentY !== null && currentY >= 2.5 && x >= 14.2 && x <= 25.8 && z >= 18 && z <= 96) {
+        // 1. East Upper Ramparts & Stairs (y = 6.0)
+        // Broad ramparts elevation lock & walkway span (x in [11.0, 26.5], z in [18, 96])
+        if (currentY !== null && currentY >= 2.5 && x >= 11.0 && x <= 26.5 && z >= 18 && z <= 96) {
             if (z > 91) {
                 const t = (96 - z) / 5;
                 return Math.max(0, t * 6.0);
@@ -704,25 +704,37 @@ class DarkSoulsWorld {
             return 6.0;
         }
 
-        // Ascending Stairs from Courtyard (z in [4, 22], x in [14.6, 25.4])
-        if (x >= 14.6 && x <= 25.4 && z >= 4 && z <= 22) {
+        // Ascending Stairs from Courtyard (z in [4, 22], x in [14.0, 26.0])
+        if (x >= 14.0 && x <= 26.0 && z >= 4 && z <= 22) {
             const t = (z - 4) / 18;
             return t * 6.0;
         }
-        // High Ramparts Battlement Walkway (z in [22, 91], x in [14.6, 25.4])
-        if (x >= 14.6 && x <= 25.4 && z > 22 && z <= 91) {
+        // High Ramparts Battlement Walkway & Bastion (z in [22, 91], x in [11.0, 26.5])
+        if (x >= 11.0 && x <= 26.5 && z > 22 && z <= 91) {
             return 6.0;
         }
-        // Watchtower & Descent Ramp to Fog Gate (z in [91, 96], x in [13, 25.4])
-        if (x >= 13 && x <= 25.4 && z > 91 && z <= 96) {
+        // Watchtower & Descent Ramp to Fog Gate (z in [91, 96], x in [11.0, 26.5])
+        if (x >= 11.0 && x <= 26.5 && z > 91 && z <= 96) {
             const t = (96 - z) / 5;
             return Math.max(0, t * 6.0);
         }
 
-        // 2. West Lower Flooded Catacombs & Deep Subterranean Mausoleum
-        // Sunken Catacombs Elevation Lock: If player is underground (currentY <= -1.2) and in catacombs corridor/stairs range,
-        // preserve underground elevation and prevent snapping up to surface courtyard height (y = 0).
-        if (currentY !== null && currentY <= -1.2 && x >= -27.5 && x <= -12.5 && z >= 4 && z <= 96) {
+        // 2. Surface Boss Arena (z in [92, 172], wide arena span x in [-22, 22])
+        // If player is on surface (currentY === null || currentY >= -2.2), ALWAYS stay solid at y = 0.0!
+        // Prevents any floor-clipping or dropping into subterranean crypt when touching walls
+        if (x >= -22 && x <= 22 && z >= 92 && z <= 172 && (currentY === null || currentY >= -2.2)) {
+            return 0.0;
+        }
+
+        // 3. Central Royal Bridge (z in [24, 96], walkable bridge span x in [-9.0, 9.0])
+        if (x >= -9.0 && x <= 9.0 && z >= 24 && z <= 96 && (currentY === null || currentY >= -2.2)) {
+            return 0.0;
+        }
+
+        // 4. West Lower Flooded Catacombs & Deep Subterranean Mausoleum
+        // Sunken Catacombs Elevation Lock: Only active if player is GENUINELY underground (currentY <= -2.5)
+        // Prevents surface players from ever being falsely trapped at -1.2m
+        if (currentY !== null && currentY <= -2.5 && x >= -34 && x <= -9 && z >= 4 && z <= 150) {
             if (z >= 4 && z <= 22) {
                 const t = (z - 4) / 18;
                 return -t * 5.0;
@@ -734,6 +746,8 @@ class DarkSoulsWorld {
                 const t = (z - 90) / 6;
                 return -5.0 + t * 5.0;
             }
+            // Deep subterranean Mausoleum & Crypt of Nito
+            return -6.0;
         }
 
         // Descending Sunken Stairs from Courtyard (z in [4, 22], x in [-25, -15])
@@ -742,13 +756,14 @@ class DarkSoulsWorld {
             return -t * 5.0;
         }
         // Flooded Subterranean Catacombs Corridor (z in [22, 90], x in [-25, -15])
-        if (x >= -25 && x <= -15 && z > 22 && z <= 90) {
+        if (x >= -25 && x <= -15 && z > 22 && z <= 90 && (currentY === null || currentY < -2.0)) {
             return -5.0;
         }
+
         // Deep Catacombs Subterranean Mausoleum Arena & Crypt (z in [90, 150], x in [-34, -7])
-        // Elevation disambiguation: Only active if player is submerged in subterranean crypt (currentY < -2.5) or west of surface arena (x < -17.5)
+        // ONLY active if player is GENUINELY submerged in the subterranean crypt (currentY < -2.5)
         const inCryptBounds = (x >= -34 && x <= -7 && z >= 90 && z <= 150);
-        if (inCryptBounds && (currentY === null ? (x < -17.5) : (currentY < -2.5 || x < -17.5))) {
+        if (inCryptBounds && currentY !== null && currentY < -2.5) {
             // Crypt Exit Ascent Stairs back to surface fog gate (x in [-20, -12], z in [90, 96])
             if (x >= -20 && x <= -12 && z >= 90 && z <= 96) {
                 const t = (z - 90) / 6;
@@ -763,18 +778,8 @@ class DarkSoulsWorld {
             return -6.0;
         }
 
-        // 3. Central Bridge (z in [28, 96], walkable bridge span x in [-7.2, 7.2])
-        if (x >= -7.2 && x <= 7.2 && z >= 28 && z <= 96) {
-            return 0.0;
-        }
-
-        // 4. Surface Boss Arena (z in [94.5, 170], full 34m wide arena span x in [-17.5, 17.5])
-        if (x >= -17.5 && x <= 17.5 && z >= 94.5 && z <= 170) {
-            return 0.0;
-        }
-
-        // 5. Courtyard (z in [-30, 30], x in [-30, 30])
-        if (x >= -30 && x <= 30 && z >= -30 && z <= 30) {
+        // 5. Main Courtyard (z in [-35, 35], x in [-35, 35])
+        if (x >= -35 && x <= 35 && z >= -35 && z <= 35 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 

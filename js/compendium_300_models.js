@@ -5339,7 +5339,7 @@
             if (!entry || entry.category !== 'MOB') return;
             const mesh = this.spawnInWorld(entryId);
             if (this.game && this.game.combat && mesh) {
-                this.game.combat.mobs.push({
+                const mobEntity = {
                     id: entry.id,
                     name: entry.name,
                     mesh: mesh,
@@ -5347,12 +5347,19 @@
                     maxHp: entry.hp || 300,
                     damage: entry.dmg || 60,
                     souls: entry.souls || 200,
-                    speed: 3.2,
+                    speed: 2.8,
                     attackReach: 2.5,
                     isDead: false,
+                    isStaggered: false,
+                    staggerTimer: 0,
+                    state: 'CHASE',
+                    behaviorType: 'Swarm',
+                    animTime: 0,
                     cooldown: 1.0,
                     attackTime: 0
-                });
+                };
+                if (!this.game.combat.enemies) this.game.combat.enemies = [];
+                this.game.combat.enemies.push(mobEntity);
             }
             if (this.game && this.game.showNotification) {
                 this.game.showNotification(`⚔️ MOB CHALLENGE ENGAGED: ${entry.name} • HP: ${entry.hp}`);
@@ -5362,9 +5369,13 @@
         // Clear all spawned entities
         clearSpawned() {
             this.spawnedEntities.forEach(e => {
-                if (this.scene) this.scene.remove(e);
+                if (e.parent) e.parent.remove(e);
+                else if (this.scene) this.scene.remove(e);
             });
             this.spawnedEntities = [];
+            if (this.game && this.game.combat && this.game.combat.enemies) {
+                this.game.combat.enemies = this.game.combat.enemies.filter(e => e.mesh && e.mesh.parent);
+            }
             if (this.game && this.game.showNotification) {
                 this.game.showNotification(`🧹 ALL SPAWNED 3D ENTITIES CLEARED`);
             }

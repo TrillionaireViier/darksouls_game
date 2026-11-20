@@ -1297,13 +1297,9 @@ class DarkSoulsGame {
             }
         } else {
             if (pPos.y < targetGroundY) {
-                const stepUp = targetGroundY - pPos.y;
-                if (stepUp <= 0.85) {
-                    pPos.y = targetGroundY; // Snap feet to solid ground immediately for normal stairs/steps
-                } else {
-                    // Prevent vertical ceiling teleportation
-                    pPos.y = Math.min(pPos.y + 12 * delta, targetGroundY);
-                }
+                // Instantly snap feet to solid ground when below terrain elevation
+                // Permanently eliminates floor sinking and partial floor-submersion bugs
+                pPos.y = targetGroundY;
             } else {
                 pPos.y = THREE.MathUtils.lerp(pPos.y, targetGroundY, Math.min(1.0, delta * 20));
             }
