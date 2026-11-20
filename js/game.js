@@ -1689,8 +1689,14 @@ class DarkSoulsGame {
                     }
                 }
                 if (uData.shieldGroup) {
-                    uData.shieldGroup.position.set(-0.08, 0.02, 0.02);
-                    uData.shieldGroup.rotation.set(0.08, -1.35, -0.06);
+                    uData.shieldGroup.visible = !this.isTorchActive;
+                    if (!this.isTorchActive) {
+                        uData.shieldGroup.position.set(-0.08, 0.02, 0.02);
+                        uData.shieldGroup.rotation.set(0.08, -1.35, -0.06);
+                    }
+                }
+                if (uData.offhandTorch) {
+                    uData.offhandTorch.visible = !!this.isTorchActive;
                 }
             }
 
@@ -1896,8 +1902,14 @@ class DarkSoulsGame {
 
             // Normal shield posture (anatomically strapped to left forearm)
             if (uData.shieldGroup) {
-                uData.shieldGroup.position.set(-0.08, 0.02, 0.02);
-                uData.shieldGroup.rotation.set(0.08, -1.35, -0.06);
+                uData.shieldGroup.visible = !this.isTorchActive;
+                if (!this.isTorchActive) {
+                    uData.shieldGroup.position.set(-0.08, 0.02, 0.02);
+                    uData.shieldGroup.rotation.set(0.08, -1.35, -0.06);
+                }
+            }
+            if (uData.offhandTorch) {
+                uData.offhandTorch.visible = !!this.isTorchActive;
             }
 
             // Dynamic idle breathing animation
@@ -2990,14 +3002,16 @@ class DarkSoulsGame {
             }
 
             // Restore Heraldry & Nobility
-            if (data.heraldry && this.heraldry) {
-                this.heraldry.heraldry = data.heraldry;
+            if (this.heraldry) {
+                if (data.heraldry) this.heraldry.heraldry = data.heraldry;
                 if (data.chivalryHonor !== undefined) this.heraldry.chivalryHonor = data.chivalryHonor;
                 if (data.currentRankIndex !== undefined) this.heraldry.currentRankIndex = data.currentRankIndex;
                 if (Array.isArray(data.fiefdoms)) this.heraldry.fiefdoms = data.fiefdoms;
                 this.heraldry.customized = !!data.heraldryCustomized;
                 if (data.heraldryCustomized) {
                     this.heraldry.customizeHeraldry();
+                } else {
+                    this.heraldry.resetToDefaultCrest();
                 }
             }
 

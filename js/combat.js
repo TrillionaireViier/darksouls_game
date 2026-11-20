@@ -3616,6 +3616,9 @@ class DarkSoulsCombat {
             this.isBlocking = false;
             return;
         }
+        if (isDown && this.game && this.game.isTorchActive) {
+            this.game.toggleTorch(false);
+        }
         this.isBlocking = isDown;
     }
 
