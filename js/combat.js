@@ -2085,6 +2085,13 @@ class DarkSoulsCombat {
                 const angle = forward.dot(toBoss.normalize());
                 if (angle > 0.12) {
                     this.boss.hp -= totalDmg;
+                    if (this.boss.state === 'IDLE') {
+                        this.boss.state = 'CHASE';
+                        this.audio.playBossRoar();
+                        this.audio.setBossMusic(true);
+                        this.game.showBossHpBar(this.boss);
+                        this.game.showNotification(`${this.boss.name} AWAKENED!`);
+                    }
                     if (hasTorchFire) this.applyBurnEffect(this.boss);
                     this.audio.playHit(true);
                     this.world.spawnHitSparks(this.boss.mesh.position, true);
@@ -2099,6 +2106,53 @@ class DarkSoulsCombat {
 
                     if (this.boss.hp <= 0) {
                         this.killBoss();
+                    }
+                }
+            }
+        }
+
+        // 3. Check Spawned Compendium 3D Entities (Allow attacking / banishing any spawned 3D model)
+        if (window.compendiumInstance && window.compendiumInstance.spawnedEntities && window.compendiumInstance.spawnedEntities.length > 0) {
+            const spawned = window.compendiumInstance.spawnedEntities;
+            for (let i = spawned.length - 1; i >= 0; i--) {
+                const entMesh = spawned[i];
+                if (!entMesh || !entMesh.parent) {
+                    spawned.splice(i, 1);
+                    continue;
+                }
+                const toEnt = new THREE.Vector3().subVectors(entMesh.position, playerPos);
+                const dist = toEnt.length();
+                if (dist < reach + 1.2) {
+                    const angle = forward.dot(toEnt.normalize());
+                    if (angle > 0.15) {
+                        entMesh.userData.hp = (entMesh.userData.hp !== undefined ? entMesh.userData.hp : 100) - totalDmg;
+                        this.audio.playHit(true);
+                        this.world.spawnHitSparks(entMesh.position, true);
+                        this.world.spawnBlood(entMesh.position);
+                        this.game.showDamageNumber(entMesh.position, totalDmg, false);
+                        
+                        if (entMesh.userData.hp <= 0) {
+                            const entryName = (entMesh.userData.entry && entMesh.userData.entry.name) || '3D Entity';
+                            this.game.showNotification(`⚔️ ${entryName.toUpperCase()} BANISHED!`);
+                            this.audio.playVictory();
+                            this.souls += 100;
+                            this.game.showSoulsGained(100);
+                            
+                            const sScale = entMesh.scale.clone();
+                            let dissTimer = 0;
+                            const dissInterval = setInterval(() => {
+                                dissTimer += 0.05;
+                                const factor = Math.max(0, 1.0 - dissTimer / 0.4);
+                                entMesh.scale.set(sScale.x * factor, sScale.y * factor, sScale.z * factor);
+                                if (factor <= 0) {
+                                    clearInterval(dissInterval);
+                                    if (entMesh.parent) entMesh.parent.remove(entMesh);
+                                    else this.game.scene.remove(entMesh);
+                                    const idx = spawned.indexOf(entMesh);
+                                    if (idx >= 0) spawned.splice(idx, 1);
+                                }
+                            }, 30);
+                        }
                     }
                 }
             }
@@ -3712,8 +3766,11 @@ class DarkSoulsCombat {
         this._scratchToPlayer.subVectors(playerPos, this.boss.mesh.position);
         const dist = this._scratchToPlayer.length();
 
-        // Check if player entered Boss Arena (z > 98)
-        if (playerPos.z > 98 && this.boss.state === 'IDLE') {
+        // Check if player entered Boss Arena (z > 98) or proximity aggro / damaged
+        const inArena = playerPos.z > 98;
+        const inProximity = dist < 24.0;
+        const isDamaged = this.boss.hp < this.boss.maxHp;
+        if ((inArena || inProximity || isDamaged) && this.boss.state === 'IDLE') {
             this.boss.state = 'CHASE';
             const id = this.boss.id;
             if (id === 'taurus' || id === 'asylum' || id === 'capra' || id === 'gaping' || id === 'manus') this.audio.playBossRoar();

@@ -5289,6 +5289,12 @@
             }
 
             const modelMesh = this.buildModel(entry, px, py, pz, 1.0);
+            modelMesh.userData = {
+                entry: entry,
+                isSpawned3D: true,
+                hp: entry.hp || 150,
+                maxHp: entry.hp || 150
+            };
             if (this.scene) {
                 this.scene.add(modelMesh);
                 this.spawnedEntities.push(modelMesh);

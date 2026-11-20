@@ -704,7 +704,7 @@ class DarkSoulsWorld {
             return 6.0;
         }
 
-        // Ascending Stairs from Courtyard (z in [4, 22], x in [14.0, 26.0])
+        // Ascending Stairs from Courtyard to Ramparts (z in [4, 22], x in [14.0, 26.0])
         if (x >= 14.0 && x <= 26.0 && z >= 4 && z <= 22) {
             const t = (z - 4) / 18;
             return t * 6.0;
@@ -721,7 +721,6 @@ class DarkSoulsWorld {
 
         // 2. Surface Boss Arena (z in [92, 172], wide arena span x in [-22, 22])
         // If player is on surface (currentY === null || currentY >= -2.2), ALWAYS stay solid at y = 0.0!
-        // Prevents any floor-clipping or dropping into subterranean crypt when touching walls
         if (x >= -22 && x <= 22 && z >= 92 && z <= 172 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
@@ -731,39 +730,18 @@ class DarkSoulsWorld {
             return 0.0;
         }
 
-        // 4. West Lower Flooded Catacombs & Deep Subterranean Mausoleum
-        // Sunken Catacombs Elevation Lock: Only active if player is GENUINELY underground (currentY <= -2.5)
-        // Prevents surface players from ever being falsely trapped at -1.2m
-        if (currentY !== null && currentY <= -2.5 && x >= -34 && x <= -9 && z >= 4 && z <= 150) {
-            if (z >= 4 && z <= 22) {
-                const t = (z - 4) / 18;
-                return -t * 5.0;
-            }
-            if (z > 22 && z <= 90) {
-                return -5.0;
-            }
-            if (z > 90 && z <= 96) {
-                const t = (z - 90) / 6;
-                return -5.0 + t * 5.0;
-            }
-            // Deep subterranean Mausoleum & Crypt of Nito
-            return -6.0;
+        // 4. West Sunken Catacombs & Deep Subterranean Mausoleum
+        // Precise stairwell trench check: stairs are 8m wide centered at x = -20 (bounds x: [-23.8, -16.2])
+        const inStairTrench = (x >= -23.8 && x <= -16.2 && z >= 4.0 && z <= 22.5);
+        if (inStairTrench) {
+            const t = Math.max(0, Math.min(1.0, (z - 4.0) / 18.0));
+            // Precisely aligns with step top meshes (-stepDepth + 0.445)
+            return Math.min(0.0, -t * 5.0 + 0.22);
         }
 
-        // Descending Sunken Stairs from Courtyard (z in [4, 22], x in [-25, -15])
-        if (x >= -25 && x <= -15 && z >= 4 && z <= 22) {
-            const t = (z - 4) / 18;
-            return -t * 5.0;
-        }
-        // Flooded Subterranean Catacombs Corridor (z in [22, 90], x in [-25, -15])
-        if (x >= -25 && x <= -15 && z > 22 && z <= 90 && (currentY === null || currentY < -2.0)) {
-            return -5.0;
-        }
-
-        // Deep Catacombs Subterranean Mausoleum Arena & Crypt (z in [90, 150], x in [-34, -7])
-        // ONLY active if player is GENUINELY submerged in the subterranean crypt (currentY < -2.5)
+        // Deep Catacombs Crypt & Mausoleum (z in [90, 150], x in [-34, -7])
         const inCryptBounds = (x >= -34 && x <= -7 && z >= 90 && z <= 150);
-        if (inCryptBounds && currentY !== null && currentY < -2.5) {
+        if (inCryptBounds && (currentY === null || currentY < -2.2)) {
             // Crypt Exit Ascent Stairs back to surface fog gate (x in [-20, -12], z in [90, 96])
             if (x >= -20 && x <= -12 && z >= 90 && z <= 96) {
                 const t = (z - 90) / 6;
@@ -774,13 +752,20 @@ class DarkSoulsWorld {
                 const t = (z - 90) / 8;
                 return -5.0 - t * 1.0;
             }
-            // Deep subterranean Catacombs Mausoleum floor
             return -6.0;
         }
 
-        // 5. Main Courtyard (z in [-35, 35], x in [-35, 35])
-        if (x >= -35 && x <= 35 && z >= -35 && z <= 35 && (currentY === null || currentY >= -2.2)) {
-            return 0.0;
+        // Flooded Subterranean Catacombs Corridor (z in [22, 90], x in [-24.2, -15.8])
+        if (x >= -24.2 && x <= -15.8 && z > 22 && z <= 90 && (currentY === null || currentY < -1.5)) {
+            return -4.92;
+        }
+
+        // 5. Main Courtyard Starting Arena (z in [-35, 35], x in [-35, 35])
+        // Guarantees solid floor at y = 0.0 anywhere in the courtyard
+        if (x >= -35 && x <= 35 && z >= -35 && z <= 35) {
+            if (currentY === null || currentY >= -1.2) {
+                return 0.0;
+            }
         }
 
         // 6. Serpent Sanctuary & Temple of the Gorgon (z in [-115, -30], x in [-38, 38])

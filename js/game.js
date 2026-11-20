@@ -690,6 +690,24 @@ class DarkSoulsGame {
                 }
             }
         }
+
+        // Banish nearby spawned Compendium 3D Entity with [E]
+        if (this._nearbyCompendiumEntity && this._nearbyCompendiumEntity.parent) {
+            const ent = this._nearbyCompendiumEntity;
+            const eName = (ent.userData && ent.userData.entry && ent.userData.entry.name) || '3D Entity';
+            if (pPos.distanceTo(ent.position) <= 3.8) {
+                if (window.compendiumInstance && window.compendiumInstance.spawnedEntities) {
+                    const idx = window.compendiumInstance.spawnedEntities.indexOf(ent);
+                    if (idx >= 0) window.compendiumInstance.spawnedEntities.splice(idx, 1);
+                }
+                if (ent.parent) ent.parent.remove(ent);
+                else this.scene.remove(ent);
+                this._nearbyCompendiumEntity = null;
+                this.showNotification(`✨ ${eName.toUpperCase()} BANISHED`);
+                if (this.audio && this.audio.playRoll) this.audio.playRoll();
+                return;
+            }
+        }
     }
 
     openMerchantModal() {
@@ -1389,6 +1407,12 @@ class DarkSoulsGame {
             this.playerVelocity.y = 0;
         }
 
+        // Anti-Clipping Safety Clamp: If player sinks below cobblestone in courtyard, instantly recover to 0.0
+        if (pPos.y < -0.35 && pPos.x >= -30 && pPos.x <= 30 && pPos.z >= -30 && pPos.z <= 3.5) {
+            pPos.y = 0.0;
+            this.playerVelocity.y = 0;
+        }
+
         // 4. MOVEMENT DIRECTION & LOCOMOTION
         const moveDir = this.calculateMovementDirection();
         const isMoving = moveDir.lengthSq() > 0.001;
@@ -2024,11 +2048,23 @@ class DarkSoulsGame {
 
         // Check Interactable Proximity
         let activePrompt = null;
+        this._nearbyCompendiumEntity = null;
         for (const item of this.world.interactables) {
             if (item.type === 'fog_gate' && this.world.fogTraversed) continue;
             if (pPos.distanceTo(item.position) <= item.radius) {
                 activePrompt = item.prompt;
                 break;
+            }
+        }
+
+        if (!activePrompt && window.compendiumInstance && window.compendiumInstance.spawnedEntities) {
+            for (const ent of window.compendiumInstance.spawnedEntities) {
+                if (ent && ent.parent && pPos.distanceTo(ent.position) <= 3.2) {
+                    const eName = (ent.userData && ent.userData.entry && ent.userData.entry.name) || '3D Entity';
+                    activePrompt = `[ E ] BANISH / DISMISS ${eName.toUpperCase()}`;
+                    this._nearbyCompendiumEntity = ent;
+                    break;
+                }
             }
         }
 
