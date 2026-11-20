@@ -3120,7 +3120,7 @@ class DarkSoulsCombat {
                 behaviorType: 'Ranged',
                 aiType: 'Ranged',
                 hp: 220,
-                damage: 48,
+                damage: 18,
                 souls: 180,
                 speed: 1.8,
                 attackReach: 32.0,
@@ -3134,7 +3134,7 @@ class DarkSoulsCombat {
                 behaviorType: 'Ranged',
                 aiType: 'Ranged',
                 hp: 240,
-                damage: 52,
+                damage: 20,
                 souls: 220,
                 speed: 1.8,
                 attackReach: 35.0,
@@ -3148,7 +3148,7 @@ class DarkSoulsCombat {
                 behaviorType: 'Ranged',
                 aiType: 'Ranged',
                 hp: 260,
-                damage: 55,
+                damage: 22,
                 souls: 260,
                 speed: 1.9,
                 attackReach: 34.0,
@@ -3162,7 +3162,7 @@ class DarkSoulsCombat {
                 behaviorType: 'Ranged',
                 aiType: 'Ranged',
                 hp: 270,
-                damage: 56,
+                damage: 22,
                 souls: 280,
                 speed: 1.7,
                 attackReach: 38.0,
@@ -3176,7 +3176,7 @@ class DarkSoulsCombat {
                 behaviorType: 'Ranged',
                 aiType: 'Ranged',
                 hp: 280,
-                damage: 60,
+                damage: 24,
                 souls: 320,
                 speed: 1.6,
                 attackReach: 40.0,
@@ -3190,7 +3190,7 @@ class DarkSoulsCombat {
                 behaviorType: 'Ranged',
                 aiType: 'Ranged',
                 hp: 420,
-                damage: 85,
+                damage: 28,
                 souls: 800,
                 speed: 1.5,
                 attackReach: 44.0,
@@ -3212,7 +3212,10 @@ class DarkSoulsCombat {
         const isQaOneHp = (this.qaOneHpMobs || (window.qaSuite && window.qaSuite.qaOneHpMobsActive));
         const isQaOneHpDmg = (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive));
         const maxHp = isQaOneHp ? 1 : (mobDef.hp || 200);
-        const damage = isQaOneHpDmg ? 1 : (mobDef.damage || 35);
+        const isRangedOrArcher = (mobDef.behaviorType === 'Ranged' || mobDef.isArcher || mobDef.meshType === 'archer' || mobDef.aiType === 'Ranged');
+        const rawDmg = mobDef.damage || 35;
+        // Melee mobs deal 2.5x - 3.0x more damage, while archer / ranged damage is kept lower
+        const damage = isQaOneHpDmg ? 1 : (isRangedOrArcher ? Math.max(14, Math.min(25, Math.round(rawDmg * 0.40))) : Math.round(rawDmg * 2.6));
 
         const behavior = mobDef.behaviorType || 'Swarm';
         let defaultRadius = 0.88;
@@ -5386,7 +5389,7 @@ equipWeapon(weaponId) {
             pos: fromPos.clone(),
             vel: vel,
             shooter: shooter,
-            damage: shooter ? (shooter.damage || 45) : 45,
+            damage: shooter ? Math.max(12, Math.min(25, shooter.damage || 18)) : 18,
             life: 7.0,
             stuck: false,
             stuckTimer: 0
