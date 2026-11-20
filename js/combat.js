@@ -600,6 +600,159 @@ class DarkSoulsCombat {
         this.charcoalResinTimer = 0;
         this.projectiles = [];
 
+        // ----------------------------------------------------
+        // SOULSBORNE MAGIC GRIMOIRE & SPELLCASTING SYSTEM (12 SPELLS)
+        // ----------------------------------------------------
+        this.currentSpellId = 'soul_arrow';
+        this.unlockedSpells = [
+            'soul_arrow',
+            'heavy_soul_arrow',
+            'crystal_homing',
+            'soul_spear',
+            'comet_azur',
+            'sunlight_spear',
+            'lightning_stake',
+            'chaos_fireball',
+            'firestorm',
+            'black_flame',
+            'wrath_of_gods',
+            'bloodflame_talons'
+        ];
+        this.spells = {
+            soul_arrow: {
+                id: 'soul_arrow',
+                name: 'Glintstone Soul Arrow',
+                type: 'Sorcery',
+                icon: '💠',
+                damage: 220,
+                staminaCost: 18,
+                speed: 24,
+                color: 0x44ddff,
+                desc: 'Shoots a swift bolt of pure glintstone starlight.'
+            },
+            heavy_soul_arrow: {
+                id: 'heavy_soul_arrow',
+                name: 'Great Heavy Soul Arrow',
+                type: 'Sorcery',
+                icon: '💎',
+                damage: 380,
+                staminaCost: 28,
+                speed: 20,
+                color: 0x00aaff,
+                desc: 'Hurls a massive dense crystal starlight bolt.'
+            },
+            crystal_homing: {
+                id: 'crystal_homing',
+                name: 'Homing Crystal Soulmass',
+                type: 'Sorcery',
+                icon: '✨',
+                damage: 480,
+                staminaCost: 32,
+                speed: 22,
+                color: 0x88ffff,
+                desc: 'Surrounds caster with 5 crystalline darts that fly at foes.'
+            },
+            soul_spear: {
+                id: 'soul_spear',
+                name: 'Crystal Soul Spear',
+                type: 'Sorcery',
+                icon: '🔱',
+                damage: 650,
+                staminaCost: 38,
+                speed: 28,
+                color: 0x66ffff,
+                desc: 'Pierces through all enemies in its trajectory with lethal force.'
+            },
+            comet_azur: {
+                id: 'comet_azur',
+                name: 'Comet Azur Torrent',
+                type: 'Primeval Sorcery',
+                icon: '🌌',
+                damage: 850,
+                staminaCost: 48,
+                speed: 30,
+                color: 0x00ffea,
+                desc: 'Fires a titanic stream of primeval stellar magic.'
+            },
+            sunlight_spear: {
+                id: 'sunlight_spear',
+                name: 'Sunlight Spear of Gwyn',
+                type: 'Miracle / Lightning',
+                icon: '⚡',
+                damage: 620,
+                staminaCost: 34,
+                speed: 30,
+                color: 0xffea00,
+                desc: 'Hurls the golden lightning of Lord Gwyn that shatters dragon scales.'
+            },
+            lightning_stake: {
+                id: 'lightning_stake',
+                name: 'Ancient Lightning Stake',
+                type: 'Dragon Cult Incantation',
+                icon: '🌩️',
+                damage: 680,
+                staminaCost: 40,
+                speed: 22,
+                color: 0xff3322,
+                desc: 'Drives crimson dragon lightning into the earth, triggering shockwaves.'
+            },
+            chaos_fireball: {
+                id: 'chaos_fireball',
+                name: 'Great Chaos Fireball',
+                type: 'Pyromancy',
+                icon: '🔥',
+                damage: 550,
+                staminaCost: 30,
+                speed: 20,
+                color: 0xff5500,
+                desc: 'Hurls a molten ball of chaotic fire leaving burning lava.'
+            },
+            firestorm: {
+                id: 'firestorm',
+                name: 'Chaos Firestorm',
+                type: 'Pyromancy',
+                icon: '🌋',
+                damage: 720,
+                staminaCost: 44,
+                speed: 18,
+                color: 0xff2200,
+                desc: 'Summons violent pillars of chaos flame in a ring around the caster.'
+            },
+            black_flame: {
+                id: 'black_flame',
+                name: 'Black Flame Scourge',
+                type: 'Godslayer Incantation',
+                icon: '🖤',
+                damage: 520,
+                staminaCost: 26,
+                speed: 24,
+                color: 0x8844aa,
+                desc: 'Unleashes the God-Slaying Black Flame that eats away target HP.'
+            },
+            wrath_of_gods: {
+                id: 'wrath_of_gods',
+                name: 'Wrath of the Gods',
+                type: 'Miracle',
+                icon: '☀️',
+                damage: 420,
+                staminaCost: 28,
+                speed: 16,
+                color: 0xffffff,
+                desc: 'Emits a blinding 360-degree kinetic holy shockwave blast.'
+            },
+            bloodflame_talons: {
+                id: 'bloodflame_talons',
+                name: 'Bloodflame Talons',
+                type: 'Blood Incantation',
+                icon: '🩸',
+                damage: 540,
+                staminaCost: 28,
+                speed: 22,
+                color: 0xff0044,
+                desc: 'Scratches the air with cursed talons that detonate in bloodflame.'
+            }
+        };
+
         // Pre-allocated scratch vectors for zero-allocation 60 FPS animation/combat updates
         this._scratchToPlayer = new THREE.Vector3();
         this._scratchDir = new THREE.Vector3();
@@ -1386,6 +1539,607 @@ class DarkSoulsCombat {
                 radius: 3.8,
                 spawnPos: { x: 0, z: 132 },
                 create: (cf, x, z) => cf.createEldenBeast(x, z)
+            },
+            // 40 EXPANDED LORDS: ELDEN RING ERDTREE, BLOODBORNE, SEKIRO & DS3 (61–100)
+            {
+                id: 'messmer_the_impaler',
+                name: 'MESSMER THE IMPALER, LORD OF FLAMES',
+                title: 'Shadow Keep Specimen Storehouse &bull; Spear of the Impaler, Winged Serpents & Blazing Fire Torrent',
+                unlockLocationId: 'sote_shadow_keep',
+                icon: '🐍',
+                theme: 'flame',
+                bossScale: 2.1,
+                maxHp: 24000,
+                damage: 1250,
+                souls: 1100000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'messmer_the_impaler', theme: 'flame', bossScale: 2.1 }, x, z)
+            },
+            {
+                id: 'radahn_consort',
+                name: 'PROMISED CONSORT RADAHN & MIQUELLA',
+                title: 'Enir-Ilim Gate of Divinity &bull; Light of Miquella, Twin Greatswords of Radahn & Divine Pillar of Light',
+                unlockLocationId: 'sote_enir_ilim_gate',
+                icon: '👑',
+                theme: 'holy',
+                bossScale: 2.2,
+                maxHp: 28000,
+                damage: 1400,
+                souls: 1500000,
+                radius: 3.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'radahn_consort', theme: 'holy', bossScale: 2.2 }, x, z)
+            },
+            {
+                id: 'bayle_the_dread',
+                name: 'BAYLE THE DREAD, APEX DRAGON OF DREAD',
+                title: 'Jagged Peak Rest of the Dread &bull; Dread Lightning Torrent, Magma Breath & Broken Dragon Wings',
+                unlockLocationId: 'sote_jagged_peak_summit',
+                icon: '🐉',
+                theme: 'flame',
+                bossScale: 2.8,
+                maxHp: 26000,
+                damage: 1350,
+                souls: 1250000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'bayle_the_dread', theme: 'flame', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'midra_frenzied_flame',
+                name: 'MIDRA, LORD OF FRENZIED FLAME',
+                title: "Midra's Manse Abyssal Woods &bull; Barbed Greatsword, Frenzied Flame Sun Head & Golden Flame Vortex",
+                unlockLocationId: 'sote_midras_manse',
+                icon: '👁️',
+                theme: 'frenzy',
+                bossScale: 2.0,
+                maxHp: 23000,
+                damage: 1200,
+                souls: 1050000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'midra_frenzied_flame', theme: 'frenzy', bossScale: 2.0 }, x, z)
+            },
+            {
+                id: 'rellana_twin_moon',
+                name: 'RELLANA, TWIN MOON KNIGHT',
+                title: 'Castle Ensis Moonrise Chamber &bull; Twin Moon Swords, Carian Starlight & Moon Blade Flurry',
+                unlockLocationId: 'sote_castle_ensis',
+                icon: '🌙',
+                theme: 'magic',
+                bossScale: 2.0,
+                maxHp: 22500,
+                damage: 1180,
+                souls: 1000000,
+                radius: 2.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'rellana_twin_moon', theme: 'magic', bossScale: 2.0 }, x, z)
+            },
+            {
+                id: 'romina_saint_bud',
+                name: 'ROMINA, SAINT OF THE BUD',
+                title: 'Church of the Bud Ancient Ruins &bull; Halberd of the Bud, Scarlet Rot Butterflies & Centipede Stomp',
+                unlockLocationId: 'sote_church_of_the_bud',
+                icon: '🌺',
+                theme: 'rot',
+                bossScale: 2.4,
+                maxHp: 24000,
+                damage: 1220,
+                souls: 1100000,
+                radius: 3.3,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'romina_saint_bud', theme: 'rot', bossScale: 2.4 }, x, z)
+            },
+            {
+                id: 'scadutree_avatar',
+                name: 'SCADUTREE AVATAR, BLOOM OF THE SUNFLOWER',
+                title: 'Scadutree Base Tree-Worship Sanctum &bull; Golden Flower Head Slam, Radiant Light Thorns & Rebirth Burst',
+                unlockLocationId: 'sote_scadutree_base',
+                icon: '🌻',
+                theme: 'holy',
+                bossScale: 2.6,
+                maxHp: 25000,
+                damage: 1280,
+                souls: 1150000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'scadutree_avatar', theme: 'holy', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'putrescent_knight',
+                name: 'PUTRESCENT KNIGHT, HORSEMAN OF DEEP PURPLE',
+                title: "Stone Coffin Fissure Garden of Deep Purple &bull; Putrescence Cleaver, Ghostflame Sludge & Phantom Steed Charge",
+                unlockLocationId: 'sote_stone_coffin_fissure',
+                icon: '🐴',
+                theme: 'magic',
+                bossScale: 2.3,
+                maxHp: 23500,
+                damage: 1240,
+                souls: 1080000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'putrescent_knight', theme: 'magic', bossScale: 2.3 }, x, z)
+            },
+            {
+                id: 'metyr_mother_fingers',
+                name: 'METYR, MOTHER OF FINGERS',
+                title: 'Finger Ruins of Dheo &bull; Microcosm Beam, Crawling Finger Slams & Primordial Signal Burst',
+                unlockLocationId: 'sote_finger_ruins_rhia',
+                icon: '🖐️',
+                theme: 'cosmic',
+                bossScale: 2.7,
+                maxHp: 25500,
+                damage: 1300,
+                souls: 1200000,
+                radius: 3.6,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'metyr_mother_fingers', theme: 'cosmic', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'commander_gaius',
+                name: 'COMMANDER GAIUS & ARMORED BOAR',
+                title: 'Shadow Keep Back Gate Hinterland &bull; Gravity Lance Charge, Boar Tusk Trample & Gravitational Burst',
+                unlockLocationId: 'sote_scaduview',
+                icon: '🐗',
+                theme: 'dark',
+                bossScale: 2.4,
+                maxHp: 24500,
+                damage: 1260,
+                souls: 1120000,
+                radius: 3.3,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'commander_gaius', theme: 'dark', bossScale: 2.4 }, x, z)
+            },
+            {
+                id: 'cleric_beast',
+                name: 'CLERIC BEAST OF YHARNAM',
+                title: 'Central Yharnam Great Bridge &bull; Deformed Beast Claws, Terrifying Shriek & Ground Shatter',
+                unlockLocationId: 'bb_central_great_bridge',
+                icon: '🐺',
+                theme: 'beast',
+                bossScale: 2.6,
+                maxHp: 21000,
+                damage: 1120,
+                souls: 850000,
+                radius: 3.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'cleric_beast', theme: 'beast', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'vicar_amelia',
+                name: 'VICAR AMELIA, WHITE BEAST OF CATHEDRAL',
+                title: 'Grand Cathedral Nave &bull; Gold Medallion Prayer, Praying Slash & Silver Fur Cleave',
+                unlockLocationId: 'cathedral_ward',
+                icon: '🐾',
+                theme: 'beast',
+                bossScale: 2.4,
+                maxHp: 22000,
+                damage: 1150,
+                souls: 900000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'vicar_amelia', theme: 'beast', bossScale: 2.4 }, x, z)
+            },
+            {
+                id: 'blood_starved_beast',
+                name: 'BLOOD-STARVED BEAST',
+                title: 'Old Yharnam Church of the Good Chalice &bull; Flayed Hide Frenzy, Poison Cloud & Lacerating Claws',
+                unlockLocationId: 'bb_old_yharnam_chapel',
+                icon: '🩸',
+                theme: 'blood',
+                bossScale: 2.2,
+                maxHp: 21500,
+                damage: 1160,
+                souls: 880000,
+                radius: 2.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'blood_starved_beast', theme: 'blood', bossScale: 2.2 }, x, z)
+            },
+            {
+                id: 'shadows_of_yharnam',
+                name: 'SHADOWS OF YHARNAM, FORBIDDEN TRIO',
+                title: 'Forbidden Woods Gravestone Plaza &bull; Katana Slash, Fireball Hurl, Giant Serpent Summons',
+                unlockLocationId: 'forbidden_woods',
+                icon: '👥',
+                theme: 'dark',
+                bossScale: 2.0,
+                maxHp: 23000,
+                damage: 1180,
+                souls: 950000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'shadows_of_yharnam', theme: 'dark', bossScale: 2.0 }, x, z)
+            },
+            {
+                id: 'rom_vacuous_spider',
+                name: 'ROM, THE VACUOUS SPIDER',
+                title: 'Byrgenwerth Moonside Lake &bull; Arcane Meteor Shower, Stone Head Slam & Spider Brood',
+                unlockLocationId: 'bb_byrgenwerth_moonside',
+                icon: '🕷️',
+                theme: 'magic',
+                bossScale: 2.5,
+                maxHp: 22800,
+                damage: 1200,
+                souls: 980000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'rom_vacuous_spider', theme: 'magic', bossScale: 2.5 }, x, z)
+            },
+            {
+                id: 'the_one_reborn',
+                name: 'THE ONE REBORN',
+                title: "Yahar'gul Advent Plaza &bull; Corpse Mass Torrent, Acid Sludge Pool & Corpse Bell Chime",
+                unlockLocationId: 'bb_unseen_village_advent',
+                icon: '🧟',
+                theme: 'dark',
+                bossScale: 2.9,
+                maxHp: 24500,
+                damage: 1240,
+                souls: 1050000,
+                radius: 3.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'the_one_reborn', theme: 'dark', bossScale: 2.9 }, x, z)
+            },
+            {
+                id: 'ebrietas_daughter_cosmos',
+                name: 'EBRIETAS, DAUGHTER OF THE COSMOS',
+                title: 'Altar of Despair Beneath Grand Cathedral &bull; A Call Beyond Cosmic Lasers, Tentacle Swipe & Blood Spit',
+                unlockLocationId: 'upper_cathedral_ward',
+                icon: '🐙',
+                theme: 'cosmic',
+                bossScale: 2.7,
+                maxHp: 25000,
+                damage: 1280,
+                souls: 1150000,
+                radius: 3.6,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'ebrietas_daughter_cosmos', theme: 'cosmic', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'martyr_logarius',
+                name: 'MARTYR LOGARIUS OF CAINHURST',
+                title: 'Forsaken Castle Cainhurst Rooftops &bull; Executioner Scythe, Flying Skull Magic & Bloodied Rapier Storm',
+                unlockLocationId: 'cainhurst_castle',
+                icon: '👑',
+                theme: 'frost',
+                bossScale: 2.1,
+                maxHp: 23500,
+                damage: 1210,
+                souls: 1020000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'martyr_logarius', theme: 'frost', bossScale: 2.1 }, x, z)
+            },
+            {
+                id: 'gehrman_first_hunter',
+                name: 'GEHRMAN, THE FIRST HUNTER',
+                title: "Hunter's Dream Burning Workshop &bull; Burial Blade Curved Scythe, Blunderbuss Riposte & Wind Slash",
+                unlockLocationId: 'hunters_dream',
+                icon: '🌾',
+                theme: 'blood',
+                bossScale: 2.0,
+                maxHp: 26000,
+                damage: 1320,
+                souls: 1250000,
+                radius: 2.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'gehrman_first_hunter', theme: 'blood', bossScale: 2.0 }, x, z)
+            },
+            {
+                id: 'moon_presence',
+                name: 'FLORA, THE MOON PRESENCE',
+                title: "Hunter's Dream Red Moon Meadow &bull; Blood Gaze 1-HP Blast, Tendril Flurry & Cosmic Blood Mist",
+                unlockLocationId: 'hunters_dream',
+                icon: '🌕',
+                theme: 'cosmic',
+                bossScale: 2.5,
+                maxHp: 27000,
+                damage: 1360,
+                souls: 1350000,
+                radius: 3.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'moon_presence', theme: 'cosmic', bossScale: 2.5 }, x, z)
+            },
+            {
+                id: 'gyoubu_masataka_oniwa',
+                name: 'GYOUBU MASATAKA ONIWA',
+                title: 'Ashina Castle Gate Fortress &bull; Oniwa Cross Spear, Demon Warhorse Charge & Spinning Rope Cleave',
+                unlockLocationId: 'sekiro_ashina_castle_gate',
+                icon: '🐎',
+                theme: 'dark',
+                bossScale: 2.4,
+                maxHp: 22000,
+                damage: 1140,
+                souls: 900000,
+                radius: 3.3,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'gyoubu_masataka_oniwa', theme: 'dark', bossScale: 2.4 }, x, z)
+            },
+            {
+                id: 'genichiro_ashina',
+                name: 'GENICHIRO ASHINA, WAY OF TOMOE',
+                title: 'Ashina Castle Tenshu Dojo &bull; Floating Passage Combo, Greatbow Flurry & Lightning of Tomoe',
+                unlockLocationId: 'ashina_castle',
+                icon: '⚡',
+                theme: 'dragon',
+                bossScale: 2.0,
+                maxHp: 23500,
+                damage: 1200,
+                souls: 1000000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'genichiro_ashina', theme: 'dragon', bossScale: 2.0 }, x, z)
+            },
+            {
+                id: 'guardian_ape',
+                name: 'GUARDIAN APE OF SUNKEN VALLEY',
+                title: 'Sunken Valley Bodhisattva Valley Apex &bull; Cleaver Slam, Toxic Fart Cloud & Severed Head Shriek',
+                unlockLocationId: 'sekiro_bodhisattva_valley',
+                icon: '🦍',
+                theme: 'beast',
+                bossScale: 2.7,
+                maxHp: 24500,
+                damage: 1240,
+                souls: 1080000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'guardian_ape', theme: 'beast', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'folding_screen_monkeys',
+                name: 'FOLDING SCREEN MONKEYS',
+                title: 'Senpou Temple Inner Sanctum &bull; Hearing, Seeing, Speaking & Invisible Illusory Apes',
+                unlockLocationId: 'senpou_temple',
+                icon: '🐒',
+                theme: 'magic',
+                bossScale: 1.8,
+                maxHp: 20500,
+                damage: 1080,
+                souls: 820000,
+                radius: 2.6,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'folding_screen_monkeys', theme: 'magic', bossScale: 1.8 }, x, z)
+            },
+            {
+                id: 'corrupted_monk',
+                name: 'TRUE CORRUPTED MONK OF FOUNTAINHEAD',
+                title: 'Fountainhead Palace Vermilion Bridge &bull; Triple-Deathblow Naginata, Shadow Illusions & Centipede Vomit',
+                unlockLocationId: 'sekiro_fountainhead_vermilion',
+                icon: '🎭',
+                theme: 'magic',
+                bossScale: 2.3,
+                maxHp: 25000,
+                damage: 1260,
+                souls: 1120000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'corrupted_monk', theme: 'magic', bossScale: 2.3 }, x, z)
+            },
+            {
+                id: 'great_shinobi_owl',
+                name: 'GREAT SHINOBI OWL & OWL FATHER',
+                title: 'Hirata Estate Hidden Temple &bull; Heavy Odachi Slash, Anti-Healing Charm & Firecracker Mist',
+                unlockLocationId: 'hirata_estate',
+                icon: '🦉',
+                theme: 'dark',
+                bossScale: 2.2,
+                maxHp: 26500,
+                damage: 1340,
+                souls: 1280000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'great_shinobi_owl', theme: 'dark', bossScale: 2.2 }, x, z)
+            },
+            {
+                id: 'demon_of_hatred',
+                name: 'DEMON OF HATRED',
+                title: 'Ashina Outskirts Scorched Battlefield &bull; Blazing Claw Sweep, Fireball Volley & Flame Wave Stomp',
+                unlockLocationId: 'sekiro_outskirts_wall_gate',
+                icon: '👹',
+                theme: 'flame',
+                bossScale: 2.9,
+                maxHp: 28500,
+                damage: 1420,
+                souls: 1450000,
+                radius: 3.9,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'demon_of_hatred', theme: 'flame', bossScale: 2.9 }, x, z)
+            },
+            {
+                id: 'divine_dragon',
+                name: 'DIVINE DRAGON OF EVERLASTING JADE',
+                title: 'Sanctuary Cloud Peak &bull; Seven-Branched Sword Wind Shockwaves & Celestial Lightning Parrying',
+                unlockLocationId: 'fountainhead_palace',
+                icon: '🐉',
+                theme: 'dragon',
+                bossScale: 3.0,
+                maxHp: 27000,
+                damage: 1360,
+                souls: 1350000,
+                radius: 4.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'divine_dragon', theme: 'dragon', bossScale: 3.0 }, x, z)
+            },
+            {
+                id: 'iudex_gundyr',
+                name: 'IUDEX GUNDYR, ASHEN ARBITER',
+                title: 'Cemetery of Ash Untended Graves &bull; Coiled Sword Thrust, Shoulder Ram & Erupting Pus of Man',
+                unlockLocationId: 'ds3_cemetery_of_ash',
+                icon: '⚔️',
+                theme: 'dark',
+                bossScale: 2.2,
+                maxHp: 22000,
+                damage: 1150,
+                souls: 880000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'iudex_gundyr', theme: 'dark', bossScale: 2.2 }, x, z)
+            },
+            {
+                id: 'vordt_boreal_valley',
+                name: 'VORDT OF THE BOREAL VALLEY',
+                title: 'High Wall of Lothric Grand Portcullis &bull; Frost Greathammer, Quadrupedal Charge & Frost Breath',
+                unlockLocationId: 'high_wall_lothric',
+                icon: '❄️',
+                theme: 'frost',
+                bossScale: 2.4,
+                maxHp: 22500,
+                damage: 1180,
+                souls: 920000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'vordt_boreal_valley', theme: 'frost', bossScale: 2.4 }, x, z)
+            },
+            {
+                id: 'crystal_sage',
+                name: 'CRYSTAL SAGE OF FARRON',
+                title: 'Road of Sacrifices Crux Ruins &bull; Crystal Soul Spear, Homing Blue Hail & Teleportation Clones',
+                unlockLocationId: 'road_of_sacrifices',
+                icon: '🔮',
+                theme: 'magic',
+                bossScale: 2.0,
+                maxHp: 21800,
+                damage: 1140,
+                souls: 890000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'crystal_sage', theme: 'magic', bossScale: 2.0 }, x, z)
+            },
+            {
+                id: 'deacons_of_the_deep',
+                name: 'DEACONS OF THE DEEP',
+                title: 'Cathedral of the Deep Core &bull; Archdeacon Royce, Fire Orbs, Deep Curse Fog & Red Soul Possession',
+                unlockLocationId: 'cathedral_of_the_deep',
+                icon: '🕯️',
+                theme: 'holy',
+                bossScale: 2.0,
+                maxHp: 23000,
+                damage: 1170,
+                souls: 950000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'deacons_of_the_deep', theme: 'holy', bossScale: 2.0 }, x, z)
+            },
+            {
+                id: 'high_lord_wolnir',
+                name: 'HIGH LORD WOLNIR, CARTHUS TYRANT',
+                title: 'Catacombs of Carthus Dark Goblet &bull; Golden Holy Bracelets, Abyss Miasma & Colossal Holy Greatsword',
+                unlockLocationId: 'catacombs_carthus',
+                icon: '💀',
+                theme: 'dark',
+                bossScale: 2.8,
+                maxHp: 25000,
+                damage: 1270,
+                souls: 1100000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'high_lord_wolnir', theme: 'dark', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'old_demon_king',
+                name: 'OLD DEMON KING, LAST PYRE',
+                title: 'Smouldering Lake Molten Cavern &bull; Flaming Stone Club, Meteor Rain & Ring of Chaos Flame',
+                unlockLocationId: 'smouldering_lake',
+                icon: '🔥',
+                theme: 'flame',
+                bossScale: 2.6,
+                maxHp: 24200,
+                damage: 1230,
+                souls: 1060000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'old_demon_king', theme: 'flame', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'aldrich_devourer',
+                name: 'ALDRICH, DEVOURER OF GODS',
+                title: 'Anor Londo Cathedral of the Devourer &bull; Golden Darkmoon Arrow Rain, Lifehunt Scythe & Soul Stream',
+                unlockLocationId: 'ds3_anor_londo_ds3',
+                icon: '🏹',
+                theme: 'magic',
+                bossScale: 2.5,
+                maxHp: 25800,
+                damage: 1310,
+                souls: 1200000,
+                radius: 3.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'aldrich_devourer', theme: 'magic', bossScale: 2.5 }, x, z)
+            },
+            {
+                id: 'yhorm_the_giant',
+                name: 'YHORM THE GIANT, PROFANED RECLUSE',
+                title: 'Profaned Capital Sunken Throne &bull; Great Machete Downward Slam, Burning Lava Stomp & Lord Rage',
+                unlockLocationId: 'profaned_capital',
+                icon: '🗿',
+                theme: 'dark',
+                bossScale: 2.8,
+                maxHp: 27500,
+                damage: 1380,
+                souls: 1300000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'yhorm_the_giant', theme: 'dark', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'dancer_boreal_valley',
+                name: 'DANCER OF THE BOREAL VALLEY',
+                title: 'High Wall of Lothric Cathedral of Emma &bull; Dual Curved Swords (Flame & Dark Magic) & Infinite Spin',
+                unlockLocationId: 'high_wall_lothric',
+                icon: '💃',
+                theme: 'frost',
+                bossScale: 2.3,
+                maxHp: 26000,
+                damage: 1320,
+                souls: 1240000,
+                radius: 3.1,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'dancer_boreal_valley', theme: 'frost', bossScale: 2.3 }, x, z)
+            },
+            {
+                id: 'oceiros_consumed_king',
+                name: 'OCEIROS, THE CONSUMED KING',
+                title: "Consumed King's Garden Deep Grove &bull; Moonlight Dragon Scepter, Blind Frenzy Charge & Ocelotte Cry",
+                unlockLocationId: 'consumed_kings_garden',
+                icon: '🐉',
+                theme: 'magic',
+                bossScale: 2.5,
+                maxHp: 25200,
+                damage: 1290,
+                souls: 1180000,
+                radius: 3.4,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'oceiros_consumed_king', theme: 'magic', bossScale: 2.5 }, x, z)
+            },
+            {
+                id: 'demon_prince',
+                name: 'THE DEMON PRINCE, CHAOS SOVEREIGN',
+                title: 'The Dreg Heap Earthen Peak Ruins &bull; Chaos Bed Vestiges Laser, Meteor Fall & Burning Magma Dive',
+                unlockLocationId: 'dreg_heap',
+                icon: '🦇',
+                theme: 'flame',
+                bossScale: 2.8,
+                maxHp: 29000,
+                damage: 1440,
+                souls: 1550000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'demon_prince', theme: 'flame', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'halflight_spear_church',
+                name: 'HALFLIGHT, SPEAR OF THE CHURCH',
+                title: 'Ringed City Church of Filianore &bull; Frayed Blade Bleed Stance, Ritual Spear Fragments & Guardian Orbs',
+                unlockLocationId: 'ringed_city',
+                icon: '⚖️',
+                theme: 'holy',
+                bossScale: 2.1,
+                maxHp: 26500,
+                damage: 1350,
+                souls: 1350000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 132 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'halflight_spear_church', theme: 'holy', bossScale: 2.1 }, x, z)
             }
         ];
     }
@@ -2650,6 +3404,91 @@ class DarkSoulsCombat {
         this.estusFlasks = this.maxEstus;
         this.stamina = this.maxStamina;
         this.spawnEnemies();
+    }
+
+    // ----------------------------------------------------
+    // SPELLCASTING METHODS (TRY CAST SPELL & CYCLE SPELLS)
+    // ----------------------------------------------------
+    tryCastSpell() {
+        if (this.isDead || this.isRolling || this.isDrinkingEstus || this.isStaggered || this.isAttacking) return false;
+        const spell = this.spells[this.currentSpellId] || this.spells.soul_arrow;
+        const stamCost = spell.staminaCost || 25;
+        if (this.stamina < stamCost) {
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification("⚠️ NOT ENOUGH STAMINA FOR SPELL");
+            }
+            return false;
+        }
+
+        this.stamina = Math.max(0, this.stamina - stamCost);
+        this.staminaDelay = 0.65;
+        this.isAttacking = true;
+        this.attackCombo = 1;
+        this.attackTime = 0;
+
+        // Spawn spell projectile
+        const pPos = this.game.playerMesh.position.clone().add(new THREE.Vector3(0, 1.25, 0));
+        const rot = this.game.playerMesh.rotation.y;
+        const dir = new THREE.Vector3(Math.sin(rot), 0, Math.cos(rot)).normalize();
+
+        const sGeo = new THREE.SphereGeometry(0.24, 8, 8);
+        const sMat = new THREE.MeshBasicMaterial({ color: spell.color, transparent: true, opacity: 0.95 });
+        const pMesh = new THREE.Mesh(sGeo, sMat);
+        pMesh.position.copy(pPos).add(dir.clone().multiplyScalar(0.7));
+        this.game.scene.add(pMesh);
+
+        const pLight = new THREE.PointLight(spell.color, 3.0, 12);
+        pMesh.add(pLight);
+
+        this.projectiles.push({
+            mesh: pMesh,
+            dir: dir,
+            speed: spell.speed || 24,
+            life: 2.0,
+            damage: spell.damage || 350
+        });
+
+        if (this.audio) {
+            if (spell.type.includes('Lightning')) this.audio.playSunlightFlame();
+            else if (spell.type.includes('Pyromancy')) this.audio.playBonfireIgnite();
+            else this.audio.playSwing(false);
+        }
+
+        if (this.game && this.game.showNotification) {
+            this.game.showNotification(`${spell.icon} CAST: ${spell.name} (${spell.damage} DMG)`);
+        }
+
+        if (this.game && this.game.shakeCamera) {
+            this.game.shakeCamera(0.2, 0.2);
+        }
+
+        return true;
+    }
+
+    cycleSpell(dir = 1) {
+        if (!this.unlockedSpells || this.unlockedSpells.length <= 1) return;
+        const idx = this.unlockedSpells.indexOf(this.currentSpellId);
+        const nextIdx = (idx + dir + this.unlockedSpells.length) % this.unlockedSpells.length;
+        this.currentSpellId = this.unlockedSpells[nextIdx];
+        const s = this.spells[this.currentSpellId];
+        if (this.game && this.game.showNotification) {
+            this.game.showNotification(`⚡ SPELL: ${s.icon} ${s.name} (${s.damage} DMG)`);
+        }
+        if (this.audio && this.audio.playRoll) this.audio.playRoll();
+        this.updateSpellHUD();
+    }
+
+    updateSpellHUD() {
+        const s = this.spells[this.currentSpellId];
+        if (!s) return;
+        const slotTop = document.querySelector('.eq-top .eq-icon');
+        if (slotTop) {
+            slotTop.textContent = s.icon;
+        }
+        const eqTop = document.querySelector('.eq-top');
+        if (eqTop) {
+            eqTop.setAttribute('title', `${s.name} [3] (Click to Cast)`);
+        }
     }
 
     fireMoonlightBeam() {

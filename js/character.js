@@ -8181,4 +8181,173 @@ class DarkSoulsCharacters {
         return root;
     }
 
+    // ----------------------------------------------------
+    // DYNAMIC SOULSBORNE LEGENDARY BOSS MESH GENERATOR (BOSSES 61-100)
+    // ----------------------------------------------------
+    createSoulsborneBoss(bossDef, x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.4;
+        root.add(bodyGroup);
+
+        const theme = bossDef.theme || 'dark';
+        let mainColor = 0x222222;
+        let glowColor = 0xff6600;
+        let metalness = 0.6;
+        let roughness = 0.4;
+
+        if (theme === 'flame' || theme === 'fire') {
+            mainColor = 0x2a1510;
+            glowColor = 0xff3300;
+        } else if (theme === 'holy' || theme === 'gold') {
+            mainColor = 0x3d3215;
+            glowColor = 0xffd700;
+            metalness = 0.85;
+            roughness = 0.25;
+        } else if (theme === 'magic' || theme === 'cosmic') {
+            mainColor = 0x0e1b2b;
+            glowColor = 0x00e5ff;
+        } else if (theme === 'rot' || theme === 'frenzy') {
+            mainColor = 0x2e1e0a;
+            glowColor = 0xffaa00;
+        } else if (theme === 'beast' || theme === 'blood') {
+            mainColor = 0x201416;
+            glowColor = 0xcc1122;
+        } else if (theme === 'frost' || theme === 'dragon') {
+            mainColor = 0x182430;
+            glowColor = 0x88ddff;
+        }
+
+        const armorMat = new THREE.MeshStandardMaterial({
+            color: mainColor,
+            metalness: metalness,
+            roughness: roughness
+        });
+        const glowMat = new THREE.MeshStandardMaterial({
+            color: glowColor,
+            emissive: glowColor,
+            emissiveIntensity: 0.65,
+            roughness: 0.3
+        });
+        const steelMat = new THREE.MeshStandardMaterial({
+            color: 0x444444,
+            metalness: 0.8,
+            roughness: 0.2
+        });
+
+        const scale = bossDef.bossScale || 1.8;
+        bodyGroup.scale.set(scale, scale, scale);
+
+        // 1. Torso
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.42, 1.6, 8), armorMat);
+        torso.castShadow = true;
+        bodyGroup.add(torso);
+
+        // 2. Head & Helmet / Horns
+        const headGroup = new THREE.Group();
+        headGroup.position.set(0, 1.1, 0);
+        torso.add(headGroup);
+
+        const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.32, 8, 8), armorMat);
+        headGroup.add(headMesh);
+
+        // Glowing eyes
+        const eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.04, 0.08), glowMat);
+        eyeL.position.set(-0.12, 0.04, 0.28);
+        headGroup.add(eyeL);
+
+        const eyeR = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.04, 0.08), glowMat);
+        eyeR.position.set(0.12, 0.04, 0.28);
+        headGroup.add(eyeR);
+
+        // Themed Crest / Crown / Horns
+        if (theme === 'holy' || theme === 'gold') {
+            const crown = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.05, 6, 12), glowMat);
+            crown.position.y = 0.28;
+            crown.rotation.x = Math.PI / 2;
+            headGroup.add(crown);
+        } else if (theme === 'flame' || theme === 'rot' || theme === 'beast') {
+            const hornL = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.65, 5), glowMat);
+            hornL.position.set(-0.25, 0.35, 0);
+            hornL.rotation.z = -0.45;
+            headGroup.add(hornL);
+            const hornR = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.65, 5), glowMat);
+            hornR.position.set(0.25, 0.35, 0);
+            hornR.rotation.z = 0.45;
+            headGroup.add(hornR);
+        } else {
+            const crest = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.45, 0.5), steelMat);
+            crest.position.set(0, 0.32, 0);
+            headGroup.add(crest);
+        }
+
+        // 3. Wings / Tendrils
+        const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.06, 0.8), armorMat);
+        wingL.position.set(-1.1, 0.4, -0.3);
+        wingL.rotation.z = 0.3;
+        torso.add(wingL);
+
+        const wingR = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.06, 0.8), armorMat);
+        wingR.position.set(1.1, 0.4, -0.3);
+        wingR.rotation.z = -0.3;
+        torso.add(wingR);
+
+        // 4. Arms & Boss Weapon
+        const rShoulder = new THREE.Group();
+        rShoulder.position.set(0.65, 0.5, 0);
+        torso.add(rShoulder);
+
+        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.95, 6), armorMat);
+        rArm.position.y = -0.45;
+        rShoulder.add(rArm);
+
+        let wpn;
+        if (theme === 'flame' || theme === 'rot') {
+            wpn = new THREE.Group();
+            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 3.8, 6), steelMat);
+            const tip = new THREE.Mesh(new THREE.ConeGeometry(0.22, 1.1, 6), glowMat);
+            tip.position.y = 2.1;
+            wpn.add(shaft);
+            wpn.add(tip);
+        } else if (theme === 'holy' || theme === 'gold') {
+            wpn = new THREE.Mesh(new THREE.BoxGeometry(0.28, 3.2, 0.08), glowMat);
+        } else if (theme === 'beast') {
+            wpn = new THREE.Mesh(new THREE.BoxGeometry(0.45, 2.8, 0.1), steelMat);
+        } else {
+            wpn = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.4, 0.08), steelMat);
+        }
+        wpn.position.set(0.1, 0.6, 0.6);
+        wpn.rotation.x = 0.7;
+        rShoulder.add(wpn);
+
+        const lShoulder = new THREE.Group();
+        lShoulder.position.set(-0.65, 0.5, 0);
+        torso.add(lShoulder);
+        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.95, 6), armorMat);
+        lArm.position.y = -0.45;
+        lShoulder.add(lArm);
+
+        // 5. Boss Atmospheric Point Light
+        const auraLight = new THREE.PointLight(glowColor, 3.5, 18, 1.2);
+        auraLight.position.set(0, 1.4, 0.6);
+        bodyGroup.add(auraLight);
+
+        root.userData = {
+            bodyGroup,
+            torso,
+            headGroup,
+            rShoulder,
+            lShoulder,
+            wpn,
+            auraLight,
+            wingL,
+            wingR
+        };
+
+        this.scene.add(root);
+        return root;
+    }
+
 }

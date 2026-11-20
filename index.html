@@ -1615,7 +1615,7 @@
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
                 <button class="btn-icon-bar" onclick="openNPCsModal()" title="330 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (330)</span></button>
                 <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,000 3D Models: 340 Armors, 330 NPCs & 330 Mobs" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,000)</span></button>
-                <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
+                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="100 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (100)</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" title="30 Legendary Soulsborne Weapons & Arsenal" style="border-color: #d4af37; color: #ffd778; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);">⚔️ <span class="btn-label-text">WEAPONS (30)</span></button>
                 <button class="btn-icon-bar" onclick="openLoreCodexModal()" title="Dark Souls Lore Codex & 300 Mobs/Zombies Drops" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">📜 <span class="btn-label-text">LORE (570)</span></button>
@@ -1689,8 +1689,8 @@
 
         <!-- Classic Dark Souls Equipment D-Pad -->
         <div class="equipment-dpad">
-            <div class="eq-slot eq-top" title="Pyromancy / Spell">
-                <span class="eq-icon">🔥</span>
+            <div class="eq-slot eq-top active" onclick="if(window.game&&window.game.combat)window.game.combat.tryCastSpell()" oncontextmenu="event.preventDefault();if(window.game&&window.game.combat)window.game.combat.cycleSpell(1);" title="Spell / Incantation [3] (Click to Cast • Right-Click / [5] to Cycle)" style="cursor: pointer; border-color: #00e5ff; box-shadow: 0 0 10px rgba(0,229,255,0.45); background: rgba(10,30,45,0.65);">
+                <span class="eq-icon">💠</span>
             </div>
             <div class="eq-slot eq-left active" title="Heater Shield">
                 <span class="eq-icon">🛡️</span>
@@ -2020,7 +2020,7 @@
                         <input type="checkbox" checked onchange="setDevMapLayer('locations', this)"> 📍 Locations (250)
                     </label>
                     <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; color: #ff5566;">
-                        <input type="checkbox" checked onchange="setDevMapLayer('bosses', this)"> 👑 Bosses
+                        <input type="checkbox" checked onchange="setDevMapLayer('bosses', this)"> 👑 Bosses (100)
                     </label>
                     <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; color: #00e5ff;">
                         <input type="checkbox" checked onchange="setDevMapLayer('npcs', this)"> 🧙 NPCs (330)
@@ -2156,7 +2156,7 @@
     <!-- BOSS ROSTER SELECTION MODAL -->
     <div id="boss-select-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 660px;">
-            <div class="modal-header">LORDS OF LORDRAN &bull; BOSS ROSTER</div>
+            <div class="modal-header">LORDS OF LORDRAN &bull; 100 BOSS ROSTER</div>
             <p style="font-size: 0.9rem; color: #b8a896; line-height: 1.5; text-align: center;">
                 Select any Lord of Lordran to summon into the citadel arena. Warps you directly to the arena fog gate, fully prepared for battle!
             </p>
@@ -2938,6 +2938,525 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('elden_beast')">CHALLENGE</button>
+                </div>
+                <!-- Boss 61: Messmer the Impaler -->
+                <div class="boss-card" data-boss-id="messmer_the_impaler">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐍</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">61. MESSMER THE IMPALER</div>
+                            <div class="boss-card-desc">Shadow Keep Specimen Storehouse &bull; Spear of the Impaler, Winged Serpents & Blazing Torrent</div>
+                            <div class="boss-card-stats">HP: 24,000 &bull; REWARD: 1,100,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('messmer_the_impaler')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 62: Promised Consort Radahn -->
+                <div class="boss-card" data-boss-id="radahn_consort">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👑</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">62. PROMISED CONSORT RADAHN & MIQUELLA</div>
+                            <div class="boss-card-desc">Enir-Ilim Gate of Divinity &bull; Light of Miquella, Twin Radahn Greatswords & Pillar of Light</div>
+                            <div class="boss-card-stats">HP: 28,000 &bull; REWARD: 1,500,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('radahn_consort')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 63: Bayle the Dread -->
+                <div class="boss-card" data-boss-id="bayle_the_dread">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">63. BAYLE THE DREAD</div>
+                            <div class="boss-card-desc">Jagged Peak Apex &bull; Dread Dragon Lightning, Magma Breath & Broken Dragon Wings</div>
+                            <div class="boss-card-stats">HP: 26,000 &bull; REWARD: 1,250,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('bayle_the_dread')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 64: Midra, Lord of Frenzied Flame -->
+                <div class="boss-card" data-boss-id="midra_frenzied_flame">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👁️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">64. MIDRA, LORD OF FRENZIED FLAME</div>
+                            <div class="boss-card-desc">Midra's Manse Abyssal Woods &bull; Barbed Greatsword & Blazing Yellow Frenzied Sun Head</div>
+                            <div class="boss-card-stats">HP: 23,000 &bull; REWARD: 1,050,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('midra_frenzied_flame')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 65: Rellana, Twin Moon Knight -->
+                <div class="boss-card" data-boss-id="rellana_twin_moon">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌙</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">65. RELLANA, TWIN MOON KNIGHT</div>
+                            <div class="boss-card-desc">Castle Ensis Moonrise Chamber &bull; Twin Moon Swords, Carian Starlight & Moon Wave Flurry</div>
+                            <div class="boss-card-stats">HP: 22,500 &bull; REWARD: 1,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('rellana_twin_moon')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 66: Romina, Saint of the Bud -->
+                <div class="boss-card" data-boss-id="romina_saint_bud">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌺</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">66. ROMINA, SAINT OF THE BUD</div>
+                            <div class="boss-card-desc">Church of the Bud Ruins &bull; Halberd of the Bud, Scarlet Rot Butterflies & Centipede Stomp</div>
+                            <div class="boss-card-stats">HP: 24,000 &bull; REWARD: 1,100,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('romina_saint_bud')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 67: Scadutree Avatar -->
+                <div class="boss-card" data-boss-id="scadutree_avatar">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌻</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">67. SCADUTREE AVATAR</div>
+                            <div class="boss-card-desc">Scadutree Base Sanctum &bull; Golden Flower Head Slam, Radiant Light Thorns & Triple Rebirth</div>
+                            <div class="boss-card-stats">HP: 25,000 &bull; REWARD: 1,150,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('scadutree_avatar')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 68: Putrescent Knight -->
+                <div class="boss-card" data-boss-id="putrescent_knight">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐴</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">68. PUTRESCENT KNIGHT</div>
+                            <div class="boss-card-desc">Stone Coffin Fissure &bull; Putrescence Cleaver, Ghostflame Sludge & Phantom Steed Charge</div>
+                            <div class="boss-card-stats">HP: 23,500 &bull; REWARD: 1,080,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('putrescent_knight')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 69: Metyr, Mother of Fingers -->
+                <div class="boss-card" data-boss-id="metyr_mother_fingers">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🖐️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">69. METYR, MOTHER OF FINGERS</div>
+                            <div class="boss-card-desc">Finger Ruins of Dheo &bull; Microcosm Cosmic Beam, Crawling Finger Slams & Primordial Pulse</div>
+                            <div class="boss-card-stats">HP: 25,500 &bull; REWARD: 1,200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('metyr_mother_fingers')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 70: Commander Gaius -->
+                <div class="boss-card" data-boss-id="commander_gaius">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐗</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">70. COMMANDER GAIUS & BOAR</div>
+                            <div class="boss-card-desc">Shadow Keep Back Gate &bull; Gravity Lance Charge, Boar Tusk Trample & Gravitational Burst</div>
+                            <div class="boss-card-stats">HP: 24,500 &bull; REWARD: 1,120,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('commander_gaius')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 71: Cleric Beast -->
+                <div class="boss-card" data-boss-id="cleric_beast">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐺</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">71. CLERIC BEAST OF YHARNAM</div>
+                            <div class="boss-card-desc">Central Yharnam Great Bridge &bull; Deformed Beast Claws, Terrifying Shriek & Ground Shatter</div>
+                            <div class="boss-card-stats">HP: 21,000 &bull; REWARD: 850,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('cleric_beast')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 72: Vicar Amelia -->
+                <div class="boss-card" data-boss-id="vicar_amelia">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐾</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">72. VICAR AMELIA</div>
+                            <div class="boss-card-desc">Grand Cathedral Nave &bull; Gold Medallion Prayer, Praying Slash & Silver Fur Cleave</div>
+                            <div class="boss-card-stats">HP: 22,000 &bull; REWARD: 900,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('vicar_amelia')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 73: Blood-starved Beast -->
+                <div class="boss-card" data-boss-id="blood_starved_beast">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🩸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">73. BLOOD-STARVED BEAST</div>
+                            <div class="boss-card-desc">Old Yharnam Church &bull; Flayed Hide Frenzy, Poison Cloud & Rapid Lacerating Claws</div>
+                            <div class="boss-card-stats">HP: 21,500 &bull; REWARD: 880,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('blood_starved_beast')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 74: Shadows of Yharnam -->
+                <div class="boss-card" data-boss-id="shadows_of_yharnam">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">74. SHADOWS OF YHARNAM</div>
+                            <div class="boss-card-desc">Forbidden Woods Gravestones &bull; Katana Slash, Fireball Hurl & Giant Serpent Summon</div>
+                            <div class="boss-card-stats">HP: 23,000 &bull; REWARD: 950,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('shadows_of_yharnam')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 75: Rom, the Vacuous Spider -->
+                <div class="boss-card" data-boss-id="rom_vacuous_spider">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🕷️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">75. ROM, THE VACUOUS SPIDER</div>
+                            <div class="boss-card-desc">Byrgenwerth Moonside Lake &bull; Arcane Meteor Shower, Stone Head Slam & Spider Brood</div>
+                            <div class="boss-card-stats">HP: 22,800 &bull; REWARD: 980,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('rom_vacuous_spider')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 76: The One Reborn -->
+                <div class="boss-card" data-boss-id="the_one_reborn">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🧟</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">76. THE ONE REBORN</div>
+                            <div class="boss-card-desc">Yahar'gul Advent Plaza &bull; Corpse Mass Torrent, Acid Sludge Pool & Corpse Bell Chime</div>
+                            <div class="boss-card-stats">HP: 24,500 &bull; REWARD: 1,050,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('the_one_reborn')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 77: Ebrietas, Daughter of the Cosmos -->
+                <div class="boss-card" data-boss-id="ebrietas_daughter_cosmos">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐙</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">77. EBRIETAS, DAUGHTER OF THE COSMOS</div>
+                            <div class="boss-card-desc">Altar of Despair &bull; A Call Beyond Cosmic Star Lasers, Tentacle Swipe & Blood Spit</div>
+                            <div class="boss-card-stats">HP: 25,000 &bull; REWARD: 1,150,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('ebrietas_daughter_cosmos')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 78: Martyr Logarius -->
+                <div class="boss-card" data-boss-id="martyr_logarius">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👑</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">78. MARTYR LOGARIUS</div>
+                            <div class="boss-card-desc">Castle Cainhurst Rooftops &bull; Executioner Scythe, Flying Skull Magic & Rapier Storm</div>
+                            <div class="boss-card-stats">HP: 23,500 &bull; REWARD: 1,020,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('martyr_logarius')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 79: Gehrman, the First Hunter -->
+                <div class="boss-card" data-boss-id="gehrman_first_hunter">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌾</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">79. GEHRMAN, THE FIRST HUNTER</div>
+                            <div class="boss-card-desc">Hunter's Dream Burning Workshop &bull; Burial Blade Curved Scythe & Blunderbuss Riposte</div>
+                            <div class="boss-card-stats">HP: 26,000 &bull; REWARD: 1,250,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('gehrman_first_hunter')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 80: Flora, the Moon Presence -->
+                <div class="boss-card" data-boss-id="moon_presence">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌕</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">80. FLORA, THE MOON PRESENCE</div>
+                            <div class="boss-card-desc">Hunter's Dream Red Moon Meadow &bull; Blood Gaze 1-HP Blast, Tendril Flurry & Cosmic Blood</div>
+                            <div class="boss-card-stats">HP: 27,000 &bull; REWARD: 1,350,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('moon_presence')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 81: Gyoubu Masataka Oniwa -->
+                <div class="boss-card" data-boss-id="gyoubu_masataka_oniwa">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐎</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">81. GYOUBU MASATAKA ONIWA</div>
+                            <div class="boss-card-desc">Ashina Castle Gate Fortress &bull; Oniwa Cross Spear, Demon Warhorse Charge & Spinning Cleave</div>
+                            <div class="boss-card-stats">HP: 22,000 &bull; REWARD: 900,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('gyoubu_masataka_oniwa')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 82: Genichiro Ashina -->
+                <div class="boss-card" data-boss-id="genichiro_ashina">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚡</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">82. GENICHIRO ASHINA, WAY OF TOMOE</div>
+                            <div class="boss-card-desc">Ashina Castle Tenshu Dojo &bull; Floating Passage Combo, Greatbow Flurry & Tomoe Lightning</div>
+                            <div class="boss-card-stats">HP: 23,500 &bull; REWARD: 1,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('genichiro_ashina')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 83: Guardian Ape -->
+                <div class="boss-card" data-boss-id="guardian_ape">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦍</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">83. GUARDIAN APE</div>
+                            <div class="boss-card-desc">Sunken Valley Bodhisattva Valley &bull; Cleaver Slam, Toxic Fart Cloud & Severed Head Shriek</div>
+                            <div class="boss-card-stats">HP: 24,500 &bull; REWARD: 1,080,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('guardian_ape')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 84: Folding Screen Monkeys -->
+                <div class="boss-card" data-boss-id="folding_screen_monkeys">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐒</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">84. FOLDING SCREEN MONKEYS</div>
+                            <div class="boss-card-desc">Senpou Temple Inner Sanctum &bull; Hearing, Seeing, Speaking & Invisible Illusory Apes</div>
+                            <div class="boss-card-stats">HP: 20,500 &bull; REWARD: 820,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('folding_screen_monkeys')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 85: True Corrupted Monk -->
+                <div class="boss-card" data-boss-id="corrupted_monk">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🎭</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">85. TRUE CORRUPTED MONK</div>
+                            <div class="boss-card-desc">Fountainhead Palace Vermilion Bridge &bull; Triple Naginata, Shadow Illusions & Centipede Vomit</div>
+                            <div class="boss-card-stats">HP: 25,000 &bull; REWARD: 1,120,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('corrupted_monk')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 86: Great Shinobi Owl -->
+                <div class="boss-card" data-boss-id="great_shinobi_owl">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">86. GREAT SHINOBI OWL & OWL FATHER</div>
+                            <div class="boss-card-desc">Hirata Estate Hidden Temple &bull; Heavy Odachi Slash, Anti-Healing Charm & Firecracker Mist</div>
+                            <div class="boss-card-stats">HP: 26,500 &bull; REWARD: 1,280,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('great_shinobi_owl')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 87: Demon of Hatred -->
+                <div class="boss-card" data-boss-id="demon_of_hatred">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👹</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">87. DEMON OF HATRED</div>
+                            <div class="boss-card-desc">Ashina Outskirts Scorched Field &bull; Blazing Claw Sweep, Fireball Volley & Flame Wave Stomp</div>
+                            <div class="boss-card-stats">HP: 28,500 &bull; REWARD: 1,450,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('demon_of_hatred')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 88: Divine Dragon -->
+                <div class="boss-card" data-boss-id="divine_dragon">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">88. DIVINE DRAGON OF EVERLASTING JADE</div>
+                            <div class="boss-card-desc">Sanctuary Cloud Peak &bull; Seven-Branched Sword Wind Shockwaves & Celestial Lightning</div>
+                            <div class="boss-card-stats">HP: 27,000 &bull; REWARD: 1,350,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('divine_dragon')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 89: Iudex Gundyr -->
+                <div class="boss-card" data-boss-id="iudex_gundyr">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚔️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">89. IUDEX GUNDYR, ASHEN ARBITER</div>
+                            <div class="boss-card-desc">Cemetery of Ash Untended Graves &bull; Coiled Sword Thrust, Shoulder Ram & Erupting Pus of Man</div>
+                            <div class="boss-card-stats">HP: 22,000 &bull; REWARD: 880,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('iudex_gundyr')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 90: Vordt of the Boreal Valley -->
+                <div class="boss-card" data-boss-id="vordt_boreal_valley">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">❄️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">90. VORDT OF THE BOREAL VALLEY</div>
+                            <div class="boss-card-desc">High Wall Grand Portcullis &bull; Frost Greathammer, Quadrupedal Charge & Frost Breath</div>
+                            <div class="boss-card-stats">HP: 22,500 &bull; REWARD: 920,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('vordt_boreal_valley')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 91: Crystal Sage -->
+                <div class="boss-card" data-boss-id="crystal_sage">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔮</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">91. CRYSTAL SAGE OF FARRON</div>
+                            <div class="boss-card-desc">Road of Sacrifices Crux Ruins &bull; Crystal Soul Spear, Homing Blue Hail & Teleportation Clones</div>
+                            <div class="boss-card-stats">HP: 21,800 &bull; REWARD: 890,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('crystal_sage')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 92: Deacons of the Deep -->
+                <div class="boss-card" data-boss-id="deacons_of_the_deep">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🕯️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">92. DEACONS OF THE DEEP</div>
+                            <div class="boss-card-desc">Cathedral of the Deep Core &bull; Archdeacon Royce, Fire Orbs, Deep Curse Fog & Red Soul</div>
+                            <div class="boss-card-stats">HP: 23,000 &bull; REWARD: 950,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('deacons_of_the_deep')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 93: High Lord Wolnir -->
+                <div class="boss-card" data-boss-id="high_lord_wolnir">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💀</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">93. HIGH LORD WOLNIR</div>
+                            <div class="boss-card-desc">Catacombs of Carthus Dark Goblet &bull; Golden Holy Bracelets, Abyss Miasma & Holy Greatsword</div>
+                            <div class="boss-card-stats">HP: 25,000 &bull; REWARD: 1,100,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('high_lord_wolnir')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 94: Old Demon King -->
+                <div class="boss-card" data-boss-id="old_demon_king">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">94. OLD DEMON KING</div>
+                            <div class="boss-card-desc">Smouldering Lake Molten Cavern &bull; Flaming Stone Club, Meteor Rain & Ring of Chaos Flame</div>
+                            <div class="boss-card-stats">HP: 24,200 &bull; REWARD: 1,060,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('old_demon_king')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 95: Aldrich, Devourer of Gods -->
+                <div class="boss-card" data-boss-id="aldrich_devourer">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🏹</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">95. ALDRICH, DEVOURER OF GODS</div>
+                            <div class="boss-card-desc">Anor Londo Cathedral of Devourer &bull; Golden Darkmoon Arrow Rain, Lifehunt Scythe & Soul Stream</div>
+                            <div class="boss-card-stats">HP: 25,800 &bull; REWARD: 1,200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('aldrich_devourer')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 96: Yhorm the Giant -->
+                <div class="boss-card" data-boss-id="yhorm_the_giant">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗿</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">96. YHORM THE GIANT</div>
+                            <div class="boss-card-desc">Profaned Capital Sunken Throne &bull; Great Machete Downward Slam, Burning Lava Stomp & Lord Rage</div>
+                            <div class="boss-card-stats">HP: 27,500 &bull; REWARD: 1,300,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('yhorm_the_giant')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 97: Dancer of the Boreal Valley -->
+                <div class="boss-card" data-boss-id="dancer_boreal_valley">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💃</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">97. DANCER OF THE BOREAL VALLEY</div>
+                            <div class="boss-card-desc">High Wall Cathedral of Emma &bull; Dual Curved Swords (Flame & Dark Magic) & Infinite Spin</div>
+                            <div class="boss-card-stats">HP: 26,000 &bull; REWARD: 1,240,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('dancer_boreal_valley')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 98: Oceiros, the Consumed King -->
+                <div class="boss-card" data-boss-id="oceiros_consumed_king">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">98. OCEIROS, THE CONSUMED KING</div>
+                            <div class="boss-card-desc">Consumed King's Garden Deep Grove &bull; Moonlight Dragon Scepter, Blind Frenzy Charge & Ocelotte Cry</div>
+                            <div class="boss-card-stats">HP: 25,200 &bull; REWARD: 1,180,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('oceiros_consumed_king')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 99: The Demon Prince -->
+                <div class="boss-card" data-boss-id="demon_prince">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦇</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">99. THE DEMON PRINCE</div>
+                            <div class="boss-card-desc">The Dreg Heap Earthen Peak Ruins &bull; Chaos Bed Vestiges Laser, Meteor Fall & Magma Dive</div>
+                            <div class="boss-card-stats">HP: 29,000 &bull; REWARD: 1,550,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('demon_prince')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 100: Halflight, Spear of the Church -->
+                <div class="boss-card" data-boss-id="halflight_spear_church">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚖️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">100. HALFLIGHT, SPEAR OF THE CHURCH</div>
+                            <div class="boss-card-desc">Ringed City Church of Filianore &bull; Frayed Blade Bleed Stance, Ritual Spear Fragments & Orbs</div>
+                            <div class="boss-card-stats">HP: 26,500 &bull; REWARD: 1,350,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('halflight_spear_church')">CHALLENGE</button>
                 </div>
             </div>
 
@@ -4565,7 +5084,7 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openCompendiumModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">🗿 1,000 3D MODELS (ARMORS, NPCS, MOBS)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); if(window.compendiumInstance)window.compendiumInstance.clearSpawned();" style="border-color: #ff6666; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">🧹 CLEAR SPAWNED 3D</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDeathQuotesModal();" style="border-color: #ff5555; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">💀 300 DEATH EPITAPHS</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 60 BOSS ROSTER</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 100 BOSS ROSTER</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDevMapModal();" style="border-color: #00ffaa; color: #a5ffbe; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.4);">🗺️ DEV MAP [M]</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 250 LOCATIONS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLoreCodexModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">📜 LORE (570 MOBS)</button>
@@ -5538,24 +6057,24 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/audio.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/lore_items.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/world.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/character.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/siege_warfare.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/heraldry_nobility.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/apothecary_crafting.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/collision_system.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/qa_bot_tester.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/combat.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/postprocessing.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/qa_suite.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/blacksmith_forge.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
-    <script src="js/inventory_system.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
+    <script src="js/three.min.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/audio.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/lore_items.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/world.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/character.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/siege_warfare.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/heraldry_nobility.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/apothecary_crafting.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/collision_system.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/qa_bot_tester.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/combat.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/postprocessing.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/qa_suite.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/blacksmith_forge.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/inventory_system.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
     <script src="js/compendium_300_models.js?v=20261120_1000_3D_MODELS_ARMORS_NPCS_MOBS"></script>
     <script src="js/death_quotes_300.js?v=20261120_190_LOCATIONS_300_DEATH_QUOTES"></script>
-    <script src="js/game.js?v=20261120_250_LOCATIONS_30_WEAPONS_1000_MODELS"></script>
+    <script src="js/game.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
     <script src="js/dev_map.js?v=20261120_DARK_SOULS_DEV_MAP_250_LOCATIONS"></script>
     <script>
         // 300 Death Quotes UI Logic

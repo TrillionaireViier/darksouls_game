@@ -282,6 +282,14 @@ class DarkSoulsGame {
             }
             if (e.code === 'KeyT' || e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') this.toggleTorch();
             if (e.code === 'KeyR' || e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К' || e.code === 'Digit1') this.combat.tryDrinkEstus();
+            if (e.code === 'Digit3' || e.code === 'KeyY' || e.key === 'y' || e.key === 'Y' || e.key === 'н' || e.key === 'Н') {
+                e.preventDefault();
+                this.combat.tryCastSpell();
+            }
+            if (e.code === 'Digit5' || e.code === 'KeyU' || e.key === 'u' || e.key === 'U' || e.key === 'г' || e.key === 'Г') {
+                e.preventDefault();
+                this.combat.cycleSpell(1);
+            }
             if (e.code === 'KeyP' || e.key === 'p' || e.key === 'P' || e.key === 'з' || e.key === 'З' || e.code === 'KeyV' || e.key === 'v' || e.key === 'V' || e.key === 'м' || e.key === 'М' || e.code === 'Digit4') this.combat.tryDrinkAntidote();
             if (e.code === 'Digit2' || e.code === 'KeyX' || e.key === 'x' || e.key === 'X' || e.key === 'ч' || e.key === 'Ч') this.cycleEquippedWeapon(1);
             if (e.code === 'KeyZ' || e.key === 'z' || e.key === 'Z' || e.key === 'я' || e.key === 'Я') this.cycleEquippedWeapon(-1);
@@ -3947,6 +3955,8 @@ window.closeAdminModal = () => { if (window.game) window.game.closeAdminModal();
 window.adminUnlockAllBosses = () => { if (window.game) window.game.adminUnlockAllBosses(); };
 window.adminLockBosses = () => { if (window.game) window.game.adminLockBosses(); };
 window.adminUnlockAllWeapons = () => { if (window.game) window.game.adminUnlockAllWeapons(); };
+window.castSpell = () => { if (window.game && window.game.combat) window.game.combat.tryCastSpell(); };
+window.cycleSpell = (dir = 1) => { if (window.game && window.game.combat) window.game.combat.cycleSpell(dir); };
 window.adminGrantSoulsAndEstus = (s) => { if (window.game) window.game.adminGrantSoulsAndEstus(s); };
 window.adminToggleGodMode = () => { if (window.game) window.game.adminToggleGodMode(); };
 window.adminWarp = (d) => { if (window.game) window.game.adminWarp(d); };
