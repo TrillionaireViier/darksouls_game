@@ -763,6 +763,176 @@ class DarkSoulsCombat {
                 poiseBreak: 2.1,
                 cost: 17500,
                 unlocked: false
+            },
+            carian_knights_sword: {
+                id: 'carian_knights_sword',
+                name: "Carian Knight's Sword",
+                type: 'Glintstone Straight Sword',
+                icon: '🗡️',
+                desc: 'Straight sword of the enchanted royal Carian knights. Imbued with luminous glintstone starlight sorcery.',
+                lightDmg: 245,
+                heavyDmg: 460,
+                reach: 3.2,
+                bossReachBonus: 2.2,
+                lightStamina: 16,
+                heavyStamina: 28,
+                speedMultiplier: 1.32,
+                poiseBreak: 1.7,
+                cost: 11000,
+                unlocked: false
+            },
+            wing_of_astel: {
+                id: 'wing_of_astel',
+                name: 'Wing of Astel',
+                type: 'Cosmic Curved Sword',
+                icon: '🦋',
+                desc: 'Fashioned from the delicate wing of a voidborn malformed star. Emits Nebula cosmic starlight detonations.',
+                lightDmg: 260,
+                heavyDmg: 490,
+                reach: 3.3,
+                bossReachBonus: 2.3,
+                lightStamina: 15,
+                heavyStamina: 26,
+                speedMultiplier: 1.48,
+                poiseBreak: 1.8,
+                cost: 13500,
+                unlocked: false
+            },
+            reduvia: {
+                id: 'reduvia',
+                name: 'Reduvia Blood Dagger',
+                type: 'Occult Dagger',
+                icon: '🩸',
+                desc: 'Jagged sacrificial dagger used by bloody fingers. Hurls razor-sharp projectiles of airborne cursed blood.',
+                lightDmg: 210,
+                heavyDmg: 390,
+                reach: 2.6,
+                bossReachBonus: 1.8,
+                lightStamina: 10,
+                heavyStamina: 18,
+                speedMultiplier: 1.75,
+                poiseBreak: 1.4,
+                cost: 9500,
+                unlocked: false
+            },
+            magma_wyrm_scalesword: {
+                id: 'magma_wyrm_scalesword',
+                name: "Magma Wyrm's Scalesword",
+                type: 'Curved Greatsword',
+                icon: '🌋',
+                desc: 'Curved greatsword crafted from the molten jaw of a Magma Wyrm. Leaves pools of boiling incandescent magma.',
+                lightDmg: 310,
+                heavyDmg: 580,
+                reach: 4.1,
+                bossReachBonus: 3.0,
+                lightStamina: 24,
+                heavyStamina: 40,
+                speedMultiplier: 1.14,
+                poiseBreak: 2.6,
+                cost: 15000,
+                unlocked: false
+            },
+            profaned_greatsword: {
+                id: 'profaned_greatsword',
+                name: 'Profaned Greatsword of Sulyvahn',
+                type: 'Colossal Flame Greatsword',
+                icon: '🔥',
+                desc: 'Greatsword wielded in the right hand of Pontiff Sulyvahn. Imbued with the eternal slumbering fire of the Profaned Flame.',
+                lightDmg: 325,
+                heavyDmg: 610,
+                reach: 4.4,
+                bossReachBonus: 3.2,
+                lightStamina: 26,
+                heavyStamina: 44,
+                speedMultiplier: 1.10,
+                poiseBreak: 2.8,
+                cost: 16500,
+                unlocked: false
+            },
+            greatsword_of_judgment: {
+                id: 'greatsword_of_judgment',
+                name: 'Greatsword of Judgment',
+                type: 'Dark Sorcery Greatsword',
+                icon: '⚖️',
+                desc: 'Greatsword wielded in the left hand of Pontiff Sulyvahn. Reflects the dark magic of the moon in deeper, darker hues.',
+                lightDmg: 315,
+                heavyDmg: 590,
+                reach: 4.3,
+                bossReachBonus: 3.1,
+                lightStamina: 25,
+                heavyStamina: 42,
+                speedMultiplier: 1.15,
+                poiseBreak: 2.7,
+                cost: 16000,
+                unlocked: false
+            },
+            mornes_great_hammer: {
+                id: 'mornes_great_hammer',
+                name: "Morne's Great Hammer",
+                type: 'Greathammer of Wrath',
+                icon: '🔨',
+                desc: 'Colossal greathammer bestowed upon the Knights of Carim. Unstoppable poise and devastating wrathful shockwaves.',
+                lightDmg: 350,
+                heavyDmg: 660,
+                reach: 4.2,
+                bossReachBonus: 3.2,
+                lightStamina: 30,
+                heavyStamina: 50,
+                speedMultiplier: 0.98,
+                poiseBreak: 3.3,
+                cost: 18000,
+                unlocked: false
+            },
+            paladin_grant: {
+                id: 'paladin_grant',
+                name: "Grant &bull; Paladin Leeroy's Hammer",
+                type: 'Holy Great Hammer',
+                icon: '⛪',
+                desc: 'Legendary sanctified hammer of Paladin Leeroy of the Way of White. Infused with wrath of the gods holy shockwaves.',
+                lightDmg: 340,
+                heavyDmg: 640,
+                reach: 4.1,
+                bossReachBonus: 3.1,
+                lightStamina: 28,
+                heavyStamina: 48,
+                speedMultiplier: 1.02,
+                poiseBreak: 3.1,
+                cost: 17000,
+                unlocked: false
+            },
+            smouldering_demon_greataxe: {
+                id: 'smouldering_demon_greataxe',
+                name: "Demon's Greataxe",
+                type: 'Chaos Greataxe',
+                icon: '🪓',
+                desc: 'Hefty stone greataxe born of the Demon Firesage. Highest physical strength requirement and crushing power in Lordran.',
+                lightDmg: 360,
+                heavyDmg: 680,
+                reach: 4.0,
+                bossReachBonus: 3.0,
+                lightStamina: 32,
+                heavyStamina: 52,
+                speedMultiplier: 0.95,
+                poiseBreak: 3.4,
+                cost: 18500,
+                unlocked: false
+            },
+            mohgwyn_sacred_spear: {
+                id: 'mohgwyn_sacred_spear',
+                name: "Mohgwyn's Sacred Spear",
+                type: 'Blood Great Spear',
+                icon: '🔱',
+                desc: 'Trident of the Lord of Blood. Thrust into the Mother of Truth to cause torrential downpours of burning bloodflame.',
+                lightDmg: 300,
+                heavyDmg: 560,
+                reach: 4.6,
+                bossReachBonus: 3.5,
+                lightStamina: 22,
+                heavyStamina: 36,
+                speedMultiplier: 1.22,
+                poiseBreak: 2.4,
+                cost: 19000,
+                unlocked: false
             }
         };
         this.currentWeaponId = 'sword';
@@ -1056,6 +1226,256 @@ class DarkSoulsCombat {
                 desc: 'Fires a sacred star of the Greater Will trailing shooting starlight.'
             }
         };
+        // ----------------------------------------------------
+        // SOULSBORNE SPIRIT ASHES & CALLING BELL SYSTEM (20 SUMMONS)
+        // ----------------------------------------------------
+        this.currentSpiritAshId = 'mimic_tear';
+        this.spiritSummonCooldown = 0;
+        this.activeSpiritCompanion = null;
+        this.spiritAshesDatabase = {
+            mimic_tear: {
+                id: 'mimic_tear',
+                name: 'Mimic Tear Ashes',
+                title: 'Silver Tear Phantom Twin',
+                icon: '🪞',
+                hp: 3400,
+                maxHp: 3400,
+                damage: 260,
+                color: 0xc8d6e5,
+                desc: "Summons phantom twin of the player. Possesses immense vitality and matches the player's weapon prowess.",
+                cost: 3500
+            },
+            black_knife_tiche: {
+                id: 'black_knife_tiche',
+                name: 'Black Knife Tiche',
+                title: 'Destined Death Assassin',
+                icon: '🗡️',
+                hp: 1900,
+                maxHp: 1900,
+                damage: 340,
+                color: 0x4a4e69,
+                desc: 'Alecto daughter who stole a fragment of Death. Acrobatic attacks deal percentage-based max HP burn.',
+                cost: 4000
+            },
+            greatshield_soldiers: {
+                id: 'greatshield_soldiers',
+                name: 'Greatshield Soldiers',
+                title: 'Nokron Shield Phalanx',
+                icon: '🛡️',
+                hp: 3100,
+                maxHp: 3100,
+                damage: 170,
+                color: 0x90a4ae,
+                desc: 'Fierce phalanx of phantom legionnaires who bang shields, taunting and absorbing boss strikes.',
+                cost: 2500
+            },
+            solaire_of_astora: {
+                id: 'solaire_of_astora',
+                name: 'Knight Solaire of Astora',
+                title: 'Warrior of Sunlight',
+                icon: '☀️',
+                hp: 2800,
+                maxHp: 2800,
+                damage: 310,
+                color: 0xffd54f,
+                desc: 'Jovial golden phantom of Solaire. Hurls Sunlight Spears and boosts summoner morale: Praise the Sun!',
+                cost: 3000
+            },
+            siegmeyer_of_catarina: {
+                id: 'siegmeyer_of_catarina',
+                name: 'Siegmeyer of Catarina',
+                title: 'Onion Knight of Catarina',
+                icon: '🧅',
+                hp: 3200,
+                maxHp: 3200,
+                damage: 280,
+                color: 0xfff9c4,
+                desc: 'Beloved Catarina knight. Swings a colossal Pierce Shield and Zweihander, laughing in the face of peril.',
+                cost: 2800
+            },
+            knight_artorias: {
+                id: 'knight_artorias',
+                name: 'Knight Artorias the Abysswalker',
+                title: 'Wolf Knight of Lordran',
+                icon: '🐺',
+                hp: 3000,
+                maxHp: 3000,
+                damage: 360,
+                color: 0x3f51b5,
+                desc: 'Legendary hero of Lordran. Unleashes graceful somersaulting Greatsword slams and abyssal spin attacks.',
+                cost: 4500
+            },
+            iron_tarkus: {
+                id: 'iron_tarkus',
+                name: 'Black Iron Tarkus',
+                title: 'Knight of Berenike',
+                icon: '🗿',
+                hp: 3700,
+                maxHp: 3700,
+                damage: 330,
+                color: 0x37474f,
+                desc: 'Unflinching giant clad in heavy black iron armor. Capable of staggering and knocking down massive bosses.',
+                cost: 3800
+            },
+            blaidd_halfwolf: {
+                id: 'blaidd_halfwolf',
+                name: 'Blaidd the Half-Wolf',
+                title: 'Shadow of Ranni',
+                icon: '🐾',
+                hp: 2900,
+                maxHp: 2900,
+                damage: 320,
+                color: 0x78909c,
+                desc: 'Loyal wolf warrior carrying the Royal Greatsword. Inflicts chilling frostbite and savage howling strikes.',
+                cost: 3600
+            },
+            millicent_prosthesis: {
+                id: 'millicent_prosthesis',
+                name: 'Millicent, Needle Knight',
+                title: 'Daughter of the Rot God',
+                icon: '🪡',
+                hp: 2200,
+                maxHp: 2200,
+                damage: 350,
+                color: 0xffab91,
+                desc: 'Armed with a golden needle prosthetic arm. Unleashes consecutive blitz strikes inspired by the Waterfowl Dance.',
+                cost: 3700
+            },
+            dung_eater_puppet: {
+                id: 'dung_eater_puppet',
+                name: 'Dung Eater Puppet',
+                title: 'The Loathsome Defiler',
+                icon: '🔔',
+                hp: 3300,
+                maxHp: 3300,
+                damage: 270,
+                color: 0x8d6e63,
+                desc: "Seluvis's cursed puppet. Shrieks defilement, reducing all enemy resistances by 20% in combat.",
+                cost: 3200
+            },
+            latenna_albinauric: {
+                id: 'latenna_albinauric',
+                name: 'Latenna the Albinauric',
+                title: 'First-Generation Albinauric Archer',
+                icon: '🏹',
+                hp: 1600,
+                maxHp: 1600,
+                damage: 290,
+                color: 0x80deea,
+                desc: 'Immobile sniper spirit. Unleashes a continuous rapid volley of homing magic arrows from afar.',
+                cost: 2600
+            },
+            cleanrot_finlay: {
+                id: 'cleanrot_finlay',
+                name: 'Cleanrot Knight Finlay',
+                title: 'Hero of Aeonia',
+                icon: '⚜️',
+                hp: 2600,
+                maxHp: 2600,
+                damage: 300,
+                color: 0xffcc80,
+                desc: 'Cleanrot hero who carried Malenia across the continent. Emits golden halo rings and scarlet rot mist.',
+                cost: 3500
+            },
+            bloodhound_darriwil: {
+                id: 'bloodhound_darriwil',
+                name: 'Bloodhound Knight',
+                title: 'Stalker of the Evergaol',
+                icon: '🩸',
+                hp: 2100,
+                maxHp: 2100,
+                damage: 330,
+                color: 0xef9a9a,
+                desc: "Feral canine swordsman with Bloodhound's Step. Vanishes into thin air to slice enemy flanks.",
+                cost: 3100
+            },
+            banished_knight_oleg: {
+                id: 'banished_knight_oleg',
+                name: 'Banished Knight Oleg',
+                title: 'Wings of the Storm',
+                icon: '🌪️',
+                hp: 2800,
+                maxHp: 2800,
+                damage: 300,
+                color: 0xb0bec5,
+                desc: 'Dual-wielding storm champion. Whirlwinds into enemy ranks with sweeping twin greatsword combos.',
+                cost: 3300
+            },
+            banished_knight_engvall: {
+                id: 'banished_knight_engvall',
+                name: 'Banished Knight Engvall',
+                title: 'Halberdier of Stormveil',
+                icon: '🦅',
+                hp: 2900,
+                maxHp: 2900,
+                damage: 290,
+                color: 0x90a4ae,
+                desc: 'Loyal storm knight wielding a two-handed halberd with devastating sweeping thrusts and leap slams.',
+                cost: 3200
+            },
+            stormhawk_deenh: {
+                id: 'stormhawk_deenh',
+                name: 'Stormhawk Deenh',
+                title: 'King of the Storms',
+                icon: '🦅',
+                hp: 1500,
+                maxHp: 1500,
+                damage: 190,
+                color: 0xb0bec5,
+                desc: 'Ancient bird of Stormveil. Emits screeching battle cries that grant summoner +25% attack boost.',
+                cost: 2400
+            },
+            mad_pumpkin_head: {
+                id: 'mad_pumpkin_head',
+                name: 'Mad Pumpkin Head',
+                title: 'Berserk Gladiator',
+                icon: '🎃',
+                hp: 3500,
+                maxHp: 3500,
+                damage: 280,
+                color: 0xffb74d,
+                desc: 'Wild gladiator wearing an impenetrable brass pumpkin helmet. Headbutts enemies, ignoring incoming flinching.',
+                cost: 3000
+            },
+            omenkiller_rollo: {
+                id: 'omenkiller_rollo',
+                name: 'Omenkiller Rollo',
+                title: 'First Omen Hunter',
+                icon: '🔥',
+                hp: 3000,
+                maxHp: 3000,
+                damage: 330,
+                color: 0xff7043,
+                desc: 'Cruel executioner drinking from aromatic concoctions. Spews incandescent firebreath and cleaves with dual cleavers.',
+                cost: 3600
+            },
+            nepheli_loux: {
+                id: 'nepheli_loux',
+                name: 'Nepheli Loux, Warrior',
+                title: 'Chieftess of the Badlands',
+                icon: '⚡',
+                hp: 2700,
+                maxHp: 2700,
+                damage: 310,
+                color: 0x81d4fa,
+                desc: 'Rightful Lady of Limgrave. Dual-wields Stormhawk Axes enveloped in crackling golden lightning.',
+                cost: 3400
+            },
+            iron_fist_alexander: {
+                id: 'iron_fist_alexander',
+                name: 'Iron Fist Alexander',
+                title: 'Warrior Jar of Caelid',
+                icon: '🏺',
+                hp: 3800,
+                maxHp: 3800,
+                damage: 320,
+                color: 0xd7ccc8,
+                desc: 'The mighty living jar. Spins like a flaming tempest, spewing molten lava and body-checking titan bosses.',
+                cost: 4200
+            }
+        };
+        this.unlockedSpiritAshes = Object.keys(this.spiritAshesDatabase);
+
 
         // Pre-allocated scratch vectors for zero-allocation 60 FPS animation/combat updates
         this._scratchToPlayer = new THREE.Vector3();
@@ -3577,7 +3997,271 @@ class DarkSoulsCombat {
     // ----------------------------------------------------
     // WEAPONS ARSENAL MANAGEMENT & MERCHANT SHOP
     // ----------------------------------------------------
-    equipWeapon(weaponId) {
+    
+    // ----------------------------------------------------
+    // SPIRIT ASHES CALLING BELL & AUTONOMOUS PHANTOM AI
+    // ----------------------------------------------------
+    trySummonSpiritAsh(ashId = this.currentSpiritAshId) {
+        if (this.isDead) return false;
+        const ash = this.spiritAshesDatabase[ashId];
+        if (!ash) return false;
+
+        // If companion is already active:
+        if (this.activeSpiritCompanion) {
+            if (this.activeSpiritCompanion.id === ashId) {
+                this.dismissSpiritAsh();
+                return true;
+            } else {
+                this.dismissSpiritAsh(false);
+            }
+        }
+
+        if (this.spiritSummonCooldown > 0) {
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification(`SPIRIT BELL COOLING DOWN (${Math.ceil(this.spiritSummonCooldown)}s)`);
+            }
+            return false;
+        }
+
+        // Stamina cost for summoning
+        if (this.stamina < 30 && !this.isGodMode) {
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification("INSUFFICIENT STAMINA TO RING SPIRIT BELL");
+            }
+            return false;
+        }
+        if (!this.isGodMode) {
+            this.stamina -= 30;
+            this.staminaDelay = 1.4;
+        }
+
+        this.currentSpiritAshId = ashId;
+        this.spiritSummonCooldown = 5.0;
+
+        if (this.audio && this.audio.playBellToll) {
+            this.audio.playBellToll();
+        }
+
+        const playerPos = this.game.playerMesh.position;
+        const playerRot = this.game.playerMesh.rotation.y;
+        const sideOffset = new THREE.Vector3(-1.8, 0, 1.2).applyAxisAngle(new THREE.Vector3(0, 1, 0), playerRot);
+        const spawnPos = playerPos.clone().add(sideOffset);
+        spawnPos.y = playerPos.y;
+
+        let companionMesh;
+        if (this.game && this.game.charFactory && this.game.charFactory.createSpiritCompanionMesh) {
+            companionMesh = this.game.charFactory.createSpiritCompanionMesh(ash);
+        } else {
+            companionMesh = new THREE.Group();
+            const bodyMat = new THREE.MeshStandardMaterial({
+                color: ash.color || 0x88ccff,
+                transparent: true,
+                opacity: 0.75,
+                emissive: ash.color || 0x4488ff,
+                emissiveIntensity: 0.35,
+                roughness: 0.3
+            });
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.25, 1.6, 8), bodyMat);
+            body.position.y = 0.8;
+            companionMesh.add(body);
+        }
+
+        companionMesh.position.copy(spawnPos);
+        companionMesh.rotation.y = playerRot;
+        this.game.scene.add(companionMesh);
+
+        this.activeSpiritCompanion = {
+            id: ash.id,
+            name: ash.name,
+            title: ash.title,
+            icon: ash.icon,
+            mesh: companionMesh,
+            hp: ash.hp,
+            maxHp: ash.maxHp,
+            damage: ash.damage,
+            color: ash.color,
+            attackTimer: 0,
+            animTime: 0,
+            target: null,
+            attackAnimTimer: 0
+        };
+
+        if (this.world && this.world.spawnHitSparks) {
+            this.world.spawnHitSparks(spawnPos, true);
+        }
+
+        if (this.game && this.game.showNotification) {
+            this.game.showNotification(`🔔 SUMMONED: ${ash.name.toUpperCase()} (${ash.icon})`);
+        }
+
+        return true;
+    }
+
+    dismissSpiritAsh(notify = true) {
+        if (!this.activeSpiritCompanion) return;
+        const comp = this.activeSpiritCompanion;
+        if (comp.mesh && comp.mesh.parent) {
+            if (this.world && this.world.spawnHitSparks) {
+                this.world.spawnHitSparks(comp.mesh.position, false);
+            }
+            comp.mesh.parent.remove(comp.mesh);
+        }
+        this.activeSpiritCompanion = null;
+        if (notify && this.game && this.game.showNotification) {
+            this.game.showNotification("✨ SPIRIT PHANTOM RETURNED TO ASHES");
+        }
+    }
+
+    cycleSpiritAsh(dir = 1) {
+        const keys = this.unlockedSpiritAshes || Object.keys(this.spiritAshesDatabase);
+        if (!keys.length) return;
+        let idx = keys.indexOf(this.currentSpiritAshId);
+        if (idx === -1) idx = 0;
+        idx = (idx + dir + keys.length) % keys.length;
+        this.currentSpiritAshId = keys[idx];
+        const ash = this.spiritAshesDatabase[this.currentSpiritAshId];
+        if (this.game && this.game.showNotification && ash) {
+            this.game.showNotification(`SPIRIT ASH: ${ash.name.toUpperCase()} (${ash.icon}) &bull; [N / 4] TO SUMMON`);
+        }
+        if (this.game && this.game.renderSpiritAshesUI) {
+            this.game.renderSpiritAshesUI();
+        }
+    }
+
+    updateSpiritCompanion(delta) {
+        if (!this.activeSpiritCompanion) return;
+        const comp = this.activeSpiritCompanion;
+        if (this.spiritSummonCooldown > 0) {
+            this.spiritSummonCooldown -= delta;
+        }
+
+        if (comp.hp <= 0 || !comp.mesh || !comp.mesh.parent) {
+            this.dismissSpiritAsh(false);
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification(`💀 ${comp.name.toUpperCase()} HAS FALLEN IN BATTLE`);
+            }
+            return;
+        }
+
+        comp.animTime += delta;
+        if (comp.attackTimer > 0) comp.attackTimer -= delta;
+        if (comp.attackAnimTimer > 0) comp.attackAnimTimer -= delta;
+
+        // Rotate floor summon ring
+        const ring = comp.mesh.getObjectByName('spiritRing');
+        if (ring) ring.rotation.z += delta * 1.5;
+
+        const compPos = comp.mesh.position;
+        const playerPos = this.game.playerMesh.position;
+
+        // Locate nearest active target (boss or hollow)
+        let targetMesh = null;
+        let targetDist = Infinity;
+        let isBossTarget = false;
+
+        if (this.boss && !this.boss.isDead && this.boss.state === 'CHASE') {
+            const d = compPos.distanceTo(this.boss.mesh.position);
+            if (d < 36.0) {
+                targetMesh = this.boss.mesh;
+                targetDist = d;
+                isBossTarget = true;
+            }
+        }
+
+        if (!targetMesh) {
+            for (const e of this.enemies) {
+                if (e.isDead || !e.mesh) continue;
+                const d = compPos.distanceTo(e.mesh.position);
+                if (d < targetDist && d < 28.0) {
+                    targetDist = d;
+                    targetMesh = e.mesh;
+                    isBossTarget = false;
+                }
+            }
+        }
+
+        const isArcher = comp.id === 'latenna_albinauric';
+        const attackRange = isArcher ? 14.0 : 3.0;
+
+        if (targetMesh) {
+            // Target tracking & face target
+            const toTarget = new THREE.Vector3().subVectors(targetMesh.position, compPos);
+            toTarget.y = 0;
+            const dist = toTarget.length();
+            if (dist > 0.001) {
+                comp.mesh.rotation.y = Math.atan2(toTarget.x, toTarget.z);
+            }
+
+            if (dist > attackRange) {
+                // Move towards target
+                const moveSpeed = 4.2;
+                toTarget.normalize();
+                compPos.addScaledVector(toTarget, moveSpeed * delta);
+                compPos.y = playerPos.y + Math.abs(Math.sin(comp.animTime * 8)) * 0.12;
+            } else {
+                // In range: perform attack!
+                compPos.y = playerPos.y;
+                if (comp.attackTimer <= 0) {
+                    comp.attackTimer = 1.7;
+                    comp.attackAnimTimer = 0.45;
+
+                    // Play attack sound & animation
+                    if (this.audio && this.audio.playHit) {
+                        this.audio.playHit(false);
+                    }
+
+                    // Apply damage to target
+                    const dmg = comp.damage;
+                    if (isBossTarget && this.boss) {
+                        this.boss.hp -= dmg;
+                        if (this.world && this.world.spawnHitSparks) {
+                            this.world.spawnHitSparks(this.boss.mesh.position, true);
+                        }
+                        if (this.game && this.game.showDamageNumber) {
+                            this.game.showDamageNumber(this.boss.mesh.position, dmg, false);
+                        }
+                        if (this.boss.hp <= 0) this.killBoss();
+                    } else if (targetMesh.userData && targetMesh.userData.enemyRef) {
+                        const enemy = targetMesh.userData.enemyRef;
+                        enemy.hp -= dmg;
+                        if (this.world && this.world.spawnHitSparks) {
+                            this.world.spawnHitSparks(enemy.mesh.position, false);
+                        }
+                        if (this.game && this.game.showDamageNumber) {
+                            this.game.showDamageNumber(enemy.mesh.position, dmg, false);
+                        }
+                        if (enemy.hp <= 0) this.killEnemy(enemy);
+                    }
+                }
+            }
+        } else {
+            // Follow player
+            const toPlayer = new THREE.Vector3().subVectors(playerPos, compPos);
+            toPlayer.y = 0;
+            const dist = toPlayer.length();
+            if (dist > 3.2) {
+                toPlayer.normalize();
+                comp.mesh.rotation.y = Math.atan2(toPlayer.x, toPlayer.z);
+                const followSpeed = 4.8;
+                compPos.addScaledVector(toPlayer, followSpeed * delta);
+                compPos.y = playerPos.y + Math.abs(Math.sin(comp.animTime * 8)) * 0.12;
+            } else {
+                compPos.y = playerPos.y;
+            }
+        }
+
+        // Swing arm/weapon if attacking
+        const rArm = comp.mesh.getObjectByName('spiritRArm');
+        if (rArm) {
+            if (comp.attackAnimTimer > 0) {
+                rArm.rotation.x = -1.2 + Math.sin(comp.animTime * 20) * 0.6;
+            } else {
+                rArm.rotation.x = 0;
+            }
+        }
+    }
+
+equipWeapon(weaponId) {
         if (!this.weapons[weaponId]) return false;
         if (!this.unlockedWeapons.includes(weaponId)) {
             this.game.showNotification("WEAPON LOCKED &bull; VISIT UNDEAD MERCHANT");
@@ -4307,6 +4991,7 @@ class DarkSoulsCombat {
         // 0. Update Physics Entities (Articulated Ragdolls & Ballistic Projectiles)
         this.updateRagdolls(delta);
         this.updateArrows(delta);
+        this.updateSpiritCompanion(delta);
 
         if (this.isDead) return;
 

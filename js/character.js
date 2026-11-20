@@ -1111,7 +1111,117 @@ class DarkSoulsCharacters {
             rimeLight.position.y = 1.1;
             root.add(rimeLight);
 
-        } else if (weaponId === 'torch') {
+        } 
+        else if (weaponId === 'carian_knights_sword') {
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.32, 8), this.leatherMat);
+            hilt.position.y = -0.12;
+            root.add(hilt);
+            const guard = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.04, 0.06), new THREE.MeshStandardMaterial({ color: 0x4a90e2, metalness: 0.8, roughness: 0.2 }));
+            guard.position.y = 0.06;
+            root.add(guard);
+            const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.045), new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00aaff, emissiveIntensity: 0.6 }));
+            gem.position.set(0, 0.06, 0.035);
+            root.add(gem);
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.45, 0.025), new THREE.MeshStandardMaterial({ color: 0xd0e8ff, metalness: 0.9, roughness: 0.15 }));
+            blade.position.y = 0.80;
+            blade.castShadow = true;
+            root.add(blade);
+        }
+        else if (weaponId === 'wing_of_astel') {
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.28, 8), new THREE.MeshStandardMaterial({ color: 0x1a237e }));
+            hilt.position.y = -0.10;
+            root.add(hilt);
+            const wingBlade = new THREE.Mesh(new THREE.ConeGeometry(0.16, 1.35, 3), new THREE.MeshStandardMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.85, emissive: 0x18ffff, emissiveIntensity: 0.5, metalness: 0.5, roughness: 0.2 }));
+            wingBlade.position.set(0.05, 0.72, 0);
+            wingBlade.rotation.z = -0.08;
+            root.add(wingBlade);
+        }
+        else if (weaponId === 'reduvia') {
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.22, 8), this.leatherMat);
+            hilt.position.y = -0.08;
+            root.add(hilt);
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.75, 0.025), new THREE.MeshStandardMaterial({ color: 0x880e4f, emissive: 0xd50000, emissiveIntensity: 0.4, metalness: 0.7, roughness: 0.3 }));
+            blade.position.y = 0.38;
+            root.add(blade);
+        }
+        else if (weaponId === 'magma_wyrm_scalesword') {
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.45, 8), this.leatherMat);
+            hilt.position.y = -0.18;
+            root.add(hilt);
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.24, 1.9, 0.06), new THREE.MeshStandardMaterial({ color: 0xff3d00, emissive: 0xdd2c00, emissiveIntensity: 0.6, roughness: 0.7 }));
+            blade.position.y = 1.05;
+            blade.castShadow = true;
+            root.add(blade);
+        }
+        else if (weaponId === 'profaned_greatsword') {
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.55, 8), this.darkSteelMat);
+            hilt.position.y = -0.22;
+            root.add(hilt);
+            const guard = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.06, 0.08), this.darkSteelMat);
+            guard.position.y = 0.08;
+            root.add(guard);
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.22, 2.05, 0.04), new THREE.MeshStandardMaterial({ color: 0xff6d00, emissive: 0xff3d00, emissiveIntensity: 0.45, metalness: 0.8, roughness: 0.25 }));
+            blade.position.y = 1.12;
+            blade.castShadow = true;
+            root.add(blade);
+        }
+        else if (weaponId === 'greatsword_of_judgment') {
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.52, 8), this.darkSteelMat);
+            hilt.position.y = -0.20;
+            root.add(hilt);
+            const guard = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.06, 0.08), this.darkSteelMat);
+            guard.position.y = 0.08;
+            root.add(guard);
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.20, 2.0, 0.04), new THREE.MeshStandardMaterial({ color: 0x4a148c, emissive: 0x7b1fa2, emissiveIntensity: 0.4, metalness: 0.85, roughness: 0.2 }));
+            blade.position.y = 1.10;
+            blade.castShadow = true;
+            root.add(blade);
+        }
+        else if (weaponId === 'mornes_great_hammer') {
+            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.4, 8), this.darkSteelMat);
+            shaft.position.y = 0.35;
+            root.add(shaft);
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.55, 0.45), this.darkSteelMat);
+            head.position.y = 1.15;
+            head.castShadow = true;
+            root.add(head);
+        }
+        else if (weaponId === 'paladin_grant') {
+            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 1.35, 8), this.darkSteelMat);
+            shaft.position.y = 0.35;
+            root.add(shaft);
+            const head = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.52, 8), new THREE.MeshStandardMaterial({ color: 0xffd54f, metalness: 0.8, roughness: 0.2 }));
+            head.position.y = 1.12;
+            head.castShadow = true;
+            root.add(head);
+        }
+        else if (weaponId === 'smouldering_demon_greataxe') {
+            const haft = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.5, 8), this.leatherMat);
+            haft.position.y = 0.40;
+            root.add(haft);
+            const axeHead = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.70, 0.08), new THREE.MeshStandardMaterial({ color: 0xbf360c, emissive: 0xff5722, emissiveIntensity: 0.4, roughness: 0.6 }));
+            axeHead.position.set(0.22, 1.20, 0);
+            axeHead.castShadow = true;
+            root.add(axeHead);
+        }
+        else if (weaponId === 'mohgwyn_sacred_spear') {
+            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 2.2, 8), this.darkSteelMat);
+            shaft.position.y = 0.70;
+            root.add(shaft);
+            const centerProng = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.65, 4), new THREE.MeshStandardMaterial({ color: 0xb71c1c, emissive: 0xd50000, emissiveIntensity: 0.5 }));
+            centerProng.position.y = 2.05;
+            root.add(centerProng);
+            const leftProng = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.45, 4), new THREE.MeshStandardMaterial({ color: 0xb71c1c }));
+            leftProng.position.set(-0.16, 1.85, 0);
+            leftProng.rotation.z = 0.2;
+            root.add(leftProng);
+            const rightProng = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.45, 4), new THREE.MeshStandardMaterial({ color: 0xb71c1c }));
+            rightProng.position.set(0.16, 1.85, 0);
+            rightProng.rotation.z = -0.2;
+            root.add(rightProng);
+        }
+
+        else if (weaponId === 'torch') {
             // Pitch-Soaked Torch Weapon (Fire damage & darkness illumination)
             return this.createTorchMesh(true);
 
@@ -1327,9 +1437,9 @@ class DarkSoulsCharacters {
 
         const newWeapon = this.createWeaponMesh(weaponId);
         // Authentic combat-ready weapon rigging (held naturally upright & balanced)
-        const isColossal = ['zweihander', 'dark_moon_greatsword', 'moonlight', 'blasphemous_blade', 'starscourge_greatswords', 'godslayer_greatsword', 'holy_moonlight_sword', 'fume_ultra_greatsword', 'greatsword_of_artorias', 'bloodhounds_fang', 'claymore', 'sacred_relic_sword', 'ringed_knight_paired'].includes(weaponId);
-        const isPolearm = ['halberd', 'black_knight_halberd', 'eleonoras_poleblade', 'bolt_of_gransax', 'moonlight_butterfly_horn', 'dragonslayer_spear', 'lifehunt_scythe', 'friedes_scythe'].includes(weaponId);
-        const isGreatImpact = ['dragontooth', 'giant_crusher', 'dragonslayer_greataxe', 'whirligig_saw', 'dragon_king_greataxe', 'smoughs_great_hammer'].includes(weaponId);
+        const isColossal = ['zweihander', 'dark_moon_greatsword', 'moonlight', 'blasphemous_blade', 'starscourge_greatswords', 'godslayer_greatsword', 'holy_moonlight_sword', 'fume_ultra_greatsword', 'greatsword_of_artorias', 'bloodhounds_fang', 'claymore', 'sacred_relic_sword', 'ringed_knight_paired', 'magma_wyrm_scalesword', 'profaned_greatsword', 'greatsword_of_judgment'].includes(weaponId);
+        const isPolearm = ['halberd', 'black_knight_halberd', 'eleonoras_poleblade', 'bolt_of_gransax', 'moonlight_butterfly_horn', 'dragonslayer_spear', 'lifehunt_scythe', 'friedes_scythe', 'mohgwyn_sacred_spear'].includes(weaponId);
+        const isGreatImpact = ['dragontooth', 'giant_crusher', 'dragonslayer_greataxe', 'whirligig_saw', 'dragon_king_greataxe', 'smoughs_great_hammer', 'mornes_great_hammer', 'paladin_grant', 'smouldering_demon_greataxe'].includes(weaponId);
         const isKatana = ['uchigatana', 'rivers_of_blood', 'moonveil', 'kusabimaru', 'chikage', 'rakuyo', 'chaos_blade', 'mortal_blade', 'hand_of_malenia', 'frayed_blade'].includes(weaponId);
 
         if (isPolearm) {
@@ -8347,6 +8457,135 @@ class DarkSoulsCharacters {
         };
 
         this.scene.add(root);
+        return root;
+    }
+
+
+    createSpiritCompanionMesh(ash) {
+        const root = new THREE.Group();
+        root.userData = { ashId: ash.id };
+
+        const ghostColor = ash.color || 0x88ccff;
+        const ghostMat = new THREE.MeshStandardMaterial({
+            color: ghostColor,
+            transparent: true,
+            opacity: 0.75,
+            emissive: ghostColor,
+            emissiveIntensity: 0.40,
+            roughness: 0.35,
+            metalness: 0.15
+        });
+
+        // Glowing summon floor ring
+        const ringGeo = new THREE.RingGeometry(0.7, 1.0, 32);
+        const ringMat = new THREE.MeshBasicMaterial({
+            color: ghostColor,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.6
+        });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.name = 'spiritRing';
+        ringMesh.rotation.x = -Math.PI / 2;
+        ringMesh.position.y = 0.04;
+        root.add(ringMesh);
+
+        if (ash.id === 'iron_fist_alexander') {
+            // Living Warrior Jar Mesh
+            const jarBody = new THREE.Mesh(new THREE.SphereGeometry(0.9, 14, 12), ghostMat);
+            jarBody.scale.set(1.1, 0.95, 1.1);
+            jarBody.position.y = 0.85;
+            root.add(jarBody);
+
+            const jarLid = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.22, 14), ghostMat);
+            jarLid.position.y = 1.62;
+            root.add(jarLid);
+
+            const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.6, 0.24), ghostMat);
+            rArm.name = 'spiritRArm';
+            rArm.position.set(0.95, 0.85, 0);
+            root.add(rArm);
+
+            const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.6, 0.24), ghostMat);
+            lArm.name = 'spiritLArm';
+            lArm.position.set(-0.95, 0.85, 0);
+            root.add(lArm);
+        } else if (ash.id === 'stormhawk_deenh') {
+            // Avian Stormhawk
+            const birdBody = new THREE.Mesh(new THREE.ConeGeometry(0.35, 1.1, 6), ghostMat);
+            birdBody.rotation.x = Math.PI / 2;
+            birdBody.position.y = 1.6;
+            root.add(birdBody);
+
+            const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.08, 0.5), ghostMat);
+            wingL.position.set(-0.7, 1.6, 0);
+            wingL.rotation.z = -0.2;
+            root.add(wingL);
+
+            const wingR = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.08, 0.5), ghostMat);
+            wingR.position.set(0.7, 1.6, 0);
+            wingR.rotation.z = 0.2;
+            root.add(wingR);
+        } else if (ash.id === 'mad_pumpkin_head') {
+            // Colossal Brass Pumpkin Helmet Warrior
+            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.85, 0.4), ghostMat);
+            torso.position.y = 1.1;
+            root.add(torso);
+
+            const pumpkinHelm = new THREE.Mesh(new THREE.SphereGeometry(0.48, 12, 10), new THREE.MeshStandardMaterial({
+                color: 0xffaa00,
+                emissive: 0xff6600,
+                emissiveIntensity: 0.35,
+                roughness: 0.5
+            }));
+            pumpkinHelm.position.y = 1.78;
+            root.add(pumpkinHelm);
+
+            const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.75, 6), ghostMat);
+            rArm.name = 'spiritRArm';
+            rArm.position.set(0.45, 1.1, 0);
+            root.add(rArm);
+        } else {
+            // Humanoid Warrior / Knight / Hero Phantom
+            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.65, 0.28), ghostMat);
+            torso.position.y = 1.05;
+            root.add(torso);
+
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.20, 10, 8), ghostMat);
+            head.position.y = 1.55;
+            root.add(head);
+
+            const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.6, 6), ghostMat);
+            rArm.name = 'spiritRArm';
+            rArm.position.set(0.34, 1.05, 0);
+            root.add(rArm);
+
+            const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.6, 6), ghostMat);
+            lArm.name = 'spiritLArm';
+            lArm.position.set(-0.34, 1.05, 0);
+            root.add(lArm);
+
+            // Greatshield for soldiers & Tarkus
+            if (ash.id === 'greatshield_soldiers' || ash.id === 'iron_tarkus') {
+                const shield = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.95, 0.6), ghostMat);
+                shield.position.set(-0.38, 0.95, 0.25);
+                root.add(shield);
+            }
+
+            // Weapon in Right Hand
+            const sword = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.25, 0.03), ghostMat);
+            sword.position.set(0.38, 1.0, 0.35);
+            root.add(sword);
+
+            const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.7, 6), ghostMat);
+            legL.position.set(-0.16, 0.35, 0);
+            root.add(legL);
+
+            const legR = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.7, 6), ghostMat);
+            legR.position.set(0.16, 0.35, 0);
+            root.add(legR);
+        }
+
         return root;
     }
 

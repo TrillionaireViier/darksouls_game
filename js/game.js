@@ -282,6 +282,14 @@ class DarkSoulsGame {
             }
             if (e.code === 'KeyT' || e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') this.toggleTorch();
             if (e.code === 'KeyR' || e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К' || e.code === 'Digit1') this.combat.tryDrinkEstus();
+            if (e.code === 'KeyN' || e.key === 'n' || e.key === 'N' || e.key === 'т' || e.key === 'Т') {
+                e.preventDefault();
+                this.combat.trySummonSpiritAsh();
+            }
+            if (e.code === 'Digit6') {
+                e.preventDefault();
+                this.combat.cycleSpiritAsh(1);
+            }
             if (e.code === 'Digit3' || e.code === 'KeyY' || e.key === 'y' || e.key === 'Y' || e.key === 'н' || e.key === 'Н') {
                 e.preventDefault();
                 this.combat.tryCastSpell();
@@ -833,6 +841,46 @@ class DarkSoulsGame {
     // ----------------------------------------------------
     // GRIMOIRE SPELLS MODAL (20 SPELLS)
     // ----------------------------------------------------
+    openSpiritAshesModal() {
+        const modal = document.getElementById('spirit-ashes-modal');
+        if (modal) modal.style.display = 'flex';
+        this.renderSpiritAshesUI();
+    }
+
+    closeSpiritAshesModal() {
+        const modal = document.getElementById('spirit-ashes-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    renderSpiritAshesUI() {
+        const container = document.getElementById('spirit-ashes-cards-grid');
+        if (!container || !this.combat || !this.combat.spiritAshesDatabase) return;
+        const currentId = this.combat.currentSpiritAshId;
+        const companion = this.combat.activeSpiritCompanion;
+        const ashes = this.combat.spiritAshesDatabase;
+        let html = '';
+        for (const [id, ash] of Object.entries(ashes)) {
+            const isEquipped = currentId === id;
+            const isSummoned = companion && companion.id === id;
+            html += `
+                <div class="boss-card spirit-ash-card ${isEquipped ? 'ring-active' : ''}" data-ash-id="${id}">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">${ash.icon}</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name" style="color: ${ash.color ? '#' + ash.color.toString(16).padStart(6, '0') : '#ffd778'};">${ash.name.toUpperCase()}</div>
+                            <div class="boss-card-desc">${ash.title} &bull; ${ash.desc}</div>
+                            <div class="boss-card-stats">HP: ${ash.hp} &bull; ATK: ${ash.damage} &bull; COST: ${ash.cost} SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss ${isSummoned ? 'btn-unring' : 'btn-arsenal-equip'}" onclick="summonSpiritAsh('${id}')">
+                        ${isSummoned ? 'DISMISS' : (isEquipped ? 'SUMMON [4]' : 'ATTUNE')}
+                    </button>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+    }
+
     openGrimoireModal() {
         const modal = document.getElementById('grimoire-modal');
         if (modal) {
@@ -4068,6 +4116,10 @@ window.openRingsModal = () => { if (window.game) window.game.openRingsModal(); }
 window.closeRingsModal = () => { if (window.game) window.game.closeRingsModal(); };
 window.equipRing = (slot, ringId) => { if (window.game && window.game.combat) window.game.combat.equipRing(slot, ringId); };
 window.unequipRing = (slot) => { if (window.game && window.game.combat) window.game.combat.unequipRing(slot); };
+window.openSpiritAshesModal = () => { if (window.game) window.game.openSpiritAshesModal(); };
+window.closeSpiritAshesModal = () => { if (window.game) window.game.closeSpiritAshesModal(); };
+window.summonSpiritAsh = (ashId) => { if (window.game && window.game.combat) window.game.combat.trySummonSpiritAsh(ashId); };
+window.cycleSpiritAsh = (dir = 1) => { if (window.game && window.game.combat) window.game.combat.cycleSpiritAsh(dir); };
 window.openGrimoireModal = () => { if (window.game) window.game.openGrimoireModal(); };
 window.closeGrimoireModal = () => { if (window.game) window.game.closeGrimoireModal(); };
 window.adminGrantSoulsAndEstus = (s) => { if (window.game) window.game.adminGrantSoulsAndEstus(s); };
@@ -4080,7 +4132,7 @@ window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodex
 window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
 window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
 
-// 250 Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
+// 300 Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
     // ----------------------------------------------------
     // SANCTUARIES & HUB REALMS
@@ -4391,7 +4443,61 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'ds2_earthen_peak_windmill', name: 'Earthen Peak - Upper Windmill Spire', zone: 'Earthen Peak', pos: [20, 6.0, 66], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'Mytha, the Baneful Queen', desc: 'A towering wooden windmill churning with poisonous green fumes above flooded magma keeps.', light: 0.80 },
     { id: 'ds2_brume_tower_throne', name: 'Brume Tower - Throne of the Fume Knight', zone: 'Brume Tower', pos: [0, -5.0, 122], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Fume Knight Raime', desc: 'A colossal subterranean furnace of ash where Raime stands guard over the idol of Nadalia.', light: 0.85 },
     { id: 'des_boletaria_1_1', name: 'Boletarian Palace - Gates of Boletaria Courtyard', zone: 'Boletaria', pos: [0, 0, -32], elev: '0m', danger: 'Tier I (Introductory)', boss: 'Phalanx', desc: 'The monumental stone portcullis leading into the great castle of King Allant under deep fog.', light: 0.95 },
-    { id: 'des_flamelurker_temple', name: 'Stonefang Tunnel - Temple of God Underground', zone: 'Stonefang Tunnel', pos: [18, -5.0, 98], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Flamelurker & Dragon God', desc: 'A scorching volcanic cavern where the ancient fossilized bones of the colossal Dragon God rest.', light: 1.10 }
+    { id: 'des_flamelurker_temple', name: 'Stonefang Tunnel - Temple of God Underground', zone: 'Stonefang Tunnel', pos: [18, -5.0, 98], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Flamelurker & Dragon God', desc: 'A scorching volcanic cavern where the ancient fossilized bones of the colossal Dragon God rest.', light: 1.10 },
+    // ----------------------------------------------------
+    // 50 NEW SOULSBORNE EXPEDITIONS (#251 - #300)
+    // ----------------------------------------------------
+    { id: 'des_shrine_of_storms_altar', name: "Shrine of Storms - Altar of the Monolith", zone: "Shrine of Storms", pos: [22, -1, 115], elev: '-1m', danger: 'Tier IV (Severe)', boss: "Storm King & Shadowmen", desc: "A stormy mountaintop shrine battered by torrential downpours where the Storm King glides above the monoliths.", light: 0.9 },
+    { id: 'des_tower_of_latria_heart', name: "Upper Latria - Monstrous Beating Heart", zone: "Tower of Latria", pos: [-24, 7.5, 88], elev: '+7.5m', danger: 'Tier V (Legendary)', boss: "Maneaters & Old Monk", desc: "Suspended iron walkways encircling a colossal fleshy heart pulsing with ancient demonic corruption.", light: 0.85 },
+    { id: 'des_valley_defilement_swamp', name: "Swamp of Sorrow - Colossal Depraved Village", zone: "Valley of Defilement", pos: [30, -8, 75], elev: '-8m', danger: 'Tier V (Nightmare)', boss: "Maiden Astraea & Garl Vinland", desc: "A nauseating toxic swamp filled with depraved shanties and the sanctuary of the fallen Saint Astraea.", light: 0.7 },
+    { id: 'des_stonefang_armorspider', name: "Stonefang Tunnel - Smithing Lava Caverns", zone: "Stonefang Tunnel", pos: [12, -3.5, 82], elev: '-3.5m', danger: 'Tier III (Moderate)', boss: "Armor Spider & Miners", desc: "Deep mining tunnels illuminated by blast furnaces, molten lava streams, and ancient burrowing spider webs.", light: 1.15 },
+    { id: 'des_penetrator_courtyard', name: "Boletarian Palace - Courtyard of Red Knights", zone: "Boletarian Palace", pos: [-8, 2, 108], elev: '+2m', danger: 'Tier IV (Severe)', boss: "Penetrator & Biorr of Twin Fangs", desc: "Grand cobblestone square leading to the inner sanctum, guarded by elite red-eyed imperial knights.", light: 1.05 },
+    { id: 'ds1_great_hollow_trunk', name: "The Great Hollow - Primeval Archtree Trunk", zone: "The Great Hollow", pos: [-32, -9, 60], elev: '-9m', danger: 'Tier IV (Severe)', boss: "Curse Basilisks & Mushroom Men", desc: "The cavernous hollow interior of an ancient everlasting archtree descending toward the subterranean Ash Lake.", light: 0.75 },
+    { id: 'ds1_ash_lake_dragon', name: "Stone Dragon Sanctuary - Everlasting Rest", zone: "Ash Lake", pos: [-38, -12, 85], elev: '-12m', danger: 'Tier V (Legendary)', boss: "Everlasting Stone Dragon", desc: "Endless shores of gray ash and primordial archtrees where the immortal Stone Dragon awaits dragon acolytes.", light: 1.2 },
+    { id: 'ds1_painted_world_annex', name: "Painted World - Courtyard of Priscilla", zone: "Painted World of Ariamis", pos: [16, 4, 122], elev: '+4m', danger: 'Tier IV (Severe)', boss: "Crossbreed Priscilla & Phalanx", desc: "Snow-covered cold ruins sealed within a colossal canvas in Anor Londo, home to the gentle Crossbreed Priscilla.", light: 1.1 },
+    { id: 'ds1_demon_ruins_staircase', name: "Demon Ruins - Lava Staircase of Firesage", zone: "Demon Ruins", pos: [28, -6.5, 92], elev: '-6.5m', danger: 'Tier IV (Severe)', boss: "Demon Firesage & Capra Pack", desc: "A blistering subterranean staircase over churning magma lakes leading down into the roots of Lost Izalith.", light: 1.25 },
+    { id: 'ds1_lost_izalith_bed', name: "Lost Izalith - Root Chamber of Chaos", zone: "Lost Izalith", pos: [34, -7, 110], elev: '-7m', danger: 'Tier V (Nightmare)', boss: "Bed of Chaos & Chaos Eaters", desc: "The incandescent cradle of all demons where the Witch of Izalith was consumed by the primordial Flame of Chaos.", light: 1.3 },
+    { id: 'ds1_tomb_giants_patches', name: "Tomb of the Giants - Pit of Patches", zone: "Tomb of the Giants", pos: [19, -8.5, 68], elev: '-8.5m', danger: 'Tier V (Nightmare)', boss: "Patches the Hyena & Giant Skeletons", desc: "Pitch-black ossuary caverns where Patches lures naive clerics toward the edge of an abyss pit.", light: 0.45 },
+    { id: 'ds1_crystal_cave_butterflies', name: "Crystal Cave - Invisible Bridges of Seath", zone: "Crystal Cave", pos: [-26, 1.5, 130], elev: '+1.5m', danger: 'Tier V (Severe)', boss: "Moonlight Butterflies & Golden Golems", desc: "Luminous sapphire caverns crossed only by stepping onto invisible crystalline walkways over bottomless chasms.", light: 1.15 },
+    { id: 'ds1_sanctuary_guardian_pool', name: "Oolacile Sanctuary - Guardian Shaded Spring", zone: "Oolacile Sanctuary", pos: [-15, 0.5, 95], elev: '+0.5m', danger: 'Tier IV (Severe)', boss: "Sanctuary Guardian & Elizabeth", desc: "A tranquil sunlit forest pool guarded by the winged manticore chimera before entering the royal woods.", light: 1.05 },
+    { id: 'ds1_chasm_abyss_manus', name: "Chasm of the Abyss - Throne of Manus", zone: "Chasm of the Abyss", pos: [-22, -11, 118], elev: '-11m', danger: 'Tier V (Nightmare)', boss: "Manus, Father of the Abyss", desc: "The abyssal primordial void where the Primeval Man mutated into the monstrous Father of the Abyss.", light: 0.5 },
+    { id: 'ds2_majula_pit', name: "Majula - Great Subterranean Pit", zone: "Majula", pos: [6, -1, 52], elev: '-1m', danger: 'Tier II (Fair)', boss: "Gillie the Laddersmith", desc: "The fathomless pit at the center of Majula descending through rickety wooden scaffolds into the Grave of Saints.", light: 1 },
+    { id: 'ds2_heides_ruin_blue', name: "Heide Tower of Flame - Cathedral of Blue", zone: "Heide Tower of Flame", pos: [-18, 3, 78], elev: '+3m', danger: 'Tier III (Moderate)', boss: "Old Dragonslayer & Blue Sentinels", desc: "A flooded ocean fortress where the Old Dragonslayer guards the sacred shrine of the Blue Sentinels.", light: 1.15 },
+    { id: 'ds2_huntsmans_copse_bridge', name: "Huntsman Copse - Purgatory Chariot Bridge", zone: "Huntsman Copse", pos: [24, 0, 64], elev: '0m', danger: 'Tier IV (Severe)', boss: "Executioner Chariot & Necromancers", desc: "A crumbling rope bridge suspended over a misty gorge leading to the iron colosseum of the Undead Purgatory.", light: 0.85 },
+    { id: 'ds2_shrine_of_amana_altar', name: "Shrine of Amana - Altar of Songbirds", zone: "Shrine of Amana", pos: [-30, -4, 84], elev: '-4m', danger: 'Tier V (Severe)', boss: "Demon of Song & Milfanito Priestesses", desc: "Submerged flooded ruins echoing with the sorrowful lullaby of Milfanito priestesses soothing the deformed.", light: 1.1 },
+    { id: 'ds2_dragon_shrine_ancient', name: "Dragon Shrine - Stairway of the Ancient", zone: "Dragon Shrine", pos: [32, 8.5, 126], elev: '+8.5m', danger: 'Tier V (Legendary)', boss: "Ancient Dragon & Dragonfang Villard", desc: "A majestic skyward shrine perched on floating stone pillars where silent dragon knights guard the colossal Ancient Dragon.", light: 1.25 },
+    { id: 'ds2_memory_of_jeigh', name: "Memory of Jeigh - Scorched Giant Rampart", zone: "Forest of Fallen Giants", pos: [14, 3.5, 102], elev: '+3.5m', danger: 'Tier IV (Severe)', boss: "Giant Lord & King Vendrick Vanguard", desc: "A past memory of catastrophic siege warfare where flaming siege stones rain down upon the battlements.", light: 1.2 },
+    { id: 'ds2_shulva_dragon_sanctum', name: "Dragon Sanctum - Chamber of Sinh", zone: "Sunken King Sanctum", pos: [26, -9, 105], elev: '-9m', danger: 'Tier V (Nightmare)', boss: "Sinh the Slumbering Dragon & Elana", desc: "A submerged subterranean ziggurat where the poisonous Slumbering Dragon rests impaled by Sir Yorgh spear.", light: 0.95 },
+    { id: 'ds2_eleum_loyce_cathedral', name: "Grand Cathedral of Loyce - Chaos Throne", zone: "Frozen Eleum Loyce", pos: [-28, 6, 114], elev: '+6m', danger: 'Tier V (Nightmare)', boss: "Burnt Ivory King & Loyce Knights", desc: "A frostbitten ivory cathedral suspended above the incandescent mouth of the Old Chaos.", light: 1.2 },
+    { id: 'ds3_untended_graves_champion', name: "Untended Graves - Shrine of Champion Gundyr", zone: "Cemetery of Ash", pos: [2, 0.5, 48], elev: '+0.5m', danger: 'Tier I (Introduction)', boss: "Iudex Gundyr & Ravenous Crystal Lizard", desc: "A desolate resting ground of unkindled ash surrounded by silent bell-towers and weathered tombstones.", light: 0.95 },
+    { id: 'ds3_undead_settlement_bridge', name: "Undead Settlement - Dilapidated Bridge", zone: "Undead Settlement", pos: [18, -1.5, 72], elev: '-1.5m', danger: 'Tier III (Moderate)', boss: "Curse-rotted Greatwood & Holy Knight Hodrick", desc: "A ramshackle bridge over a sewer ravine beneath the giant archer tower throwing spears from above.", light: 0.9 },
+    { id: 'ds3_road_of_sacrifices_keep', name: "Keep Ruins - Farron Swamp Citadel", zone: "Road of Sacrifices", pos: [-16, -2.5, 82], elev: '-2.5m', danger: 'Tier IV (Severe)', boss: "Crystal Sage & Abyss Watchers", desc: "Sunken fortress ramparts overgrown with poisonous moss and extinguished sacred flames.", light: 0.85 },
+    { id: 'ds3_rosaria_bedchamber', name: "Cathedral of the Deep - Rosaria\x27s Bedchamber", zone: "Cathedral of the Deep", pos: [22, 2.5, 96], elev: '+2.5m', danger: 'Tier IV (Severe)', boss: "Deacons of the Deep & Cathedral Knights", desc: "The sacred sanctuary where monks of the Way of White fell into horrific devotion to the deep water abyss.", light: 0.95 },
+    { id: 'ds3_profaned_capital_yhorm', name: "Profaned Capital - Throne of Yhorm", zone: "Profaned Capital", pos: [30, -5.5, 112], elev: '-5.5m', danger: 'Tier V (Legendary)', boss: "Yhorm the Giant & Siegward of Catarina", desc: "A gold-encrusted subterranean royal hall where Yhorm the Giant sits with the legendary Storm Ruler.", light: 1.15 },
+    { id: 'ds3_irithyll_dungeon_cells', name: "Irithyll Dungeon - Bellowing Cell Block", zone: "Irithyll Dungeon", pos: [-20, -4.5, 98], elev: '-4.5m', danger: 'Tier IV (Severe)', boss: "Jailer Overseers & Monstrosities of Sin", desc: "Cold subterranean iron cages where terrifying jailers drain the maximum vitality of captured prisoners.", light: 0.8 },
+    { id: 'ds3_archdragon_peak_bell', name: "Archdragon Peak - Great Belfry Summit", zone: "Archdragon Peak", pos: [28, 9, 132], elev: '+9m', danger: 'Tier V (Legendary)', boss: "Nameless King & King of the Storm", desc: "A cloud-shrouded plateau where ringing the great bell summons the Nameless King riding his stormdrake.", light: 1.3 },
+    { id: 'ds3_painted_corvian_settlement', name: "Painted World - Corvian Settlement & Vilhelm", zone: "Painted World of Ariandel", pos: [-25, 4.5, 120], elev: '+4.5m', danger: 'Tier V (Nightmare)', boss: "Sister Friede & Father Ariandel", desc: "The frozen chapel of Father Ariandel who whips himself to appease the rising flame with his blood basin.", light: 1.05 },
+    { id: 'ds3_ringed_city_streets', name: "Ringed City - Judicator Abyssal Swamp", zone: "The Ringed City", pos: [32, -3, 125], elev: '-3m', danger: 'Tier V (Nightmare)', boss: "Judicator Argo & Ringed Knights", desc: "Sunken streets swallowed by the dark soul swamp, patrolled by giant Judicators summoning ghost archers.", light: 0.9 },
+    { id: 'ds3_shira_ruined_tower', name: "The Ringed City - Shira\x27s Crucifix Sanctuary", zone: "The Ringed City", pos: [0, 0, 140], elev: '0m', danger: 'Tier V (Supreme)', boss: "Slave Knight Gael & Shira", desc: "The shattered desert of ash at the end of all time where Slave Knight Gael feasts on the Dark Soul.", light: 1.1 },
+    { id: 'bb_central_yharnam_fountain', name: "Central Yharnam - Great Fountain Square", zone: "Central Yharnam", pos: [-12, 1, 68], elev: '+1m', danger: 'Tier III (Moderate)', boss: "Cleric Beast & Brick Trolls", desc: "Cobblestone plaza where maddened townsfolk burn a beast on a wooden pyre under a blood red moon.", light: 0.85 },
+    { id: 'bb_cathedral_ward_grand', name: "Cathedral Ward - Grand Beast Altar", zone: "Cathedral Ward", pos: [14, 4, 86], elev: '+4m', danger: 'Tier IV (Severe)', boss: "Vicar Amelia & Eileen the Crow", desc: "The towering marble cathedral of the Healing Church where Vicar Amelia clutches the beastly golden pendant.", light: 1.05 },
+    { id: 'bb_forbidden_woods_windmill', name: "Forbidden Woods - Windmill Crossroads", zone: "Forbidden Woods", pos: [-24, -2, 76], elev: '-2m', danger: 'Tier IV (Severe)', boss: "Shadow of Yharnam & Snake Parasites", desc: "Dense misty forest filled with serpent clusters, hidden spike traps, and decaying cobblestone mills.", light: 0.75 },
+    { id: 'bb_byrgenwerth_lunarium', name: "Byrgenwerth - Moonside Lake Lunarium", zone: "Byrgenwerth", pos: [20, 1.5, 94], elev: '+1.5m', danger: 'Tier IV (Severe)', boss: "Rom, the Vacuous Spider & Master Willem", desc: "The lakeside academy where scholar Willem gazes endlessly upon the lake hiding the paleblood moon.", light: 1.1 },
+    { id: 'bb_hypogean_gaol_paarl', name: "Yahar'gul, Unseen Village - Advent Plaza", zone: "Yahar'gul Unseen Village", pos: [26, -1, 108], elev: '-1m', danger: 'Tier V (Nightmare)', boss: "The One Reborn & Bell Ringing Women", desc: "A nocturnal ritual city where severed flesh descends from the cosmos to manifest The One Reborn.", light: 0.8 },
+    { id: 'bb_nightmare_mensis_loft', name: "Nightmare of Mensis - Wet Nurse Terrace", zone: "Nightmare of Mensis", pos: [-28, 8, 124], elev: '+8m', danger: 'Tier V (Nightmare)', boss: "Mergo Wet Nurse & Micolash", desc: "The highest tower balcony of the Nightmare where the multi-bladed Wet Nurse cradles the crying infant Great One.", light: 0.95 },
+    { id: 'bb_research_hall_clocktower', name: "Research Hall - Astral Clocktower Veranda", zone: "Hunter Nightmare", pos: [15, 6.5, 118], elev: '+6.5m', danger: 'Tier V (Legendary)', boss: "Lady Maria of the Astral Clocktower", desc: "A colossal stained-glass clock tower where Lady Maria slumbers, guarding the secret of the fishing hamlet.", light: 1.15 },
+    { id: 'bb_lighthouse_hut_well', name: "Fishing Hamlet - Lighthouse Hut & Shark Well", zone: "Hunter Nightmare", pos: [-18, -3, 128], elev: '-3m', danger: 'Tier V (Supreme)', boss: "Orphan of Kos & Shark Giants", desc: "A rain-drenched coastal beach where the weeping Orphan of Kos emerges from the washed-up Great One carcass.", light: 0.9 },
+    { id: 'sekiro_ashina_reservoir', name: "Ashina Reservoir - Moon-view Tower", zone: "Ashina Outskirts", pos: [8, 1, 62], elev: '+1m', danger: 'Tier III (Moderate)', boss: "Seven Ashina Spears & Lone Shadow", desc: "The reed field where Wolf first met the Divine Heir Kuro before their fateful clash with Lord Genichiro.", light: 1 },
+    { id: 'sekiro_senpou_main_hall', name: "Senpou Temple - Main Hall of Monkeys", zone: "Senpou Temple Mt. Kongo", pos: [-14, 5, 92], elev: '+5m', danger: 'Tier IV (Severe)', boss: "Folding Screen Monkeys & Armored Warrior", desc: "A sacred autumn temple sanctuary home to corrupt monks seeking immortality through the dragon blood.", light: 1.15 },
+    { id: 'sekiro_sunken_valley_passage', name: "Sunken Valley - Guardian Ape Watering Hole", zone: "Sunken Valley", pos: [22, -4.5, 88], elev: '-4.5m', danger: 'Tier IV (Severe)', boss: "Guardian Ape & Snake Eyes Shirafuji", desc: "A mist-filled gorge filled with lotus waters where the undying giant ape guards the Palace Lotus.", light: 0.95 },
+    { id: 'sekiro_mibu_village_watermill', name: "Mibu Village - Watermill & Monk Bridge", zone: "Ashina Depths", pos: [-22, -6, 102], elev: '-6m', danger: 'Tier IV (Severe)', boss: "Corrupted Monk & O'Rin of the Water", desc: "A phantom-haunted village bathed in purple twilight where weeping spirits dance beside the misty river.", light: 0.85 },
+    { id: 'sekiro_fountainhead_palace_veranda', name: "Fountainhead Palace - Vermilion Terrace", zone: "Fountainhead Palace", pos: [16, 7, 126], elev: '+7m', danger: 'Tier V (Legendary)', boss: "Divine Dragon & Okami Nobles", desc: "A celestial palace of cherry blossoms and turquoise waters where noble okami warriors flute immortal melodies.", light: 1.25 },
+    { id: 'er_academy_debate_parlor', name: "Academy of Raya Lucaria - Debate Parlor", zone: "Liurnia of the Lakes", pos: [-19, 2.5, 96], elev: '+2.5m', danger: 'Tier IV (Severe)', boss: "Red Wolf of Radagon & Rennala", desc: "The grand crystalline academic forum where the Red Wolf of Radagon wields glintstone sorcery swords.", light: 1.1 },
+    { id: 'er_volcano_manor_guest_hall', name: "Volcano Manor - Prison Town Noble Hall", zone: "Mt. Gelmir", pos: [25, 4, 110], elev: '+4m', danger: 'Tier V (Severe)', boss: "Godskin Noble & Praetor Rykard", desc: "A lava-scorched fortress where blasphemous inquisitors worship the great serpent of Mt. Gelmir.", light: 1.2 },
+    { id: 'er_haligtree_roots_malenia', name: "Brace of the Haligtree - Roots of Malenia", zone: "Miquella Haligtree", pos: [-32, -8, 122], elev: '-8m', danger: 'Tier V (Supreme)', boss: "Malenia, Blade of Miquella", desc: "The deepest roots of the rotting divine tree where Malenia slumbers beside an enormous blooming Aeonian scarlet rot bud.", light: 1.05 },
+    { id: 'er_crumbling_farum_dragon_temple', name: "Farum Azula - Dragon Temple Rooftop", zone: "Crumbling Farum Azula", pos: [28, 8, 134], elev: '+8m', danger: 'Tier V (Nightmare)', boss: "Dragonlord Placidusax & Beast Clergyman", desc: "Suspended ruins spinning through a titanic eternal storm where ancient multi-headed dragonlords rule beyond time.", light: 1.25 },
+    { id: 'sote_enir_ilim_divine_gate', name: "Enir-Ilim - Gate of Divinity", zone: "Shadow Realm", pos: [0, 9.5, 142], elev: '+9.5m', danger: 'Tier V (Supreme)', boss: "Promised Consort Radahn & Miquella", desc: "The towering spiral citadel summit of the Hornsent where Miquella ascended through the Gate of Divinity.", light: 1.35 }
+
 ];
 
 // Locations & Save Slot Global Window Helpers
