@@ -196,7 +196,7 @@ class DarkSoulsGame {
         // Auto-restore saved journey if present
         if (this.hasSaveData()) {
             this.loadGame(false);
-            this.showNotification(`JOURNEY RESTORED &bull; SOUL LEVEL ${this.combat.level}`);
+            this.showNotification(`JOURNEY RESTORED • SOUL LEVEL ${this.combat.level}`);
         } else {
             this.showNotification("WELCOME TO LORDRAN. PREPARE TO DIE.");
         }
@@ -3022,7 +3022,7 @@ class DarkSoulsGame {
 
             if (this.audio) this.audio.playBonfireIgnite();
             if (showNotification) {
-                this.showNotification(`📂 JOURNEY RESTORED &bull; SOUL LEVEL ${this.combat.level} (${this.combat.souls.toLocaleString()} SOULS)`);
+                this.showNotification(`📂 JOURNEY RESTORED • SOUL LEVEL ${this.combat.level} (${this.combat.souls.toLocaleString()} SOULS)`);
             }
             return true;
         } catch (err) {
