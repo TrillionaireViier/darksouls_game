@@ -2375,7 +2375,8 @@ class DarkSoulsGame {
 
     showNotification(msg) {
         if (!this.ui.notification) return;
-        this.ui.notification.textContent = msg;
+        const cleanMsg = typeof msg === 'string' ? msg.replace(/&bull;/g, '•') : msg;
+        this.ui.notification.textContent = cleanMsg;
         this.ui.notification.style.opacity = '1';
         this.ui.notification.style.transform = 'translate(-50%, 0)';
         clearTimeout(this.notifTimer);
