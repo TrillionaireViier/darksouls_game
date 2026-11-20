@@ -1618,7 +1618,7 @@
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
                 <button class="btn-icon-bar" onclick="openLoreCodexModal()" title="Dark Souls Lore Codex & 300 Mobs/Zombies Drops" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">📜 <span class="btn-label-text">LORE (570)</span></button>
-                <button class="btn-icon-bar" onclick="openLocationsModal()" title="100 Lordran & Beyond Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (100)</span></button>
+                <button class="btn-icon-bar" onclick="openLocationsModal()" title="150 Lordran & Beyond Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (150)</span></button>
                 <button class="btn-icon-bar" id="btn-touch-toggle" onclick="toggleVirtualControls()" title="Toggle On-Screen Virtual Joystick & Buttons" style="border-color: #ffd700; color: #ffe680; font-weight: 700;">🕹️ <span class="btn-label-text">CONTROLS PAD</span></button>
                 <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
                 <button class="btn-icon-bar" onclick="openMerchantModal()" style="border-color: #ff9933; color: #ffb866; font-weight: 700;">🛒 <span class="btn-label-text">SHOP</span></button>
@@ -1839,11 +1839,11 @@
             <!-- Bonfire Warp / Fast Travel Across 100 Realms -->
             <div style="margin-top: 14px; border-top: 1px solid #382c20; padding-top: 14px;">
                 <div class="modal-label" style="text-align: center; margin-bottom: 8px; color: #ffd778; font-weight: 800; letter-spacing: 2px; font-size: 0.95rem;">
-                    🗺️ WARP &bull; FAST TRAVEL TO BONFIRES (100 REALMS)
+                    🗺️ WARP &bull; FAST TRAVEL TO BONFIRES (150 REALMS)
                 </div>
                 <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px;">
                     <button class="btn-upgrade" onclick="openFastTravelFromBonfire()" style="background: linear-gradient(135deg, rgba(20,60,50,0.85) 0%, rgba(10,35,30,0.95) 100%); border-color: #00ffaa; color: #a5ffbe; font-size: 0.86rem; padding: 10px 18px; font-weight: 800; box-shadow: 0 0 16px rgba(0,255,170,0.35); width: 100%; letter-spacing: 1px; cursor: pointer;">
-                        🗺️ OPEN FAST TRAVEL MAP & EXPEDITIONS (100 REALMS)
+                        🗺️ OPEN FAST TRAVEL MAP & EXPEDITIONS (150 REALMS)
                     </button>
                 </div>
                 <!-- Quick Warp to Most Iconic Dark Souls Bonfires -->
@@ -1852,6 +1852,8 @@
                     <button class="btn-upgrade" onclick="fastTravelFromBonfire('firelink_shrine')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #ff7722; color: #ffaa66; background: rgba(50,25,10,0.7);">🔥 Firelink Shrine</button>
                     <button class="btn-upgrade" onclick="fastTravelFromBonfire('undead_burg_bridge')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #c49a45; color: #ffd276; background: rgba(45,35,15,0.7);">🏰 Undead Burg</button>
                     <button class="btn-upgrade" onclick="fastTravelFromBonfire('undead_asylum')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #88ccff; color: #c2e2ff; background: rgba(20,40,65,0.7);">🗝️ Undead Asylum</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('sekiro_ashina_gate')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #f87171; color: #fca5a5; background: rgba(60,20,20,0.7);">🏯 Ashina Castle</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('sote_gravesite_plain')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #eab308; color: #fef08a; background: rgba(50,40,10,0.7);">🌳 Shadow Realm</button>
                     <button class="btn-upgrade" onclick="fastTravelFromBonfire('majula_cliffside')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #00ffaa; color: #a5ffbe; background: rgba(10,45,30,0.7);">🌿 Majula Cliffside</button>
                     <button class="btn-upgrade" onclick="fastTravelFromBonfire('limgrave_first_step')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #ffd778; color: #fff3a8; background: rgba(50,40,15,0.7);">✨ Limgrave (Grace)</button>
                     <button class="btn-upgrade" onclick="fastTravelFromBonfire('hunters_dream')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #c084fc; color: #f3e8ff; background: rgba(45,20,50,0.7);">🌙 Hunter's Dream</button>
@@ -4140,7 +4142,7 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); if(window.compendiumInstance)window.compendiumInstance.clearSpawned();" style="border-color: #ff6666; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">🧹 CLEAR SPAWNED 3D</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDeathQuotesModal();" style="border-color: #ff5555; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">💀 300 DEATH EPITAPHS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 60 BOSS ROSTER</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 100 LOCATIONS</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 150 LOCATIONS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLoreCodexModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">📜 LORE (570 MOBS)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSkinsModal();" style="border-color: #64b5f6; color: #bbdefb; justify-content: center; padding: 10px 12px; font-weight: 700;">🛡️ 3D SKINS & SETS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 12px; font-weight: 700;">🗡️ WEAPON ARSENAL</button>
@@ -4161,17 +4163,17 @@
         </div>
     </div>
 
-    <!-- 75 LORDRAN & BEYOND LOCATIONS & FAST-TRAVEL EXPEDITIONS MODAL -->
+    <!-- 150 LORDRAN, ASHINA, ERDTREE & BEYOND LOCATIONS & FAST-TRAVEL EXPEDITIONS MODAL -->
     <div id="locations-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 900px; max-height: 85vh; overflow-y: auto; padding: 24px; scrollbar-width: thin; scrollbar-color: #a87932 rgba(18, 14, 10, 0.85);">
-            <div class="modal-header">🗺️ 100 LORDRAN & BEYOND EXPEDITIONS & FAST-TRAVEL 🗺️</div>
+            <div class="modal-header">🗺️ 150 LORDRAN & BEYOND EXPEDITIONS & FAST-TRAVEL 🗺️</div>
             <p style="font-size: 0.85rem; color: #b8a896; text-align: center; margin-bottom: 14px;">
-                Instant fast-travel across all 75 sacred zones, sunken catacombs, elevated ramparts and primeval depths of Lordran, Drangleic, Lothric, Boletaria and Yharnam. Select any expedition to warp immediately.
+                Instant fast-travel across all 150 sacred zones, sunken catacombs, elevated ramparts, Sekiro valleys, Erdtree peaks and primeval depths of Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina and the Lands Between. Select any expedition to warp immediately.
             </p>
 
             <!-- Filter Categories -->
             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px;">
-                <button class="btn-icon-bar" onclick="filterLocations('all')" style="border-color: #ffd700; color: #fff3a8; padding: 6px 14px; font-size: 0.78rem; font-weight: 800;">ALL 100 LOCATIONS</button>
+                <button class="btn-icon-bar" onclick="filterLocations('all')" style="border-color: #ffd700; color: #fff3a8; padding: 6px 14px; font-size: 0.78rem; font-weight: 800;">ALL 150 LOCATIONS</button>
                 <button class="btn-icon-bar" onclick="filterLocations('surface')" style="border-color: #ff7722; color: #ffaa66; padding: 6px 14px; font-size: 0.78rem; font-weight: 700;">SURFACE HIGHWAYS (0m)</button>
                 <button class="btn-icon-bar" onclick="filterLocations('depths')" style="border-color: #00ffaa; color: #77ffcc; padding: 6px 14px; font-size: 0.78rem; font-weight: 700;">CATACOMBS & DEPTHS (-5m)</button>
                 <button class="btn-icon-bar" onclick="filterLocations('high')" style="border-color: #ffd700; color: #ffe680; padding: 6px 14px; font-size: 0.78rem; font-weight: 700;">RAMPARTS & SPIRES (+6m)</button>
@@ -5111,24 +5113,24 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/audio.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/lore_items.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/world.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/character.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/siege_warfare.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/heraldry_nobility.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/apothecary_crafting.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/collision_system.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/qa_bot_tester.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/combat.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/postprocessing.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/qa_suite.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/blacksmith_forge.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/inventory_system.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
-    <script src="js/compendium_300_models.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES_300_MODELS"></script>
-    <script src="js/death_quotes_300.js?v=20261120_300_DEATH_QUOTES"></script>
-    <script src="js/game.js?v=20261120_DARK_SOULS_100_LOCATIONS_60_BOSSES"></script>
+    <script src="js/three.min.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/audio.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/lore_items.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/world.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/character.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/siege_warfare.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/heraldry_nobility.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/apothecary_crafting.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/collision_system.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/qa_bot_tester.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/combat.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/postprocessing.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/qa_suite.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/blacksmith_forge.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/inventory_system.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
+    <script src="js/compendium_300_models.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES_300_MODELS"></script>
+    <script src="js/death_quotes_300.js?v=20261120_150_LOCATIONS_300_DEATH_QUOTES"></script>
+    <script src="js/game.js?v=20261120_DARK_SOULS_150_LOCATIONS_60_BOSSES"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {

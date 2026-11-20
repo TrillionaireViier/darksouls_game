@@ -1409,10 +1409,14 @@ class DarkSoulsGame {
             this.playerVelocity.y = 0;
         }
 
-        // Anti-Clipping Safety Clamp: If player sinks below cobblestone in courtyard, instantly recover to 0.0
-        if (pPos.y < -0.35 && pPos.x >= -30 && pPos.x <= 30 && pPos.z >= -30 && pPos.z <= 3.5) {
-            pPos.y = 0.0;
-            this.playerVelocity.y = 0;
+        // Anti-Clipping Safety Clamp: If player sinks below cobblestone in courtyard/bridge, instantly recover to solid ground
+        if (pPos.y < -0.35 && pPos.y > -2.2 && pPos.x >= -35 && pPos.x <= 35 && pPos.z >= -35 && pPos.z <= 96) {
+            const inWestTrench = (pPos.x >= -25.2 && pPos.x <= -14.8 && pPos.z >= 3.5 && pPos.z <= 92);
+            const inSerpentStairs = (pPos.x >= -14 && pPos.x <= 14 && pPos.z >= -38 && pPos.z <= -28);
+            if (!inWestTrench && !inSerpentStairs) {
+                pPos.y = 0.0;
+                this.playerVelocity.y = 0;
+            }
         }
 
         // 4. MOVEMENT DIRECTION & LOCOMOTION
@@ -3922,7 +3926,7 @@ window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodex
 window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
 window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
 
-// 100 Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam & Lands Between Fast-Travel Locations
+// 150 Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
     // ----------------------------------------------------
     // SANCTUARIES & HUB REALMS
@@ -4038,7 +4042,72 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'boletaria_kings_tower', name: "Boletaria - King's High Tower", zone: 'Boletaria', pos: [18, 6.0, 150], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'False King Allant', desc: 'The pinnacle spire of the Boletarian palace where the soul-draining sword of King Allant strikes.', light: 1.20 },
     { id: 'latria_ivory_tower', name: 'Tower of Latria - Heart of the Panopticon', zone: 'Tower of Latria', pos: [-18, -5.0, 135], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Old Monk & Mindflayers', desc: 'A colossal beating organic heart suspended in chains inside the spiraling blood tower.', light: 0.65 },
     { id: 'storm_altar', name: 'Shrine of Storms - Monolith Altar of the Sky', zone: 'Shrine of Storms', pos: [10, 6.0, 140], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Storm King', desc: 'A wind-whipped seaside cliff battered by rain and lightning where giant flying shadow rays swarm.', light: 0.85 },
-    { id: 'lands_between_nexus', name: 'Lands Between - Elden Throne & Fractured Marika', zone: 'Elden Throne', pos: [0, 6.0, 190], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Elden Beast & Radagon', desc: 'The golden cosmic sea inside the Erdtree where the physical incarnation of the Greater Will resides.', light: 1.40 }
+    { id: 'lands_between_nexus', name: 'Lands Between - Elden Throne & Fractured Marika', zone: 'Elden Throne', pos: [0, 6.0, 190], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Elden Beast & Radagon', desc: 'The golden cosmic sea inside the Erdtree where the physical incarnation of the Greater Will resides.', light: 1.40 },
+
+    // ----------------------------------------------------
+    // 50 NEW SOULSBORNE EXPEDITIONS (SEKIRO, ER SHADOW OF ERDTREE, DS DLCs, DEMON'S SOULS)
+    // ----------------------------------------------------
+    // SEKIRO: SHADOWS DIE TWICE (10 LOCATIONS: 101–110)
+    { id: 'sekiro_ashina_gate', name: 'Ashina Castle - Outskirts Fortress Gate', zone: 'Ashina Outskirts', pos: [0, 0, -28], elev: '0m', danger: 'Tier III (Advanced)', boss: 'Gyoubu Oniwa', desc: 'The massive timber gates guarding Ashina where Gyoubu Masataka Oniwa charges on his demon steed.', light: 1.05 },
+    { id: 'sekiro_dojo', name: 'Ashina Castle - Upper Tower Dojo', zone: 'Ashina Castle', pos: [20, 6.0, 48], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Ashina Elite - Jinsuke Saze', desc: 'Tatami dojo high atop Ashina Castle where masters of the Ashina Cross draw their blades in milliseconds.', light: 1.15 },
+    { id: 'sekiro_senpou_main', name: 'Senpou Temple - Main Hall of Mt. Kongo', zone: 'Senpou Temple', pos: [14, 6.0, 85], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Folding Screen Monkeys', desc: 'The golden temple halls surrounded by crimson maple trees where monks sought the false dragons heritage.', light: 1.25 },
+    { id: 'sekiro_sunken_valley', name: 'Sunken Valley - Bodhisattva Gun Fort', zone: 'Sunken Valley', pos: [-18, -5.0, 75], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Guardian Ape & Snake Eyes', desc: 'A mist-drenched ravine flanked by giant stone Buddha statues and sniper riflemen in the crags.', light: 0.70 },
+    { id: 'sekiro_fountainhead', name: 'Fountainhead Palace - Vermilion Sanctuary', zone: 'Fountainhead Palace', pos: [0, 6.0, 160], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'True Corrupted Monk & Divine Dragon', desc: 'Celestial flooded pavilions of sacred waters where nobles play okami flutes beneath cherry blossoms.', light: 1.40 },
+    { id: 'sekiro_hirata_estate', name: 'Hirata Estate - Burning Audience Chamber', zone: 'Hirata Estate', pos: [-6, 0, -18], elev: '0m', danger: 'Tier III (Advanced)', boss: 'Lady Butterfly & Juzou the Drunkard', desc: 'The raging inferno of the Hirata clan courtyard where illusions and poisoned sake run thick.', light: 1.10 },
+    { id: 'sekiro_reservoir', name: 'Ashina Reservoir - Moon-Viewing Watchtower', zone: 'Ashina Reservoir', pos: [22, 6.0, 28], elev: '+6m', danger: 'Tier II (Moderate)', boss: 'Seven Ashina Spears', desc: 'The tall watchtower where the young Divine Heir Kuro was held captive by Genichiro Ashina.', light: 1.00 },
+    { id: 'sekiro_mibu_village', name: 'Mibu Village - Mist-Shrouded Watermill', zone: 'Mibu Village', pos: [-16, -5.0, 110], elev: '-5m', danger: 'Tier IV (Severe)', boss: "O'Rin of the Water", desc: 'An isolated village cursed by eternal sake-drinking madness, guarded by a weeping shamisen ghost.', light: 0.55 },
+    { id: 'sekiro_abandoned_dungeon', name: 'Abandoned Dungeon - Bottomless Hole', zone: 'Abandoned Dungeon', pos: [-20, -5.0, 50], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Shichimen Warrior', desc: 'A pit of unhallowed experiments illuminated by eerie purple spirit lanterns and wailing apparitions.', light: 0.45 },
+    { id: 'sekiro_silvergrass_field', name: 'Ashina Outskirts - Silvergrass Duel Battlefield', zone: 'Ashina Outskirts', pos: [0, 0, 115], elev: '0m', danger: 'Apex Lord Tier', boss: 'Isshin, the Sword Saint', desc: 'The moonlit meadow of whispering pampas grass where the final clash of the Sengoku era unfolds.', light: 1.20 },
+
+    // ELDEN RING: SHADOW OF THE ERDTREE DLC (12 LOCATIONS: 111–122)
+    { id: 'sote_gravesite_plain', name: 'Gravesite Plain - Scorched Ruins & Ghostflame', zone: 'Gravesite Plain', pos: [4, 0, 22], elev: '0m', danger: 'Tier III (Advanced)', boss: 'Furnace Golem', desc: 'A misty spectral cemetery plateau punctuated by towering wicker golems vomiting incandescent flame.', light: 1.00 },
+    { id: 'sote_castle_ensis', name: 'Castle Ensis - Moon-Gazing Grounds', zone: 'Castle Ensis', pos: [16, 6.0, 55], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Rellana, Twin Moon Knight', desc: 'Gothic fortified causeway where the Caria princess commands both sorcerous moons and flame blades.', light: 1.10 },
+    { id: 'sote_shadow_keep_storehouse', name: 'Shadow Keep - Specimen Storehouse Upper Floor', zone: 'Shadow Keep', pos: [22, 6.0, 110], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Fire Knight Queelign', desc: 'Colossal vertical library filled with preserved beast carcasses and divine tablets suspended in air.', light: 0.85 },
+    { id: 'sote_dark_chamber', name: 'Shadow Keep - Dark Chamber of the Impaler', zone: 'Shadow Keep', pos: [0, 6.0, 145], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Messmer the Impaler', desc: 'The red throne hall where the cursed son of Marika summons base serpent flame against the Hornsent.', light: 0.95 },
+    { id: 'sote_jagged_peak_foot', name: "Jagged Peak - Dragon's Pit & Foot of the Crag", zone: 'Jagged Peak', pos: [-12, 0, 35], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Ancient Dragon Senessax', desc: 'A sulfurous volcanic ascent strewn with petrified dragon remains and crackling crimson lightning.', light: 0.90 },
+    { id: 'sote_jagged_peak_summit', name: 'Jagged Peak - Storm-Rapt Summit of Bayle', zone: 'Jagged Peak', pos: [0, 6.0, 185], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Bayle the Dread', desc: 'The roaring apex of magma where the dread four-winged drake battles eternal thunder in defiance of dragons.', light: 1.35 },
+    { id: 'sote_ruins_rauh', name: 'Ancient Ruins of Rauh - Rot-Weaved Overlook', zone: 'Ancient Ruins of Rauh', pos: [-22, 6.0, 95], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Romina, Saint of the Bud', desc: 'Vast pre-Erdtree overgrown stone aqueducts infested with divine rot, scorpions and dancing centipedes.', light: 1.05 },
+    { id: 'sote_cerulean_coast', name: 'Cerulean Coast - Ghostflame Shoreline', zone: 'Cerulean Coast', pos: [-14, 0, 85], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Ghostflame Dragon', desc: 'A serene beach carpeted in vibrant blue luminescent flowers bordering the edge of the Shadow Realm.', light: 1.15 },
+    { id: 'sote_stone_coffin_fissure', name: 'Stone Coffin Fissure - Garden of Deep Purple', zone: 'Stone Coffin Fissure', pos: [-20, -5.0, 140], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Putrescent Knight & St. Trina', desc: 'A bottomless abyss of stacked stone sarcophagi leading to the glowing nectar garden of eternal sleep.', light: 0.60 },
+    { id: 'sote_scadutree_chalice', name: 'Scadutree Base - Tree-Worship Sanctum', zone: 'Scadutree Base', pos: [12, -5.0, 120], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Scadutree Avatar', desc: 'The subterranean root sanctuary where the black Scadutree weeps golden sap into giant stone chalices.', light: 0.85 },
+    { id: 'sote_shaman_village', name: 'Hinterland - Shaman Village of Golden Boughs', zone: 'Hinterland', pos: [8, 0, 60], elev: '0m', danger: 'Sanctuary (Secret)', boss: "None (Marika's Origin)", desc: 'A tragic blooming meadow of golden flowers where Queen Marika was born before the Hornsent jars.', light: 1.30 },
+    { id: 'sote_finger_ruins', name: 'Finger Ruins of Dheo - Primordial Crater', zone: 'Finger Ruins', pos: [18, 0, 105], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Metyr, Mother of Fingers', desc: 'A cosmic impact crater studded with curled stone fingers and microscopic stellar beings from the void.', light: 0.80 },
+
+    // ELDEN RING BASE GAME (8 LOCATIONS: 123–130)
+    { id: 'er_deeproot_depths', name: "Deeproot Depths - Prince of Death's Throne", zone: 'Deeproot Depths', pos: [-18, -5.0, 130], elev: '-5m', danger: 'Tier V (Legendary)', boss: "Fia's Champions & Lichdragon Fortissax", desc: 'The subterranean roots of the Greattree cradling Godwyn the Goldens monstrous mutated visage.', light: 0.70 },
+    { id: 'er_lake_of_rot', name: 'Lake of Rot - Grand Cloister Scarlet Basin', zone: 'Lake of Rot', pos: [-22, -5.0, 95], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Astel, Naturalborn of the Void', desc: 'An underground basin of boiling crimson rot sacred to an Outer God sealed beneath the earth.', light: 0.75 },
+    { id: 'er_ainsel_river', name: 'Ainsel River - Uhl Palace Ruins Waterfall', zone: 'Ainsel River', pos: [-15, -5.0, 60], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Dragonkin Soldier of Nokstella', desc: 'Ancient stone palace ruins carved into cavern walls, haunted by giant ants and celestial malformed stars.', light: 0.65 },
+    { id: 'er_subterranean_shunning', name: 'Leyndell Sewers - Subterranean Shunning-Grounds', zone: 'Leyndell Sewers', pos: [-16, -5.0, 80], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Mohg, the Omen', desc: 'Labyrinthine brick piping where cursed Hornsent and Omen children were cast away in chains.', light: 0.50 },
+    { id: 'er_altus_plateau', name: 'Altus Plateau - Leyndell Capital Highway', zone: 'Altus Plateau', pos: [6, 0, 45], elev: '0m', danger: 'Tier III (Advanced)', boss: 'Tree Sentinel Duo', desc: 'The golden grass highlands surrounding the Royal Capital beneath the warm glow of the Erdtree.', light: 1.30 },
+    { id: 'er_volcano_manor', name: 'Mt. Gelmir - Volcano Manor Audience Chamber', zone: 'Volcano Manor', pos: [-8, 0, 70], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Rykard, Lord of Blasphemy', desc: 'The opulent serpent court of Tanith overlooking a cauldron of magma where blasphemy is championed.', light: 1.05 },
+    { id: 'er_consecrated_snowfield', name: 'Consecrated Snowfield - Hidden Path to the Haligtree', zone: 'Snowfield', pos: [12, 0, 90], elev: '0m', danger: 'Tier IV (Severe)', boss: "Night's Cavalry Duo", desc: 'A blinding blizzard-shrouded frozen wasteland concealing the liturgical town of Ordina.', light: 0.90 },
+    { id: 'er_roundtable_hold', name: 'Roundtable Hold - The Tarnished Table of Lost Grace', zone: 'Roundtable Hold', pos: [0, 0, 0], elev: '0m', danger: 'Sanctuary (Sanctum)', boss: 'Master Hewg & Gideon Ofnir', desc: 'The extra-dimensional fortress sanctuary where Tarnished champions sharpen weapons at the round table.', light: 1.20 },
+
+    // DARK SOULS III & DLCs (8 LOCATIONS: 131–138)
+    { id: 'ds3_kiln_first_flame', name: 'Kiln of the First Flame - Eclipse of the Cinder', zone: 'Kiln of the First Flame', pos: [0, 6.0, 165], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Soul of Cinder', desc: 'The distorted converging horizon of ruined kingdoms under a bleeding eclipse of fading fire.', light: 1.25 },
+    { id: 'ds3_archdragon_peak', name: 'Archdragon Peak - Dragon-Kin Mausoleum Altar', zone: 'Archdragon Peak', pos: [18, 6.0, 115], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Nameless King & King of the Storm', desc: 'A storm-battered mountain peak towering above clouds where dragon worshippers ring the great bell.', light: 1.35 },
+    { id: 'ds3_farron_keep', name: 'Farron Keep - Perimeter Wolf Blood Bonfire', zone: 'Farron Keep', pos: [-14, 0, 20], elev: '0m', danger: 'Tier III (Advanced)', boss: 'Abyss Watchers', desc: 'A rotting toxic bog where the Undead Legion swore an oath of wolf blood to extinguish the Abyss.', light: 0.70 },
+    { id: 'ds3_irithyll_valley', name: 'Irithyll of the Boreal Valley - Central Moonlit Bridge', zone: 'Boreal Valley', pos: [0, 0, 65], elev: '0m', danger: 'Tier IV (Severe)', boss: 'Pontiff Sulyvahn', desc: 'A breathtaking moonlit snow city of gothic spires and frost-covered bridges guarded by Pontiff beasts.', light: 1.00 },
+    { id: 'ds3_anor_londo_water_reserve', name: 'Anor Londo - Water Reserve & Aldrich Cathedral', zone: 'Anor Londo (DS3)', pos: [8, 0, 105], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Aldrich, Devourer of Gods', desc: 'The frozen desecrated cathedral of Gwynevere where the Saint of the Deep devours the Dark Sun Gwyndolin.', light: 0.85 },
+    { id: 'ds3_filianore_rest', name: "The Ringed City - Filianore's Rest Ashen Desert", zone: 'The Ringed City', pos: [0, 0, 140], elev: '0m', danger: 'Apex Lord Tier', boss: 'Slave Knight Gael', desc: 'An endless sea of grey ash at the end of time where Gael feasted on the Dark Soul of mankind.', light: 1.10 },
+    { id: 'ds3_dreg_heap', name: 'The Dreg Heap - Earthen Peak Toxic Basin', zone: 'The Dreg Heap', pos: [-18, -5.0, 45], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Demon Prince', desc: 'The tangled rubbish heap of ruined ages collapsed upon one another at the edge of the world.', light: 0.75 },
+    { id: 'ds3_ariandel_chapel', name: 'Painted World of Ariandel - Ariandel Chapel', zone: 'Painted World', pos: [10, 0, 50], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Sister Friede & Father Ariandel', desc: 'A decaying canvas world of rotting snow and black flame where Sister Friede tends the dying rot.', light: 0.95 },
+
+    // DARK SOULS II & DLCs (7 LOCATIONS: 139–145)
+    { id: 'ds2_brume_tower', name: 'Brume Tower - Throne Floor of Ashen Scaffolds', zone: 'Brume Tower', pos: [20, 6.0, 100], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Fume Knight Raime', desc: 'A colossal black iron foundry choked with volcanic ash where the disgraced knight Raime wields dark fire.', light: 0.90 },
+    { id: 'ds2_shulva_sunken', name: "Shulva, Sanctum City - Dragon's Sanctum Core", zone: 'Shulva', pos: [-22, -5.0, 115], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Sinh, the Slumbering Dragon', desc: 'A stepped subterranean ziggurat city hollowed into deep caverns, poisoned by the waking dragons breath.', light: 0.65 },
+    { id: 'ds2_memory_jeigh', name: 'Forest of Fallen Giants - Memory of Jeigh Ramparts', zone: 'Memory of Jeigh', pos: [16, 6.0, 60], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Giant Lord', desc: 'The crumbling fortress battlements caught in a past war where giants hurled colossal rolling boulders.', light: 1.10 },
+    { id: 'ds2_throne_of_want', name: 'Drangleic Castle - Kiln-Passage Throne of Want', zone: 'Drangleic Castle', pos: [0, 0, 125], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Throne Watcher & Defender / Nashandra', desc: 'The subterranean kiln below Drangleic Castle where the true monarch takes the throne to link the fire.', light: 0.95 },
+    { id: 'ds2_aldia_keep', name: "Aldia's Keep - Dragon Shrine Ritual Staircase", zone: "Aldia's Keep", pos: [14, 6.0, 80], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Ancient Dragon', desc: 'A laboratory manor of dragon skeletons and petrified curiosities leading to the high aerial dragon shrine.', light: 1.15 },
+    { id: 'ds2_black_gulch', name: 'Black Gulch - Poison Spitfire Caverns', zone: 'Black Gulch', pos: [-16, -5.0, 70], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'The Rotten', desc: 'Pitch black cavern filled with thousands of spitting green poison statues and oil puddles hiding tar beasts.', light: 0.40 },
+    { id: 'ds2_eleum_loyce', name: 'Frozen Eleum Loyce - The Old Chaos Pit of Fire', zone: 'Eleum Loyce', pos: [0, -5.0, 135], elev: '-5m', danger: 'Apex Lord Tier', boss: 'Burnt Ivory King', desc: 'A sunken arena of raw bed of chaos flame where the Ivory King leapt into fire to protect his kingdom.', light: 1.05 },
+
+    // DARK SOULS I & DEMON'S SOULS (5 LOCATIONS: 146–150)
+    { id: 'ds1_great_hollow', name: 'The Great Hollow - Primordial Archtree Canopy', zone: 'The Great Hollow', pos: [-12, -5.0, 30], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Basilisks & Mushroom Men', desc: 'A colossal hollowed world tree trunk descending into the underworld, tangled in roots and basilisk gas.', light: 0.60 },
+    { id: 'ds1_ash_lake', name: "Ash Lake - Stone Dragon's Everlasting Shore", zone: 'Ash Lake', pos: [0, 0, 75], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Everlasting Dragon & Hydra', desc: 'A tranquil surreal ocean of white sand and everlasting stone archtrees stretching to infinity.', light: 1.30 },
+    { id: 'ds1_valley_drakes', name: 'Valley of Drakes - New Londo Sluice Gate Chasm', zone: 'Valley of Drakes', pos: [-10, 0, 5], elev: '0m', danger: 'Tier III (Advanced)', boss: 'Undead Dragon', desc: 'A narrow windy mountain gorge inhabited by blue lightning wyverns guarding the floodgates of New Londo.', light: 0.95 },
+    { id: 'des_flamelurker_pit', name: 'Stonefang Tunnel - Armor Spider & Flamelurker Pit', zone: 'Stonefang Tunnel', pos: [-18, -5.0, 85], elev: '-5m', danger: 'Tier IV (Severe)', boss: 'Flamelurker', desc: 'Red-hot underground volcanic forge where the ancient beast of flame roars among bones of miners.', light: 0.85 },
+    { id: 'des_nexus_mausoleum', name: 'The Nexus - Monumental Upper Archway of Archstones', zone: 'The Nexus', pos: [0, 6.0, 20], elev: '+6m', danger: 'Sanctuary (Prime Hub)', boss: 'Monumental & Maiden in Black', desc: 'The soaring temple holding the fabric of northern Boletaria together against the deep colorless fog.', light: 1.35 }
 ];
 
 // Locations & Save Slot Global Window Helpers

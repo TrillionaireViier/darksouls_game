@@ -731,17 +731,17 @@ class DarkSoulsWorld {
         }
 
         // 4. West Sunken Catacombs & Deep Subterranean Mausoleum
-        // Precise stairwell trench check: stairs are 8m wide centered at x = -20 (bounds x: [-23.8, -16.2])
-        const inStairTrench = (x >= -23.8 && x <= -16.2 && z >= 4.0 && z <= 22.5);
+        // Precise stairwell trench check: stairs are 10m wide centered at x = -20 (bounds x: [-25.2, -14.8])
+        const inStairTrench = (x >= -25.2 && x <= -14.8 && z >= 3.5 && z <= 22.8);
         if (inStairTrench) {
             const t = Math.max(0, Math.min(1.0, (z - 4.0) / 18.0));
-            // Precisely aligns with step top meshes (-stepDepth + 0.445)
-            return Math.min(0.0, -t * 5.0 + 0.22);
+            // Seamless gradient from courtyard (0.0m) down to flooded corridor floor (-4.92m)
+            return -t * 4.92;
         }
 
-        // Deep Catacombs Crypt & Mausoleum (z in [90, 150], x in [-34, -7])
-        const inCryptBounds = (x >= -34 && x <= -7 && z >= 90 && z <= 150);
-        if (inCryptBounds && (currentY === null || currentY < -2.2)) {
+        // Deep Catacombs Crypt & Mausoleum (z in [90, 152], x in [-35, -6])
+        const inCryptBounds = (x >= -35 && x <= -6 && z >= 90 && z <= 152);
+        if (inCryptBounds && (currentY === null || currentY < -1.8)) {
             // Crypt Exit Ascent Stairs back to surface fog gate (x in [-20, -12], z in [90, 96])
             if (x >= -20 && x <= -12 && z >= 90 && z <= 96) {
                 const t = (z - 90) / 6;
@@ -755,27 +755,20 @@ class DarkSoulsWorld {
             return -6.0;
         }
 
-        // Flooded Subterranean Catacombs Corridor (z in [22, 90], x in [-24.2, -15.8])
-        if (x >= -24.2 && x <= -15.8 && z > 22 && z <= 90 && (currentY === null || currentY < -1.5)) {
+        // Flooded Subterranean Catacombs Corridor (z in [22, 90], x in [-25.5, -14.5])
+        if (x >= -25.5 && x <= -14.5 && z > 22 && z <= 90 && (currentY === null || currentY < 0.5)) {
             return -4.92;
         }
 
-        // 5. Main Courtyard Starting Arena (z in [-35, 35], x in [-35, 35])
-        // Guarantees solid floor at y = 0.0 anywhere in the courtyard
-        if (x >= -35 && x <= 35 && z >= -35 && z <= 35) {
-            if (currentY === null || currentY >= -1.2) {
-                return 0.0;
-            }
-        }
-
-        // 6. Serpent Sanctuary & Temple of the Gorgon (z in [-115, -30], x in [-38, 38])
-        // A. Descent Stairs from Courtyard (z in [-36, -30], x in [-12, 12])
-        if (x >= -12 && x <= 12 && z >= -36 && z <= -30) {
-            const t = (-30 - z) / 6.0;
+        // 5. Serpent Sanctuary & Temple of the Gorgon (z in [-115, -30], x in [-38, 38])
+        // A. Descent Stairs from Courtyard (z in [-36.5, -29.5], x in [-13, 13])
+        // Evaluated BEFORE flat courtyard so player descending stairs never hits a 0.0 clamp!
+        if (x >= -13 && x <= 13 && z >= -36.5 && z <= -29.5) {
+            const t = Math.max(0, Math.min(1.0, (-30 - z) / 6.0));
             return -t * 2.5;
         }
-        // B. Sunken Serpent Courtyard (z in [-70, -36], x in [-32, 32])
-        if (x >= -32 && x <= 32 && z >= -70 && z < -36) {
+        // B. Sunken Serpent Courtyard (z in [-70, -36.5], x in [-32, 32])
+        if (x >= -32 && x <= 32 && z >= -70 && z < -36.5) {
             return -2.5;
         }
         // C. Descent Stairs into Gorgon Inner Sanctum (z in [-78, -70], x in [-14, 14])
@@ -786,6 +779,14 @@ class DarkSoulsWorld {
         // D. Gorgon Inner Sanctum & Altar of Medusa (z in [-115, -78], x in [-38, 38])
         if (x >= -38 && x <= 38 && z >= -115 && z < -78) {
             return -4.0;
+        }
+
+        // 6. Main Courtyard Starting Arena (z in [-35, 35], x in [-35, 35])
+        // Guarantees solid floor at y = 0.0 anywhere in the courtyard
+        if (x >= -35 && x <= 35 && z >= -35 && z <= 35) {
+            if (!inStairTrench && (currentY === null || currentY >= -1.5)) {
+                return 0.0;
+            }
         }
 
         // 7. Dynamic Fast-Travel Lordran Realm Ground Height
@@ -800,6 +801,14 @@ class DarkSoulsWorld {
                     }
                 }
             }
+        }
+
+        // 8. Citadel Perimeter Failsafe: Never fall into void within citadel grounds
+        if (x >= -38 && x <= 38 && z >= -35 && z <= 175) {
+            if (currentY === null || currentY >= -1.8) {
+                return 0.0;
+            }
+            return -4.92;
         }
 
         // Beyond citadel architectural borders lies the bottomless chasm
