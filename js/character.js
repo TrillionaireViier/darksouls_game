@@ -1514,10 +1514,9 @@ class DarkSoulsCharacters {
         }
         rHand.add(newWeapon);
 
-        // Hide back sword hilt when holding any bladed sword to prevent double-sword clipping
+        // Hide back sword hilt when holding any weapon to prevent double-sword / torch clipping
         if (playerMesh.userData && playerMesh.userData.greatswordHiltGroup) {
-            const isHoldingBlade = (weaponId !== 'torch');
-            playerMesh.userData.greatswordHiltGroup.visible = !isHoldingBlade;
+            playerMesh.userData.greatswordHiltGroup.visible = false;
         }
 
         playerMesh.userData.swordGroup = newWeapon;
@@ -1797,33 +1796,34 @@ class DarkSoulsCharacters {
         chape.rotation.y = Math.PI / 4;
         backScabbardGroup.add(chape);
 
-        // Two-handed Greatsword Hilt
+        // Two-handed Greatsword Hilt (Compact authentic arming hilt, hidden when weapon drawn)
         const greatswordHiltGroup = new THREE.Group();
-        greatswordHiltGroup.position.y = 0.42;
+        greatswordHiltGroup.position.y = 0.40;
+        greatswordHiltGroup.visible = false;
         backScabbardGroup.add(greatswordHiltGroup);
 
-        const guardMesh = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.038, 0.045), this.steelMat);
+        const guardMesh = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.032, 0.040), this.steelMat);
         guardMesh.castShadow = true;
         greatswordHiltGroup.add(guardMesh);
 
-        const gripMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.020, 0.023, 0.36, 8), this.scabbardWrapMat);
-        gripMesh.position.y = 0.20;
+        const gripMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.020, 0.26, 8), this.scabbardWrapMat);
+        gripMesh.position.y = 0.15;
         greatswordHiltGroup.add(gripMesh);
 
-        for (let gi = 0; gi < 5; gi++) {
-            const cordRing = new THREE.Mesh(new THREE.TorusGeometry(0.023, 0.005, 4, 8), this.leatherMat);
-            cordRing.position.y = 0.07 + gi * 0.065;
+        for (let gi = 0; gi < 4; gi++) {
+            const cordRing = new THREE.Mesh(new THREE.TorusGeometry(0.021, 0.004, 4, 8), this.leatherMat);
+            cordRing.position.y = 0.06 + gi * 0.06;
             cordRing.rotation.x = Math.PI / 2;
             greatswordHiltGroup.add(cordRing);
         }
 
-        const ringPommel = new THREE.Mesh(new THREE.TorusGeometry(0.052, 0.014, 8, 16), this.steelMat);
-        ringPommel.position.y = 0.42;
+        const ringPommel = new THREE.Mesh(new THREE.TorusGeometry(0.042, 0.012, 8, 16), this.steelMat);
+        ringPommel.position.y = 0.32;
         ringPommel.castShadow = true;
         greatswordHiltGroup.add(ringPommel);
 
-        const pommelSpoke = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.085, 0.014), this.steelMat);
-        pommelSpoke.position.y = 0.42;
+        const pommelSpoke = new THREE.Mesh(new THREE.BoxGeometry(0.010, 0.070, 0.012), this.steelMat);
+        pommelSpoke.position.y = 0.32;
         greatswordHiltGroup.add(pommelSpoke);
 
 // Clean Dark Souls Nordic knight back: unhindered fur mantle & scabbard
