@@ -1327,19 +1327,24 @@ class DarkSoulsCharacters {
 
         const newWeapon = this.createWeaponMesh(weaponId);
         // Authentic combat-ready weapon rigging (held naturally upright & balanced)
-        if (weaponId === 'halberd') {
+        const isColossal = ['zweihander', 'dark_moon_greatsword', 'moonlight', 'blasphemous_blade', 'starscourge_greatswords', 'godslayer_greatsword', 'holy_moonlight_sword', 'fume_ultra_greatsword', 'greatsword_of_artorias', 'bloodhounds_fang', 'claymore'].includes(weaponId);
+        const isPolearm = ['halberd', 'black_knight_halberd', 'eleonoras_poleblade', 'bolt_of_gransax'].includes(weaponId);
+        const isGreatImpact = ['dragontooth', 'giant_crusher', 'dragonslayer_greataxe', 'whirligig_saw'].includes(weaponId);
+        const isKatana = ['uchigatana', 'rivers_of_blood', 'moonveil', 'kusabimaru', 'chikage', 'rakuyo', 'chaos_blade', 'mortal_blade'].includes(weaponId);
+
+        if (isPolearm) {
             newWeapon.rotation.set(0.16, 0.05, -0.06);
             newWeapon.position.set(0.02, 0.04, 0.02);
-        } else if (weaponId === 'zweihander' || weaponId === 'dark_moon_greatsword') {
+        } else if (isColossal) {
             newWeapon.rotation.set(0.32, 0.10, -0.16);
             newWeapon.position.set(0.02, 0.05, 0.06);
-        } else if (weaponId === 'dragontooth') {
+        } else if (isGreatImpact) {
             newWeapon.rotation.set(0.28, 0.10, -0.14);
             newWeapon.position.set(0.02, 0.04, 0.06);
         } else if (weaponId === 'torch') {
             newWeapon.rotation.set(0.12, 0, -0.05);
             newWeapon.position.set(0, 0.06, 0.04);
-        } else if (weaponId === 'uchigatana' || weaponId === 'rivers_of_blood') {
+        } else if (isKatana) {
             newWeapon.rotation.set(0.32, 0.08, -0.12);
             newWeapon.position.set(0.02, 0.04, 0.06);
         } else {
@@ -1350,7 +1355,7 @@ class DarkSoulsCharacters {
 
         // Hide back sword hilt when holding any bladed sword to prevent double-sword clipping
         if (playerMesh.userData && playerMesh.userData.greatswordHiltGroup) {
-            const isHoldingBlade = (weaponId === 'sword' || weaponId === 'zweihander' || weaponId === 'moonlight' || weaponId === 'dark_moon_greatsword' || weaponId === 'uchigatana' || weaponId === 'rivers_of_blood');
+            const isHoldingBlade = (weaponId !== 'torch');
             playerMesh.userData.greatswordHiltGroup.visible = !isHoldingBlade;
         }
 
