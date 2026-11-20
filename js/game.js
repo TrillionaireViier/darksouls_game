@@ -657,7 +657,9 @@ class DarkSoulsGame {
                     this.travelToLocation(item.targetLocationId, true);
                     return;
                 } else if (item.type === 'return_waystone') {
-                    this.travelToLocation('royal_bridge_arena');
+                    this.combat.restAtBonfire();
+                    this.refuelTorch(100);
+                    this.openBonfireModal();
                     return;
                 } else if (item.type === 'torch_sconce') {
                     if (!item.isLit) {
@@ -3863,10 +3865,20 @@ class DarkSoulsGame {
                 }
             }
 
+            // Restore health, stamina, and flasks on fast-travel rest
+            if (this.combat) {
+                this.combat.hp = this.combat.maxHp;
+                this.combat.stamina = this.combat.maxStamina;
+                this.combat.estusFlasks = this.combat.maxEstus;
+                this.combat.isPoisoned = false;
+                this.combat.isPetrified = false;
+            }
+
             if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
             this.showNotification(`🗺️ FAST-TRAVEL: ${loc.name.toUpperCase()} (${loc.elev})`);
 
             this.closeLocationsModal();
+            if (this.closeBonfireModal) this.closeBonfireModal();
             if (typeof closeQuickMenuModal === 'function') closeQuickMenuModal();
             this.updateHUD();
             this.updateEscapeMenuUI();

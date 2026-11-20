@@ -3097,7 +3097,7 @@ class DarkSoulsWorld {
             type: 'return_waystone',
             position: new THREE.Vector3(x, y, z),
             radius: 4.0,
-            prompt: '[ E ] RETURN TO ROYAL CITADEL & ARENA [ENTER]',
+            prompt: '🔥 [ E ] REST & FAST TRAVEL AT BONFIRE WAYSTONE',
             targetLocationId: 'royal_bridge_arena'
         });
     }

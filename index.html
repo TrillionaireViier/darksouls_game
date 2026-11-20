@@ -1836,6 +1836,29 @@
                 </div>
             </div>
 
+            <!-- Bonfire Warp / Fast Travel Across 100 Realms -->
+            <div style="margin-top: 14px; border-top: 1px solid #382c20; padding-top: 14px;">
+                <div class="modal-label" style="text-align: center; margin-bottom: 8px; color: #ffd778; font-weight: 800; letter-spacing: 2px; font-size: 0.95rem;">
+                    🗺️ WARP &bull; FAST TRAVEL TO BONFIRES (100 REALMS)
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px;">
+                    <button class="btn-upgrade" onclick="openFastTravelFromBonfire()" style="background: linear-gradient(135deg, rgba(20,60,50,0.85) 0%, rgba(10,35,30,0.95) 100%); border-color: #00ffaa; color: #a5ffbe; font-size: 0.86rem; padding: 10px 18px; font-weight: 800; box-shadow: 0 0 16px rgba(0,255,170,0.35); width: 100%; letter-spacing: 1px; cursor: pointer;">
+                        🗺️ OPEN FAST TRAVEL MAP & EXPEDITIONS (100 REALMS)
+                    </button>
+                </div>
+                <!-- Quick Warp to Most Iconic Dark Souls Bonfires -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px;">
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('royal_bridge_arena')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #ffd700; color: #fff3a8; background: rgba(50,40,15,0.7);">⚔️ Royal Citadel</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('firelink_shrine')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #ff7722; color: #ffaa66; background: rgba(50,25,10,0.7);">🔥 Firelink Shrine</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('undead_burg_bridge')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #c49a45; color: #ffd276; background: rgba(45,35,15,0.7);">🏰 Undead Burg</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('undead_asylum')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #88ccff; color: #c2e2ff; background: rgba(20,40,65,0.7);">🗝️ Undead Asylum</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('majula_cliffside')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #00ffaa; color: #a5ffbe; background: rgba(10,45,30,0.7);">🌿 Majula Cliffside</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('limgrave_first_step')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #ffd778; color: #fff3a8; background: rgba(50,40,15,0.7);">✨ Limgrave (Grace)</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('hunters_dream')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #c084fc; color: #f3e8ff; background: rgba(45,20,50,0.7);">🌙 Hunter's Dream</button>
+                    <button class="btn-upgrade" onclick="fastTravelFromBonfire('central_yharnam_bridge')" style="padding: 7px 6px; font-size: 0.72rem; border-color: #ff5555; color: #ffaaaa; background: rgba(50,15,15,0.7);">🩸 Central Yharnam</button>
+                </div>
+            </div>
+
             <!-- Save / Load Section in Bonfire -->
             <div style="margin-top: 14px; border-top: 1px solid #382c20; padding-top: 12px;">
                 <div class="modal-label" style="text-align: center; margin-bottom: 6px; color: #ffd778; font-weight: 700; letter-spacing: 1.5px;">
@@ -4247,6 +4270,21 @@
             if (window.game) {
                 if (window.game.closeBonfireModal) window.game.closeBonfireModal();
                 window.game.selectBoss(bossId);
+            }
+        }
+
+        // Bonfire Fast Travel Handlers
+        function openFastTravelFromBonfire() {
+            if (window.game) {
+                if (window.game.closeBonfireModal) window.game.closeBonfireModal();
+                if (window.game.openLocationsModal) window.game.openLocationsModal();
+            }
+        }
+
+        function fastTravelFromBonfire(locId) {
+            if (window.game) {
+                if (window.game.closeBonfireModal) window.game.closeBonfireModal();
+                if (window.game.travelToLocation) window.game.travelToLocation(locId);
             }
         }
 
