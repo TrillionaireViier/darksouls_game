@@ -95,6 +95,14 @@ class HeraldryNobilitySystem {
     // ----------------------------------------------------------------
     // 401. TABARD & COAT OF ARMS RENDERING (CANVAS BLAZON ENGINE)
     // ----------------------------------------------------------------
+    resetToDefaultCrest() {
+        this.customized = false;
+        this.applyHeraldryTo3DPlayer();
+        if (this.game) {
+            this.game.showNotification("🛡️ RESTORED AUTHENTIC ASTORA CREST SHIELD");
+        }
+    }
+
     customizeHeraldry(tincture, sigil, division, secondaryColor) {
         this.customized = true;
         this.heraldry.tincture = tincture || this.heraldry.tincture;
@@ -225,8 +233,14 @@ class HeraldryNobilitySystem {
     }
 
     applyHeraldryTo3DPlayer() {
-        if (!this.customized) return;
         if (!this.game || !this.game.character || !this.game.character.crestShieldMat) return;
+        if (!this.customized) {
+            if (this.game.character.defaultShieldTex) {
+                this.game.character.crestShieldMat.map = this.game.character.defaultShieldTex;
+                this.game.character.crestShieldMat.needsUpdate = true;
+            }
+            return;
+        }
         const newTex = new THREE.CanvasTexture(this.heraldryCanvas);
         this.game.character.crestShieldMat.map = newTex;
         this.game.character.crestShieldMat.needsUpdate = true;

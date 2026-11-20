@@ -1689,8 +1689,8 @@ class DarkSoulsGame {
                     }
                 }
                 if (uData.shieldGroup) {
-                    uData.shieldGroup.position.set(-0.06, 0.02, 0.06);
-                    uData.shieldGroup.rotation.set(0.10, -0.35, -0.06);
+                    uData.shieldGroup.position.set(-0.08, 0.02, 0.02);
+                    uData.shieldGroup.rotation.set(0.08, -1.35, -0.06);
                 }
             }
 
@@ -1845,9 +1845,9 @@ class DarkSoulsGame {
         } else if (this.combat.isBlocking) {
             // Shield Block Stance: Left arm raises firmly, rotating inward to present the crest shield directly in front of the chest
             if (uData.leftShoulder) {
-                uData.leftShoulder.rotation.x = 0.72;
-                uData.leftShoulder.rotation.y = 0.36;
-                uData.leftShoulder.rotation.z = -0.20;
+                uData.leftShoulder.rotation.x = -0.75;
+                uData.leftShoulder.rotation.y = 0.20;
+                uData.leftShoulder.rotation.z = 0.35;
             }
             if (uData.torso) {
                 uData.torso.rotation.y = -0.16;
@@ -1855,9 +1855,9 @@ class DarkSoulsGame {
             }
             if (uData.bodyGroup) uData.bodyGroup.position.y = 0.95;
             if (uData.shieldGroup) {
-                // Firmly anchored to forearm, shielding flank and torso
-                uData.shieldGroup.position.set(-0.06, 0.02, 0.06);
-                uData.shieldGroup.rotation.set(0.10, -0.35, -0.06);
+                // Firmly anchored to forearm, presented forward to intercept enemy strikes
+                uData.shieldGroup.position.set(-0.06, 0.02, 0.04);
+                uData.shieldGroup.rotation.set(0.08, -0.40, -0.06);
             }
         } else if (!isMoving) {
             // 6. IDLE BREATHING OSCILLATION & REALISTIC COMBAT STANCE
@@ -1896,8 +1896,8 @@ class DarkSoulsGame {
 
             // Normal shield posture (anatomically strapped to left forearm)
             if (uData.shieldGroup) {
-                uData.shieldGroup.position.set(-0.06, 0.02, 0.06);
-                uData.shieldGroup.rotation.set(0.10, -0.35, -0.06);
+                uData.shieldGroup.position.set(-0.08, 0.02, 0.02);
+                uData.shieldGroup.rotation.set(0.08, -1.35, -0.06);
             }
 
             // Dynamic idle breathing animation
@@ -2856,6 +2856,7 @@ class DarkSoulsGame {
             currentWeaponId: this.combat.currentWeaponId || 'sword',
             unlockedWeapons: this.combat.unlockedWeapons || ['sword'],
             heraldry: this.heraldry ? this.heraldry.heraldry : null,
+            heraldryCustomized: !!(this.heraldry && this.heraldry.customized),
             chivalryHonor: this.heraldry ? this.heraldry.chivalryHonor : 850,
             currentRankIndex: this.heraldry ? this.heraldry.currentRankIndex : 2,
             fiefdoms: this.heraldry ? this.heraldry.fiefdoms : null,
@@ -2994,7 +2995,10 @@ class DarkSoulsGame {
                 if (data.chivalryHonor !== undefined) this.heraldry.chivalryHonor = data.chivalryHonor;
                 if (data.currentRankIndex !== undefined) this.heraldry.currentRankIndex = data.currentRankIndex;
                 if (Array.isArray(data.fiefdoms)) this.heraldry.fiefdoms = data.fiefdoms;
-                this.heraldry.customizeHeraldry();
+                this.heraldry.customized = !!data.heraldryCustomized;
+                if (data.heraldryCustomized) {
+                    this.heraldry.customizeHeraldry();
+                }
             }
 
             // Restore Apothecary Medicines & Antidotes

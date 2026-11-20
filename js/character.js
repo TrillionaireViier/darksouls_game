@@ -167,6 +167,7 @@ class DarkSoulsCharacters {
         }
 
         const shieldTex = new THREE.CanvasTexture(shieldCanvas);
+        this.defaultShieldTex = shieldTex;
 
         this.crestShieldMat = new THREE.MeshStandardMaterial({
             map: shieldTex,
@@ -1677,42 +1678,42 @@ class DarkSoulsCharacters {
         shieldGroup.add(brace2);
 
         // 6. Forearm Leather Padding Cushion Pad
-        const pad = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.14, 0.022), this.leatherMat);
-        pad.position.set(0.02, 0.02, -0.018);
+        const pad = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.18, 0.020), this.leatherMat);
+        pad.position.set(0, -0.03, -0.018);
         shieldGroup.add(pad);
 
         // 7. Forearm Enarme Straps (Snugly wrapping around left forearm vambrace)
-        const strap1 = new THREE.Mesh(new THREE.TorusGeometry(0.072, 0.014, 8, 20), this.leatherMat);
-        strap1.position.set(0.02, 0.02, -0.075);
+        const strap1 = new THREE.Mesh(new THREE.TorusGeometry(0.070, 0.012, 8, 20), this.leatherMat);
+        strap1.position.set(0, 0.05, -0.092);
         strap1.rotation.x = Math.PI / 2;
         shieldGroup.add(strap1);
 
-        const buckle1 = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.020, 0.010), this.steelBuckleMat);
-        buckle1.position.set(0.02, 0.02, -0.145);
+        const buckle1 = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.018, 0.010), this.steelBuckleMat);
+        buckle1.position.set(0, 0.05, -0.162);
         shieldGroup.add(buckle1);
 
-        const strap2 = new THREE.Mesh(new THREE.TorusGeometry(0.070, 0.013, 8, 20), this.leatherMat);
-        strap2.position.set(0.018, 0.11, -0.072);
+        const strap2 = new THREE.Mesh(new THREE.TorusGeometry(0.066, 0.012, 8, 20), this.leatherMat);
+        strap2.position.set(0, -0.10, -0.090);
         strap2.rotation.x = Math.PI / 2;
         shieldGroup.add(strap2);
 
         // 8. Hand Grip Handle Bar (Guige handle securely gripped inside left gauntlet)
-        const handleBracket1 = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.018, 0.06), this.darkSteelMat);
-        handleBracket1.position.set(0.03 - 0.045, -0.14, -0.040);
+        const handleBracket1 = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.016, 0.07), this.darkSteelMat);
+        handleBracket1.position.set(-0.04, -0.18, -0.045);
         shieldGroup.add(handleBracket1);
 
-        const handleBracket2 = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.018, 0.06), this.darkSteelMat);
-        handleBracket2.position.set(0.03 + 0.045, -0.14, -0.040);
+        const handleBracket2 = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.016, 0.07), this.darkSteelMat);
+        handleBracket2.position.set(0.04, -0.18, -0.045);
         shieldGroup.add(handleBracket2);
 
-        const handleBar = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.10, 8), this.scabbardWrapMat);
-        handleBar.position.set(0.03, -0.14, -0.070);
+        const handleBar = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.09, 8), this.scabbardWrapMat);
+        handleBar.position.set(0, -0.18, -0.075);
         handleBar.rotation.z = Math.PI / 2;
         shieldGroup.add(handleBar);
 
-        // Anatomically strapped to outer forearm, shielding flank and front
-        shieldGroup.position.set(-0.06, 0.02, 0.06);
-        shieldGroup.rotation.set(0.10, -0.35, -0.06);
+        // Anatomically strapped to outer forearm: covers entire left flank & front-left
+        shieldGroup.position.set(-0.08, 0.02, 0.02);
+        shieldGroup.rotation.set(0.08, -1.35, -0.06);
         lHand.add(shieldGroup);
 
         // Offhand Torch
