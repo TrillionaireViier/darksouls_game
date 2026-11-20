@@ -201,6 +201,10 @@ class DarkSoulsGame {
         } else {
             this.showNotification("WELCOME TO LORDRAN. PREPARE TO DIE.");
         }
+
+        setTimeout(() => {
+            if (this.initFirelinkNPCs) this.initFirelinkNPCs();
+        }, 900);
     }
 
     cacheUIElements() {
@@ -261,6 +265,21 @@ class DarkSoulsGame {
                 }
             }
             if (e.code === 'KeyE' || e.key === 'e' || e.key === 'E' || e.key === 'у' || e.key === 'У') this.handleInteraction();
+            if (e.code === 'KeyG' || e.key === 'g' || e.key === 'G' || e.key === 'п' || e.key === 'П') {
+                if (this._nearbyCompendiumEntity && this._nearbyCompendiumEntity.parent) {
+                    const ent = this._nearbyCompendiumEntity;
+                    const eName = (ent.userData && ent.userData.entry && ent.userData.entry.name) || '3D Entity';
+                    if (window.compendiumInstance && window.compendiumInstance.spawnedEntities) {
+                        const idx = window.compendiumInstance.spawnedEntities.indexOf(ent);
+                        if (idx >= 0) window.compendiumInstance.spawnedEntities.splice(idx, 1);
+                    }
+                    if (ent.parent) ent.parent.remove(ent);
+                    else this.scene.remove(ent);
+                    this._nearbyCompendiumEntity = null;
+                    this.showNotification(`✨ ${eName.toUpperCase()} BANISHED`);
+                    if (this.audio && this.audio.playRoll) this.audio.playRoll();
+                }
+            }
             if (e.code === 'KeyT' || e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') this.toggleTorch();
             if (e.code === 'KeyR' || e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К' || e.code === 'Digit1') this.combat.tryDrinkEstus();
             if (e.code === 'KeyP' || e.key === 'p' || e.key === 'P' || e.key === 'з' || e.key === 'З' || e.code === 'KeyV' || e.key === 'v' || e.key === 'V' || e.key === 'м' || e.key === 'М' || e.code === 'Digit4') this.combat.tryDrinkAntidote();
@@ -693,11 +712,16 @@ class DarkSoulsGame {
             }
         }
 
-        // Banish nearby spawned Compendium 3D Entity with [E]
+        // Banish or Talk with nearby spawned Compendium 3D Entity with [E]
         if (this._nearbyCompendiumEntity && this._nearbyCompendiumEntity.parent) {
             const ent = this._nearbyCompendiumEntity;
-            const eName = (ent.userData && ent.userData.entry && ent.userData.entry.name) || '3D Entity';
-            if (pPos.distanceTo(ent.position) <= 3.8) {
+            const entry = ent.userData && ent.userData.entry;
+            const eName = (entry && entry.name) || '3D Entity';
+            if (pPos.distanceTo(ent.position) <= 4.2) {
+                if (entry && entry.category === 'NPC' && window.speakNPCDialogue) {
+                    window.speakNPCDialogue(entry.id);
+                    return;
+                }
                 if (window.compendiumInstance && window.compendiumInstance.spawnedEntities) {
                     const idx = window.compendiumInstance.spawnedEntities.indexOf(ent);
                     if (idx >= 0) window.compendiumInstance.spawnedEntities.splice(idx, 1);
@@ -1201,6 +1225,7 @@ class DarkSoulsGame {
         if (this.heraldry) this.heraldry.update(delta);
         if (this.apothecary) this.apothecary.update(delta);
         if (this.inventory) this.inventory.update(delta);
+        if (window.compendiumInstance && window.compendiumInstance.update) window.compendiumInstance.update(delta);
 
         // 2. Update Player Position & Rotation
         this.updatePlayer(delta);
@@ -2065,9 +2090,14 @@ class DarkSoulsGame {
 
         if (!activePrompt && window.compendiumInstance && window.compendiumInstance.spawnedEntities) {
             for (const ent of window.compendiumInstance.spawnedEntities) {
-                if (ent && ent.parent && pPos.distanceTo(ent.position) <= 3.2) {
-                    const eName = (ent.userData && ent.userData.entry && ent.userData.entry.name) || '3D Entity';
-                    activePrompt = `[ E ] BANISH / DISMISS ${eName.toUpperCase()}`;
+                if (ent && ent.parent && pPos.distanceTo(ent.position) <= 3.8) {
+                    const entry = ent.userData && ent.userData.entry;
+                    const eName = (entry && entry.name) || '3D Entity';
+                    if (entry && entry.category === 'NPC') {
+                        activePrompt = `💬 [ E ] TALK TO ${eName.toUpperCase()} • [ G ] DISMISS`;
+                    } else {
+                        activePrompt = `[ E ] BANISH / DISMISS ${eName.toUpperCase()}`;
+                    }
                     this._nearbyCompendiumEntity = ent;
                     break;
                 }

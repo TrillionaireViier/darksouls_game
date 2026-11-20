@@ -10330,13 +10330,72 @@
             }
         }
 
-        // Summon companion NPC
+        // Summon companion NPC with Golden Phantom shimmer & combat AI
         summonNPC(entryId) {
             const entry = LORDRAN_300_DATABASE.find(e => e.id === entryId);
             if (!entry || entry.category !== 'NPC') return;
-            this.spawnInWorld(entryId);
+            
+            let px = 0, py = 0, pz = 10;
+            if (this.game && this.game.playerMesh) {
+                const pPos = this.game.playerMesh.position;
+                const pRot = this.game.playerMesh.rotation.y;
+                px = pPos.x + Math.sin(pRot) * 2.8;
+                pz = pPos.z + Math.cos(pRot) * 2.8;
+                py = this.game.world ? this.game.world.getGroundHeight(px, pz) : pPos.y;
+            }
+
+            const modelMesh = this.buildModel(entry, px, py, pz, 1.0);
+            
+            // Golden phantom companion aura & light
+            const phantomAura = new THREE.PointLight(0xffd700, 2.5, 8.0);
+            phantomAura.position.set(0, 1.5, 0);
+            modelMesh.add(phantomAura);
+            
+            modelMesh.userData = {
+                entry: entry,
+                isSpawned3D: true,
+                isSummonedAlly: true,
+                hp: entry.hp || 500,
+                maxHp: entry.hp || 500,
+                damage: 75,
+                attackCooldown: 0,
+                animTime: 0
+            };
+
+            if (this.scene) {
+                this.scene.add(modelMesh);
+                this.spawnedEntities.push(modelMesh);
+            }
+
             if (this.game && this.game.showNotification) {
-                this.game.showNotification(`🧙 NPC COMPANION SUMMONED: ${entry.name} ("${entry.quote}")`);
+                this.game.showNotification(`🧙 GOLDEN ALLY SUMMONED: ${entry.name}`);
+                this.game.showNotification(`💬 "${entry.quote}"`);
+            }
+            if (this.game && this.game.audio && this.game.audio.playBellToll) {
+                this.game.audio.playBellToll();
+            } else if (window.dsAudio && window.dsAudio.playBonfireIgnite) {
+                window.dsAudio.playBonfireIgnite();
+            }
+            return modelMesh;
+        }
+
+        // Banish all summoned companion allies
+        dismissAllCompanions() {
+            let count = 0;
+            for (let i = this.spawnedEntities.length - 1; i >= 0; i--) {
+                const ent = this.spawnedEntities[i];
+                if (ent && (ent.userData.isSummonedAlly || (ent.userData.entry && ent.userData.entry.category === 'NPC'))) {
+                    if (ent.parent) ent.parent.remove(ent);
+                    else if (this.scene) this.scene.remove(ent);
+                    this.spawnedEntities.splice(i, 1);
+                    count++;
+                }
+            }
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification(`✨ ${count} NPC SUMMONS BANISHED TO THEIR REALMS`);
+            }
+            if (this.game && this.game.audio && this.game.audio.playRoll) {
+                this.game.audio.playRoll();
             }
         }
 
@@ -10370,6 +10429,109 @@
             }
             if (this.game && this.game.showNotification) {
                 this.game.showNotification(`⚔️ MOB CHALLENGE ENGAGED: ${entry.name} • HP: ${entry.hp}`);
+            }
+        }
+
+        // Companion AI Update loop (Follow player, attack hostile bosses/mobs, defend)
+        update(delta) {
+            if (!this.spawnedEntities || this.spawnedEntities.length === 0) return;
+            const player = this.game ? this.game.playerMesh : null;
+            if (!player) return;
+            const pPos = player.position;
+
+            // Find nearest active hostile target
+            let targetEnemy = null;
+            let minDist = 30.0;
+
+            if (this.game.combat && this.game.combat.boss && !this.game.combat.boss.isDead && this.game.combat.boss.state !== 'IDLE') {
+                const bMesh = this.game.combat.boss.mesh;
+                if (bMesh) {
+                    const d = pPos.distanceTo(bMesh.position);
+                    if (d < minDist) {
+                        targetEnemy = { mesh: bMesh, hpObj: this.game.combat.boss, isBoss: true };
+                        minDist = d;
+                    }
+                }
+            }
+
+            if (!targetEnemy && this.game.combat && this.game.combat.enemies) {
+                for (const em of this.game.combat.enemies) {
+                    if (em && !em.isDead && em.mesh && em.mesh.parent) {
+                        const d = pPos.distanceTo(em.mesh.position);
+                        if (d < minDist) {
+                            targetEnemy = { mesh: em.mesh, hpObj: em, isBoss: false };
+                            minDist = d;
+                        }
+                    }
+                }
+            }
+
+            for (const ent of this.spawnedEntities) {
+                if (!ent || !ent.parent || !ent.userData.isSummonedAlly) continue;
+                ent.userData.animTime = (ent.userData.animTime || 0) + delta;
+                ent.userData.attackCooldown = Math.max(0, (ent.userData.attackCooldown || 0) - delta);
+
+                const pos = ent.position;
+
+                if (targetEnemy && targetEnemy.mesh) {
+                    // Attack active enemy
+                    const ePos = targetEnemy.mesh.position;
+                    const toEnemy = new THREE.Vector3(ePos.x - pos.x, 0, ePos.z - pos.z);
+                    const distToE = toEnemy.length();
+
+                    if (distToE > 2.4) {
+                        toEnemy.normalize();
+                        pos.x += toEnemy.x * delta * 3.5;
+                        pos.z += toEnemy.z * delta * 3.5;
+                        ent.rotation.y = Math.atan2(toEnemy.x, toEnemy.z);
+                        pos.y = (this.game.world ? this.game.world.getGroundHeight(pos.x, pos.z, pos.y) : pos.y) + Math.abs(Math.sin(ent.userData.animTime * 10)) * 0.08;
+                    } else {
+                        // In attack reach: swing at enemy
+                        ent.rotation.y = Math.atan2(toEnemy.x, toEnemy.z);
+                        if (ent.userData.attackCooldown <= 0) {
+                            ent.userData.attackCooldown = 1.3;
+                            const dmg = Math.floor(ent.userData.damage * (0.85 + Math.random() * 0.3));
+                            if (targetEnemy.isBoss) {
+                                targetEnemy.hpObj.hp -= dmg;
+                                if (this.game.combat.showBossDamage) this.game.combat.showBossDamage(dmg);
+                            } else {
+                                targetEnemy.hpObj.hp -= dmg;
+                                if (targetEnemy.hpObj.hp <= 0) {
+                                    targetEnemy.hpObj.isDead = true;
+                                    if (targetEnemy.mesh.parent) targetEnemy.mesh.parent.remove(targetEnemy.mesh);
+                                }
+                            }
+                            if (this.game.showDamageNumber) this.game.showDamageNumber(ePos, dmg, false);
+                            if (this.game.world && this.game.world.spawnHitSparks) this.game.world.spawnHitSparks(ePos, false);
+                            if (this.game.audio && this.game.audio.playHit) this.game.audio.playHit(false);
+                            
+                            // Visual weapon lunge
+                            ent.position.y += 0.12;
+                            setTimeout(() => { if (ent && ent.parent) ent.position.y -= 0.12; }, 180);
+                        }
+                    }
+                } else {
+                    // No enemy: follow player smoothly
+                    const toPlayer = new THREE.Vector3(pPos.x - pos.x, 0, pPos.z - pos.z);
+                    const distToP = toPlayer.length();
+
+                    if (distToP > 4.2) {
+                        toPlayer.normalize();
+                        const speed = distToP > 8.0 ? 5.2 : 3.2;
+                        pos.x += toPlayer.x * delta * speed;
+                        pos.z += toPlayer.z * delta * speed;
+                        ent.rotation.y = Math.atan2(toPlayer.x, toPlayer.z);
+                        pos.y = (this.game.world ? this.game.world.getGroundHeight(pos.x, pos.z, pos.y) : pos.y) + Math.abs(Math.sin(ent.userData.animTime * 9)) * 0.06;
+                    } else if (distToP < 2.0) {
+                        toPlayer.normalize();
+                        pos.x -= toPlayer.x * delta * 1.5;
+                        pos.z -= toPlayer.z * delta * 1.5;
+                    } else {
+                        ent.rotation.y = Math.atan2(toPlayer.x, toPlayer.z);
+                        const groundY = this.game.world ? this.game.world.getGroundHeight(pos.x, pos.z, pos.y) : 0;
+                        pos.y = groundY + Math.sin(ent.userData.animTime * 2) * 0.02;
+                    }
+                }
             }
         }
 
@@ -10464,6 +10626,164 @@
             `;
         }).join('');
     }
+
+
+    // ====================================================
+    // 200 NPCS & ALLIES UI SYSTEM
+    // ====================================================
+    window.openNPCsModal = function() {
+        const modal = document.getElementById('npcs-modal');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        renderNPCCards();
+    };
+
+    window.closeNPCsModal = function() {
+        const modal = document.getElementById('npcs-modal');
+        if (modal) modal.style.display = 'none';
+    };
+
+    window.activeNPCGameFilter = 'ALL';
+    window.npcSearchQuery = '';
+
+    window.filterNPCGame = function(game) {
+        window.activeNPCGameFilter = game;
+        document.querySelectorAll('.npc-game-tab-btn').forEach(btn => {
+            const isMatch = btn.getAttribute('data-game') === game;
+            btn.classList.toggle('active', isMatch);
+            if (isMatch) {
+                btn.style.boxShadow = '0 0 12px rgba(0,229,255,0.6)';
+                btn.style.background = 'rgba(0, 40, 60, 0.85)';
+            } else {
+                btn.style.boxShadow = 'none';
+                btn.style.background = 'transparent';
+            }
+        });
+        renderNPCCards();
+    };
+
+    window.onNPCSearchInput = function(query) {
+        window.npcSearchQuery = (query || '').toLowerCase().trim();
+        renderNPCCards();
+    };
+
+    function getNPCGameCode(npc, idx) {
+        const num = idx + 1;
+        if (num > 100 && num <= 130) return 'ER';
+        if (num > 130 && num <= 150) return 'DS3';
+        if (num > 150 && num <= 170) return 'BB';
+        if (num > 170 && num <= 185) return 'SEKIRO';
+        if (num > 185 && num <= 200) return 'DS2';
+        
+        const r = (npc.realm || '').toLowerCase();
+        const d = (npc.desc || '').toLowerCase();
+        const t = (npc.title || '').toLowerCase();
+        if (r.includes('yharnam') || d.includes('hunter') || r.includes('byrgenwerth') || t.includes('yharnam')) return 'BB';
+        if (r.includes('ashina') || d.includes('shinobi') || d.includes('sekiro') || t.includes('ashina')) return 'SEKIRO';
+        if (r.includes('limgrave') || r.includes('liurnia') || r.includes('erdtree') || r.includes('caelid') || r.includes('roundtable') || d.includes('tarnished')) return 'ER';
+        if (r.includes('lothric') || d.includes('ashen') || d.includes('cinder') || r.includes('irithyll')) return 'DS3';
+        if (r.includes('drangleic') || r.includes('majula') || r.includes('mirrah')) return 'DS2';
+        return 'DS1';
+    }
+
+    function renderNPCCards() {
+        const grid = document.getElementById('npcs-cards-grid');
+        if (!grid || !window.LORDRAN_300_DATABASE) return;
+
+        const allNpcs = window.LORDRAN_300_DATABASE.filter(item => item.category === 'NPC');
+        const activeGame = window.activeNPCGameFilter || 'ALL';
+        const q = window.npcSearchQuery || '';
+
+        const gameLabels = {
+            'DS1': 'Dark Souls I',
+            'DS2': 'Dark Souls II',
+            'DS3': 'Dark Souls III',
+            'BB': 'Bloodborne',
+            'SEKIRO': 'Sekiro',
+            'ER': 'Elden Ring & SOTE'
+        };
+
+        const gameColors = {
+            'DS1': '#ffd700',
+            'DS2': '#4fc3f7',
+            'DS3': '#ff7722',
+            'BB': '#f43f5e',
+            'SEKIRO': '#f59e0b',
+            'ER': '#10b981'
+        };
+
+        const filtered = allNpcs.filter((npc, idx) => {
+            const gCode = getNPCGameCode(npc, idx);
+            const matchGame = (activeGame === 'ALL' || gCode === activeGame);
+            const matchQuery = !q || npc.name.toLowerCase().includes(q) || (npc.quote && npc.quote.toLowerCase().includes(q)) || (npc.realm && npc.realm.toLowerCase().includes(q)) || (npc.desc && npc.desc.toLowerCase().includes(q));
+            return matchGame && matchQuery;
+        });
+
+        grid.innerHTML = filtered.map((item) => {
+            const idx = allNpcs.indexOf(item);
+            const gCode = getNPCGameCode(item, idx);
+            const gColor = gameColors[gCode] || '#ffd700';
+            const gLabel = gameLabels[gCode] || 'Soulsborne';
+
+            return `
+                <div class="boss-card" style="border-color: rgba(0, 229, 255, 0.25); padding: 12px; background: rgba(10, 16, 24, 0.85); box-shadow: 0 0 10px rgba(0,229,255,0.08);">
+                    <div class="boss-card-info" style="gap: 12px;">
+                        <div class="boss-card-icon" style="font-size: 2.0rem; filter: drop-shadow(0 0 8px ${gColor});">${item.icon || '🧙'}</div>
+                        <div class="boss-card-text" style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 3px; border: 1px solid ${gColor}; color: ${gColor}; background: rgba(0,0,0,0.5);">${gLabel}</span>
+                                <span style="font-size: 0.68rem; color: #a5d6a7; font-weight: 700;">📍 ${item.realm || 'Lordran'}</span>
+                                <div class="boss-card-name" style="font-size: 0.92rem; font-weight: 800; color: #fff3a8;">${item.name}</div>
+                            </div>
+                            <div class="boss-card-desc" style="font-size: 0.78rem; color: #cbd5e1; margin-top: 3px; line-height: 1.35;">${item.desc}</div>
+                            <div style="font-size: 0.8rem; color: #ffd778; font-style: italic; margin-top: 4px; padding-left: 6px; border-left: 2px solid ${gColor};">
+                                "${item.quote || 'May the flames guide thee.'}"
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 6px; margin-top: 10px; justify-content: flex-end; flex-wrap: wrap;">
+                        <button class="btn-fight-boss" onclick="speakNPCDialogue('${item.id}')" style="border-color: #ffd778; color: #fff3a8; padding: 6px 12px; font-size: 0.74rem; font-weight: 800; background: rgba(50,35,10,0.7);">💬 TALK</button>
+                        <button class="btn-fight-boss" onclick="window.compendiumInstance.summonNPC('${item.id}')" style="border-color: #00e5ff; color: #80d8ff; padding: 6px 12px; font-size: 0.74rem; font-weight: 800; background: rgba(0,40,60,0.7); box-shadow: 0 0 8px rgba(0,229,255,0.3);">🧙 SUMMON ALLY</button>
+                        <button class="btn-fight-boss" onclick="window.compendiumInstance.spawnInWorld('${item.id}')" style="padding: 6px 10px; font-size: 0.74rem; border-color: #64b5f6; color: #bbdefb; background: rgba(20,40,70,0.5);">📦 SPAWN 3D</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.speakNPCDialogue = function(npcId) {
+        if (!window.LORDRAN_300_DATABASE) return;
+        const npc = window.LORDRAN_300_DATABASE.find(e => e.id === npcId);
+        if (!npc) return;
+
+        const box = document.getElementById('npc-dialogue-box');
+        if (!box) return;
+
+        document.getElementById('npc-dialogue-name').textContent = npc.name.toUpperCase();
+        document.getElementById('npc-dialogue-realm').innerHTML = `📍 ${npc.realm || 'Lordran'} &bull; ${npc.title || 'Legendary Soul'}`;
+        document.getElementById('npc-dialogue-text').textContent = `"${npc.quote || 'May the flames guide thee.'}"`;
+
+        const summonBtn = document.getElementById('npc-dialogue-summon-action');
+        if (summonBtn) {
+            summonBtn.onclick = function() {
+                if (window.compendiumInstance) window.compendiumInstance.summonNPC(npc.id);
+                dismissNPCDialogue();
+            };
+        }
+
+        box.style.display = 'block';
+
+        if (window.game && window.game.audio && window.game.audio.playBellToll) {
+            window.game.audio.playBellToll();
+        } else if (window.dsAudio && window.dsAudio.playBonfireIgnite) {
+            window.dsAudio.playBonfireIgnite();
+        }
+    };
+
+    window.dismissNPCDialogue = function() {
+        const box = document.getElementById('npc-dialogue-box');
+        if (box) box.style.display = 'none';
+    };
 
     window.addEventListener('DOMContentLoaded', () => {
         if (window.game) {

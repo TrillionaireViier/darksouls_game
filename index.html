@@ -1613,6 +1613,7 @@
                 <button class="btn-icon-bar" onclick="openQASuiteModal()" title="Open Automated QA Test Suite, 1-HP Sandbox & Watchdog" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🛠️ <span class="btn-label-text">QA SUITE</span></button>
                 <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
+                <button class="btn-icon-bar" onclick="openNPCsModal()" title="200 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (200)</span></button>
                 <button class="btn-icon-bar" onclick="openCompendiumModal()" title="600 3D Models: 200 Armors, 200 NPCs & 200 Mobs" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (600)</span></button>
                 <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
@@ -1973,6 +1974,65 @@
             </div>
 
             <button class="btn-modal-close" onclick="closeCompendiumModal()" style="margin-top: 12px;">CLOSE COMPENDIUM</button>
+        </div>
+    </div>
+
+
+    <!-- ==================================================== -->
+    <!-- 200 SOULSBORNE NPCS & ALLIES ROSTER MODAL            -->
+    <!-- ==================================================== -->
+    <div id="npcs-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="max-width: 820px; width: 94%; max-height: 88vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="color: #00e5ff; font-size: 1.3rem; letter-spacing: 2px;">
+                🧙 200 SOULSBORNE LEGENDARY NPCS & ALLIES
+            </div>
+            <p style="font-size: 0.85rem; color: #b8a896; line-height: 1.4; text-align: center; margin: 0 0 10px 0;">
+                Converse with, hear authentic lore dialogues, and summon all 200 legendary NPCs across Dark Souls I, II, III, Bloodborne, Sekiro & Elden Ring to fight at your side!
+            </p>
+
+            <!-- Search & Actions Bar -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;">
+                <input type="text" id="npc-search-input" placeholder="🔍 Search 200 NPCs by name, realm, or iconic quote..." 
+                       oninput="onNPCSearchInput(this.value)" 
+                       style="flex: 1; min-width: 220px; padding: 8px 12px; background: rgba(10, 20, 30, 0.9); border: 1px solid #00e5ff; color: #fff; font-family: 'Cinzel', serif; font-size: 0.82rem; border-radius: 4px; outline: none; box-shadow: 0 0 8px rgba(0,229,255,0.25);">
+                <button class="btn-fight-boss" onclick="if(window.compendiumInstance)window.compendiumInstance.dismissAllCompanions()" style="border-color: #ff6666; color: #ff9999; font-size: 0.75rem; padding: 8px 12px; font-weight: 800;">⚡ DISMISS ALL SUMMONS</button>
+            </div>
+
+            <!-- Game Category Filter Tabs -->
+            <div style="display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px;">
+                <button class="btn-icon-bar npc-game-tab-btn active" data-game="ALL" onclick="filterNPCGame('ALL')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #00e5ff; color: #80d8ff;">ALL (200)</button>
+                <button class="btn-icon-bar npc-game-tab-btn" data-game="DS1" onclick="filterNPCGame('DS1')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">DARK SOULS I</button>
+                <button class="btn-icon-bar npc-game-tab-btn" data-game="DS2" onclick="filterNPCGame('DS2')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #4fc3f7; color: #e1f5fe;">DARK SOULS II</button>
+                <button class="btn-icon-bar npc-game-tab-btn" data-game="DS3" onclick="filterNPCGame('DS3')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #ff7722; color: #ffaa55;">DARK SOULS III</button>
+                <button class="btn-icon-bar npc-game-tab-btn" data-game="BB" onclick="filterNPCGame('BB')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #f43f5e; color: #fecdd3;">BLOODBORNE</button>
+                <button class="btn-icon-bar npc-game-tab-btn" data-game="SEKIRO" onclick="filterNPCGame('SEKIRO')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #f59e0b; color: #fef3c7;">SEKIRO</button>
+                <button class="btn-icon-bar npc-game-tab-btn" data-game="ER" onclick="filterNPCGame('ER')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #10b981; color: #a7f3d0;">ELDEN RING & SOTE</button>
+            </div>
+
+            <!-- Cards Grid -->
+            <div id="npcs-cards-grid" class="boss-cards-grid" style="max-height: 52vh; overflow-y: auto; gap: 8px; padding-right: 4px;">
+                <!-- Cards dynamically populated by renderNPCCards() -->
+            </div>
+
+            <button class="btn-modal-close" onclick="closeNPCsModal()" style="margin-top: 12px;">CLOSE NPCS</button>
+        </div>
+    </div>
+
+    <!-- Cinematic Interactive NPC Dialogue Box -->
+    <div id="npc-dialogue-box" style="display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 680px; background: rgba(14, 12, 10, 0.96); border: 2px solid #ffd700; border-radius: 8px; box-shadow: 0 0 32px rgba(255, 215, 0, 0.45); padding: 16px 20px; z-index: 999999; text-align: center;">
+        <div style="font-size: 0.7rem; color: #ffd700; letter-spacing: 2px; text-transform: uppercase; font-weight: 800;">💬 SOULSBORNE INTERACTION</div>
+        <div id="npc-dialogue-name" style="font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 800; color: #fff3a8; margin: 4px 0;">SOLAIRE OF ASTORA</div>
+        <div id="npc-dialogue-realm" style="font-size: 0.74rem; color: #a5d6a7; margin-bottom: 10px; font-weight: 700;">Astora &bull; Warrior of Sunlight</div>
+        <div id="npc-dialogue-text" style="font-size: 0.96rem; color: #f8fafc; font-style: italic; line-height: 1.5; margin-bottom: 14px; background: rgba(0,0,0,0.4); padding: 10px 14px; border-radius: 6px; border-left: 3px solid #ffd700;">
+            "The sun is a wondrous body. Like a magnificent father! If only I could be so grossly incandescent!"
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button onclick="dismissNPCDialogue()" style="background: rgba(45,30,10,0.85); border: 1.5px solid #ffd700; color: #fff3a8; padding: 7px 18px; font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 800; border-radius: 4px; cursor: pointer; box-shadow: 0 0 10px rgba(255,215,0,0.3);">
+                [ CONTINUE ]
+            </button>
+            <button id="npc-dialogue-summon-action" style="background: rgba(10,45,30,0.85); border: 1.5px solid #00ffaa; color: #a5ffbe; padding: 7px 18px; font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 800; border-radius: 4px; cursor: pointer; box-shadow: 0 0 10px rgba(0,255,170,0.3);">
+                🧙 SUMMON AS ALLY PHANTOM
+            </button>
         </div>
     </div>
 
@@ -4138,6 +4198,7 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openQASuiteModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🛠️ QA SUITE</button>
                     <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800;">⚡ 60 FPS MODE</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openNPCsModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🧙 200 NPCS & ALLIES</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openCompendiumModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">🗿 600 3D MODELS (ARMORS, NPCS, MOBS)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); if(window.compendiumInstance)window.compendiumInstance.clearSpawned();" style="border-color: #ff6666; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">🧹 CLEAR SPAWNED 3D</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDeathQuotesModal();" style="border-color: #ff5555; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">💀 300 DEATH EPITAPHS</button>
@@ -5113,24 +5174,24 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/audio.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/lore_items.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/world.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/character.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/siege_warfare.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/heraldry_nobility.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/apothecary_crafting.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/collision_system.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/qa_bot_tester.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/combat.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/postprocessing.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/qa_suite.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/blacksmith_forge.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
-    <script src="js/inventory_system.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
+    <script src="js/three.min.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/audio.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/lore_items.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/world.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/character.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/siege_warfare.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/heraldry_nobility.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/apothecary_crafting.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/collision_system.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/qa_bot_tester.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/combat.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/postprocessing.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/qa_suite.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/blacksmith_forge.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/inventory_system.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
     <script src="js/compendium_300_models.js?v=20261120_600_3D_MODELS_ARMORS_NPCS_MOBS"></script>
     <script src="js/death_quotes_300.js?v=20261120_190_LOCATIONS_300_DEATH_QUOTES"></script>
-    <script src="js/game.js?v=20261120_DARK_SOULS_190_LOCATIONS_60_BOSSES"></script>
+    <script src="js/game.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {
