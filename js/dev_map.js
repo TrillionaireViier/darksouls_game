@@ -15,7 +15,7 @@
             this.isOpen = false;
             
             // Map view transformation
-            this.scale = 2.8; // pixels per meter
+            this.scale = 1.4; // pixels per meter
             this.offsetX = 0;
             this.offsetZ = 0;
             this.isDragging = false;
@@ -39,7 +39,7 @@
             
             // World boundaries for auto-framing
             // X: [-40, 40], Z: [-40, 180]
-            this.worldCenter = { x: 0, z: 65 };
+            this.worldCenter = { x: 0, z: 150 };
             
             this.initDOM();
             this.bindEvents();
@@ -564,23 +564,23 @@
 
             // 2. Draw Architecture Footprint & Walkable Slabs
             if (this.layers.architecture) {
-                // Courtyard (Surface 0m)
-                this.drawZoneRect(ctx, -30, -30, 60, 34, 'rgba(40, 30, 20, 0.65)', '#7c6848', 'COURTYARD & BONFIRE (0m)');
+                // Expanded Grand Courtyard (Surface 0m)
+                this.drawZoneRect(ctx, -40, -45, 80, 75, "rgba(40, 30, 20, 0.65)", "#7c6848", "EXPANDED COURTYARD & BONFIRE (0m)");
 
-                // Ramparts & Watchtower (+6m)
-                this.drawZoneRect(ctx, 18, -20, 14, 70, 'rgba(60, 50, 15, 0.55)', '#ffd700', 'WATCHTOWER RAMPARTS (+6m)');
+                // Watchtower Ramparts (+6m) - 248m length!
+                this.drawZoneRect(ctx, 15, 20, 15, 255, "rgba(60, 50, 15, 0.55)", "#ffd700", "WATCHTOWER RAMPARTS (+6m) [248m]");
 
-                // Royal Bridge (0m)
-                this.drawZoneRect(ctx, -12, 4, 24, 91, 'rgba(30, 35, 45, 0.65)', '#4fc3f7', 'ROYAL HIGHWAY BRIDGE (0m)');
+                // Royal Highway Viaduct (0m) - 240m length!
+                this.drawZoneRect(ctx, -8, 25, 16, 250, "rgba(30, 35, 45, 0.65)", "#4fc3f7", "ROYAL HIGHWAY VIADUCT (0m) [240m]");
 
-                // Upper Arena (0m)
-                this.drawZoneRect(ctx, -30, 95, 60, 80, 'rgba(50, 20, 25, 0.65)', '#ff4444', 'UPPER CITADEL ARENA OF LORDS (0m)');
+                // Upper Boss Arena (0m) - Repositioned at z = 275 - 390
+                this.drawZoneRect(ctx, -30, 275, 60, 115, "rgba(50, 20, 25, 0.65)", "#ff4444", "UPPER CITADEL ARENA OF LORDS (0m)");
 
-                // Catacombs & Nito Tomb (-5m)
-                this.drawZoneRect(ctx, -34, 40, 26, 120, 'rgba(10, 45, 30, 0.65)', '#00ffaa', 'CATACOMBS CRYPT (-5m)');
+                // Flooded Catacombs & Crypt (-5m) - 248m length!
+                this.drawZoneRect(ctx, -30, 25, 20, 250, "rgba(10, 45, 30, 0.65)", "#00ffaa", "FLOODED CATACOMBS CRYPT (-5m) [248m]");
 
                 // Sunken Serpent Courtyard (-4m)
-                this.drawZoneRect(ctx, -25, -95, 50, 35, 'rgba(15, 30, 40, 0.65)', '#00e5ff', 'SERPENT SANCTUARY (-4m)');
+                this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
             }
 
             // 3. Draw All World Pins

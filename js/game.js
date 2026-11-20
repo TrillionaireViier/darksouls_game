@@ -10,7 +10,7 @@ class DarkSoulsGame {
 
         // Three.js Core
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
+        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1500);
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             powerPreference: 'high-performance'
@@ -2589,7 +2589,7 @@ class DarkSoulsGame {
             if (pPos.y <= -3.5) {
                 this.world.spawnArenaBonfire(-20, -5.0, 115);
             } else {
-                this.world.spawnArenaBonfire(0, 0, 138);
+                this.world.spawnArenaBonfire(0, 0, 345);
             }
         }
 
@@ -2739,9 +2739,9 @@ class DarkSoulsGame {
         if (this.lastBonfirePos) {
             this.playerMesh.position.copy(this.lastBonfirePos);
         } else if (this.world && this.world.arenaBonfireGroup) {
-            this.playerMesh.position.set(0, 0, 134);
+            this.playerMesh.position.set(0, 0, 330);
         } else {
-            this.playerMesh.position.set(0, 0, 134);
+            this.playerMesh.position.set(0, 0, 330);
         }
 
         if (this.playerVelocity) this.playerVelocity.set(0, 0, 0);
@@ -2929,7 +2929,7 @@ class DarkSoulsGame {
                     this.world.spawnDiscoveredWaystone(0, 0, 154, targetLoc);
                 }
                 if (this.world && this.world.spawnArenaBonfire) {
-                    this.world.spawnArenaBonfire(0, 0, 138);
+                    this.world.spawnArenaBonfire(0, 0, 345);
                 }
             }
             this.combat.isDead = false;
@@ -4137,7 +4137,7 @@ window.DARK_SOULS_LOCATIONS = [
     // ----------------------------------------------------
     // SANCTUARIES & HUB REALMS
     // ----------------------------------------------------
-    { id: 'royal_bridge_arena', name: 'Royal Bridge - Grand Citadel Arena (Hub)', zone: 'Royal Citadel', pos: [0, 0, 134], elev: '0m', danger: 'Sanctuary & War Arena (Hub)', boss: 'Arena Colosseum', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and the nexus bonfire.', light: 1.10 },
+    { id: 'royal_bridge_arena', name: 'Royal Bridge - Grand Citadel Arena (Hub)', zone: 'Royal Citadel', pos: [0, 0, 330], elev: '0m', danger: 'Sanctuary & War Arena (Hub)', boss: 'Arena Colosseum', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and the nexus bonfire.', light: 1.10 },
     { id: 'firelink_shrine', name: 'Firelink Shrine - Ruined Bonfire', zone: 'Firelink Shrine', pos: [0, 0, 5], elev: '0m', danger: 'Sanctuary (Safe)', boss: 'None (Crestfallen Warrior)', desc: 'The historic nexus of Lordran where weary pilgrims gather around the warm embers of the bonfire.', light: 1.10 },
     { id: 'undead_parish_altar', name: 'Undead Parish - Sunlit Altar', zone: 'Undead Parish', pos: [4, 0, 40], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Armored Fang Boar', desc: 'The shattered altar of the Warriors of Sunlight bathed in the golden radiance of the ancient sun.', light: 1.25 },
     { id: 'high_ramparts_watchtower', name: 'High Ramparts - Solar Overlook', zone: 'High Ramparts', pos: [24, 6.0, 35], elev: '+6m', danger: 'Tier II (Moderate)', boss: 'Knight Solaire', desc: 'The elevated eastern battlements where Knight Solaire gazes upon his incandescent sun.', light: 1.25 },

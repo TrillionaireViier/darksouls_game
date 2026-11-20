@@ -1494,7 +1494,7 @@ class DarkSoulsCombat {
                 damage: 230,
                 souls: 4000,
                 radius: 2.7,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createAsylumDemon(x, z)
             },
             {
@@ -1507,7 +1507,7 @@ class DarkSoulsCombat {
                 damage: 270,
                 souls: 5000,
                 radius: 2.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createTaurusDemon(x, z)
             },
             {
@@ -1520,7 +1520,7 @@ class DarkSoulsCombat {
                 damage: 260,
                 souls: 7500,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createBellGargoyle(x, z)
             },
             {
@@ -1533,7 +1533,7 @@ class DarkSoulsCombat {
                 damage: 310,
                 souls: 8000,
                 radius: 2.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createCapraDemon(x, z)
             },
             {
@@ -1546,7 +1546,7 @@ class DarkSoulsCombat {
                 damage: 300,
                 souls: 10000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createGapingDragon(x, z)
             },
             {
@@ -1559,7 +1559,7 @@ class DarkSoulsCombat {
                 damage: 310,
                 souls: 12000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createChaosWitchQuelaag(x, z)
             },
             {
@@ -1572,7 +1572,7 @@ class DarkSoulsCombat {
                 damage: 270,
                 souls: 9000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createMoonlightButterfly(x, z)
             },
             {
@@ -1585,7 +1585,7 @@ class DarkSoulsCombat {
                 damage: 340,
                 souls: 14000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createIronGolem(x, z)
             },
             {
@@ -1598,7 +1598,7 @@ class DarkSoulsCombat {
                 damage: 330,
                 souls: 16000,
                 radius: 2.6,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createDragonslayerOrnstein(x, z)
             },
             {
@@ -1611,7 +1611,7 @@ class DarkSoulsCombat {
                 damage: 360,
                 souls: 16000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createExecutionerSmough(x, z)
             },
             {
@@ -1624,7 +1624,7 @@ class DarkSoulsCombat {
                 damage: 340,
                 souls: 15000,
                 radius: 3.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createWolfSif(x, z)
             },
             {
@@ -1637,7 +1637,7 @@ class DarkSoulsCombat {
                 damage: 370,
                 souls: 20000,
                 radius: 2.7,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createKnightArtorias(x, z)
             },
             {
@@ -1650,7 +1650,7 @@ class DarkSoulsCombat {
                 damage: 390,
                 souls: 24000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createManusFatherOfAbyss(x, z)
             },
             {
@@ -1663,7 +1663,7 @@ class DarkSoulsCombat {
                 damage: 380,
                 souls: 25000,
                 radius: 3.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createBlackDragonKalameet(x, z)
             },
             {
@@ -1689,7 +1689,7 @@ class DarkSoulsCombat {
                 damage: 410,
                 souls: 35000,
                 radius: 2.7,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createGwynLordOfCinder(x, z)
             },
             {
@@ -1702,7 +1702,7 @@ class DarkSoulsCombat {
                 damage: 290,
                 souls: 12000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createStrayDemon(x, z)
             },
             {
@@ -1715,7 +1715,7 @@ class DarkSoulsCombat {
                 damage: 310,
                 souls: 14000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createDemonFiresage(x, z)
             },
             {
@@ -1728,7 +1728,7 @@ class DarkSoulsCombat {
                 damage: 320,
                 souls: 16000,
                 radius: 2.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createCentipedeDemon(x, z)
             },
             {
@@ -1741,7 +1741,7 @@ class DarkSoulsCombat {
                 damage: 340,
                 souls: 20000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createBedOfChaos(x, z)
             },
             {
@@ -1754,7 +1754,7 @@ class DarkSoulsCombat {
                 damage: 360,
                 souls: 22000,
                 radius: 3.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createCeaselessDischarge(x, z)
             },
             {
@@ -1767,7 +1767,7 @@ class DarkSoulsCombat {
                 damage: 370,
                 souls: 25000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSeathTheScaleless(x, z)
             },
             {
@@ -1780,7 +1780,7 @@ class DarkSoulsCombat {
                 damage: 380,
                 souls: 28000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createFourKings(x, z)
             },
             {
@@ -1793,7 +1793,7 @@ class DarkSoulsCombat {
                 damage: 350,
                 souls: 24000,
                 radius: 2.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createCrossbreedPriscilla(x, z)
             },
             {
@@ -1806,7 +1806,7 @@ class DarkSoulsCombat {
                 damage: 340,
                 souls: 26000,
                 radius: 2.3,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createDarkSunGwyndolin(x, z)
             },
             {
@@ -1819,7 +1819,7 @@ class DarkSoulsCombat {
                 damage: 280,
                 souls: 15000,
                 radius: 2.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createPinwheel(x, z)
             },
             {
@@ -1832,7 +1832,7 @@ class DarkSoulsCombat {
                 damage: 360,
                 souls: 30000,
                 radius: 2.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSanctuaryGuardian(x, z)
             },
             {
@@ -1845,7 +1845,7 @@ class DarkSoulsCombat {
                 damage: 370,
                 souls: 32000,
                 radius: 2.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createThePursuer(x, z)
             },
             {
@@ -1858,7 +1858,7 @@ class DarkSoulsCombat {
                 damage: 390,
                 souls: 35000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createLookingGlassKnight(x, z)
             },
             {
@@ -1871,7 +1871,7 @@ class DarkSoulsCombat {
                 damage: 420,
                 souls: 40000,
                 radius: 2.7,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createFumeKnight(x, z)
             },
             {
@@ -1884,7 +1884,7 @@ class DarkSoulsCombat {
                 damage: 410,
                 souls: 38000,
                 radius: 2.3,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSirAlonne(x, z)
             },
             {
@@ -1897,7 +1897,7 @@ class DarkSoulsCombat {
                 damage: 440,
                 souls: 45000,
                 radius: 2.7,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createNamelessKing(x, z)
             },
             {
@@ -1910,7 +1910,7 @@ class DarkSoulsCombat {
                 damage: 400,
                 souls: 36000,
                 radius: 2.3,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createAbyssWatchers(x, z)
             },
             {
@@ -1923,7 +1923,7 @@ class DarkSoulsCombat {
                 damage: 415,
                 souls: 39000,
                 radius: 2.6,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createPontiffSulyvahn(x, z)
             },
             {
@@ -1936,7 +1936,7 @@ class DarkSoulsCombat {
                 damage: 460,
                 souls: 50000,
                 radius: 2.6,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSlaveKnightGael(x, z)
             },
             {
@@ -1949,7 +1949,7 @@ class DarkSoulsCombat {
                 damage: 480,
                 souls: 60000,
                 radius: 2.7,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulOfCinder(x, z)
             },
             {
@@ -1975,7 +1975,7 @@ class DarkSoulsCombat {
                 damage: 520,
                 souls: 120000,
                 radius: 2.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createMalenia(x, z)
             },
             {
@@ -1988,7 +1988,7 @@ class DarkSoulsCombat {
                 damage: 560,
                 souls: 150000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createRadahn(x, z)
             },
             {
@@ -2001,7 +2001,7 @@ class DarkSoulsCombat {
                 damage: 600,
                 souls: 200000,
                 radius: 2.6,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createKingAllant(x, z)
             },
 {
@@ -2014,7 +2014,7 @@ class DarkSoulsCombat {
                 damage: 620,
                 souls: 220000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createLudwig(x, z)
             },
             {
@@ -2027,7 +2027,7 @@ class DarkSoulsCombat {
                 damage: 640,
                 souls: 240000,
                 radius: 2.3,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createLadyMaria(x, z)
             },
             {
@@ -2040,7 +2040,7 @@ class DarkSoulsCombat {
                 damage: 660,
                 souls: 260000,
                 radius: 2.6,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createOrphanOfKos(x, z)
             },
             {
@@ -2053,7 +2053,7 @@ class DarkSoulsCombat {
                 damage: 680,
                 souls: 280000,
                 radius: 2.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createFatherGascoigne(x, z)
             },
             {
@@ -2066,7 +2066,7 @@ class DarkSoulsCombat {
                 damage: 700,
                 souls: 300000,
                 radius: 2.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createDarklurker(x, z)
             },
             {
@@ -2079,7 +2079,7 @@ class DarkSoulsCombat {
                 damage: 720,
                 souls: 320000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createVelstadt(x, z)
             },
             {
@@ -2092,7 +2092,7 @@ class DarkSoulsCombat {
                 damage: 740,
                 souls: 350000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createIvoryKing(x, z)
             },
             {
@@ -2105,7 +2105,7 @@ class DarkSoulsCombat {
                 damage: 760,
                 souls: 380000,
                 radius: 2.7,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createDragonrider(x, z)
             },
             {
@@ -2118,7 +2118,7 @@ class DarkSoulsCombat {
                 damage: 780,
                 souls: 400000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createTwinPrinces(x, z)
             },
             {
@@ -2131,7 +2131,7 @@ class DarkSoulsCombat {
                 damage: 800,
                 souls: 430000,
                 radius: 2.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createDragonslayerArmour(x, z)
             },
             {
@@ -2144,7 +2144,7 @@ class DarkSoulsCombat {
                 damage: 820,
                 souls: 460000,
                 radius: 2.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSisterFriede(x, z)
             },
             {
@@ -2157,7 +2157,7 @@ class DarkSoulsCombat {
                 damage: 850,
                 souls: 500000,
                 radius: 2.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createChampionGundyr(x, z)
             },
             {
@@ -2170,7 +2170,7 @@ class DarkSoulsCombat {
                 damage: 900,
                 souls: 550000,
                 radius: 3.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createDarkeaterMidir(x, z)
             },
             {
@@ -2183,7 +2183,7 @@ class DarkSoulsCombat {
                 damage: 930,
                 souls: 600000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createGodfrey(x, z)
             },
             {
@@ -2196,7 +2196,7 @@ class DarkSoulsCombat {
                 damage: 960,
                 souls: 650000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createMaliketh(x, z)
             },
             {
@@ -2209,7 +2209,7 @@ class DarkSoulsCombat {
                 damage: 990,
                 souls: 700000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createMohg(x, z)
             },
             {
@@ -2222,7 +2222,7 @@ class DarkSoulsCombat {
                 damage: 1020,
                 souls: 750000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createMorgott(x, z)
             },
             {
@@ -2235,7 +2235,7 @@ class DarkSoulsCombat {
                 damage: 1050,
                 souls: 800000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createRykard(x, z)
             },
             {
@@ -2248,7 +2248,7 @@ class DarkSoulsCombat {
                 damage: 1100,
                 souls: 900000,
                 radius: 2.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createIsshin(x, z)
             },
             {
@@ -2261,7 +2261,7 @@ class DarkSoulsCombat {
                 damage: 1200,
                 souls: 1000000,
                 radius: 3.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createEldenBeast(x, z)
             },
             // 40 EXPANDED LORDS: ELDEN RING ERDTREE, BLOODBORNE, SEKIRO & DS3 (61–100)
@@ -2277,7 +2277,7 @@ class DarkSoulsCombat {
                 damage: 1250,
                 souls: 1100000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'messmer_the_impaler', theme: 'flame', bossScale: 2.1 }, x, z)
             },
             {
@@ -2292,7 +2292,7 @@ class DarkSoulsCombat {
                 damage: 1400,
                 souls: 1500000,
                 radius: 3.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'radahn_consort', theme: 'holy', bossScale: 2.2 }, x, z)
             },
             {
@@ -2307,7 +2307,7 @@ class DarkSoulsCombat {
                 damage: 1350,
                 souls: 1250000,
                 radius: 3.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'bayle_the_dread', theme: 'flame', bossScale: 2.8 }, x, z)
             },
             {
@@ -2322,7 +2322,7 @@ class DarkSoulsCombat {
                 damage: 1200,
                 souls: 1050000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'midra_frenzied_flame', theme: 'frenzy', bossScale: 2.0 }, x, z)
             },
             {
@@ -2337,7 +2337,7 @@ class DarkSoulsCombat {
                 damage: 1180,
                 souls: 1000000,
                 radius: 2.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'rellana_twin_moon', theme: 'magic', bossScale: 2.0 }, x, z)
             },
             {
@@ -2352,7 +2352,7 @@ class DarkSoulsCombat {
                 damage: 1220,
                 souls: 1100000,
                 radius: 3.3,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'romina_saint_bud', theme: 'rot', bossScale: 2.4 }, x, z)
             },
             {
@@ -2367,7 +2367,7 @@ class DarkSoulsCombat {
                 damage: 1280,
                 souls: 1150000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'scadutree_avatar', theme: 'holy', bossScale: 2.6 }, x, z)
             },
             {
@@ -2382,7 +2382,7 @@ class DarkSoulsCombat {
                 damage: 1240,
                 souls: 1080000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'putrescent_knight', theme: 'magic', bossScale: 2.3 }, x, z)
             },
             {
@@ -2397,7 +2397,7 @@ class DarkSoulsCombat {
                 damage: 1300,
                 souls: 1200000,
                 radius: 3.6,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'metyr_mother_fingers', theme: 'cosmic', bossScale: 2.7 }, x, z)
             },
             {
@@ -2412,7 +2412,7 @@ class DarkSoulsCombat {
                 damage: 1260,
                 souls: 1120000,
                 radius: 3.3,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'commander_gaius', theme: 'dark', bossScale: 2.4 }, x, z)
             },
             {
@@ -2427,7 +2427,7 @@ class DarkSoulsCombat {
                 damage: 1120,
                 souls: 850000,
                 radius: 3.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'cleric_beast', theme: 'beast', bossScale: 2.6 }, x, z)
             },
             {
@@ -2442,7 +2442,7 @@ class DarkSoulsCombat {
                 damage: 1150,
                 souls: 900000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'vicar_amelia', theme: 'beast', bossScale: 2.4 }, x, z)
             },
             {
@@ -2457,7 +2457,7 @@ class DarkSoulsCombat {
                 damage: 1160,
                 souls: 880000,
                 radius: 2.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'blood_starved_beast', theme: 'blood', bossScale: 2.2 }, x, z)
             },
             {
@@ -2472,7 +2472,7 @@ class DarkSoulsCombat {
                 damage: 1180,
                 souls: 950000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'shadows_of_yharnam', theme: 'dark', bossScale: 2.0 }, x, z)
             },
             {
@@ -2487,7 +2487,7 @@ class DarkSoulsCombat {
                 damage: 1200,
                 souls: 980000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'rom_vacuous_spider', theme: 'magic', bossScale: 2.5 }, x, z)
             },
             {
@@ -2502,7 +2502,7 @@ class DarkSoulsCombat {
                 damage: 1240,
                 souls: 1050000,
                 radius: 3.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'the_one_reborn', theme: 'dark', bossScale: 2.9 }, x, z)
             },
             {
@@ -2517,7 +2517,7 @@ class DarkSoulsCombat {
                 damage: 1280,
                 souls: 1150000,
                 radius: 3.6,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'ebrietas_daughter_cosmos', theme: 'cosmic', bossScale: 2.7 }, x, z)
             },
             {
@@ -2532,7 +2532,7 @@ class DarkSoulsCombat {
                 damage: 1210,
                 souls: 1020000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'martyr_logarius', theme: 'frost', bossScale: 2.1 }, x, z)
             },
             {
@@ -2547,7 +2547,7 @@ class DarkSoulsCombat {
                 damage: 1320,
                 souls: 1250000,
                 radius: 2.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'gehrman_first_hunter', theme: 'blood', bossScale: 2.0 }, x, z)
             },
             {
@@ -2562,7 +2562,7 @@ class DarkSoulsCombat {
                 damage: 1360,
                 souls: 1350000,
                 radius: 3.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'moon_presence', theme: 'cosmic', bossScale: 2.5 }, x, z)
             },
             {
@@ -2577,7 +2577,7 @@ class DarkSoulsCombat {
                 damage: 1140,
                 souls: 900000,
                 radius: 3.3,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'gyoubu_masataka_oniwa', theme: 'dark', bossScale: 2.4 }, x, z)
             },
             {
@@ -2592,7 +2592,7 @@ class DarkSoulsCombat {
                 damage: 1200,
                 souls: 1000000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'genichiro_ashina', theme: 'dragon', bossScale: 2.0 }, x, z)
             },
             {
@@ -2607,7 +2607,7 @@ class DarkSoulsCombat {
                 damage: 1240,
                 souls: 1080000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'guardian_ape', theme: 'beast', bossScale: 2.7 }, x, z)
             },
             {
@@ -2622,7 +2622,7 @@ class DarkSoulsCombat {
                 damage: 1080,
                 souls: 820000,
                 radius: 2.6,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'folding_screen_monkeys', theme: 'magic', bossScale: 1.8 }, x, z)
             },
             {
@@ -2637,7 +2637,7 @@ class DarkSoulsCombat {
                 damage: 1260,
                 souls: 1120000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'corrupted_monk', theme: 'magic', bossScale: 2.3 }, x, z)
             },
             {
@@ -2652,7 +2652,7 @@ class DarkSoulsCombat {
                 damage: 1340,
                 souls: 1280000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'great_shinobi_owl', theme: 'dark', bossScale: 2.2 }, x, z)
             },
             {
@@ -2667,7 +2667,7 @@ class DarkSoulsCombat {
                 damage: 1420,
                 souls: 1450000,
                 radius: 3.9,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'demon_of_hatred', theme: 'flame', bossScale: 2.9 }, x, z)
             },
             {
@@ -2682,7 +2682,7 @@ class DarkSoulsCombat {
                 damage: 1360,
                 souls: 1350000,
                 radius: 4.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'divine_dragon', theme: 'dragon', bossScale: 3.0 }, x, z)
             },
             {
@@ -2697,7 +2697,7 @@ class DarkSoulsCombat {
                 damage: 1150,
                 souls: 880000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'iudex_gundyr', theme: 'dark', bossScale: 2.2 }, x, z)
             },
             {
@@ -2712,7 +2712,7 @@ class DarkSoulsCombat {
                 damage: 1180,
                 souls: 920000,
                 radius: 3.2,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'vordt_boreal_valley', theme: 'frost', bossScale: 2.4 }, x, z)
             },
             {
@@ -2727,7 +2727,7 @@ class DarkSoulsCombat {
                 damage: 1140,
                 souls: 890000,
                 radius: 2.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'crystal_sage', theme: 'magic', bossScale: 2.0 }, x, z)
             },
             {
@@ -2742,7 +2742,7 @@ class DarkSoulsCombat {
                 damage: 1170,
                 souls: 950000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'deacons_of_the_deep', theme: 'holy', bossScale: 2.0 }, x, z)
             },
             {
@@ -2757,7 +2757,7 @@ class DarkSoulsCombat {
                 damage: 1270,
                 souls: 1100000,
                 radius: 3.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'high_lord_wolnir', theme: 'dark', bossScale: 2.8 }, x, z)
             },
             {
@@ -2772,7 +2772,7 @@ class DarkSoulsCombat {
                 damage: 1230,
                 souls: 1060000,
                 radius: 3.5,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'old_demon_king', theme: 'flame', bossScale: 2.6 }, x, z)
             },
             {
@@ -2787,7 +2787,7 @@ class DarkSoulsCombat {
                 damage: 1310,
                 souls: 1200000,
                 radius: 3.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'aldrich_devourer', theme: 'magic', bossScale: 2.5 }, x, z)
             },
             {
@@ -2802,7 +2802,7 @@ class DarkSoulsCombat {
                 damage: 1380,
                 souls: 1300000,
                 radius: 3.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'yhorm_the_giant', theme: 'dark', bossScale: 2.8 }, x, z)
             },
             {
@@ -2817,7 +2817,7 @@ class DarkSoulsCombat {
                 damage: 1320,
                 souls: 1240000,
                 radius: 3.1,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'dancer_boreal_valley', theme: 'frost', bossScale: 2.3 }, x, z)
             },
             {
@@ -2832,7 +2832,7 @@ class DarkSoulsCombat {
                 damage: 1290,
                 souls: 1180000,
                 radius: 3.4,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'oceiros_consumed_king', theme: 'magic', bossScale: 2.5 }, x, z)
             },
             {
@@ -2847,7 +2847,7 @@ class DarkSoulsCombat {
                 damage: 1440,
                 souls: 1550000,
                 radius: 3.8,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'demon_prince', theme: 'flame', bossScale: 2.8 }, x, z)
             },
             {
@@ -2862,7 +2862,7 @@ class DarkSoulsCombat {
                 damage: 1350,
                 souls: 1350000,
                 radius: 3.0,
-                spawnPos: { x: 0, z: 132 },
+                spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'halflight_spear_church', theme: 'holy', bossScale: 2.1 }, x, z)
             }
         ];
@@ -2892,7 +2892,7 @@ class DarkSoulsCombat {
         this.currentBossType = def.id;
 
         const posX = (x !== null) ? x : (def.spawnPos ? def.spawnPos.x : 0);
-        const posZ = (z !== null) ? z : (def.spawnPos ? def.spawnPos.z : 132);
+        const posZ = (z !== null) ? z : (def.spawnPos ? def.spawnPos.z : 330);
 
         const bossMesh = def.create(this.charFactory, posX, posZ);
         this.boss = {
@@ -2987,53 +2987,60 @@ class DarkSoulsCombat {
             this.ragdolls = [];
         }
 
-        // Balanced Tactical Mob Spawning (No 570-mob swarm dog-piles at spawn)
+        // Tactical 3x Mobs Spawning across 3-4x Expanded Locations (240m Viaduct, 248m Ramparts, 248m Catacombs)
         const mobList = (window.DarkSoulsLore && window.DarkSoulsLore.mobs) || window.DARK_SOULS_MOBS || [];
         if (mobList.length > 0) {
             let starterZoneCount = 0;
             const spawnedCoords = [];
 
             mobList.forEach(mobDef => {
-                const pos = mobDef.defaultPos;
-                if (!pos || (pos[0] === 0 && pos[1] === 0 && pos[2] === 0)) return;
+                const rawPos = mobDef.defaultPos;
+                if (!rawPos || (rawPos[0] === 0 && rawPos[1] === 0 && rawPos[2] === 0)) return;
 
-                const dist = Math.sqrt(pos[0] * pos[0] + pos[2] * pos[2]);
+                let px = rawPos[0];
+                let py = rawPos[1];
+                let pz = rawPos[2];
 
-                // Safe sanctuary zone: no mobs within 14m of bonfire / player start
-                if (dist < 14.0) return;
+                // Scale & distribute mobs across the 3-4x expanded 240m+ paths before the boss:
+                if (pz >= 20 && pz <= 95 && Math.abs(px) < 8.5) {
+                    // Royal Bridge Viaduct (spread smoothly across z: 35 to 265)
+                    pz = 35 + ((pz - 20) / 75) * 230;
+                } else if (pz >= 20 && pz <= 95 && px > 10.0) {
+                    // High Castle Ramparts (spread across z: 30 to 265)
+                    pz = 30 + ((pz - 20) / 75) * 235;
+                } else if (pz >= 20 && pz <= 95 && px < -10.0) {
+                    // Subterranean Catacombs (spread across z: 30 to 265)
+                    pz = 30 + ((pz - 20) / 75) * 235;
+                } else if (pz > 95 && pz <= 150) {
+                    // Deep Crypts & Upper Causeway approach
+                    pz = 150 + ((pz - 95) / 55) * 115;
+                }
 
-                // Boss Arena sanctuary: NEVER spawn regular hollow mobs inside the Boss Arena (z in [94, 168], x in [-18, 18])
-                if (pos[0] >= -18 && pos[0] <= 18 && pos[2] >= 94 && pos[2] <= 168) return;
+                const dist = Math.sqrt(px * px + pz * pz);
 
-                // Starter Bridge Encounter: Max 3 hollows along the roadway
-                if (dist < 35.0) {
-                    if (starterZoneCount >= 3) return;
+                // Safe sanctuary around starting bonfire (12m radius)
+                if (dist < 12.0) return;
+
+                // Boss Arena sanctuary: never spawn hollow mobs inside the Boss Arena (z in [272, 390], x in [-22, 22])
+                if (px >= -22 && px <= 22 && pz >= 272 && pz <= 390) return;
+
+                // Starter Courtyard density control
+                if (dist < 32.0) {
+                    if (starterZoneCount >= 6) return;
                     starterZoneCount++;
                 }
 
-                // Minimum spacing between mobs (at least 9 meters) to prevent clumping
+                // Minimum spacing between mobs (~5.4m) for tactical squads and ambushes
                 const isTooClose = spawnedCoords.some(c => {
-                    const dx = c[0] - pos[0];
-                    const dz = c[1] - pos[2];
-                    return (dx * dx + dz * dz) < 81.0;
+                    const dx = c[0] - px;
+                    const dz = c[1] - pz;
+                    return (dx * dx + dz * dz) < 29.0;
                 });
                 if (isTooClose) return;
 
-                spawnedCoords.push([pos[0], pos[2]]);
-                this.createCustomMob(mobDef, pos[0], pos[2], 0, pos[1]);
+                spawnedCoords.push([px, pz]);
+                this.createCustomMob(mobDef, px, pz, 0, py);
             });
-        } else {
-            // Fallback starter hollows if lore list is uninitialized
-            this.createHollowSoldier(-10, -10, 0, 0);
-            this.createHollowSoldier(2, 22, Math.PI, 0);
-            this.createHollowSoldier(-1, 55, Math.PI, 0);
-            this.createHollowSoldier(20, 48, Math.PI, 6.0);
-            this.createHollowSoldier(19, 78, Math.PI, 6.0);
-            this.createHollowSoldier(-20, 42, 0, -5.0);
-            this.createSkeletonWarriorEnemy(-20, 60, Math.PI, -5.0);
-            this.createSkeletonWarriorEnemy(-22, 82, 0, -5.0);
-            this.createSkeletonWarriorEnemy(-16, 108, Math.PI, -6.0);
-            this.createSkeletonWarriorEnemy(-24, 134, 0, -6.0);
         }
 
         // Spawn Gorgons & Serpents in the Sunken Serpent Sanctum & Temple of the Gorgon
@@ -3048,67 +3055,7 @@ class DarkSoulsCombat {
                 speed: 2.8,
                 attackReach: 3.2,
                 behaviorType: 'Heavy Tank',
-                pos: [0, -4.0, -96.0]
-            },
-            {
-                id: 'gorgon_sister_viper_1',
-                name: 'GORGON VIPER-WITCH',
-                meshType: 'gorgon_medusa',
-                hp: 680,
-                damage: 95,
-                souls: 1800,
-                speed: 3.2,
-                attackReach: 2.5,
-                behaviorType: 'Flanker',
-                pos: [-14.0, -2.5, -52.0]
-            },
-            {
-                id: 'gorgon_sister_viper_2',
-                name: 'GORGON VIPER-WITCH',
-                meshType: 'gorgon_medusa',
-                hp: 680,
-                damage: 95,
-                souls: 1800,
-                speed: 3.2,
-                attackReach: 2.5,
-                behaviorType: 'Flanker',
-                pos: [14.0, -2.5, -52.0]
-            },
-            {
-                id: 'giant_pit_viper_1',
-                name: 'GIANT PIT VIPER',
-                meshType: 'giant_cobra',
-                hp: 550,
-                damage: 85,
-                souls: 1400,
-                speed: 3.0,
-                attackReach: 2.8,
-                behaviorType: 'Swarm',
-                pos: [-8.0, -2.5, -44.0]
-            },
-            {
-                id: 'giant_pit_viper_2',
-                name: 'GIANT PIT VIPER',
-                meshType: 'giant_cobra',
-                hp: 550,
-                damage: 85,
-                souls: 1400,
-                speed: 3.0,
-                attackReach: 2.8,
-                behaviorType: 'Swarm',
-                pos: [8.0, -2.5, -44.0]
-            },
-            {
-                id: 'giant_pit_viper_3',
-                name: 'COLOSSAL TEMPLE COBRA',
-                meshType: 'giant_cobra',
-                hp: 850,
-                damage: 120,
-                souls: 2200,
-                speed: 2.7,
-                attackReach: 3.4,
-                behaviorType: 'Heavy Tank',
-                pos: [0, -4.0, -84.0]
+                pos: [0, -4.0, -92.0]
             },
             {
                 id: 'man_serpent_guard_1',
@@ -3133,17 +3080,40 @@ class DarkSoulsCombat {
                 attackReach: 2.8,
                 behaviorType: 'Heavy Tank',
                 pos: [5.0, 0, -28.0]
+            },
+            {
+                id: 'man_serpent_patrol_1',
+                name: 'MAN-SERPENT PATROL',
+                meshType: 'man_serpent_warrior',
+                hp: 580,
+                damage: 105,
+                souls: 1400,
+                speed: 2.7,
+                attackReach: 2.8,
+                behaviorType: 'Flanker',
+                pos: [-12.0, -2.5, -55.0]
+            },
+            {
+                id: 'man_serpent_patrol_2',
+                name: 'MAN-SERPENT PATROL',
+                meshType: 'man_serpent_warrior',
+                hp: 580,
+                damage: 105,
+                souls: 1400,
+                speed: 2.7,
+                attackReach: 2.8,
+                behaviorType: 'Flanker',
+                pos: [12.0, -2.5, -55.0]
             }
         ];
-
         serpentSanctumMobs.forEach(sMob => {
             this.createCustomMob(sMob, sMob.pos[0], sMob.pos[2], 0, sMob.pos[1]);
         });
 
-        // Tactical Undead Hollow Archers on High Ramparts (+6m), Overlooks, and Parapets
+        // Tactical Undead Hollow Archers on High Ramparts (+6m), Watchtowers, and Viaduct Archways
         const lordranArchers = [
             {
-                id: 'undead_archer_tower',
+                id: 'undead_archer_tower_1',
                 name: 'UNDEAD BURG RAMPART ARCHER',
                 meshType: 'archer',
                 isArcher: true,
@@ -3154,10 +3124,10 @@ class DarkSoulsCombat {
                 souls: 180,
                 speed: 1.8,
                 attackReach: 32.0,
-                pos: [12.0, 6.0, 32.0]
+                pos: [18.0, 6.0, 36.0]
             },
             {
-                id: 'undead_archer_parapet',
+                id: 'undead_archer_parapet_1',
                 name: 'PARAPET HOLLOW SNIPER',
                 meshType: 'archer',
                 isArcher: true,
@@ -3168,35 +3138,49 @@ class DarkSoulsCombat {
                 souls: 220,
                 speed: 1.8,
                 attackReach: 35.0,
-                pos: [-14.0, 6.0, 56.0]
+                pos: [-18.0, 6.0, 75.0]
             },
             {
-                id: 'undead_archer_bridge',
-                name: 'BRIDGE AMBUSH ARCHER',
-                meshType: 'archer',
-                isArcher: true,
-                behaviorType: 'Ranged',
-                aiType: 'Ranged',
-                hp: 200,
-                damage: 44,
-                souls: 160,
-                speed: 2.0,
-                attackReach: 28.0,
-                pos: [2.0, 3.8, 88.0]
-            },
-            {
-                id: 'undead_archer_lookout',
-                name: 'CASTLE LOOKOUT MARKSMAN',
+                id: 'undead_archer_midway_bridge',
+                name: 'VIADUCT FORTRESS ARCHER',
                 meshType: 'archer',
                 isArcher: true,
                 behaviorType: 'Ranged',
                 aiType: 'Ranged',
                 hp: 260,
                 damage: 55,
-                souls: 250,
-                speed: 1.6,
+                souls: 260,
+                speed: 1.9,
+                attackReach: 34.0,
+                pos: [0.0, 6.5, 150.0]
+            },
+            {
+                id: 'undead_archer_tower_2',
+                name: 'RAMPARTS WATCHTOWER MARKSMAN',
+                meshType: 'archer',
+                isArcher: true,
+                behaviorType: 'Ranged',
+                aiType: 'Ranged',
+                hp: 270,
+                damage: 56,
+                souls: 280,
+                speed: 1.7,
                 attackReach: 38.0,
-                pos: [18.0, 6.0, 72.0]
+                pos: [21.0, 10.0, 215.0]
+            },
+            {
+                id: 'undead_archer_gatehouse',
+                name: 'GATEHOUSE APEX SNIPER',
+                meshType: 'archer',
+                isArcher: true,
+                behaviorType: 'Ranged',
+                aiType: 'Ranged',
+                hp: 280,
+                damage: 60,
+                souls: 320,
+                speed: 1.6,
+                attackReach: 40.0,
+                pos: [21.0, 10.0, 268.0]
             },
             {
                 id: 'silver_knight_greatbowman',
@@ -3216,7 +3200,7 @@ class DarkSoulsCombat {
         lordranArchers.forEach(aMob => {
             this.createCustomMob(aMob, aMob.pos[0], aMob.pos[2], 0, aMob.pos[1]);
         });
-
+        
         // Boss
         if (!this.boss || this.boss.isDead) {
             this.spawnBoss(this.currentBossType || 'taurus');
@@ -6015,7 +5999,7 @@ equipWeapon(weaponId) {
         const dist = this._scratchToPlayer.length();
 
         // Check if player entered Boss Arena (z > 98) or proximity aggro / damaged
-        const inArena = playerPos.z > 98;
+        const inArena = playerPos.z > 275;
         const inProximity = dist < 24.0;
         const isDamaged = this.boss.hp < this.boss.maxHp;
         if ((inArena || inProximity || isDamaged) && this.boss.state === 'IDLE') {
