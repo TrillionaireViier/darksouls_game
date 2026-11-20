@@ -1617,7 +1617,9 @@
                 <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,000 3D Models: 340 Armors, 330 NPCs & 330 Mobs" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,000)</span></button>
                 <button class="btn-icon-bar" onclick="openBossSelectModal()" title="100 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (100)</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
-                <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" title="30 Legendary Soulsborne Weapons & Arsenal" style="border-color: #d4af37; color: #ffd778; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);">⚔️ <span class="btn-label-text">WEAPONS (30)</span></button>
+                <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" title="40 Legendary Soulsborne Weapons & Arsenal" style="border-color: #d4af37; color: #ffd778; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);">⚔️ <span class="btn-label-text">WEAPONS (40)</span></button>
+                <button class="btn-icon-bar" onclick="openRingsModal()" title="30 Legendary Soulsborne Rings & Talismans (4 Equip Slots)" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">💍 <span class="btn-label-text">RINGS (30)</span></button>
+                <button class="btn-icon-bar" onclick="openGrimoireModal()" title="20 Legendary Sorceries, Miracles & Pyromancies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">📜 <span class="btn-label-text">SPELLS (20)</span></button>
                 <button class="btn-icon-bar" onclick="openLoreCodexModal()" title="Dark Souls Lore Codex & 300 Mobs/Zombies Drops" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">📜 <span class="btn-label-text">LORE (570)</span></button>
                 <button class="btn-icon-bar" onclick="openDevMapModal()" title="Open God-Mode Interactive Dev Map & Radar [M]" style="border-color: #00ffaa; color: #a5ffbe; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">DEV MAP [M]</span></button>
                 <button class="btn-icon-bar" onclick="openLocationsModal()" title="250 Lordran & Beyond Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (250)</span></button>
@@ -3646,7 +3648,7 @@
     <!-- WEAPONS ARSENAL MODAL -->
     <div id="weapons-modal" class="modal-overlay">
         <div class="modal-box" style="max-width: 660px;">
-            <div class="modal-header">⚔️ WEAPONS ARSENAL (30 WEAPONS) &bull; EQUIPMENT</div>
+            <div class="modal-header">⚔️ WEAPONS ARSENAL (40 WEAPONS) &bull; EQUIPMENT</div>
             <p style="font-size: 0.9rem; color: #b8a896; line-height: 1.5; text-align: center;">
                 Select any unlocked weapon to immediately equip into your right hand. You can also cycle owned weapons in real-time by pressing <strong style="color: #ffd276;">[ 2 ]</strong> or <strong style="color: #ffd276;">[ X ]</strong>!
             </p>
@@ -4040,9 +4042,747 @@
                     </div>
                     <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('claymore')">EQUIP</button>
                 </div>
+                <!-- Weapon 31: Hand of Malenia -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="hand_of_malenia">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">HAND OF MALENIA</div>
+                            <div class="boss-card-desc">Waterfowl Dance Katana &bull; Rapid airborne flurry cutting enemy guards</div>
+                            <div class="boss-card-stats">DMG: 290 / 540 &bull; SPEED: 1.45x &bull; REACH: 4.1m &bull; COST: 16,500</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('hand_of_malenia')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 32: Sacred Relic Sword -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="sacred_relic_sword">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌟</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">SACRED RELIC SWORD</div>
+                            <div class="boss-card-desc">Wave of Gold Greatsword &bull; Sweeping golden arc of starlight across the arena</div>
+                            <div class="boss-card-stats">DMG: 310 / 580 &bull; REACH: 4.5m &bull; SPEED: 1.05x &bull; COST: 18,000</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('sacred_relic_sword')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 33: Moonlight Butterfly Horn -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="moonlight_butterfly_horn">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦋</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">MOONLIGHT BUTTERFLY HORN</div>
+                            <div class="boss-card-desc">Pure Magic Spear &bull; Pierces directly through physical shields & armor</div>
+                            <div class="boss-card-stats">DMG: 230 / 430 &bull; REACH: 4.9m &bull; SPEED: 1.25x &bull; COST: 8,000</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('moonlight_butterfly_horn')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 34: Dragon King Greataxe -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="dragon_king_greataxe">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🪓</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DRAGON KING GREATAXE</div>
+                            <div class="boss-card-desc">Gaping Dragon Greataxe &bull; Devastating seismic ground shockwaves</div>
+                            <div class="boss-card-stats">DMG: 340 / 630 &bull; POISE: 3.6x &bull; REACH: 4.0m &bull; COST: 14,000</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('dragon_king_greataxe')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 35: Smough's Great Hammer -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="smoughs_great_hammer">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔨</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">SMOUGH'S GREAT HAMMER</div>
+                            <div class="boss-card-desc">Gilded Colossal Hammer &bull; Shatters any poise (4.2x) and drains enemy life</div>
+                            <div class="boss-card-stats">DMG: 360 / 680 &bull; POISE: 4.2x &bull; SPEED: 0.68x &bull; COST: 17,000</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('smoughs_great_hammer')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 36: Dragonslayer Spear -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="dragonslayer_spear">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔱</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ORNSTEIN'S DRAGONSLAYER SPEAR</div>
+                            <div class="boss-card-desc">Lightning Cross Spear &bull; 5.1m reach with electrical thrust blasts</div>
+                            <div class="boss-card-stats">DMG: 275 / 510 &bull; REACH: 5.1m &bull; SPEED: 1.15x &bull; COST: 13,500</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('dragonslayer_spear')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 37: Lifehunt Scythe -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="lifehunt_scythe">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌾</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">PRISCILLA'S LIFEHUNT SCYTHE</div>
+                            <div class="boss-card-desc">Occult Bleed Scythe &bull; Reaps the life of Gods with massive hemorrhaging</div>
+                            <div class="boss-card-stats">DMG: 285 / 530 &bull; SPEED: 1.25x &bull; REACH: 4.3m &bull; COST: 12,000</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('lifehunt_scythe')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 38: Ringed Knight Paired Greatswords -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="ringed_knight_paired">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚔️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RINGED KNIGHT PAIRED GREATSWORDS</div>
+                            <div class="boss-card-desc">Dual Blazing Colossal Swords &bull; Leaping dual thrusts ignited with abyssal fire</div>
+                            <div class="boss-card-stats">DMG: 350 / 660 &bull; POISE: 3.7x &bull; REACH: 4.6m &bull; COST: 19,000</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('ringed_knight_paired')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 39: Sister Friede's Great Scythe -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="friedes_scythe">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">❄️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">SISTER FRIEDE'S GREAT SCYTHE</div>
+                            <div class="boss-card-desc">Dual Frost & Blackflame Scythes &bull; Spinning rime waves & leaping darkness slashes</div>
+                            <div class="boss-card-stats">DMG: 270 / 495 &bull; SPEED: 1.35x &bull; REACH: 4.2m &bull; COST: 15,000</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('friedes_scythe')">EQUIP</button>
+                </div>
+
+                <!-- Weapon 40: Midir's Frayed Blade -->
+                <div class="boss-card arsenal-weapon-card" data-weapon-id="frayed_blade">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">MIDIR'S FRAYED BLADE</div>
+                            <div class="boss-card-desc">Abyssal Dragon Katana &bull; Void black lightning shockwave slashes</div>
+                            <div class="boss-card-stats">DMG: 280 / 520 &bull; SPEED: 1.45x &bull; REACH: 3.8m &bull; COST: 17,500</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-arsenal-equip" onclick="equipArsenalWeapon('frayed_blade')">EQUIP</button>
+                </div>
             </div>
 
             <button class="btn-modal-close" onclick="closeWeaponArsenalModal()">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- 💍 30 RINGS & TALISMANS MODAL (4 SLOTS) -->
+    <div id="rings-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 680px;">
+            <div class="modal-header">💍 30 RINGS & TALISMANS (4 ACTIVE SLOTS) 💍</div>
+            <p style="font-size: 0.85rem; color: #b8a896; text-align: center; margin-bottom: 8px;">
+                Equip up to 4 legendary Rings & Talismans. Each provides active buffs to Maximum HP, Stamina regeneration, Poise, Ninja Flips, or Damage!
+            </p>
+
+            <!-- 4 Equipped Slots Bar -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: rgba(20, 15, 10, 0.85); padding: 8px; border: 1px solid #d4af37; border-radius: 4px; margin-bottom: 10px;">
+                <div id="equipped-ring-slot-0" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(35, 25, 15, 0.6); padding: 6px; border: 1px dashed #775533; border-radius: 4px; min-height: 55px; text-align: center;"></div>
+                <div id="equipped-ring-slot-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(35, 25, 15, 0.6); padding: 6px; border: 1px dashed #775533; border-radius: 4px; min-height: 55px; text-align: center;"></div>
+                <div id="equipped-ring-slot-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(35, 25, 15, 0.6); padding: 6px; border: 1px dashed #775533; border-radius: 4px; min-height: 55px; text-align: center;"></div>
+                <div id="equipped-ring-slot-3" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(35, 25, 15, 0.6); padding: 6px; border: 1px dashed #775533; border-radius: 4px; min-height: 55px; text-align: center;"></div>
+            </div>
+
+            <!-- 30 Rings List Grid -->
+            <div class="boss-cards-grid" style="max-height: 48vh;">
+                <!-- 1. FaP Ring -->
+                <div class="boss-card ring-card" data-ring-id="ring_favor">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💍</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RING OF FAVOR & PROTECTION</div>
+                            <div class="boss-card-desc">Goddess Fina's embrace &bull; +20% Max HP, +20% Stamina, +20% Equip Load</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 2. Cloranthy -->
+                <div class="boss-card ring-card" data-ring-id="cloranthy">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌿</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">CLORANTHY RING +3</div>
+                            <div class="boss-card-desc">Ancient green blossom &bull; +50% Stamina Recovery Regeneration Speed</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 3. Havel -->
+                <div class="boss-card ring-card" data-ring-id="havel">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗿</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">HAVEL'S RING</div>
+                            <div class="boss-card-desc">The Rock's legacy &bull; +50% Poise and Heavy Armor carrying capacity</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 4. Silver Serpent -->
+                <div class="boss-card ring-card" data-ring-id="silver_serpent">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐍</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">COVETOUS SILVER SERPENT RING</div>
+                            <div class="boss-card-desc">Greedy serpent skull &bull; +50% More Souls reaped from all foes</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 5. Wolf Ring -->
+                <div class="boss-card ring-card" data-ring-id="wolf_ring">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐺</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">WOLF RING OF ARTORIAS</div>
+                            <div class="boss-card-desc">Abysswalker's resolve &bull; +40 Flat Poise prevents light staggering</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 6. Dark Wood Grain -->
+                <div class="boss-card ring-card" data-ring-id="dark_wood_grain">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🤸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DARK WOOD GRAIN RING</div>
+                            <div class="boss-card-desc">Eastern ninja relic &bull; Grants Ninja Flip somersault with extended i-frames</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 7. Red Tearstone -->
+                <div class="boss-card ring-card" data-ring-id="red_tearstone">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💎</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RED TEARSTONE RING</div>
+                            <div class="boss-card-desc">Crimson teardrop &bull; +50% Attack Damage Boost when HP is below 25%</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 8. Hornet Ring -->
+                <div class="boss-card ring-card" data-ring-id="hornet_ring">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐝</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">HORNET RING (CIARAN)</div>
+                            <div class="boss-card-desc">Lord's Blade Ciaran &bull; +35% Critical Damage on Ripostes and Backstabs</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 9. Evil Eye -->
+                <div class="boss-card ring-card" data-ring-id="ring_evil_eye">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👁️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RING OF THE EVIL EYE</div>
+                            <div class="boss-card-desc">Demon of Astora &bull; Absorbs life force, restoring 100 HP on every kill</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 10. Bellowing Dragon -->
+                <div class="boss-card ring-card" data-ring-id="bellowing_dragon">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">BELLOWING DRAGONCREST RING</div>
+                            <div class="boss-card-desc">Dragon School of Vinheim &bull; +25% Sorcery & Magic Spell Damage</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 11. Firstborn -->
+                <div class="boss-card ring-card" data-ring-id="firstborn_ring">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">☀️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RING OF THE SUN'S FIRSTBORN</div>
+                            <div class="boss-card-desc">Nameless God of War &bull; +25% Miracle and Lightning Incantation Damage</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 12. Witch's Ring -->
+                <div class="boss-card ring-card" data-ring-id="witch_ring">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">WITCH'S RING OF IZALITH</div>
+                            <div class="boss-card-desc">Daughters of Chaos &bull; +25% Chaos and Pyromancy Flame Spell Damage</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 13. Steel Protection -->
+                <div class="boss-card ring-card" data-ring-id="steel_protection">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🛡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RING OF STEEL PROTECTION</div>
+                            <div class="boss-card-desc">Knight King Rendal &bull; -20% Physical Damage received from enemy hits</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 14. Flame Stoneplate -->
+                <div class="boss-card ring-card" data-ring-id="flame_stoneplate">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">FLAME STONEPLATE RING</div>
+                            <div class="boss-card-desc">Volcanic slate inscription &bull; -35% Fire & Lava Damage received</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 15. Thunder Stoneplate -->
+                <div class="boss-card ring-card" data-ring-id="thunder_stoneplate">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚡</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">THUNDER STONEPLATE RING</div>
+                            <div class="boss-card-desc">Archdragon lightning slate &bull; -35% Lightning Damage received</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 16. Speckled Stoneplate -->
+                <div class="boss-card ring-card" data-ring-id="speckled_stoneplate">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💠</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">SPECKLED STONEPLATE RING</div>
+                            <div class="boss-card-desc">Prismatic protection &bull; -25% Magic, Dark, Rot & Poison Damage received</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 17. Rusted Iron -->
+                <div class="boss-card ring-card" data-ring-id="rusted_iron">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚙️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RUSTED IRON RING</div>
+                            <div class="boss-card-desc">Undead Asylum depths &bull; Effortless sprint through swamps and deep sludge</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 18. Cat Ring -->
+                <div class="boss-card ring-card" data-ring-id="cat_ring">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐱</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">CAT COVENANT RING (ALVINA)</div>
+                            <div class="boss-card-desc">Forest Hunter bond &bull; Golden companions gain +35% aggressive attack cadence</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 19. Slumbering Dragon -->
+                <div class="boss-card ring-card" data-ring-id="slumbering_dragon">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🤫</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">SLUMBERING DRAGONCREST RING</div>
+                            <div class="boss-card-desc">Silent sorcerer stealth &bull; Completely silences footsteps and roll sounds</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 20. Ring of Fog -->
+                <div class="boss-card ring-card" data-ring-id="fog_ring">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌫️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RING OF FOG</div>
+                            <div class="boss-card-desc">Forest Hunter camouflage &bull; Cuts enemy detection aggro range in half</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 21. Radagon's Soreseal -->
+                <div class="boss-card ring-card" data-ring-id="radagon_soreseal">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚔️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">RADAGON'S SORESEAL</div>
+                            <div class="boss-card-desc">Solemn eye of Radagon &bull; +15% Core Attributes & +15% damage dealt</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 22. Erdtree's Favor +2 -->
+                <div class="boss-card ring-card" data-ring-id="erdtree_favor">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌳</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ERDTREE'S FAVOR +2</div>
+                            <div class="boss-card-desc">Blessing of Queen Marika &bull; +15% Max HP, +15% Stamina and +15% Poise</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 23. Shard of Alexander -->
+                <div class="boss-card ring-card" data-ring-id="shard_alexander">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🏺</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">SHARD OF ALEXANDER</div>
+                            <div class="boss-card-desc">Warrior Jar champion &bull; +25% Heavy Attacks and Weapon Skills damage</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 24. Dragoncrest Greatshield -->
+                <div class="boss-card ring-card" data-ring-id="dragoncrest_greatshield">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🛡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DRAGONCREST GREATSHIELD TALISMAN</div>
+                            <div class="boss-card-desc">Haligtree dragon relic &bull; -25% Physical damage taken from all sources</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 25. Lord of Blood -->
+                <div class="boss-card ring-card" data-ring-id="lord_of_blood">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🩸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">LORD OF BLOOD'S EXULTATION</div>
+                            <div class="boss-card-desc">Lord of Blood Mohg &bull; +20% Attack Power when wielding blood weapons</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 26. Godfrey Icon -->
+                <div class="boss-card ring-card" data-ring-id="godfrey_icon">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦁</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">GODFREY ICON</div>
+                            <div class="boss-card-desc">First Elden Lord &bull; +20% Spell and charged attack damage</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 27. Graven-Mass -->
+                <div class="boss-card ring-card" data-ring-id="graven_mass">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔮</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">GRAVEN-MASS TALISMAN</div>
+                            <div class="boss-card-desc">School of Raya Lucaria &bull; +20% Glintstone Sorcery spell effectiveness</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 28. Flock's Canvas -->
+                <div class="boss-card ring-card" data-ring-id="flock_canvas">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">📜</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">FLOCK'S CANVAS TALISMAN</div>
+                            <div class="boss-card-desc">Dragon Cult priesthood &bull; +20% Faith incantation and lightning spell damage</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 29. Winged Sword Insignia -->
+                <div class="boss-card ring-card" data-ring-id="winged_sword">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ROTTEN WINGED SWORD INSIGNIA</div>
+                            <div class="boss-card-desc">Prosthesis of Malenia &bull; Consecutive successive weapon hits boost damage up to +30%</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+                <!-- 30. Gold Scarab -->
+                <div class="boss-card ring-card" data-ring-id="gold_scarab">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🪲</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">GOLDEN SCARAB TALISMAN</div>
+                            <div class="boss-card-desc">Sacred golden beetle &bull; +40% Bonus Souls reaped from all vanquished foes</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-ring">EQUIP</button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeRingsModal()">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- 📜 20 SPELLS GRIMOIRE MODAL -->
+    <div id="grimoire-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 680px;">
+            <div class="modal-header">📜 20 SPELLS GRIMOIRE &bull; SORCERIES & INCANTATIONS</div>
+            <p style="font-size: 0.85rem; color: #b8a896; text-align: center; margin-bottom: 8px;">
+                Select any spell to attune to your active spell slot. Cast with <strong style="color: #00e5ff;">[ 3 ]</strong> or <strong style="color: #00e5ff;">[ Y ]</strong>. Cycle active spells in real-time with <strong style="color: #ffd276;">[ 5 ]</strong> or <strong style="color: #ffd276;">[ U ]</strong>!
+            </p>
+
+            <div class="boss-cards-grid" style="max-height: 52vh;">
+                <!-- 1. Glintstone Soul Arrow -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="soul_arrow">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💠</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">GLINTSTONE SOUL ARROW</div>
+                            <div class="boss-card-desc">Raya Lucaria Sorcery &bull; Swift piercing bolt of pure starlight</div>
+                            <div class="boss-card-stats">DMG: 220 &bull; STAMINA: 18 &bull; SPEED: 24</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 2. Heavy Soul Arrow -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="heavy_soul_arrow">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💎</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">GREAT HEAVY SOUL ARROW</div>
+                            <div class="boss-card-desc">High-density Glintstone &bull; Massive dense crystal starlight missile</div>
+                            <div class="boss-card-stats">DMG: 380 &bull; STAMINA: 28 &bull; SPEED: 20</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 3. Crystal Homing -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="crystal_homing">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">✨</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">HOMING CRYSTAL SOULMASS</div>
+                            <div class="boss-card-desc">Big Hat Logan's research &bull; 5 orbiting crystalline darts seek target</div>
+                            <div class="boss-card-stats">DMG: 480 &bull; STAMINA: 32 &bull; SPEED: 22</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 4. Soul Spear -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="soul_spear">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔱</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">CRYSTAL SOUL SPEAR</div>
+                            <div class="boss-card-desc">Grand Archives secret &bull; Pierces through all enemies in its line</div>
+                            <div class="boss-card-stats">DMG: 650 &bull; STAMINA: 38 &bull; SPEED: 28</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 5. Comet Azur -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="comet_azur">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌌</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">COMET AZUR TORRENT</div>
+                            <div class="boss-card-desc">Primeval Current Sorcery &bull; Titanic beam of primeval starlight</div>
+                            <div class="boss-card-stats">DMG: 850 &bull; STAMINA: 48 &bull; SPEED: 30</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 6. Sunlight Spear -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="sunlight_spear">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚡</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">SUNLIGHT SPEAR OF GWYN</div>
+                            <div class="boss-card-desc">First Lord Miracle &bull; Radiant golden dragon-hunting spear</div>
+                            <div class="boss-card-stats">DMG: 620 &bull; STAMINA: 34 &bull; SPEED: 30</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 7. Lightning Stake -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="lightning_stake">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌩️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ANCIENT LIGHTNING STAKE</div>
+                            <div class="boss-card-desc">Dragon Cult Incantation &bull; Drives red lightning directly into the earth</div>
+                            <div class="boss-card-stats">DMG: 680 &bull; STAMINA: 40 &bull; SPEED: 22</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 8. Chaos Fireball -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="chaos_fireball">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">GREAT CHAOS FIREBALL</div>
+                            <div class="boss-card-desc">Pyromancy of Izalith &bull; Explodes leaving a molten pool of lava</div>
+                            <div class="boss-card-stats">DMG: 550 &bull; STAMINA: 30 &bull; SPEED: 20</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 9. Firestorm -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="firestorm">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌋</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">CHAOS FIRESTORM</div>
+                            <div class="boss-card-desc">Bed of Chaos Pyromancy &bull; Erupting ring of towering flame pillars</div>
+                            <div class="boss-card-stats">DMG: 720 &bull; STAMINA: 44 &bull; SPEED: 18</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 10. Black Flame -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="black_flame">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🖤</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">BLACK FLAME SCOURGE</div>
+                            <div class="boss-card-desc">Godslayer Incantation &bull; Searing black flame that eats away target HP</div>
+                            <div class="boss-card-stats">DMG: 520 &bull; STAMINA: 26 &bull; SPEED: 24</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 11. Wrath of the Gods -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="wrath_of_gods">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">☀️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">WRATH OF THE GODS</div>
+                            <div class="boss-card-desc">Ancient Way of White Miracle &bull; 360-degree kinetic holy blast</div>
+                            <div class="boss-card-stats">DMG: 420 &bull; STAMINA: 28 &bull; SPEED: 16</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 12. Bloodflame Talons -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="bloodflame_talons">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🩸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">BLOODFLAME TALONS</div>
+                            <div class="boss-card-desc">Lord of Blood Incantation &bull; Lacerating claws that detonate in bloodflame</div>
+                            <div class="boss-card-stats">DMG: 540 &bull; STAMINA: 28 &bull; SPEED: 22</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 13. Stars of Ruin -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="stars_of_ruin">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">✨</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">STARS OF RUIN</div>
+                            <div class="boss-card-desc">Lusat's Primeval Sorcery &bull; 12 tracking dark starlight missiles</div>
+                            <div class="boss-card-stats">DMG: 780 &bull; STAMINA: 42 &bull; SPEED: 26</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 14. Cannon of Haima -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="cannon_of_haima">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💣</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">CANNON OF HAIMA</div>
+                            <div class="boss-card-desc">Battlemage Glintstone Shell &bull; Massive explosive artillery strike</div>
+                            <div class="boss-card-stats">DMG: 720 &bull; STAMINA: 38 &bull; SPEED: 20</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 15. Fortissax Lightning -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="fortissax_lightning">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">⚡</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">FORTISSAX'S LIGHTNING SPEAR</div>
+                            <div class="boss-card-desc">Lichdragon Incantation &bull; Strikes down with twin red death lightning spears</div>
+                            <div class="boss-card-stats">DMG: 790 &bull; STAMINA: 45 &bull; SPEED: 28</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 16. Giantsflame Take Thee -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="giantsflame_take_thee">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌋</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">GIANTSFLAME TAKE THEE</div>
+                            <div class="boss-card-desc">Fire Giant Incantation &bull; Colossal sphere of rhapsodic fire</div>
+                            <div class="boss-card-stats">DMG: 760 &bull; STAMINA: 40 &bull; SPEED: 22</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 17. Flame Grant Me Strength -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="flame_grant_strength">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💪</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">FLAME, GRANT ME STRENGTH</div>
+                            <div class="boss-card-desc">Pyromancy Fury &bull; Ignites inner attack power & hurls front flame wave</div>
+                            <div class="boss-card-stats">DMG: 400 &bull; STAMINA: 25 &bull; SPEED: 15</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 18. Dark Bead -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="dark_bead">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🖤</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DARK BEAD OF THE ABYSS</div>
+                            <div class="boss-card-desc">Manus's Primeval Dark &bull; 7 dense humanity pellets shotgun barrage</div>
+                            <div class="boss-card-stats">DMG: 820 &bull; STAMINA: 35 &bull; SPEED: 25</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 19. Frenzied Burst -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="frenzied_burst">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👁️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">FRENZIED BURST</div>
+                            <div class="boss-card-desc">Three Fingers Incantation &bull; High-velocity sniper beam of yellow flame</div>
+                            <div class="boss-card-stats">DMG: 740 &bull; STAMINA: 36 &bull; SPEED: 34</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+                <!-- 20. Elden Stars -->
+                <div class="boss-card grimoire-spell-card" data-spell-id="elden_stars">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌟</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ELDEN STARS</div>
+                            <div class="boss-card-desc">Greater Will Ancient Incantation &bull; Sacred star constellation shooting light</div>
+                            <div class="boss-card-stats">DMG: 880 &bull; STAMINA: 50 &bull; SPEED: 18</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss btn-equip-spell">ATTUNE</button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeGrimoireModal()">CLOSE</button>
         </div>
     </div>
 
@@ -4404,7 +5144,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="font-size: 0.82rem; font-weight: 700; color: #ffd778; letter-spacing: 1.5px;">🗡️ 3. WEAPON ARSENAL:</span>
                         <button class="btn-upgrade" onclick="triggerAdminUnlockWeapons()" style="border-color: #ffd700; color: #fff3a8; padding: 4px 10px; font-size: 0.72rem;">
-                            ⚔️ UNLOCK ALL 30 WEAPONS
+                            ⚔️ UNLOCK ALL 40 WEAPONS
                         </button>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
@@ -5089,7 +5829,9 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 250 LOCATIONS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLoreCodexModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">📜 LORE (570 MOBS)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSkinsModal();" style="border-color: #64b5f6; color: #bbdefb; justify-content: center; padding: 10px 12px; font-weight: 700;">🛡️ 3D SKINS & SETS</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 10px rgba(212, 175, 55, 0.35);">🗡️ WEAPON ARSENAL (30)</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 10px rgba(212, 175, 55, 0.35);">🗡️ WEAPON ARSENAL (40)</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openRingsModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 10px rgba(255, 215, 0, 0.35);">💍 30 RINGS & TALISMANS</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openGrimoireModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);">📜 20 SPELLS GRIMOIRE</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openMerchantModal();" style="border-color: #ff9933; color: #ffb866; justify-content: center; padding: 10px 12px; font-weight: 700;">🛒 MERCHANT SHOP</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSiegeModal();" style="border-color: #e65100; color: #ffb74d; justify-content: center; padding: 10px 12px; font-weight: 700;">🏰 SIEGE (391-400)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openHeraldryModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 700;">👑 HERALDRY (401-410)</button>
@@ -6057,24 +6799,24 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/audio.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/lore_items.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/world.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/character.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/siege_warfare.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/heraldry_nobility.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/apothecary_crafting.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/collision_system.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/qa_bot_tester.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/combat.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/postprocessing.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/qa_suite.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/blacksmith_forge.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
-    <script src="js/inventory_system.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/three.min.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/audio.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/lore_items.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/world.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/character.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/siege_warfare.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/heraldry_nobility.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/apothecary_crafting.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/collision_system.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/qa_bot_tester.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/combat.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/postprocessing.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/qa_suite.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/blacksmith_forge.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
+    <script src="js/inventory_system.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
     <script src="js/compendium_300_models.js?v=20261120_1000_3D_MODELS_ARMORS_NPCS_MOBS"></script>
     <script src="js/death_quotes_300.js?v=20261120_190_LOCATIONS_300_DEATH_QUOTES"></script>
-    <script src="js/game.js?v=20261120_100_BOSSES_250_LOCATIONS_30_WEAPONS_12_SPELLS"></script>
+    <script src="js/game.js?v=20261120_100_BOSSES_250_LOCS_40_WPNS_20_SPELLS_30_RINGS"></script>
     <script src="js/dev_map.js?v=20261120_DARK_SOULS_DEV_MAP_250_LOCATIONS"></script>
     <script>
         // 300 Death Quotes UI Logic

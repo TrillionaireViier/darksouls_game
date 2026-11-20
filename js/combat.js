@@ -593,6 +593,176 @@ class DarkSoulsCombat {
                 poiseBreak: 2.0,
                 cost: 2000,
                 unlocked: false
+            },
+            hand_of_malenia: {
+                id: 'hand_of_malenia',
+                name: 'Hand of Malenia',
+                type: 'Scarlet Valkyrie Katana',
+                icon: '🌸',
+                desc: 'Waterfowl Dance rapid aerial slashes that carve through enemy defense with blinding speed.',
+                lightDmg: 290,
+                heavyDmg: 540,
+                reach: 4.1,
+                bossReachBonus: 3.1,
+                lightStamina: 18,
+                heavyStamina: 30,
+                speedMultiplier: 1.45,
+                poiseBreak: 1.8,
+                cost: 16500,
+                unlocked: false
+            },
+            sacred_relic_sword: {
+                id: 'sacred_relic_sword',
+                name: 'Sacred Relic Sword',
+                type: 'Golden Relic Greatsword',
+                icon: '🌟',
+                desc: 'Wave of Gold unleashes a monumental sweeping carpet of pure golden starlight across the arena.',
+                lightDmg: 310,
+                heavyDmg: 580,
+                reach: 4.5,
+                bossReachBonus: 3.5,
+                lightStamina: 26,
+                heavyStamina: 44,
+                speedMultiplier: 1.05,
+                poiseBreak: 2.8,
+                cost: 18000,
+                unlocked: false
+            },
+            moonlight_butterfly_horn: {
+                id: 'moonlight_butterfly_horn',
+                name: 'Moonlight Butterfly Horn',
+                type: 'Pure Magic Spear',
+                icon: '🦋',
+                desc: 'Spiral translucent crystal horn piercing straight through physical armor with pure magic damage.',
+                lightDmg: 230,
+                heavyDmg: 430,
+                reach: 4.9,
+                bossReachBonus: 3.9,
+                lightStamina: 20,
+                heavyStamina: 34,
+                speedMultiplier: 1.25,
+                poiseBreak: 1.6,
+                cost: 8000,
+                unlocked: false
+            },
+            dragon_king_greataxe: {
+                id: 'dragon_king_greataxe',
+                name: 'Dragon King Greataxe',
+                type: 'Prehistoric Greataxe',
+                icon: '🪓',
+                desc: 'Carved from the tail of the Gaping Dragon. Massive seismic earth shockwave on heavy strikes.',
+                lightDmg: 340,
+                heavyDmg: 630,
+                reach: 4.0,
+                bossReachBonus: 3.0,
+                lightStamina: 42,
+                heavyStamina: 62,
+                speedMultiplier: 0.78,
+                poiseBreak: 3.6,
+                cost: 14000,
+                unlocked: false
+            },
+            smoughs_great_hammer: {
+                id: 'smoughs_great_hammer',
+                name: "Smough's Great Hammer",
+                type: 'Gilded Colossal Hammer',
+                icon: '🔨',
+                desc: 'Massive gilded executioner hammer. Pulverizes poise and restores health upon impact.',
+                lightDmg: 360,
+                heavyDmg: 680,
+                reach: 4.2,
+                bossReachBonus: 3.2,
+                lightStamina: 48,
+                heavyStamina: 70,
+                speedMultiplier: 0.68,
+                poiseBreak: 4.2,
+                cost: 17000,
+                unlocked: false
+            },
+            dragonslayer_spear: {
+                id: 'dragonslayer_spear',
+                name: "Ornstein's Dragonslayer Spear",
+                type: 'Cross Spear / Lightning',
+                icon: '🔱',
+                desc: 'Cross-bladed lightning spear used by the Dragonslayer captain to impale airborne dragons.',
+                lightDmg: 275,
+                heavyDmg: 510,
+                reach: 5.1,
+                bossReachBonus: 4.1,
+                lightStamina: 25,
+                heavyStamina: 42,
+                speedMultiplier: 1.15,
+                poiseBreak: 2.2,
+                cost: 13500,
+                unlocked: false
+            },
+            lifehunt_scythe: {
+                id: 'lifehunt_scythe',
+                name: "Priscilla's Lifehunt Scythe",
+                type: 'Occult Bleed Scythe',
+                icon: '🌾',
+                desc: 'Scythe of the Crossbreed that reaps the life of Gods. Inflicts devastating rapid hemorrhaging.',
+                lightDmg: 285,
+                heavyDmg: 530,
+                reach: 4.3,
+                bossReachBonus: 3.3,
+                lightStamina: 24,
+                heavyStamina: 40,
+                speedMultiplier: 1.25,
+                poiseBreak: 2.3,
+                cost: 12000,
+                unlocked: false
+            },
+            ringed_knight_paired: {
+                id: 'ringed_knight_paired',
+                name: 'Ringed Knight Paired Greatswords',
+                type: 'Dual Blazing Colossal Swords',
+                icon: '⚔️',
+                desc: 'Twinned abyssal iron swords forged in the Abyss. Leaping dual thrusts ignited with black-red embers.',
+                lightDmg: 350,
+                heavyDmg: 660,
+                reach: 4.6,
+                bossReachBonus: 3.6,
+                lightStamina: 44,
+                heavyStamina: 66,
+                speedMultiplier: 0.85,
+                poiseBreak: 3.7,
+                cost: 19000,
+                unlocked: false
+            },
+            friedes_scythe: {
+                id: 'friedes_scythe',
+                name: "Sister Friede's Great Scythe",
+                type: 'Frost & Blackflame Scythe',
+                icon: '❄️',
+                desc: 'Dual scythes unleashing chilling waves of frost rime and leaping blackflame slashes.',
+                lightDmg: 270,
+                heavyDmg: 495,
+                reach: 4.2,
+                bossReachBonus: 3.2,
+                lightStamina: 20,
+                heavyStamina: 36,
+                speedMultiplier: 1.35,
+                poiseBreak: 2.0,
+                cost: 15000,
+                unlocked: false
+            },
+            frayed_blade: {
+                id: 'frayed_blade',
+                name: "Midir's Frayed Blade",
+                type: 'Abyssal Dragon Katana',
+                icon: '🐉',
+                desc: 'Born of the Darkeater Midir. Hold stance to fire shockwaves of black void lightning.',
+                lightDmg: 280,
+                heavyDmg: 520,
+                reach: 3.8,
+                bossReachBonus: 2.8,
+                lightStamina: 18,
+                heavyStamina: 30,
+                speedMultiplier: 1.45,
+                poiseBreak: 2.1,
+                cost: 17500,
+                unlocked: false
             }
         };
         this.currentWeaponId = 'sword';
@@ -616,8 +786,54 @@ class DarkSoulsCombat {
             'firestorm',
             'black_flame',
             'wrath_of_gods',
-            'bloodflame_talons'
+            'bloodflame_talons',
+            'stars_of_ruin',
+            'cannon_of_haima',
+            'fortissax_lightning',
+            'giantsflame_take_thee',
+            'flame_grant_strength',
+            'dark_bead',
+            'frenzied_burst',
+            'elden_stars'
         ];
+        // ----------------------------------------------------
+        // SOULSBORNE RINGS & TALISMANS SYSTEM (4 SLOTS, 30 RINGS)
+        // ----------------------------------------------------
+        this.maxRingSlots = 4;
+        this.equippedRings = ['ring_favor', 'cloranthy', 'havel', 'silver_serpent'];
+        this.ringsDatabase = {
+            ring_favor: { id: 'ring_favor', name: 'Ring of Favor & Protection', icon: '💍', type: 'Lordran Ring', desc: '+20% Maximum HP, +20% Maximum Stamina & +20% Equip Load.' },
+            cloranthy: { id: 'cloranthy', name: 'Cloranthy Ring +3', icon: '🌿', type: 'Lordran Ring', desc: '+50% Stamina Recovery Regeneration Speed.' },
+            havel: { id: 'havel', name: "Havel's Ring", icon: '🗿', type: 'Lordran Ring', desc: '+50% Poise and Heavy Armor carrying capacity.' },
+            silver_serpent: { id: 'silver_serpent', name: 'Covetous Silver Serpent Ring', icon: '🐍', type: 'Lordran Ring', desc: '+50% More Souls reaped from all vanquished foes.' },
+            wolf_ring: { id: 'wolf_ring', name: 'Wolf Ring of Artorias', icon: '🐺', type: 'Lordran Ring', desc: '+40 Flat Poise. Prevents stagger from light enemy blows.' },
+            dark_wood_grain: { id: 'dark_wood_grain', name: 'Dark Wood Grain Ring (Ninja Flip)', icon: '🤸', type: 'Lordran Ring', desc: 'Grants acrobatic ninja flip somersault roll with extended invincibility frames.' },
+            red_tearstone: { id: 'red_tearstone', name: 'Red Tearstone Ring', icon: '💎', type: 'Lordran Ring', desc: '+50% Attack Damage Boost when player HP drops below 25%.' },
+            hornet_ring: { id: 'hornet_ring', name: 'Hornet Ring', icon: '🐝', type: 'Lordran Ring', desc: '+35% Critical Damage multiplier on Ripostes and Backstabs.' },
+            ring_evil_eye: { id: 'ring_evil_eye', name: 'Ring of the Evil Eye', icon: '👁️', type: 'Lordran Ring', desc: 'Absorbs enemy life force, restoring 100 HP on every enemy kill.' },
+            bellowing_dragon: { id: 'bellowing_dragon', name: 'Bellowing Dragoncrest Ring', icon: '🐉', type: 'Sorcery Ring', desc: '+25% Glintstone & Sorcery Spell Damage.' },
+            firstborn_ring: { id: 'firstborn_ring', name: "Ring of the Sun's Firstborn", icon: '☀️', type: 'Faith Ring', desc: '+25% Miracle and Lightning Incantation Damage.' },
+            witch_ring: { id: 'witch_ring', name: "Witch's Ring of Izalith", icon: '🔥', type: 'Pyromancy Ring', desc: '+25% Chaos and Pyromancy Flame Spell Damage.' },
+            steel_protection: { id: 'steel_protection', name: 'Ring of Steel Protection', icon: '🛡️', type: 'Defense Ring', desc: '-20% Physical Damage received from enemy hits.' },
+            flame_stoneplate: { id: 'flame_stoneplate', name: 'Flame Stoneplate Ring', icon: '🔥', type: 'Defense Ring', desc: '-35% Fire & Lava Damage received.' },
+            thunder_stoneplate: { id: 'thunder_stoneplate', name: 'Thunder Stoneplate Ring', icon: '⚡', type: 'Defense Ring', desc: '-35% Lightning Damage received.' },
+            speckled_stoneplate: { id: 'speckled_stoneplate', name: 'Speckled Stoneplate Ring', icon: '💠', type: 'Defense Ring', desc: '-25% Magic, Dark, Rot & Poison Damage received.' },
+            rusted_iron: { id: 'rusted_iron', name: 'Rusted Iron Ring', icon: '⚙️', type: 'Movement Ring', desc: 'Allows effortless sprint and movement through swamps and deep sludge.' },
+            cat_ring: { id: 'cat_ring', name: 'Cat Covenant Ring of Alvina', icon: '🐱', type: 'Covenant Ring', desc: 'Summoned golden phantoms and companions gain +35% aggressive attack cadence.' },
+            slumbering_dragon: { id: 'slumbering_dragon', name: 'Slumbering Dragoncrest Ring', icon: '🤫', type: 'Stealth Ring', desc: 'Completely silences movement footsteps and roll sounds.' },
+            fog_ring: { id: 'fog_ring', name: 'Ring of Fog', icon: '🌫️', type: 'Stealth Ring', desc: 'Semi-transparent phantom illusion; cuts enemy detection aggro range in half.' },
+            radagon_soreseal: { id: 'radagon_soreseal', name: "Radagon's Soreseal", icon: '⚔️', type: 'Elden Talisman', desc: '+15% Vigor, Endurance & Strength attributes; +15% damage dealt.' },
+            erdtree_favor: { id: 'erdtree_favor', name: "Erdtree's Favor +2", icon: '🌳', type: 'Elden Talisman', desc: '+15% Maximum HP, +15% Stamina and +15% Poise.' },
+            shard_alexander: { id: 'shard_alexander', name: 'Shard of Alexander', icon: '🏺', type: 'Elden Talisman', desc: '+25% Weapon Heavy Attacks and Skill Damage.' },
+            dragoncrest_greatshield: { id: 'dragoncrest_greatshield', name: 'Dragoncrest Greatshield Talisman', icon: '🛡️', type: 'Elden Talisman', desc: '-25% Physical damage taken from all sources.' },
+            lord_of_blood: { id: 'lord_of_blood', name: "Lord of Blood's Exultation", icon: '🩸', type: 'Elden Talisman', desc: '+20% Attack Power when wielding blood weapons or inflicting bleed.' },
+            godfrey_icon: { id: 'godfrey_icon', name: 'Godfrey Icon', icon: '🦁', type: 'Elden Talisman', desc: '+20% Spell and charged attack damage.' },
+            graven_mass: { id: 'graven_mass', name: 'Graven-Mass Talisman', icon: '🔮', type: 'Elden Talisman', desc: '+20% Sorcery spell effectiveness.' },
+            flock_canvas: { id: 'flock_canvas', name: "Flock's Canvas Talisman", icon: '📜', type: 'Elden Talisman', desc: '+20% Faith incantation and lightning spell damage.' },
+            winged_sword: { id: 'winged_sword', name: 'Rotten Winged Sword Insignia', icon: '🗡️', type: 'Elden Talisman', desc: 'Consecutive successive weapon hits boost damage up to +30%.' },
+            gold_scarab: { id: 'gold_scarab', name: 'Golden Scarab Talisman', icon: '🪲', type: 'Elden Talisman', desc: '+40% Bonus Souls reaped from all vanquished foes.' }
+        };
+
         this.spells = {
             soul_arrow: {
                 id: 'soul_arrow',
@@ -750,6 +966,94 @@ class DarkSoulsCombat {
                 speed: 22,
                 color: 0xff0044,
                 desc: 'Scratches the air with cursed talons that detonate in bloodflame.'
+            },
+            stars_of_ruin: {
+                id: 'stars_of_ruin',
+                name: 'Stars of Ruin',
+                type: 'Primeval Sorcery',
+                icon: '✨',
+                damage: 780,
+                staminaCost: 42,
+                speed: 26,
+                color: 0x4488ff,
+                desc: 'Unleashes 12 dark starlight projectiles that track targets aggressively.'
+            },
+            cannon_of_haima: {
+                id: 'cannon_of_haima',
+                name: 'Cannon of Haima',
+                type: 'Glintstone Sorcery',
+                icon: '💣',
+                damage: 720,
+                staminaCost: 38,
+                speed: 20,
+                color: 0x0088cc,
+                desc: 'Launches an explosive glintstone shell that obliterates enemy ranks.'
+            },
+            fortissax_lightning: {
+                id: 'fortissax_lightning',
+                name: "Fortissax's Lightning Spear",
+                type: 'Ancient Dragon Incantation',
+                icon: '⚡',
+                damage: 790,
+                staminaCost: 45,
+                speed: 28,
+                color: 0xff1122,
+                desc: 'Strikes down with twin red death lightning spears.'
+            },
+            giantsflame_take_thee: {
+                id: 'giantsflame_take_thee',
+                name: 'Giantsflame Take Thee',
+                type: 'Fire Giant Incantation',
+                icon: '🌋',
+                damage: 760,
+                staminaCost: 40,
+                speed: 22,
+                color: 0xff4400,
+                desc: 'Hurls a colossal sphere of rhapsodic fire from the Mountaintops.'
+            },
+            flame_grant_strength: {
+                id: 'flame_grant_strength',
+                name: 'Flame, Grant Me Strength',
+                type: 'Pyromancy Buff',
+                icon: '💪',
+                damage: 400,
+                staminaCost: 25,
+                speed: 15,
+                color: 0xff6600,
+                desc: 'Ignites inner fury, boosting attack power and launching a burst of fire.'
+            },
+            dark_bead: {
+                id: 'dark_bead',
+                name: 'Dark Bead of the Abyss',
+                type: 'Abyssal Sorcery',
+                icon: '🖤',
+                damage: 820,
+                staminaCost: 35,
+                speed: 25,
+                color: 0x331144,
+                desc: 'Manus’s ancient humanity beads shotgun blast of catastrophic dark damage.'
+            },
+            frenzied_burst: {
+                id: 'frenzied_burst',
+                name: 'Frenzied Burst',
+                type: 'Frenzied Flame Incantation',
+                icon: '👁️',
+                damage: 740,
+                staminaCost: 36,
+                speed: 34,
+                color: 0xffcc00,
+                desc: 'High-velocity sniper stream of yellow flame from the caster’s eyes.'
+            },
+            elden_stars: {
+                id: 'elden_stars',
+                name: 'Elden Stars',
+                type: 'Erdtree Incantation',
+                icon: '🌟',
+                damage: 880,
+                staminaCost: 50,
+                speed: 18,
+                color: 0xffea55,
+                desc: 'Fires a sacred star of the Greater Will trailing shooting starlight.'
             }
         };
 
@@ -3404,6 +3708,69 @@ class DarkSoulsCombat {
         this.estusFlasks = this.maxEstus;
         this.stamina = this.maxStamina;
         this.spawnEnemies();
+    }
+
+    // ----------------------------------------------------
+    // RINGS & TALISMANS LOGIC & BONUSES
+    // ----------------------------------------------------
+    hasRing(ringId) {
+        return Boolean(this.equippedRings && this.equippedRings.includes(ringId));
+    }
+
+    equipRing(slotIndex, ringId) {
+        if (slotIndex < 0 || slotIndex >= this.maxRingSlots) return;
+        if (!this.ringsDatabase[ringId]) return;
+        this.equippedRings[slotIndex] = ringId;
+        this.applyRingBonuses();
+        if (this.game && this.game.showNotification) {
+            const r = this.ringsDatabase[ringId];
+            this.game.showNotification(`💍 EQUIPPED: ${r.icon} ${r.name}`);
+        }
+        if (this.audio && this.audio.playRoll) this.audio.playRoll();
+        if (this.game && this.game.updateRingsUI) this.game.updateRingsUI();
+    }
+
+    unequipRing(slotIndex) {
+        if (slotIndex < 0 || slotIndex >= this.maxRingSlots) return;
+        this.equippedRings[slotIndex] = null;
+        this.applyRingBonuses();
+        if (this.game && this.game.updateRingsUI) this.game.updateRingsUI();
+    }
+
+    applyRingBonuses() {
+        let hpMult = 1.0;
+        let staminaMult = 1.0;
+        if (this.hasRing('ring_favor')) {
+            hpMult += 0.2;
+            staminaMult += 0.2;
+        }
+        if (this.hasRing('erdtree_favor')) {
+            hpMult += 0.15;
+            staminaMult += 0.15;
+        }
+        if (this.hasRing('radagon_soreseal')) {
+            hpMult += 0.1;
+            staminaMult += 0.1;
+        }
+        const baseHp = 1000 + (this.vigor - 10) * 45;
+        this.maxHp = Math.round(baseHp * hpMult);
+        this.hp = Math.min(this.hp, this.maxHp);
+
+        const baseStam = 100 + (this.endurance - 10) * 5;
+        this.maxStamina = Math.round(baseStam * staminaMult);
+        this.stamina = Math.min(this.stamina, this.maxStamina);
+
+        let regen = 38;
+        if (this.hasRing('cloranthy')) regen = Math.round(regen * 1.5);
+        this.staminaRegenRate = regen;
+
+        let basePoise = 100;
+        if (this.hasRing('havel')) basePoise = Math.round(basePoise * 1.5);
+        if (this.hasRing('wolf_ring')) basePoise += 40;
+        if (this.hasRing('erdtree_favor')) basePoise = Math.round(basePoise * 1.15);
+        this.maxPoise = basePoise;
+
+        if (this.game && this.game.updateHUD) this.game.updateHUD();
     }
 
     // ----------------------------------------------------

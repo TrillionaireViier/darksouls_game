@@ -1327,10 +1327,10 @@ class DarkSoulsCharacters {
 
         const newWeapon = this.createWeaponMesh(weaponId);
         // Authentic combat-ready weapon rigging (held naturally upright & balanced)
-        const isColossal = ['zweihander', 'dark_moon_greatsword', 'moonlight', 'blasphemous_blade', 'starscourge_greatswords', 'godslayer_greatsword', 'holy_moonlight_sword', 'fume_ultra_greatsword', 'greatsword_of_artorias', 'bloodhounds_fang', 'claymore'].includes(weaponId);
-        const isPolearm = ['halberd', 'black_knight_halberd', 'eleonoras_poleblade', 'bolt_of_gransax'].includes(weaponId);
-        const isGreatImpact = ['dragontooth', 'giant_crusher', 'dragonslayer_greataxe', 'whirligig_saw'].includes(weaponId);
-        const isKatana = ['uchigatana', 'rivers_of_blood', 'moonveil', 'kusabimaru', 'chikage', 'rakuyo', 'chaos_blade', 'mortal_blade'].includes(weaponId);
+        const isColossal = ['zweihander', 'dark_moon_greatsword', 'moonlight', 'blasphemous_blade', 'starscourge_greatswords', 'godslayer_greatsword', 'holy_moonlight_sword', 'fume_ultra_greatsword', 'greatsword_of_artorias', 'bloodhounds_fang', 'claymore', 'sacred_relic_sword', 'ringed_knight_paired'].includes(weaponId);
+        const isPolearm = ['halberd', 'black_knight_halberd', 'eleonoras_poleblade', 'bolt_of_gransax', 'moonlight_butterfly_horn', 'dragonslayer_spear', 'lifehunt_scythe', 'friedes_scythe'].includes(weaponId);
+        const isGreatImpact = ['dragontooth', 'giant_crusher', 'dragonslayer_greataxe', 'whirligig_saw', 'dragon_king_greataxe', 'smoughs_great_hammer'].includes(weaponId);
+        const isKatana = ['uchigatana', 'rivers_of_blood', 'moonveil', 'kusabimaru', 'chikage', 'rakuyo', 'chaos_blade', 'mortal_blade', 'hand_of_malenia', 'frayed_blade'].includes(weaponId);
 
         if (isPolearm) {
             newWeapon.rotation.set(0.16, 0.05, -0.06);

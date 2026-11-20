@@ -773,6 +773,113 @@ class DarkSoulsGame {
     }
 
     // ----------------------------------------------------
+    // RINGS & TALISMANS MODAL (30 RINGS, 4 SLOTS)
+    // ----------------------------------------------------
+    openRingsModal() {
+        const modal = document.getElementById('rings-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateRingsUI();
+            if (this.audio && this.audio.playRoll) this.audio.playRoll();
+        }
+    }
+
+    closeRingsModal() {
+        const modal = document.getElementById('rings-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    updateRingsUI() {
+        if (!this.combat || !this.combat.ringsDatabase) return;
+        for (let i = 0; i < 4; i++) {
+            const ringId = this.combat.equippedRings[i];
+            const slotEl = document.getElementById(`equipped-ring-slot-${i}`);
+            if (slotEl) {
+                if (ringId && this.combat.ringsDatabase[ringId]) {
+                    const r = this.combat.ringsDatabase[ringId];
+                    slotEl.innerHTML = `<span style="font-size: 1.4rem;">${r.icon}</span><span style="font-size: 0.72rem; color: #ffd276; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">${r.name}</span><button onclick="unequipRing(${i})" style="font-size: 0.65rem; color: #ff6666; background: rgba(50,15,15,0.7); border: 1px solid #aa3333; cursor: pointer; border-radius: 2px; padding: 1px 4px;">REMOVE</button>`;
+                } else {
+                    slotEl.innerHTML = `<span style="font-size: 1.2rem; opacity: 0.4;">💍</span><span style="font-size: 0.72rem; color: #776655;">EMPTY SLOT ${i + 1}</span>`;
+                }
+            }
+        }
+
+        const cards = document.querySelectorAll('.ring-card');
+        cards.forEach(card => {
+            const ringId = card.getAttribute('data-ring-id');
+            const isEquipped = this.combat.hasRing(ringId);
+            const btn = card.querySelector('.btn-equip-ring');
+            if (btn) {
+                if (isEquipped) {
+                    btn.textContent = 'EQUIPPED';
+                    btn.disabled = true;
+                    btn.style.borderColor = '#88ff88';
+                    btn.style.color = '#88ff88';
+                } else {
+                    btn.textContent = 'EQUIP';
+                    btn.disabled = false;
+                    btn.style.borderColor = '#ffd276';
+                    btn.style.color = '#ffd276';
+                    btn.onclick = () => {
+                        let targetSlot = this.combat.equippedRings.findIndex(r => !r);
+                        if (targetSlot === -1) targetSlot = 0;
+                        this.combat.equipRing(targetSlot, ringId);
+                    };
+                }
+            }
+        });
+    }
+
+    // ----------------------------------------------------
+    // GRIMOIRE SPELLS MODAL (20 SPELLS)
+    // ----------------------------------------------------
+    openGrimoireModal() {
+        const modal = document.getElementById('grimoire-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateGrimoireUI();
+            if (this.audio && this.audio.playRoll) this.audio.playRoll();
+        }
+    }
+
+    closeGrimoireModal() {
+        const modal = document.getElementById('grimoire-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    updateGrimoireUI() {
+        if (!this.combat || !this.combat.spells) return;
+        const cards = document.querySelectorAll('.grimoire-spell-card');
+        cards.forEach(card => {
+            const spellId = card.getAttribute('data-spell-id');
+            const isEquipped = this.combat.currentSpellId === spellId;
+            const btn = card.querySelector('.btn-equip-spell');
+            if (btn) {
+                if (isEquipped) {
+                    btn.textContent = 'EQUIPPED';
+                    btn.disabled = true;
+                    btn.style.borderColor = '#00e5ff';
+                    btn.style.color = '#00e5ff';
+                } else {
+                    btn.textContent = 'ATTUNE';
+                    btn.disabled = false;
+                    btn.style.borderColor = '#ffd276';
+                    btn.style.color = '#ffd276';
+                    btn.onclick = () => {
+                        this.combat.currentSpellId = spellId;
+                        this.combat.updateSpellHUD();
+                        this.updateGrimoireUI();
+                        if (this.showNotification) {
+                            const s = this.combat.spells[spellId];
+                            this.showNotification(`📜 ATTUNED: ${s.icon} ${s.name}`);
+                        }
+                    };
+                }
+            }
+        });
+    }
+
+    // ----------------------------------------------------
     // SIEGE WARFARE MODAL (391–400)
     // ----------------------------------------------------
     openSiegeModal() {
@@ -3957,6 +4064,12 @@ window.adminLockBosses = () => { if (window.game) window.game.adminLockBosses();
 window.adminUnlockAllWeapons = () => { if (window.game) window.game.adminUnlockAllWeapons(); };
 window.castSpell = () => { if (window.game && window.game.combat) window.game.combat.tryCastSpell(); };
 window.cycleSpell = (dir = 1) => { if (window.game && window.game.combat) window.game.combat.cycleSpell(dir); };
+window.openRingsModal = () => { if (window.game) window.game.openRingsModal(); };
+window.closeRingsModal = () => { if (window.game) window.game.closeRingsModal(); };
+window.equipRing = (slot, ringId) => { if (window.game && window.game.combat) window.game.combat.equipRing(slot, ringId); };
+window.unequipRing = (slot) => { if (window.game && window.game.combat) window.game.combat.unequipRing(slot); };
+window.openGrimoireModal = () => { if (window.game) window.game.openGrimoireModal(); };
+window.closeGrimoireModal = () => { if (window.game) window.game.closeGrimoireModal(); };
 window.adminGrantSoulsAndEstus = (s) => { if (window.game) window.game.adminGrantSoulsAndEstus(s); };
 window.adminToggleGodMode = () => { if (window.game) window.game.adminToggleGodMode(); };
 window.adminWarp = (d) => { if (window.game) window.game.adminWarp(d); };
