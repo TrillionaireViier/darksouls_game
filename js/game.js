@@ -1689,6 +1689,10 @@ class DarkSoulsGame {
                         uData.leftShoulder.rotation.z = 0.05;
                     }
                 }
+                if (uData.shieldGroup) {
+                    uData.shieldGroup.position.set(-0.06, 0.02, 0.08);
+                    uData.shieldGroup.rotation.set(0.12, -0.40, -0.08);
+                }
             }
 
             // Periodic footstep audio
@@ -1852,8 +1856,8 @@ class DarkSoulsGame {
             }
             if (uData.bodyGroup) uData.bodyGroup.position.y = 0.95;
             if (uData.shieldGroup) {
-                uData.shieldGroup.position.set(0, 0.22, 0.35);
-                uData.shieldGroup.rotation.set(0, 0, 0);
+                uData.shieldGroup.position.set(0.05, 0.26, 0.32);
+                uData.shieldGroup.rotation.set(-0.65, -0.22, 0.25);
             }
         } else if (!isMoving) {
             // 6. IDLE BREATHING OSCILLATION & REALISTIC COMBAT STANCE
@@ -1890,10 +1894,10 @@ class DarkSoulsGame {
                 uData.headGroup.rotation.x = 0;
             }
 
-            // Normal shield posture (facing forward toward enemies)
+            // Normal shield posture (anatomically strapped to left forearm)
             if (uData.shieldGroup) {
-                uData.shieldGroup.position.set(-0.04, 0.06, 0.16);
-                uData.shieldGroup.rotation.set(0.08, -0.12, -0.05);
+                uData.shieldGroup.position.set(-0.06, 0.02, 0.08);
+                uData.shieldGroup.rotation.set(0.12, -0.40, -0.08);
             }
 
             // Dynamic idle breathing animation

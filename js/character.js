@@ -78,69 +78,88 @@ class DarkSoulsCharacters {
         shieldCanvas.height = 512;
         const sCtx = shieldCanvas.getContext('2d');
 
-        // Astora deep steel-blue field
-        const bgGrad = sCtx.createRadialGradient(256, 256, 40, 256, 256, 280);
-        bgGrad.addColorStop(0, '#1c2e44');
-        bgGrad.addColorStop(1, '#0e1824');
+        // Astora deep steel-blue field with subtle radial highlight
+        const bgGrad = sCtx.createRadialGradient(256, 200, 30, 256, 256, 300);
+        bgGrad.addColorStop(0, '#223854');
+        bgGrad.addColorStop(0.65, '#142234');
+        bgGrad.addColorStop(1, '#09111c');
         sCtx.fillStyle = bgGrad;
         sCtx.fillRect(0, 0, 512, 512);
 
+        // Fluted steel damascus lines
+        sCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        sCtx.lineWidth = 2;
+        for (let i = 0; i < 512; i += 12) {
+            sCtx.beginPath();
+            sCtx.moveTo(i, 0);
+            sCtx.lineTo(i, 512);
+            sCtx.stroke();
+        }
+
         // Golden rim border
         sCtx.strokeStyle = '#d4af37';
-        sCtx.lineWidth = 20;
+        sCtx.lineWidth = 18;
         sCtx.strokeRect(10, 10, 492, 492);
         sCtx.strokeStyle = '#7c5a1a';
         sCtx.lineWidth = 4;
         sCtx.strokeRect(22, 22, 468, 468);
 
         // Golden corner cornerpieces & rivets
-        const corners = [[20, 20], [492, 20], [20, 492], [492, 492]];
+        const corners = [[20, 20], [492, 20], [20, 492], [492, 492], [256, 18], [256, 494]];
         corners.forEach(([cx, cy]) => {
-            sCtx.fillStyle = '#f0c850';
+            sCtx.fillStyle = '#f5d061';
             sCtx.beginPath();
             sCtx.arc(cx, cy, 10, 0, Math.PI * 2);
             sCtx.fill();
-            sCtx.fillStyle = '#614810';
+            sCtx.fillStyle = '#543b0c';
             sCtx.beginPath();
             sCtx.arc(cx - 2, cy - 2, 4, 0, Math.PI * 2);
             sCtx.fill();
         });
 
         // Silver Heraldic Falcon & Sacred Cross of Astora
-        sCtx.fillStyle = '#e8ecf0';
+        sCtx.fillStyle = '#eaf0f8';
         sCtx.beginPath();
         // Cross vertical beam
-        sCtx.fillRect(236, 60, 40, 392);
+        sCtx.fillRect(236, 50, 40, 400);
         // Cross horizontal bar
-        sCtx.fillRect(130, 160, 252, 38);
+        sCtx.fillRect(110, 150, 292, 40);
+        // Golden filigree inlays
+        sCtx.fillStyle = '#f5c842';
+        sCtx.fillRect(246, 55, 20, 390);
+        sCtx.fillRect(115, 160, 282, 20);
+
         // Central diamond crest
         sCtx.fillStyle = '#ffd700';
         sCtx.beginPath();
-        sCtx.moveTo(256, 140);
-        sCtx.lineTo(290, 179);
-        sCtx.lineTo(256, 218);
-        sCtx.lineTo(222, 179);
+        sCtx.moveTo(256, 130);
+        sCtx.lineTo(295, 170);
+        sCtx.lineTo(256, 210);
+        sCtx.lineTo(217, 170);
         sCtx.closePath();
         sCtx.fill();
+        sCtx.strokeStyle = '#5a3d08';
+        sCtx.lineWidth = 3;
+        sCtx.stroke();
 
         // Falcon wing heraldic flourishes
-        sCtx.strokeStyle = '#c8d4e2';
-        sCtx.lineWidth = 6;
+        sCtx.strokeStyle = '#d6e4f2';
+        sCtx.lineWidth = 8;
         sCtx.beginPath();
-        sCtx.arc(200, 240, 45, Math.PI * 0.2, Math.PI * 0.9);
+        sCtx.arc(195, 245, 55, Math.PI * 0.15, Math.PI * 0.95);
         sCtx.stroke();
         sCtx.beginPath();
-        sCtx.arc(312, 240, 45, Math.PI * 0.1, Math.PI * 0.8, true);
+        sCtx.arc(317, 245, 55, Math.PI * 0.05, Math.PI * 0.85, true);
         sCtx.stroke();
 
         // Battle cuts & micro-scratches
-        for (let i = 0; i < 45; i++) {
-            const x1 = 40 + Math.random() * 432;
-            const y1 = 40 + Math.random() * 432;
-            const len = 15 + Math.random() * 35;
+        for (let i = 0; i < 55; i++) {
+            const x1 = 30 + Math.random() * 452;
+            const y1 = 30 + Math.random() * 452;
+            const len = 15 + Math.random() * 45;
             const angle = Math.random() * Math.PI;
-            sCtx.strokeStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.45)';
-            sCtx.lineWidth = 1.2;
+            sCtx.strokeStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.5)';
+            sCtx.lineWidth = 1.3;
             sCtx.beginPath();
             sCtx.moveTo(x1, y1);
             sCtx.lineTo(x1 + Math.cos(angle) * len, y1 + Math.sin(angle) * len);
@@ -152,7 +171,36 @@ class DarkSoulsCharacters {
         this.crestShieldMat = new THREE.MeshStandardMaterial({
             map: shieldTex,
             metalness: 0.82,
-            roughness: 0.32
+            roughness: 0.32,
+            side: THREE.DoubleSide
+        });
+
+        // 1B. AGED OAK WOOD BACKING TEXTURE (256x256)
+        const woodCanvas = document.createElement('canvas');
+        woodCanvas.width = 256;
+        woodCanvas.height = 256;
+        const wCtx = woodCanvas.getContext('2d');
+        wCtx.fillStyle = '#26180c';
+        wCtx.fillRect(0, 0, 256, 256);
+        // Vertical planks
+        for (let x = 0; x < 256; x += 36) {
+            wCtx.strokeStyle = '#120b05';
+            wCtx.lineWidth = 2.5;
+            wCtx.beginPath();
+            wCtx.moveTo(x, 0);
+            wCtx.lineTo(x, 256);
+            wCtx.stroke();
+        }
+        for (let i = 0; i < 220; i++) {
+            wCtx.fillStyle = Math.random() > 0.5 ? 'rgba(65, 42, 22, 0.35)' : 'rgba(10, 6, 3, 0.45)';
+            wCtx.fillRect(Math.random() * 256, Math.random() * 256, 2, 12 + Math.random() * 28);
+        }
+        const woodTex = new THREE.CanvasTexture(woodCanvas);
+        this.shieldWoodMat = new THREE.MeshStandardMaterial({
+            map: woodTex,
+            roughness: 0.88,
+            metalness: 0.12,
+            side: THREE.DoubleSide
         });
 
         // 2. BRUSHED FLUTED STEEL ARMOR (512x512)
@@ -205,13 +253,15 @@ class DarkSoulsCharacters {
 
         this.leatherMat = new THREE.MeshStandardMaterial({
             color: 0x6e4e3a, // Saddle brown leather
-            roughness: 0.72
+            roughness: 0.72,
+            side: THREE.DoubleSide
         });
 
         this.goldTrimMat = new THREE.MeshStandardMaterial({
             color: 0xd4a84e,
             metalness: 0.88,
-            roughness: 0.28
+            roughness: 0.28,
+            side: THREE.DoubleSide
         });
 
         // Diamond-quilted gambeson skirt texture (faithful to medieval warrior sculpt)
@@ -1516,41 +1566,153 @@ class DarkSoulsCharacters {
         lHand.position.y = -0.44;
         leftShoulder.add(lHand);
 
-        // Authentic Curved Heater Shield (Anatomically curved plate facing forward toward enemies)
+        // Authentic Sculpted 3D Dark Souls Crest Shield (Gothic Curved Heater Plate with Double-Sided Detailing)
         const shieldGroup = new THREE.Group();
-        const shieldPlate = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.48, 0.38, 0.78, 14, 1, false, -Math.PI * 0.26, Math.PI * 0.52),
-            this.crestShieldMat
-        );
+
+        // 1. Solid Curved Heater Shield Shape
+        const shieldShape = new THREE.Shape();
+        const shW = 0.23, shTop = 0.38, shMid = 0.05, shBot = -0.40;
+        shieldShape.moveTo(-shW, shTop);
+        shieldShape.quadraticCurveTo(0, shTop + 0.02, shW, shTop);
+        shieldShape.quadraticCurveTo(shW + 0.01, shMid + 0.15, shW, shMid);
+        shieldShape.quadraticCurveTo(shW * 0.9, -0.20, 0, shBot);
+        shieldShape.quadraticCurveTo(-shW * 0.9, -0.20, -shW, shMid);
+        shieldShape.quadraticCurveTo(-shW - 0.01, shMid + 0.15, -shW, shTop);
+
+        const shieldExtrudeSettings = {
+            depth: 0.022,
+            bevelEnabled: true,
+            bevelSegments: 3,
+            steps: 1,
+            bevelSize: 0.012,
+            bevelThickness: 0.012
+        };
+
+        const shieldPlateGeom = new THREE.ExtrudeGeometry(shieldShape, shieldExtrudeSettings);
+        shieldPlateGeom.computeBoundingBox();
+        const shBox = shieldPlateGeom.boundingBox;
+        const shSizeX = shBox.max.x - shBox.min.x;
+        const shSizeY = shBox.max.y - shBox.min.y;
+        const shPos = shieldPlateGeom.attributes.position;
+        const shUvs = shieldPlateGeom.attributes.uv;
+
+        for (let i = 0; i < shPos.count; i++) {
+            const x = shPos.getX(i);
+            const z = shPos.getZ(i);
+            // Cylindrical curvature wrapping naturally around arm and torso
+            const curveZ = (1 - Math.min(1, (x / shW) * (x / shW))) * 0.042;
+            shPos.setZ(i, z + curveZ);
+            if (z > 0.005) {
+                shUvs.setXY(i, (x - shBox.min.x) / shSizeX, (shPos.getY(i) - shBox.min.y) / shSizeY);
+            }
+        }
+        shieldPlateGeom.computeVertexNormals();
+
+        // Multi-material: Front face = Astora Crest texture, Beveled side rim = Polished Gold
+        const shieldPlate = new THREE.Mesh(shieldPlateGeom, [this.crestShieldMat, this.goldTrimMat]);
         shieldPlate.castShadow = true;
         shieldPlate.receiveShadow = true;
         shieldGroup.add(shieldPlate);
 
-        // Shield heraldic gold border rims
-        const shieldBorderTop = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.49, 0.39, 0.04, 14, 1, true, -Math.PI * 0.26, Math.PI * 0.52),
-            this.goldTrimMat
-        );
-        shieldBorderTop.position.y = 0.38;
-        shieldGroup.add(shieldBorderTop);
+        // 2. Inner Aged Oak Wood Back Plate
+        const backGeom = new THREE.ExtrudeGeometry(shieldShape, {
+            depth: 0.008,
+            bevelEnabled: false
+        });
+        const bPos = backGeom.attributes.position;
+        for (let i = 0; i < bPos.count; i++) {
+            const x = bPos.getX(i);
+            const z = bPos.getZ(i);
+            const curveZ = (1 - Math.min(1, (x / shW) * (x / shW))) * 0.042;
+            bPos.setZ(i, z + curveZ);
+        }
+        backGeom.computeVertexNormals();
+        const shieldBack = new THREE.Mesh(backGeom, this.shieldWoodMat);
+        shieldBack.position.z = -0.002;
+        shieldGroup.add(shieldBack);
 
-        const shieldBorderBot = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.49, 0.39, 0.04, 14, 1, true, -Math.PI * 0.26, Math.PI * 0.52),
-            this.goldTrimMat
-        );
-        shieldBorderBot.position.y = -0.38;
-        shieldGroup.add(shieldBorderBot);
+        // 3. Central Heraldic Shield Boss (Umbo)
+        const bossGroup = new THREE.Group();
+        bossGroup.position.set(0, 0.12, 0.076);
 
-        // Forearm inner leather straps
-        const strap1 = new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.016, 6, 8), this.leatherMat);
-        strap1.position.set(0, 0.12, 0.06);
+        const bossCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.075, 0.016, 12), this.goldTrimMat);
+        bossCollar.rotation.x = Math.PI / 2;
+        bossGroup.add(bossCollar);
+
+        const bossDome = new THREE.Mesh(new THREE.SphereGeometry(0.054, 12, 10, 0, Math.PI * 2, 0, Math.PI * 0.5), this.steelMat);
+        bossDome.rotation.x = Math.PI / 2;
+        bossGroup.add(bossDome);
+
+        const bossStud = new THREE.Mesh(new THREE.OctahedronGeometry(0.022, 0), this.goldTrimMat);
+        bossStud.position.z = 0.056;
+        bossGroup.add(bossStud);
+
+        shieldGroup.add(bossGroup);
+
+        // 4. Perimeter 3D Golden Rivets (Catching torch light & specular reflections)
+        const rivetCoords = [
+            [0, 0.39, 0.075],
+            [-0.21, 0.37, 0.025],
+            [0.21, 0.37, 0.025],
+            [-0.22, 0.05, 0.024],
+            [0.22, 0.05, 0.024],
+            [-0.13, -0.22, 0.038],
+            [0.13, -0.22, 0.038],
+            [0, -0.38, 0.072]
+        ];
+        const rivetGeom = new THREE.SphereGeometry(0.012, 8, 8);
+        rivetCoords.forEach(([rx, ry, rz]) => {
+            const rivet = new THREE.Mesh(rivetGeom, this.goldTrimMat);
+            rivet.position.set(rx, ry, rz);
+            shieldGroup.add(rivet);
+        });
+
+        // 5. Inner Steel Reinforcement Cross-Braces
+        const brace1 = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.026, 0.012), this.darkSteelMat);
+        brace1.position.set(0, 0.14, 0.008);
+        shieldGroup.add(brace1);
+
+        const brace2 = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.026, 0.012), this.darkSteelMat);
+        brace2.position.set(0, -0.14, 0.012);
+        shieldGroup.add(brace2);
+
+        // 6. Forearm Leather Padding Cushion Pad
+        const pad = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.15, 0.025), this.leatherMat);
+        pad.position.set(0.03, 0.02, -0.02);
+        shieldGroup.add(pad);
+
+        // 7. Forearm Enarme Straps (Snugly wrapping around left forearm vambrace)
+        const strap1 = new THREE.Mesh(new THREE.TorusGeometry(0.076, 0.016, 8, 20), this.leatherMat);
+        strap1.position.set(0.03, 0.02, -0.085);
+        strap1.rotation.x = Math.PI / 2;
         shieldGroup.add(strap1);
-        const strap2 = new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.016, 6, 8), this.leatherMat);
-        strap2.position.set(0, -0.12, 0.06);
+
+        const buckle1 = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.022, 0.012), this.steelBuckleMat);
+        buckle1.position.set(0.03, 0.02, -0.16);
+        shieldGroup.add(buckle1);
+
+        const strap2 = new THREE.Mesh(new THREE.TorusGeometry(0.074, 0.014, 8, 20), this.leatherMat);
+        strap2.position.set(0.025, 0.12, -0.082);
+        strap2.rotation.x = Math.PI / 2;
         shieldGroup.add(strap2);
 
-        shieldGroup.position.set(-0.04, 0.06, 0.16);
-        shieldGroup.rotation.set(0.08, -0.12, -0.05);
+        // 8. Hand Grip Handle Bar (Guige handle securely gripped inside left gauntlet)
+        const handleBracket1 = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.02, 0.07), this.darkSteelMat);
+        handleBracket1.position.set(0.04 - 0.05, -0.16, -0.045);
+        shieldGroup.add(handleBracket1);
+
+        const handleBracket2 = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.02, 0.07), this.darkSteelMat);
+        handleBracket2.position.set(0.04 + 0.05, -0.16, -0.045);
+        shieldGroup.add(handleBracket2);
+
+        const handleBar = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.11, 8), this.scabbardWrapMat);
+        handleBar.position.set(0.04, -0.16, -0.08);
+        handleBar.rotation.z = Math.PI / 2;
+        shieldGroup.add(handleBar);
+
+        // Anatomically strapped to outer forearm, shielding flank and front
+        shieldGroup.position.set(-0.06, 0.02, 0.08);
+        shieldGroup.rotation.set(0.12, -0.40, -0.08);
         lHand.add(shieldGroup);
 
         // Offhand Torch
