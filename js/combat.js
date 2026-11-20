@@ -5469,7 +5469,9 @@ equipWeapon(weaponId) {
                         const attackerPos = arr.shooter ? (arr.shooter.mesh ? arr.shooter.mesh.position : arr.pos) : arr.pos;
                         this.damagePlayer(arr.damage, attackerPos);
 
-                        arr.stuck = true;
+                        // Cleanly remove arrow immediately on impact with player (no floating clipped arrows)
+                        this.game.scene.remove(arr.mesh);
+                        this.arrows.splice(i, 1);
                         continue;
                     }
                 }

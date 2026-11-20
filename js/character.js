@@ -1571,21 +1571,21 @@ class DarkSoulsCharacters {
 
         // 1. Solid Curved Heater Shield Shape
         const shieldShape = new THREE.Shape();
-        const shW = 0.23, shTop = 0.38, shMid = 0.05, shBot = -0.40;
+        const shW = 0.22, shTop = 0.36, shMid = 0.04, shBot = -0.38;
         shieldShape.moveTo(-shW, shTop);
         shieldShape.quadraticCurveTo(0, shTop + 0.02, shW, shTop);
-        shieldShape.quadraticCurveTo(shW + 0.01, shMid + 0.15, shW, shMid);
-        shieldShape.quadraticCurveTo(shW * 0.9, -0.20, 0, shBot);
-        shieldShape.quadraticCurveTo(-shW * 0.9, -0.20, -shW, shMid);
-        shieldShape.quadraticCurveTo(-shW - 0.01, shMid + 0.15, -shW, shTop);
+        shieldShape.quadraticCurveTo(shW + 0.01, shMid + 0.14, shW, shMid);
+        shieldShape.quadraticCurveTo(shW * 0.88, -0.18, 0, shBot);
+        shieldShape.quadraticCurveTo(-shW * 0.88, -0.18, -shW, shMid);
+        shieldShape.quadraticCurveTo(-shW - 0.01, shMid + 0.14, -shW, shTop);
 
         const shieldExtrudeSettings = {
-            depth: 0.022,
+            depth: 0.018,
             bevelEnabled: true,
             bevelSegments: 3,
             steps: 1,
-            bevelSize: 0.012,
-            bevelThickness: 0.012
+            bevelSize: 0.010,
+            bevelThickness: 0.010
         };
 
         const shieldPlateGeom = new THREE.ExtrudeGeometry(shieldShape, shieldExtrudeSettings);
@@ -1599,8 +1599,8 @@ class DarkSoulsCharacters {
         for (let i = 0; i < shPos.count; i++) {
             const x = shPos.getX(i);
             const z = shPos.getZ(i);
-            // Cylindrical curvature wrapping naturally around arm and torso
-            const curveZ = (1 - Math.min(1, (x / shW) * (x / shW))) * 0.042;
+            // Cylindrical curvature wrapping naturally around arm and flank
+            const curveZ = (1 - Math.min(1, (x / shW) * (x / shW))) * 0.038;
             shPos.setZ(i, z + curveZ);
             if (z > 0.005) {
                 shUvs.setXY(i, (x - shBox.min.x) / shSizeX, (shPos.getY(i) - shBox.min.y) / shSizeY);
@@ -1614,53 +1614,53 @@ class DarkSoulsCharacters {
         shieldPlate.receiveShadow = true;
         shieldGroup.add(shieldPlate);
 
-        // 2. Inner Aged Oak Wood Back Plate
+        // 2. Inner Aged Oak Wood Back Plate (Mounted cleanly behind the metal face)
         const backGeom = new THREE.ExtrudeGeometry(shieldShape, {
-            depth: 0.008,
+            depth: 0.006,
             bevelEnabled: false
         });
         const bPos = backGeom.attributes.position;
         for (let i = 0; i < bPos.count; i++) {
             const x = bPos.getX(i);
             const z = bPos.getZ(i);
-            const curveZ = (1 - Math.min(1, (x / shW) * (x / shW))) * 0.042;
+            const curveZ = (1 - Math.min(1, (x / shW) * (x / shW))) * 0.038;
             bPos.setZ(i, z + curveZ);
         }
         backGeom.computeVertexNormals();
         const shieldBack = new THREE.Mesh(backGeom, this.shieldWoodMat);
-        shieldBack.position.z = -0.002;
+        shieldBack.position.z = -0.006;
         shieldGroup.add(shieldBack);
 
         // 3. Central Heraldic Shield Boss (Umbo)
         const bossGroup = new THREE.Group();
-        bossGroup.position.set(0, 0.12, 0.076);
+        bossGroup.position.set(0, 0.10, 0.065);
 
-        const bossCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.075, 0.016, 12), this.goldTrimMat);
+        const bossCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.060, 0.070, 0.014, 12), this.goldTrimMat);
         bossCollar.rotation.x = Math.PI / 2;
         bossGroup.add(bossCollar);
 
-        const bossDome = new THREE.Mesh(new THREE.SphereGeometry(0.054, 12, 10, 0, Math.PI * 2, 0, Math.PI * 0.5), this.steelMat);
+        const bossDome = new THREE.Mesh(new THREE.SphereGeometry(0.050, 12, 10, 0, Math.PI * 2, 0, Math.PI * 0.5), this.steelMat);
         bossDome.rotation.x = Math.PI / 2;
         bossGroup.add(bossDome);
 
-        const bossStud = new THREE.Mesh(new THREE.OctahedronGeometry(0.022, 0), this.goldTrimMat);
-        bossStud.position.z = 0.056;
+        const bossStud = new THREE.Mesh(new THREE.OctahedronGeometry(0.020, 0), this.goldTrimMat);
+        bossStud.position.z = 0.050;
         bossGroup.add(bossStud);
 
         shieldGroup.add(bossGroup);
 
         // 4. Perimeter 3D Golden Rivets (Catching torch light & specular reflections)
         const rivetCoords = [
-            [0, 0.39, 0.075],
-            [-0.21, 0.37, 0.025],
-            [0.21, 0.37, 0.025],
-            [-0.22, 0.05, 0.024],
-            [0.22, 0.05, 0.024],
-            [-0.13, -0.22, 0.038],
-            [0.13, -0.22, 0.038],
-            [0, -0.38, 0.072]
+            [0, 0.37, 0.065],
+            [-0.19, 0.35, 0.022],
+            [0.19, 0.35, 0.022],
+            [-0.20, 0.04, 0.021],
+            [0.20, 0.04, 0.021],
+            [-0.12, -0.20, 0.034],
+            [0.12, -0.20, 0.034],
+            [0, -0.36, 0.062]
         ];
-        const rivetGeom = new THREE.SphereGeometry(0.012, 8, 8);
+        const rivetGeom = new THREE.SphereGeometry(0.011, 8, 8);
         rivetCoords.forEach(([rx, ry, rz]) => {
             const rivet = new THREE.Mesh(rivetGeom, this.goldTrimMat);
             rivet.position.set(rx, ry, rz);
@@ -1668,51 +1668,51 @@ class DarkSoulsCharacters {
         });
 
         // 5. Inner Steel Reinforcement Cross-Braces
-        const brace1 = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.026, 0.012), this.darkSteelMat);
-        brace1.position.set(0, 0.14, 0.008);
+        const brace1 = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.024, 0.010), this.darkSteelMat);
+        brace1.position.set(0, 0.12, 0.004);
         shieldGroup.add(brace1);
 
-        const brace2 = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.026, 0.012), this.darkSteelMat);
-        brace2.position.set(0, -0.14, 0.012);
+        const brace2 = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.024, 0.010), this.darkSteelMat);
+        brace2.position.set(0, -0.12, 0.008);
         shieldGroup.add(brace2);
 
         // 6. Forearm Leather Padding Cushion Pad
-        const pad = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.15, 0.025), this.leatherMat);
-        pad.position.set(0.03, 0.02, -0.02);
+        const pad = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.14, 0.022), this.leatherMat);
+        pad.position.set(0.02, 0.02, -0.018);
         shieldGroup.add(pad);
 
         // 7. Forearm Enarme Straps (Snugly wrapping around left forearm vambrace)
-        const strap1 = new THREE.Mesh(new THREE.TorusGeometry(0.076, 0.016, 8, 20), this.leatherMat);
-        strap1.position.set(0.03, 0.02, -0.085);
+        const strap1 = new THREE.Mesh(new THREE.TorusGeometry(0.072, 0.014, 8, 20), this.leatherMat);
+        strap1.position.set(0.02, 0.02, -0.075);
         strap1.rotation.x = Math.PI / 2;
         shieldGroup.add(strap1);
 
-        const buckle1 = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.022, 0.012), this.steelBuckleMat);
-        buckle1.position.set(0.03, 0.02, -0.16);
+        const buckle1 = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.020, 0.010), this.steelBuckleMat);
+        buckle1.position.set(0.02, 0.02, -0.145);
         shieldGroup.add(buckle1);
 
-        const strap2 = new THREE.Mesh(new THREE.TorusGeometry(0.074, 0.014, 8, 20), this.leatherMat);
-        strap2.position.set(0.025, 0.12, -0.082);
+        const strap2 = new THREE.Mesh(new THREE.TorusGeometry(0.070, 0.013, 8, 20), this.leatherMat);
+        strap2.position.set(0.018, 0.11, -0.072);
         strap2.rotation.x = Math.PI / 2;
         shieldGroup.add(strap2);
 
         // 8. Hand Grip Handle Bar (Guige handle securely gripped inside left gauntlet)
-        const handleBracket1 = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.02, 0.07), this.darkSteelMat);
-        handleBracket1.position.set(0.04 - 0.05, -0.16, -0.045);
+        const handleBracket1 = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.018, 0.06), this.darkSteelMat);
+        handleBracket1.position.set(0.03 - 0.045, -0.14, -0.040);
         shieldGroup.add(handleBracket1);
 
-        const handleBracket2 = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.02, 0.07), this.darkSteelMat);
-        handleBracket2.position.set(0.04 + 0.05, -0.16, -0.045);
+        const handleBracket2 = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.018, 0.06), this.darkSteelMat);
+        handleBracket2.position.set(0.03 + 0.045, -0.14, -0.040);
         shieldGroup.add(handleBracket2);
 
-        const handleBar = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.11, 8), this.scabbardWrapMat);
-        handleBar.position.set(0.04, -0.16, -0.08);
+        const handleBar = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.10, 8), this.scabbardWrapMat);
+        handleBar.position.set(0.03, -0.14, -0.070);
         handleBar.rotation.z = Math.PI / 2;
         shieldGroup.add(handleBar);
 
         // Anatomically strapped to outer forearm, shielding flank and front
-        shieldGroup.position.set(-0.06, 0.02, 0.08);
-        shieldGroup.rotation.set(0.12, -0.40, -0.08);
+        shieldGroup.position.set(-0.06, 0.02, 0.06);
+        shieldGroup.rotation.set(0.10, -0.35, -0.06);
         lHand.add(shieldGroup);
 
         // Offhand Torch

@@ -1689,8 +1689,8 @@ class DarkSoulsGame {
                     }
                 }
                 if (uData.shieldGroup) {
-                    uData.shieldGroup.position.set(-0.06, 0.02, 0.08);
-                    uData.shieldGroup.rotation.set(0.12, -0.40, -0.08);
+                    uData.shieldGroup.position.set(-0.06, 0.02, 0.06);
+                    uData.shieldGroup.rotation.set(0.10, -0.35, -0.06);
                 }
             }
 
@@ -1843,11 +1843,11 @@ class DarkSoulsGame {
                 }
             }
         } else if (this.combat.isBlocking) {
-            // Shield Block Stance
+            // Shield Block Stance: Left arm raises firmly, rotating inward to present the crest shield directly in front of the chest
             if (uData.leftShoulder) {
-                uData.leftShoulder.rotation.x = 0.75;
-                uData.leftShoulder.rotation.y = 0.38;
-                uData.leftShoulder.rotation.z = -0.18;
+                uData.leftShoulder.rotation.x = 0.72;
+                uData.leftShoulder.rotation.y = 0.36;
+                uData.leftShoulder.rotation.z = -0.20;
             }
             if (uData.torso) {
                 uData.torso.rotation.y = -0.16;
@@ -1855,8 +1855,9 @@ class DarkSoulsGame {
             }
             if (uData.bodyGroup) uData.bodyGroup.position.y = 0.95;
             if (uData.shieldGroup) {
-                uData.shieldGroup.position.set(0.05, 0.26, 0.32);
-                uData.shieldGroup.rotation.set(-0.65, -0.22, 0.25);
+                // Firmly anchored to forearm, shielding flank and torso
+                uData.shieldGroup.position.set(-0.06, 0.02, 0.06);
+                uData.shieldGroup.rotation.set(0.10, -0.35, -0.06);
             }
         } else if (!isMoving) {
             // 6. IDLE BREATHING OSCILLATION & REALISTIC COMBAT STANCE
@@ -1895,8 +1896,8 @@ class DarkSoulsGame {
 
             // Normal shield posture (anatomically strapped to left forearm)
             if (uData.shieldGroup) {
-                uData.shieldGroup.position.set(-0.06, 0.02, 0.08);
-                uData.shieldGroup.rotation.set(0.12, -0.40, -0.08);
+                uData.shieldGroup.position.set(-0.06, 0.02, 0.06);
+                uData.shieldGroup.rotation.set(0.10, -0.35, -0.06);
             }
 
             // Dynamic idle breathing animation
