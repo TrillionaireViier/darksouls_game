@@ -1,6 +1,6 @@
 // ============================================================================
 // DARK SOULS: COMPREHENSIVE GOD-MODE DEV MAP & CARTOGRAPHY RADAR
-// Visualizes all 190 Locations, Bosses, 200 NPCs, Bonfires, Lore, Architecture & Live Player Tracker
+// Visualizes all 190 Locations, Bosses, 330 NPCs, Bonfires, Lore, Architecture & Live Player Tracker
 // Features: Click-to-Teleport, Pan & Zoom, Search Filter, Elevation Layering
 // ============================================================================
 

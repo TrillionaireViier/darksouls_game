@@ -1613,8 +1613,8 @@
                 <button class="btn-icon-bar" onclick="openQASuiteModal()" title="Open Automated QA Test Suite, 1-HP Sandbox & Watchdog" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🛠️ <span class="btn-label-text">QA SUITE</span></button>
                 <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
-                <button class="btn-icon-bar" onclick="openNPCsModal()" title="200 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (200)</span></button>
-                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="600 3D Models: 200 Armors, 200 NPCs & 200 Mobs" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (600)</span></button>
+                <button class="btn-icon-bar" onclick="openNPCsModal()" title="330 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (330)</span></button>
+                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,000 3D Models: 340 Armors, 330 NPCs & 330 Mobs" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,000)</span></button>
                 <button class="btn-icon-bar" onclick="openBossSelectModal()" style="border-color: #c49a45; color: #ffd276; font-weight: 700; box-shadow: 0 0 10px rgba(196,154,69,0.3);">⚔️ <span class="btn-label-text">BOSSES</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" style="border-color: #d4af37; color: #ffd778; font-weight: 700;">⚔️ <span class="btn-label-text">WEAPONS</span></button>
@@ -1904,10 +1904,10 @@
     <div id="compendium-300-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box" style="max-width: 780px; width: 92%; max-height: 88vh; display: flex; flex-direction: column;">
             <div class="modal-header" style="color: #ffd700; font-size: 1.3rem; letter-spacing: 2px;">
-                🗿 600 3D MODELS COMPENDIUM & BESTIARY
+                🗿 1,000 3D MODELS COMPENDIUM & BESTIARY
             </div>
             <p style="font-size: 0.85rem; color: #b8a896; line-height: 1.4; text-align: center; margin: 0 0 10px 0;">
-                200 Iconic Armors, 200 Legendary NPCs, and 200 Ferocious Mobs from Dark Souls, Bloodborne, Sekiro & Elden Ring. Spawn, Equip, or Challenge directly in Lordran!
+                340 Iconic Armors, 330 Legendary NPCs, and 330 Ferocious Mobs from Dark Souls, Bloodborne, Sekiro & Elden Ring. Spawn, Equip, or Challenge directly in Lordran!
             </p>
 
             
@@ -1955,7 +1955,7 @@
 
             <!-- Search and Filter Bar -->
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;">
-                <input type="text" id="compendium-search-input" placeholder="🔍 Search 600 models by name, lore, weapon, or realm..." 
+                <input type="text" id="compendium-search-input" placeholder="🔍 Search 1,000 models by name, lore, weapon, or realm..." 
                        oninput="onCompendiumSearchInput(this.value)" 
                        style="flex: 1; min-width: 200px; padding: 8px 12px; background: rgba(15, 12, 10, 0.9); border: 1px solid #7c6848; color: #fff; font-family: 'Cinzel', serif; font-size: 0.82rem; border-radius: 4px; outline: none;">
                 <button class="btn-fight-boss" onclick="if(window.compendiumInstance)window.compendiumInstance.clearSpawned()" style="border-color: #ff6666; color: #ff9999; font-size: 0.72rem; padding: 7px 10px;">🧹 CLEAR SPAWNED</button>
@@ -1963,10 +1963,10 @@
 
             <!-- Category Tabs -->
             <div style="display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px;">
-                <button class="btn-icon-bar compendium-tab-btn active" data-category="ALL" onclick="filterCompendiumCategory('ALL')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">ALL (600)</button>
-                <button class="btn-icon-bar compendium-tab-btn" data-category="ARMOR" onclick="filterCompendiumCategory('ARMOR')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">🛡️ ARMORS (200)</button>
-                <button class="btn-icon-bar compendium-tab-btn" data-category="NPC" onclick="filterCompendiumCategory('NPC')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #00ffaa; color: #a5ffbe;">🧙 NPCS (200)</button>
-                <button class="btn-icon-bar compendium-tab-btn" data-category="MOB" onclick="filterCompendiumCategory('MOB')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ff5555; color: #ffaaaa;">👹 MOBS (200)</button>
+                <button class="btn-icon-bar compendium-tab-btn active" data-category="ALL" onclick="filterCompendiumCategory('ALL')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">ALL (1,000)</button>
+                <button class="btn-icon-bar compendium-tab-btn" data-category="ARMOR" onclick="filterCompendiumCategory('ARMOR')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">🛡️ ARMORS (340)</button>
+                <button class="btn-icon-bar compendium-tab-btn" data-category="NPC" onclick="filterCompendiumCategory('NPC')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #00ffaa; color: #a5ffbe;">🧙 NPCS (330)</button>
+                <button class="btn-icon-bar compendium-tab-btn" data-category="MOB" onclick="filterCompendiumCategory('MOB')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ff5555; color: #ffaaaa;">👹 MOBS (330)</button>
             </div>
 
             <!-- Cards Grid -->
@@ -1995,7 +1995,7 @@
             </div>
             
             <p style="font-size: 0.8rem; color: #b8a896; line-height: 1.35; margin: 0 0 8px 0;">
-                Real-time top-down architectural blueprint of Lordran. Visualizes all <b>190 Fast-Travel Locations</b>, Boss Arenas, <b>200 NPCs & Companions</b>, Bonfires, Waystones, and Lore Drops. Drag to pan &bull; Scroll to zoom &bull; Click any pin or floor tile to instant-teleport!
+                Real-time top-down architectural blueprint of Lordran. Visualizes all <b>190 Fast-Travel Locations</b>, Boss Arenas, <b>330 NPCs & Companions</b>, Bonfires, Waystones, and Lore Drops. Drag to pan &bull; Scroll to zoom &bull; Click any pin or floor tile to instant-teleport!
             </p>
 
             <!-- Dev Map Control Bar: Search & Action Controls -->
@@ -2023,7 +2023,7 @@
                         <input type="checkbox" checked onchange="setDevMapLayer('bosses', this)"> 👑 Bosses
                     </label>
                     <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; color: #00e5ff;">
-                        <input type="checkbox" checked onchange="setDevMapLayer('npcs', this)"> 🧙 NPCs (200)
+                        <input type="checkbox" checked onchange="setDevMapLayer('npcs', this)"> 🧙 NPCs (330)
                     </label>
                     <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; color: #ff7722;">
                         <input type="checkbox" checked onchange="setDevMapLayer('bonfires', this)"> 🜂 Bonfires
@@ -2072,15 +2072,15 @@
     <div id="npcs-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box" style="max-width: 820px; width: 94%; max-height: 88vh; display: flex; flex-direction: column;">
             <div class="modal-header" style="color: #00e5ff; font-size: 1.3rem; letter-spacing: 2px;">
-                🧙 200 SOULSBORNE LEGENDARY NPCS & ALLIES
+                🧙 330 SOULSBORNE LEGENDARY NPCS & ALLIES
             </div>
             <p style="font-size: 0.85rem; color: #b8a896; line-height: 1.4; text-align: center; margin: 0 0 10px 0;">
-                Converse with, hear authentic lore dialogues, and summon all 200 legendary NPCs across Dark Souls I, II, III, Bloodborne, Sekiro & Elden Ring to fight at your side!
+                Converse with, hear authentic lore dialogues, and summon all 330 legendary NPCs across Dark Souls I, II, III, Bloodborne, Sekiro & Elden Ring to fight at your side!
             </p>
 
             <!-- Search & Actions Bar -->
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;">
-                <input type="text" id="npc-search-input" placeholder="🔍 Search 200 NPCs by name, realm, or iconic quote..." 
+                <input type="text" id="npc-search-input" placeholder="🔍 Search 330 NPCs by name, realm, or iconic quote..." 
                        oninput="onNPCSearchInput(this.value)" 
                        style="flex: 1; min-width: 220px; padding: 8px 12px; background: rgba(10, 20, 30, 0.9); border: 1px solid #00e5ff; color: #fff; font-family: 'Cinzel', serif; font-size: 0.82rem; border-radius: 4px; outline: none; box-shadow: 0 0 8px rgba(0,229,255,0.25);">
                 <button class="btn-fight-boss" onclick="if(window.compendiumInstance)window.compendiumInstance.dismissAllCompanions()" style="border-color: #ff6666; color: #ff9999; font-size: 0.75rem; padding: 8px 12px; font-weight: 800;">⚡ DISMISS ALL SUMMONS</button>
@@ -2088,7 +2088,7 @@
 
             <!-- Game Category Filter Tabs -->
             <div style="display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px;">
-                <button class="btn-icon-bar npc-game-tab-btn active" data-game="ALL" onclick="filterNPCGame('ALL')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #00e5ff; color: #80d8ff;">ALL (200)</button>
+                <button class="btn-icon-bar npc-game-tab-btn active" data-game="ALL" onclick="filterNPCGame('ALL')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #00e5ff; color: #80d8ff;">ALL (330)</button>
                 <button class="btn-icon-bar npc-game-tab-btn" data-game="DS1" onclick="filterNPCGame('DS1')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">DARK SOULS I</button>
                 <button class="btn-icon-bar npc-game-tab-btn" data-game="DS2" onclick="filterNPCGame('DS2')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #4fc3f7; color: #e1f5fe;">DARK SOULS II</button>
                 <button class="btn-icon-bar npc-game-tab-btn" data-game="DS3" onclick="filterNPCGame('DS3')" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-color: #ff7722; color: #ffaa55;">DARK SOULS III</button>
@@ -4289,8 +4289,8 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openQASuiteModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🛠️ QA SUITE</button>
                     <button class="btn-icon-bar btn-perf-toggle" onclick="closeQuickMenuModal(); togglePerformanceMode();" style="border-color: #4caf50; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800;">⚡ 60 FPS MODE</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openAdminModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 10px rgba(255,215,0,0.3);">👑 ADMIN SUITE</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openNPCsModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🧙 200 NPCS & ALLIES</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openCompendiumModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">🗿 600 3D MODELS (ARMORS, NPCS, MOBS)</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openNPCsModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🧙 330 NPCS & ALLIES</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openCompendiumModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">🗿 1,000 3D MODELS (ARMORS, NPCS, MOBS)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); if(window.compendiumInstance)window.compendiumInstance.clearSpawned();" style="border-color: #ff6666; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">🧹 CLEAR SPAWNED 3D</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDeathQuotesModal();" style="border-color: #ff5555; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">💀 300 DEATH EPITAPHS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 60 BOSS ROSTER</button>
@@ -5266,24 +5266,24 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/audio.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/lore_items.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/world.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/character.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/siege_warfare.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/heraldry_nobility.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/apothecary_crafting.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/collision_system.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/qa_bot_tester.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/combat.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/postprocessing.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/qa_suite.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/blacksmith_forge.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/inventory_system.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
-    <script src="js/compendium_300_models.js?v=20261120_600_3D_MODELS_ARMORS_NPCS_MOBS"></script>
+    <script src="js/three.min.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/audio.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/lore_items.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/world.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/character.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/siege_warfare.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/heraldry_nobility.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/apothecary_crafting.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/collision_system.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/qa_bot_tester.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/combat.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/postprocessing.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/qa_suite.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/blacksmith_forge.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/inventory_system.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
+    <script src="js/compendium_300_models.js?v=20261120_1000_3D_MODELS_ARMORS_NPCS_MOBS"></script>
     <script src="js/death_quotes_300.js?v=20261120_190_LOCATIONS_300_DEATH_QUOTES"></script>
-    <script src="js/game.js?v=20261120_DARK_SOULS_200_NPCS_190_LOCATIONS"></script>
+    <script src="js/game.js?v=20261120_DARK_SOULS_1000_MODELS_330_NPCS_190_LOCATIONS"></script>
     <script src="js/dev_map.js?v=20261120_DARK_SOULS_DEV_MAP_190_LOCATIONS"></script>
     <script>
         // 300 Death Quotes UI Logic
