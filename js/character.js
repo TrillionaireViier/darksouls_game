@@ -4,6 +4,15 @@
 // ==========================================
 
 const COSTUMES = {
+    forgotten_witness: {
+        id: 'forgotten_witness',
+        name: 'THE FORGOTTEN WITNESS',
+        title: 'The Sunken Liturgy &bull; Order of the Blank Page, Ink-Draped Ashen Cowl & Zero-Debt Shroud',
+        icon: '⚖️',
+        desc: 'Garments of the entity born outside the Grand Ledger of Oaths. Shrouded in ash-grey wool inscribed with nullifying runes, unbound by celestial debt.',
+        perk: 'Solvency of the Blank Page: +20% Damage vs Auditors & Debt Mobs, Immune to Default Curses, -20% Stamina Cost',
+        perkData: { defMultiplier: 1.15, stamMultiplier: 1.25, speedMultiplier: 1.12, dmgBonus: 1.20, poiseBonus: 12 }
+    },
     warrior: {
         id: 'warrior',
         name: 'NORTHERN WARRIOR',
@@ -14394,6 +14403,306 @@ class DarkSoulsCharacters {
             rightLeg: rightHip, leftLeg: leftHip,
             weapon: skull
         };
+        this.scene.add(root);
+        return root;
+    }
+
+    // ----------------------------------------------------
+    // THE SUNKEN LITURGY: HIGH BAILIFF OF ARREARS
+    // First Adjudicator of the Grand Counting House
+    // ----------------------------------------------------
+    createHighBailiff(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.9;
+        root.add(bodyGroup);
+
+        const robeMat = new THREE.MeshStandardMaterial({
+            color: 0x221215,
+            roughness: 0.85,
+            metalness: 0.2
+        });
+        const ironMat = new THREE.MeshStandardMaterial({
+            color: 0x1f1f22,
+            roughness: 0.45,
+            metalness: 0.8
+        });
+        const brassMat = new THREE.MeshStandardMaterial({
+            color: 0x997232,
+            roughness: 0.35,
+            metalness: 0.85
+        });
+        const glowSealMat = new THREE.MeshStandardMaterial({
+            color: 0xff3300,
+            emissive: 0xff2200,
+            emissiveIntensity: 0.9,
+            roughness: 0.3
+        });
+
+        const torso = new THREE.Group();
+        bodyGroup.add(torso);
+
+        // Heavy clerical robes & leaden chasuble
+        const chestGeo = new THREE.CylinderGeometry(1.0, 1.25, 2.2, 10);
+        const chest = new THREE.Mesh(chestGeo, robeMat);
+        chest.castShadow = true;
+        torso.add(chest);
+
+        // Brass Seal of Arrears Collar
+        const collar = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.16, 8, 16), brassMat);
+        collar.rotation.x = Math.PI / 2;
+        collar.position.y = 0.95;
+        torso.add(collar);
+
+        // Hanging parchment contract fragments
+        for (let i = 0; i < 4; i++) {
+            const rotA = (i / 4) * Math.PI * 2;
+            const scroll = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.9, 0.04), new THREE.MeshStandardMaterial({ color: 0xbaa482, roughness: 0.9 }));
+            scroll.position.set(Math.cos(rotA) * 0.95, -0.4, Math.sin(rotA) * 0.95);
+            scroll.rotation.y = rotA;
+            torso.add(scroll);
+        }
+
+        // Head Group & Iron Mask
+        const headGroup = new THREE.Group();
+        headGroup.position.set(0, 1.45, 0);
+        torso.add(headGroup);
+
+        const headMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.42, 0.75, 8), ironMat);
+        headGroup.add(headMesh);
+
+        // Glowing Seal of Default (Forehead)
+        const eyeRune = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.08, 0.08), glowSealMat);
+        eyeRune.position.set(0, 0.15, 0.38);
+        headGroup.add(eyeRune);
+
+        // Mitre / Horned Iron Adjudicator Crown
+        const crown = new THREE.Mesh(new THREE.ConeGeometry(0.48, 0.85, 6), brassMat);
+        crown.position.y = 0.7;
+        headGroup.add(crown);
+
+        // Arms & Shoulders
+        const rightShoulder = new THREE.Group();
+        rightShoulder.position.set(1.25, 0.8, 0);
+        torso.add(rightShoulder);
+        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.22, 1.2, 8), robeMat);
+        rArm.position.y = -0.55;
+        rightShoulder.add(rArm);
+
+        const leftShoulder = new THREE.Group();
+        leftShoulder.position.set(-1.25, 0.8, 0);
+        torso.add(leftShoulder);
+        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.22, 1.2, 8), robeMat);
+        lArm.position.y = -0.55;
+        leftShoulder.add(lArm);
+
+        // Weapon Group: Gavel of Foreclosure (Right Hand)
+        const weaponGroup = new THREE.Group();
+        weaponGroup.position.set(0, -1.15, 0.2);
+        rightShoulder.add(weaponGroup);
+
+        const hammerShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 3.2, 8), ironMat);
+        weaponGroup.add(hammerShaft);
+
+        const hammerHead = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.8, 1.4), brassMat);
+        hammerHead.position.set(0, 1.35, 0.15);
+        hammerHead.castShadow = true;
+        weaponGroup.add(hammerHead);
+
+        const hammerRune = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.2, 0.2), glowSealMat);
+        hammerRune.position.set(0, 1.35, 0.15);
+        weaponGroup.add(hammerRune);
+
+        // Left Hand: Suspended Scale of Arrears
+        const scaleGroup = new THREE.Group();
+        scaleGroup.position.set(0, -1.1, 0.2);
+        leftShoulder.add(scaleGroup);
+        const scaleBeam = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.2, 6), brassMat);
+        scaleBeam.rotation.z = Math.PI / 2;
+        scaleGroup.add(scaleBeam);
+        const panL = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.15, 0.12, 8), brassMat);
+        panL.position.set(-0.55, -0.45, 0);
+        scaleGroup.add(panL);
+        const panR = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.15, 0.12, 8), brassMat);
+        panR.position.set(0.55, -0.45, 0);
+        scaleGroup.add(panR);
+
+        // Legs / Robe Base
+        const rightHip = new THREE.Group();
+        rightHip.position.set(0.5, -1.0, 0);
+        torso.add(rightHip);
+        const rLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.25, 1.1, 8), robeMat);
+        rLeg.position.y = -0.55;
+        rightHip.add(rLeg);
+
+        const leftHip = new THREE.Group();
+        leftHip.position.set(-0.5, -1.0, 0);
+        torso.add(leftHip);
+        const lLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.25, 1.1, 8), robeMat);
+        lLeg.position.y = -0.55;
+        leftHip.add(lLeg);
+
+        const auraLight = new THREE.PointLight(0xff3300, 2.2, 16);
+        auraLight.position.set(0, 1.8, 0.5);
+        bodyGroup.add(auraLight);
+
+        root.userData = {
+            bodyGroup,
+            torso,
+            headGroup,
+            rightShoulder,
+            leftShoulder,
+            rightHip,
+            leftHip,
+            weaponGroup,
+            auraLight
+        };
+
+        this.scene.add(root);
+        return root;
+    }
+
+    // ----------------------------------------------------
+    // THE SUNKEN LITURGY: THE TWINS OF SURETY
+    // Shared Balance Arbiters joined by the Brass Equilibrium Chain
+    // ----------------------------------------------------
+    createTwinsOfSurety(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.8;
+        root.add(bodyGroup);
+
+        const shroudMat = new THREE.MeshStandardMaterial({
+            color: 0xdedcd7,
+            roughness: 0.65,
+            metalness: 0.15
+        });
+        const goldMat = new THREE.MeshStandardMaterial({
+            color: 0xcca033,
+            roughness: 0.35,
+            metalness: 0.85
+        });
+        const blindfoldMat = new THREE.MeshStandardMaterial({
+            color: 0x4a3822,
+            roughness: 0.9
+        });
+        const chainMat = new THREE.MeshStandardMaterial({
+            color: 0xffcc44,
+            emissive: 0xbb8800,
+            emissiveIntensity: 0.7,
+            roughness: 0.4
+        });
+
+        const torso = new THREE.Group();
+        bodyGroup.add(torso);
+
+        // Twin 1 (Left Arbiter of Collateral)
+        const twin1 = new THREE.Group();
+        twin1.position.set(-1.1, 0, 0);
+        torso.add(twin1);
+
+        const t1Body = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.38, 1.8, 8), shroudMat);
+        twin1.add(t1Body);
+        const t1Head = new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 8), shroudMat);
+        t1Head.position.y = 1.15;
+        twin1.add(t1Head);
+        const t1Band = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.33, 0.12, 10), blindfoldMat);
+        t1Band.position.y = 1.15;
+        twin1.add(t1Band);
+        const t1Crown = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.04, 6, 12), goldMat);
+        t1Crown.rotation.x = Math.PI / 2;
+        t1Crown.position.y = 1.35;
+        twin1.add(t1Crown);
+
+        // Twin 2 (Right Arbiter of Discharge)
+        const twin2 = new THREE.Group();
+        twin2.position.set(1.1, 0, 0);
+        torso.add(twin2);
+
+        const t2Body = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.38, 1.8, 8), shroudMat);
+        twin2.add(t2Body);
+        const t2Head = new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 8), shroudMat);
+        t2Head.position.y = 1.15;
+        twin2.add(t2Head);
+        const t2Band = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.33, 0.12, 10), blindfoldMat);
+        t2Band.position.y = 1.15;
+        twin2.add(t2Band);
+        const t2Crown = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.04, 6, 12), goldMat);
+        t2Crown.rotation.x = Math.PI / 2;
+        t2Crown.position.y = 1.35;
+        twin2.add(t2Crown);
+
+        // Glowing Equilibrium Chain connecting them
+        const eqChain = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 2.2, 8), chainMat);
+        eqChain.rotation.z = Math.PI / 2;
+        eqChain.position.set(0, 0.3, 0);
+        torso.add(eqChain);
+
+        // Suspended brass balance pan in center of chain
+        const centerPan = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.18, 0.15, 8), goldMat);
+        centerPan.position.set(0, -0.15, 0);
+        torso.add(centerPan);
+
+        // Arms & Weapons
+        const rightShoulder = new THREE.Group();
+        rightShoulder.position.set(1.8, 0.5, 0);
+        torso.add(rightShoulder);
+        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.15, 1.0, 6), shroudMat);
+        rArm.position.y = -0.45;
+        rightShoulder.add(rArm);
+
+        // Surety Balance Scythe (Twin 2)
+        const weaponGroup = new THREE.Group();
+        weaponGroup.position.set(0, -0.9, 0.2);
+        rightShoulder.add(weaponGroup);
+        const scytheStaff = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 2.8, 8), goldMat);
+        weaponGroup.add(scytheStaff);
+        const scytheBlade = new THREE.Mesh(new THREE.TorusGeometry(0.7, 0.06, 6, 12, Math.PI * 0.75), goldMat);
+        scytheBlade.position.set(0.45, 1.25, 0);
+        weaponGroup.add(scytheBlade);
+
+        const leftShoulder = new THREE.Group();
+        leftShoulder.position.set(-1.8, 0.5, 0);
+        torso.add(leftShoulder);
+        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.15, 1.0, 6), shroudMat);
+        lArm.position.y = -0.45;
+        leftShoulder.add(lArm);
+
+        // Balance Flail (Twin 1)
+        const flailStaff = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.5, 6), goldMat);
+        flailStaff.position.set(0, -0.6, 0.2);
+        leftShoulder.add(flailStaff);
+        const flailOrb = new THREE.Mesh(new THREE.DodecahedronGeometry(0.24), goldMat);
+        flailOrb.position.set(0, -1.5, 0.2);
+        leftShoulder.add(flailOrb);
+
+        const rightHip = new THREE.Group();
+        rightHip.position.set(0.5, -0.9, 0);
+        torso.add(rightHip);
+        const leftHip = new THREE.Group();
+        leftHip.position.set(-0.5, -0.9, 0);
+        torso.add(leftHip);
+
+        const auraLight = new THREE.PointLight(0xffd700, 2.0, 14);
+        auraLight.position.set(0, 1.2, 0.5);
+        bodyGroup.add(auraLight);
+
+        root.userData = {
+            bodyGroup,
+            torso,
+            headGroup: twin1,
+            rightShoulder,
+            leftShoulder,
+            rightHip,
+            leftHip,
+            weaponGroup,
+            auraLight
+        };
+
         this.scene.add(root);
         return root;
     }

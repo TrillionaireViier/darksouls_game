@@ -4462,7 +4462,11 @@ class DarkSoulsGame {
                 const recoveredSouls = bm.souls || 0;
                 this.combat.souls += recoveredSouls;
                 this.showSoulsGained(recoveredSouls);
-                this.showNotification(`🩸 RETRIEVED ${recoveredSouls.toLocaleString()} LOST SOULS & RECOVERED LOST STUFF!`);
+                this.showNotification(`📜 RECEIPT OF SETTLEMENT REDEEMED! +${recoveredSouls.toLocaleString()} SOULS • DEFAULT DISCHARGED!`);
+                if (this.combat && this.combat.interestBurnInterval) {
+                    clearInterval(this.combat.interestBurnInterval);
+                    this.combat.interestBurnInterval = null;
+                }
                 if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
                 this.scene.remove(bm.group);
                 this.bloodstainMarker = null;
@@ -4575,7 +4579,7 @@ class DarkSoulsGame {
         if (!container) return;
 
         const locs = window.DARK_SOULS_LOCATIONS || [];
-        const unlocked = this.unlockedLocations || ['lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill', 'ds1_chasm_of_abyss_manus', 'ds1_ash_lake_dragon_tree', 'ds1_painted_world_statue', 'ds1_new_londo_sealer', 'ds1_lost_izalith_bed', 'ds1_catacombs_blacksmith', 'ds2_heides_blue_cathedral', 'ds2_iron_keep_smelter', 'ds2_shrine_of_amana_altar', 'ds2_undead_crypt_agdayne', 'ds2_harvest_valley_mines', 'ds2_doors_of_pharros', 'ds3_irithyll_dungeon_cells', 'ds3_lothric_twin_princes', 'ds3_cathedral_of_deep_roof', 'ds3_untended_graves_champion', 'ds3_ringed_city_abyssal_chasm', 'bb_old_yharnam_clocktower', 'bb_cainhurst_snow_roof', 'bb_upper_cathedral_orphanage', 'bb_hemwick_charnel_lane', 'sekiro_hirata_estate_blaze', 'sekiro_ashina_castle_dojo', 'sekiro_sunken_valley_gun_fort', 'er_caelid_sellia_town', 'er_nokron_eternal_city', 'er_altus_plateau_erdtree', 'er_mountaintops_fire_giant', 'sote_scadu_altus_highroad', 'sote_belurat_tower_settlement'];
+        const unlocked = this.unlockedLocations || ['lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill', 'ds1_chasm_of_abyss_manus', 'ds1_ash_lake_dragon_tree', 'ds1_painted_world_statue', 'ds1_new_londo_sealer', 'ds1_lost_izalith_bed', 'ds1_catacombs_blacksmith', 'ds2_heides_blue_cathedral', 'ds2_iron_keep_smelter', 'ds2_shrine_of_amana_altar', 'ds2_undead_crypt_agdayne', 'ds2_harvest_valley_mines', 'ds2_doors_of_pharros', 'ds3_irithyll_dungeon_cells', 'ds3_lothric_twin_princes', 'ds3_cathedral_of_deep_roof', 'ds3_untended_graves_champion', 'ds3_ringed_city_abyssal_chasm', 'bb_old_yharnam_clocktower', 'bb_cainhurst_snow_roof', 'bb_upper_cathedral_orphanage', 'bb_hemwick_charnel_lane', 'sekiro_hirata_estate_blaze', 'sekiro_ashina_castle_dojo', 'sekiro_sunken_valley_gun_fort', 'er_caelid_sellia_town', 'er_nokron_eternal_city', 'er_altus_plateau_erdtree', 'er_mountaintops_fire_giant', 'sote_scadu_altus_highroad', 'sote_belurat_tower_settlement'];
 
         const filtered = locs.filter(l => {
             if (activeFilter === 'all') return true;
@@ -4752,7 +4756,7 @@ class DarkSoulsGame {
         if (!loc || !this.playerMesh) return;
 
         // Check unlock status
-        const unlocked = this.unlockedLocations || ['lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+        const unlocked = this.unlockedLocations || ['lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
         if (!unlocked.includes(locationId) && locationId !== 'royal_bridge_arena') {
             this.showNotification(`🔒 THIS REALM IS LOCKED! DEFEAT ITS WARDEN TO UNLOCK.`);
             if (this.audio && this.audio.playParry) this.audio.playParry();
@@ -4905,6 +4909,9 @@ window.DARK_SOULS_LOCATIONS = [
     {"id":"lordran_flooded_catacombs","name":"💀 Subterranean Catacombs - Flooded Crypts","zone":"Lordran Undead Burg","pos":[-20,-4.92,32],"elev":"-5m","danger":"Tier III (Crypts)","boss":"Skeleton Warriors & Necromancers","desc":"Ancient flooded crypts deep beneath the viaduct, illuminated by emerald ghostfire and patrolled by skeletal squads.","light":1.0},
     {"id":"lordran_high_ramparts","name":"👑 High Castle Ramparts - Archer Watchtowers","zone":"Lordran Undead Burg","pos":[20,6.0,32],"elev":"+6m","danger":"Tier II (Ramparts)","boss":"Hollow Archers & Tower Knights","desc":"Sun-drenched battlements overlooking the valley with ballistas, archer watchtowers, and heavy iron patrols.","light":1.35},
     {"id":"lordran_royal_bridge","name":"⚔️ Royal Viaduct Bridge - Fog Gate Approach","zone":"Lordran Undead Burg","pos":[0,0,272],"elev":"0m","danger":"Tier II (Viaduct)","boss":"Citadel Soldiers & Taurus Demon","desc":"Colossal stone procession bridge leading straight to the Taurus Demon fog gate and boss arena.","light":1.2},
+    {"id":"liturgy_grand_counting_house","name":"⚖️ The Grand Counting House of Arrears","zone":"The Sunken Liturgy","pos":[-20,-4.92,120],"elev":"-5m","danger":"Tier V (Auditor Settlement)","boss":"High Bailiff of Arrears","desc":"Submerged bone-and-brass counting nave where millions of overdue oaths rot in iron ledgers under the gaze of Auditors.","light":0.95},
+    {"id":"liturgy_vault_settlement","name":"📜 Vault of Final Settlement - Grand Ledger","zone":"The Sunken Liturgy","pos":[0,-11.0,360],"elev":"-11m","danger":"Tier VI (Cosmic Solvency)","boss":"The Arch-Creditors & Grand Ledger","desc":"The subterranean sanctum at the base of reality where the cosmic balance sheet is kept, awaiting the final bill.","light":1.1},
+    {"id":"liturgy_suspended_scales","name":"⚖️ The Suspended Scales of Surety","zone":"The Sunken Liturgy","pos":[20,6.0,180],"elev":"+6m","danger":"Tier V (Arbiters)","boss":"The Twins of Surety","desc":"Gigantic brass balance scales suspended over the abyss, measuring the equilibrium of debts and collateral.","light":1.2},
 
     {"id":"sote_belurat_tower_settlement","name":"Belurat - Tower Settlement Stage","zone":"Belurat","pos":[-44,4,15],"elev":"+4m","danger":"Tier IV (Severe)","boss":"Divine Beast Dancing Lion","desc":"Ancient spiral streets carved from storm-grey stone leading to the grand stage of the lion dance.","light":1.2},
 

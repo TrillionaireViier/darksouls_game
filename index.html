@@ -1736,6 +1736,7 @@
                 <button class="btn-icon-bar" onclick="openGrimoireModal()" title="20 Legendary Sorceries, Miracles & Pyromancies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">📜 <span class="btn-label-text">SPELLS (20)</span></button>
                 <button class="btn-icon-bar" onclick="openSpiritAshesModal()" title="20 Legendary Spirit Ashes & Phantoms (Calling Bell [4 / N])" style="border-color: #a78bfa; color: #ddd6fe; font-weight: 800; background: rgba(45, 20, 60, 0.75); box-shadow: 0 0 12px rgba(167, 139, 250, 0.45);">🔔 <span class="btn-label-text">SUMMONS (20)</span></button>
                 <button class="btn-icon-bar" onclick="openLoreCodexModal()" title="Dark Souls Lore Codex & 300 Mobs/Zombies Drops" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">📜 <span class="btn-label-text">LORE (690)</span></button>
+                <button class="btn-icon-bar" onclick="openSunkenLiturgyModal()" title="The Sunken Liturgy • Dark Fantasy Debt Realm & Lore" style="border-color: #ffaa33; color: #ffe0b2; font-weight: 800; background: rgba(60, 35, 10, 0.85); box-shadow: 0 0 14px rgba(255, 170, 51, 0.5);">⚖️ <span class="btn-label-text">SUNKEN LITURGY</span></button>
                 <button class="btn-icon-bar" onclick="openDevMapModal()" title="Open God-Mode Interactive Dev Map & Radar [M]" style="border-color: #00ffaa; color: #a5ffbe; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">DEV MAP [M]</span></button>
                 <button class="btn-icon-bar" onclick="openLocationsModal()" title="305 Lordran & Beyond Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (406)</span></button>
                 <button class="btn-icon-bar" onclick="teleportOrHighlightPath('outside')" title="Outside Realm: Darkroot Woods, Primeval Archtree & Dragon Plateau [O]" style="border-color: #2ecc71; color: #a8ffb2; font-weight: 800; background: rgba(20, 50, 30, 0.75); box-shadow: 0 0 12px rgba(46, 204, 113, 0.45);">🌲 <span class="btn-label-text">OUTSIDE [O]</span></button>
@@ -5956,6 +5957,110 @@
         </div>
     </div>
 
+    <!-- ================================================================ -->
+    <!-- ⚖️ THE SUNKEN LITURGY — DARK FANTASY DEBT CODEX & LORE MODAL -->
+    <!-- ================================================================ -->
+    <div id="sunken-liturgy-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 10001; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div class="modal-box" style="max-width: 900px; width: 94%; max-height: 90vh; display: flex; flex-direction: column; border: 2px solid #b58934; box-shadow: 0 0 40px rgba(181, 137, 52, 0.45); background: linear-gradient(180deg, #18120e 0%, #0c0906 100%); padding: 20px 24px; border-radius: 8px;">
+            <!-- Header -->
+            <div class="modal-header" style="color: #ffd778; text-shadow: 0 0 16px rgba(212, 175, 55, 0.6); display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #a87932; padding-bottom: 10px; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.6rem;">⚖️</span>
+                    <div>
+                        <div style="font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 800; letter-spacing: 2px; color: #fff3a8;">THE SUNKEN LITURGY</div>
+                        <div style="font-size: 0.76rem; color: #bcaaa4; letter-spacing: 1px;">THE GRAND LEDGER OF OATHS & THE COSMIC DEBT REALM</div>
+                    </div>
+                </div>
+                <button onclick="closeSunkenLiturgyModal()" style="background: none; border: 1px solid #775533; color: #ff9988; font-size: 1.1rem; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">✕</button>
+            </div>
+
+            <!-- Action Quick Bar -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(181, 137, 52, 0.25);">
+                <button class="btn-icon-bar" onclick="if(window.equipSkin){window.equipSkin('forgotten_witness');}closeSunkenLiturgyModal();" style="padding: 7px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8; background: rgba(70, 45, 15, 0.85); box-shadow: 0 0 10px rgba(255,215,0,0.35);">🛡️ EQUIP FORGOTTEN WITNESS SKIN</button>
+                <button class="btn-icon-bar" onclick="closeSunkenLiturgyModal(); openWeaponArsenalModal();" style="padding: 7px 14px; font-size: 0.78rem; font-weight: 800; border-color: #d4af37; color: #ffd778; background: rgba(50, 35, 15, 0.8);">🗡️ WEAPONS: QUILL, GAVEL, SCALES</button>
+                <button class="btn-icon-bar" onclick="closeSunkenLiturgyModal(); openLoreCodexModal(); filterLoreCodex('liturgy');" style="padding: 7px 14px; font-size: 0.78rem; font-weight: 800; border-color: #a5d6a7; color: #c8e6c9; background: rgba(20, 50, 30, 0.8);">📜 VIEW LITURGY CODEX (6 ENTRIES)</button>
+                <button class="btn-icon-bar" onclick="closeSunkenLiturgyModal(); if(window.game&&window.game.travelToLocation)window.game.travelToLocation('liturgy_grand_counting_house');" style="padding: 7px 14px; font-size: 0.78rem; font-weight: 800; border-color: #00ffaa; color: #a5ffbe; background: rgba(10, 45, 30, 0.8);">🗺️ EXPEDITION: COUNTING HOUSE (-5m)</button>
+            </div>
+
+            <!-- Scrollable Lore Reader -->
+            <div style="overflow-y: auto; max-height: 62vh; padding-right: 10px; font-size: 0.88rem; line-height: 1.65; color: #d7ccc8; scrollbar-width: thin; scrollbar-color: #b58934 rgba(20,15,10,0.85);">
+                <blockquote style="margin: 0 0 18px 0; padding: 12px 16px; border-left: 3px solid #ffd700; background: rgba(40, 28, 18, 0.65); font-style: italic; color: #ffe0b2;">
+                    "In the first silence, we took our first breath on credit. And now, the Auditors have come to collect."<br>
+                    <span style="font-size: 0.78rem; color: #bcaaa4; font-style: normal;">— Litany of the Blank Page, Verse I</span>
+                </blockquote>
+
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 8px 0; font-family: 'Cinzel', serif; color: #ffd778; font-size: 1.15rem; border-bottom: 1px solid rgba(181, 137, 52, 0.35); padding-bottom: 4px;">I. THE GENESIS: THE LEDGER OF OATHS</h3>
+                    <p style="margin: 0 0 10px 0;">
+                        Before the stars were named, reality was forged as a <strong>Ledger of Oaths</strong> by the First Arbiters. Every breath of warm air, every spark of memory, and every living name was borrowed capital—drawn from an incomprehensible reservoir of primeval cosmic potential.
+                    </p>
+                    <p style="margin: 0;">
+                        In exchange, humanity signed an unwritten covenant: at the end of time, all vitality was to be repaid in full, with interest, back into the Grand Ledger. The seven sunken debt-cities were erected across subterranean abysses, watched over by the faceless <strong>Arch-Creditors</strong>.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 8px 0; font-family: 'Cinzel', serif; color: #ffd778; font-size: 1.15rem; border-bottom: 1px solid rgba(181, 137, 52, 0.35); padding-bottom: 4px;">II. THE COLLAPSE: THE DEFAULT CYCLE</h3>
+                    <p style="margin: 0 0 10px 0;">
+                        The calamity began when the Grand Ledger ran out of ink. Overdue oaths accumulated across millenia, and when debts went unpaid, people stopped dying naturally.
+                    </p>
+                    <p style="margin: 0 0 10px 0;">
+                        They became <strong>The Indebted</strong>—hollow husks bound to unfinished contracts, scrubbing counting house flagstones to discharge debts their descendants no longer remember. In panic, the Arch-Creditors harvested living memories as collateral, mutating into bloated, iron-clad <strong>Auditors</strong> who rewrite reality to liquidate accounts.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 8px 0; font-family: 'Cinzel', serif; color: #ffd778; font-size: 1.15rem; border-bottom: 1px solid rgba(181, 137, 52, 0.35); padding-bottom: 4px;">III. THE AWAITED ONE: THE FORGOTTEN WITNESS</h3>
+                    <p style="margin: 0 0 10px 0;">
+                        Prophecies foretold the arrival of the <strong>Forgotten Witness</strong>—an entity born outside the margins of the Ledger with zero inherited debt, completely immune to default curses.
+                    </p>
+                    <p style="margin: 0;">
+                        Dispatched by the <strong>Order of the Blank Page</strong>, the Witness descends to hunt down the Four Sealed Ledgers (*Usury*, *Mortmain*, *Collateral*, *Foreclosure*) held by mad Auditors to reach the Vault of Final Settlement.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 8px 0; font-family: 'Cinzel', serif; color: #ffd778; font-size: 1.15rem; border-bottom: 1px solid rgba(181, 137, 52, 0.35); padding-bottom: 4px;">IV. THE THREE ENDINGS</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 10px;">
+                        <div style="background: rgba(30, 20, 15, 0.7); border: 1px solid #d4af37; border-radius: 8px; padding: 12px;">
+                            <h4 style="margin: 0 0 6px 0; color: #ffd778; font-family: 'Cinzel', serif; font-size: 0.95rem;">1. DEFAULT CYCLE</h4>
+                            <p style="margin: 0; font-size: 0.78rem; color: #d7ccc8; line-height: 1.45;">
+                                Sign your own soul as eternal collateral to extend the ledger for another era, binding mankind under harsher, more predatory contracts.
+                            </p>
+                        </div>
+                        <div style="background: rgba(30, 20, 15, 0.7); border: 1px solid #ff7744; border-radius: 8px; padding: 12px;">
+                            <h4 style="margin: 0 0 6px 0; color: #ffab91; font-family: 'Cinzel', serif; font-size: 0.95rem;">2. THE WRITE-OFF</h4>
+                            <p style="margin: 0; font-size: 0.78rem; color: #d7ccc8; line-height: 1.45;">
+                                Burn the Grand Ledger to cancel all debt at once—unraveling the cosmic structure so reality quietly dissolves without obligation.
+                            </p>
+                        </div>
+                        <div style="background: rgba(30, 20, 15, 0.7); border: 1px solid #80d8ff; border-radius: 8px; padding: 12px;">
+                            <h4 style="margin: 0 0 6px 0; color: #b3e5fc; font-family: 'Cinzel', serif; font-size: 0.95rem;">3. THE UNBOUND COVENANT (SECRET)</h4>
+                            <p style="margin: 0; font-size: 0.78rem; color: #d7ccc8; line-height: 1.45;">
+                                Collect the Apocryphal Receipts of Settlement to rewrite the terms of existence: reality is an inherent right, not borrowed debt.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <h3 style="margin: 0 0 8px 0; font-family: 'Cinzel', serif; color: #ffd778; font-size: 1.15rem; border-bottom: 1px solid rgba(181, 137, 52, 0.35); padding-bottom: 4px;">V. SANCTUM MECHANICS & ARSENAL</h3>
+                    <ul style="margin: 0; padding-left: 18px; font-size: 0.82rem; line-height: 1.6; color: #d7ccc8;">
+                        <li><strong>Interest-Burn Damage:</strong> High Bailiff of Arrears punishes potion chugging with burning interest damage over time (immune when wearing Forgotten Witness).</li>
+                        <li><strong>Shared Equilibrium:</strong> The Twins of Surety are tethered by a brass balance chain—damaging one tilts the cosmic equilibrium of the other.</li>
+                        <li><strong>Receipt of Settlement:</strong> Perishing leaves an Apocryphal Receipt at your corpse to reclaim before compounding interest drains max vigor.</li>
+                        <li><strong>Liturgy Weapons:</strong> Quill of Default (Rapier), Bailiff's Gavel (Great Hammer), The Scales of Surety (Twin Scythes).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="display: flex; justify-content: flex-end; margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(181, 137, 52, 0.25);">
+                <button class="btn-modal-close" onclick="closeSunkenLiturgyModal()" style="padding: 8px 24px; font-size: 0.85rem; font-weight: 800;">RESUME EXPEDITION [ESC]</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 📜 DARK SOULS LORE CODEX & 570 MOBS COMPENDIUM -->
     <div id="lore-codex-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center;">
         <div class="modal-box" style="max-width: 860px; max-height: 88vh; display: flex; flex-direction: column; border-color: #d4af37; box-shadow: 0 0 35px rgba(212, 175, 55, 0.35); background: linear-gradient(180deg, #16120d 0%, #0a0806 100%);">
@@ -5968,6 +6073,7 @@
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; justify-content: space-between;">
                 <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <button class="btn-icon-bar" onclick="filterLoreCodex('all')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd778; color: #fff3a8; background: rgba(60,45,15,0.7);">ALL (570)</button>
+                    <button class="btn-icon-bar" onclick="filterLoreCodex('liturgy')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffaa33; color: #ffe0b2; background: rgba(70, 35, 12, 0.85); box-shadow: 0 0 10px rgba(255, 170, 51, 0.45);">⚖️ SUNKEN LITURGY</button>
                     <button class="btn-icon-bar" onclick="filterLoreCodex('weapon')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #c49a45; color: #ffd276;">WEAPONS</button>
                     <button class="btn-icon-bar" onclick="filterLoreCodex('armor')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #64b5f6; color: #bbdefb;">ARMOR</button>
                     <button class="btn-icon-bar" onclick="filterLoreCodex('relic')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-color: #ce93d8; color: #f3e5f5;">RELICS</button>
@@ -6862,6 +6968,7 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDevMapModal();" style="border-color: #00ffaa; color: #a5ffbe; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.4);">🗺️ DEV MAP [M]</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 350 LOCATIONS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLoreCodexModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">📜 LORE (690 MOBS)</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSunkenLiturgyModal();" style="border-color: #ffaa33; color: #ffe0b2; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 35, 10, 0.85); box-shadow: 0 0 12px rgba(255,170,51,0.45);">⚖️ THE SUNKEN LITURGY</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openSkinsModal();" style="border-color: #64b5f6; color: #bbdefb; justify-content: center; padding: 10px 12px; font-weight: 700;">🛡️ 3D SKINS & SETS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openWeaponArsenalModal();" style="border-color: #d4af37; color: #ffd778; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 10px rgba(212, 175, 55, 0.35);">🗡️ WEAPON ARSENAL (40)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openRingsModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 10px rgba(255, 215, 0, 0.35);">💍 30 RINGS & TALISMANS</button>
@@ -7019,6 +7126,19 @@
                 if (m) m.style.display = 'none';
             }
         }
+
+        // Sunken Liturgy Modal Helpers
+        function openSunkenLiturgyModal() {
+            const modal = document.getElementById('sunken-liturgy-modal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeSunkenLiturgyModal() {
+            const modal = document.getElementById('sunken-liturgy-modal');
+            if (modal) modal.style.display = 'none';
+        }
+        window.openSunkenLiturgyModal = openSunkenLiturgyModal;
+        window.closeSunkenLiturgyModal = closeSunkenLiturgyModal;
 
         // Lore Codex Modal Helpers
         function openLoreCodexModal() {
@@ -7840,25 +7960,25 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/audio.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/lore_items.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/world.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/character.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/siege_warfare.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/collision_system.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/combat.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/postprocessing.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/qa_suite.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/inventory_system.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/compendium_300_models.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/death_quotes_300.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/game.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
-    <script src="js/dev_map.js?v=20261122_CANVAS_RENDER_FIX_V13"></script>
+    <script src="js/three.min.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/audio.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/lore_items.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/world.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/character.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/siege_warfare.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/collision_system.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/combat.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/postprocessing.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/qa_suite.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/inventory_system.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/compendium_300_models.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/death_quotes_300.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/game.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/dev_map.js?v=20261122_SUNKEN_LITURGY_V14"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {

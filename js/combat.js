@@ -203,6 +203,57 @@ class DarkSoulsCombat {
                 cost: 400,
                 unlocked: true
             },
+            quill_of_default: {
+                id: 'quill_of_default',
+                name: 'Quill of Default',
+                type: 'Thrusting Rapier (The Sunken Liturgy)',
+                icon: '✒️',
+                desc: 'Needle-thin rapier forged from midnight steel and abyssal void ink by the Order of the Blank Page. Pierces all armor and writes default decay into Auditors.',
+                lightDmg: 245,
+                heavyDmg: 460,
+                reach: 3.8,
+                bossReachBonus: 2.6,
+                lightStamina: 14,
+                heavyStamina: 24,
+                speedMultiplier: 1.45,
+                poiseBreak: 1.3,
+                cost: 0,
+                unlocked: true
+            },
+            bailiff_gavel: {
+                id: 'bailiff_gavel',
+                name: "Bailiff's Gavel of Foreclosure",
+                type: 'Great Hammer (The Sunken Liturgy)',
+                icon: '🔨',
+                desc: 'Colossal brass gavel stamped with the seal of arrears. Heavy strikes shatter poise and trigger ground shockwaves of compounding interest.',
+                lightDmg: 340,
+                heavyDmg: 640,
+                reach: 4.2,
+                bossReachBonus: 3.2,
+                lightStamina: 38,
+                heavyStamina: 56,
+                speedMultiplier: 0.85,
+                poiseBreak: 3.8,
+                cost: 0,
+                unlocked: true
+            },
+            scales_of_surety: {
+                id: 'scales_of_surety',
+                name: 'The Scales of Surety',
+                type: 'Twin Balance Scythes (The Sunken Liturgy)',
+                icon: '⚖️',
+                desc: 'Linked curved balance blades forged from the scales of the First Arbiters. Equalizes damage dealt to all nearby enemies with high critical strike multipliers.',
+                lightDmg: 230,
+                heavyDmg: 430,
+                reach: 3.6,
+                bossReachBonus: 2.4,
+                lightStamina: 16,
+                heavyStamina: 28,
+                speedMultiplier: 1.32,
+                poiseBreak: 1.7,
+                cost: 0,
+                unlocked: true
+            },
             rivers_of_blood: {
                 id: 'rivers_of_blood',
                 name: 'Rivers of Blood',
@@ -936,7 +987,7 @@ class DarkSoulsCombat {
             }
         };
         this.currentWeaponId = 'sword';
-        this.unlockedWeapons = ['sword', 'torch'];
+        this.unlockedWeapons = ['sword', 'torch', 'quill_of_default', 'bailiff_gavel', 'scales_of_surety'];
         this.charcoalResinTimer = 0;
         this.projectiles = [];
 
@@ -1484,6 +1535,32 @@ class DarkSoulsCombat {
 
         // 16 LORDS OF LORDRAN: PROGRESSIVE BOSS ROSTER (Smooth Unlock Sequence)
         this.bossRoster = [
+            {
+                id: 'high_bailiff',
+                name: 'HIGH BAILIFF OF ARREARS',
+                title: 'The Sunken Liturgy &bull; First Adjudicator of the Grand Counting House, Gavel of Foreclosure & Compound Interest',
+                unlockLocationId: 'liturgy_grand_counting_house',
+                icon: '⚖️',
+                maxHp: 6800,
+                damage: 320,
+                souls: 28000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createHighBailiff(x, z)
+            },
+            {
+                id: 'twins_surety',
+                name: 'THE TWINS OF SURETY',
+                title: 'The Sunken Liturgy &bull; Keepers of the Suspended Scales, Dual Balance Scythes & Linked Poise Equilibrium',
+                unlockLocationId: 'liturgy_suspended_scales',
+                icon: '⛓️',
+                maxHp: 5800,
+                damage: 290,
+                souls: 26000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createTwinsOfSurety(x, z)
+            },
             {
                 id: 'asylum',
                 name: 'VANGUARD OF ASH: ASYLUM DEMON',
@@ -4227,6 +4304,18 @@ class DarkSoulsCombat {
                     this.game.showNotification("✨ ESTUS CLEANSED POISON & VENOM!");
                 }
                 if (this.isPetrified) this.isPetrified = false;
+
+                // THE SUNKEN LITURGY — HIGH BAILIFF INTEREST-BURN MECHANIC
+                if (this.boss && this.boss.id === 'high_bailiff' && !this.boss.isDead) {
+                    const skinId = (this.game && this.game.currentCharacterSkin) || 'warrior';
+                    if (skinId === 'forgotten_witness') {
+                        this.game.showNotification("⚖️ FORGOTTEN WITNESS: ZERO-DEBT IMMUNITY DISCHARGES INTEREST-BURN!");
+                    } else {
+                        this.game.showNotification("🔥 DEFAULT PENALTY! HIGH BAILIFF INFLICTS COMPOUND INTEREST-BURN!");
+                        this.applyInterestBurn(4);
+                    }
+                }
+
                 if (this.game && this.game.triggerAutoSave) {
                     this.game.triggerAutoSave('ESTUS_DRINK');
                 }
@@ -4266,6 +4355,35 @@ class DarkSoulsCombat {
         if (this.game && this.game.triggerAutoSave) {
             this.game.triggerAutoSave('ANTIDOTE_USE');
         }
+    }
+
+    // ----------------------------------------------------
+    // THE SUNKEN LITURGY: COMPOUND INTEREST-BURN MECHANIC
+    // Punishes potion chugging and defaults when facing Auditors
+    // ----------------------------------------------------
+    applyInterestBurn(ticks = 4) {
+        if (this.isDead) return;
+        if (this.interestBurnInterval) {
+            clearInterval(this.interestBurnInterval);
+            this.interestBurnInterval = null;
+        }
+        let remainingTicks = ticks;
+        this.interestBurnInterval = setInterval(() => {
+            if (this.isDead || remainingTicks <= 0) {
+                clearInterval(this.interestBurnInterval);
+                this.interestBurnInterval = null;
+                return;
+            }
+            remainingTicks--;
+            const burnDmg = 45;
+            this.hp = Math.max(1, this.hp - burnDmg);
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification(`⚖️ COMPOUND INTEREST: -${burnDmg} HP (DEFAULT BALANCE DUE)`);
+            }
+            if (this.world && this.world.spawnHitSparks && this.game && this.game.playerMesh) {
+                this.world.spawnHitSparks(this.game.playerMesh.position, false);
+            }
+        }, 750);
     }
 
     // ----------------------------------------------------
@@ -5392,6 +5510,10 @@ equipWeapon(weaponId) {
         this.isBlocking = false;
         this.isRolling = false;
         this.isDrinkingEstus = false;
+        if (this.interestBurnInterval) {
+            clearInterval(this.interestBurnInterval);
+            this.interestBurnInterval = null;
+        }
 
         // Choose random comical LOL animation style
         const animNames = [
@@ -5435,6 +5557,10 @@ equipWeapon(weaponId) {
     // BONFIRE REST & LEVEL UP
     // ----------------------------------------------------
     restAtBonfire() {
+        if (this.interestBurnInterval) {
+            clearInterval(this.interestBurnInterval);
+            this.interestBurnInterval = null;
+        }
         this.hp = this.maxHp;
         this.estusFlasks = this.maxEstus;
         this.stamina = this.maxStamina;
