@@ -3511,7 +3511,7 @@ class DarkSoulsCombat {
             this.ragdolls = [];
         }
 
-        // Tactical 3x Mobs Spawning across 3-4x Expanded Locations (240m Viaduct, 248m Ramparts, 248m Catacombs)
+        // MASSIVE 3X MOBS SPAWNING ACROSS ALL AREAS (Bridge, Ramparts, Catacombs, Courtyard, Outskirts, Sanctum)
         const mobList = (window.DarkSoulsLore && window.DarkSoulsLore.mobs) || window.DARK_SOULS_MOBS || [];
         if (mobList.length > 0) {
             let starterZoneCount = 0;
@@ -3527,476 +3527,148 @@ class DarkSoulsCombat {
 
                 // Scale & distribute mobs across the 3-4x expanded 240m+ paths before the boss:
                 if (pz >= 20 && pz <= 95 && Math.abs(px) < 8.5) {
-                    // Royal Bridge Viaduct (spread smoothly across z: 35 to 265)
                     pz = 35 + ((pz - 20) / 75) * 230;
                 } else if (pz >= 20 && pz <= 95 && px > 10.0) {
-                    // High Castle Ramparts (spread across z: 30 to 265)
                     pz = 30 + ((pz - 20) / 75) * 235;
                 } else if (pz >= 20 && pz <= 95 && px < -10.0) {
-                    // Subterranean Catacombs (spread across z: 30 to 265)
                     pz = 30 + ((pz - 20) / 75) * 235;
                 } else if (pz > 95 && pz <= 150) {
-                    // Deep Crypts & Upper Causeway approach
                     pz = 150 + ((pz - 95) / 55) * 115;
                 }
 
                 const dist = Math.sqrt(px * px + pz * pz);
 
-                // Safe sanctuary around starting bonfire (12m radius)
-                if (dist < 12.0) return;
+                // Safe sanctuary around starting bonfire (8m radius)
+                if (dist < 8.0) return;
 
-                // Boss Arena sanctuary: never spawn hollow mobs inside the Boss Arena (z in [272, 390], x in [-22, 22])
+                // Boss Arena sanctuary
                 if (px >= -22 && px <= 22 && pz >= 272 && pz <= 390) return;
 
-                // Starter Courtyard density control
+                // Starter Courtyard density: up to 24 mobs
                 if (dist < 32.0) {
-                    if (starterZoneCount >= 6) return;
+                    if (starterZoneCount >= 24) return;
                     starterZoneCount++;
                 }
 
-                // Minimum spacing between mobs (~5.4m) for tactical squads and ambushes
+                // Spacing threshold reduced to 6.5 (~2.5m) to allow 3-man tactical squads
                 const isTooClose = spawnedCoords.some(c => {
                     const dx = c[0] - px;
                     const dz = c[1] - pz;
-                    return (dx * dx + dz * dz) < 29.0;
+                    return (dx * dx + dz * dz) < 6.5;
                 });
                 if (isTooClose) return;
 
                 spawnedCoords.push([px, pz]);
+                // Primary Mob
                 this.createCustomMob(mobDef, px, pz, 0, py);
+
+                // Spawn 2 Squad Flanker Mobs (3x Density) along bridge, ramparts, catacombs & courtyard
+                const isBridge = (pz >= 28 && pz <= 268 && Math.abs(px) < 7.5);
+                const isRamparts = (pz >= 24 && pz <= 268 && px >= 13.0 && px <= 24.5);
+                const isCatacombs = (pz >= 24 && pz <= 268 && px <= -16.0 && px >= -24.5);
+                const isCourtyard = (dist >= 10.0 && dist <= 30.0);
+                const isOutskirts = (px <= -42.0 && px >= -72.0 && pz >= -8.0 && pz <= 42.0);
+
+                if (isBridge || isRamparts || isCatacombs || isCourtyard || isOutskirts) {
+                    // Flanker 1
+                    const fx1 = px + (isBridge ? 2.2 : (isRamparts ? 1.6 : -1.8));
+                    const fz1 = pz + 2.4;
+                    this.createCustomMob(mobDef, fx1, fz1, 0.2, py);
+
+                    // Flanker 2
+                    const fx2 = px - (isBridge ? 2.2 : (isRamparts ? 1.6 : -1.8));
+                    const fz2 = pz - 2.4;
+                    this.createCustomMob(mobDef, fx2, fz2, -0.2, py);
+                }
             });
         }
 
-        // Spawn Gorgons & Serpents in the Sunken Serpent Sanctum & Temple of the Gorgon
-        const serpentSanctumMobs = [
-            {
-                id: 'gorgon_matriarch_elite',
-                name: 'GORGON MATRIARCH ELITE',
-                meshType: 'gorgon_medusa',
-                hp: 1200,
-                damage: 160,
-                souls: 3500,
-                speed: 2.8,
-                attackReach: 3.2,
-                behaviorType: 'Heavy Tank',
-                pos: [0, -4.0, -92.0]
-            },
-            {
-                id: 'man_serpent_guard_1',
-                name: 'MAN-SERPENT TEMPLE GUARD',
-                meshType: 'man_serpent_warrior',
-                hp: 620,
-                damage: 110,
-                souls: 1600,
-                speed: 2.6,
-                attackReach: 2.8,
-                behaviorType: 'Heavy Tank',
-                pos: [-5.0, 0, -28.0]
-            },
-            {
-                id: 'man_serpent_guard_2',
-                name: 'MAN-SERPENT TEMPLE GUARD',
-                meshType: 'man_serpent_warrior',
-                hp: 620,
-                damage: 110,
-                souls: 1600,
-                speed: 2.6,
-                attackReach: 2.8,
-                behaviorType: 'Heavy Tank',
-                pos: [5.0, 0, -28.0]
-            },
-            {
-                id: 'man_serpent_patrol_1',
-                name: 'MAN-SERPENT PATROL',
-                meshType: 'man_serpent_warrior',
-                hp: 580,
-                damage: 105,
-                souls: 1400,
-                speed: 2.7,
-                attackReach: 2.8,
-                behaviorType: 'Flanker',
-                pos: [-12.0, -2.5, -55.0]
-            },
-            {
-                id: 'man_serpent_patrol_2',
-                name: 'MAN-SERPENT PATROL',
-                meshType: 'man_serpent_warrior',
-                hp: 580,
-                damage: 105,
-                souls: 1400,
-                speed: 2.7,
-                attackReach: 2.8,
-                behaviorType: 'Flanker',
-                pos: [12.0, -2.5, -55.0]
-            }
+        // 3X SERPENT SANCTUM MOBS (15 Mobs across descending halls)
+        const sanctumPositions = [
+            [-5.0, 0, -28.0], [5.0, 0, -28.0], [0, 0, -32.0],
+            [-10.0, -2.5, -45.0], [10.0, -2.5, -45.0], [0, -2.5, -50.0],
+            [-12.0, -2.5, -55.0], [12.0, -2.5, -55.0], [-6.0, -2.5, -62.0],
+            [6.0, -2.5, -62.0], [0, -2.5, -70.0], [-10.0, -4.0, -78.0],
+            [10.0, -4.0, -78.0], [-4.0, -4.0, -88.0], [4.0, -4.0, -88.0],
+            [0, -4.0, -92.0]
         ];
-        serpentSanctumMobs.forEach(sMob => {
-            this.createCustomMob(sMob, sMob.pos[0], sMob.pos[2], 0, sMob.pos[1]);
+        sanctumPositions.forEach((pos, idx) => {
+            const isMatriarch = (idx >= 13);
+            const sMob = {
+                id: `serpent_mob_${idx}`,
+                name: isMatriarch ? 'GORGON MATRIARCH ELITE' : 'MAN-SERPENT TEMPLE GUARD',
+                meshType: isMatriarch ? 'gorgon_medusa' : 'man_serpent_warrior',
+                hp: isMatriarch ? 1200 : 620,
+                damage: isMatriarch ? 160 : 110,
+                souls: isMatriarch ? 3500 : 1600,
+                speed: 2.7,
+                attackReach: isMatriarch ? 3.2 : 2.8,
+                behaviorType: 'Heavy Tank'
+            };
+            this.createCustomMob(sMob, pos[0], pos[2], 0, pos[1]);
         });
 
-        // Tactical Undead Hollow Archers on High Ramparts (+6m), Watchtowers, and Viaduct Archways
-        const lordranArchers = [
-            {
-                id: 'undead_archer_tower_1',
-                name: 'UNDEAD BURG RAMPART ARCHER',
-                meshType: 'archer',
-                isArcher: true,
-                behaviorType: 'Ranged',
-                aiType: 'Ranged',
-                hp: 220,
-                damage: 18,
-                souls: 180,
-                speed: 1.8,
-                attackReach: 32.0,
-                pos: [18.0, 6.0, 36.0]
-            },
-            {
-                id: 'undead_archer_parapet_1',
-                name: 'PARAPET HOLLOW SNIPER',
-                meshType: 'archer',
-                isArcher: true,
-                behaviorType: 'Ranged',
-                aiType: 'Ranged',
-                hp: 240,
-                damage: 20,
-                souls: 220,
-                speed: 1.8,
-                attackReach: 35.0,
-                pos: [-18.0, 6.0, 75.0]
-            },
-            {
-                id: 'undead_archer_midway_bridge',
-                name: 'VIADUCT FORTRESS ARCHER',
-                meshType: 'archer',
-                isArcher: true,
-                behaviorType: 'Ranged',
-                aiType: 'Ranged',
-                hp: 260,
-                damage: 22,
-                souls: 260,
-                speed: 1.9,
-                attackReach: 34.0,
-                pos: [0.0, 6.5, 150.0]
-            },
-            {
-                id: 'undead_archer_tower_2',
-                name: 'RAMPARTS WATCHTOWER MARKSMAN',
-                meshType: 'archer',
-                isArcher: true,
-                behaviorType: 'Ranged',
-                aiType: 'Ranged',
-                hp: 270,
-                damage: 22,
-                souls: 280,
-                speed: 1.7,
-                attackReach: 38.0,
-                pos: [21.0, 10.0, 215.0]
-            },
-            {
-                id: 'undead_archer_gatehouse',
-                name: 'GATEHOUSE APEX SNIPER',
-                meshType: 'archer',
-                isArcher: true,
-                behaviorType: 'Ranged',
-                aiType: 'Ranged',
-                hp: 280,
-                damage: 24,
-                souls: 320,
-                speed: 1.6,
-                attackReach: 40.0,
-                pos: [21.0, 10.0, 268.0]
-            },
-            {
-                id: 'silver_knight_greatbowman',
-                name: 'ANOR LONDO GREATBOW ARCHER',
-                meshType: 'archer',
-                isArcher: true,
-                behaviorType: 'Ranged',
-                aiType: 'Ranged',
-                hp: 420,
-                damage: 28,
-                souls: 800,
-                speed: 1.5,
-                attackReach: 44.0,
-                pos: [0.0, 6.5, -45.0]
-            }
+        // 3X LORDRAN ARCHERS (18 Archers across high battlements)
+        const archerPositions = [
+            [18.0, 6.0, 36.0], [18.0, 6.0, 55.0], [18.0, 6.0, 75.0],
+            [18.0, 6.0, 95.0], [18.0, 6.0, 120.0], [18.0, 6.0, 140.0],
+            [18.0, 6.0, 165.0], [18.0, 6.0, 190.0], [21.0, 10.0, 215.0],
+            [21.0, 10.0, 240.0], [21.0, 10.0, 268.0],
+            [-18.0, 6.0, 45.0], [-18.0, 6.0, 75.0], [-18.0, 6.0, 110.0],
+            [-18.0, 6.0, 150.0], [0.0, 6.5, 150.0], [0.0, 6.5, -45.0],
+            [-18.0, 6.0, 210.0]
         ];
-        lordranArchers.forEach(aMob => {
-            this.createCustomMob(aMob, aMob.pos[0], aMob.pos[2], 0, aMob.pos[1]);
+        archerPositions.forEach((pos, idx) => {
+            const aMob = {
+                id: `undead_archer_${idx}`,
+                name: (idx >= 15) ? 'ANOR LONDO GREATBOW ARCHER' : 'RAMPART HOLLOW SNIPER',
+                meshType: 'archer',
+                isArcher: true,
+                behaviorType: 'Ranged',
+                aiType: 'Ranged',
+                hp: (idx >= 15) ? 420 : 250,
+                damage: (idx >= 15) ? 28 : 20,
+                souls: (idx >= 15) ? 800 : 240,
+                speed: 1.8,
+                attackReach: 36.0
+            };
+            this.createCustomMob(aMob, pos[0], pos[2], 0, pos[1]);
         });
 
-        // Spawn Dedicated High-Tier Mobs across the Outside Realm (Darkroot Woods, Wyrm Plateau & Ashen Wastes)
-        const outsideRealmMobs = [
-            {
-                id: 'outside_treant_warden_1',
-                name: 'ANCIENT TREANT BARK GUARDIAN',
-                meshType: 'treant_guardian',
-                hp: 1400,
-                damage: 150,
-                souls: 3200,
-                speed: 2.3,
-                attackReach: 3.5,
-                behaviorType: 'Heavy Tank',
-                pos: [-60.0, 0, -32.0]
-            },
-            {
-                id: 'outside_treant_warden_2',
-                name: 'ANCIENT TREANT BARK GUARDIAN',
-                meshType: 'treant_guardian',
-                hp: 1400,
-                damage: 150,
-                souls: 3200,
-                speed: 2.3,
-                attackReach: 3.5,
-                behaviorType: 'Heavy Tank',
-                pos: [-105.0, 0, 15.0]
-            },
-            {
-                id: 'outside_cursed_basilisk_1',
-                name: 'CURSED BASILISK OF THE OUTLANDS',
-                meshType: 'cursed_basilisk',
-                hp: 850,
-                damage: 110,
-                souls: 2200,
-                speed: 3.4,
-                attackReach: 2.6,
-                behaviorType: 'Flanker',
-                pos: [-85.0, 0, 40.0]
-            },
-            {
-                id: 'outside_cursed_basilisk_2',
-                name: 'CURSED BASILISK OF THE OUTLANDS',
-                meshType: 'cursed_basilisk',
-                hp: 850,
-                damage: 110,
-                souls: 2200,
-                speed: 3.4,
-                attackReach: 2.6,
-                behaviorType: 'Flanker',
-                pos: [-125.0, 0, -35.0]
-            },
-            {
-                id: 'outside_fell_omen_1',
-                name: 'FELL OMEN GLADIATOR',
-                meshType: 'fell_omen_gladiator',
-                hp: 1650,
-                damage: 175,
-                souls: 4000,
-                speed: 2.7,
-                attackReach: 3.2,
-                behaviorType: 'Heavy Tank',
-                pos: [-135.0, 0, -18.0]
-            },
-            {
-                id: 'outside_crystal_drake_1',
-                name: 'CRYSTAL DRAKE WHELP',
-                meshType: 'crystal_drake_whelp',
-                hp: 1100,
-                damage: 135,
-                souls: 2800,
-                speed: 3.2,
-                attackReach: 3.0,
-                behaviorType: 'Flanker',
-                pos: [-148.0, 2.0, 38.0]
-            },
-            {
-                id: 'outside_crystal_drake_2',
-                name: 'CRYSTAL DRAKE WHELP',
-                meshType: 'crystal_drake_whelp',
-                hp: 1100,
-                damage: 135,
-                souls: 2800,
-                speed: 3.2,
-                attackReach: 3.0,
-                behaviorType: 'Flanker',
-                pos: [-168.0, 2.0, 55.0]
-            },
-            {
-                id: 'outside_crucible_sentinel_1',
-                name: 'CRUCIBLE KNIGHT SENTINEL',
-                meshType: 'crucible_knight_sentinel',
-                hp: 2100,
-                damage: 190,
-                souls: 5500,
-                speed: 2.5,
-                attackReach: 3.0,
-                behaviorType: 'Heavy Tank',
-                pos: [-162.0, 2.0, 46.0]
-            },
-            {
-                id: 'outside_chimera_hound_1',
-                name: 'FIRE CHIMERA HOUND',
-                meshType: 'fire_chimera_hound',
-                hp: 920,
-                damage: 125,
-                souls: 2400,
-                speed: 3.6,
-                attackReach: 2.5,
-                behaviorType: 'Flanker',
-                pos: [-78.0, 0, -45.0]
-            },
-            {
-                id: 'outside_chimera_hound_2',
-                name: 'FIRE CHIMERA HOUND',
-                meshType: 'fire_chimera_hound',
-                hp: 920,
-                damage: 125,
-                souls: 2400,
-                speed: 3.6,
-                attackReach: 2.5,
-                behaviorType: 'Flanker',
-                pos: [-110.0, 0, 35.0]
-            },
-            // --- 12 NEW 3D PROCEDURAL MOBS ACROSS OUTSIDE REALM ---
-            {
-                id: 'outside_magma_wyrm_1',
-                name: 'MAGMA WYRM TITAN',
-                meshType: 'dragonkin_wyrm',
-                hp: 1750,
-                damage: 180,
-                souls: 4500,
-                speed: 2.8,
-                attackReach: 3.6,
-                behaviorType: 'Heavy Tank',
-                pos: [-180.0, -1.5, -25.0]
-            },
-            {
-                id: 'outside_magma_wyrm_2',
-                name: 'CHARRED WYRM WARRIOR',
-                meshType: 'dragonkin_wyrm',
-                hp: 1600,
-                damage: 165,
-                souls: 4200,
-                speed: 3.0,
-                attackReach: 3.4,
-                behaviorType: 'Heavy Tank',
-                pos: [-165.0, 2.0, 60.0]
-            },
-            {
-                id: 'outside_crucible_sentinel_2',
-                name: 'CRUCIBLE SILURIA SENTINEL',
-                meshType: 'crucible_knight',
-                hp: 2200,
-                damage: 195,
-                souls: 5800,
-                speed: 2.6,
-                attackReach: 3.8,
-                behaviorType: 'Heavy Tank',
-                pos: [-110.0, 0, 12.0]
-            },
-            {
-                id: 'outside_crucible_sentinel_3',
-                name: 'CRUCIBLE ORDOVIS CHAMPION',
-                meshType: 'crucible_knight',
-                hp: 2150,
-                damage: 190,
-                souls: 5600,
-                speed: 2.7,
-                attackReach: 3.5,
-                behaviorType: 'Heavy Tank',
-                pos: [-145.0, 0, -55.0]
-            },
-            {
-                id: 'outside_abductor_virgin_1',
-                name: 'VOLCANO ABDUCTOR VIRGIN',
-                meshType: 'abductor_virgin',
-                hp: 2400,
-                damage: 210,
-                souls: 6200,
-                speed: 3.2,
-                attackReach: 3.6,
-                behaviorType: 'Heavy Tank',
-                pos: [-135.0, 0, -35.0]
-            },
-            {
-                id: 'outside_abductor_virgin_2',
-                name: 'PENDULUM EXECUTIONER VIRGIN',
-                meshType: 'abductor_virgin',
-                hp: 2350,
-                damage: 205,
-                souls: 6000,
-                speed: 3.3,
-                attackReach: 3.7,
-                behaviorType: 'Heavy Tank',
-                pos: [-65.0, 0, 15.0]
-            },
-            {
-                id: 'outside_cthulhu_mindflayer_1',
-                name: 'ASTRAL VOID MINDFLAYER',
-                meshType: 'cthulhu_mindflayer',
-                hp: 1350,
-                damage: 160,
-                souls: 4400,
-                speed: 3.1,
-                attackReach: 3.8,
-                behaviorType: 'Ranged',
-                pos: [-160.0, -2.5, -60.0]
-            },
-            {
-                id: 'outside_cthulhu_mindflayer_2',
-                name: 'COSMIC TENDRIL CHANNELLER',
-                meshType: 'cthulhu_mindflayer',
-                hp: 1300,
-                damage: 155,
-                souls: 4200,
-                speed: 3.2,
-                attackReach: 3.6,
-                behaviorType: 'Ranged',
-                pos: [-150.0, -2.5, -52.0]
-            },
-            {
-                id: 'outside_omen_ogre_1',
-                name: 'BELURAT HORNSENT BERSERKER',
-                meshType: 'omen_ogre',
-                hp: 2100,
-                damage: 195,
-                souls: 5500,
-                speed: 2.8,
-                attackReach: 3.7,
-                behaviorType: 'Heavy Tank',
-                pos: [-85.0, 0, 70.0]
-            },
-            {
-                id: 'outside_omen_ogre_2',
-                name: 'SUBTERRANEAN HORNED OGRE',
-                meshType: 'omen_ogre',
-                hp: 2050,
-                damage: 190,
-                souls: 5300,
-                speed: 2.9,
-                attackReach: 3.6,
-                behaviorType: 'Heavy Tank',
-                pos: [-95.0, 0, 62.0]
-            },
-            {
-                id: 'outside_arachnid_scuttler_1',
-                name: 'BLACK CHITIN STINGER BEAST',
-                meshType: 'arachnid_scuttler',
-                hp: 1450,
-                damage: 165,
-                souls: 4600,
-                speed: 3.6,
-                attackReach: 3.4,
-                behaviorType: 'Flanker',
-                pos: [-130.0, 0, 65.0]
-            },
-            {
-                id: 'outside_arachnid_scuttler_2',
-                name: 'CAELID ROT SCUTTLER',
-                meshType: 'arachnid_scuttler',
-                hp: 1400,
-                damage: 160,
-                souls: 4400,
-                speed: 3.7,
-                attackReach: 3.3,
-                behaviorType: 'Flanker',
-                pos: [-142.0, 0, 72.0]
-            }
+        // 3X OUTSIDE REALM MOBS (24 Mobs across outskirts, dragon chasm & darkroot)
+        const outsidePositions = [
+            [-50.0, -2.0, 8.0], [-54.0, -2.0, 14.0], [-62.0, -2.0, 20.0],
+            [-56.0, -2.0, 28.0], [-68.0, -2.0, 12.0], [-65.0, -2.0, 32.0],
+            [-60.0, 0, -32.0], [-68.0, 0, -25.0], [-105.0, 0, 15.0],
+            [-95.0, 0, 22.0], [-85.0, 0, 40.0], [-90.0, 0, 32.0],
+            [-125.0, 0, -35.0], [-120.0, 0, -25.0], [-135.0, 0, -18.0],
+            [-148.0, 2.0, 38.0], [-155.0, 2.0, 44.0], [-168.0, 2.0, 55.0],
+            [-175.0, 2.0, 62.0], [-182.0, 2.0, 48.0], [-140.0, 0, -10.0],
+            [-110.0, 0, -42.0], [-78.0, 0, -15.0], [-52.0, -2.0, 22.0]
         ];
-        outsideRealmMobs.forEach(oMob => {
-            this.createCustomMob(oMob, oMob.pos[0], oMob.pos[2], 0, oMob.pos[1]);
+        outsidePositions.forEach((pos, idx) => {
+            const types = ['treant_guardian', 'cursed_basilisk', 'fell_omen_gladiator', 'crystal_drake_whelp', 'crucible_knight_sentinel'];
+            const mType = types[idx % types.length];
+            const oMob = {
+                id: `outside_mob_${idx}`,
+                name: mType.toUpperCase().replace(/_/g, ' '),
+                meshType: mType,
+                hp: 1100 + (idx % 5) * 200,
+                damage: 130 + (idx % 5) * 15,
+                souls: 2500 + (idx % 5) * 500,
+                speed: 2.6,
+                attackReach: 3.0,
+                behaviorType: (idx % 2 === 0) ? 'Heavy Tank' : 'Flanker'
+            };
+            this.createCustomMob(oMob, pos[0], pos[2], 0, pos[1]);
         });
-        
+
+        // 3X SUBTERRANEAN CATACOMBS SKELETON WARRIOR SQUADS (every 18m from z=32 to 260)
+        for (let caz = 34; caz <= 260; caz += 18) {
+            this.createSkeletonWarriorEnemy(-21.5, caz, 0, -4.92);
+            this.createSkeletonWarriorEnemy(-18.5, caz + 4, Math.PI, -4.92);
+        }
+
         // Boss
         if (!this.boss || this.boss.isDead) {
             this.spawnBoss(this.currentBossType || 'taurus');
@@ -4018,6 +3690,17 @@ class DarkSoulsCombat {
         if (behavior === 'Heavy Tank') defaultRadius = 1.35;
         else if (behavior === 'Flanker') defaultRadius = 0.75;
         else if (behavior === 'Caster' || behavior === 'Ranged') defaultRadius = 0.82;
+
+        // Determine Zone Tier for auto-leveling
+        let zoneTier = 0;
+        if (x <= -35) zoneTier = 4;                 // Outside Outskirts Dragon Chasm
+        else if (y <= -4.0 && z > 20) zoneTier = 3; // Flooded Catacombs
+        else if (z < -25) zoneTier = 3;             // Serpent Sanctum
+        else if (y >= 5.0) zoneTier = 2;            // High Castle Ramparts
+        else if (z > 175) zoneTier = 2;             // Deep Viaduct Boss Approach
+        else if (z >= 30) zoneTier = 1;             // Royal Bridge
+
+        const scale = this.getMobLevelScale(zoneTier);
 
         const enemy = {
             def: mobDef,
@@ -4049,16 +3732,18 @@ class DarkSoulsCombat {
             isStaggered: false,
             staggerTimer: 0,
             radius: mobDef.radius || defaultRadius,
-            animTime: Math.random() * 5
+            animTime: Math.random() * 5,
+            zoneTier: zoneTier,
+            level: scale.level
         };
         enemy.baseMaxHp = maxHp;
         enemy.baseDamage = damage;
         enemy.baseSouls = enemy.souls || 150;
-        const currentScale = this.getMobLevelScale();
-        enemy.maxHp = Math.round(enemy.baseMaxHp * currentScale.hpMult);
+
+        enemy.maxHp = Math.round(enemy.baseMaxHp * scale.hpMult);
         enemy.hp = enemy.maxHp;
-        enemy.damage = Math.round(enemy.baseDamage * currentScale.dmgMult);
-        enemy.souls = Math.round(enemy.baseSouls * currentScale.soulsMult);
+        enemy.damage = Math.round(enemy.baseDamage * scale.dmgMult);
+        enemy.souls = Math.round(enemy.baseSouls * scale.soulsMult);
 
         this.enemies.push(enemy);
         return enemy;
@@ -4093,6 +3778,17 @@ class DarkSoulsCombat {
             flankDir: -1,
             radius: 0.85
         };
+        enemy.zoneTier = 3;
+        const scale = this.getMobLevelScale(3);
+        enemy.level = scale.level;
+        enemy.baseMaxHp = enemy.maxHp;
+        enemy.baseDamage = enemy.damage;
+        enemy.baseSouls = enemy.souls || 350;
+        enemy.maxHp = Math.round(enemy.baseMaxHp * scale.hpMult);
+        enemy.hp = enemy.maxHp;
+        enemy.damage = Math.round(enemy.baseDamage * scale.dmgMult);
+        enemy.souls = Math.round(enemy.baseSouls * scale.soulsMult);
+
         this.enemies.push(enemy);
         return enemy;
     }
@@ -4121,6 +3817,18 @@ class DarkSoulsCombat {
             flankDir: 1,
             animTime: Math.random() * 5
         };
+        const zoneTier = (y >= 5 ? 2 : (y <= -3 ? 3 : 0));
+        const scale = this.getMobLevelScale(zoneTier);
+        enemy.zoneTier = zoneTier;
+        enemy.level = scale.level;
+        enemy.baseMaxHp = enemy.maxHp;
+        enemy.baseDamage = enemy.damage;
+        enemy.baseSouls = 120;
+        enemy.maxHp = Math.round(enemy.baseMaxHp * scale.hpMult);
+        enemy.hp = enemy.maxHp;
+        enemy.damage = Math.round(enemy.baseDamage * scale.dmgMult);
+        enemy.souls = Math.round(enemy.baseSouls * scale.soulsMult);
+
         this.enemies.push(enemy);
     }
 
@@ -5765,17 +5473,18 @@ equipWeapon(weaponId) {
         }
     }
 
-    getMobLevelScale() {
-        const lvlBonus = Math.max(0, this.level - 1);
+    getMobLevelScale(zoneBonus = 0) {
+        const playerLvl = Math.max(1, this.level || 1);
+        const mobLvl = Math.max(1, playerLvl + zoneBonus);
         return {
-            hpMult: 1.0 + lvlBonus * 0.12,     // +12% HP per level
-            dmgMult: 1.0 + lvlBonus * 0.08,    // +8% damage per level
-            soulsMult: 1.0 + lvlBonus * 0.15   // +15% souls per level
+            level: mobLvl,
+            hpMult: 1.0 + (mobLvl - 1) * 0.14,      // +14% HP per level
+            dmgMult: 1.0 + (mobLvl - 1) * 0.09,     // +9% DMG per level
+            soulsMult: 1.0 + (mobLvl - 1) * 0.18    // +18% souls per level
         };
     }
 
     scaleAllMobsToPlayerLevel() {
-        const scale = this.getMobLevelScale();
         for (let i = 0; i < this.enemies.length; i++) {
             const e = this.enemies[i];
             if (e && !e.isDead) {
@@ -5783,6 +5492,9 @@ equipWeapon(weaponId) {
                 if (!e.baseDamage) e.baseDamage = e.damage;
                 if (!e.baseSouls) e.baseSouls = e.souls || 150;
 
+                const zoneTier = e.zoneTier || 0;
+                const scale = this.getMobLevelScale(zoneTier);
+                e.level = scale.level;
                 const hpRatio = e.hp / Math.max(1, e.maxHp);
                 e.maxHp = Math.round(e.baseMaxHp * scale.hpMult);
                 e.hp = Math.max(1, Math.round(e.maxHp * hpRatio));
@@ -5792,18 +5504,19 @@ equipWeapon(weaponId) {
         }
 
         if (this.boss && !this.boss.isDead) {
+            const bossScale = this.getMobLevelScale(4); // Bosses get +4 apex tier levels
             if (!this.boss.baseMaxHp) this.boss.baseMaxHp = this.boss.maxHp;
             if (!this.boss.baseDamage) this.boss.baseDamage = this.boss.damage;
 
             const bossHpRatio = this.boss.hp / Math.max(1, this.boss.maxHp);
-            this.boss.maxHp = Math.round(this.boss.baseMaxHp * scale.hpMult);
+            this.boss.level = bossScale.level;
+            this.boss.maxHp = Math.round(this.boss.baseMaxHp * bossScale.hpMult);
             this.boss.hp = Math.max(1, Math.round(this.boss.maxHp * bossHpRatio));
-            this.boss.damage = Math.round(this.boss.baseDamage * scale.dmgMult);
+            this.boss.damage = Math.round(this.boss.baseDamage * bossScale.dmgMult);
         }
 
         if (this.game && this.game.showNotification) {
-            const pct = Math.round((scale.hpMult - 1.0) * 100);
-            this.game.showNotification(`⚔️ LEVEL ${this.level}! ALL MOBS SCALED TO LVL ${this.level} (+${pct}% HP/DMG)`);
+            this.game.showNotification(`⚔️ AUTO-LEVEL UP: ALL MOBS & BOSS AUTO-SCALED TO PLAYER LVL ${this.level}`);
         }
     }
 

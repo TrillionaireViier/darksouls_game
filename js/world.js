@@ -900,7 +900,7 @@ class DarkSoulsWorld {
         }
 
         // 8. Citadel & Outside Realm Perimeter Failsafe: Never fall into void within explored grounds
-        if ((x >= -38 && x <= 38 && z >= -35 && z <= 175) || (x >= -195 && x <= -28 && z >= -90 && z <= 90)) {
+        if ((x >= -38 && x <= 38 && z >= -35 && z <= 390) || (x >= -195 && x <= -28 && z >= -90 && z <= 90)) {
             if (currentY === null || currentY >= -1.8) {
                 return (x <= -130 && x >= -185 && z >= 15 && z <= 80) ? 2.0 : 0.0;
             }
@@ -944,6 +944,18 @@ class DarkSoulsWorld {
         eastCourtyard.position.set(27.5, 0, 17);
         eastCourtyard.receiveShadow = true;
         this.scene.add(eastCourtyard);
+
+        // Protective Gothic Stone Balustrades flanking Center Promenade (prevents falling into side trenches)
+        this.createWall(-15.0, 1.2, 17.0, 0.6, 2.4, 26); // West Promenade Balustrade
+        this.createWall(15.0, 1.2, 17.0, 0.6, 2.4, 26);  // East Promenade Balustrade
+
+        // Outer balustrades along West and East battlements
+        this.createWall(-25.0, 1.2, 17.0, 0.6, 2.4, 26); // West Outer Balustrade
+        this.createWall(25.0, 1.2, 17.0, 0.6, 2.4, 26);  // East Outer Balustrade
+
+        // Corner abutments connecting promenade to Bridge portal (sealing gap at z=30)
+        this.createWall(-11.0, 1.5, 30.0, 8.0, 3.0, 1.2);
+        this.createWall(11.0, 1.5, 30.0, 8.0, 3.0, 1.2);
 
         // Outer Courtyard Fortress Walls (North Gate open at x in [-7, 7] for Serpent Sanctuary)
         this.createWall(-18.5, 5, -30, 23, 10, 2); // West segment of North wall (x: -30 to -7)
@@ -1556,10 +1568,20 @@ class DarkSoulsWorld {
             this.scene.add(stepMesh);
         }
 
-        // DRAMATIC ILLUMINATED PATH BEACONS
-        this.createPathBeacon(20, 6, 29, 0xffd700, "👑 HIGH RAMPARTS [UP]", "LEVEL +6m • ARCHER WATCHTOWERS", "#fff3a8");
-        this.createPathBeacon(-20, 0, 29, 0x00ffaa, "💀 SUNKEN CATACOMBS [DOWN]", "LEVEL -5m • FLOODED CRYPTS", "#a5ffbe");
-        this.createPathBeacon(0, 0, 29, 0xff7722, "⚔️ ROYAL BRIDGE [MAIN]", "LEVEL 0m • DIRECT FOG GATE PATH", "#ff9933");
+        // DRAMATIC ILLUMINATED PATH BEACONS & ROUTE PORTALS
+        // 1. In Central Courtyard Promenade (Safe, clear, fully accessible on surface flagstones at z = 18m)
+        this.createPathBeacon(-6.5, 0, 18, 0x00ffaa, "💀 UNDERGROUND CATACOMBS [DOWN]", "LEVEL -5m • FLOODED CRYPTS & SKELETONS", "#a5ffbe");
+        this.createPathBeacon(6.5, 0, 18, 0xffd700, "👑 HIGH CASTLE RAMPARTS [UP]", "LEVEL +6m • ARCHER WATCHTOWERS & BATTLEMENTS", "#fff3a8");
+        // Flanking Bridge Waypoint (at bridge entrance parapet, keeping central doorway completely clear)
+        this.createPathBeacon(-4.8, 0, 33, 0xff7722, "⚔️ ROYAL BRIDGE [WARP TO FOG GATE]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON (240m)", "#ff9933");
+
+        // 2. Return Portals from Inside the Flooded Subterranean Catacombs
+        this.createPathBeacon(-20, -4.92, 32, 0xffd700, "☀️ SURFACE COURTYARD [UP]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700");
+        this.createPathBeacon(-20, -4.92, 146, 0xffd700, "☀️ SURFACE COURTYARD [UP]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700");
+
+        // 3. Return & Ascent Portals on High Castle Ramparts
+        this.createPathBeacon(20, 6.0, 32, 0xffd700, "☀️ SURFACE COURTYARD [DOWN]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700");
+        this.createPathBeacon(20, 6.0, 266, 0xff7722, "⚔️ DESCEND TO BOSS FOG GATE [DOWN]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON", "#ff9933");
 
         // ----------------------------------------------------
         // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 275 TO Z = 385)
@@ -2410,17 +2432,23 @@ class DarkSoulsWorld {
         courtyardCliff.receiveShadow = true;
         distantGroup.add(courtyardCliff);
 
-        // Massive foundation walls under East Ramparts (x=20, z=[22, 91])
-        const rampartFoundation = new THREE.Mesh(new THREE.BoxGeometry(8.8, 24, 69), this.wallMat);
-        rampartFoundation.position.set(20, -9.0, 56.5);
+        // Massive foundation walls under East Ramparts (x=20, z=[22, 270]: 248m length!)
+        const rampartFoundation = new THREE.Mesh(new THREE.BoxGeometry(10.0, 30, 248), this.wallMat);
+        rampartFoundation.position.set(20, -12.0, 146);
         rampartFoundation.receiveShadow = true;
         distantGroup.add(rampartFoundation);
 
-        // Massive foundation walls under West Catacombs (x=-20, z=[22, 90])
-        const cryptFoundation = new THREE.Mesh(new THREE.BoxGeometry(8.8, 16, 67), this.wallMat);
-        cryptFoundation.position.set(-20, -15.0, 56);
+        // Massive foundation walls under West Catacombs (x=-20, z=[22, 270]: 248m length!)
+        const cryptFoundation = new THREE.Mesh(new THREE.BoxGeometry(10.0, 22, 248), this.wallMat);
+        cryptFoundation.position.set(-20, -16.0, 146);
         cryptFoundation.receiveShadow = true;
         distantGroup.add(cryptFoundation);
+
+        // Colossal foundation valley bedrock slab under the ENTIRE citadel & viaduct (x=[-180, 180], z=[-50, 390])
+        const canyonBedrock = new THREE.Mesh(new THREE.BoxGeometry(380, 30, 460), this.cliffRockMat || this.wallMat);
+        canyonBedrock.position.set(0, -32.0, 170);
+        canyonBedrock.receiveShadow = true;
+        distantGroup.add(canyonBedrock);
 
         // Colossal stone bridge piers & buttresses beneath the Royal Bridge (x=0, z=[28, 96])
         for (let bz = 45; bz <= 265; bz += 35) {
@@ -2573,15 +2601,21 @@ class DarkSoulsWorld {
         // 3. Interactive Teleport Portal
         let targetPos = null;
         let promptText = `[ E ] TELEPORT: ${title}`;
-        if (title.includes('CATACOMBS') || title.includes('SUNKEN')) {
+        if (title.includes('CATACOMBS') || title.includes('SUNKEN') || title.includes('UNDERGROUND')) {
             targetPos = new THREE.Vector3(-20, -4.92, 32);
-            promptText = `[ E ] TELEPORT TO UNDERGROUND CATACOMBS (-5m)`;
+            promptText = `💀 [ E ] TELEPORT TO UNDERGROUND CATACOMBS (-5m)`;
         } else if (title.includes('RAMPARTS') || title.includes('HIGH')) {
             targetPos = new THREE.Vector3(20, 6.0, 32);
-            promptText = `[ E ] TELEPORT TO HIGH RAMPARTS (+6m)`;
+            promptText = `👑 [ E ] TELEPORT TO HIGH RAMPARTS (+6m)`;
+        } else if (title.includes('SURFACE') || title.includes('COURTYARD')) {
+            targetPos = new THREE.Vector3(0, 0, 16);
+            promptText = `☀️ [ E ] RETURN TO SURFACE COURTYARD (0m)`;
+        } else if (title.includes('FOG') || title.includes('BOSS') || title.includes('WARP') || title.includes('DESCEND')) {
+            targetPos = new THREE.Vector3(0, 0, 272);
+            promptText = `⚔️ [ E ] TELEPORT TO BOSS FOG GATE (240m)`;
         } else if (title.includes('BRIDGE') || title.includes('ROYAL')) {
-            targetPos = new THREE.Vector3(0, 0, 32);
-            promptText = `[ E ] TELEPORT TO ROYAL BRIDGE (0m)`;
+            targetPos = new THREE.Vector3(0, 0, 272);
+            promptText = `⚔️ [ E ] TELEPORT TO ROYAL BRIDGE FOG GATE (0m)`;
         }
 
         if (targetPos) {

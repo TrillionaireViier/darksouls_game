@@ -668,7 +668,8 @@
             z-index: 80;
         }
 
-        /* LOCK-ON RETICLE */
+        
+        /* LOCK-ON RETICLE & MOB STATUS CARD */
         #lockon-reticle {
             position: absolute;
             width: 14px;
@@ -682,6 +683,53 @@
             z-index: 55;
             pointer-events: none;
         }
+        #lockon-info-card {
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(14, 11, 8, 0.90);
+            border: 1px solid #9c7b45;
+            padding: 3px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            pointer-events: none;
+            box-shadow: 0 0 12px rgba(0,0,0,0.85);
+        }
+        #lockon-mob-level {
+            color: #ffd700;
+            font-weight: 900;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+        }
+        #lockon-mob-name {
+            color: #eeddcc;
+            font-size: 10px;
+            letter-spacing: 1px;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+        }
+        #lockon-hp-bar {
+            width: 95px;
+            height: 4px;
+            background: #2a0c0c;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1px;
+            border: 1px solid #4a1515;
+        }
+        #lockon-hp-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #cc2222, #ff5544);
+            transition: width 0.12s ease;
+        }
+
 
         /* FLOATING DAMAGE NUMBERS */
         .floating-damage {
@@ -1648,7 +1696,16 @@
     <div id="damage-flash"></div>
 
     <!-- Lock-on Target Reticle -->
-    <div id="lockon-reticle"></div>
+    
+    <!-- Lock-on Target Reticle & Mob Status Card -->
+    <div id="lockon-reticle">
+        <div id="lockon-info-card">
+            <span id="lockon-mob-level">[Lv. 1]</span>
+            <span id="lockon-mob-name">HOLLOW SOLDIER</span>
+            <div id="lockon-hp-bar"><div id="lockon-hp-fill"></div></div>
+        </div>
+    </div>
+
 
     <!-- Escape Hint Pill (Visual Indicator for Desktop Controls) -->
     <div id="escape-hint-pill" style="display: none !important;">⚜️ [ESC] UNLOCK CURSOR & SCROLL BUTTONS</div>
@@ -7783,25 +7840,25 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/audio.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/lore_items.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/world.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/character.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/siege_warfare.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/collision_system.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/combat.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/postprocessing.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/qa_suite.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/inventory_system.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/compendium_300_models.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/death_quotes_300.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/game.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
-    <script src="js/dev_map.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/three.min.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/audio.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/lore_items.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/world.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/character.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/siege_warfare.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/collision_system.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/combat.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/postprocessing.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/qa_suite.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/inventory_system.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/compendium_300_models.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/death_quotes_300.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/game.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
+    <script src="js/dev_map.js?v=20261122_UNDERGROUND_TELEPORT_FIX_V12"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {
