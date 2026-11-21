@@ -118,6 +118,10 @@ class DarkSoulsGame {
 
         this.brightnessLevel = 0; // 0: Noon Sun, 1: Maximum+, 2: Daylight
 
+        // 10 Special Gestures & Ashes of War Animation State (#51-60)
+        this.activeCustomAnimation = null;
+        this._currentGestureIdx = 0;
+
         // Handheld Medieval Pitch Torch State - Default to false so shield is shown
         this.isTorchActive = false;
         this.torchFuel = 100.0;
@@ -277,8 +281,14 @@ class DarkSoulsGame {
                     this._nearbyCompendiumEntity = null;
                     this.showNotification(`✨ ${eName.toUpperCase()} BANISHED`);
                     if (this.audio && this.audio.playRoll) this.audio.playRoll();
+                } else {
+                    this.cycleAndPlayGesture();
                 }
             }
+            if (e.code === 'Digit7') { e.preventDefault(); this.playSpecialAnimation('lions_claw'); }
+            if (e.code === 'Digit8') { e.preventDefault(); this.playSpecialAnimation('bloodhound_step'); }
+            if (e.code === 'Digit9') { e.preventDefault(); this.playSpecialAnimation('warcry_roar'); }
+            if (e.code === 'Digit0') { e.preventDefault(); this.playSpecialAnimation('seppuku_buff'); }
             if (e.code === 'KeyT' || e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') this.toggleTorch();
             if (e.code === 'KeyR' || e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К' || e.code === 'Digit1') this.combat.tryDrinkEstus();
             if (e.code === 'KeyN' || e.key === 'n' || e.key === 'N' || e.key === 'т' || e.key === 'Т') {
@@ -1977,6 +1987,9 @@ class DarkSoulsGame {
                 uData.shieldGroup.position.set(-0.06, 0.02, 0.04);
                 uData.shieldGroup.rotation.set(0.08, -0.40, -0.06);
             }
+        } else if (this.activeCustomAnimation) {
+            // === 10 NEW SPECIAL GESTURES & ASHES OF WAR (#51-60) ===
+            this.updateCustomAnimation(delta, uData, time, isMoving);
         } else if (!isMoving) {
             // 6. IDLE BREATHING OSCILLATION & REALISTIC COMBAT STANCE — 8 Weapon-Specific Stances (#37-44)
             const t = time * 2.2;
@@ -2110,6 +2123,344 @@ class DarkSoulsGame {
         // 7. WEAPON STANCE STABILIZATION (Active for both moving and idle)
         if (!this.combat.isAttacking) {
             this.updateWeaponStance(delta, isMoving);
+        }
+    }
+
+
+    // ----------------------------------------------------
+    // 10 SPECIAL GESTURES & ASHES OF WAR ANIMATIONS (#51-60)
+    // ----------------------------------------------------
+    cycleAndPlayGesture() {
+        const gestures = [
+            'praise_the_sun',
+            'well_what_is_it',
+            'point_down',
+            'knights_bow',
+            'warcry_roar',
+            'lions_claw',
+            'bloodhound_step',
+            'seppuku_buff',
+            'bonfire_meditation',
+            'shield_clang_taunt'
+        ];
+        const nextIdx = (this._currentGestureIdx || 0) % gestures.length;
+        this._currentGestureIdx = nextIdx + 1;
+        this.playSpecialAnimation(gestures[nextIdx]);
+    }
+
+    playSpecialAnimation(animId) {
+        if (this.combat.isDead || this.combat.isDrinkingEstus || this.combat.isStaggered) return;
+
+        const anims = {
+            praise_the_sun: { id: 'praise_the_sun', name: '☀️ PRAISE THE SUN! \\ [T] / (+50 HP)', duration: 2.6, canInterrupt: true },
+            well_what_is_it: { id: 'well_what_is_it', name: '🤷 "WELL, WHAT IS IT?" (GIANTDAD TAUNT)', duration: 2.4, canInterrupt: true },
+            point_down: { id: 'point_down', name: '👇 POINT DOWN (COLD DISRESPECT)', duration: 2.0, canInterrupt: true },
+            knights_bow: { id: 'knights_bow', name: '🤺 DUELIST\'S KNIGHTLY BOW', duration: 2.2, canInterrupt: true },
+            warcry_roar: { id: 'warcry_roar', name: '🦁 WARCRY & CHEST ROAR (+25% ATK BUFF)', duration: 2.0, canInterrupt: false },
+            lions_claw: { id: 'lions_claw', name: '⚔️ LION\'S CLAW SOMERSAULT SLAM!', duration: 0.95, canInterrupt: false },
+            bloodhound_step: { id: 'bloodhound_step', name: '💨 BLOODHOUND\'S PHANTOM STEP (I-FRAMES)', duration: 0.45, canInterrupt: false },
+            seppuku_buff: { id: 'seppuku_buff', name: '🩸 SEPPUKU FLAME INFUSION (+60 FIRE/BLEED)', duration: 2.2, canInterrupt: false },
+            bonfire_meditation: { id: 'bonfire_meditation', name: '🔥 BONFIRE LOTUS REST (REGEN HP)', duration: 9999, canInterrupt: true },
+            shield_clang_taunt: { id: 'shield_clang_taunt', name: '🛡️ SHIELD CLANG BATTLE TAUNT (AGGRO MOBS)', duration: 1.8, canInterrupt: true }
+        };
+
+        const def = anims[animId];
+        if (!def) return;
+
+        this.activeCustomAnimation = {
+            id: animId,
+            def: def,
+            time: 0,
+            canInterrupt: def.canInterrupt,
+            startPos: this.playerMesh.position.clone()
+        };
+
+        this.showNotification(def.name);
+    }
+
+    updateCustomAnimation(delta, uData, time, isMoving) {
+        if (!this.activeCustomAnimation) return;
+        const anim = this.activeCustomAnimation;
+        anim.time += delta;
+        const t = anim.time;
+        const pPos = this.playerMesh.position;
+        const groundY = this.world.getGroundHeight(pPos.x, pPos.z);
+
+        // Cancel interruptible animations when moving
+        if (isMoving && anim.canInterrupt) {
+            this.activeCustomAnimation = null;
+            return;
+        }
+
+        switch (anim.id) {
+            case 'praise_the_sun': {
+                // Anim #51: Praise the Sun (\ [T] /)
+                const p = Math.min(1.0, t / 0.55);
+                if (uData.leftShoulder) {
+                    uData.leftShoulder.rotation.x = -p * 1.85;
+                    uData.leftShoulder.rotation.z = p * 1.25;
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = -p * 1.85;
+                    uData.rightShoulder.rotation.z = -p * 1.25;
+                }
+                if (uData.torso) uData.torso.rotation.x = -p * 0.22;
+                if (uData.headGroup) uData.headGroup.rotation.x = -p * 0.58;
+
+                if (t >= 0.55 && t < 2.1) {
+                    uData.torso.position.y = Math.sin(t * 8) * 0.025;
+                    if (!anim._healed) {
+                        anim._healed = true;
+                        this.combat.hp = Math.min(this.combat.maxHp, this.combat.hp + 50);
+                        if (this.audio && this.audio.playSunlightFlame) this.audio.playSunlightFlame();
+                        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(pPos, true);
+                    }
+                } else if (t >= 2.1) {
+                    const ret = 1.0 - (t - 2.1) / 0.5;
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.x = -ret * 1.85;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = -ret * 1.85;
+                }
+                if (t >= anim.def.duration) this.activeCustomAnimation = null;
+                break;
+            }
+
+            case 'well_what_is_it': {
+                // Anim #52: "Well, what is it?" GiantDad Mocking Taunt
+                const p = Math.min(1.0, t / 0.45);
+                if (uData.leftShoulder) {
+                    uData.leftShoulder.rotation.z = p * 1.45;
+                    uData.leftShoulder.rotation.x = -p * 0.15;
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.z = -p * 1.45;
+                    uData.rightShoulder.rotation.x = -p * 0.15;
+                }
+                if (uData.torso) uData.torso.rotation.x = -p * 0.15;
+
+                if (t >= 0.45 && t < 1.9) {
+                    const sway = Math.sin(t * 4.5);
+                    if (uData.torso) {
+                        uData.torso.rotation.y = sway * 0.22;
+                        uData.torso.rotation.z = Math.cos(t * 4.5) * 0.08;
+                    }
+                    if (uData.headGroup) uData.headGroup.rotation.y = -sway * 0.20;
+                }
+                if (t >= anim.def.duration) this.activeCustomAnimation = null;
+                break;
+            }
+
+            case 'point_down': {
+                // Anim #53: Point Down Cold Disrespect
+                const p = Math.min(1.0, t / 0.4);
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = p * 1.35;
+                    uData.rightShoulder.rotation.z = -p * 0.25;
+                }
+                if (uData.leftShoulder) uData.leftShoulder.rotation.z = p * 0.4;
+                if (uData.torso) uData.torso.rotation.x = p * 0.22;
+                if (uData.headGroup) uData.headGroup.rotation.x = p * 0.45;
+                if (t >= anim.def.duration) this.activeCustomAnimation = null;
+                break;
+            }
+
+            case 'knights_bow': {
+                // Anim #54: Knight's Duel Bow
+                const p = Math.min(1.0, t / 0.7);
+                if (t < 1.4) {
+                    if (uData.leftShoulder) { uData.leftShoulder.rotation.x = -p * 0.65; uData.leftShoulder.rotation.z = -p * 0.35; }
+                    if (uData.rightShoulder) { uData.rightShoulder.rotation.x = p * 0.75; uData.rightShoulder.rotation.y = p * 0.65; }
+                    if (uData.torso) uData.torso.rotation.x = p * 0.62;
+                    if (uData.headGroup) uData.headGroup.rotation.x = p * 0.35;
+                } else {
+                    const rise = 1.0 - (t - 1.4) / 0.8;
+                    if (uData.torso) uData.torso.rotation.x = Math.max(0, rise * 0.62);
+                    if (uData.headGroup) uData.headGroup.rotation.x = Math.max(0, rise * 0.35);
+                }
+                if (t >= anim.def.duration) this.activeCustomAnimation = null;
+                break;
+            }
+
+            case 'warcry_roar': {
+                // Anim #55: Warcry Roar & Chest Pound
+                if (t < 0.65) {
+                    // Beat chest
+                    const punch = Math.sin(t * 18);
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = 0.5 + punch * 0.6;
+                    if (punch > 0.85 && !anim._clanged) {
+                        anim._clanged = true;
+                        if (this.audio && this.audio.playBlock) this.audio.playBlock();
+                        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(pPos);
+                    }
+                } else {
+                    // Roar back
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.x = -1.25;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = -1.25;
+                    if (uData.torso) { uData.torso.rotation.x = -0.38; uData.torso.position.y = Math.sin(t * 24) * 0.035; }
+                    if (uData.headGroup) uData.headGroup.rotation.x = -0.72;
+
+                    if (!anim._roared) {
+                        anim._roared = true;
+                        if (this.audio && this.audio.playBossRoar) this.audio.playBossRoar();
+                        this.shakeCamera(0.25, 0.35);
+                        this.combat._warcryBuffTimer = 25.0; // 25s +25% attack power!
+                    }
+                }
+                if (t >= anim.def.duration) this.activeCustomAnimation = null;
+                break;
+            }
+
+            case 'lions_claw': {
+                // Anim #56: Lion's Claw 360° Somersault Slam
+                const forward = new THREE.Vector3(Math.sin(this.playerMesh.rotation.y), 0, Math.cos(this.playerMesh.rotation.y));
+                if (t < 0.48) {
+                    // Airborne flip
+                    const norm = t / 0.48;
+                    uData.bodyGroup.position.y = 1.0 + Math.sin(norm * Math.PI) * 1.85;
+                    this.playerMesh.rotation.x = norm * Math.PI * 2;
+                    pPos.addScaledVector(forward, 6.5 * delta);
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = -2.8;
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.x = -2.4;
+                } else if (t < 0.72) {
+                    // Ground slam impact
+                    this.playerMesh.rotation.x = 0;
+                    uData.bodyGroup.position.y = 0.68;
+                    if (uData.torso) uData.torso.rotation.x = 0.75;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = 1.75;
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.x = 1.45;
+
+                    if (!anim._slammed) {
+                        anim._slammed = true;
+                        if (this.audio && this.audio.playPlungingSlam) this.audio.playPlungingSlam();
+                        if (this.world && this.world.spawnPlungingShockwave) this.world.spawnPlungingShockwave(pPos);
+                        this.shakeCamera(0.42, 0.4);
+
+                        // Damage in radius
+                        const wpn = this.combat.weapons[this.combat.currentWeaponId] || this.combat.weapons.sword;
+                        const slamDmg = Math.round((wpn.heavyDmg || 280) * 2.5);
+
+                        if (this.combat.boss && !this.combat.boss.isDead) {
+                            if (pPos.distanceTo(this.combat.boss.mesh.position) < 6.5) {
+                                this.combat.boss.hp -= slamDmg;
+                                this.showDamageNumber(this.combat.boss.mesh.position, slamDmg, true);
+                                if (this.combat.boss.hp <= 0) this.combat.killBoss();
+                            }
+                        }
+                        for (const mob of this.combat.enemies) {
+                            if (!mob.isDead && pPos.distanceTo(mob.mesh.position) < 5.8) {
+                                mob.hp -= slamDmg;
+                                mob.isStaggered = true;
+                                mob.staggerTimer = 2.0;
+                                this.showDamageNumber(mob.mesh.position, slamDmg, true);
+                                if (mob.hp <= 0) this.combat.killEnemy(mob);
+                            }
+                        }
+                    }
+                } else {
+                    this.playerMesh.rotation.x = 0;
+                    uData.bodyGroup.position.y = 1.0;
+                }
+                if (t >= anim.def.duration) {
+                    this.playerMesh.rotation.x = 0;
+                    this.activeCustomAnimation = null;
+                }
+                break;
+            }
+
+            case 'bloodhound_step': {
+                // Anim #57: Bloodhound's Phantom Step
+                this.combat.isInvincible = true;
+                const forward = new THREE.Vector3(Math.sin(this.playerMesh.rotation.y), 0, Math.cos(this.playerMesh.rotation.y));
+                pPos.addScaledVector(forward, 11.5 * delta);
+                uData.bodyGroup.position.y = 0.65;
+                if (uData.torso) uData.torso.rotation.x = 0.55;
+
+                this.spawnRollGhostTrail();
+
+                if (!anim._stepped) {
+                    anim._stepped = true;
+                    if (this.audio && this.audio.playRoll) this.audio.playRoll();
+                }
+
+                if (t >= anim.def.duration) {
+                    uData.bodyGroup.position.y = 1.0;
+                    this.combat.isInvincible = false;
+                    this.activeCustomAnimation = null;
+                }
+                break;
+            }
+
+            case 'seppuku_buff': {
+                // Anim #58: Seppuku Blood Flame Infusion
+                if (t < 0.6) {
+                    if (uData.rightShoulder) { uData.rightShoulder.rotation.x = 1.1; uData.rightShoulder.rotation.y = -0.5; }
+                    if (uData.torso) uData.torso.rotation.x = 0.15;
+                } else if (t < 1.2) {
+                    // Deep thrust into self
+                    if (uData.torso) uData.torso.rotation.x = 0.45;
+                    if (!anim._stabbed) {
+                        anim._stabbed = true;
+                        if (this.world && this.world.spawnBlood) this.world.spawnBlood(pPos);
+                        if (this.audio && this.audio.playHit) this.audio.playHit(true);
+                        this.combat.hp = Math.max(1, this.combat.hp - 60);
+                        this.combat.charcoalResinTimer = 45.0; // 45s crimson fire & bleed buff!
+                        this.shakeCamera(0.2, 0.25);
+                    }
+                } else {
+                    // Flaming withdraw
+                    if (!anim._flamed) {
+                        anim._flamed = true;
+                        if (this.audio && this.audio.playSunlightFlame) this.audio.playSunlightFlame();
+                        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(pPos, true);
+                    }
+                }
+                if (t >= anim.def.duration) this.activeCustomAnimation = null;
+                break;
+            }
+
+            case 'bonfire_meditation': {
+                // Anim #59: Bonfire Lotus Rest
+                const p = Math.min(1.0, t / 0.7);
+                uData.bodyGroup.position.y = 1.0 - p * 0.68;
+                if (uData.leftHip) { uData.leftHip.rotation.x = -p * 1.5; uData.leftHip.rotation.z = -p * 0.5; }
+                if (uData.rightHip) { uData.rightHip.rotation.x = -p * 1.5; uData.rightHip.rotation.z = p * 0.5; }
+                if (uData.leftShoulder) uData.leftShoulder.rotation.x = p * 0.45;
+                if (uData.rightShoulder) uData.rightShoulder.rotation.x = p * 0.45;
+
+                // Healing aura
+                anim._healTick = (anim._healTick || 0) + delta;
+                if (anim._healTick >= 0.5) {
+                    anim._healTick = 0;
+                    this.combat.hp = Math.min(this.combat.maxHp, this.combat.hp + 8);
+                    this.combat.poisonBuildup = Math.max(0, this.combat.poisonBuildup - 10);
+                }
+                break;
+            }
+
+            case 'shield_clang_taunt': {
+                // Anim #60: Shield Clang Battle Taunt
+                if (uData.leftShoulder) { uData.leftShoulder.rotation.x = -0.85; uData.leftShoulder.rotation.y = 0.35; }
+                const strikeTimes = [0.3, 0.75, 1.2];
+                for (let k = 0; k < strikeTimes.length; k++) {
+                    const st = strikeTimes[k];
+                    if (t >= st && t < st + 0.15 && !anim['_clang_' + k]) {
+                        anim['_clang_' + k] = true;
+                        if (this.audio && this.audio.playBlock) this.audio.playBlock();
+                        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(pPos);
+                        this.shakeCamera(0.08, 0.1);
+                    }
+                }
+                if (t > 1.3 && !anim._taunted) {
+                    anim._taunted = true;
+                    // Taunt nearby mobs
+                    for (const mob of this.combat.enemies) {
+                        if (!mob.isDead && pPos.distanceTo(mob.mesh.position) < 28.0) {
+                            mob.state = 'CHASE';
+                        }
+                    }
+                }
+                if (t >= anim.def.duration) this.activeCustomAnimation = null;
+                break;
+            }
         }
     }
 

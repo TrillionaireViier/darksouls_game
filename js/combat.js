@@ -3837,6 +3837,8 @@ class DarkSoulsCombat {
         const forward = new THREE.Vector3(Math.sin(playerRot), 0, Math.cos(playerRot));
 
         // Damage boost from strength stat + optional pine resin fire buff
+        let warcryMultiplier = (this._warcryBuffTimer > 0) ? 1.25 : 1.0;
+        baseDamage = Math.round(baseDamage * warcryMultiplier);
         let totalDmg = Math.round(baseDamage * (1 + (this.strength - 10) * 0.12));
         if (this.charcoalResinTimer > 0) {
             totalDmg += 60; // Fire Pine Resin buff!
@@ -4999,6 +5001,10 @@ equipWeapon(weaponId) {
         this.updateRagdolls(delta);
         this.updateArrows(delta);
         this.updateSpiritCompanion(delta);
+
+        if (this._warcryBuffTimer > 0) {
+            this._warcryBuffTimer -= delta;
+        }
 
         if (this.isDead) return;
 
