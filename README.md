@@ -15,6 +15,10 @@ An authentic, fully playable 3D Dark Souls experience built with WebGL and Three
 
 ### Keyboard & Mouse
 - **W, A, S, D**: Move Character
+- **O**: **Warp to Outside Realm Wilderness** (West Courtyard Gatehouse)
+- **M**: Open High-Precision Developer Radar Map & Compass
+- **F3**: Toggle Real-time Coordinates & FPS Diagnostic HUD
+- **G**: Open Gesture Wheel (Praise the Sun, Bow, Point, Toast, etc.)
 - **Mouse**: Orbit Camera (Click canvas to capture mouse / Pointer Lock)
 - **Space / Left Shift (with movement)**: **Directional Dodge Roll (Перекат)** with true 360° somersault, i-frames (неуязвимость), body tuck, and ethereal ghost trail.
 - **Space / Left Shift (neutral / stationary)**: **Dark Souls Backstep (Отскок назад)** — rapid backward hop with i-frames, ready for counter-attacks.
@@ -62,6 +66,42 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Weapon*: Flaming Sunlight Greatsword & Golden Sun Crown
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
+
+### 🌲 Outside Realm Apex Bosses & Roster Expansion (138+ Selectable Lords)
+Traverse beyond the West Courtyard Gatehouse into the uncharted Outside wilderness to battle legendary open-world horrors:
+- **Ancient Dragon Senessax (Древний Дракон Сенессакс)** — Wyrm Cliffside Plateau
+  - Lightning-charged ancient scales, red lightning glaive thrusts, electric shockwaves.
+- **Death Rite Bird (Птица Погребального Обряда)** — Titan Bone Cemetery
+  - Ghostflame ignition, spectral spear sweeps, piercing cryogenic black flame bursts.
+- **Fallingstar Beast (Зверь Падающей Звезды)** — Astral Meteor Crater
+  - Gravitational crush, crystalline pincer charges, violet gravity field detonations.
+- **Erdtree Avatar (Воплощение Древа Эрд)** — Primeval Archtree Sanctum
+  - Golden holy staff ground slams, holy light projectile volleys, golden shockwaves.
+- **Starscourge Radahn, Bayle the Dread, Messmer the Impaler, Rellana Twin Moon Knight, Midra Lord of Frenzied Flame, Divine Beast Dancing Lion, and 130+ more!**
+
+---
+
+## 🌲 The Outside Realm Wilderness & Expeditions
+Step through the western rampart archway or press `[ O ]` to enter the expansive outdoor terrain spanning over 200 meters of continuous collision geometry:
+1. **Astral Meteor Crater**: Deep gravitational depression studded with glowing starlight crystal monoliths and cyan pointlight beacons.
+2. **Magma Chasm Falls**: Cascading molten cataracts with dynamic ember lighting and scorch hazard zones.
+3. **Titan Bone Cemetery**: Cyclopean skeletal ribcages forming natural gothic archways across the ashen dunes.
+4. **Rotten Grove Sanctum**: Toxic fungal mounds veiled in spore clouds and primordial tree roots.
+5. **Sunken Dragon Crypt**: Ancient sub-surface subterranean vault housing fossilized dragonkin.
+6. **Ancient Dolmen Colonnade**: Megalithic stone rings marking ancient astronomical leylines.
+7. **Primeval Waystone Portals & Waypoints**: Instantaneous traversal back to Courtyard, Boss Arenas, or the Citadel.
+
+---
+
+## 🕷️ Procedural 3D Mob Models & Bestiary (1,050 Models / 690 Lore Entries)
+Encounter newly crafted, fully rigged Three.js procedural 3D creatures with custom locomotion, attack animations, and hitboxes:
+- **Dragonkin Wyrm**: Swept-back magma horns, glowing internal chest vent with pointlight, spiked tail, and molten curved greatsword.
+- **Crucible Knight Sentinel**: Red-gold Ordovis armor plate, antlered helm, golden feathered wings, runic greatsword, and spiked hornshield.
+- **Abductor Virgin**: Heavy iron maiden cylindrical chassis with glowing internal furnace, rotating chariot wheels, and twin pendular executioner scythes.
+- **Cthulhu Mindflayer**: Deep starry cosmic robes, cephalopod head with 6 writhing tentacles, starlight casting staff, and resonant summoning bell.
+- **Omen Ogre**: Bulky horned titan, barbed iron neck collar, and heavyweight butcher cleaver.
+- **Arachnid Scuttler**: 6 articulated segmented legs, chittering mandibles, glowing multi-eye cluster, and arced toxic stinger tail.
+- Explore the **3D Compendium Viewer** (1,050 interactive models: 340 Armors, 330 NPCs, 380 Mobs) and the **Lore Codex** (690 documented beasts).
 
 ---
 
