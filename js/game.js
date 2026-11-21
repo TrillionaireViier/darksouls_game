@@ -728,18 +728,31 @@ class DarkSoulsGame {
         for (const item of this.world.interactables) {
             const d = pPos.distanceTo(item.position);
             if (d <= item.radius) {
-                if (item.type === 'bonfire') {
+                if (item.type === 'base_heal_teleport' || item.type === 'bonfire' || item.type === 'return_waystone') {
+                    // Full Heal & Base Teleport Sanctuary
                     this.combat.restAtBonfire();
+                    this.combat.hp = this.combat.maxHp;
+                    this.combat.stamina = this.combat.maxStamina;
+                    this.combat.estusFlasks = this.combat.maxEstus;
+                    this.combat.isPoisoned = false;
+                    this.combat.poisonTimer = 0;
+                    this.combat.poisonBuildup = 0;
+                    this.combat.isPetrified = false;
+                    if (this.combat.interestBurnInterval) {
+                        clearInterval(this.combat.interestBurnInterval);
+                        this.combat.interestBurnInterval = null;
+                    }
                     this.refuelTorch(100);
-                    this.openBonfireModal();
+                    if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+                    if (this.audio && this.audio.playEstusDrink) this.audio.playEstusDrink();
+                    if (this.world && this.world.spawnHitSparks && this.playerMesh) {
+                        this.world.spawnHitSparks(this.playerMesh.position, true);
+                    }
+                    this.showNotification("✨ SANCTUARY HEALED FULL HP & TELEPORT READY!");
+                    this.openLocationsModal();
                     return;
                 } else if (item.type === 'discovered_waystone') {
                     this.travelToLocation(item.targetLocationId, true);
-                    return;
-                } else if (item.type === 'return_waystone') {
-                    this.combat.restAtBonfire();
-                    this.refuelTorch(100);
-                    this.openBonfireModal();
                     return;
                 } else if (item.type === 'torch_sconce') {
                     if (!item.isLit) {
@@ -1419,6 +1432,28 @@ class DarkSoulsGame {
         // 1. Update Subsystems
         this.world.update(delta);
         this.combat.update(delta);
+
+        // Passive Base Sanctuary Healing Well (at [0, 0, 0] within 6.5m)
+        if (this.playerMesh && this.combat && !this.combat.isDead) {
+            const p = this.playerMesh.position;
+            const distToBase = Math.sqrt(p.x * p.x + p.z * p.z);
+            if (distToBase < 6.5 && Math.abs(p.y) < 2.0) {
+                if (this.combat.hp < this.combat.maxHp) {
+                    this.combat.hp = Math.min(this.combat.maxHp, this.combat.hp + 60 * delta);
+                }
+                if (this.combat.stamina < this.combat.maxStamina) {
+                    this.combat.stamina = Math.min(this.combat.maxStamina, this.combat.stamina + 80 * delta);
+                }
+                if (this.combat.isPoisoned) {
+                    this.combat.isPoisoned = false;
+                    this.combat.poisonTimer = 0;
+                }
+                if (this.combat.interestBurnInterval) {
+                    clearInterval(this.combat.interestBurnInterval);
+                    this.combat.interestBurnInterval = null;
+                }
+            }
+        }
 
         // Continuous 15-Second Auto-Save Engine
         if (this.combat && !this.combat.isDead) {

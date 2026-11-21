@@ -3588,10 +3588,11 @@ class DarkSoulsCombat {
             this.ragdolls = [];
         }
 
-        // MASSIVE 3X MOBS SPAWNING ACROSS ALL AREAS (Bridge, Ramparts, Catacombs, Courtyard, Outskirts, Sanctum)
+        // BALANCED MOBS SPAWNING ACROSS ALL AREAS (Bridge, Ramparts, Catacombs, Outskirts, Sanctum)
         const mobList = (window.DarkSoulsLore && window.DarkSoulsLore.mobs) || window.DARK_SOULS_MOBS || [];
         if (mobList.length > 0) {
             let starterZoneCount = 0;
+            let meleeCount = 0;
             const spawnedCoords = [];
 
             mobList.forEach(mobDef => {
@@ -3602,7 +3603,7 @@ class DarkSoulsCombat {
                 let py = rawPos[1];
                 let pz = rawPos[2];
 
-                // Scale & distribute mobs across the 3-4x expanded 240m+ paths before the boss:
+                // Scale & distribute mobs across the paths:
                 if (pz >= 20 && pz <= 95 && Math.abs(px) < 8.5) {
                     pz = 35 + ((pz - 20) / 75) * 230;
                 } else if (pz >= 20 && pz <= 95 && px > 10.0) {
@@ -3615,23 +3616,30 @@ class DarkSoulsCombat {
 
                 const dist = Math.sqrt(px * px + pz * pz);
 
-                // Safe sanctuary around starting bonfire (8m radius)
-                if (dist < 8.0) return;
+                // 1. Safe Sanctuary: Mobs are NOT close to starting bonfire / base (26m radius safe zone)
+                if (dist < 26.0) return;
 
                 // Boss Arena sanctuary
                 if (px >= -22 && px <= 22 && pz >= 272 && pz <= 390) return;
 
-                // Starter Courtyard density: up to 24 mobs
-                if (dist < 32.0) {
-                    if (starterZoneCount >= 24) return;
+                // 2. Twice less melee mobs: skip every 2nd melee mob
+                const isMelee = !mobDef.isArcher && (mobDef.behaviorType !== 'Ranged');
+                if (isMelee) {
+                    meleeCount++;
+                    if (meleeCount % 2 === 0) return;
+                }
+
+                // Starter Courtyard density: up to 6 distant sentries max
+                if (dist < 36.0) {
+                    if (starterZoneCount >= 6) return;
                     starterZoneCount++;
                 }
 
-                // Spacing threshold reduced to 6.5 (~2.5m) to allow 3-man tactical squads
+                // Clean spacing threshold (8.5m² / ~2.9m) to prevent mob clumping
                 const isTooClose = spawnedCoords.some(c => {
                     const dx = c[0] - px;
                     const dz = c[1] - pz;
-                    return (dx * dx + dz * dz) < 6.5;
+                    return (dx * dx + dz * dz) < 8.5;
                 });
                 if (isTooClose) return;
 
@@ -3639,23 +3647,15 @@ class DarkSoulsCombat {
                 // Primary Mob
                 this.createCustomMob(mobDef, px, pz, 0, py);
 
-                // Spawn 2 Squad Flanker Mobs (3x Density) along bridge, ramparts, catacombs & courtyard
-                const isBridge = (pz >= 28 && pz <= 268 && Math.abs(px) < 7.5);
-                const isRamparts = (pz >= 24 && pz <= 268 && px >= 13.0 && px <= 24.5);
-                const isCatacombs = (pz >= 24 && pz <= 268 && px <= -16.0 && px >= -24.5);
-                const isCourtyard = (dist >= 10.0 && dist <= 30.0);
-                const isOutskirts = (px <= -42.0 && px >= -72.0 && pz >= -8.0 && pz <= 42.0);
-
-                if (isBridge || isRamparts || isCatacombs || isCourtyard || isOutskirts) {
-                    // Flanker 1
-                    const fx1 = px + (isBridge ? 2.2 : (isRamparts ? 1.6 : -1.8));
-                    const fz1 = pz + 2.4;
-                    this.createCustomMob(mobDef, fx1, fz1, 0.2, py);
-
-                    // Flanker 2
-                    const fx2 = px - (isBridge ? 2.2 : (isRamparts ? 1.6 : -1.8));
-                    const fz2 = pz - 2.4;
-                    this.createCustomMob(mobDef, fx2, fz2, -0.2, py);
+                // Flanker squads only for ranged/archers on ramparts & bridges (never duplicate melee swarms)
+                if (!isMelee) {
+                    const isBridge = (pz >= 35 && pz <= 265 && Math.abs(px) < 7.5);
+                    const isRamparts = (pz >= 30 && pz <= 265 && px >= 13.0 && px <= 24.5);
+                    if (isBridge || isRamparts) {
+                        const fx1 = px + (isBridge ? 2.4 : 1.6);
+                        const fz1 = pz + 2.8;
+                        this.createCustomMob(mobDef, fx1, fz1, 0.2, py);
+                    }
                 }
             });
         }
@@ -4507,16 +4507,16 @@ class DarkSoulsCombat {
                         const wpnPoiseMult = (currentWpn && currentWpn.poiseBreak) || 1.0;
                         const behavior = e.behaviorType || 'Swarm';
 
-                        // Poise & Stagger System: Small mobs ALWAYS stagger on EVERY hit!
+                        // Poise & Stagger System: Small mobs ALWAYS stagger on EVERY hit for 0.4s!
                         const isHeavySlash = (this.attackCombo === 3 || this.attackCombo >= 5 || this.currentWeaponId === 'zweihander' || this.currentWeaponId === 'dragontooth');
-                        const isSmallMob = (behavior === 'Swarm' || behavior === 'Flanker' || behavior === 'Ranged' || e.isArcher || e.type === 'hollow' || e.type === 'skeleton');
+                        const isSmallMob = (behavior === 'Swarm' || behavior === 'Flanker' || behavior === 'Ranged' || e.isArcher || e.type === 'hollow' || e.type === 'skeleton' || !e.type || e.type === 'mob' || (e.maxHp && e.maxHp < 900));
 
                         if (isSmallMob) {
-                            // Small / standard mobs stagger on EVERY hit (1.1s for light, 1.6s for heavy)
+                            // Small / standard mobs stagger for strictly 0.4s on every hit
                             e.poise = 0;
                             e.isStaggered = true;
-                            e.staggerTimer = isHeavySlash ? 1.60 : 1.10;
-                            e.maxStaggerTimer = e.staggerTimer;
+                            e.staggerTimer = 0.40;
+                            e.maxStaggerTimer = 0.40;
                             e.state = 'STAGGER';
                             e.attackPhase = 'IDLE';
                             e.isAttacking = false;
@@ -5809,7 +5809,20 @@ equipWeapon(weaponId) {
                     this.world.spawnHitSparks(e.mesh.position, true);
                     this.game.scene.remove(p.mesh);
                     this.projectiles.splice(i, 1);
-                    if (e.hp <= 0) this.killEnemy(e);
+                    if (e.hp <= 0) {
+                        this.killEnemy(e);
+                    } else {
+                        const behavior = e.behaviorType || 'Swarm';
+                        const isSmallMob = (behavior === 'Swarm' || behavior === 'Flanker' || behavior === 'Ranged' || e.isArcher || e.type === 'hollow' || e.type === 'skeleton' || !e.type || e.type === 'mob' || (e.maxHp && e.maxHp < 900));
+                        if (isSmallMob) {
+                            e.isStaggered = true;
+                            e.staggerTimer = 0.40;
+                            e.maxStaggerTimer = 0.40;
+                            e.state = 'STAGGER';
+                            e.attackPhase = 'IDLE';
+                            e.isAttacking = false;
+                        }
+                    }
                     hitHollow = true;
                     break;
                 }

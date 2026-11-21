@@ -1763,8 +1763,8 @@ class DarkSoulsWorld {
             type: 'bonfire',
             position: new THREE.Vector3(-75, 0, 0),
             radius: 4.5,
-            prompt: '🔥 [ E ] REST AT DARKROOT EXPEDITION BONFIRE',
-            label: 'DARKROOT BONFIRE'
+            prompt: '✨ [ E ] HEAL TO FULL & TELEPORT (DARKROOT EXPEDITION)',
+            label: 'DARKROOT SANCTUARY'
         });
 
         // Standing Iron Braziers flanking Darkroot Bonfire
@@ -2253,8 +2253,8 @@ class DarkSoulsWorld {
         this.interactables.push({
             type: 'bonfire',
             position: new THREE.Vector3(x, y, z),
-            radius: 3.2,
-            prompt: '[ E ] REST AT SERPENT BONFIRE'
+            radius: 3.5,
+            prompt: '✨ [ E ] HEAL TO FULL & TELEPORT (SERPENT SANCTUM)'
         });
 
         this.scene.add(bonfireGroup);
@@ -3035,55 +3035,71 @@ class DarkSoulsWorld {
     }
 
     // ----------------------------------------------------
-    // THE BONFIRE (SWORD THRUST INTO ASHES)
+    // THE SANCTUARY TELEPORT DAIS & HEALING BASE
+    // Replaces basic bonfire with full healing fountain & fast-travel teleport dais
     // ----------------------------------------------------
     buildBonfire() {
         const bonfireGroup = new THREE.Group();
 
-        // 1. Ash & charred bone mound
-        const ashGeo = new THREE.ConeGeometry(2.4, 0.8, 16);
+        // 1. Radiant Teleport & Healing Glyph Ring lying flat on floor
+        const runeGeo = new THREE.RingGeometry(0.8, 3.4, 32);
+        const runeMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc,
+            transparent: true,
+            opacity: 0.75,
+            side: THREE.DoubleSide
+        });
+        const runeMesh = new THREE.Mesh(runeGeo, runeMat);
+        runeMesh.rotation.x = -Math.PI / 2;
+        runeMesh.position.y = 0.05;
+        bonfireGroup.add(runeMesh);
+
+        // 2. Surrounding Carved Basalt Dais Border
+        const ringGeo = new THREE.TorusGeometry(3.5, 0.35, 8, 28);
+        const ringMat = new THREE.MeshStandardMaterial({
+            color: 0x1a1614,
+            roughness: 0.85,
+            metalness: 0.2
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.y = 0.12;
+        ring.receiveShadow = true;
+        bonfireGroup.add(ring);
+
+        // 3. Central Ash Mound & Sacred Relic Core
+        const ashGeo = new THREE.ConeGeometry(2.0, 0.7, 16);
         const ashMat = new THREE.MeshStandardMaterial({
             color: 0x141212,
             roughness: 0.98,
             metalness: 0.05
         });
         const ashMound = new THREE.Mesh(ashGeo, ashMat);
-        ashMound.position.y = 0.4;
+        ashMound.position.y = 0.35;
         ashMound.receiveShadow = true;
         bonfireGroup.add(ashMound);
 
-        // Surrounding charred stone circle
-        const ringGeo = new THREE.TorusGeometry(2.6, 0.35, 8, 18);
-        const ringMat = new THREE.MeshStandardMaterial({ color: 0x1a1614, roughness: 0.9 });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.rotation.x = Math.PI / 2;
-        ring.position.y = 0.15;
-        bonfireGroup.add(ring);
-
-        // 2. The Coiled Sword (Dark Souls signature twisted blade)
+        // 4. The Coiled Sword (Dark Souls signature twisted blade)
         const swordGroup = new THREE.Group();
 
-        // Twisted blade
         const bladeGeo = new THREE.CylinderGeometry(0.08, 0.16, 2.8, 8);
         const bladeMat = new THREE.MeshStandardMaterial({
             color: 0x4a4440,
             roughness: 0.4,
             metalness: 0.85,
-            emissive: 0x331100,
+            emissive: 0x003322,
             emissiveIntensity: 0.6
         });
         const blade = new THREE.Mesh(bladeGeo, bladeMat);
         blade.position.y = 1.4;
         swordGroup.add(blade);
 
-        // Crossguard
         const guardGeo = new THREE.BoxGeometry(0.8, 0.12, 0.2);
         const guardMat = new THREE.MeshStandardMaterial({ color: 0x332a22, metalness: 0.9, roughness: 0.3 });
         const guard = new THREE.Mesh(guardGeo, guardMat);
         guard.position.y = 2.8;
         swordGroup.add(guard);
 
-        // Grip & Pommel
         const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.6, 8), this.woodMat);
         hilt.position.y = 3.1;
         swordGroup.add(hilt);
@@ -3092,37 +3108,53 @@ class DarkSoulsWorld {
         pommel.position.y = 3.45;
         swordGroup.add(pommel);
 
-        // Tilt sword slightly like in Dark Souls
         swordGroup.rotation.z = 0.12;
         swordGroup.rotation.x = -0.08;
         bonfireGroup.add(swordGroup);
 
-        // 3. Dynamic Flame & Fire Particles
+        // 5. Vertical Radiant Starlight Healing Pillar
+        const beamGeo = new THREE.CylinderGeometry(0.12, 0.12, 5.5, 12);
+        const beamMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc,
+            transparent: true,
+            opacity: 0.45,
+            blending: THREE.AdditiveBlending
+        });
+        const beam = new THREE.Mesh(beamGeo, beamMat);
+        beam.position.y = 2.75;
+        bonfireGroup.add(beam);
+
+        // 6. Dynamic Celestial Flame & Embers
         const flameCore = new THREE.Mesh(
-            new THREE.DodecahedronGeometry(0.45),
-            new THREE.MeshBasicMaterial({ color: 0xff6600 })
+            new THREE.DodecahedronGeometry(0.48),
+            new THREE.MeshBasicMaterial({ color: 0x00ffcc })
         );
-        flameCore.position.y = 0.9;
+        flameCore.position.y = 1.1;
         bonfireGroup.add(flameCore);
         this.bonfireCore = flameCore;
 
-        // Bonfire Point Light
-        this.bonfireLight = new THREE.PointLight(0xff6611, 2.8, 22, 1.6);
-        this.bonfireLight.position.set(0, 1.4, 0);
+        // Healing Sanctuary Point Lights (Celestial Emerald & Warm Gold)
+        this.bonfireLight = new THREE.PointLight(0x00ffcc, 3.4, 25, 1.4);
+        this.bonfireLight.position.set(0, 1.8, 0);
         this.bonfireLight.castShadow = false;
         bonfireGroup.add(this.bonfireLight);
 
-        // Position Bonfire at center of Courtyard
+        const warmLight = new THREE.PointLight(0xffd700, 2.2, 16);
+        warmLight.position.set(0, 1.2, 0);
+        bonfireGroup.add(warmLight);
+
+        // Position at center of Courtyard
         bonfireGroup.position.set(0, 0, 0);
         this.scene.add(bonfireGroup);
         this.bonfireGroup = bonfireGroup;
 
         // Register interactable
         this.interactables.push({
-            type: 'bonfire',
+            type: 'base_heal_teleport',
             position: new THREE.Vector3(0, 0, 0),
-            radius: 3.5,
-            prompt: '[ E ] REST AT BONFIRE'
+            radius: 4.8,
+            prompt: '✨ [ E ] SANCTUARY TELEPORT & HEALING BASE (FULL HP & FAST TRAVEL)',
+            label: 'SANCTUARY TELEPORT BASE'
         });
     }
 
@@ -3651,8 +3683,8 @@ class DarkSoulsWorld {
         this.interactables.push({
             type: 'bonfire',
             position: new THREE.Vector3(x, y, z),
-            radius: 3.4,
-            prompt: '🔥 [ E ] REST AT ARENA VICTORY BONFIRE'
+            radius: 3.8,
+            prompt: '✨ [ E ] HEAL TO FULL & TELEPORT (ARENA VICTORY SANCTUARY)'
         });
 
         this.particles.push({
