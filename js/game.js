@@ -335,6 +335,15 @@ class DarkSoulsGame {
             if (e.code === 'Digit2' || e.code === 'KeyX' || e.key === 'x' || e.key === 'X' || e.key === 'ч' || e.key === 'Ч') this.cycleEquippedWeapon(1);
             if (e.code === 'KeyZ' || e.key === 'z' || e.key === 'Z' || e.key === 'я' || e.key === 'Я') this.cycleEquippedWeapon(-1);
             if (e.code === 'KeyC' || e.key === 'c' || e.key === 'C' || e.key === 'с' || e.key === 'С') this.openWeaponArsenalModal();
+            if (e.code === 'KeyL' || e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д') {
+                e.preventDefault();
+                const litModal = document.getElementById('sunken-liturgy-modal');
+                if (litModal && litModal.style.display === 'flex') {
+                    if (window.closeSunkenLiturgyModal) window.closeSunkenLiturgyModal();
+                } else {
+                    if (window.openSunkenLiturgyModal) window.openSunkenLiturgyModal();
+                }
+            }
             if (e.code === 'KeyI' || e.key === 'i' || e.key === 'I' || e.key === 'ш' || e.key === 'Ш' || e.code === 'Tab') {
                 e.preventDefault();
                 if (this.inventory) {
