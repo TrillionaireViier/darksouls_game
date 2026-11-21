@@ -1412,7 +1412,7 @@ class DarkSoulsGame {
 
         // 0. Anti-Stuck Safety Watchdog for Player Combat & Locomotion Flags
         if (this.combat) {
-            if (this.combat.isAttacking && (!this.combat.attackTime || this.combat.attackTime > 1.2 || isNaN(this.combat.attackTime))) {
+            if (this.combat.isAttacking && (!this.combat.attackTime || this.combat.attackTime > 1.5 || isNaN(this.combat.attackTime))) {
                 this.combat.isAttacking = false;
                 this.combat.attackCombo = 0;
             }
@@ -1539,16 +1539,41 @@ class DarkSoulsGame {
                 const rollYaw = Math.atan2(this.combat.rollDir.x, this.combat.rollDir.z);
                 this.playerMesh.rotation.y = rollYaw;
 
-                if (uData.torso) uData.torso.rotation.x = progress * Math.PI * 2;
+                // 6 Roll Style Variants (Animations #31-36)
+                if (!this._rollStyle) this._rollStyle = Math.floor(Math.random() * 6);
+                const rs = this._rollStyle;
+
+                if (rs === 1) {
+                    // Roll #32: Shoulder Roll (tighter tuck, diagonal body)
+                    if (uData.torso) { uData.torso.rotation.x = progress * Math.PI * 2; uData.torso.rotation.z = Math.sin(progress * Math.PI) * 0.5; }
+                } else if (rs === 2) {
+                    // Roll #33: Dive Roll (extended forward dive)
+                    if (uData.torso) uData.torso.rotation.x = progress * Math.PI * 1.5;
+                    if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0 - Math.sin(progress * Math.PI) * 0.3;
+                } else if (rs === 3) {
+                    // Roll #34: Cartwheel (sideways flip)
+                    if (uData.torso) { uData.torso.rotation.z = progress * Math.PI * 2; uData.torso.rotation.x = 0.3; }
+                } else if (rs === 4) {
+                    // Roll #35: Ninja Flip (high arc backflip)
+                    if (uData.torso) uData.torso.rotation.x = -progress * Math.PI * 2;
+                    if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0 + Math.sin(progress * Math.PI) * 0.5;
+                } else if (rs === 5) {
+                    // Roll #36: Slide (low ground slide)
+                    if (uData.torso) uData.torso.rotation.x = 0.4 + progress * 0.3;
+                    if (uData.bodyGroup) uData.bodyGroup.position.y = 0.6;
+                } else {
+                    // Roll #31: Classic (original)
+                    if (uData.torso) uData.torso.rotation.x = progress * Math.PI * 2;
+                }
 
                 const tuck = Math.sin(progress * Math.PI);
                 if (uData.leftHip && uData.rightHip) {
-                    uData.leftHip.rotation.x = -tuck * 1.4;
-                    uData.rightHip.rotation.x = -tuck * 1.4;
+                    uData.leftHip.rotation.x = -tuck * (rs === 4 ? 0.6 : 1.4);
+                    uData.rightHip.rotation.x = -tuck * (rs === 4 ? 0.6 : 1.4);
                 }
                 if (uData.leftShoulder && uData.rightShoulder) {
-                    uData.leftShoulder.rotation.x = tuck * 1.1;
-                    uData.rightShoulder.rotation.x = tuck * 1.1;
+                    uData.leftShoulder.rotation.x = tuck * (rs === 3 ? 0.5 : 1.1);
+                    uData.rightShoulder.rotation.x = tuck * (rs === 3 ? 0.5 : 1.1);
                 }
 
                 const groundY = this.world.getGroundHeight(this.playerMesh.position.x, this.playerMesh.position.z, this.playerMesh.position.y);
@@ -1731,16 +1756,39 @@ class DarkSoulsGame {
                 uData.rightShoulder.rotation.x = 0.2;
             }
         } else if (this.combat.isStaggered) {
-            // Heavy Hit Stagger / Knockback
+            // Heavy Hit Stagger / Knockback — 6 Reaction Variants (#45-50)
             const st = this.combat.staggerTime;
             const fade = 1.0 - Math.min(1.0, st / 0.6);
-            if (uData.torso) {
-                uData.torso.rotation.x = -0.42 * fade;
-                uData.torso.rotation.z = 0.12 * Math.sin(st * 20) * fade;
+            if (!this._staggerStyle) this._staggerStyle = Math.floor(Math.random() * 6);
+            const ss = this._staggerStyle;
+            
+            if (ss === 0) {
+                // Stagger #45: Classic recoil back
+                if (uData.torso) { uData.torso.rotation.x = -0.42 * fade; uData.torso.rotation.z = 0.12 * Math.sin(st * 20) * fade; }
+            } else if (ss === 1) {
+                // Stagger #46: Side stumble (knocked sideways)
+                if (uData.torso) { uData.torso.rotation.z = 0.5 * fade; uData.torso.rotation.x = -0.15 * fade; }
+                if (uData.leftHip) uData.leftHip.rotation.z = 0.3 * fade;
+            } else if (ss === 2) {
+                // Stagger #47: Head snap (violent head jerk)
+                if (uData.torso) { uData.torso.rotation.x = -0.25 * fade; }
+                if (uData.headGroup) { uData.headGroup.rotation.x = -0.5 * fade; uData.headGroup.rotation.y = 0.4 * Math.sin(st * 25) * fade; }
+            } else if (ss === 3) {
+                // Stagger #48: Doubled over (gut punch)
+                if (uData.torso) { uData.torso.rotation.x = 0.6 * fade; uData.torso.rotation.z = 0; }
+                if (uData.bodyGroup) uData.bodyGroup.position.y = 0.85;
+            } else if (ss === 4) {
+                // Stagger #49: Stagger step back (involuntary backstep)
+                if (uData.torso) { uData.torso.rotation.x = -0.35 * fade; uData.torso.rotation.y = Math.sin(st * 15) * 0.2 * fade; }
+                if (uData.rightHip) uData.rightHip.rotation.x = -0.3 * fade;
+            } else {
+                // Stagger #50: Shield arm flinch (arm raised defensively)
+                if (uData.torso) { uData.torso.rotation.x = -0.3 * fade; uData.torso.rotation.z = -0.15 * fade; }
+                if (uData.leftShoulder) { uData.leftShoulder.rotation.x = -0.8 * fade; uData.leftShoulder.rotation.z = 0.6 * fade; }
             }
-            if (uData.leftShoulder) uData.leftShoulder.rotation.z = 0.45 * fade;
+            if (uData.leftShoulder && ss < 5) uData.leftShoulder.rotation.z = 0.45 * fade;
             if (uData.rightShoulder) uData.rightShoulder.rotation.z = -0.45 * fade;
-            if (uData.bodyGroup) uData.bodyGroup.position.y = 0.92;
+            if (uData.bodyGroup) uData.bodyGroup.position.y = ss === 3 ? 0.85 : 0.92;
         } else if (this.combat.isParrying) {
             // Parry Shield Deflection Flick
             const p = Math.min(1.0, this.combat.parryTime / 0.4);
@@ -1847,6 +1895,70 @@ class DarkSoulsGame {
                     uData.swordGroup.rotation.set(Math.PI * 0.95, 0, 0);
                     uData.swordGroup.position.set(0, -0.4, 0.4);
                 }
+            } else if (combo === 7) { // Anim #23: Spinning Slash (360° whirlwind)
+                const norm = Math.min(1.0, t / 0.55);
+                if (uData.torso) { uData.torso.rotation.y = norm * Math.PI * 2; uData.torso.rotation.x = 0.15; }
+                if (uData.rightShoulder) { uData.rightShoulder.rotation.x = 0.8; uData.rightShoulder.rotation.z = -0.3; }
+                if (uData.swordGroup) { uData.swordGroup.rotation.z = Math.sin(t * 16) * 2.2; }
+                if (uData.leftShoulder) { uData.leftShoulder.rotation.z = 0.6 * Math.sin(norm * Math.PI); }
+            } else if (combo === 8) { // Anim #24: Kick Stagger
+                const norm = Math.min(1.0, t / 0.35);
+                if (norm < 0.4) {
+                    if (uData.rightHip) uData.rightHip.rotation.x = norm / 0.4 * 1.6;
+                    if (uData.torso) uData.torso.rotation.x = 0.2;
+                } else {
+                    if (uData.rightHip) uData.rightHip.rotation.x = 1.6 * (1 - (norm - 0.4) / 0.6);
+                    if (uData.torso) uData.torso.rotation.x = -0.1;
+                }
+                if (uData.leftShoulder) uData.leftShoulder.rotation.z = 0.4;
+                if (uData.rightShoulder) uData.rightShoulder.rotation.z = -0.4;
+            } else if (combo === 9) { // Anim #25: Pommel Strike (handle bash)
+                const norm = Math.min(1.0, t / 0.3);
+                if (uData.rightShoulder) { uData.rightShoulder.rotation.x = 0.8 + norm * 0.6; uData.rightShoulder.rotation.z = -0.2; }
+                if (uData.swordGroup) { uData.swordGroup.rotation.set(Math.PI, 0, 0); uData.swordGroup.position.z = 0.1 + norm * 0.5; }
+                if (uData.torso) uData.torso.rotation.y = -0.2 + norm * 0.4;
+            } else if (combo === 10) { // Anim #26: Rising Uppercut Slash
+                const norm = Math.min(1.0, t / 0.4);
+                if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0 + Math.sin(norm * Math.PI) * 0.25;
+                if (uData.rightShoulder) { uData.rightShoulder.rotation.x = -1.0 + norm * 3.0; uData.rightShoulder.rotation.z = 0.3 - norm * 0.6; }
+                if (uData.torso) { uData.torso.rotation.x = -0.1 + norm * 0.3; }
+                if (uData.swordGroup) { uData.swordGroup.rotation.x = -0.5 + norm * 2.5; }
+            } else if (combo === 11) { // Anim #27: Cross-Body Reverse Cleave
+                const norm = Math.min(1.0, t / 0.45);
+                if (uData.torso) { uData.torso.rotation.y = 0.6 - norm * 1.4; uData.torso.rotation.x = 0.1; }
+                if (uData.rightShoulder) { uData.rightShoulder.rotation.x = -0.3 + Math.sin(norm * Math.PI) * 1.8; uData.rightShoulder.rotation.y = 0.5 - norm * 1.0; }
+                if (uData.swordGroup) { uData.swordGroup.rotation.z = -Math.sin(t * 14) * 2.0; }
+            } else if (combo === 12) { // Anim #28: Leaping Spin Attack (Zweihander special)
+                const norm = Math.min(1.0, t / 0.65);
+                if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0 + Math.sin(norm * Math.PI) * 0.5;
+                if (uData.torso) uData.torso.rotation.y = norm * Math.PI * 3;
+                if (uData.rightShoulder) { uData.rightShoulder.rotation.x = -0.5; uData.rightShoulder.rotation.z = -0.3; }
+                if (uData.swordGroup) { uData.swordGroup.rotation.z = Math.sin(t * 20) * 1.5; }
+            } else if (combo === 13) { // Anim #29: Quick Draw Iai Slash (Katana special)
+                const norm = Math.min(1.0, t / 0.3);
+                if (norm < 0.3) {
+                    if (uData.torso) uData.torso.rotation.y = 0.8;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = 0.4;
+                } else {
+                    const s = (norm - 0.3) / 0.7;
+                    if (uData.torso) uData.torso.rotation.y = 0.8 - s * 1.6;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = 0.4 + s * 1.2;
+                    if (uData.swordGroup) uData.swordGroup.rotation.z = s * 2.5;
+                }
+            } else if (combo === 14) { // Anim #30: Ground Pound (Hammer special)
+                const norm = Math.min(1.0, t / 0.6);
+                if (norm < 0.5) {
+                    const w = norm / 0.5;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = -2.5 * w;
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.x = -2.0 * w;
+                    if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0 + w * 0.3;
+                } else {
+                    const s = (norm - 0.5) / 0.5;
+                    if (uData.rightShoulder) uData.rightShoulder.rotation.x = -2.5 + s * 4.5;
+                    if (uData.leftShoulder) uData.leftShoulder.rotation.x = -2.0 + s * 3.5;
+                    if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0 - s * 0.15;
+                    if (uData.torso) uData.torso.rotation.x = s * 0.4;
+                }
             }
         } else if (this.combat.isBlocking) {
             // Shield Block Stance: Left arm raises firmly, rotating inward to present the crest shield directly in front of the chest
@@ -1866,8 +1978,10 @@ class DarkSoulsGame {
                 uData.shieldGroup.rotation.set(0.08, -0.40, -0.06);
             }
         } else if (!isMoving) {
-            // 6. IDLE BREATHING OSCILLATION & REALISTIC COMBAT STANCE
+            // 6. IDLE BREATHING OSCILLATION & REALISTIC COMBAT STANCE — 8 Weapon-Specific Stances (#37-44)
             const t = time * 2.2;
+            const wpnId = this.combat ? this.combat.currentWeaponId : 'sword';
+            
             if (uData.rightHip && uData.leftHip) {
                 uData.rightHip.rotation.x = 0.04;
                 uData.rightHip.rotation.z = 0.04;
@@ -1875,17 +1989,95 @@ class DarkSoulsGame {
                 uData.leftHip.rotation.z = -0.04;
             }
             if (uData.bodyGroup) uData.bodyGroup.position.y = 1.0;
-            if (uData.torso) {
-                uData.torso.position.y = Math.sin(t) * 0.025;
-                uData.torso.rotation.x = Math.sin(t) * 0.015;
-                uData.torso.rotation.y = Math.sin(t * 0.3) * 0.015;
-                uData.torso.rotation.z = Math.sin(t * 0.5) * 0.02;
-                uData.torso.scale.set(1.0 + Math.sin(t) * 0.012, 1.0, 1.0 + Math.sin(t) * 0.018);
-            }
-            if (uData.rightShoulder) {
-                uData.rightShoulder.rotation.x = Math.sin(t) * 0.03;
-                uData.rightShoulder.rotation.y = 0;
-                uData.rightShoulder.rotation.z = -0.06;
+            
+            if (wpnId === 'zweihander') {
+                // Stance #38: Zweihander — wide planted stance, sword resting on shoulder
+                if (uData.torso) {
+                    uData.torso.position.y = Math.sin(t * 0.8) * 0.02;
+                    uData.torso.rotation.x = 0.06;
+                    uData.torso.rotation.y = -0.08 + Math.sin(t * 0.3) * 0.02;
+                    uData.torso.rotation.z = Math.sin(t * 0.4) * 0.015;
+                    uData.torso.scale.set(1.0, 1.0, 1.0);
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = -0.6 + Math.sin(t * 0.5) * 0.04;
+                    uData.rightShoulder.rotation.y = -0.15;
+                    uData.rightShoulder.rotation.z = 0.2;
+                }
+                if (uData.rightHip) { uData.rightHip.rotation.x = 0.1; uData.rightHip.rotation.z = 0.08; }
+                if (uData.leftHip) { uData.leftHip.rotation.x = -0.06; uData.leftHip.rotation.z = -0.08; }
+            } else if (wpnId === 'uchigatana') {
+                // Stance #39: Katana — iaijutsu ready draw (hand on hilt, coiled)
+                if (uData.torso) {
+                    uData.torso.position.y = Math.sin(t) * 0.015;
+                    uData.torso.rotation.x = 0.1 + Math.sin(t) * 0.01;
+                    uData.torso.rotation.y = 0.15 + Math.sin(t * 0.4) * 0.01;
+                    uData.torso.rotation.z = 0;
+                    uData.torso.scale.set(1.0, 1.0, 1.0);
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = 0.3 + Math.sin(t * 0.7) * 0.02;
+                    uData.rightShoulder.rotation.y = -0.1;
+                    uData.rightShoulder.rotation.z = -0.15;
+                }
+                if (uData.rightHip) { uData.rightHip.rotation.x = 0.12; }
+                if (uData.leftHip) { uData.leftHip.rotation.x = -0.08; }
+            } else if (wpnId === 'halberd') {
+                // Stance #40: Halberd — upright polearm at side
+                if (uData.torso) {
+                    uData.torso.position.y = Math.sin(t * 0.9) * 0.02;
+                    uData.torso.rotation.x = 0.04;
+                    uData.torso.rotation.y = Math.sin(t * 0.3) * 0.02;
+                    uData.torso.rotation.z = -0.03;
+                    uData.torso.scale.set(1.0, 1.0, 1.0);
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = -0.15 + Math.sin(t * 0.6) * 0.03;
+                    uData.rightShoulder.rotation.y = 0;
+                    uData.rightShoulder.rotation.z = 0.12;
+                }
+            } else if (wpnId === 'dragontooth') {
+                // Stance #41: Dragon Tooth — resting on ground, leaning on it
+                if (uData.torso) {
+                    uData.torso.position.y = Math.sin(t * 0.7) * 0.025;
+                    uData.torso.rotation.x = 0.12 + Math.sin(t * 0.5) * 0.02;
+                    uData.torso.rotation.y = -0.05;
+                    uData.torso.rotation.z = 0.04 + Math.sin(t * 0.4) * 0.02;
+                    uData.torso.scale.set(1.0, 1.0, 1.0);
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = 0.15 + Math.sin(t * 0.4) * 0.03;
+                    uData.rightShoulder.rotation.y = 0;
+                    uData.rightShoulder.rotation.z = -0.1;
+                }
+            } else if (wpnId === 'moonlight') {
+                // Stance #42: Moonlight Greatsword — held vertically, glowing in front
+                if (uData.torso) {
+                    uData.torso.position.y = Math.sin(t) * 0.02;
+                    uData.torso.rotation.x = -0.05 + Math.sin(t * 0.8) * 0.015;
+                    uData.torso.rotation.y = Math.sin(t * 0.3) * 0.025;
+                    uData.torso.rotation.z = 0;
+                    uData.torso.scale.set(1.0 + Math.sin(t) * 0.008, 1.0, 1.0);
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = -0.3 + Math.sin(t * 0.6) * 0.04;
+                    uData.rightShoulder.rotation.y = 0.1;
+                    uData.rightShoulder.rotation.z = -0.08;
+                }
+            } else {
+                // Stances #37, #43, #44: Default sword + minor variations
+                if (uData.torso) {
+                    uData.torso.position.y = Math.sin(t) * 0.025;
+                    uData.torso.rotation.x = Math.sin(t) * 0.015;
+                    uData.torso.rotation.y = Math.sin(t * 0.3) * 0.015;
+                    uData.torso.rotation.z = Math.sin(t * 0.5) * 0.02;
+                    uData.torso.scale.set(1.0 + Math.sin(t) * 0.012, 1.0, 1.0 + Math.sin(t) * 0.018);
+                }
+                if (uData.rightShoulder) {
+                    uData.rightShoulder.rotation.x = Math.sin(t) * 0.03;
+                    uData.rightShoulder.rotation.y = 0;
+                    uData.rightShoulder.rotation.z = -0.06;
+                }
             }
             if (uData.leftShoulder) {
                 if (this.isTorchActive) {

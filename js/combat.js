@@ -3328,7 +3328,7 @@ class DarkSoulsCombat {
 
         if (this.isAttacking) {
             const wpn = this.weapons[this.currentWeaponId] || this.weapons.sword;
-            const totalDur = (this.attackCombo === 3 ? 0.70 : 0.45) / (wpn.speedMultiplier || 1.0);
+            const totalDur = (this.attackCombo === 3 ? 0.70 : this.attackCombo >= 7 ? 0.60 : 0.45) / (wpn.speedMultiplier || 1.0);
             const remaining = totalDur - this.attackTime;
             if (remaining > 0 && remaining <= windowSec) canBuffer = true;
         } else if (this.isRolling) {
@@ -3470,6 +3470,18 @@ class DarkSoulsCombat {
             this.staminaDelay = 0.5;
             this.audio.playSwing(false);
             this.checkAttackHits(Math.round(wpn.lightDmg * 1.15), wpn.poiseBreak * 1.2, wpn.reach + 0.2, wpn.bossReachBonus + 0.2);
+        } else if (this.attackTime > (0.20 / (wpn.speedMultiplier || 1.0)) && this.attackCombo === 2) {
+            // Combo 3: Weapon-specific finisher (#23-30 depending on weapon)
+            if (wpn.id === 'uchigatana') this.attackCombo = 13; // Iai Slash
+            else if (wpn.id === 'zweihander') this.attackCombo = 12; // Leaping Spin
+            else if (wpn.id === 'dragontooth') this.attackCombo = 14; // Ground Pound
+            else if (wpn.id === 'halberd') this.attackCombo = 10; // Rising Uppercut
+            else this.attackCombo = 7; // Spinning Slash
+            this.attackTime = 0;
+            this.stamina = Math.max(0, this.stamina - Math.round(stamCost * 1.3));
+            this.staminaDelay = 0.6;
+            this.audio.playSwing(true);
+            this.checkAttackHits(Math.round(wpn.lightDmg * 1.4), wpn.poiseBreak * 1.5, wpn.reach + 0.4, wpn.bossReachBonus + 0.4);
         }
     }
 
@@ -3648,6 +3660,7 @@ class DarkSoulsCombat {
         this.rollTime = 0;
         this.isInvincible = true;
         this.isAttacking = false;
+        if (this.game) this.game._rollStyle = Math.floor(Math.random() * 6); // Randomize roll anim variant
         this.isBlocking = false;
         this.stamina = Math.max(0, this.stamina - 18);
         this.staminaDelay = 0.35;
@@ -4694,6 +4707,10 @@ equipWeapon(weaponId) {
 
     killEnemy(enemy) {
         enemy.isDead = true;
+
+        // === NEW: 6 Mob Death Animation Styles (Animations #1-6) ===
+        enemy._deathStyle = Math.floor(Math.random() * 6);
+        enemy._deathTimer = 0;
         enemy.state = 'DEAD';
         const soulReward = enemy.souls || 150;
         this.souls += soulReward;
@@ -5393,7 +5410,7 @@ equipWeapon(weaponId) {
             vel: vel,
             shooter: shooter,
             damage: shooter ? Math.max(12, Math.min(25, shooter.damage || 18)) : 18,
-            life: 7.0,
+            life: 4.0,
             stuck: false,
             stuckTimer: 0
         });
@@ -5413,7 +5430,7 @@ equipWeapon(weaponId) {
                 if (arr.stuckTimer < 0.35) {
                     arr.mesh.rotation.z += Math.sin(arr.stuckTimer * 45) * 0.04 * (1 - arr.stuckTimer / 0.35);
                 }
-                if (arr.stuckTimer > 3.0 || arr.life <= 0) {
+                if (arr.stuckTimer > 1.5 || arr.life <= 0) {
                     const fade = Math.max(0, 1.0 - (arr.stuckTimer - 3.0) / 0.8);
                     arr.mesh.scale.setScalar(fade);
                     if (fade <= 0 || arr.life <= 0) {
@@ -5461,6 +5478,7 @@ equipWeapon(weaponId) {
                             // Deflect arrow away realistically
                             arr.vel.reflect(playerFacing).multiplyScalar(0.35);
                             arr.vel.y += 2.0;
+                            arr.life = Math.min(arr.life, 1.5); // Quick despawn after deflect
                             continue;
                         }
                     }
@@ -5551,6 +5569,81 @@ equipWeapon(weaponId) {
 
             // 1. Articulated Ragdoll Physics handles deceased entities in updateRagdolls
             if (e.isDead || e.state === 'DEAD') {
+                // === NEW: 6 Procedural Mob Death Animations (Animations #1-6) ===
+                if (e._deathStyle !== undefined && e._deathTimer !== undefined && e.mesh && e.mesh.visible) {
+                    e._deathTimer += delta;
+                    const dt = e._deathTimer;
+                    const mu = e.mesh.userData;
+                    const gY = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z);
+                    
+                    if (e._deathStyle === 0) {
+                        // Death #1: "Crumbling Kneel" — falls to knees then face-plants
+                        if (dt < 0.6) {
+                            if (mu.rightHip) mu.rightHip.rotation.x = -dt * 2.2;
+                            if (mu.leftHip) mu.leftHip.rotation.x = -dt * 2.2;
+                            if (mu.torso) mu.torso.rotation.x = -dt * 0.8;
+                            e.mesh.position.y = Math.max(gY - 0.3, e.mesh.position.y - delta * 1.5);
+                        } else {
+                            if (mu.torso) mu.torso.rotation.x = Math.min(1.4, mu.torso.rotation.x + delta * 3.5);
+                            if (mu.head) mu.head.rotation.x = 0.6;
+                            if (mu.rightShoulder) mu.rightShoulder.rotation.z = -0.9;
+                            if (mu.leftShoulder) mu.leftShoulder.rotation.z = 0.9;
+                        }
+                    } else if (e._deathStyle === 1) {
+                        // Death #2: "Spiral Collapse" — spins while falling sideways
+                        e.mesh.rotation.y += delta * 8.0 * Math.max(0.1, 1.0 - dt / 1.5);
+                        e.mesh.rotation.z = Math.min(Math.PI / 2, dt * 2.8);
+                        e.mesh.position.y = Math.max(gY, e.mesh.position.y - delta * 2.0);
+                        if (mu.rightShoulder) mu.rightShoulder.rotation.x = -1.2;
+                        if (mu.leftShoulder) mu.leftShoulder.rotation.x = 1.4;
+                    } else if (e._deathStyle === 2) {
+                        // Death #3: "Stumble Back" — staggers backwards before collapsing
+                        if (dt < 0.5) {
+                            e.mesh.position.z -= delta * 2.5;
+                            if (mu.torso) mu.torso.rotation.x = -dt * 1.5;
+                            if (mu.rightShoulder) mu.rightShoulder.rotation.z = -dt * 2.0;
+                            if (mu.leftShoulder) mu.leftShoulder.rotation.z = dt * 2.0;
+                        } else {
+                            e.mesh.rotation.x = -Math.min(Math.PI / 2, (dt - 0.5) * 3.5);
+                            e.mesh.position.y = Math.max(gY, e.mesh.position.y - delta * 3.0);
+                        }
+                    } else if (e._deathStyle === 3) {
+                        // Death #4: "Disembowel Clutch" — grabs stomach, doubles over
+                        if (dt < 0.8) {
+                            if (mu.torso) mu.torso.rotation.x = dt * 1.8;
+                            if (mu.rightShoulder) mu.rightShoulder.rotation.x = 1.2 * dt;
+                            if (mu.leftShoulder) mu.leftShoulder.rotation.x = 1.2 * dt;
+                            if (mu.head) mu.head.rotation.x = dt * 0.8;
+                        } else {
+                            e.mesh.position.y = Math.max(gY, e.mesh.position.y - delta * 2.0);
+                            if (mu.rightHip) mu.rightHip.rotation.x = -1.0;
+                            if (mu.leftHip) mu.leftHip.rotation.x = -0.8;
+                        }
+                    } else if (e._deathStyle === 4) {
+                        // Death #5: "Violent Knockback Launch" — launched backwards
+                        if (dt < 0.3) {
+                            e.mesh.position.y += delta * 4.0;
+                            e.mesh.position.z -= delta * 5.0;
+                            e.mesh.rotation.x -= delta * 8.0;
+                        } else {
+                            e.mesh.position.y = Math.max(gY, e.mesh.position.y - delta * 8.0);
+                            if (mu.leftHip) mu.leftHip.rotation.x = Math.sin(dt * 12) * 0.6;
+                            if (mu.rightHip) mu.rightHip.rotation.x = -Math.sin(dt * 12) * 0.6;
+                        }
+                    } else {
+                        // Death #6: "Slow Timber Fall" — rigid body topple like a felled tree
+                        e.mesh.rotation.x = -Math.min(Math.PI / 2, dt * 1.5);
+                        e.mesh.position.y = Math.max(gY, e.mesh.position.y - delta * 1.0);
+                        if (mu.rightShoulder) mu.rightShoulder.rotation.set(0, 0, -0.4);
+                        if (mu.leftShoulder) mu.leftShoulder.rotation.set(0, 0, 0.4);
+                    }
+                    
+                    // Fade out after 2.5s
+                    if (dt > 2.5 && e.mesh.visible) {
+                        e.mesh.traverse(c => { if (c.material) c.material.opacity = Math.max(0, 1.0 - (dt - 2.5) / 1.0); });
+                        if (dt > 3.5) e.mesh.visible = false;
+                    }
+                }
                 continue;
             }
 
@@ -5704,11 +5797,64 @@ equipWeapon(weaponId) {
                         if (u.bowString) { u.bowString.position.x = 0.16 + 0.22 * t; }
                         if (u.notchedArrow) { u.notchedArrow.position.z = 0.42 - 0.25 * t; }
                     } else {
-                        // Flanker / Swarm / default
-                        if (u.torso) { u.torso.rotation.y = -0.65 * t; u.torso.rotation.x = -0.22 * t; }
-                        if (u.head) { u.head.rotation.x = 0.15 * t; u.head.rotation.y = 0.25 * t; }
-                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.1 * t; u.rightShoulder.rotation.z = 0.45 * t; u.rightShoulder.rotation.y = -0.25 * t; }
-                        if (u.leftShoulder) { u.leftShoulder.rotation.x = 0.35 * t; u.leftShoulder.rotation.z = -0.35 * t; }
+                        // Flanker / Swarm / default — 10 attack variant animations (#7-16)
+                        if (!e._attackVariant) e._attackVariant = Math.floor(Math.random() * 10);
+                        const av = e._attackVariant;
+                        if (av === 0) {
+                            // Variant #7: Classic overhead slash windup
+                            if (u.torso) { u.torso.rotation.y = -0.65 * t; u.torso.rotation.x = -0.22 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.1 * t; u.rightShoulder.rotation.z = 0.45 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = 0.35 * t; u.leftShoulder.rotation.z = -0.35 * t; }
+                        } else if (av === 1) {
+                            // Variant #8: Lateral sweeping cleave (wide arc from right)
+                            if (u.torso) { u.torso.rotation.y = 0.75 * t; u.torso.rotation.x = -0.15 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.8 * t; u.rightShoulder.rotation.y = -1.6 * t; u.rightShoulder.rotation.z = 0.6 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.z = -0.45 * t; }
+                        } else if (av === 2) {
+                            // Variant #9: Low thrust / spear jab
+                            if (u.torso) { u.torso.rotation.x = 0.35 * t; u.torso.rotation.y = -0.2 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = 1.4 * t; u.rightShoulder.rotation.z = -0.15 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = 0.6 * t; }
+                        } else if (av === 3) {
+                            // Variant #10: Spin attack windup (full body rotation)
+                            if (u.torso) { u.torso.rotation.y = -1.2 * t; u.torso.rotation.x = -0.1 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.8 * t; u.rightShoulder.rotation.y = -0.9 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = -0.6 * t; u.leftShoulder.rotation.y = 0.5 * t; }
+                        } else if (av === 4) {
+                            // Variant #11: Uppercut rising slash
+                            if (u.torso) { u.torso.rotation.x = 0.4 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = 0.8 * t; u.rightShoulder.rotation.z = 0.9 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = -0.3 * t; }
+                        } else if (av === 5) {
+                            // Variant #12: Shield bash / headbutt lunge
+                            if (u.torso) { u.torso.rotation.x = 0.5 * t; u.torso.rotation.y = 0.2 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.4 * t; u.leftShoulder.rotation.z = -0.8 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.5 * t; }
+                            if (u.head) { u.head.rotation.x = 0.4 * t; }
+                        } else if (av === 6) {
+                            // Variant #13: Double-hand overhead smash
+                            if (u.torso) { u.torso.rotation.x = -0.3 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.4 * t; u.rightShoulder.rotation.z = 0.3 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = -2.2 * t; u.leftShoulder.rotation.z = -0.3 * t; }
+                        } else if (av === 7) {
+                            // Variant #14: Backhand cross-body slash
+                            if (u.torso) { u.torso.rotation.y = 0.9 * t; u.torso.rotation.x = -0.12 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.5 * t; u.rightShoulder.rotation.y = 0.8 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.z = 0.5 * t; }
+                        } else if (av === 8) {
+                            // Variant #15: Leaping downward chop
+                            if (u.torso) { u.torso.rotation.x = -0.5 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.8 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.0 * t; }
+                            if (u.rightHip) { u.rightHip.rotation.x = -0.6 * t; }
+                        } else {
+                            // Variant #16: Grapple lunge (both arms reach forward)
+                            if (u.torso) { u.torso.rotation.x = 0.3 * t; u.torso.rotation.y = -0.15 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = 1.6 * t; u.rightShoulder.rotation.z = -0.4 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = 1.6 * t; u.leftShoulder.rotation.z = 0.4 * t; }
+                            if (u.head) { u.head.rotation.x = 0.3 * t; }
+                        }
+                        if (u.head && av < 5) { u.head.rotation.x = 0.15 * t; u.head.rotation.y = 0.25 * t; }
                     }
                     if (u.rightHip && u.leftHip) {
                         u.rightHip.rotation.x = -0.3 * t;
@@ -5737,9 +5883,42 @@ equipWeapon(weaponId) {
                         if (u.bowString) { u.bowString.position.x = 0.16; }
                         if (u.notchedArrow) { u.notchedArrow.position.z = 0.42; }
                     } else {
-                        // Flanker / Swarm
-                        if (u.torso) { u.torso.rotation.y = -0.65 + 1.25 * t; u.torso.rotation.x = -0.22 + 0.65 * t; }
-                        if (u.head) { u.head.rotation.x = 0.15 - 0.35 * t; u.head.rotation.y = 0.25 - 0.45 * t; }
+                        // Flanker / Swarm — variant strike animations (#7-16)
+                        const av = e._attackVariant || 0;
+                        if (av === 1) {
+                            // Lateral sweeping cleave follow-through
+                            if (u.torso) { u.torso.rotation.y = 0.75 - 1.8 * t; u.torso.rotation.x = 0.3 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.y = -1.6 + 2.4 * t; u.rightShoulder.rotation.x = -0.8 + 1.6 * t; }
+                        } else if (av === 2) {
+                            // Thrust strike
+                            if (u.torso) { u.torso.rotation.x = 0.35 - 0.1 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = 1.4 + 0.3 * t; }
+                        } else if (av === 3) {
+                            // Spin attack release
+                            if (u.torso) { u.torso.rotation.y = -1.2 + 2.8 * t; }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.8 + 3.2 * t; u.rightShoulder.rotation.y = -0.9 + 1.8 * t; }
+                        } else if (av === 4) {
+                            // Uppercut rising release
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = 0.8 - 2.0 * t; u.rightShoulder.rotation.z = 0.9 - 0.6 * t; }
+                        } else if (av === 5) {
+                            // Shield bash / headbutt follow-through
+                            if (u.torso) { u.torso.rotation.x = 0.5 - 0.3 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.4 + 2.0 * t; }
+                            if (u.head) { u.head.rotation.x = 0.4 - 0.6 * t; }
+                        } else if (av >= 6 && av <= 8) {
+                            // Smash / chop / backhand follow-through
+                            if (u.torso) { u.torso.rotation.x = -0.3 + 0.8 * t; u.torso.rotation.y = (av === 7 ? (0.9 - 1.5 * t) : 0); }
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = -(av === 8 ? 2.8 : 2.4) + 4.0 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = -(av === 6 ? 2.2 : 1.0) + 3.0 * t; }
+                        } else if (av === 9) {
+                            // Grapple lunge thrust
+                            if (u.rightShoulder) { u.rightShoulder.rotation.x = 1.6 + 0.5 * t; }
+                            if (u.leftShoulder) { u.leftShoulder.rotation.x = 1.6 + 0.5 * t; }
+                            if (u.torso) { u.torso.rotation.x = 0.3 + 0.2 * t; }
+                        } else {
+                            if (u.torso) { u.torso.rotation.y = -0.65 + 1.25 * t; u.torso.rotation.x = -0.22 + 0.65 * t; }
+                        }
+                        if (u.head && av !== 5) { u.head.rotation.x = 0.15 - 0.35 * t; u.head.rotation.y = 0.25 - 0.45 * t; }
                         if (u.rightShoulder) { u.rightShoulder.rotation.x = -2.1 + 3.45 * t; u.rightShoulder.rotation.z = 0.45 - 0.75 * t; }
                         if (u.leftShoulder) { u.leftShoulder.rotation.x = 0.35 - 0.7 * t; }
                     }
@@ -5960,24 +6139,55 @@ equipWeapon(weaponId) {
                     }
                 }
             } else {
-                // 6. Idle / Patrol Breathing & Scanning Animation
+                // 6. Idle / Patrol Breathing & Scanning Animation — 6 Fidget Variants (#17-22)
                 e.state = 'PATROL';
                 e.attackPhase = 'IDLE';
+                if (!e._idleVariant) e._idleVariant = Math.floor(Math.random() * 6);
                 const breath = Math.sin(e.animTime * 2.2 + e.idleSeed);
-                if (u.torso) {
-                    u.torso.position.y = breath * 0.035;
-                    u.torso.rotation.x = 0.12 + breath * 0.04;
-                    u.torso.rotation.z = 0;
+                const iv = e._idleVariant;
+                
+                if (iv === 1) {
+                    // Idle #18: Head scratch / neck rub
+                    if (u.torso) { u.torso.position.y = breath * 0.03; u.torso.rotation.x = 0.1; u.torso.rotation.z = 0; }
+                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 1.2) * 0.15; u.head.rotation.x = -0.15 + Math.sin(e.animTime * 3.0) * 0.08; }
+                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.2 + Math.sin(e.animTime * 2.5) * 0.15; u.rightShoulder.rotation.z = 0.5; }
+                } else if (iv === 2) {
+                    // Idle #19: Weight shifting (swaying side to side)
+                    if (u.torso) { u.torso.position.y = breath * 0.04; u.torso.rotation.z = Math.sin(e.animTime * 1.5) * 0.12; u.torso.rotation.x = 0.08; }
+                    if (u.rightHip) u.rightHip.rotation.z = Math.sin(e.animTime * 1.5) * 0.08;
+                    if (u.leftHip) u.leftHip.rotation.z = -Math.sin(e.animTime * 1.5) * 0.08;
+                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 0.7) * 0.25; u.head.rotation.x = 0.05; }
+                } else if (iv === 3) {
+                    // Idle #20: Aggressive posturing (taunting forward lean)
+                    if (u.torso) { u.torso.position.y = breath * 0.025; u.torso.rotation.x = 0.25 + Math.sin(e.animTime * 3.0) * 0.08; u.torso.rotation.z = 0; }
+                    if (u.head) { u.head.rotation.x = 0.2; u.head.rotation.y = Math.sin(e.animTime * 2.5 + e.idleSeed) * 0.4; }
+                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.6 + Math.sin(e.animTime * 1.8) * 0.15; u.rightShoulder.rotation.z = 0.3; }
+                } else if (iv === 4) {
+                    // Idle #21: Weapon check / arm flex
+                    const flex = Math.sin(e.animTime * 1.0 + e.idleSeed);
+                    if (u.torso) { u.torso.position.y = breath * 0.03; u.torso.rotation.x = 0.08; u.torso.rotation.z = 0; }
+                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.5 + flex * 0.4; u.rightShoulder.rotation.z = 0.2 + Math.abs(flex) * 0.3; }
+                    if (u.head) { u.head.rotation.y = flex * 0.2; u.head.rotation.x = -0.1 + Math.abs(flex) * 0.1; }
+                } else if (iv === 5) {
+                    // Idle #22: Nervous trembling (scared low-tier mob)
+                    const tremble = Math.sin(e.animTime * 18 + e.idleSeed) * 0.03;
+                    if (u.torso) { u.torso.position.y = breath * 0.02; u.torso.rotation.x = 0.15 + tremble; u.torso.rotation.z = tremble * 2; }
+                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 1.0) * 0.4 + tremble; u.head.rotation.x = 0.1 + tremble; }
+                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.15 + tremble * 3; u.rightShoulder.rotation.z = 0.12 + tremble; }
+                    if (u.leftShoulder) { u.leftShoulder.rotation.x = -0.1 + tremble * 3; u.leftShoulder.rotation.z = -0.12 - tremble; }
+                } else {
+                    // Idle #17: Default breathing (original)
+                    if (u.torso) { u.torso.position.y = breath * 0.035; u.torso.rotation.x = 0.12 + breath * 0.04; u.torso.rotation.z = 0; }
+                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 0.85 + e.idleSeed) * 0.32; u.head.rotation.x = 0.08 + Math.cos(e.animTime * 1.6) * 0.05; }
                 }
-                if (u.head) {
-                    u.head.rotation.y = Math.sin(e.animTime * 0.85 + e.idleSeed) * 0.32;
-                    u.head.rotation.x = 0.08 + Math.cos(e.animTime * 1.6) * 0.05;
+                
+                if (iv === 0 || iv >= 3) {
+                    if (u.rightShoulder && iv !== 3 && iv !== 4 && iv !== 5) {
+                        u.rightShoulder.rotation.x = -0.28 + breath * 0.05;
+                        u.rightShoulder.rotation.z = 0.18;
+                    }
                 }
-                if (u.rightShoulder) {
-                    u.rightShoulder.rotation.x = -0.28 + breath * 0.05;
-                    u.rightShoulder.rotation.z = 0.18;
-                }
-                if (u.leftShoulder) {
+                if (u.leftShoulder && iv !== 1 && iv !== 5) {
                     u.leftShoulder.rotation.x = -0.16 - breath * 0.04;
                     u.leftShoulder.rotation.z = -0.22;
                 }
