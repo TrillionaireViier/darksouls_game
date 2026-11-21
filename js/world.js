@@ -783,6 +783,15 @@ class DarkSoulsWorld {
             }
         }
 
+                // 8. Undead Burg Outskirts - Cliffside Dragon Chasm (x in [-75, -29], z in [-10, 45])
+        if (x >= -75 && x <= -29 && z >= -10 && z <= 45) {
+            if (x > -42) {
+                const t = (-29 - x) / 13.0;
+                return -t * 2.0;
+            }
+            return -2.0;
+        }
+
         // 8. Citadel Perimeter Failsafe: Never fall into void within citadel grounds
         if (x >= -38 && x <= 38 && z >= -35 && z <= 175) {
             if (currentY === null || currentY >= -1.8) {
@@ -856,6 +865,97 @@ class DarkSoulsWorld {
         ];
         pillarCoords.forEach(([px, pz]) => {
             this.createPillar(px, pz, 8);
+        });
+
+        
+        // ----------------------------------------------------
+        // OUTSIDE LOCATION: UNDEAD BURG OUTSKIRTS - CLIFFSIDE DRAGON CHASM
+        // Position: X in [-75, -30], Z in [-10, 45], Elevation: Y = -2.0m
+        // ----------------------------------------------------
+        // 1. Gateway Breach in West Fortress Wall (Archway at x=-30, z=18)
+        const breachArchL = new THREE.Mesh(new THREE.BoxGeometry(2.4, 7.5, 1.6), this.wallMat);
+        breachArchL.position.set(-30, 3.75, 12);
+        this.scene.add(breachArchL);
+        const breachArchR = new THREE.Mesh(new THREE.BoxGeometry(2.4, 7.5, 1.6), this.wallMat);
+        breachArchR.position.set(-30, 3.75, 24);
+        this.scene.add(breachArchR);
+        const breachArchTop = new THREE.Mesh(new THREE.BoxGeometry(2.6, 2.0, 14), this.wallMat);
+        breachArchTop.position.set(-30, 8.5, 18);
+        this.scene.add(breachArchTop);
+
+        // 2. Suspension Mountain Bridge over bottomless gorge (x: -30 to -42, z: 14 to 22)
+        const bridgeSlab = new THREE.Mesh(new THREE.BoxGeometry(13, 0.6, 8.5), this.stoneMat);
+        bridgeSlab.position.set(-36, -1.0, 18);
+        bridgeSlab.rotation.z = Math.atan2(2.0, 13.0);
+        bridgeSlab.receiveShadow = true;
+        this.scene.add(bridgeSlab);
+
+        // Bridge balustrades & chains
+        const chainGeom = new THREE.CylinderGeometry(0.04, 0.04, 13.5, 8);
+        const chainL = new THREE.Mesh(chainGeom, this.darkSteelMat);
+        chainL.position.set(-36, 0.4, 14.1);
+        chainL.rotation.z = Math.PI / 2 - Math.atan2(2.0, 13.0);
+        this.scene.add(chainL);
+        const chainR = new THREE.Mesh(chainGeom, this.darkSteelMat);
+        chainR.position.set(-36, 0.4, 21.9);
+        chainR.rotation.z = Math.PI / 2 - Math.atan2(2.0, 13.0);
+        this.scene.add(chainR);
+
+        // 3. Vast Mountain Cliffside Plateau Slab (x: -75 to -42, z: -10 to 45, y=-2.0)
+        const plateauGeo = new THREE.BoxGeometry(34, 1.5, 56);
+        const plateauMat = this.stoneMat.clone();
+        const plateauMesh = new THREE.Mesh(plateauGeo, plateauMat);
+        plateauMesh.position.set(-58.5, -2.75, 17.5);
+        plateauMesh.receiveShadow = true;
+        this.scene.add(plateauMesh);
+
+        // 4. Perimeter Jagged Cliffs & Ancient Battlements along edge
+        const cliffPosts = [
+            [-74, -10], [-74, 5], [-74, 20], [-74, 35], [-74, 44],
+            [-60, -9], [-45, -9],
+            [-60, 44], [-45, 44]
+        ];
+        cliffPosts.forEach(([cx, cz]) => {
+            const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(2.2, 1), this.wallMat);
+            rock.position.set(cx, -1.2, cz);
+            rock.scale.set(1.2, 2.0, 1.2);
+            rock.castShadow = true;
+            this.scene.add(rock);
+        });
+
+        // 5. Standing Braziers & Torches at Outskirts Cliff
+        this.createStandingBrazier(-52, -2.0, 6, 0xff5511, 4.2, 30);
+        this.createStandingBrazier(-52, -2.0, 30, 0xff5511, 4.2, 30);
+        this.createStandingBrazier(-70, -2.0, 18, 0xff7722, 4.5, 32);
+
+        // 6. Colossal Ancient Dragon Skull Relic at cliff edge
+        const dragonSkull = new THREE.Mesh(new THREE.ConeGeometry(2.5, 5.0, 5), this.boneMat || this.stoneMat);
+        dragonSkull.position.set(-68, -0.5, 18);
+        dragonSkull.rotation.z = Math.PI / 2 - 0.2;
+        dragonSkull.rotation.y = -Math.PI / 2;
+        dragonSkull.castShadow = true;
+        this.scene.add(dragonSkull);
+
+        // 7. Primal Outskirts Bonfire at (-55, -2.0, 18)
+        this.createFloorSoapstone(-55, -2.0, 15, '#ff7722', "⛰️ UNDEAD BURG OUTSKIRTS", "Windswept dragon chasm beyond the fortress wall");
+
+        // Interactive Portals between Courtyard & Outskirts
+        this.interactables.push({
+            type: 'route_portal',
+            position: new THREE.Vector3(-28, 0, 18),
+            radius: 5.0,
+            prompt: '⛰️ [ E ] PASS TO BURG OUTSKIRTS (CLIFF CHASM: -2m)',
+            targetPos: new THREE.Vector3(-52, -2.0, 18),
+            label: 'UNDEAD BURG OUTSKIRTS'
+        });
+
+        this.interactables.push({
+            type: 'route_portal',
+            position: new THREE.Vector3(-45, -2.0, 18),
+            radius: 5.0,
+            prompt: '☀️ [ E ] RETURN TO FIRELINK COURTYARD (0m)',
+            targetPos: new THREE.Vector3(0, 0, 0),
+            label: 'FIRELINK COURTYARD'
         });
 
         // ----------------------------------------------------
