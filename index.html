@@ -1736,6 +1736,12 @@
         <span id="prompt-text">[ E ] REST AT BONFIRE</span>
     </div>
 
+    <!-- Live Real-Time Coordinate HUD [F3 to toggle] -->
+    <div id="live-coords-hud" onclick="if(window.game&&window.game.toggleCoordsHUD)window.game.toggleCoordsHUD();" title="Real-Time Player Coordinates [Click or press F3 to toggle]" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 8px; background: rgba(8, 12, 18, 0.85); border: 1px solid rgba(120, 180, 240, 0.55); border-radius: 4px; padding: 4px 14px; font-family: monospace; font-size: 0.80rem; color: #aadcff; box-shadow: 0 2px 12px rgba(0,0,0,0.8); cursor: pointer; user-select: none; transition: background 0.2s ease;">
+        <span style="color: #ffd778; font-weight: bold;">📍 COORDS [F3]:</span>
+        <span id="coords-text">X: 0.0m &bull; Y: 0.0m &bull; Z: 0.0m</span>
+    </div>
+
     <!-- Notification Banner -->
         <!-- Auto-Save Flame Indicator (Subtle Dark Souls Corner Glow) -->
     <div id="autosave-indicator" class="autosave-flame-indicator" aria-hidden="true">
@@ -7213,25 +7219,25 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/audio.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/lore_items.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/world.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/character.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/siege_warfare.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/heraldry_nobility.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/apothecary_crafting.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/collision_system.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/qa_bot_tester.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/combat.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/postprocessing.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/qa_suite.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/blacksmith_forge.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/inventory_system.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/compendium_300_models.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/death_quotes_300.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/game.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
-    <script src="js/dev_map.js?v=20261121_MOB_SCALING_AND_STUN_V3"></script>
+    <script src="js/three.min.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/audio.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/lore_items.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/world.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/character.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/siege_warfare.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/heraldry_nobility.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/apothecary_crafting.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/collision_system.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/qa_bot_tester.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/combat.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/postprocessing.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/qa_suite.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/blacksmith_forge.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/inventory_system.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/compendium_300_models.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/death_quotes_300.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/game.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/dev_map.js?v=20261121_COORDINATES_HUD_V4"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {

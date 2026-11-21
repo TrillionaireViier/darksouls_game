@@ -232,13 +232,27 @@ class DarkSoulsGame {
             lockonReticle: document.getElementById('lockon-reticle'),
             locationUnlockedBanner: document.getElementById('location-unlocked-banner'),
             locationUnlockedTitle: document.getElementById('location-unlocked-title'),
-            locationUnlockedSubtitle: document.getElementById('location-unlocked-subtitle')
+            locationUnlockedSubtitle: document.getElementById('location-unlocked-subtitle'),
+            coordsText: document.getElementById('coords-text')
         };
+    }
+
+    toggleCoordsHUD() {
+        const hud = document.getElementById('live-coords-hud');
+        if (!hud) return;
+        const isHidden = (hud.style.display === 'none');
+        hud.style.display = isHidden ? 'flex' : 'none';
+        this.showNotification(isHidden ? "📍 COORDINATES DISPLAY ON" : "📍 COORDINATES DISPLAY OFF");
     }
 
     bindEvents() {
         // Keyboard inputs (Full English & Cyrillic Russian Layout Support)
         window.addEventListener('keydown', (e) => {
+            if (e.code === 'F3') {
+                e.preventDefault();
+                this.toggleCoordsHUD();
+                return;
+            }
             if (e.code) this.keys[e.code] = true;
             if (e.key) {
                 this.keys[e.key.toLowerCase()] = true;
@@ -2772,6 +2786,17 @@ class DarkSoulsGame {
         }
 
         const pPos = this.playerMesh.position;
+
+        // Live Real-Time Coordinates HUD [F3]
+        if (this.ui.coordsText) {
+            const cx = pPos.x.toFixed(1);
+            const cy = pPos.y.toFixed(1);
+            const cz = pPos.z.toFixed(1);
+            if (this._lastCoordsText !== `${cx},${cy},${cz}`) {
+                this._lastCoordsText = `${cx},${cy},${cz}`;
+                this.ui.coordsText.innerHTML = `X: <b style="color:#ffffff;">${cx}m</b> &bull; Y: <b style="color:#ffffff;">${cy}m</b> &bull; Z: <b style="color:#ffffff;">${cz}m</b>`;
+            }
+        }
 
         // Route Compass Pill Active Highlight (Cached, only on state change)
         if (!this.cachedRoutes) {
