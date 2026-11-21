@@ -4518,7 +4518,7 @@ class DarkSoulsGame {
         if (!container) return;
 
         const locs = window.DARK_SOULS_LOCATIONS || [];
-        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill'];
 
         const filtered = locs.filter(l => {
             if (activeFilter === 'all') return true;
@@ -4742,6 +4742,22 @@ window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllL
 
 // 300 Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
+    {"id":"er_limgrave_stormhill","name":"Stormhill - Windswept Warmaster Plateau","zone":"Limgrave Stormhill","pos":[60,2,-15],"elev":"+2m","danger":"Tier III (Moderate)","boss":"Bell Bearing Hunter & Stormhawks","desc":"A windswept plateau beneath the Erdtree where fierce gusts swirl yellow leaves and ancient ruins overlook the bay.","light":1.35},
+
+    {"id":"ds2_dragon_aerie_peaks","name":"Dragon Aerie - High Wyvern Pinnacles","zone":"Dragon Aerie","pos":[65,14,65],"elev":"+14m","danger":"Tier V (Legendary)","boss":"Guardian Wyverns & Exploding Hollows","desc":"Perilous suspension rope bridges linking emerald mountain spires swarming with circling guardian drakes.","light":1.4},
+
+    {"id":"ds2_majula_cliff_monument","name":"Majula - Sunset Ocean Monument","zone":"Majula Cliffs","pos":[-45,0,-25],"elev":"0m","danger":"Sanctuary (Safe)","boss":"Emerald Herald & Saida Monument","desc":"A peaceful grassy clifftop sanctuary facing an eternal golden sunset over the calm open sea.","light":1.4},
+
+    {"id":"ds1_sanctuary_garden","name":"Oolacile Sanctuary - Ancient Royal Glade","zone":"Royal Wood Exterior","pos":[-55,1.5,-45],"elev":"+1.5m","danger":"Tier IV (Severe)","boss":"Sanctuary Guardian & Stone Knights","desc":"A lush primeval forest clearing bathed in ancient sunlight where the chimeric winged beast guards the past.","light":1.2},
+
+    {"id":"ds1_crystal_cave_abyss","name":"Crystal Cave - Prismatic Chasm Shards","zone":"Crystal Cave","pos":[45,4,85],"elev":"+4m","danger":"Tier V (Nightmare)","boss":"Moonlight Butterflies & Seath Golems","desc":"Giant translucent celestial crystal pillars bridging a star-lit mountain gorge outside the archives.","light":1.35},
+
+    {"id":"ds1_demon_ruins_lava","name":"Demon Ruins - Scorched Molten Terrace","zone":"Demon Ruins Exterior","pos":[-35,-9,110],"elev":"-9m","danger":"Tier V (Nightmare)","boss":"Ceaseless Discharge & Demon Herd","desc":"A vast open terrace carved into basalt cliffs overlooking roaring rivers of boiling primordial lava.","light":1.45},
+
+    {"id":"ds1_sen_fortress_rooftops","name":"Sen's Fortress - Stormy Giant Ramparts","zone":"Sen's Fortress Exterior","pos":[55,12,20],"elev":"+12m","danger":"Tier V (Legendary)","boss":"Iron Golem & Firebomb Giants","desc":"Soaring rain-battered fortress battlements where chained giants launch blazing boulders across the ramparts.","light":1.3},
+
+    {"id":"ds1_darkroot_basin_waterfall","name":"Darkroot Basin - Hydra's Crystal Falls","zone":"Darkroot Basin","pos":[-68,-6,50],"elev":"-6m","danger":"Tier IV (Severe)","boss":"Great Lake Hydra & Crystal Golems","desc":"A deep sunken basin where ancient waterfalls plunge into a mirror lake guarded by colossal crystal golems.","light":0.95},
+
     { id: 'ds1_undead_burg_outskirts', name: "Undead Burg Outskirts - Cliffside Dragon Chasm", zone: "Undead Burg Outskirts", pos: [-52, -2.0, 18], elev: '-2m', danger: 'Tier IV (Severe)', boss: "Hellkite Drake & Cliffside Sentinels", desc: "A vast windswept cliffside terrace outside the citadel fortress walls overlooking the bottomless mountain chasm.", light: 1.25 },
 
     // ----------------------------------------------------

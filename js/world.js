@@ -594,6 +594,69 @@ class DarkSoulsWorld {
             roughness: 0.82,
             side: THREE.DoubleSide
         });
+
+        // ==========================================
+        // OUTSIDE REALM & DARKROOT FOREST MATERIALS
+        // ==========================================
+        const grassCanvas = document.createElement('canvas');
+        grassCanvas.width = 512;
+        grassCanvas.height = 512;
+        const gCtx = grassCanvas.getContext('2d');
+        gCtx.fillStyle = '#182416';
+        gCtx.fillRect(0, 0, 512, 512);
+        for (let i = 0; i < 4000; i++) {
+            const gx = Math.random() * 512;
+            const gy = Math.random() * 512;
+            const gr = 1.0 + Math.random() * 2.5;
+            const gShade = Math.random();
+            gCtx.fillStyle = gShade < 0.4 ? 'rgba(38, 54, 32, 0.45)' : (gShade < 0.8 ? 'rgba(24, 38, 20, 0.6)' : 'rgba(48, 40, 26, 0.5)');
+            gCtx.beginPath();
+            gCtx.arc(gx, gy, gr, 0, Math.PI * 2);
+            gCtx.fill();
+        }
+        const grassTex = new THREE.CanvasTexture(grassCanvas);
+        grassTex.wrapS = THREE.RepeatWrapping;
+        grassTex.wrapT = THREE.RepeatWrapping;
+        grassTex.repeat.set(16, 16);
+
+        this.forestGrassMat = new THREE.MeshStandardMaterial({
+            map: grassTex,
+            roughness: 0.92,
+            metalness: 0.05
+        });
+
+        this.cliffRockMat = new THREE.MeshStandardMaterial({
+            color: 0x22262a,
+            roughness: 0.90,
+            metalness: 0.12,
+            flatShading: true
+        });
+
+        this.archtreeBarkMat = new THREE.MeshStandardMaterial({
+            color: 0x2a2118,
+            roughness: 0.95,
+            metalness: 0.05
+        });
+
+        this.foliageMat = new THREE.MeshStandardMaterial({
+            color: 0x153520,
+            roughness: 0.85,
+            flatShading: true
+        });
+
+        this.runeStoneMat = new THREE.MeshStandardMaterial({
+            color: 0x333b42,
+            roughness: 0.75,
+            metalness: 0.25,
+            emissive: 0x0a2228,
+            emissiveIntensity: 0.35
+        });
+
+        this.dragonBoneMat = new THREE.MeshStandardMaterial({
+            color: 0xddd5c7,
+            roughness: 0.78,
+            metalness: 0.08
+        });
     }
 
     buildLighting() {
@@ -762,6 +825,19 @@ class DarkSoulsWorld {
             return -4.0;
         }
 
+        // 5b. Outside Realm (Darkroot Woods, Primeval Archtree, Wyrm Plateau & Ashen Wastes: x in [-195, -28], z in [-90, 90])
+        if (x >= -195 && x <= -28 && z >= -90 && z <= 90) {
+            // Wyrm Cliffside Plateau (x in [-185, -130], z in [15, 80])
+            if (x >= -185 && x <= -130 && z >= 15 && z <= 80) {
+                if (x > -140) {
+                    const t = (-130 - x) / 10.0;
+                    return t * 2.0;
+                }
+                return 2.0;
+            }
+            return 0.0;
+        }
+
         // 6. Main Courtyard Starting Arena (z in [-55, 35], x in [-45, 45])
         if (x >= -45 && x <= 45 && z >= -55 && z <= 35) {
             if (!inStairTrench && (currentY === null || currentY >= -1.5)) {
@@ -783,7 +859,19 @@ class DarkSoulsWorld {
             }
         }
 
-                // 8. Undead Burg Outskirts - Cliffside Dragon Chasm (x in [-75, -29], z in [-10, 45])
+        
+        // --- 10 OUTSIDE LOCATIONS COLLISION ---
+        if (x >= -75 && x <= -40 && z >= 35 && z <= 65) return -6.0; // Darkroot Basin (-6m)
+        if (x >= 42 && x <= 68 && z >= 5 && z <= 35) return 12.0;    // Sen's Fortress (+12m)
+        if (x >= -48 && x <= -22 && z >= 95 && z <= 125) return -9.0; // Demon Ruins (-9m)
+        if (x >= 32 && x <= 58 && z >= 70 && z <= 100) return 4.0;   // Crystal Cave (+4m)
+        if (x >= -68 && x <= -42 && z >= -58 && z <= -32) return 1.5; // Oolacile Glade (+1.5m)
+        if (x >= -58 && x <= -32 && z >= -38 && z <= -12) return 0.0; // Majula Cliffs (0m)
+        if (x >= 52 && x <= 78 && z >= 52 && z <= 78) return 14.0;   // Dragon Aerie (+14m)
+        if (x >= 25 && x <= 50 && z >= -48 && z <= -22) return -2.5; // Cemetery of Ash (-2.5m)
+        if (x >= 48 && x <= 72 && z >= -28 && z <= -2) return 2.0;   // Stormhill (+2m)
+
+        // 8. Undead Burg Outskirts - Cliffside Dragon Chasm (x in [-75, -29], z in [-10, 45])
         if (x >= -75 && x <= -29 && z >= -10 && z <= 45) {
             if (x > -42) {
                 const t = (-29 - x) / 13.0;
@@ -792,10 +880,10 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 8. Citadel Perimeter Failsafe: Never fall into void within citadel grounds
-        if (x >= -38 && x <= 38 && z >= -35 && z <= 175) {
+        // 8. Citadel & Outside Realm Perimeter Failsafe: Never fall into void within explored grounds
+        if ((x >= -38 && x <= 38 && z >= -35 && z <= 175) || (x >= -195 && x <= -28 && z >= -90 && z <= 90)) {
             if (currentY === null || currentY >= -1.8) {
-                return 0.0;
+                return (x <= -130 && x >= -185 && z >= 15 && z <= 80) ? 2.0 : 0.0;
             }
             return -4.92;
         }
@@ -842,7 +930,26 @@ class DarkSoulsWorld {
         this.createWall(-18.5, 5, -30, 23, 10, 2); // West segment of North wall (x: -30 to -7)
         this.createWall(18.5, 5, -30, 23, 10, 2);  // East segment of North wall (x: 7 to 30)
         this.createWall(0, 9.5, -30, 14, 3, 2);    // Overhead monumental arch lintel above doorway
-        this.createWall(-30, 5, 0, 2, 10, 60);   // West wall
+        // Outer West Fortress Wall (Gate Arch open at z in [-7, 7] leading to OUTSIDE REALM)
+        this.createWall(-30, 5, -18.5, 2, 10, 23); // North segment of West wall (z: -30 to -7)
+        this.createWall(-30, 5, 18.5, 2, 10, 23);  // South segment of West wall (z: 7 to 30)
+        this.createWall(-30, 9.5, 0, 2, 3, 14);    // Overhead monumental arch lintel above West Gate
+        this.createPillar(-30, -7, 9);
+        this.createPillar(-30, 7, 9);
+        this.createTorch(-29.2, 5.0, -6.8, { intensity: 2.5, color: 0x2ecc71 });
+        this.createTorch(-29.2, 5.0, 6.8, { intensity: 2.5, color: 0x2ecc71 });
+        this.createPathBeacon(-28, 0, 0, 0x2ecc71, "🌲 OUTSIDE REALM: DARKROOT WOODS & CLIFFS [WEST]", "ANCIENT ARCHTREES • DRAGON CLIFFS • WYRMS & BASILISKS", "#a8ffb2");
+
+        // West Gate In-World Portal to Outside Darkroot Bonfire
+        this.interactables.push({
+            type: 'route_portal',
+            position: new THREE.Vector3(-26, 0, 0),
+            radius: 4.5,
+            prompt: '🌲 [ E ] WAYSTONE: WARP TO OUTSIDE DARKROOT EXPEDITION',
+            targetPos: new THREE.Vector3(-75, 0, 0),
+            label: 'DARKROOT OUTSIDE REALM'
+        });
+
         this.createWall(30, 5, 0, 2, 10, 60);    // East wall
 
         // South Wall Openings (Central Bridge opening x=[-6, 6])
@@ -957,6 +1064,82 @@ class DarkSoulsWorld {
             targetPos: new THREE.Vector3(0, 0, 0),
             label: 'FIRELINK COURTYARD'
         });
+
+        
+        // ----------------------------------------------------
+        // 10 EPIC EXTERIOR / OUTSIDE LOCATIONS 3D GEOMETRY
+        // ----------------------------------------------------
+        // 1. Darkroot Basin - Hydra's Crystal Falls ([-68, -6.0, 50])
+        const basinFloor = new THREE.Mesh(new THREE.CylinderGeometry(15, 16, 1.2, 16), this.stoneMat);
+        basinFloor.position.set(-68, -6.6, 50);
+        basinFloor.receiveShadow = true;
+        this.scene.add(basinFloor);
+        this.createStandingBrazier(-68, -6.0, 44, 0x00ccff, 4.0, 28);
+        this.createFloorSoapstone(-68, -6.0, 48, '#00ccff', "🌊 DARKROOT BASIN", "Crystal waterfalls and mirror lake");
+
+        // 2. Sen's Fortress - Stormy Giant Ramparts ([55, 12.0, 20])
+        const sensRooftop = new THREE.Mesh(new THREE.BoxGeometry(22, 1.5, 26), this.stoneMat);
+        sensRooftop.position.set(55, 11.25, 20);
+        sensRooftop.receiveShadow = true;
+        this.scene.add(sensRooftop);
+        this.createStandingBrazier(55, 12.0, 12, 0xff7722, 5.0, 32);
+        this.createFloorSoapstone(55, 12.0, 17, '#ffaa44', "🏰 SEN'S ROOFTOPS", "Iron Golem battlements in the rain");
+
+        // 3. Demon Ruins - Scorched Molten Terrace ([-35, -9.0, 110])
+        const ruinsFloor = new THREE.Mesh(new THREE.BoxGeometry(24, 1.5, 28), this.darkSteelMat || this.stoneMat);
+        ruinsFloor.position.set(-35, -9.75, 110);
+        ruinsFloor.receiveShadow = true;
+        this.scene.add(ruinsFloor);
+        this.createStandingBrazier(-35, -9.0, 102, 0xff2200, 5.5, 36);
+        this.createFloorSoapstone(-35, -9.0, 108, '#ff3300', "🔥 DEMON RUINS", "Rivers of molten chaos lava");
+
+        // 4. Crystal Cave - Prismatic Chasm Shards ([45, 4.0, 85])
+        const crystalPlat = new THREE.Mesh(new THREE.BoxGeometry(20, 1.2, 24), this.wallMat);
+        crystalPlat.position.set(45, 3.4, 85);
+        crystalPlat.receiveShadow = true;
+        this.scene.add(crystalPlat);
+        this.createStandingBrazier(45, 4.0, 78, 0x44eeff, 4.2, 30);
+        this.createFloorSoapstone(45, 4.0, 83, '#44eeff', "💎 CRYSTAL CAVE", "Glimmering chasms beyond the archives");
+
+        // 5. Oolacile Sanctuary - Ancient Royal Glade ([-55, 1.5, -45])
+        const oolacileFloor = new THREE.Mesh(new THREE.CylinderGeometry(14, 15, 1.2, 16), this.stoneMat);
+        oolacileFloor.position.set(-55, 0.9, -45);
+        oolacileFloor.receiveShadow = true;
+        this.scene.add(oolacileFloor);
+        this.createStandingBrazier(-55, 1.5, -51, 0x88ffaa, 4.0, 28);
+        this.createFloorSoapstone(-55, 1.5, -46, '#77ffaa', "🌳 OOLACILE SANCTUARY", "Primeval glade of the Sanctuary Guardian");
+
+        // 6. Majula - Sunset Ocean Monument ([-45, 0.0, -25])
+        const majulaPlat = new THREE.Mesh(new THREE.BoxGeometry(22, 1.2, 22), this.stoneMat);
+        majulaPlat.position.set(-45, -0.6, -25);
+        majulaPlat.receiveShadow = true;
+        this.scene.add(majulaPlat);
+        this.createStandingBrazier(-45, 0.0, -32, 0xffaa44, 4.5, 30);
+        this.createFloorSoapstone(-45, 0.0, -27, '#ffbb66', "🌅 MAJULA OCEAN CLIFF", "Eternal sunset over the ocean of Drangleic");
+
+        // 7. Dragon Aerie - High Wyvern Pinnacles ([65, 14.0, 65])
+        const aeriePeak = new THREE.Mesh(new THREE.ConeGeometry(14, 8, 8), this.wallMat);
+        aeriePeak.position.set(65, 10.0, 65);
+        aeriePeak.receiveShadow = true;
+        this.scene.add(aeriePeak);
+        this.createStandingBrazier(65, 14.0, 60, 0xffdd44, 5.0, 32);
+        this.createFloorSoapstone(65, 14.0, 63, '#ffe666', "🐉 DRAGON AERIE", "Sky-piercing mountain pinnacles");
+
+        // 8. Cemetery of Ash - Untended Grave Ravine ([38, -2.5, -35])
+        const ashPlat = new THREE.Mesh(new THREE.BoxGeometry(20, 1.2, 22), this.stoneMat);
+        ashPlat.position.set(38, -3.1, -35);
+        ashPlat.receiveShadow = true;
+        this.scene.add(ashPlat);
+        this.createStandingBrazier(38, -2.5, -42, 0xaaaaaa, 3.8, 25);
+        this.createFloorSoapstone(38, -2.5, -37, '#cccccc', "⚰️ CEMETERY OF ASH", "Ravine of untended graves and ashen bells");
+
+        // 9. Stormhill - Windswept Warmaster Plateau ([60, 2.0, -15])
+        const stormhillPlat = new THREE.Mesh(new THREE.BoxGeometry(22, 1.2, 24), this.stoneMat);
+        stormhillPlat.position.set(60, 1.4, -15);
+        stormhillPlat.receiveShadow = true;
+        this.scene.add(stormhillPlat);
+        this.createStandingBrazier(60, 2.0, -22, 0xffd700, 4.5, 30);
+        this.createFloorSoapstone(60, 2.0, -17, '#ffe066', "⚡ LIMGRAVE STORMHILL", "Golden Erdtree windswept heights");
 
         // ----------------------------------------------------
         // PATH 1: THE HIGH CASTLE RAMPARTS (UP: Y = 6.0)
@@ -1295,9 +1478,291 @@ class DarkSoulsWorld {
         // 4. North Path Beacon: Jade Serpent Beam & Serpentine Sanctum Banner (Flanking North Archway)
         this.createPathBeacon(-5.8, 0, -28.0, 0x1e824c, "🐍 GORGON'S SANCTUM & SERPENT RUINS [NORTH]", "SUNKEN TEMPLE • MEDUSA & COBRAS", "#2ecc71");
 
-        // Build Massive Serpentine Sanctum & Atmospheric Map Details
+        // Build Massive Serpentine Sanctum, Outside Realm & Atmospheric Map Details
         this.buildSerpentSanctum();
+        this.buildOutsideRealm();
         this.buildMapDetailEnhancements();
+    }
+
+    buildOutsideRealm() {
+        const outsideGroup = new THREE.Group();
+
+        // 1. Vast Forest Turf & Ashen Soil Ground Slab (x in [-190, -28], z in [-85, 85], y = 0.0)
+        const outdoorFloorGeo = new THREE.PlaneGeometry(162, 170);
+        const outdoorFloor = new THREE.Mesh(outdoorFloorGeo, this.forestGrassMat);
+        outdoorFloor.rotation.x = -Math.PI / 2;
+        outdoorFloor.position.set(-109, 0, 0);
+        outdoorFloor.receiveShadow = true;
+        outsideGroup.add(outdoorFloor);
+
+        // 2. Cobblestone Trails Connecting Destinations
+        // Main Way: West Gate (x = -30, z = 0) to Primeval Mother Archtree (x = -110, z = 0)
+        const mainPathGeo = new THREE.PlaneGeometry(80, 5.0);
+        const mainPath = new THREE.Mesh(mainPathGeo, this.stoneMat);
+        mainPath.rotation.x = -Math.PI / 2;
+        mainPath.position.set(-70, 0.02, 0);
+        mainPath.receiveShadow = true;
+        outsideGroup.add(mainPath);
+
+        // Branching Trail South to Wyrm Ridge (x: -90 to -145, z: 0 to 45)
+        const wyrmPathGeo = new THREE.PlaneGeometry(6, 65);
+        const wyrmPath = new THREE.Mesh(wyrmPathGeo, this.stoneMat);
+        wyrmPath.rotation.x = -Math.PI / 2;
+        wyrmPath.rotation.z = -0.65;
+        wyrmPath.position.set(-115, 0.02, 22);
+        wyrmPath.receiveShadow = true;
+        outsideGroup.add(wyrmPath);
+
+        // Branching Trail North to Ashen Hollow (x: -90 to -135, z: 0 to -45)
+        const ashenPathGeo = new THREE.PlaneGeometry(6, 60);
+        const ashenPath = new THREE.Mesh(ashenPathGeo, this.stoneMat);
+        ashenPath.rotation.x = -Math.PI / 2;
+        ashenPath.rotation.z = 0.65;
+        ashenPath.position.set(-110, 0.02, -22);
+        ashenPath.receiveShadow = true;
+        outsideGroup.add(ashenPath);
+
+        // 3. Eight Majestic Archtrees with Colossal Gnarled Trunks & Canopies
+        const createArchtree = (tx, tz, scale = 1.0, tint = 0x153520) => {
+            const treeGroup = new THREE.Group();
+            treeGroup.position.set(tx, 0, tz);
+
+            // Tapered trunk
+            const trunkGeo = new THREE.CylinderGeometry(1.4 * scale, 2.8 * scale, 22 * scale, 8);
+            const trunk = new THREE.Mesh(trunkGeo, this.archtreeBarkMat);
+            trunk.position.y = 11 * scale;
+            trunk.castShadow = true;
+            trunk.receiveShadow = true;
+            treeGroup.add(trunk);
+
+            // 4 Root flares radiating outward
+            for (let a = 0; a < 4; a++) {
+                const ang = (a / 4) * Math.PI * 2;
+                const rootGeo = new THREE.CylinderGeometry(0.45 * scale, 1.2 * scale, 5 * scale, 5);
+                const rootMesh = new THREE.Mesh(rootGeo, this.archtreeBarkMat);
+                rootMesh.position.set(Math.cos(ang) * 2.4 * scale, 2.0 * scale, Math.sin(ang) * 2.4 * scale);
+                rootMesh.rotation.z = Math.cos(ang) * 0.45;
+                rootMesh.rotation.x = Math.sin(ang) * 0.45;
+                rootMesh.castShadow = true;
+                treeGroup.add(rootMesh);
+            }
+
+            // Canopy foliage clusters
+            const folMat = new THREE.MeshStandardMaterial({ color: tint, roughness: 0.88, flatShading: true });
+            const canopyOffsets = [
+                [0, 22 * scale, 0, 5.5 * scale],
+                [-3.2 * scale, 19 * scale, 2.5 * scale, 4.2 * scale],
+                [3.5 * scale, 20 * scale, -2.8 * scale, 4.0 * scale],
+                [2.2 * scale, 18 * scale, 3.2 * scale, 3.8 * scale],
+                [-2.8 * scale, 20 * scale, -3.0 * scale, 4.2 * scale]
+            ];
+            canopyOffsets.forEach(([fx, fy, fz, fr]) => {
+                const fol = new THREE.Mesh(new THREE.DodecahedronGeometry(fr, 1), folMat);
+                fol.position.set(fx, fy, fz);
+                fol.castShadow = true;
+                fol.receiveShadow = true;
+                treeGroup.add(fol);
+            });
+
+            this.scene.add(treeGroup);
+            this.colliders.push(new THREE.Box3(
+                new THREE.Vector3(tx - 2.0 * scale, 0, tz - 2.0 * scale),
+                new THREE.Vector3(tx + 2.0 * scale, 24 * scale, tz + 2.0 * scale)
+            ));
+        };
+
+        createArchtree(-58, -35, 1.1, 0x163824);
+        createArchtree(-62, 38, 1.05, 0x14341f);
+        createArchtree(-110, 0, 1.65, 0x102e1b); // Primeval Mother Archtree (centerpiece)
+        createArchtree(-95, -55, 1.0, 0x184028);
+        createArchtree(-102, 58, 1.15, 0x13301c);
+        createArchtree(-145, -35, 1.2, 0x153520);
+        createArchtree(-150, 52, 1.05, 0x173a23);
+        createArchtree(-175, 8, 1.3, 0x122c19);
+
+        // 4. Darkroot Ancient Tree Bonfire (x = -75, y = 0, z = 0)
+        const bonfireBase = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.4, 0.4, 12), this.stoneMat);
+        bonfireBase.position.set(-75, 0.2, 0);
+        bonfireBase.receiveShadow = true;
+        outsideGroup.add(bonfireBase);
+
+        const emberCore = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 8), new THREE.MeshStandardMaterial({
+            color: 0xff6600,
+            emissive: 0xff4400,
+            emissiveIntensity: 0.95
+        }));
+        emberCore.position.set(-75, 0.5, 0);
+        outsideGroup.add(emberCore);
+
+        const coiledSword = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.08, 1.8, 6), this.darkSteelMat || this.stoneMat);
+        coiledSword.position.set(-75, 1.1, 0);
+        coiledSword.rotation.z = 0.12;
+        coiledSword.rotation.x = -0.08;
+        outsideGroup.add(coiledSword);
+
+        const bonfireLight = new THREE.PointLight(0xff7722, 3.8, 25);
+        bonfireLight.position.set(-75, 1.5, 0);
+        outsideGroup.add(bonfireLight);
+
+        // Bonfire interaction
+        this.interactables.push({
+            type: 'bonfire',
+            position: new THREE.Vector3(-75, 0, 0),
+            radius: 4.5,
+            prompt: '🔥 [ E ] REST AT DARKROOT EXPEDITION BONFIRE',
+            label: 'DARKROOT BONFIRE'
+        });
+
+        // Standing Iron Braziers flanking Darkroot Bonfire
+        this.createStandingBrazier(-78.5, 0, -3.5, 0xff7722, 3.5, 20);
+        this.createStandingBrazier(-78.5, 0, 3.5, 0xff7722, 3.5, 20);
+
+        // 5. Primeval Waystone Portal (x = -115, y = 0, z = 0)
+        for (let m = 0; m < 6; m++) {
+            const mAng = (m / 6) * Math.PI * 2;
+            const mx = -115 + Math.cos(mAng) * 4.5;
+            const mz = Math.sin(mAng) * 4.5;
+            const mono = new THREE.Mesh(new THREE.BoxGeometry(0.85, 4.5, 0.85), this.runeStoneMat);
+            mono.position.set(mx, 2.25, mz);
+            mono.rotation.y = mAng;
+            mono.castShadow = true;
+            outsideGroup.add(mono);
+            this.colliders.push(new THREE.Box3(
+                new THREE.Vector3(mx - 0.5, 0, mz - 0.5),
+                new THREE.Vector3(mx + 0.5, 4.5, mz + 0.5)
+            ));
+        }
+
+        const portalDisk = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.1, 16), new THREE.MeshStandardMaterial({
+            color: 0x00e5ff,
+            emissive: 0x0099cc,
+            emissiveIntensity: 0.8,
+            roughness: 0.2,
+            transparent: true,
+            opacity: 0.82
+        }));
+        portalDisk.position.set(-115, 0.05, 0);
+        outsideGroup.add(portalDisk);
+
+        const portalLight = new THREE.PointLight(0x00e5ff, 3.5, 22);
+        portalLight.position.set(-115, 2.0, 0);
+        outsideGroup.add(portalLight);
+
+        this.interactables.push({
+            type: 'route_portal',
+            position: new THREE.Vector3(-115, 0, 0),
+            radius: 5.5,
+            prompt: '⚡ [ E ] WAYSTONE: RETURN TO CITADEL COURTYARD',
+            targetPos: new THREE.Vector3(0, 0, 0),
+            label: 'CITADEL COURTYARD'
+        });
+
+        // Secondary portal to Boss Fog Gate
+        this.interactables.push({
+            type: 'route_portal',
+            position: new THREE.Vector3(-118, 0, 3.5),
+            radius: 3.5,
+            prompt: '⚔️ [ E ] WAYSTONE: WARP DIRECTLY TO BOSS ARENA FOG GATE',
+            targetPos: new THREE.Vector3(0, 0, 274),
+            label: 'BOSS ARENA FOG GATE'
+        });
+
+        // 6. Wyrm Cliffside Plateau (x: -130 to -185, z: 15 to 80, y = 2.0)
+        const plateauGeo = new THREE.BoxGeometry(55, 2.0, 65);
+        const plateauMesh = new THREE.Mesh(plateauGeo, this.cliffRockMat);
+        plateauMesh.position.set(-157.5, 1.0, 47.5);
+        plateauMesh.receiveShadow = true;
+        plateauMesh.castShadow = true;
+        outsideGroup.add(plateauMesh);
+
+        // Plateau Access Steps (ramp from x = -130 to -140, z in [40, 55])
+        for (let st = 0; st < 8; st++) {
+            const sx = -130 - st * 1.25;
+            const sy = (st + 1) * (2.0 / 8);
+            const stepMesh = new THREE.Mesh(new THREE.BoxGeometry(1.3, sy, 14), this.stoneMat);
+            stepMesh.position.set(sx, sy / 2, 47.5);
+            stepMesh.receiveShadow = true;
+            outsideGroup.add(stepMesh);
+        }
+
+        // Colossal Dragon Ribcage Arches on the Plateau
+        const ribCoords = [-146, -155, -164, -173, -181];
+        ribCoords.forEach(rx => {
+            const ribGeo = new THREE.TorusGeometry(5.2, 0.45, 8, 16, Math.PI);
+            const rib = new THREE.Mesh(ribGeo, this.dragonBoneMat);
+            rib.position.set(rx, 2.0, 47.5);
+            rib.rotation.y = Math.PI / 2;
+            rib.castShadow = true;
+            outsideGroup.add(rib);
+        });
+
+        // Ancient Dragon Altar at Plateau Summit (x = -170, z = 47.5, y = 2.0)
+        const dragonAltar = new THREE.Mesh(new THREE.BoxGeometry(6.0, 1.2, 4.0), this.stoneMat);
+        dragonAltar.position.set(-170, 2.6, 47.5);
+        dragonAltar.receiveShadow = true;
+        outsideGroup.add(dragonAltar);
+
+        this.createStandingBrazier(-170, 2.0, 43.5, 0xff5500, 4.2, 25);
+        this.createStandingBrazier(-170, 2.0, 51.5, 0xff5500, 4.2, 25);
+
+        // Dragon Plateau Beacon
+        this.createPathBeacon(-142, 2.0, 47.5, 0xe67e22, "🐉 WYRM CLIFFSIDE PLATEAU [ELEV +2m]", "ANCIENT DRAGON BONES • DRAKE WHELPS & CRUCIBLE KNIGHTS", "#ffcc80");
+
+        // Cliff Balustrades along western and southern drop of the Plateau
+        this.createWall(-185.5, 3.2, 47.5, 1.0, 1.6, 65);
+        this.createWall(-157.5, 3.2, 80.5, 55, 1.6, 1.0);
+
+        // 7. Ashen Dune Hollow & Ruined Colonnades (x: -100 to -175, z: -80 to -20)
+        const ruinDolmens = [
+            [-125, -45, 0],
+            [-145, -60, 0.4],
+            [-165, -40, -0.3]
+        ];
+        ruinDolmens.forEach(([dx, dz, drot]) => {
+            const dL = new THREE.Mesh(new THREE.BoxGeometry(1.2, 5.0, 1.2), this.stoneMat);
+            dL.position.set(dx - 2.5, 2.5, dz);
+            dL.rotation.y = drot;
+            outsideGroup.add(dL);
+            const dR = new THREE.Mesh(new THREE.BoxGeometry(1.2, 5.0, 1.2), this.stoneMat);
+            dR.position.set(dx + 2.5, 2.5, dz);
+            dR.rotation.y = drot;
+            outsideGroup.add(dR);
+            const dTop = new THREE.Mesh(new THREE.BoxGeometry(6.8, 1.4, 2.2), this.stoneMat);
+            dTop.position.set(dx, 5.6, dz);
+            dTop.rotation.y = drot;
+            outsideGroup.add(dTop);
+
+            this.createStandingBrazier(dx, 0, dz, 0x00ffaa, 3.0, 20);
+        });
+
+        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm
+        // North mountain ridge: z = -86, x: -192 to -28
+        this.createWall(-110, 8, -86, 166, 18, 4);
+        // South mountain ridge: z = 86, x: -192 to -28
+        this.createWall(-110, 8, 86, 166, 18, 4);
+        // West boundary mountain: x = -193, z: -86 to 86
+        this.createWall(-193, 10, 0, 4, 22, 174);
+
+        // Floating forest firefly particles
+        const fireflyGeo = new THREE.BufferGeometry();
+        const fireflyCount = 60;
+        const fireflyPositions = new Float32Array(fireflyCount * 3);
+        for (let f = 0; f < fireflyCount; f++) {
+            fireflyPositions[f * 3] = -40 - Math.random() * 140;
+            fireflyPositions[f * 3 + 1] = 1.0 + Math.random() * 8.0;
+            fireflyPositions[f * 3 + 2] = -75 + Math.random() * 150;
+        }
+        fireflyGeo.setAttribute('position', new THREE.BufferAttribute(fireflyPositions, 3));
+        const fireflyMat = new THREE.PointsMaterial({
+            color: 0x76ff03,
+            size: 0.35,
+            transparent: true,
+            opacity: 0.85
+        });
+        const fireflyPoints = new THREE.Points(fireflyGeo, fireflyMat);
+        outsideGroup.add(fireflyPoints);
+
+        this.scene.add(outsideGroup);
     }
 
     buildSerpentSanctum() {
