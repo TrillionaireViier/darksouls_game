@@ -1883,9 +1883,9 @@
          CINEMATIC OVERLAYS
          ============================================== -->
 
-    <!-- YOU DIED SCREEN (WITH 300 DEATH QUOTES & LOST STUFF RESTS TRACKER) -->
+    <!-- YOU DIED SCREEN (WITH DYNAMIC TITLES & DEATH QUOTES) -->
     <div id="death-screen" class="cinematic-banner">
-        <div class="death-title">YOU DIED</div>
+        <div class="death-title" id="death-title-text">YOU DIED</div>
         <div id="death-quote-container" style="margin: 18px 0 10px 0; text-align: center; max-width: 720px; padding: 0 20px;">
             <div id="death-quote-text" style="font-family: 'Cinzel', serif; font-size: clamp(1.0rem, 2.4vw, 1.3rem); color: #ffcccc; text-shadow: 0 0 18px rgba(255,40,40,0.7); font-style: italic; letter-spacing: 1px; line-height: 1.45;">
                 "Better luck next time, Chosen Undead..."
@@ -1899,8 +1899,7 @@
         </div>
         <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
             <button class="btn-respawn" onclick="window.game.respawnPlayer()">[ SPACE ] RESPAWN AT BONFIRE</button>
-            <button class="btn-respawn" id="btn-next-death-quote" onclick="if(window.cycleDeathQuote)window.cycleDeathQuote()" style="border-color: #ffd700; color: #ffe680; background: rgba(50,40,15,0.85); box-shadow: 0 0 12px rgba(255,215,0,0.3);">🎲 NEXT QUOTE (1/300)</button>
-            <button class="btn-respawn" onclick="if(window.openDeathQuotesModal)window.openDeathQuotesModal()" style="border-color: #64b5f6; color: #bbdefb; background: rgba(15,35,60,0.85); box-shadow: 0 0 12px rgba(100,181,246,0.3);">📜 ALL 300 EPITAPHS</button>
+            <button class="btn-respawn" id="btn-next-death-quote" onclick="if(window.cycleDeathQuote)window.cycleDeathQuote()" style="border-color: #ffd700; color: #ffe680; background: rgba(50,40,15,0.85); box-shadow: 0 0 12px rgba(255,215,0,0.3);">🎲 NEXT DEATH QUOTE</button>
         </div>
     </div>
 
@@ -6964,7 +6963,6 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openNPCsModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🧙 330 NPCS & ALLIES</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openCompendiumModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">🗿 1,000 3D MODELS (ARMORS, NPCS, MOBS)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); if(window.compendiumInstance)window.compendiumInstance.clearSpawned();" style="border-color: #ff6666; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">🧹 CLEAR SPAWNED 3D</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDeathQuotesModal();" style="border-color: #ff5555; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">💀 300 DEATH EPITAPHS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 135 BOSS ROSTER</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDevMapModal();" style="border-color: #00ffaa; color: #a5ffbe; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.4);">🗺️ DEV MAP [M]</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 350 LOCATIONS</button>
@@ -7961,25 +7959,25 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/audio.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/lore_items.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/world.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/character.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/siege_warfare.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/collision_system.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/combat.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/postprocessing.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/qa_suite.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/inventory_system.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/compendium_300_models.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/death_quotes_300.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/game.js?v=20261122_SUNKEN_LITURGY_V14"></script>
-    <script src="js/dev_map.js?v=20261122_SUNKEN_LITURGY_V14"></script>
+    <script src="js/three.min.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/audio.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/lore_items.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/world.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/character.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/siege_warfare.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/collision_system.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/combat.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/postprocessing.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/qa_suite.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/inventory_system.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/compendium_300_models.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/death_quotes_300.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/game.js?v=20261122_DEATH_TITLES_V15"></script>
+    <script src="js/dev_map.js?v=20261122_DEATH_TITLES_V15"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {
@@ -8035,7 +8033,14 @@
             const quoteEl = document.getElementById('death-quote-text');
             const nextBtn = document.getElementById('btn-next-death-quote');
             if (quoteEl) quoteEl.textContent = `"${quotes[window._quoteIdx]}"`;
-            if (nextBtn) nextBtn.textContent = `🎲 NEXT QUOTE (${window._quoteIdx + 1}/300)`;
+            if (nextBtn) nextBtn.textContent = `🎲 NEXT DEATH QUOTE`;
+
+            // Dynamic Death Banner Title: alternate between YOU DIED, YOU CROAKED, etc.
+            const titleEl = document.getElementById('death-title-text') || (document.getElementById('death-screen') ? document.getElementById('death-screen').querySelector('.death-title') : null);
+            if (titleEl && window.getNextDeathTitle) {
+                titleEl.textContent = window.getNextDeathTitle();
+            }
+
             if (window.dsAudio && window.dsAudio.playRoll) window.dsAudio.playRoll();
         };
     </script>

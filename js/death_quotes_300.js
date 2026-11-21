@@ -303,12 +303,82 @@ window.DARK_SOULS_DEATH_QUOTES = [
     "Your legacy is not defined by how you fell, but by how you rise.",
     "Press [Space] to respawn at the bonfire and finish what you started.",
     "Better luck next time... because next time, you will conquer Lordran!",
-    "And your lost stuff at this place rests... now go take it back, Champion!"
+    "And your lost stuff at this place rests... now go take it back, Champion!",
+    "YOU CROAKED! The frog choir of Blighttown is currently harmonizing your eulogy.",
+    "YOU DIED. Have you tried keeping your HP strictly above zero?",
+    "YOU CROAKED in 4K resolution with 60 FPS motion blur.",
+    "YOU DIED. Patches looted your pockets before your ragdoll even touched the cobblestones.",
+    "YOU CROAKED. The boss didn't even drop out of its idle animation.",
+    "YOU DIED. Default accrued: your cosmic debt interest rate just jumped by 25%.",
+    "YOU CROAKED. Even the graveyard skeletons think that roll was questionable.",
+    "YOU DIED. Your tombstone inscription reads: 'He swore he was in i-frames'.",
+    "YOU CROAKED. Solaire is politely facepalming behind his iron helmet.",
+    "YOU DIED. At least your death flop had 10/10 cinematic form.",
+    "YOU CROAKED. The gargoyle didn't even use flame breath, it just sneezed on you.",
+    "YOU DIED. Your shield was on your back the entire time. Peak efficiency.",
+    "YOU CROAKED. That wasn't a tactical retreat, that was a panicked backward swan dive.",
+    "YOU DIED. The First Arbiters have flagged your account for terminal incompetence.",
+    "YOU CROAKED. Try rolling sideways instead of directly into the swinging greatsword.",
+    "YOU DIED. And your lost stuff at this place rests... looking lonely on the floor.",
+    "YOU CROAKED. But hey, your health bar looked great for the first 3 seconds.",
+    "YOU DIED. Andre of Astora refuses to forge an armor set strong enough to protect your ego."
 ];
+
+// ====================================================
+// DARK SOULS: DYNAMIC DEATH TITLES
+// Alternates between "YOU DIED", "YOU CROAKED", and iconic variants
+// ====================================================
+window.DARK_SOULS_DEATH_TITLES = [
+    "YOU DIED",
+    "YOU CROAKED",
+    "YOU PERISHED",
+    "YOU GOT SMACKED",
+    "YOU WASTED",
+    "THANKS OBAMA",
+    "SKILL ISSUE",
+    "DEFAULTED ON DEBT",
+    "OBLITERATED",
+    "YOU FLOPPED",
+    "REST IN PEPPERONI",
+    "YOU FLATLINED",
+    "FOLDED LIKE A LAWN CHAIR",
+    "FATAL ERROR",
+    "YOU EXPIRED",
+    "CONTRACT TERMINATED",
+    "GIT GUD",
+    "BONED",
+    "DISASSEMBLED",
+    "LOST STUFF RESTS HERE",
+    "SENT TO THE SHADOW REALM",
+    "DEFAULT PENALTY APPLIED",
+    "AUDIT FAILED: ZERO BALANCE",
+    "HUMILIATED",
+    "YOU GOT BODIED",
+    "YOU BIT THE DUST",
+    "R.I.P. ASHEN ONE",
+    "DEFEAT",
+    "WASTED",
+    "YOU SLEEP WITH THE FISHES"
+];
+
+window.getRandomDeathTitle = function() {
+    const titles = window.DARK_SOULS_DEATH_TITLES;
+    if (!titles || titles.length === 0) return "YOU DIED";
+    const idx = Math.floor(Math.random() * titles.length);
+    window._deathTitleIdx = idx;
+    return titles[idx];
+};
+
+window.getNextDeathTitle = function() {
+    const titles = window.DARK_SOULS_DEATH_TITLES;
+    if (!titles || titles.length === 0) return "YOU DIED";
+    window._deathTitleIdx = ((window._deathTitleIdx !== undefined ? window._deathTitleIdx : 0) + 1) % titles.length;
+    return titles[window._deathTitleIdx];
+};
 
 window.getRandomDeathQuote = function() {
     const quotes = window.DARK_SOULS_DEATH_QUOTES;
-    if (!quotes || quotes.length === 0) return "Better luck next time, Chosen Undead...";
+    if (!quotes || quotes.length === 0) return { index: 1, total: 1, text: "Better luck next time, Chosen Undead..." };
     const idx = Math.floor(Math.random() * quotes.length);
     return {
         index: idx + 1,

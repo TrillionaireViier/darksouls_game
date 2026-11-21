@@ -3122,7 +3122,13 @@ class DarkSoulsGame {
 
     triggerDeathScreen() {
         if (this.ui.deathScreen) {
-            // Pick random death quote from 300 Death Quotes library
+            // Pick random death banner title (YOU DIED, YOU CROAKED, etc.)
+            const titleEl = document.getElementById('death-title-text') || (this.ui.deathScreen ? this.ui.deathScreen.querySelector('.death-title') : null);
+            if (titleEl && window.getRandomDeathTitle) {
+                titleEl.textContent = window.getRandomDeathTitle();
+            }
+
+            // Pick random death quote from library
             if (window.getRandomDeathQuote) {
                 const quoteObj = window.getRandomDeathQuote();
                 this.currentDeathQuote = quoteObj;
@@ -3130,7 +3136,7 @@ class DarkSoulsGame {
                 const quoteEl = document.getElementById('death-quote-text');
                 const nextBtn = document.getElementById('btn-next-death-quote');
                 if (quoteEl) quoteEl.textContent = `"${quoteObj.text}"`;
-                if (nextBtn) nextBtn.textContent = `🎲 NEXT QUOTE (${quoteObj.index}/300)`;
+                if (nextBtn) nextBtn.textContent = `🎲 NEXT DEATH QUOTE`;
             }
 
             // Display lost souls & lost stuff status
