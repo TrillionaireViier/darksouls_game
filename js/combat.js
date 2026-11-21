@@ -3255,6 +3255,15 @@ class DarkSoulsCombat {
             radius: mobDef.radius || defaultRadius,
             animTime: Math.random() * 5
         };
+        enemy.baseMaxHp = maxHp;
+        enemy.baseDamage = damage;
+        enemy.baseSouls = enemy.souls || 150;
+        const currentScale = this.getMobLevelScale();
+        enemy.maxHp = Math.round(enemy.baseMaxHp * currentScale.hpMult);
+        enemy.hp = enemy.maxHp;
+        enemy.damage = Math.round(enemy.baseDamage * currentScale.dmgMult);
+        enemy.souls = Math.round(enemy.baseSouls * currentScale.soulsMult);
+
         this.enemies.push(enemy);
         return enemy;
     }
@@ -3876,40 +3885,46 @@ class DarkSoulsCombat {
                         const wpnPoiseMult = (currentWpn && currentWpn.poiseBreak) || 1.0;
                         const behavior = e.behaviorType || 'Swarm';
 
-                        // Authentic mob poise pools: random mobs do NOT stagger so easily!
-                        let baseMaxPoise = 50;
-                        if (behavior === 'Heavy Tank') baseMaxPoise = 115;
-                        else if (behavior === 'Flanker') baseMaxPoise = 65;
-                        else if (behavior === 'Ranged' || e.isArcher) baseMaxPoise = 42;
-                        else if (e.type && (e.type.includes('knight') || e.type.includes('serpent') || e.type.includes('gorgon'))) baseMaxPoise = 100;
+                        // Poise & Stagger System: Small mobs ALWAYS stagger on EVERY hit!
+                        const isHeavySlash = (this.attackCombo === 3 || this.attackCombo >= 5 || this.currentWeaponId === 'zweihander' || this.currentWeaponId === 'dragontooth');
+                        const isSmallMob = (behavior === 'Swarm' || behavior === 'Flanker' || behavior === 'Ranged' || e.isArcher || e.type === 'hollow' || e.type === 'skeleton');
 
-                        if (e.maxPoise === undefined) {
-                            e.maxPoise = (e.def && e.def.poise) || baseMaxPoise;
-                            e.poise = e.maxPoise;
-                        }
-
-                        // Calculate poise damage: heavy combo or Zweihander delivers major poise damage
-                        const isHeavySlash = (this.attackCombo === 3 || this.currentWeaponId === 'zweihander');
-                        const basePoiseHit = isHeavySlash ? 48 : 20;
-                        const totalPoiseHit = Math.round(basePoiseHit * wpnPoiseMult * poiseDmg);
-
-                        e.poise -= totalPoiseHit;
-                        e.poiseRegenTimer = 3.2; // Delay before poise recovers
-
-                        if (e.poise <= 0) {
-                            // POISE BROKEN! Only genuine poise break triggers stagger!
+                        if (isSmallMob) {
+                            // Small / standard mobs stagger on EVERY hit (1.1s for light, 1.6s for heavy)
                             e.poise = 0;
                             e.isStaggered = true;
-                            e.staggerTimer = isHeavySlash ? 0.70 : 0.45;
+                            e.staggerTimer = isHeavySlash ? 1.60 : 1.10;
                             e.maxStaggerTimer = e.staggerTimer;
                             e.state = 'STAGGER';
                             e.attackPhase = 'IDLE';
                             e.isAttacking = false;
-                            e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.35 + Math.random() * 0.2);
+                            e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.45 + Math.random() * 0.25);
                         } else {
-                            // POISE HOLDS! Random mobs do NOT stagger easily on casual light hits!
-                            // They take damage, bleed, and can trade blows with authentic poise hyperarmor!
-                            e.isStaggered = false;
+                            // Elite / Heavy mobs require poise break (or heavy attacks)
+                            let baseMaxPoise = 75;
+                            if (behavior === 'Heavy Tank') baseMaxPoise = 110;
+                            else if (e.type && (e.type.includes('knight') || e.type.includes('serpent') || e.type.includes('gorgon'))) baseMaxPoise = 90;
+
+                            if (e.maxPoise === undefined) {
+                                e.maxPoise = (e.def && e.def.poise) || baseMaxPoise;
+                                e.poise = e.maxPoise;
+                            }
+
+                            const basePoiseHit = isHeavySlash ? 55 : 28;
+                            const totalPoiseHit = Math.round(basePoiseHit * wpnPoiseMult * poiseDmg);
+                            e.poise -= totalPoiseHit;
+                            e.poiseRegenTimer = 3.2;
+
+                            if (e.poise <= 0 || isHeavySlash) {
+                                e.poise = 0;
+                                e.isStaggered = true;
+                                e.staggerTimer = isHeavySlash ? 1.75 : 1.25;
+                                e.maxStaggerTimer = e.staggerTimer;
+                                e.state = 'STAGGER';
+                                e.attackPhase = 'IDLE';
+                                e.isAttacking = false;
+                                e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.50 + Math.random() * 0.3);
+                            }
                         }
                     }
                 }
@@ -4954,6 +4969,48 @@ equipWeapon(weaponId) {
         }
     }
 
+    getMobLevelScale() {
+        const lvlBonus = Math.max(0, this.level - 1);
+        return {
+            hpMult: 1.0 + lvlBonus * 0.12,     // +12% HP per level
+            dmgMult: 1.0 + lvlBonus * 0.08,    // +8% damage per level
+            soulsMult: 1.0 + lvlBonus * 0.15   // +15% souls per level
+        };
+    }
+
+    scaleAllMobsToPlayerLevel() {
+        const scale = this.getMobLevelScale();
+        for (let i = 0; i < this.enemies.length; i++) {
+            const e = this.enemies[i];
+            if (e && !e.isDead) {
+                if (!e.baseMaxHp) e.baseMaxHp = e.maxHp;
+                if (!e.baseDamage) e.baseDamage = e.damage;
+                if (!e.baseSouls) e.baseSouls = e.souls || 150;
+
+                const hpRatio = e.hp / Math.max(1, e.maxHp);
+                e.maxHp = Math.round(e.baseMaxHp * scale.hpMult);
+                e.hp = Math.max(1, Math.round(e.maxHp * hpRatio));
+                e.damage = Math.round(e.baseDamage * scale.dmgMult);
+                e.souls = Math.round(e.baseSouls * scale.soulsMult);
+            }
+        }
+
+        if (this.boss && !this.boss.isDead) {
+            if (!this.boss.baseMaxHp) this.boss.baseMaxHp = this.boss.maxHp;
+            if (!this.boss.baseDamage) this.boss.baseDamage = this.boss.damage;
+
+            const bossHpRatio = this.boss.hp / Math.max(1, this.boss.maxHp);
+            this.boss.maxHp = Math.round(this.boss.baseMaxHp * scale.hpMult);
+            this.boss.hp = Math.max(1, Math.round(this.boss.maxHp * bossHpRatio));
+            this.boss.damage = Math.round(this.boss.baseDamage * scale.dmgMult);
+        }
+
+        if (this.game && this.game.showNotification) {
+            const pct = Math.round((scale.hpMult - 1.0) * 100);
+            this.game.showNotification(`⚔️ LEVEL ${this.level}! ALL MOBS SCALED TO LVL ${this.level} (+${pct}% HP/DMG)`);
+        }
+    }
+
     levelUpStat(stat) {
         const cost = this.level * 250;
         if (this.souls < cost) {
@@ -4977,6 +5034,9 @@ equipWeapon(weaponId) {
         }
 
         this.audio.playEstusDrink();
+
+        // All mobs level up with player
+        this.scaleAllMobsToPlayerLevel();
 
         // Auto-save on stat upgrade
         if (this.game && this.game.saveGame) {

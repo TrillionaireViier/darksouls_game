@@ -2469,8 +2469,9 @@ class DarkSoulsGame {
         if (!uData || !uData.swordGroup) return;
 
         const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
-        let targetRotX = 0.35, targetRotY = 0.08, targetRotZ = -0.15;
-        let targetPosX = 0.02, targetPosY = 0.04, targetPosZ = 0.06;
+        // Natural Dark Souls ready stance: sword held forward & angled slightly down at hip level
+        let targetRotX = 1.15, targetRotY = 0.12, targetRotZ = -0.20;
+        let targetPosX = 0.04, targetPosY = -0.02, targetPosZ = 0.08;
 
         if (wpnId === 'halberd') {
             // Authentic Dark Souls halberd polearm stance (held upright, balanced forward)

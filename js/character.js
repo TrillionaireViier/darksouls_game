@@ -1509,8 +1509,8 @@ class DarkSoulsCharacters {
             newWeapon.rotation.set(0.32, 0.08, -0.12);
             newWeapon.position.set(0.02, 0.04, 0.06);
         } else {
-            newWeapon.rotation.set(0.35, 0.08, -0.15);
-            newWeapon.position.set(0.02, 0.04, 0.06);
+            newWeapon.rotation.set(1.15, 0.12, -0.20);
+            newWeapon.position.set(0.04, -0.02, 0.08);
         }
         rHand.add(newWeapon);
 
@@ -1553,8 +1553,8 @@ class DarkSoulsCharacters {
         rightShoulder.add(rHand);
 
         const swordGroup = this.createWeaponMesh('sword');
-        swordGroup.rotation.set(0.35, 0.08, -0.15);
-        swordGroup.position.set(0.02, 0.04, 0.06);
+        swordGroup.rotation.set(1.15, 0.12, -0.20);
+        swordGroup.position.set(0.04, -0.02, 0.08);
         rHand.add(swordGroup);
 
         // 4. Left Arm (Shield & Offhand Arm)
