@@ -175,7 +175,7 @@ class DarkSoulsGame {
         } catch (e) {}
         this.unlockedLocations = Array.isArray(savedLocs) && savedLocs.length > 0 
             ? savedLocs 
-            : ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+            : ['royal_bridge_arena', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
 
         // Auto-Save Management (Periodic 15s & Event-Driven)
         this.autoSaveInterval = 15.0;
@@ -369,6 +369,9 @@ class DarkSoulsGame {
             }
             if (e.code === 'KeyB' || e.key === 'b' || e.key === 'B' || e.key === 'и' || e.key === 'И') {
                 if (this.apothecary) this.apothecary.applySterileBandage();
+            }
+            if (e.code === 'KeyO' || e.key === 'o' || e.key === 'O' || e.key === 'щ' || e.key === 'Щ') {
+                this.warpToOutside();
             }
         });
 
@@ -3091,6 +3094,12 @@ class DarkSoulsGame {
         this.showNotification("WARPED TO THE ARENA FOG GATE");
     }
 
+    warpToOutside() {
+        this.teleportPlayer(-75, 0, 0, "🌲 OUTSIDE REALM (DARKROOT EXPEDITION BONFIRE)");
+        this.cameraYaw = -Math.PI / 2;
+        this.cameraPitch = 0.20;
+    }
+
     triggerDeathScreen() {
         if (this.ui.deathScreen) {
             // Pick random death quote from 300 Death Quotes library
@@ -3159,7 +3168,7 @@ class DarkSoulsGame {
     unlockLocationForBoss(bossId, locId) {
         if (!locId) return null;
         if (!this.unlockedLocations) {
-            this.unlockedLocations = ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+            this.unlockedLocations = ['royal_bridge_arena', 'outside_darkroot_bonfire', 'outside_primeval_archtree', 'outside_wyrm_ridge_altar', 'outside_ashen_hollow', 'outside_western_precipice', 'outside_wilds_gateway', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
         }
         if (!this.unlockedLocations.includes(locId)) {
             this.unlockedLocations.push(locId);
@@ -3447,7 +3456,7 @@ class DarkSoulsGame {
             } : null,
             currentBossType: this.combat.currentBossType,
             defeatedBosses: this.combat.defeatedBosses || [],
-            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'],
+            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'],
             adminModeUnlocked: !!(this.combat && this.combat.adminModeUnlocked),
             isGodMode: !!(this.combat && this.combat.isGodMode),
             equippedSkin: localStorage.getItem('darksouls_equipped_skin') || 'warrior',
@@ -4740,8 +4749,29 @@ window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodex
 window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
 window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
 
-// 300 Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
+// 300+ Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
+    {"id":"outside_darkroot_expanse","name":"Darkroot Ashen Woods - Outer Glade (Expedition Bonfire)","zone":"Outside Realm","pos":[-75,0,0],"elev":"0m","danger":"Tier III (Exploration Hub)","boss":"Ancient Treants & Basilisks","desc":"An expansive primeval forest glade outside the citadel walls, surrounded by ancient Archtrees and an unquenchable expedition bonfire.","light":1.25},
+
+    {"id":"outside_astral_meteor_crater","name":"Astral Meteor Crater - Starlight Fissure","zone":"Outside Realm","pos":[-160,-2.5,-60],"elev":"-2.5m","danger":"Tier V (Nightmare)","boss":"Adult Fallingstar Beast & Void Mindflayers","desc":"A smoldering cosmic impact crater glistening with cyan starlight crystals and celestial augur tendrils.","light":1.30},
+
+    {"id":"outside_magma_chasm_falls","name":"Magma Chasm Falls - Scorched Sulfur Terrace","zone":"Outside Realm","pos":[-180,-1.5,-25],"elev":"-1.5m","danger":"Tier V (Legendary)","boss":"Magma Wyrm Titan & Basalt Drakes","desc":"Subterranean sulfur terraces cascading with molten magma where ancient magma wyrms bathe in volcanic heat.","light":1.40},
+
+    {"id":"outside_titan_bone_cemetery","name":"Titan Bone Cemetery - Colossal Ribcage Valley","zone":"Outside Realm","pos":[-85,0,70],"elev":"0m","danger":"Tier IV (Severe)","boss":"Belurat Hornsent Berserkers & Omen Ogres","desc":"An eerie mossy valley framed by the colossal ribcages of primeval giants that roamed before the first flame.","light":1.15},
+
+    {"id":"outside_rotten_grove_sanctum","name":"Rotten Grove Sanctum - Fungal Bloom Hollow","zone":"Outside Realm","pos":[-130,0,65],"elev":"0m","danger":"Tier V (Severe)","boss":"Black Chitin Stinger Beasts & Rot Scuttlers","desc":"A damp clearing overgrown with glowing toxic mold, giant mushrooms, and swarming arachnid stinger beasts.","light":1.05},
+
+    {"id":"outside_sunken_dragon_crypt","name":"Sunken Dragon Crypt - Ancient Wyrm Mausoleum","zone":"Outside Realm","pos":[-175,-3.0,20],"elev":"-3.0m","danger":"Tier V (Legendary)","boss":"Ancient Dragon Senessax & Drake Scouts","desc":"Submerged stone crypt chambers where the calcified skeletons of archaic dragons lie entombed beneath dark moss.","light":1.10},
+
+    {"id":"outside_ancient_dolmen_colonnade","name":"Ancient Druidic Dolmen - Monolith Circle","zone":"Outside Realm","pos":[-120,0,-55],"elev":"0m","danger":"Tier IV (Severe)","boss":"Ancient Treant Wardens & Crucible Champions","desc":"A sacred stone circle of mossy granite trilithons channeling primeval currents of life and ethereal lightning.","light":1.20},
+
+    {"id":"ancient_archtree_sanctuary","name":"Primeval Archtree Sanctuary - Mother Hollow","zone":"Outside Realm","pos":[-110,0,0],"elev":"0m","danger":"Tier IV (Severe)","boss":"Messmer & Treant Wardens","desc":"The colossal trunk of the primeval Mother Archtree whose canopy pierces the clouds, surrounded by ethereal monoliths and waystones.","light":1.20},
+
+    {"id":"wyrm_cliffside_plateau","name":"Wyrm Cliffside Plateau - Dragon Overlook","zone":"Outside Realm","pos":[-155,2.0,47],"elev":"+2m","danger":"Tier V (Legendary)","boss":"Bayle the Dread & Crucible Sentinels","desc":"A monumental elevated stone terrace overlooking the bottomless chasm, crowned with gigantic ancient dragon ribcages and sacrificial braziers.","light":1.35},
+
+    {"id":"ashen_dune_wastes","name":"Ashen Dune Hollow - Megalith Colonnade","zone":"Outside Realm","pos":[-135,0,-45],"elev":"0m","danger":"Tier IV (Severe)","boss":"Divine Beast Lion & Fell Omens","desc":"Silent fields of grey ash dunes littered with crumbling druidic stone dolmens, ghostfire braziers, and howling winds.","light":1.10},
+
+    {"id":"sunlight_dragon_ridge","name":"Sunlight Dragon Ridge - High Solar Altar","zone":"Outside Realm","pos":[-170,2.0,48],"elev":"+2m","danger":"Tier V (Nightmare)","boss":"Midra, Lord of Frenzied Flame","desc":"The highest precipice of the dragon cliff where ancient dragon worshippers offered praise to the primeval flame.","light":1.45},
     {"id":"er_limgrave_stormhill","name":"Stormhill - Windswept Warmaster Plateau","zone":"Limgrave Stormhill","pos":[60,2,-15],"elev":"+2m","danger":"Tier III (Moderate)","boss":"Bell Bearing Hunter & Stormhawks","desc":"A windswept plateau beneath the Erdtree where fierce gusts swirl yellow leaves and ancient ruins overlook the bay.","light":1.35},
 
     {"id":"ds2_dragon_aerie_peaks","name":"Dragon Aerie - High Wyvern Pinnacles","zone":"Dragon Aerie","pos":[65,14,65],"elev":"+14m","danger":"Tier V (Legendary)","boss":"Guardian Wyverns & Exploding Hollows","desc":"Perilous suspension rope bridges linking emerald mountain spires swarming with circling guardian drakes.","light":1.4},
@@ -4803,7 +4833,7 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'the_catacombs', name: 'The Catacombs - Bone Crypt', zone: 'The Catacombs', pos: [-20, -5.0, 45], elev: '-5m', danger: 'Tier III (Advanced)', boss: 'Pinwheel', desc: 'A pitch-black necropolis of winding tunnels carved with skull mosaics and animated skeleton sentinels.', light: 0.50 },
     { id: 'oolacile_sanctuary', name: 'Oolacile Sanctuary - Floral Clearing', zone: 'Oolacile', pos: [10, 6.0, 105], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Sanctuary Guardian', desc: 'A tranquil river glade at the threshold of Royal Wood where Elizabeth the talking mushroom tends the waters.', light: 1.15 },
     { id: 'fallen_giants', name: 'Forest of Fallen Giants - High Ramparts', zone: 'Drangleic', pos: [22, 6.0, 60], elev: '+6m', danger: 'Tier III (Advanced)', boss: 'The Pursuer', desc: 'Overgrown ramparts pierced by petrified giant trees and crumbling battlements of an ancient war.', light: 1.00 },
-    { id: 'kings_passage', name: "King's Passage - Thunder Colonnade", zone: 'Drangleic', pos: [8, 0, 95], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Looking Glass Knight', desc: 'A rain-lashed outdoor colonnade leading to the royal throne, assaulted by ceaseless lightning strikes.', light: 0.85 },
+    { id: 'kings_passage', name: "King\'s Passage - Thunder Colonnade", zone: 'Drangleic', pos: [8, 0, 95], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Looking Glass Knight', desc: 'A rain-lashed outdoor colonnade leading to the royal throne, assaulted by ceaseless lightning strikes.', light: 0.85 },
     { id: 'brume_tower', name: 'Brume Tower - Ash Wasteland Summit', zone: 'Brume Tower', pos: [26, 6.0, 145], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Fume Knight Raime', desc: 'A towering iron spire rising through volcanic ash clouds, haunted by the fiery spirit of Nadalia.', light: 0.95 },
     { id: 'alonne_keep', name: 'Memory of the Old Iron King - Polished Hall', zone: 'Iron Keep', pos: [6, 0, 135], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Sir Alonne', desc: 'A pristine mirrored marble hall from the golden age of the Iron King, spotless and immaculate.', light: 1.20 },
     { id: 'archdragon_peak', name: 'Archdragon Peak - Cloud Sanctuary', zone: 'Archdragon Peak', pos: [20, 6.0, 160], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'The Nameless King', desc: 'Ancient ruinous temple standing high above the cloud layer, sanctuary to dragon worshippers.', light: 1.35 },
@@ -4871,7 +4901,7 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'fishing_hamlet', name: 'Fishing Hamlet - Coastline of the Great One', zone: 'Fishing Hamlet', pos: [-14, 0, 65], elev: '0m', danger: 'Tier V (Legendary)', boss: 'Orphan of Kos', desc: 'A rotting barnacle-encrusted coastal village washed by cold sea rain, sacred to the dead Great One Kos.', light: 0.80 },
     { id: 'research_hall', name: 'Research Hall - Astral Clocktower Steps', zone: 'Clocktower', pos: [14, 6.0, 75], elev: '+6m', danger: 'Tier IV (Severe)', boss: 'Lady Maria of Astral Clocktower', desc: 'Vast patient ward of bandaged heads and soaring staircases guarding the dark secrets of the Healing Church.', light: 0.90 },
     { id: 'chalice_ptumeru', name: 'Pthumeru Ihyll - Cursed Defiled Depth', zone: 'Chalice Dungeon', pos: [-22, -5.0, 105], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Yharnam, Pthumerian Queen', desc: 'Ancient subterranean labyrinth of blood-soaked crypts and labyrinth warriors beneath modern Yharnam.', light: 0.40 },
-    { id: 'boletaria_kings_tower', name: "Boletaria - King's High Tower", zone: 'Boletaria', pos: [18, 6.0, 150], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'False King Allant', desc: 'The pinnacle spire of the Boletarian palace where the soul-draining sword of King Allant strikes.', light: 1.20 },
+    { id: 'boletaria_kings_tower', name: "Boletaria - King\'s High Tower", zone: 'Boletaria', pos: [18, 6.0, 150], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'False King Allant', desc: 'The pinnacle spire of the Boletarian palace where the soul-draining sword of King Allant strikes.', light: 1.20 },
     { id: 'latria_ivory_tower', name: 'Tower of Latria - Heart of the Panopticon', zone: 'Tower of Latria', pos: [-18, -5.0, 135], elev: '-5m', danger: 'Tier V (Legendary)', boss: 'Old Monk & Mindflayers', desc: 'A colossal beating organic heart suspended in chains inside the spiraling blood tower.', light: 0.65 },
     { id: 'storm_altar', name: 'Shrine of Storms - Monolith Altar of the Sky', zone: 'Shrine of Storms', pos: [10, 6.0, 140], elev: '+6m', danger: 'Tier V (Legendary)', boss: 'Storm King', desc: 'A wind-whipped seaside cliff battered by rain and lightning where giant flying shadow rays swarm.', light: 0.85 },
     { id: 'lands_between_nexus', name: 'Lands Between - Elden Throne & Fractured Marika', zone: 'Elden Throne', pos: [0, 6.0, 190], elev: '+6m', danger: 'Apex Lord Tier', boss: 'Elden Beast & Radagon', desc: 'The golden cosmic sea inside the Erdtree where the physical incarnation of the Greater Will resides.', light: 1.40 },
@@ -5166,7 +5196,63 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'ds1_ash_lake_everlasting', name: "Ash Lake - Everlasting Archtrees Sand Bar", zone: "Ash Lake", pos: [0, -6.5, 125], elev: '-6.5m', danger: 'Tier IV (Severe)', boss: "Everlasting Stone Dragon & Hydra", desc: "An infinite subterranean sea of quiet black water dotted with towering stone trees supporting the world above.", light: 1.05 },
     { id: 'ds1_chasm_of_abyss_bed', name: "Chasm of the Abyss - Primeval Human Bed", zone: "Oolacile Abyss", pos: [-15, -7.5, 135], elev: '-7.5m', danger: 'Tier V (Supreme)', boss: "Manus, Father of the Abyss", desc: "The pitch-black subterranean womb of the Abyss where primeval humanity coalesces into giant screaming sprites.", light: 0.60 },
     { id: 'des_boletaria_king_tower', name: "Boletaria Palace - King Allant's Transcendent Spire", zone: "Boletarian Palace", pos: [12, 7.0, 105], elev: '+7m', danger: 'Tier V (Legendary)', boss: "Old King Allant & Blue Dragon", desc: "The highest marble elevator pavilion of the Boletaria castle overlooking the fog-covered kingdom below.", light: 1.25 },
-    { id: 'des_latria_ivory_tower', name: "Tower of Latria - Old Monk Golden Heart Altar", zone: "Tower of Latria", pos: [-25, 6.5, 108], elev: '+6.5m', danger: 'Tier V (Legendary)', boss: "The Old Monk & Mindflayer Wardens", desc: "A nightmarish suspended iron cage cathedral where a pulsating colossal flesh heart hangs from iron chains.", light: 0.85 }
+    { id: 'des_latria_ivory_tower', name: "Tower of Latria - Old Monk Golden Heart Altar", zone: "Tower of Latria", pos: [-25, 6.5, 108], elev: '+6.5m', danger: 'Tier V (Legendary)', boss: "The Old Monk & Mindflayer Wardens", desc: "A nightmarish suspended iron cage cathedral where a pulsating colossal flesh heart hangs from iron chains.", light: 0.85 },
+
+    // ----------------------------------------------------
+    // EXPANDED OUTSIDE REALM & ICONIC SOULSBORNE OVERWORLD LOCATIONS
+    // ----------------------------------------------------
+    { id: 'outside_darkroot_bonfire', name: 'Outside Realm - Darkroot Ancient Archtree Bonfire', zone: 'Outside Darkroot Wilds', pos: [-75.0, 0, 0], elev: '0m', danger: 'Tier III (Sanctuary)', boss: 'Alexander Warrior Pot & Treant', desc: 'A colossal twisted world tree root cradle sheltering the primordial outside bonfire amidst whispering pine needles.', light: 1.15 },
+    { id: 'outside_primeval_archtree', name: 'Outside Realm - Primeval Mother Archtree Centerpiece', zone: 'Outside Darkroot Wilds', pos: [-110.0, 0, 0], elev: '0m', danger: 'Tier IV (Primeval)', boss: 'Crucible Knight Sentinel', desc: 'A titanic ancient everlasting archtree whose sprawling roots anchor the world against the infinite sky.', light: 1.10 },
+    { id: 'outside_wyrm_ridge_altar', name: 'Outside Realm - Wyrm Ridge Overlook Altar', zone: 'Outside Darkroot Wilds', pos: [-135.0, 0, 40.0], elev: '0m', danger: 'Tier IV (Draconic)', boss: 'Crystal Drake Whelp & Titanite Demon', desc: 'Weathered dragon worshipper altar on an exposed rocky ridge commanding views of distant volcanic peaks.', light: 1.25 },
+    { id: 'outside_ashen_hollow', name: 'Outside Realm - Ashen Hollow & Ghost Pool', zone: 'Outside Darkroot Wilds', pos: [-130.0, 0, -40.0], elev: '0m', danger: 'Tier IV (Abyssal)', boss: 'Channeler Sorcerer & Screaming Banshees', desc: 'A secluded sunken hollow carpeted in white ash and petrified roots where howling spectres congregate.', light: 0.75 },
+    { id: 'outside_western_precipice', name: 'Outside Realm - Western Cliffside Precipice Overlook', zone: 'Outside Darkroot Wilds', pos: [-165.0, 0, 0], elev: '0m', danger: 'Tier V (Apex)', boss: 'Ancient Sanctuary Stone Guardian', desc: 'The sheer western edge of the world overlooking boundless cloud seas and sunlit distant kingdoms.', light: 1.35 },
+    { id: 'outside_wilds_gateway', name: 'Outside Realm - Darkroot Forest Boundary Archway', zone: 'Outside Darkroot Wilds', pos: [-35.0, 0, 0], elev: '0m', danger: 'Tier II (Wilds Edge)', boss: 'Bonewheel Skeletons', desc: 'The mossy broken stone portal connecting the civilized citadel courtyard to the primeval outside forest.', light: 1.05 },
+    { id: 'outside_darkroot_expanse', name: 'Outside Realm - Darkroot Primeval Overlook Waypoint', zone: 'Outside Darkroot Wilds', pos: [-95.0, 0, 15.0], elev: '0m', danger: 'Tier III (Expedition)', boss: 'Belfry Gargoyle & Silver Knight Greatbow', desc: 'A scenic mossy boulder outlook along the cobblestone highway crossing the primeval darkroot woods.', light: 1.15 },
+
+    // Elden Ring Outdoor Overworld Locations
+    { id: 'er_stormhill_windswept_shack', name: 'Limgrave - Stormhill Windswept Shack', zone: 'Stormhill', pos: [65, 0, 110], elev: '0m', danger: 'Tier I (Open Wilds)', boss: 'Beastman of Farum Azula', desc: 'A lonely weathered wooden shack buffeted by howling coastal squalls overlooking the cliffside sea.', light: 1.20 },
+    { id: 'er_agheel_lake_south', name: 'Limgrave - Lake Agheel Dragon Marshes', zone: 'Agheel Lake', pos: [55, 0, 95], elev: '0m', danger: 'Tier II (Draconic)', boss: 'Flying Dragon Agheel', desc: 'Vast shallow marsh waters where scorched dragonfire ash mingles with reeds beneath soaring sea cliffs.', light: 1.25 },
+    { id: 'er_weeping_castle_rampart', name: 'Weeping Peninsula - Castle Morne Sea Wall', zone: 'Weeping Peninsula', pos: [45, 0, 140], elev: '0m', danger: 'Tier II (Coastal Ramparts)', boss: 'Leonine Misbegotten', desc: 'Ramparts bathed in perpetual sea fog and mourning rains looking out across the Southern Ocean.', light: 0.95 },
+    { id: 'er_caelid_redmane_bridge', name: 'Caelid - Impassable Greatbridge to Redmane', zone: 'Caelid Wilds', pos: [95, 0, 145], elev: '0m', danger: 'Tier IV (Scarlet Rot)', boss: 'Redmane Trebuchets & Radahn Lions', desc: 'Colossal iron barricades and ballista towers guarding the blood-soaked causeway to General Radahn festival.', light: 0.85 },
+    { id: 'er_dragonbarrow_fork', name: 'Caelid - Dragonbarrow Isolated Bluff', zone: 'Dragonbarrow', pos: [115, 0, 165], elev: '0m', danger: 'Tier V (Deadly)', boss: 'Elder Dragon Greyoll', desc: 'Towering red sandstone cliffs where titanic slumbering drakes guard the sacred beastial sanctum trail.', light: 1.10 },
+    { id: 'er_altus_windmill_village', name: 'Altus Plateau - Dominula Windmill Hill', zone: 'Altus Plateau', pos: [85, 0, 125], elev: '0m', danger: 'Tier III (Festive Curse)', boss: 'Godskin Apostle', desc: 'Golden wheat hills crowned by dancing celebrants and creaking windmills beneath shimmering Erdtree rays.', light: 1.35 },
+    { id: 'er_leyndell_outer_moat', name: 'Leyndell - Outer Wall Capital Moat', zone: 'Capital Outskirts', pos: [75, 0, 155], elev: '0m', danger: 'Tier IV (Siege Lines)', boss: 'Dung Eater & Margit Projection', desc: 'A sunken defensive trench beneath the titanic cyclopean golden battlements of the Royal Capital.', light: 1.15 },
+    { id: 'er_liurnia_rose_church', name: 'Liurnia of the Lakes - Sunken Rose Isle', zone: 'Liurnia Lakes', pos: [-65, 0, 115], elev: '0m', danger: 'Tier II (Blood Rose)', boss: 'White Mask Varre & Blood Nobles', desc: 'A half-submerged gothic basilica drowning in indigo lake waters and blossoming blood-red briar roses.', light: 1.05 },
+    { id: 'er_moonlight_altar_plateau', name: 'Moonlight Altar - Cathedral of Manus Celes', zone: 'Moonlight Altar', pos: [-85, 0, 145], elev: '0m', danger: 'Tier IV (Lunar Sanctum)', boss: 'Glintstone Dragon Adula', desc: 'An inaccessible mountain plateau bathed in the pale sapphire illumination of the Dark Moon.', light: 0.90 },
+    { id: 'er_gelmir_primeval_azur', name: 'Mt. Gelmir - Primeval Sorcerer Azur Overlook', zone: 'Mt. Gelmir', pos: [105, 0, 185], elev: '0m', danger: 'Tier V (Volcanic Ridge)', boss: 'Magma Wyrm Makar', desc: 'Smoking volcanic sulfur cliffs where Master Azur crystalized into green glintstone gazing into the cosmos.', light: 1.30 },
+    { id: 'er_consecrated_snowfield_blizzard', name: 'Consecrated Snowfield - Whiteout Freezing Moor', zone: 'Consecrated Snowfield', pos: [-95, 0, 175], elev: '0m', danger: 'Tier V (Freezing Whiteout)', boss: 'Night Cavalry Duo & Dragonkin', desc: 'A blinding frozen steppe where icy blizzards obscure roaming phantom dragonkin soldiers.', light: 0.80 },
+    { id: 'er_mohgwyn_blood_lake', name: 'Mohgwyn Palace - Mausoleum Blood Lake', zone: 'Mohgwyn Palace', pos: [65, 0, 205], elev: '0m', danger: 'Tier V (Lord of Blood)', boss: 'Sanguine Nobles & Albinaurics', desc: 'A horrific cavern lake of boiling crimson blood reflecting colossal classical Roman mausoleum columns.', light: 0.70 },
+    { id: 'er_sote_gravesite_plain', name: 'Shadow Realm - Gravesite Plain Spectral Steppe', zone: 'Gravesite Plain', pos: [50, 0, 165], elev: '0m', danger: 'Tier IV (Shadow Curse)', boss: 'Ghostflame Dragon & Furnace Golem', desc: 'Vast rolling prairies of pale ghostly gravestones beneath the twisted black veil of the Scadutree.', light: 0.95 },
+    { id: 'er_sote_cerulean_coast', name: 'Shadow Realm - Cerulean Coast Slumbering Shore', zone: 'Cerulean Coast', pos: [70, 0, 185], elev: '0m', danger: 'Tier IV (Ethereal)', boss: 'Demi-Human Queen Marigga', desc: 'Haunting turquoise flower fields gently rolling into indigo waves, littered with petrified stone ships.', light: 1.10 },
+    { id: 'er_sote_jagged_peak_crag', name: 'Shadow Realm - Jagged Peak Dragon Precipice', zone: 'Jagged Peak', pos: [110, 0, 210], elev: '0m', danger: 'Tier V (Dragon War)', boss: 'Ancient Dragon Senessax & Bayle', desc: 'Red jagged crags crackling with crimson dragon lightning and strewn with monumental dragon skeletons.', light: 1.25 },
+    { id: 'er_sote_abyssal_woods', name: 'Shadow Realm - Abyssal Woods Madness Fen', zone: 'Abyssal Woods', pos: [-60, 0, 175], elev: '0m', danger: 'Tier V (Frenzy)', boss: 'Aging Untouchable Winter Lanterns', desc: 'An eerie soundless bog where yellow frenzy spores drift silently between gnarled black trees.', light: 0.65 },
+    { id: 'er_sote_scaduview_sunflower', name: 'Shadow Realm - Scadutree Base Sunflower Wetlands', zone: 'Scadutree Base', pos: [80, 0, 230], elev: '0m', danger: 'Tier V (Apex)', boss: 'Scadutree Avatar Sunflower', desc: 'Submerged wetlands beneath the severed trunk of the Scadutree where colossal golden sunflowers bloom.', light: 1.05 },
+
+    // Dark Souls 1/2/3 Outdoor Locations
+    { id: 'ds1_darkroot_basin_waterfall', name: 'Darkroot Basin - Hydra Crystal Lake', zone: 'Darkroot Basin', pos: [-55, 0, 45], elev: '0m', danger: 'Tier II (Crystal Waters)', boss: 'Seven-Headed Ash Hydra', desc: 'A serene waterfall basin nestled beneath sheer granite cliffs, haunted by towering crystal golems.', light: 1.10 },
+    { id: 'ds1_valley_of_drakes_chasm', name: 'Valley of Drakes - Chasm Suspension Bridge', zone: 'Valley of Drakes', pos: [-45, 0, -65], elev: '0m', danger: 'Tier III (Chasm Winds)', boss: 'Undead Dragon & Blue Drakes', desc: 'A deep windy gorge spanning New Londo and Blighttown where blue lightning drakes patrol the winds.', light: 0.90 },
+    { id: 'ds1_kiln_outer_ash', name: 'Kiln of the First Flame - Ashen Dunes Overlook', zone: 'Kiln of First Flame', pos: [0, 0, 285], elev: '0m', danger: 'Tier V (End of Age)', boss: 'Black Knights & Gwyn', desc: 'Vast dunes of pure gray cinder ash curving upward toward the colossal shattered stone bowl of the flame.', light: 1.20 },
+    { id: 'ds2_majula_cliff_sunset', name: 'Majula - Seaborne Sunset Shore', zone: 'Majula', pos: [15, 0, 5], elev: '0m', danger: 'Sanctuary (Peaceful)', boss: 'Emerald Herald & Piglets', desc: 'Gentle sea cliffs bathed in an eternal warm golden sunset over the calm northern sea of Drangleic.', light: 1.40 },
+    { id: 'ds2_dragon_aerie_sky', name: 'Dragon Aerie - High Rope Bridges of the Wyverns', zone: 'Dragon Aerie', pos: [125, 0, 95], elev: '0m', danger: 'Tier IV (Sky Temples)', boss: 'Guardian Dragons & Drakes', desc: 'Delicate rope bridges swaying hundreds of yards above clouds between towering weathered rock pillars.', light: 1.35 },
+    { id: 'ds2_eleum_loyce_outer_wall', name: 'Frozen Eleum Loyce - Exterior Icy Glaciers', zone: 'Eleum Loyce', pos: [-75, 0, 160], elev: '0m', danger: 'Tier IV (Bitter Frost)', boss: "Aava, the King\\'s Pet", desc: 'Monumental frozen ivory battlements engulfed in perpetual whiteouts and shimmering ice glaciers.', light: 1.15 },
+    { id: 'ds3_undead_settlement_bridge', name: 'Undead Settlement - Dilapidated Bridge Crossway', zone: 'Undead Settlement', pos: [35, 0, 85], elev: '0m', danger: 'Tier II (Cursed Hamlet)', boss: 'Curse-Rotted Greatwood', desc: 'A rickety wooden bridge crossing the mountain ravine leading to the sprawling shantytown of hollows.', light: 1.10 },
+    { id: 'ds3_road_of_sacrifices_woods', name: 'Road of Sacrifices - Crucifixion Woods Shore', zone: 'Road of Sacrifices', pos: [45, 0, 105], elev: '0m', danger: 'Tier II (Forest Marsh)', boss: 'Giant Crabs & Crystal Sage', desc: 'A gloomy misty marsh littered with wooden crosses and giant armored crustaceans beneath ancient oaks.', light: 0.95 },
+    { id: 'ds3_farron_keep_perimeter', name: 'Farron Keep - Abyss Watchers Perimeter Rampart', zone: 'Farron Keep', pos: [-55, 0, 85], elev: '0m', danger: 'Tier III (Toxic Swamp)', boss: 'Abyss Watchers & Darkwraiths', desc: 'The crumbling stone battlements ringing the toxic swamp where Darkwraiths clash with Corvian hollows.', light: 0.85 },
+    { id: 'ds3_irithyll_scenic_overlook', name: 'Irithyll - Boreal Valley Moonlit Overlook', zone: 'Boreal Valley', pos: [-75, 0, 75], elev: '0m', danger: 'Tier III (Moonlit City)', boss: 'Pontiff Sulyvahn & Beasts', desc: 'A breathtaking snowy parapet overlooking the fairytale gothic spires and glowing blue moonlit avenues of Irithyll.', light: 1.15 },
+    { id: 'ds3_archdragon_peak_summit', name: 'Archdragon Peak - Great Belfry Summit Altar', zone: 'Archdragon Peak', pos: [115, 0, 75], elev: '0m', danger: 'Tier V (Storm Mountain)', boss: 'Nameless King & King of the Storm', desc: 'A high mountain terrace above a boundless ocean of clouds where dragon acolytes sound the great belfry bell.', light: 1.45 },
+    { id: 'ds3_ringed_city_lookout', name: 'The Ringed City - Mausoleum Mountain Overlook', zone: 'The Ringed City', pos: [65, 0, 240], elev: '0m', danger: 'Tier V (Abyssal End)', boss: 'Judicator Giants & Midir', desc: 'A precipitous mountain path overlooking the golden ringed spires of humanity\'s primordial sanctuary.', light: 1.25 },
+
+    // Bloodborne & Sekiro Exterior Locations
+    { id: 'bb_hemwick_witch_moor', name: 'Hemwick Charnel Lane - Graveyard Windmill Moor', zone: 'Hemwick Charnel Lane', pos: [40, 0, -105], elev: '0m', danger: 'Tier III (Cursed Moor)', boss: 'Witch of Hemwick & Mad Ones', desc: 'Gloomy wind-swept moorlands and decrepit barns reeking of burnt bone and harvested eyeballs.', light: 0.75 },
+    { id: 'bb_forbidden_woods_ravine', name: 'Forbidden Woods - Decrepit Waterwheel Ravine', zone: 'Forbidden Woods', pos: [60, 0, -115], elev: '0m', danger: 'Tier III (Parasitic Woods)', boss: 'Shadows of Yharnam & Snake Parasites', desc: 'A sprawling rotten autumn forest riddled with snake parasite pits and abandoned villager mills.', light: 0.70 },
+    { id: 'bb_cainhurst_snowbound_plaza', name: 'Forsaken Castle Cainhurst - Snowbound Courtyard Plaza', zone: 'Castle Cainhurst', pos: [-65, 0, -105], elev: '0m', danger: 'Tier IV (Freezing Blood)', boss: 'Bloodlickers & Gargoyles', desc: 'A frozen gothic courtyard buried under deep snowdrifts where bloated bloodlickers feast on ancient corpses.', light: 1.05 },
+    { id: 'bb_fishing_hamlet_pier', name: 'Fishing Hamlet - Rotting Weathered Pier', zone: 'Fishing Hamlet', pos: [55, 0, 220], elev: '0m', danger: 'Tier V (Abyssal Sea)', boss: 'Orphan of Kos & Shark Giants', desc: 'A sunless barnacle-encrusted whaling village sinking into dark oceanic shallows where Kos washed ashore.', light: 0.65 },
+    { id: 'sekiro_ashina_outskirts_gate', name: 'Ashina Outskirts - Fortress Gate Battlefield', zone: 'Ashina Outskirts', pos: [45, 0, 65], elev: '0m', danger: 'Tier II (Warzone)', boss: 'Gyoubu Masataka Oniwa', desc: 'The vast mud and snow clearing outside the fortress gate where Gyoubu rides atop mighty Onikage.', light: 1.20 },
+    { id: 'sekiro_senpou_ravine', name: 'Senpou Temple, Mt. Kongo - Red Maple Ravine', zone: 'Senpou Temple', pos: [-45, 0, 65], elev: '0m', danger: 'Tier II (Sacred Peak)', boss: 'Armored Knight & Monks', desc: 'Steep sacred mountain stairways lined with blazing red maple trees and tranquil stone pagodas.', light: 1.30 },
+    { id: 'sekiro_sunken_valley_bog', name: 'Sunken Valley - Bodhisattva Valley Watering Hole', zone: 'Sunken Valley', pos: [75, 0, -55], elev: '0m', danger: 'Tier III (Toxic Mist)', boss: 'Guardian Ape', desc: 'A deep jungle canyon flanked by colossal weathered stone Buddha statues and hot sulfur springs.', light: 1.10 },
+    { id: 'sekiro_mibu_village_meadow', name: 'Ashina Depths - Mibu Village Watermill Meadow', zone: 'Mibu Village', pos: [-65, 0, -55], elev: '0m', danger: 'Tier III (Eerie Gloom)', boss: 'Corrupted Monk', desc: 'An eerie village shrouded in purple dusk mist where cursed villagers wander beneath weeping willows.', light: 0.75 },
+    { id: 'sekiro_fountainhead_sakura', name: 'Fountainhead Palace - Great Sakura Branch Terrace', zone: 'Fountainhead Palace', pos: [0, 0, -85], elev: '0m', danger: 'Tier IV (Celestial Waters)', boss: 'Okami Leader Shizu & Divine Dragon', desc: 'A majestic weeping pink cherry blossom tree arching over crystal-clear turquoise palace lakes.', light: 1.40 },
+    { id: 'sekiro_ashina_reservoir_cliff', name: 'Ashina Castle - Reservoir Secret Reed Passage', zone: 'Ashina Reservoir', pos: [30, 0, 45], elev: '0m', danger: 'Tier I (Moonlit Reeds)', boss: 'Seven Ashina Spears', desc: 'The historic moonlit silver grass field where the Wolf fought Genichiro beneath the moonlight.', light: 1.05 }
 ];
 
 // Locations & Save Slot Global Window Helpers

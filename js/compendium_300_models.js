@@ -1,6 +1,6 @@
 // ============================================================================
-// DARK SOULS: 1,000 3D MODELS COMPENDIUM (ARMORS, NPCS & MOBS)
-// 340 Iconic Armors, 330 Legendary NPCs, and 330 Ferocious Mobs
+// DARK SOULS: 1,050 3D MODELS COMPENDIUM (ARMORS, NPCS & MOBS)
+// 340 Iconic Armors, 330 Legendary NPCs, and 380 Ferocious Mobs
 // ============================================================================
 
 (function() {
@@ -16668,7 +16668,857 @@
     "archetype": "humanoid_beast",
     "weapon": "katana",
     "shield": "shield"
-}
+},
+    {
+        "id": "mob_331_magma_wyrm_warrior",
+        "name": "MOB 331: MAGMA WYRM WARRIOR",
+        "category": "MOB",
+        "title": "Caelid &bull; HP: 6,800, DMG: 420",
+        "desc": "Charred reptilian drake soldier forged in volcanic magma chambers.",
+        "realm": "Caelid",
+        "hp": 6800,
+        "dmg": 420,
+        "souls": 3400,
+        "icon": "\ud83d\udc32",
+        "color": 1840142,
+        "alt_color": 16729344,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_332_dragonkin_soldier_nokstella",
+        "name": "MOB 332: DRAGONKIN SOLDIER OF NOKSTELLA",
+        "category": "MOB",
+        "title": "Nokstella &bull; HP: 7,200, DMG: 440",
+        "desc": "Artificial pale dragonkin forged by the Nox under false night.",
+        "realm": "Nokstella",
+        "hp": 7200,
+        "dmg": 440,
+        "souls": 3600,
+        "icon": "\ud83d\udc32",
+        "color": 1582128,
+        "alt_color": 8969727,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_333_senessax_drake_scout",
+        "name": "MOB 333: SENESSAX ANCIENT DRAKE SCOUT",
+        "category": "MOB",
+        "title": "Jagged Peak &bull; HP: 7,000, DMG: 430",
+        "desc": "Lightning-crested drake vanguard patrolling jagged volcanic crags.",
+        "realm": "Jagged Peak",
+        "hp": 7000,
+        "dmg": 430,
+        "souls": 3500,
+        "icon": "\u26a1",
+        "color": 2759698,
+        "alt_color": 16755200,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_334_glintstone_wyrm_knight",
+        "name": "MOB 334: GLINTSTONE MAGMA WYRM",
+        "category": "MOB",
+        "title": "Liurnia &bull; HP: 6,900, DMG: 410",
+        "desc": "Sorcerous wyrm infused with shimmering blue glintstone crystals.",
+        "realm": "Liurnia",
+        "hp": 6900,
+        "dmg": 410,
+        "souls": 3450,
+        "icon": "\ud83d\udc8e",
+        "color": 925744,
+        "alt_color": 58879,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_335_smoldering_wyrm_brute",
+        "name": "MOB 335: SMOLDERING WYRM BRUTE",
+        "category": "MOB",
+        "title": "Mt. Gelmir &bull; HP: 7,400, DMG: 460",
+        "desc": "Molten obsidian behemoth vomiting scorching lava torrents.",
+        "realm": "Mt. Gelmir",
+        "hp": 7400,
+        "dmg": 460,
+        "souls": 3800,
+        "icon": "\ud83d\udd25",
+        "color": 3151117,
+        "alt_color": 16724736,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_336_archdragon_wyrm_herald",
+        "name": "MOB 336: ARCHDRAGON WYRM HERALD",
+        "category": "MOB",
+        "title": "Archdragon Peak &bull; HP: 7,100, DMG: 435",
+        "desc": "Horned dragonkin herald summoning thunderbolts across mountain summits.",
+        "realm": "Archdragon Peak",
+        "hp": 7100,
+        "dmg": 435,
+        "souls": 3550,
+        "icon": "\ud83d\udcef",
+        "color": 2237984,
+        "alt_color": 13938487,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_337_chasm_abyssal_wyrm",
+        "name": "MOB 337: CHASM ABYSSAL WYRM",
+        "category": "MOB",
+        "title": "Chasm of Abyss &bull; HP: 7,500, DMG: 470",
+        "desc": "Corrupted drake swallowed by primeval dark humanity.",
+        "realm": "Chasm of Abyss",
+        "hp": 7500,
+        "dmg": 470,
+        "souls": 3900,
+        "icon": "\ud83d\udda4",
+        "color": 1118486,
+        "alt_color": 8913151,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_338_volcanic_caldera_wyrm",
+        "name": "MOB 338: VOLCANIC CALDERA WYRM",
+        "category": "MOB",
+        "title": "Lava Springs &bull; HP: 7,300, DMG: 450",
+        "desc": "Subterranean lava wyrm emerging from petrified magma beds.",
+        "realm": "Lava Springs",
+        "hp": 7300,
+        "dmg": 450,
+        "souls": 3700,
+        "icon": "\ud83c\udf0b",
+        "color": 2953736,
+        "alt_color": 16733440,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_339_ancient_dragon_sentinel_wyrm",
+        "name": "MOB 339: DRAGON SENTINEL WYRM",
+        "category": "MOB",
+        "title": "Farum Azula &bull; HP: 7,600, DMG: 480",
+        "desc": "Ancient scaled guard standing eternal watch over dragon temples.",
+        "realm": "Farum Azula",
+        "hp": 7600,
+        "dmg": 480,
+        "souls": 4000,
+        "icon": "\ud83d\udee1\ufe0f",
+        "color": 3352600,
+        "alt_color": 16763955,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": "shield"
+    },
+    {
+        "id": "mob_340_bloodflame_wyrm_stalker",
+        "name": "MOB 340: BLOODFLAME WYRM STALKER",
+        "category": "MOB",
+        "title": "Mohgwyn Palace &bull; HP: 7,350, DMG: 455",
+        "desc": "Blood-drenched drake anointed in the accursed bloodflame ritual.",
+        "realm": "Mohgwyn Palace",
+        "hp": 7350,
+        "dmg": 455,
+        "souls": 3750,
+        "icon": "\ud83e\ude78",
+        "color": 2625042,
+        "alt_color": 16716083,
+        "archetype": "dragonkin_wyrm",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_341_crucible_knight_siluria",
+        "name": "MOB 341: CRUCIBLE KNIGHT SILURIA",
+        "category": "MOB",
+        "title": "Deeproot Depths &bull; HP: 7,500, DMG: 470",
+        "desc": "Ancient horned knight wielding the spiraling Tree Spear.",
+        "realm": "Deeproot Depths",
+        "hp": 7500,
+        "dmg": 470,
+        "souls": 3800,
+        "icon": "\ud83d\udee1\ufe0f",
+        "color": 12750136,
+        "alt_color": 5904404,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_342_crucible_ordovis_guard",
+        "name": "MOB 342: CRUCIBLE ORDOVIS GUARD",
+        "category": "MOB",
+        "title": "Auriza Tomb &bull; HP: 7,400, DMG: 460",
+        "desc": "Elite vanguard of the first Elden Lord clad in heavy primal armor.",
+        "realm": "Auriza Tomb",
+        "hp": 7400,
+        "dmg": 460,
+        "souls": 3750,
+        "icon": "\u2694\ufe0f",
+        "color": 12092968,
+        "alt_color": 4854286,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_343_crucible_tree_sentinel",
+        "name": "MOB 343: CRUCIBLE TREE DEFENDER",
+        "category": "MOB",
+        "title": "Leyndell &bull; HP: 7,300, DMG: 450",
+        "desc": "Guardian of the primordial crucible before Erdtree civilization.",
+        "realm": "Leyndell",
+        "hp": 7300,
+        "dmg": 450,
+        "souls": 3650,
+        "icon": "\ud83c\udf32",
+        "color": 10383904,
+        "alt_color": 3804682,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": "shield"
+    },
+    {
+        "id": "mob_344_crucible_horned_axe_champion",
+        "name": "MOB 344: CRUCIBLE AXE CHAMPION",
+        "category": "MOB",
+        "title": "Stormveil &bull; HP: 7,250, DMG: 445",
+        "desc": "Unyielding warrior executing devastating ground stomp shockwaves.",
+        "realm": "Stormveil",
+        "hp": 7250,
+        "dmg": 445,
+        "souls": 3600,
+        "icon": "\ud83e\ude93",
+        "color": 10910758,
+        "alt_color": 5575952,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_345_crucible_wing_templar",
+        "name": "MOB 345: CRUCIBLE WING TEMPLAR",
+        "category": "MOB",
+        "title": "Nokron &bull; HP: 7,350, DMG: 455",
+        "desc": "Horned champion soaring aloft on golden ethereal crucible wings.",
+        "realm": "Nokron",
+        "hp": 7350,
+        "dmg": 455,
+        "souls": 3700,
+        "icon": "\ud83e\udeb6",
+        "color": 11568170,
+        "alt_color": 5116684,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_346_crucible_hornshield_warden",
+        "name": "MOB 346: CRUCIBLE HORNSHIELD WARDEN",
+        "category": "MOB",
+        "title": "Siofra Aqueduct &bull; HP: 7,450, DMG: 465",
+        "desc": "Heavy vanguard deflecting magic with a massive spiked hornshield.",
+        "realm": "Siofra Aqueduct",
+        "hp": 7450,
+        "dmg": 465,
+        "souls": 3800,
+        "icon": "\ud83d\udee1\ufe0f",
+        "color": 10252318,
+        "alt_color": 4329480,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": "shield"
+    },
+    {
+        "id": "mob_347_ancient_rauh_crucible_sentinel",
+        "name": "MOB 347: RAUH CRUCIBLE SENTINEL",
+        "category": "MOB",
+        "title": "Shadow Realm &bull; HP: 7,600, DMG: 480",
+        "desc": "Hornsent guardian wandering mossy ancient viaduct ruins.",
+        "realm": "Shadow Realm",
+        "hp": 7600,
+        "dmg": 480,
+        "souls": 4000,
+        "icon": "\ud83c\udfdb\ufe0f",
+        "color": 11042344,
+        "alt_color": 5248014,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": "shield"
+    },
+    {
+        "id": "mob_348_enir_ilim_crucible_ascendant",
+        "name": "MOB 348: ENIR-ILIM CRUCIBLE ASCENDANT",
+        "category": "MOB",
+        "title": "Enir-Ilim &bull; HP: 7,700, DMG: 490",
+        "desc": "Horn-crowned ascetic blessed with primordial life currents.",
+        "realm": "Enir-Ilim",
+        "hp": 7700,
+        "dmg": 490,
+        "souls": 4100,
+        "icon": "\u2728",
+        "color": 12558400,
+        "alt_color": 6690836,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_349_crucible_iron_juggernaut",
+        "name": "MOB 349: CRUCIBLE IRON JUGGERNAUT",
+        "category": "MOB",
+        "title": "Altus Plateau &bull; HP: 7,800, DMG: 500",
+        "desc": "Colossal heavily-plated champion immune to light stagger and poise break.",
+        "realm": "Altus Plateau",
+        "hp": 7800,
+        "dmg": 500,
+        "souls": 4200,
+        "icon": "\ud83d\uddff",
+        "color": 9397528,
+        "alt_color": 3935494,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_350_crucible_blood_reaver",
+        "name": "MOB 350: CRUCIBLE BLOOD REAVER",
+        "category": "MOB",
+        "title": "Blood Swamp &bull; HP: 7,500, DMG: 470",
+        "desc": "Fierce knight combining primordial wings with savage bloodletting.",
+        "realm": "Blood Swamp",
+        "hp": 7500,
+        "dmg": 470,
+        "souls": 3850,
+        "icon": "\ud83e\ude78",
+        "color": 9857052,
+        "alt_color": 4722954,
+        "archetype": "crucible_horned",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_351_volcano_abductor_virgin",
+        "name": "MOB 351: VOLCANO ABDUCTOR VIRGIN",
+        "category": "MOB",
+        "title": "Volcano Manor &bull; HP: 7,600, DMG: 480",
+        "desc": "Mechanical iron maiden crushing intruders within its burning ribcage.",
+        "realm": "Volcano Manor",
+        "hp": 7600,
+        "dmg": 480,
+        "souls": 3900,
+        "icon": "\u2699\ufe0f",
+        "color": 2369065,
+        "alt_color": 16724736,
+        "archetype": "abductor_virgin",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_352_raya_lucaria_abductor_engine",
+        "name": "MOB 352: ACADEMY ABDUCTOR ENGINE",
+        "category": "MOB",
+        "title": "Raya Lucaria &bull; HP: 7,400, DMG: 460",
+        "desc": "Glintstone-geared iron chariot patrolling waterlogged courtyards.",
+        "realm": "Raya Lucaria",
+        "hp": 7400,
+        "dmg": 460,
+        "souls": 3750,
+        "icon": "\ud83c\udff0",
+        "color": 2763824,
+        "alt_color": 58879,
+        "archetype": "abductor_virgin",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_353_pendulum_executioner_virgin",
+        "name": "MOB 353: PENDULUM EXECUTIONER",
+        "category": "MOB",
+        "title": "Mt. Gelmir &bull; HP: 7,700, DMG: 490",
+        "desc": "Dual-scythe iron maiden spinning in relentless whirling charges.",
+        "realm": "Mt. Gelmir",
+        "hp": 7700,
+        "dmg": 490,
+        "souls": 4050,
+        "icon": "\ud83e\ude93",
+        "color": 2105893,
+        "alt_color": 16720384,
+        "archetype": "abductor_virgin",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_354_chariot_virgin_slicer",
+        "name": "MOB 354: CHARIOT VIRGIN SLICER",
+        "category": "MOB",
+        "title": "Altus Highway &bull; HP: 7,550, DMG: 475",
+        "desc": "High-speed iron carriage with spiked bronze wheels and scythe blades.",
+        "realm": "Altus Highway",
+        "hp": 7550,
+        "dmg": 475,
+        "souls": 3850,
+        "icon": "\ud83c\udfa0",
+        "color": 2632238,
+        "alt_color": 16729105,
+        "archetype": "abductor_virgin",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_355_abductor_cage_stalker",
+        "name": "MOB 355: ABDUCTOR CAGE STALKER",
+        "category": "MOB",
+        "title": "Subterranean &bull; HP: 7,500, DMG: 470",
+        "desc": "Subterranean iron trap snaring wanderers into its internal furnace.",
+        "realm": "Subterranean",
+        "hp": 7500,
+        "dmg": 470,
+        "souls": 3800,
+        "icon": "\u26d3\ufe0f",
+        "color": 1974307,
+        "alt_color": 13373696,
+        "archetype": "abductor_virgin",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_356_dreg_heap_ruined_virgin",
+        "name": "MOB 356: DREG HEAP RUINED VIRGIN",
+        "category": "MOB",
+        "title": "The Dreg Heap &bull; HP: 7,650, DMG: 485",
+        "desc": "Weathered ancient war engine preserved by ashen swamp sludge.",
+        "realm": "The Dreg Heap",
+        "hp": 7650,
+        "dmg": 485,
+        "souls": 3950,
+        "icon": "\ud83c\udfda\ufe0f",
+        "color": 1711134,
+        "alt_color": 11149824,
+        "archetype": "abductor_virgin",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_357_leyndell_royal_abductor",
+        "name": "MOB 357: ROYAL ABDUCTOR ENGINE",
+        "category": "MOB",
+        "title": "Leyndell Outskirts &bull; HP: 7,800, DMG: 500",
+        "desc": "Golden-relief adorned iron engine guarding royal capital entrances.",
+        "realm": "Leyndell Outskirts",
+        "hp": 7800,
+        "dmg": 500,
+        "souls": 4200,
+        "icon": "\ud83d\udc51",
+        "color": 3158582,
+        "alt_color": 16766720,
+        "archetype": "abductor_virgin",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_358_shadow_keep_abductor_construct",
+        "name": "MOB 358: SHADOW KEEP ABDUCTOR CONSTRUCT",
+        "category": "MOB",
+        "title": "Shadow Realm &bull; HP: 7,900, DMG: 510",
+        "desc": "Messmer war construct fitted with molten serpentine scythe blades.",
+        "realm": "Shadow Realm",
+        "hp": 7900,
+        "dmg": 510,
+        "souls": 4300,
+        "icon": "\ud83d\udd25",
+        "color": 2237480,
+        "alt_color": 16720384,
+        "archetype": "abductor_virgin",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_359_latria_mindflayer_warden",
+        "name": "MOB 359: TOWER OF LATRIA MINDFLAYER",
+        "category": "MOB",
+        "title": "Tower of Latria &bull; HP: 6,800, DMG: 430",
+        "desc": "Horrific robed warden paralyzing prisoners with ringing bell spells.",
+        "realm": "Tower of Latria",
+        "hp": 6800,
+        "dmg": 430,
+        "souls": 3500,
+        "icon": "\ud83d\udd14",
+        "color": 658712,
+        "alt_color": 62975,
+        "archetype": "cthulhu_mindflayer",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_360_astral_void_scholar",
+        "name": "MOB 360: ASTRAL VOID SCHOLAR",
+        "category": "MOB",
+        "title": "Research Hall &bull; HP: 6,700, DMG: 420",
+        "desc": "Eldritch scholar whose head blossomed into squirming cosmic tentacles.",
+        "realm": "Research Hall",
+        "hp": 6700,
+        "dmg": 420,
+        "souls": 3400,
+        "icon": "\ud83c\udf0c",
+        "color": 856096,
+        "alt_color": 53486,
+        "archetype": "cthulhu_mindflayer",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_361_byrgenwerth_mindflayer_priest",
+        "name": "MOB 361: BYRGENWERTH MINDFLAYER PRIEST",
+        "category": "MOB",
+        "title": "Byrgenwerth &bull; HP: 6,900, DMG: 440",
+        "desc": "Lakeside worshipper channeling paleblood starlight through cosmic orbs.",
+        "realm": "Byrgenwerth",
+        "hp": 6900,
+        "dmg": 440,
+        "souls": 3600,
+        "icon": "\ud83d\udc41\ufe0f",
+        "color": 527125,
+        "alt_color": 50397,
+        "archetype": "cthulhu_mindflayer",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_362_cosmic_tendril_channeler",
+        "name": "MOB 362: COSMIC TENDRIL CHANNELER",
+        "category": "MOB",
+        "title": "Upper Cathedral &bull; HP: 7,000, DMG: 450",
+        "desc": "Choir ascetic summoning celestial laser bursts from starry catalysts.",
+        "realm": "Upper Cathedral",
+        "hp": 7000,
+        "dmg": 450,
+        "souls": 3700,
+        "icon": "\u2728",
+        "color": 790300,
+        "alt_color": 47308,
+        "archetype": "cthulhu_mindflayer",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_363_abyssal_mindflayer_sorcerer",
+        "name": "MOB 363: ABYSSAL MINDFLAYER SORCERER",
+        "category": "MOB",
+        "title": "Oolacile Abyss &bull; HP: 7,100, DMG: 460",
+        "desc": "Dark sorcerer twisting ancient Oolacile incantations into madness.",
+        "realm": "Oolacile Abyss",
+        "hp": 7100,
+        "dmg": 460,
+        "souls": 3800,
+        "icon": "\ud83d\udda4",
+        "color": 395280,
+        "alt_color": 7799039,
+        "archetype": "cthulhu_mindflayer",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_364_finger_ruins_mindflayer",
+        "name": "MOB 364: FINGER RUINS CELESTIAL ACOLYTE",
+        "category": "MOB",
+        "title": "Shadow Realm &bull; HP: 7,200, DMG: 470",
+        "desc": "Starlight-seeking acolyte awaiting signals from the cosmos.",
+        "realm": "Shadow Realm",
+        "hp": 7200,
+        "dmg": 470,
+        "souls": 3900,
+        "icon": "\ud83d\udd90\ufe0f",
+        "color": 921890,
+        "alt_color": 62975,
+        "archetype": "cthulhu_mindflayer",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_365_lake_of_rot_void_flayer",
+        "name": "MOB 365: LAKE OF ROT VOID FLAYER",
+        "category": "MOB",
+        "title": "Grand Cloister &bull; HP: 7,050, DMG: 455",
+        "desc": "Malformed scholar meditating over boiling pink scarlet rot falls.",
+        "realm": "Grand Cloister",
+        "hp": 7050,
+        "dmg": 455,
+        "souls": 3750,
+        "icon": "\ud83c\udf38",
+        "color": 724506,
+        "alt_color": 16711816,
+        "archetype": "cthulhu_mindflayer",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_366_cainhurst_astral_jailer",
+        "name": "MOB 366: CAINHURST ASTRAL JAILER",
+        "category": "MOB",
+        "title": "Castle Cainhurst &bull; HP: 6,950, DMG: 445",
+        "desc": "Frost-cloaked warden haunting the snowbound towers of Cainhurst.",
+        "realm": "Castle Cainhurst",
+        "hp": 6950,
+        "dmg": 445,
+        "souls": 3650,
+        "icon": "\u2744\ufe0f",
+        "color": 592920,
+        "alt_color": 8974079,
+        "archetype": "cthulhu_mindflayer",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_367_subterranean_shunned_omen",
+        "name": "MOB 367: SUBTERRANEAN SHUNNED OMEN",
+        "category": "MOB",
+        "title": "Leyndell Sewers &bull; HP: 7,500, DMG: 470",
+        "desc": "Massive horned brute wielding a heavy barbed butcher cleaver.",
+        "realm": "Leyndell Sewers",
+        "hp": 7500,
+        "dmg": 470,
+        "souls": 3800,
+        "icon": "\ud83d\udc79",
+        "color": 4076588,
+        "alt_color": 2760725,
+        "archetype": "omen_ogre",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_368_bloodfiend_horned_ogre",
+        "name": "MOB 368: BLOODFIEND HORNED OGRE",
+        "category": "MOB",
+        "title": "Shadow Realm &bull; HP: 7,600, DMG: 480",
+        "desc": "Savage horned tribal colossus feasting on sacred mother blood.",
+        "realm": "Shadow Realm",
+        "hp": 7600,
+        "dmg": 480,
+        "souls": 3950,
+        "icon": "\ud83e\ude78",
+        "color": 3550244,
+        "alt_color": 16720452,
+        "archetype": "omen_ogre",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_369_mohgwyn_barbed_cleaver",
+        "name": "MOB 369: MOHGWYN BARBED CLEAVER",
+        "category": "MOB",
+        "title": "Blood Mausoleum &bull; HP: 7,700, DMG: 490",
+        "desc": "Bloodflame-anointed executioner butchering trespassers on red terraces.",
+        "realm": "Blood Mausoleum",
+        "hp": 7700,
+        "dmg": 490,
+        "souls": 4050,
+        "icon": "\ud83e\ude93",
+        "color": 4207144,
+        "alt_color": 13373730,
+        "archetype": "omen_ogre",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_370_belurat_hornsent_berserker",
+        "name": "MOB 370: BELURAT HORNSENT BERSERKER",
+        "category": "MOB",
+        "title": "Belurat &bull; HP: 7,800, DMG: 500",
+        "desc": "Fanatical warrior covered in spiral horn spirals and chain collars.",
+        "realm": "Belurat",
+        "hp": 7800,
+        "dmg": 500,
+        "souls": 4200,
+        "icon": "\ud83d\udc51",
+        "color": 4470314,
+        "alt_color": 16755200,
+        "archetype": "omen_ogre",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_371_catacomb_horned_executioner",
+        "name": "MOB 371: CATACOMB HORNED EXECUTIONER",
+        "category": "MOB",
+        "title": "Royal Catacombs &bull; HP: 7,450, DMG: 465",
+        "desc": "Heavy subterranean giant guarding forgotten stone crypt tombs.",
+        "realm": "Royal Catacombs",
+        "hp": 7450,
+        "dmg": 465,
+        "souls": 3750,
+        "icon": "\u26d3\ufe0f",
+        "color": 3681830,
+        "alt_color": 2234898,
+        "archetype": "omen_ogre",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_372_dreg_heap_omen_titan",
+        "name": "MOB 372: DREG HEAP OMEN TITAN",
+        "category": "MOB",
+        "title": "The Dreg Heap &bull; HP: 7,650, DMG: 485",
+        "desc": "Ashen ogre hauling colossal rusted iron anchor blades.",
+        "realm": "The Dreg Heap",
+        "hp": 7650,
+        "dmg": 485,
+        "souls": 4000,
+        "icon": "\ud83c\udfda\ufe0f",
+        "color": 3813416,
+        "alt_color": 5574912,
+        "archetype": "omen_ogre",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_373_shunning_grounds_pipe_stalker",
+        "name": "MOB 373: SEWER PIPE HORNED STALKER",
+        "category": "MOB",
+        "title": "Leyndell Sewers &bull; HP: 7,400, DMG: 460",
+        "desc": "Narrow-pipe lurking predator lunging from murky sewer sluices.",
+        "realm": "Leyndell Sewers",
+        "hp": 7400,
+        "dmg": 460,
+        "souls": 3700,
+        "icon": "\ud83e\udea0",
+        "color": 3418658,
+        "alt_color": 3351057,
+        "archetype": "omen_ogre",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_374_flame_peak_horned_colossus",
+        "name": "MOB 374: FLAME PEAK HORNED COLOSSUS",
+        "category": "MOB",
+        "title": "Mountaintops &bull; HP: 7,750, DMG: 495",
+        "desc": "Frostbitten brute surviving on blizzard mountain ledges.",
+        "realm": "Mountaintops",
+        "hp": 7750,
+        "dmg": 495,
+        "souls": 4150,
+        "icon": "\ud83c\udfd4\ufe0f",
+        "color": 4338728,
+        "alt_color": 16729088,
+        "archetype": "omen_ogre",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_375_caelid_rot_scuttler",
+        "name": "MOB 375: CAELID SCARLET ROT SCUTTLER",
+        "category": "MOB",
+        "title": "Caelid Swamp &bull; HP: 6,900, DMG: 440",
+        "desc": "Multi-legged chitinous predator injecting boiling scarlet rot venom.",
+        "realm": "Caelid Swamp",
+        "hp": 6900,
+        "dmg": 440,
+        "souls": 3500,
+        "icon": "\ud83d\udd77\ufe0f",
+        "color": 1183766,
+        "alt_color": 16711765,
+        "archetype": "arachnid_scuttler",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_376_black_chitin_stinger_beast",
+        "name": "MOB 376: BLACK CHITIN STINGER BEAST",
+        "category": "MOB",
+        "title": "Deep Ainsel &bull; HP: 7,100, DMG: 460",
+        "desc": "Glossy obsidian scorpion monster with arching toxic venom tail.",
+        "realm": "Deep Ainsel",
+        "hp": 7100,
+        "dmg": 460,
+        "souls": 3700,
+        "icon": "\ud83e\udd82",
+        "color": 920850,
+        "alt_color": 3800852,
+        "archetype": "arachnid_scuttler",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_377_deeproot_spider_drake",
+        "name": "MOB 377: DEEPROOT SCUTTLING DRAKE",
+        "category": "MOB",
+        "title": "Deeproot Depths &bull; HP: 7,000, DMG: 450",
+        "desc": "Tree-root climbing arachnid ambushing travelers from cavern ceilings.",
+        "realm": "Deeproot Depths",
+        "hp": 7000,
+        "dmg": 450,
+        "souls": 3600,
+        "icon": "\ud83d\udd77\ufe0f",
+        "color": 1315352,
+        "alt_color": 65450,
+        "archetype": "arachnid_scuttler",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_378_ainsel_toxic_pincer",
+        "name": "MOB 378: AINSEL TOXIC PINCER",
+        "category": "MOB",
+        "title": "Ainsel River &bull; HP: 6,950, DMG: 445",
+        "desc": "Heavy-carapace river beast crushing armor with serrated mandibles.",
+        "realm": "Ainsel River",
+        "hp": 6950,
+        "dmg": 445,
+        "souls": 3550,
+        "icon": "\ud83e\udd80",
+        "color": 1052436,
+        "alt_color": 2280448,
+        "archetype": "arachnid_scuttler",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_379_abyssal_chitin_crawler",
+        "name": "MOB 379: ABYSSAL CHITIN CRAWLER",
+        "category": "MOB",
+        "title": "Chasm of Abyss &bull; HP: 7,200, DMG: 470",
+        "desc": "Swarming dark spider entity infesting dark humanity abyssal pools.",
+        "realm": "Chasm of Abyss",
+        "hp": 7200,
+        "dmg": 470,
+        "souls": 3850,
+        "icon": "\ud83d\udda4",
+        "color": 657677,
+        "alt_color": 8913151,
+        "archetype": "arachnid_scuttler",
+        "weapon": "sword",
+        "shield": null
+    },
+    {
+        "id": "mob_380_shadow_ruins_needle_spider",
+        "name": "MOB 380: SHADOW RUINS NEEDLE SPIDER",
+        "category": "MOB",
+        "title": "Shadow Realm &bull; HP: 7,300, DMG: 480",
+        "desc": "Ancient Rauh ruins spider scuttling across mossy stone aqueducts.",
+        "realm": "Shadow Realm",
+        "hp": 7300,
+        "dmg": 480,
+        "souls": 4000,
+        "icon": "\ud83d\udd78\ufe0f",
+        "color": 1446684,
+        "alt_color": 16724838,
+        "archetype": "arachnid_scuttler",
+        "weapon": "sword",
+        "shield": null
+    }
 ];
     window.LORDRAN_300_DATABASE = LORDRAN_300_DATABASE;
 
@@ -16881,6 +17731,188 @@
                 const scimitar = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.4, 0.02), this.steelMat);
                 scimitar.position.set(0.45, 0.2, 0.4);
                 bodyGroup.add(scimitar);
+
+            } else if (arch === 'dragonkin_wyrm') {
+                // Dragonkin Wyrm Frame (Reptilian torso, horns, tail, wyrm blade)
+                const bodyGroup = new THREE.Group();
+                bodyGroup.position.y = 1.35;
+                root.add(bodyGroup);
+
+                const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.35, 1.3, 8), primaryMat);
+                bodyGroup.add(torso);
+
+                const head = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.3, 0.6), primaryMat);
+                head.position.set(0, 0.85, 0.2);
+                bodyGroup.add(head);
+
+                const hornL = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.65, 4), secondaryMat);
+                hornL.position.set(-0.2, 1.2, -0.1);
+                hornL.rotation.set(-0.5, 0, -0.4);
+                bodyGroup.add(hornL);
+                const hornR = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.65, 4), secondaryMat);
+                hornR.position.set(0.2, 1.2, -0.1);
+                hornR.rotation.set(-0.5, 0, 0.4);
+                bodyGroup.add(hornR);
+
+                const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.05, 1.6, 6), primaryMat);
+                tail.position.set(0, -0.5, -0.6);
+                tail.rotation.x = -0.7;
+                bodyGroup.add(tail);
+
+                const wBlade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.4, 0.2), secondaryMat);
+                wBlade.position.set(0.65, 0.3, 0.5);
+                wBlade.rotation.x = 0.7;
+                bodyGroup.add(wBlade);
+
+            } else if (arch === 'crucible_horned') {
+                // Crucible Knight Frame (Antler helm, crucible wings, broadsword)
+                const bodyGroup = new THREE.Group();
+                bodyGroup.position.y = 1.35;
+                root.add(bodyGroup);
+
+                const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.32, 1.2, 8), primaryMat);
+                bodyGroup.add(torso);
+
+                const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.26, 0.45, 8), primaryMat);
+                helm.position.y = 0.85;
+                bodyGroup.add(helm);
+
+                const antlerL = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.8, 5), secondaryMat);
+                antlerL.position.set(-0.25, 1.2, 0);
+                antlerL.rotation.z = 0.55;
+                bodyGroup.add(antlerL);
+                const antlerR = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.8, 5), secondaryMat);
+                antlerR.position.set(0.25, 1.2, 0);
+                antlerR.rotation.z = -0.55;
+                bodyGroup.add(antlerR);
+
+                const wingL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.3, 0.55), secondaryMat);
+                wingL.position.set(-0.45, 0.45, -0.25);
+                wingL.rotation.set(-0.3, 0, 0.35);
+                bodyGroup.add(wingL);
+                const wingR = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.3, 0.55), secondaryMat);
+                wingR.position.set(0.45, 0.45, -0.25);
+                wingR.rotation.set(-0.3, 0, -0.35);
+                bodyGroup.add(wingR);
+
+                const sword = new THREE.Mesh(new THREE.BoxGeometry(0.15, 2.2, 0.05), primaryMat);
+                sword.position.set(0.6, 0.3, 0.5);
+                sword.rotation.x = 0.7;
+                bodyGroup.add(sword);
+
+            } else if (arch === 'abductor_virgin') {
+                // Abductor Virgin Frame (Iron maiden cylindrical cage, scythes, wheels)
+                const bodyGroup = new THREE.Group();
+                bodyGroup.position.y = 1.1;
+                root.add(bodyGroup);
+
+                const cage = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 1.5, 10), primaryMat);
+                bodyGroup.add(cage);
+
+                const face = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.5, 0.15), secondaryMat);
+                face.position.set(0, 0.3, 0.6);
+                bodyGroup.add(face);
+
+                const wheelL = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.2, 8), secondaryMat);
+                wheelL.rotation.z = Math.PI / 2;
+                wheelL.position.set(-0.7, -0.75, 0);
+                bodyGroup.add(wheelL);
+                const wheelR = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.2, 8), secondaryMat);
+                wheelR.rotation.z = Math.PI / 2;
+                wheelR.position.set(0.7, -0.75, 0);
+                bodyGroup.add(wheelR);
+
+                const scytheL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.8, 0.4), secondaryMat);
+                scytheL.position.set(-0.9, 0.3, 0.3);
+                scytheL.rotation.x = 0.6;
+                bodyGroup.add(scytheL);
+                const scytheR = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.8, 0.4), secondaryMat);
+                scytheR.position.set(0.9, 0.3, 0.3);
+                scytheR.rotation.x = 0.6;
+                bodyGroup.add(scytheR);
+
+            } else if (arch === 'cthulhu_mindflayer') {
+                // Cthulhu Mindflayer Frame (Cosmic robe, tentacle mask, staff)
+                const bodyGroup = new THREE.Group();
+                bodyGroup.position.y = 1.25;
+                root.add(bodyGroup);
+
+                const robe = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.55, 1.4, 8), primaryMat);
+                bodyGroup.add(robe);
+
+                const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8), primaryMat);
+                cranium.position.y = 0.9;
+                cranium.scale.set(0.9, 1.2, 1.1);
+                bodyGroup.add(cranium);
+
+                for (let i = 0; i < 5; i++) {
+                    const tentacle = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.01, 0.55, 4), secondaryMat);
+                    tentacle.position.set((i - 2) * 0.08, 0.65, 0.28);
+                    tentacle.rotation.x = 0.4;
+                    bodyGroup.add(tentacle);
+                }
+
+                const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.1, 6), secondaryMat);
+                staff.position.set(0.5, 0.3, 0.4);
+                bodyGroup.add(staff);
+
+            } else if (arch === 'omen_ogre') {
+                // Omen Ogre Frame (Hulking brute, horn cluster, cleaver)
+                const bodyGroup = new THREE.Group();
+                bodyGroup.position.y = 1.25;
+                root.add(bodyGroup);
+
+                const torso = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.2, 0.6), primaryMat);
+                bodyGroup.add(torso);
+
+                const head = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), primaryMat);
+                head.position.y = 0.85;
+                bodyGroup.add(head);
+
+                const horn1 = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.07, 4, 6, Math.PI), secondaryMat);
+                horn1.position.set(-0.3, 1.0, 0);
+                horn1.rotation.set(0.3, 0.4, 0.5);
+                bodyGroup.add(horn1);
+                const horn2 = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.07, 4, 6, Math.PI), secondaryMat);
+                horn2.position.set(0.3, 1.0, 0);
+                horn2.rotation.set(0.3, -0.4, -0.5);
+                bodyGroup.add(horn2);
+
+                const cleaver = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.0, 0.5), secondaryMat);
+                cleaver.position.set(0.65, 0.3, 0.45);
+                cleaver.rotation.x = 0.7;
+                bodyGroup.add(cleaver);
+
+            } else if (arch === 'arachnid_scuttler') {
+                // Arachnid Scuttler Frame (Segmented carapace, stinger tail, pincers)
+                const bodyGroup = new THREE.Group();
+                bodyGroup.position.y = 0.65;
+                root.add(bodyGroup);
+
+                const carapace = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.4, 1.2), primaryMat);
+                bodyGroup.add(carapace);
+
+                const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 1.2, 5), primaryMat);
+                tail.position.set(0, 0.7, -0.5);
+                tail.rotation.x = 0.8;
+                bodyGroup.add(tail);
+
+                const stinger = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.35, 4), secondaryMat);
+                stinger.position.set(0, 1.2, -0.1);
+                stinger.rotation.x = 1.6;
+                bodyGroup.add(stinger);
+
+                for (let i = 0; i < 3; i++) {
+                    const legL = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.08, 0.08), secondaryMat);
+                    legL.position.set(-0.6, 0, 0.3 - i * 0.3);
+                    legL.rotation.z = -0.4;
+                    bodyGroup.add(legL);
+
+                    const legR = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.08, 0.08), secondaryMat);
+                    legR.position.set(0.6, 0, 0.3 - i * 0.3);
+                    legR.rotation.z = 0.4;
+                    bodyGroup.add(legR);
+                }
 
             } else {
                 // Standard Humanoid Knight Frame (Artorias, Elite Knight, Solaire, etc.)

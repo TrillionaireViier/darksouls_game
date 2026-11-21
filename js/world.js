@@ -825,10 +825,22 @@ class DarkSoulsWorld {
             return -4.0;
         }
 
-        // 5b. Outside Realm (Darkroot Woods, Primeval Archtree, Wyrm Plateau & Ashen Wastes: x in [-195, -28], z in [-90, 90])
-        if (x >= -195 && x <= -28 && z >= -90 && z <= 90) {
-            // Wyrm Cliffside Plateau (x in [-185, -130], z in [15, 80])
-            if (x >= -185 && x <= -130 && z >= 15 && z <= 80) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-220, -28], z in [-115, 115]
+        if (x >= -220 && x <= -28 && z >= -115 && z <= 115) {
+            // Astral Meteor Crater (x in [-175, -145], z in [-75, -45])
+            if (x >= -175 && x <= -145 && z >= -75 && z <= -45) {
+                return -2.5;
+            }
+            // Magma Chasm Falls (x in [-195, -165], z in [-35, -15])
+            if (x >= -195 && x <= -165 && z >= -35 && z <= -15) {
+                return -1.5;
+            }
+            // Sunken Dragon Crypt (x in [-195, -160], z in [5, 30])
+            if (x >= -195 && x <= -160 && z >= 5 && z <= 30) {
+                return -3.0;
+            }
+            // Wyrm Cliffside Plateau (x in [-185, -130], z in [32, 85])
+            if (x >= -185 && x <= -130 && z >= 32 && z <= 85) {
                 if (x > -140) {
                     const t = (-130 - x) / 10.0;
                     return t * 2.0;
@@ -841,6 +853,13 @@ class DarkSoulsWorld {
         // 6. Main Courtyard Starting Arena (z in [-55, 35], x in [-45, 45])
         if (x >= -45 && x <= 45 && z >= -55 && z <= 35) {
             if (!inStairTrench && (currentY === null || currentY >= -1.5)) {
+                return 0.0;
+            }
+        }
+
+        // 6b. Outside Realm: Primeval Darkroot Archtree Forest & Ashen Wilds (x in [-195, -28], z in [-90, 90])
+        if (x >= -195.0 && x <= -28.0 && z >= -90.0 && z <= 90.0) {
+            if (currentY === null || currentY >= -2.5) {
                 return 0.0;
             }
         }
@@ -1487,11 +1506,11 @@ class DarkSoulsWorld {
     buildOutsideRealm() {
         const outsideGroup = new THREE.Group();
 
-        // 1. Vast Forest Turf & Ashen Soil Ground Slab (x in [-190, -28], z in [-85, 85], y = 0.0)
-        const outdoorFloorGeo = new THREE.PlaneGeometry(162, 170);
+        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (x in [-218, -28], z in [-110, 110], y = 0.0)
+        const outdoorFloorGeo = new THREE.PlaneGeometry(192, 222);
         const outdoorFloor = new THREE.Mesh(outdoorFloorGeo, this.forestGrassMat);
         outdoorFloor.rotation.x = -Math.PI / 2;
-        outdoorFloor.position.set(-109, 0, 0);
+        outdoorFloor.position.set(-123, 0, 0);
         outdoorFloor.receiveShadow = true;
         outsideGroup.add(outdoorFloor);
 
@@ -1735,13 +1754,59 @@ class DarkSoulsWorld {
             this.createStandingBrazier(dx, 0, dz, 0x00ffaa, 3.0, 20);
         });
 
-        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm
-        // North mountain ridge: z = -86, x: -192 to -28
-        this.createWall(-110, 8, -86, 166, 18, 4);
-        // South mountain ridge: z = 86, x: -192 to -28
-        this.createWall(-110, 8, 86, 166, 18, 4);
-        // West boundary mountain: x = -193, z: -86 to 86
-        this.createWall(-193, 10, 0, 4, 22, 174);
+        // --- 7b. NEW OUTSIDE REALM 3D EXPEDITIONS ---
+        // A. Astral Meteor Crater with Starlight Monoliths (x = -160, z = -60, elev = -2.5m)
+        const craterRim = new THREE.Mesh(new THREE.TorusGeometry(12.0, 1.8, 8, 16), this.cliffRockMat);
+        craterRim.position.set(-160, -1.2, -60);
+        craterRim.rotation.x = Math.PI / 2;
+        outsideGroup.add(craterRim);
+
+        for (let cr = 0; cr < 5; cr++) {
+            const cang = (cr / 5) * Math.PI * 2;
+            const cShard = new THREE.Mesh(new THREE.ConeGeometry(0.65, 4.2, 5), this.mobCrystalMat || this.darkSteelMat);
+            cShard.position.set(-160 + Math.cos(cang) * 6.5, -0.4, -60 + Math.sin(cang) * 6.5);
+            cShard.rotation.set(Math.cos(cang) * 0.35, cang, Math.sin(cang) * 0.35);
+            outsideGroup.add(cShard);
+        }
+        const meteorCore = new THREE.Mesh(new THREE.DodecahedronGeometry(1.4), this.calamityEyeMat || this.mobCrystalMat);
+        meteorCore.position.set(-160, -1.8, -60);
+        outsideGroup.add(meteorCore);
+        const meteorLight = new THREE.PointLight(0x00f5ff, 2.5, 30.0);
+        meteorLight.position.set(-160, -0.5, -60);
+        outsideGroup.add(meteorLight);
+        this.createPathBeacon(-160, -2.5, -60, 0x00f5ff, "🌌 ASTRAL METEOR CRATER [ELEV -2.5m]", "COSMIC FALLEN STAR • MINDFLAYERS & STARLIGHT CRYSTALS", "#a5f3fc");
+
+        // B. Magma Chasm Falls (x = -180, z = -25, elev = -1.5m)
+        const magmaPool = new THREE.Mesh(new THREE.BoxGeometry(16.0, 0.4, 14.0), this.demonLavaMat || this.stoneMat);
+        magmaPool.position.set(-180, -1.5, -25);
+        outsideGroup.add(magmaPool);
+        const magmaLight = new THREE.PointLight(0xff4500, 2.8, 28.0);
+        magmaLight.position.set(-180, -0.2, -25);
+        outsideGroup.add(magmaLight);
+        this.createPathBeacon(-180, -1.5, -25, 0xff4500, "🌋 MAGMA CHASM FALLS [ELEV -1.5m]", "MOLTEN BASALT • MAGMA WYRMS & LAVA EMBER CORES", "#fed7aa");
+
+        // C. Titan Bone Cemetery (x = -85, z = 70, elev = 0m)
+        [-95, -85, -75].forEach((tbx, tbi) => {
+            const titanRib = new THREE.Mesh(new THREE.TorusGeometry(4.8, 0.45, 6, 12, Math.PI), this.dragonBoneMat);
+            titanRib.position.set(tbx, 0, 70);
+            titanRib.rotation.set(0, Math.PI / 2 + (tbi - 1) * 0.2, 0);
+            outsideGroup.add(titanRib);
+        });
+        this.createPathBeacon(-85, 0, 70, 0xa855f7, "🦴 TITAN BONE CEMETERY [NORTH GLADE]", "COLOSSAL RIBCAGES • OMEN OGRES & GRAVE HORNS", "#e9d5ff");
+
+        // D. Rotten Grove Sanctum (x = -130, z = 65, elev = 0m)
+        const rotMound = new THREE.Mesh(new THREE.SphereGeometry(4.5, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.5), this.mobPustuleMat || this.forestGrassMat);
+        rotMound.position.set(-130, 0, 65);
+        outsideGroup.add(rotMound);
+        this.createPathBeacon(-130, 0, 65, 0x22c55e, "🌺 ROTTEN GROVE SANCTUM [WEST HOLLOW]", "ARACHNID SCUTTLERS • PEST STINGERS & FUNGAL BLOOM", "#bbf7d0");
+
+        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded)
+        // North mountain ridge: z = -112, x: -220 to -28
+        this.createWall(-124, 8, -112, 196, 20, 5);
+        // South mountain ridge: z = 112, x: -220 to -28
+        this.createWall(-124, 8, 112, 196, 20, 5);
+        // West boundary mountain: x = -220, z: -112 to 112
+        this.createWall(-220, 10, 0, 5, 24, 228);
 
         // Floating forest firefly particles
         const fireflyGeo = new THREE.BufferGeometry();

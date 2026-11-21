@@ -3287,6 +3287,159 @@ class DarkSoulsCombat {
                 radius: 2.8,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'old_monk_golden_robe', theme: 'magic', bossScale: 2.0 }, x, z)
+            },
+            // ----------------------------------------------------
+            // 6 NEW TITAN & DLC LEGENDARY BOSSES (OUTSIDE & APEX ROSTER)
+            // ----------------------------------------------------
+            {
+                id: 'radahn_starscourge',
+                name: 'STARCOURGE RADAHN, GENERAL OF REDMANE',
+                title: 'Caelid Wastes &bull; Gravitational Curved Blades, Starfall Meteor Crash & Leonard Warhorse',
+                unlockLocationId: 'outside_darkroot_expanse',
+                icon: '🌠',
+                theme: 'dark',
+                bossScale: 2.8,
+                maxHp: 32000,
+                damage: 1480,
+                souls: 2000000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createStarscourgeRadahn(x, z)
+            },
+            {
+                id: 'bayle_the_dread',
+                name: 'BAYLE THE DREAD, VILE DRAKE TYRANT',
+                title: 'Jagged Peak Summit &bull; Charred Magma Breath, Lightning Talons & Molten Tail Annihilation',
+                unlockLocationId: 'wyrm_cliffside_plateau',
+                icon: '🐲',
+                theme: 'flame',
+                bossScale: 3.2,
+                maxHp: 35000,
+                damage: 1550,
+                souls: 2500000,
+                radius: 4.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createBayleTheDread(x, z)
+            },
+            {
+                id: 'messmer_the_impaler',
+                name: 'MESSMER THE IMPALER, LORD OF SHADOW FLAME',
+                title: 'Shadow Keep Specimen Storehouse &bull; 4.8m Spear of Messmer, Coiled Abyssal Serpents & Scarlet Flame',
+                unlockLocationId: 'ancient_archtree_sanctuary',
+                icon: '🔥',
+                theme: 'flame',
+                bossScale: 2.5,
+                maxHp: 31000,
+                damage: 1460,
+                souls: 1900000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createMessmerTheImpaler(x, z)
+            },
+            {
+                id: 'rellana_twin_moon',
+                name: 'RELLANA, TWIN MOON KNIGHT',
+                title: 'Castle Ensis Moonrise Chamber &bull; Twin Carian Moon Blades, Magic Wave & Flame Tornado',
+                unlockLocationId: 'outside_darkroot_expanse',
+                icon: '🌙',
+                theme: 'magic',
+                bossScale: 2.2,
+                maxHp: 29500,
+                damage: 1420,
+                souls: 1800000,
+                radius: 2.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createRellanaTwinMoon(x, z)
+            },
+            {
+                id: 'dancing_lion',
+                name: 'DIVINE BEAST DANCING LION',
+                title: 'Belurat Tower Settlement &bull; Storm Gale Cyclone, Frost Stomp & Lightning Roar',
+                unlockLocationId: 'ashen_dune_wastes',
+                icon: '🦁',
+                theme: 'holy',
+                bossScale: 2.6,
+                maxHp: 30500,
+                damage: 1440,
+                souls: 1850000,
+                radius: 3.4,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createDancingLion(x, z)
+            },
+            {
+                id: 'outside_ancient_dragon_senessax',
+                name: 'ANCIENT DRAGON SENESSAX',
+                title: 'Wyrm Cliffside Plateau &bull; Red Lightning Tempest Storm, Gravel Stone Stomp & Ancient Dragon Magma',
+                unlockLocationId: 'outside_sunken_dragon_crypt',
+                icon: '⚡',
+                theme: 'dragon',
+                bossScale: 3.1,
+                maxHp: 33500,
+                damage: 1520,
+                souls: 2200000,
+                radius: 4.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_ancient_dragon_senessax', theme: 'dragon', bossScale: 3.1 }, x, z)
+            },
+            {
+                id: 'outside_death_rite_bird',
+                name: 'DEATH RITE BIRD OF ASH',
+                title: 'Ashen Dune Hollow &bull; Ghostflame Ignition, Explosive Death Fog & Skeletal Pecking Dive',
+                unlockLocationId: 'outside_ancient_dolmen_colonnade',
+                icon: '🦅',
+                theme: 'dark',
+                bossScale: 2.7,
+                maxHp: 31000,
+                damage: 1470,
+                souls: 1950000,
+                radius: 3.6,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_death_rite_bird', theme: 'dark', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'outside_fallingstar_beast',
+                name: 'FULL-GROWN FALLINGSTAR BEAST',
+                title: 'Astral Meteor Crater &bull; Gravitational Pulse Cataclysm, Cosmic Mandible Crush & Tail Spike Whip',
+                unlockLocationId: 'outside_astral_meteor_crater',
+                icon: '☄️',
+                theme: 'cosmic',
+                bossScale: 2.9,
+                maxHp: 32500,
+                damage: 1500,
+                souls: 2100000,
+                radius: 3.9,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_fallingstar_beast', theme: 'cosmic', bossScale: 2.9 }, x, z)
+            },
+            {
+                id: 'outside_erdtree_avatar',
+                name: 'PUTRID ERDTREE AVATAR',
+                title: 'Primeval Mother Archtree &bull; Golden Landslam Shockwave, Scarlet Rot Spore Cloud & Holy Stars Volley',
+                unlockLocationId: 'outside_rotten_grove_sanctum',
+                icon: '🌳',
+                theme: 'rot',
+                bossScale: 2.6,
+                maxHp: 30000,
+                damage: 1440,
+                souls: 1850000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_erdtree_avatar', theme: 'rot', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'midra_frenzied_flame',
+                name: 'MIDRA, LORD OF FRENZIED FLAME',
+                title: "Midra's Manse Depths &bull; Greatsword of Damnation, Sun of Frenzy & Golden Flame Burst",
+                unlockLocationId: 'sunlight_dragon_ridge',
+                icon: '☀️',
+                theme: 'flame',
+                bossScale: 2.3,
+                maxHp: 33000,
+                damage: 1520,
+                souls: 2200000,
+                radius: 2.9,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createMidraFrenziedFlame(x, z)
             }
         ];
     }
@@ -3622,6 +3775,278 @@ class DarkSoulsCombat {
         ];
         lordranArchers.forEach(aMob => {
             this.createCustomMob(aMob, aMob.pos[0], aMob.pos[2], 0, aMob.pos[1]);
+        });
+
+        // Spawn Dedicated High-Tier Mobs across the Outside Realm (Darkroot Woods, Wyrm Plateau & Ashen Wastes)
+        const outsideRealmMobs = [
+            {
+                id: 'outside_treant_warden_1',
+                name: 'ANCIENT TREANT BARK GUARDIAN',
+                meshType: 'treant_guardian',
+                hp: 1400,
+                damage: 150,
+                souls: 3200,
+                speed: 2.3,
+                attackReach: 3.5,
+                behaviorType: 'Heavy Tank',
+                pos: [-60.0, 0, -32.0]
+            },
+            {
+                id: 'outside_treant_warden_2',
+                name: 'ANCIENT TREANT BARK GUARDIAN',
+                meshType: 'treant_guardian',
+                hp: 1400,
+                damage: 150,
+                souls: 3200,
+                speed: 2.3,
+                attackReach: 3.5,
+                behaviorType: 'Heavy Tank',
+                pos: [-105.0, 0, 15.0]
+            },
+            {
+                id: 'outside_cursed_basilisk_1',
+                name: 'CURSED BASILISK OF THE OUTLANDS',
+                meshType: 'cursed_basilisk',
+                hp: 850,
+                damage: 110,
+                souls: 2200,
+                speed: 3.4,
+                attackReach: 2.6,
+                behaviorType: 'Flanker',
+                pos: [-85.0, 0, 40.0]
+            },
+            {
+                id: 'outside_cursed_basilisk_2',
+                name: 'CURSED BASILISK OF THE OUTLANDS',
+                meshType: 'cursed_basilisk',
+                hp: 850,
+                damage: 110,
+                souls: 2200,
+                speed: 3.4,
+                attackReach: 2.6,
+                behaviorType: 'Flanker',
+                pos: [-125.0, 0, -35.0]
+            },
+            {
+                id: 'outside_fell_omen_1',
+                name: 'FELL OMEN GLADIATOR',
+                meshType: 'fell_omen_gladiator',
+                hp: 1650,
+                damage: 175,
+                souls: 4000,
+                speed: 2.7,
+                attackReach: 3.2,
+                behaviorType: 'Heavy Tank',
+                pos: [-135.0, 0, -18.0]
+            },
+            {
+                id: 'outside_crystal_drake_1',
+                name: 'CRYSTAL DRAKE WHELP',
+                meshType: 'crystal_drake_whelp',
+                hp: 1100,
+                damage: 135,
+                souls: 2800,
+                speed: 3.2,
+                attackReach: 3.0,
+                behaviorType: 'Flanker',
+                pos: [-148.0, 2.0, 38.0]
+            },
+            {
+                id: 'outside_crystal_drake_2',
+                name: 'CRYSTAL DRAKE WHELP',
+                meshType: 'crystal_drake_whelp',
+                hp: 1100,
+                damage: 135,
+                souls: 2800,
+                speed: 3.2,
+                attackReach: 3.0,
+                behaviorType: 'Flanker',
+                pos: [-168.0, 2.0, 55.0]
+            },
+            {
+                id: 'outside_crucible_sentinel_1',
+                name: 'CRUCIBLE KNIGHT SENTINEL',
+                meshType: 'crucible_knight_sentinel',
+                hp: 2100,
+                damage: 190,
+                souls: 5500,
+                speed: 2.5,
+                attackReach: 3.0,
+                behaviorType: 'Heavy Tank',
+                pos: [-162.0, 2.0, 46.0]
+            },
+            {
+                id: 'outside_chimera_hound_1',
+                name: 'FIRE CHIMERA HOUND',
+                meshType: 'fire_chimera_hound',
+                hp: 920,
+                damage: 125,
+                souls: 2400,
+                speed: 3.6,
+                attackReach: 2.5,
+                behaviorType: 'Flanker',
+                pos: [-78.0, 0, -45.0]
+            },
+            {
+                id: 'outside_chimera_hound_2',
+                name: 'FIRE CHIMERA HOUND',
+                meshType: 'fire_chimera_hound',
+                hp: 920,
+                damage: 125,
+                souls: 2400,
+                speed: 3.6,
+                attackReach: 2.5,
+                behaviorType: 'Flanker',
+                pos: [-110.0, 0, 35.0]
+            },
+            // --- 12 NEW 3D PROCEDURAL MOBS ACROSS OUTSIDE REALM ---
+            {
+                id: 'outside_magma_wyrm_1',
+                name: 'MAGMA WYRM TITAN',
+                meshType: 'dragonkin_wyrm',
+                hp: 1750,
+                damage: 180,
+                souls: 4500,
+                speed: 2.8,
+                attackReach: 3.6,
+                behaviorType: 'Heavy Tank',
+                pos: [-180.0, -1.5, -25.0]
+            },
+            {
+                id: 'outside_magma_wyrm_2',
+                name: 'CHARRED WYRM WARRIOR',
+                meshType: 'dragonkin_wyrm',
+                hp: 1600,
+                damage: 165,
+                souls: 4200,
+                speed: 3.0,
+                attackReach: 3.4,
+                behaviorType: 'Heavy Tank',
+                pos: [-165.0, 2.0, 60.0]
+            },
+            {
+                id: 'outside_crucible_sentinel_2',
+                name: 'CRUCIBLE SILURIA SENTINEL',
+                meshType: 'crucible_knight',
+                hp: 2200,
+                damage: 195,
+                souls: 5800,
+                speed: 2.6,
+                attackReach: 3.8,
+                behaviorType: 'Heavy Tank',
+                pos: [-110.0, 0, 12.0]
+            },
+            {
+                id: 'outside_crucible_sentinel_3',
+                name: 'CRUCIBLE ORDOVIS CHAMPION',
+                meshType: 'crucible_knight',
+                hp: 2150,
+                damage: 190,
+                souls: 5600,
+                speed: 2.7,
+                attackReach: 3.5,
+                behaviorType: 'Heavy Tank',
+                pos: [-145.0, 0, -55.0]
+            },
+            {
+                id: 'outside_abductor_virgin_1',
+                name: 'VOLCANO ABDUCTOR VIRGIN',
+                meshType: 'abductor_virgin',
+                hp: 2400,
+                damage: 210,
+                souls: 6200,
+                speed: 3.2,
+                attackReach: 3.6,
+                behaviorType: 'Heavy Tank',
+                pos: [-135.0, 0, -35.0]
+            },
+            {
+                id: 'outside_abductor_virgin_2',
+                name: 'PENDULUM EXECUTIONER VIRGIN',
+                meshType: 'abductor_virgin',
+                hp: 2350,
+                damage: 205,
+                souls: 6000,
+                speed: 3.3,
+                attackReach: 3.7,
+                behaviorType: 'Heavy Tank',
+                pos: [-65.0, 0, 15.0]
+            },
+            {
+                id: 'outside_cthulhu_mindflayer_1',
+                name: 'ASTRAL VOID MINDFLAYER',
+                meshType: 'cthulhu_mindflayer',
+                hp: 1350,
+                damage: 160,
+                souls: 4400,
+                speed: 3.1,
+                attackReach: 3.8,
+                behaviorType: 'Ranged',
+                pos: [-160.0, -2.5, -60.0]
+            },
+            {
+                id: 'outside_cthulhu_mindflayer_2',
+                name: 'COSMIC TENDRIL CHANNELLER',
+                meshType: 'cthulhu_mindflayer',
+                hp: 1300,
+                damage: 155,
+                souls: 4200,
+                speed: 3.2,
+                attackReach: 3.6,
+                behaviorType: 'Ranged',
+                pos: [-150.0, -2.5, -52.0]
+            },
+            {
+                id: 'outside_omen_ogre_1',
+                name: 'BELURAT HORNSENT BERSERKER',
+                meshType: 'omen_ogre',
+                hp: 2100,
+                damage: 195,
+                souls: 5500,
+                speed: 2.8,
+                attackReach: 3.7,
+                behaviorType: 'Heavy Tank',
+                pos: [-85.0, 0, 70.0]
+            },
+            {
+                id: 'outside_omen_ogre_2',
+                name: 'SUBTERRANEAN HORNED OGRE',
+                meshType: 'omen_ogre',
+                hp: 2050,
+                damage: 190,
+                souls: 5300,
+                speed: 2.9,
+                attackReach: 3.6,
+                behaviorType: 'Heavy Tank',
+                pos: [-95.0, 0, 62.0]
+            },
+            {
+                id: 'outside_arachnid_scuttler_1',
+                name: 'BLACK CHITIN STINGER BEAST',
+                meshType: 'arachnid_scuttler',
+                hp: 1450,
+                damage: 165,
+                souls: 4600,
+                speed: 3.6,
+                attackReach: 3.4,
+                behaviorType: 'Flanker',
+                pos: [-130.0, 0, 65.0]
+            },
+            {
+                id: 'outside_arachnid_scuttler_2',
+                name: 'CAELID ROT SCUTTLER',
+                meshType: 'arachnid_scuttler',
+                hp: 1400,
+                damage: 160,
+                souls: 4400,
+                speed: 3.7,
+                attackReach: 3.3,
+                behaviorType: 'Flanker',
+                pos: [-142.0, 0, 72.0]
+            }
+        ];
+        outsideRealmMobs.forEach(oMob => {
+            this.createCustomMob(oMob, oMob.pos[0], oMob.pos[2], 0, oMob.pos[1]);
         });
         
         // Boss
