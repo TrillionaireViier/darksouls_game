@@ -90,7 +90,7 @@ class DarkSoulsCharacters {
         sCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         sCtx.lineWidth = 2;
         for (let i = 0; i < 512; i += 12) {
-            scalesCtx.beginPath();
+            sCtx.beginPath();
             sCtx.moveTo(i, 0);
             sCtx.lineTo(i, 512);
             sCtx.stroke();
@@ -110,7 +110,7 @@ class DarkSoulsCharacters {
             sCtx.fillStyle = '#f5d061';
             sCtx.beginPath();
             sCtx.arc(cx, cy, 10, 0, Math.PI * 2);
-            scalesCtx.fill();
+            sCtx.fill();
             sCtx.fillStyle = '#543b0c';
             sCtx.beginPath();
             sCtx.arc(cx - 2, cy - 2, 4, 0, Math.PI * 2);
