@@ -1494,22 +1494,22 @@ class DarkSoulsCharacters {
         const isKatana = ['uchigatana', 'rivers_of_blood', 'moonveil', 'kusabimaru', 'chikage', 'rakuyo', 'chaos_blade', 'mortal_blade', 'hand_of_malenia', 'frayed_blade'].includes(weaponId);
 
         if (isPolearm) {
-            newWeapon.rotation.set(0.16, 0.05, -0.06);
+            newWeapon.rotation.set(1.95, 0.05, -0.06);
             newWeapon.position.set(0.02, 0.04, 0.02);
         } else if (isColossal) {
-            newWeapon.rotation.set(0.32, 0.10, -0.16);
+            newWeapon.rotation.set(2.10, 0.08, -0.14);
             newWeapon.position.set(0.02, 0.05, 0.06);
         } else if (isGreatImpact) {
-            newWeapon.rotation.set(0.28, 0.10, -0.14);
+            newWeapon.rotation.set(2.05, 0.08, -0.12);
             newWeapon.position.set(0.02, 0.04, 0.06);
         } else if (weaponId === 'torch') {
             newWeapon.rotation.set(0.12, 0, -0.05);
             newWeapon.position.set(0, 0.06, 0.04);
         } else if (isKatana) {
-            newWeapon.rotation.set(0.32, 0.08, -0.12);
+            newWeapon.rotation.set(2.05, 0.06, -0.10);
             newWeapon.position.set(0.02, 0.04, 0.06);
         } else {
-            newWeapon.rotation.set(1.15, 0.12, -0.20);
+            newWeapon.rotation.set(2.05, 0.10, -0.12);
             newWeapon.position.set(0.04, -0.02, 0.08);
         }
         rHand.add(newWeapon);
@@ -1553,7 +1553,7 @@ class DarkSoulsCharacters {
         rightShoulder.add(rHand);
 
         const swordGroup = this.createWeaponMesh('sword');
-        swordGroup.rotation.set(1.15, 0.12, -0.20);
+        swordGroup.rotation.set(2.05, 0.10, -0.12);
         swordGroup.position.set(0.04, -0.02, 0.08);
         rHand.add(swordGroup);
 

@@ -6964,18 +6964,14 @@
         function teleportOrHighlightPath(path) {
             if (!window.game) return;
             const p = window.game;
-            if (path === 'ramparts') {
-                p.cameraYaw = Math.PI / 2;
-                p.cameraPitch = 0.22;
-                p.showNotification("▲ HIGH RAMPARTS (UP): Ascend East Grand Stairs (+6m elevation • Archer battlements & overlook watchtower)");
-            } else if (path === 'catacombs') {
-                p.cameraYaw = -Math.PI / 2;
-                p.cameraPitch = 0.22;
-                p.showNotification("▼ FLOODED CATACOMBS (DOWN): Descend West Sunken Crypt (-5m depth • Murky flooded corridor & tombs)");
+            if (path === 'catacombs') {
+                p.teleportPlayer(-20.0, -4.92, 32.0, "💀 SUNKEN CATACOMBS (DEPTH: -5m)");
+            } else if (path === 'ramparts') {
+                p.teleportPlayer(20.0, 6.0, 32.0, "👑 HIGH RAMPARTS (ELEV: +6m)");
             } else if (path === 'bridge') {
-                p.cameraYaw = 0;
-                p.cameraPitch = 0.22;
-                p.showNotification("⚔️ ROYAL BRIDGE (MAIN): Direct torch-lit royal bridge (0m • Straight to the White Light Fog Gate)");
+                p.teleportPlayer(0.0, 0.0, 32.0, "⚔️ ROYAL BRIDGE (MAIN ROAD: 0m)");
+            } else if (path === 'bonfire' || path === 'courtyard') {
+                p.teleportPlayer(0.0, 0.0, 0.0, "🔥 FIRELINK BONFIRE (COURTYARD: 0m)");
             }
         }
 
@@ -7219,25 +7215,25 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/audio.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/lore_items.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/world.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/character.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/siege_warfare.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/heraldry_nobility.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/apothecary_crafting.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/collision_system.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/qa_bot_tester.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/combat.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/postprocessing.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/qa_suite.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/blacksmith_forge.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/inventory_system.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/compendium_300_models.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/death_quotes_300.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/game.js?v=20261121_COORDINATES_HUD_V4"></script>
-    <script src="js/dev_map.js?v=20261121_COORDINATES_HUD_V4"></script>
+    <script src="js/three.min.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/audio.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/lore_items.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/world.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/character.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/siege_warfare.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/heraldry_nobility.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/apothecary_crafting.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/collision_system.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/qa_bot_tester.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/combat.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/postprocessing.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/qa_suite.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/blacksmith_forge.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/inventory_system.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/compendium_300_models.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/death_quotes_300.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/game.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
+    <script src="js/dev_map.js?v=20261121_UNDERGROUND_TELEPORT_SWORD_FIX_V6"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {

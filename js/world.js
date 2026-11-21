@@ -1110,6 +1110,26 @@ class DarkSoulsWorld {
             this.createStandingBrazier(-18.5, -4.9, caz, 0x00ffaa, 2.5, 16);
         }
 
+        // Return Portal to Surface Courtyard from inside the Catacombs (Entryway at z=28)
+        this.interactables.push({
+            type: 'route_portal',
+            position: new THREE.Vector3(-20, -4.92, 28),
+            radius: 5.5,
+            prompt: '☀️ [ E ] TELEPORT TO SURFACE (COURTYARD: 0m)',
+            targetPos: new THREE.Vector3(0, 0, 0),
+            label: 'SURFACE COURTYARD'
+        });
+
+        // Catacombs Exit Portal back to surface before Fog Gate (z=266)
+        this.interactables.push({
+            type: 'route_portal',
+            position: new THREE.Vector3(-20, -4.92, 266),
+            radius: 5.5,
+            prompt: '⚔️ [ E ] ASCEND TO SURFACE (BOSS FOG GATE: 0m)',
+            targetPos: new THREE.Vector3(0, 0, 274),
+            label: 'SURFACE BOSS GATE'
+        });
+
         // Crypt Exit Ascent Stairs back to Fog Gate area (z=268 to 274)
         for (let i = 0; i < 6; i++) {
             const stepZ = 268.5 + i * 1.0;
@@ -1806,6 +1826,31 @@ class DarkSoulsWorld {
 
         // 2. Authentic Floor Soapstone Guidance Rune lying flat on cobblestone
         this.createFloorSoapstone(x, y, z + 2.5, titleColor || ('#' + colorHex.toString(16).padStart(6, '0')), title, desc);
+
+        // 3. Interactive Teleport Portal
+        let targetPos = null;
+        let promptText = `[ E ] TELEPORT: ${title}`;
+        if (title.includes('CATACOMBS') || title.includes('SUNKEN')) {
+            targetPos = new THREE.Vector3(-20, -4.92, 32);
+            promptText = `[ E ] TELEPORT TO UNDERGROUND CATACOMBS (-5m)`;
+        } else if (title.includes('RAMPARTS') || title.includes('HIGH')) {
+            targetPos = new THREE.Vector3(20, 6.0, 32);
+            promptText = `[ E ] TELEPORT TO HIGH RAMPARTS (+6m)`;
+        } else if (title.includes('BRIDGE') || title.includes('ROYAL')) {
+            targetPos = new THREE.Vector3(0, 0, 32);
+            promptText = `[ E ] TELEPORT TO ROYAL BRIDGE (0m)`;
+        }
+
+        if (targetPos) {
+            this.interactables.push({
+                type: 'route_portal',
+                position: new THREE.Vector3(x, y, z),
+                radius: 4.8,
+                prompt: promptText,
+                targetPos: targetPos,
+                label: title
+            });
+        }
 
         this.particles.push({
             mesh: flameCore,

@@ -245,6 +245,16 @@ class DarkSoulsGame {
         this.showNotification(isHidden ? "📍 COORDINATES DISPLAY ON" : "📍 COORDINATES DISPLAY OFF");
     }
 
+    teleportPlayer(x, y, z, label = "") {
+        if (!this.playerMesh) return;
+        this.playerMesh.position.set(x, y, z);
+        this.playerVelocity.set(0, 0, 0);
+        if (this.audio && this.audio.playRoll) this.audio.playRoll();
+        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(this.playerMesh.position, true);
+        if (this.shakeCamera) this.shakeCamera(0.15, 0.2);
+        this.showNotification(`⚡ TELEPORTED TO: ${label || `[X: ${x.toFixed(1)}, Y: ${y.toFixed(1)}, Z: ${z.toFixed(1)}]`}`);
+    }
+
     bindEvents() {
         // Keyboard inputs (Full English & Cyrillic Russian Layout Support)
         window.addEventListener('keydown', (e) => {
@@ -733,6 +743,9 @@ class DarkSoulsGame {
                     }
                 } else if (item.type === 'merchant') {
                     this.openMerchantModal();
+                    return;
+                } else if (item.type === 'route_portal') {
+                    this.teleportPlayer(item.targetPos.x, item.targetPos.y, item.targetPos.z, item.label);
                     return;
                 } else if (item.type === 'fog_gate' && !this.world.fogTraversed) {
                     this.world.traverseFogGate();
@@ -1612,6 +1625,11 @@ class DarkSoulsGame {
 
         // 3. TERRAIN ELEVATION & GRAVITY
         const pPos = this.playerMesh.position;
+        // ABYSS RESCUE: Prevent falling into infinite void
+        if (pPos.y < -12.0) {
+            this.teleportPlayer(0, 0, 0, "🔥 FIRELINK BONFIRE (RESCUED FROM ABYSS)");
+            return;
+        }
         const targetGroundY = this.world.getGroundHeight(pPos.x, pPos.z, pPos.y);
         const heightDiff = pPos.y - targetGroundY;
 
@@ -2484,28 +2502,26 @@ class DarkSoulsGame {
 
         const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
         // Natural Dark Souls ready stance: sword held forward & angled slightly down at hip level
-        let targetRotX = 1.15, targetRotY = 0.12, targetRotZ = -0.20;
+        let targetRotX = 2.05, targetRotY = 0.10, targetRotZ = -0.12;
         let targetPosX = 0.04, targetPosY = -0.02, targetPosZ = 0.08;
 
         if (wpnId === 'halberd') {
-            // Authentic Dark Souls halberd polearm stance (held upright, balanced forward)
-            targetRotX = 0.16; targetRotY = 0.05; targetRotZ = -0.06;
+            targetRotX = 1.95; targetRotY = 0.05; targetRotZ = -0.06;
             targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.02;
         } else if (wpnId === 'zweihander' || wpnId === 'dark_moon_greatsword') {
-            // Colossal greatsword held upright in ready posture
-            targetRotX = 0.32; targetRotY = 0.10; targetRotZ = -0.16;
+            targetRotX = 2.10; targetRotY = 0.08; targetRotZ = -0.14;
             targetPosX = 0.02; targetPosY = 0.05; targetPosZ = 0.06;
         } else if (wpnId === 'dragontooth') {
-            targetRotX = 0.28; targetRotY = 0.10; targetRotZ = -0.14;
+            targetRotX = 2.05; targetRotY = 0.08; targetRotZ = -0.12;
             targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
         } else if (wpnId === 'torch') {
             targetRotX = 0.12; targetRotY = 0.0; targetRotZ = -0.05;
             targetPosX = 0.0; targetPosY = 0.06; targetPosZ = 0.04;
         } else if (wpnId === 'uchigatana' || wpnId === 'rivers_of_blood') {
-            targetRotX = 0.32; targetRotY = 0.08; targetRotZ = -0.12;
+            targetRotX = 2.05; targetRotY = 0.06; targetRotZ = -0.10;
             targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
         } else if (wpnId === 'moonlight') {
-            targetRotX = 0.32; targetRotY = 0.08; targetRotZ = -0.14;
+            targetRotX = 2.05; targetRotY = 0.08; targetRotZ = -0.12;
             targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
         }
 
@@ -3353,7 +3369,7 @@ class DarkSoulsGame {
             if (uData.rightShoulder) uData.rightShoulder.rotation.set(0, 0, 0);
             if (uData.leftHip) uData.leftHip.rotation.set(0, 0, 0);
             if (uData.rightHip) uData.rightHip.rotation.set(0, 0, 0);
-            if (uData.swordGroup) { uData.swordGroup.rotation.set(0, 0, 0); uData.swordGroup.position.set(0.35, 0.5, 0.35); }
+            if (uData.swordGroup) { uData.swordGroup.rotation.set(2.05, 0.10, -0.12); uData.swordGroup.position.set(0.04, -0.02, 0.08); }
         }
 
         // Respawns hollow soldiers
