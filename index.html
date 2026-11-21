@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261122_SANCTUARY_HEAL_V16';
+            var TARGET_BUILD = '20261122_COORDS_ESC_V17';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1855,9 +1855,9 @@
         <span id="prompt-text">[ E ] REST AT BONFIRE</span>
     </div>
 
-    <!-- Live Real-Time Coordinate HUD [F3 to toggle] -->
-    <div id="live-coords-hud" onclick="if(window.game&&window.game.toggleCoordsHUD)window.game.toggleCoordsHUD();" title="Real-Time Player Coordinates [Click or press F3 to toggle]" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 8px; background: rgba(8, 12, 18, 0.85); border: 1px solid rgba(120, 180, 240, 0.55); border-radius: 4px; padding: 4px 14px; font-family: monospace; font-size: 0.80rem; color: #aadcff; box-shadow: 0 2px 12px rgba(0,0,0,0.8); cursor: pointer; user-select: none; transition: background 0.2s ease;">
-        <span style="color: #ffd778; font-weight: bold;">📍 COORDS [F3]:</span>
+    <!-- Live Real-Time Coordinate HUD [Shown when ESC is pressed] -->
+    <div id="live-coords-hud" onclick="if(window.game&&window.game.toggleCoordsHUD)window.game.toggleCoordsHUD();" title="Real-Time Player Coordinates [Shown on ESC key]" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 300; display: none; align-items: center; gap: 8px; background: rgba(8, 12, 18, 0.92); border: 1.5px solid rgba(120, 180, 240, 0.75); border-radius: 6px; padding: 6px 18px; font-family: monospace; font-size: 0.85rem; color: #aadcff; box-shadow: 0 4px 18px rgba(0,0,0,0.9), 0 0 14px rgba(120,180,240,0.3); cursor: pointer; user-select: none; transition: background 0.2s ease;">
+        <span style="color: #ffd778; font-weight: bold;">📍 COORDS [ESC]:</span>
         <span id="coords-text">X: 0.0m &bull; Y: 0.0m &bull; Z: 0.0m</span>
     </div>
 
@@ -6867,6 +6867,7 @@
                     <div><span style="color: #b8a896;">Active Weapon:</span> <strong id="esc-stat-weapon" style="color: #88ccff;">Straight Sword</strong></div>
                     <div><span style="color: #b8a896;">Equipped Armor:</span> <strong id="esc-stat-skin" style="color: #e0c896;">WARRIOR</strong></div>
                     <div><span style="color: #b8a896;">Current Zone:</span> <strong id="esc-stat-zone" style="color: #00ffaa;">Royal Bridge (0m)</strong></div>
+                    <div><span style="color: #b8a896;">Coordinates:</span> <strong id="esc-stat-coords" style="color: #aadcff; font-family: monospace;">X: 0.0m &bull; Y: 0.0m &bull; Z: 0.0m</strong></div>
                     <div><span style="color: #b8a896;">Lords Defeated:</span> <strong id="esc-stat-bosses" style="color: #ff9944;">0 / 16</strong></div>
                     <div><span style="color: #b8a896;">Lore Items:</span> <strong id="esc-stat-lore" style="color: #ffd778;">0 / 60</strong></div>
                 </div>
@@ -7069,6 +7070,8 @@
         function openQuickMenuModal() {
             const modal = document.getElementById('quick-menu-modal');
             if (modal) modal.style.display = 'flex';
+            const hud = document.getElementById('live-coords-hud');
+            if (hud) hud.style.display = 'flex';
             if (window.game && window.game.updateEscapeMenuUI) {
                 window.game.updateEscapeMenuUI();
             }
@@ -7077,6 +7080,8 @@
         function closeQuickMenuModal() {
             const modal = document.getElementById('quick-menu-modal');
             if (modal) modal.style.display = 'none';
+            const hud = document.getElementById('live-coords-hud');
+            if (hud) hud.style.display = 'none';
         }
 
         function openBossSelectModal() {
@@ -7913,6 +7918,8 @@
             const openModals = Array.from(document.querySelectorAll('.modal-overlay')).filter(m => m.style.display === 'flex' || m.style.display === 'block');
             if (openModals.length > 0) {
                 openModals.forEach(m => m.style.display = 'none');
+                const hud = document.getElementById('live-coords-hud');
+                if (hud) hud.style.display = 'none';
                 return;
             }
 
@@ -7959,25 +7966,25 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/audio.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/lore_items.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/world.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/character.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/siege_warfare.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/collision_system.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/combat.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/postprocessing.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/qa_suite.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/inventory_system.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/compendium_300_models.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/death_quotes_300.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/game.js?v=20261122_SANCTUARY_HEAL_V16"></script>
-    <script src="js/dev_map.js?v=20261122_SANCTUARY_HEAL_V16"></script>
+    <script src="js/three.min.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/audio.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/lore_items.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/world.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/character.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/siege_warfare.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/collision_system.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/combat.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/postprocessing.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/qa_suite.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/inventory_system.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/compendium_300_models.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/death_quotes_300.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/game.js?v=20261122_COORDS_ESC_V17"></script>
+    <script src="js/dev_map.js?v=20261122_COORDS_ESC_V17"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {

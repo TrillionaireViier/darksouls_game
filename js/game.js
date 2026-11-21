@@ -3366,6 +3366,11 @@ class DarkSoulsGame {
             this.closeNextLordModal();
             if (this.closeLocationsModal) this.closeLocationsModal();
             if (window.qaSuite && window.qaSuite.closeUI) window.qaSuite.closeUI();
+
+            // Hide coordinates display when resuming battle
+            const hud = document.getElementById('live-coords-hud');
+            if (hud) hud.style.display = 'none';
+
             this.showNotification("⚔️ BATTLE RESUMED");
             return;
         }
@@ -3382,6 +3387,10 @@ class DarkSoulsGame {
         if (this.updateEscapeMenuUI) {
             this.updateEscapeMenuUI();
         }
+
+        // Show coordinates HUD when Escape button is pressed
+        const hud = document.getElementById('live-coords-hud');
+        if (hud) hud.style.display = 'flex';
 
         // 4. Smoothly scroll header actions to start and trigger golden pulse
         const bar = document.getElementById('header-actions-bar') || document.querySelector('.header-actions');
@@ -3855,6 +3864,14 @@ class DarkSoulsGame {
         const p = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
         const zoneName = p.y <= -3.5 ? 'Catacombs (-5m Depth)' : (p.x > 12 ? 'High Ramparts (+6m)' : (p.z > 95 ? 'Boss Arena' : 'Royal Bridge (0m)'));
         if (elZone) elZone.textContent = zoneName;
+
+        const elCoords = document.getElementById('esc-stat-coords');
+        if (this.playerMesh) {
+            const coordHtml = `X: <b style="color:#ffffff;">${p.x.toFixed(1)}m</b> &bull; Y: <b style="color:#ffffff;">${p.y.toFixed(1)}m</b> &bull; Z: <b style="color:#ffffff;">${p.z.toFixed(1)}m</b>`;
+            if (elCoords) elCoords.innerHTML = coordHtml;
+            const liveText = document.getElementById('coords-text');
+            if (liveText) liveText.innerHTML = coordHtml;
+        }
 
         const defeatedCount = (this.combat.defeatedBosses && this.combat.defeatedBosses.length) || 0;
         if (elBosses) elBosses.textContent = `${defeatedCount} / 16`;
