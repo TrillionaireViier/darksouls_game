@@ -1160,6 +1160,249 @@ class DarkSoulsWorld {
         this.createStandingBrazier(60, 2.0, -22, 0xffd700, 4.5, 30);
         this.createFloorSoapstone(60, 2.0, -17, '#ffe066', "⚡ LIMGRAVE STORMHILL", "Golden Erdtree windswept heights");
 
+        
+        // --- 30 EXTENDED LOCATIONS 3D GEOMETRY ---
+
+        // 1. Chasm of the Abyss - Primordial Father's Lair
+        const plat_0 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_0.position.set(-40, -11.6, 130);
+        plat_0.receiveShadow = true;
+        this.scene.add(plat_0);
+        this.createStandingBrazier(-40, -11, 125, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(-40, -11, 130, '#aa44ff', "Chasm of the Abyss", "A terrifying pitch-black abyss of pulsating huma");
+    
+        // 2. Ash Lake - Great Stone Dragon Hollow
+        const plat_1 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_1.position.set(-15, -0.6, -95);
+        plat_1.receiveShadow = true;
+        this.scene.add(plat_1);
+        this.createStandingBrazier(-15, 0, -100, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(-15, 0, -95, '#ffaa44', "Ash Lake", "An endless white sand shore beneath towering sto");
+    
+        // 3. Painted World of Ariamis - Phalanx Courtyard
+        const plat_2 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_2.position.set(32, 1.4, 145);
+        plat_2.receiveShadow = true;
+        this.scene.add(plat_2);
+        this.createStandingBrazier(32, 2, 140, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(32, 2, 145, '#00ccff', "Painted World of Ariamis", "Snow-swept courtyard of decaying gothic towers w");
+    
+        // 4. New Londo - Crimson Sealer's Floodgate
+        const plat_3 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_3.position.set(-28, -7.1, 75);
+        plat_3.receiveShadow = true;
+        this.scene.add(plat_3);
+        this.createStandingBrazier(-28, -6.5, 70, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(-28, -6.5, 75, '#aa44ff', "New Londo", "The high stone sluice mechanism that holds back ");
+    
+        // 5. Lost Izalith - Lava Throne of Chaos
+        const plat_4 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_4.position.set(-48, -10.6, 150);
+        plat_4.receiveShadow = true;
+        this.scene.add(plat_4);
+        this.createStandingBrazier(-48, -10, 145, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(-48, -10, 150, '#ffaa44', "Lost Izalith", "A titanic subterranean dome choked with searing ");
+    
+        // 6. Catacombs - Vamos' Secret Crypt Wall
+        const plat_5 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_5.position.set(-26, -6.1, 60);
+        plat_5.receiveShadow = true;
+        this.scene.add(plat_5);
+        this.createStandingBrazier(-26, -5.5, 55, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(-26, -5.5, 60, '#aa44ff', "Catacombs", "A hidden skeletal blacksmith workshop carved beh");
+    
+        // 7. Heide's Tower - Cathedral of Blue Ocean Pier
+        const plat_6 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_6.position.set(-38, 0.4, -60);
+        plat_6.receiveShadow = true;
+        this.scene.add(plat_6);
+        this.createStandingBrazier(-38, 1, -65, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(-38, 1, -60, '#ffaa44', "Heide's Tower", "Submerged turquoise maritime arches jutting from");
+    
+        // 8. Iron Keep - Smelter Demon Furnace Bridge
+        const plat_7 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_7.position.set(42, 5.9, 115);
+        plat_7.receiveShadow = true;
+        this.scene.add(plat_7);
+        this.createStandingBrazier(42, 6.5, 110, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(42, 6.5, 115, '#ffaa44', "Iron Keep", "A massive iron fortress sinking into boiling red");
+    
+        // 9. Shrine of Amana - Milfanito Water Altar
+        const plat_8 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_8.position.set(-50, -4.6, -80);
+        plat_8.receiveShadow = true;
+        this.scene.add(plat_8);
+        this.createStandingBrazier(-50, -4, -85, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(-50, -4, -80, '#aa44ff', "Shrine of Amana", "A serene flooded cavern glowing with luminous az");
+    
+        // 10. Undead Crypt - Grave Warden Agdayne's Hall
+        const plat_9 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_9.position.set(-20, -7.6, 160);
+        plat_9.receiveShadow = true;
+        this.scene.add(plat_9);
+        this.createStandingBrazier(-20, -7, 155, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(-20, -7, 160, '#aa44ff', "Undead Crypt", "A silent cavern of tombs where light is forbidde");
+    
+        // 11. Harvest Valley - Poison Mire Excavation
+        const plat_10 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_10.position.set(28, -3.6, 95);
+        plat_10.receiveShadow = true;
+        this.scene.add(plat_10);
+        this.createStandingBrazier(28, -3, 90, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(28, -3, 95, '#aa44ff', "Harvest Valley", "Deep toxic green quarry pits filled with sulfur ");
+    
+        // 12. Doors of Pharros - Gyrm Aqueduct Basin
+        const plat_11 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_11.position.set(-32, 1.9, 80);
+        plat_11.receiveShadow = true;
+        this.scene.add(plat_11);
+        this.createStandingBrazier(-32, 2.5, 75, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(-32, 2.5, 80, '#00ccff', "Doors of Pharros", "Ancient flooded stone halls honeycombed with Pha");
+    
+        // 13. Irithyll Dungeon - Profaned Flame Well
+        const plat_12 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_12.position.set(-42, -5.6, 100);
+        plat_12.receiveShadow = true;
+        this.scene.add(plat_12);
+        this.createStandingBrazier(-42, -5, 95, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(-42, -5, 100, '#aa44ff', "Irithyll Dungeon", "A grim stone penitentiary of branding irons and ");
+    
+        // 14. Grand Archives - Twin Princes' Bedchamber
+        const plat_13 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_13.position.set(18, 13.4, 140);
+        plat_13.receiveShadow = true;
+        this.scene.add(plat_13);
+        this.createStandingBrazier(18, 14, 135, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(18, 14, 140, '#ffaa44', "Grand Archives", "The gilded rooftop throne room of Lothric Castle");
+    
+        // 15. Cathedral of the Deep - Cleansing Chapel Roof
+        const plat_14 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_14.position.set(-18, 7.4, 70);
+        plat_14.receiveShadow = true;
+        this.scene.add(plat_14);
+        this.createStandingBrazier(-18, 8, 65, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(-18, 8, 70, '#00ccff', "Cathedral of the Deep", "Dizzying narrow slate roofs and flying buttresse");
+    
+        // 16. Untended Graves - Dark Shrine of Gundyr
+        const plat_15 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_15.position.set(35, -3.6, -65);
+        plat_15.receiveShadow = true;
+        this.scene.add(plat_15);
+        this.createStandingBrazier(35, -3, -70, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(35, -3, -65, '#aa44ff', "Untended Graves", "An abyss-veiled duplicate of Firelink Shrine whe");
+    
+        // 17. The Ringed City - Midir's Abyssal Chasm
+        const plat_16 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_16.position.set(25, -12.6, 160);
+        plat_16.receiveShadow = true;
+        this.scene.add(plat_16);
+        this.createStandingBrazier(25, -12, 155, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(25, -12, 160, '#aa44ff', "The Ringed City", "The deepest cavern at the edge of the world wher");
+    
+        // 18. Old Yharnam - Djura's Gatling Tower
+        const plat_17 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_17.position.set(-22, 8.4, 45);
+        plat_17.receiveShadow = true;
+        this.scene.add(plat_17);
+        this.createStandingBrazier(-22, 9, 40, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(-22, 9, 45, '#00ccff', "Old Yharnam", "A burning ruined city of ash and crucifix beasts");
+    
+        // 19. Castle Cainhurst - Annalise's Throne Roof
+        const plat_18 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_18.position.set(38, 10.4, 105);
+        plat_18.receiveShadow = true;
+        this.scene.add(plat_18);
+        this.createStandingBrazier(38, 11, 100, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(38, 11, 105, '#00ccff', "Castle Cainhurst", "The frozen gothic snow spires of the Vileblood c");
+    
+        // 20. Upper Cathedral Ward - Choir Orphanage
+        const plat_19 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_19.position.set(12, 6.9, 95);
+        plat_19.receiveShadow = true;
+        this.scene.add(plat_19);
+        this.createStandingBrazier(12, 7.5, 90, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(12, 7.5, 95, '#aa44ff', "Upper Cathedral Ward", "A moon-veiled sanctuary of cosmic experimentatio");
+    
+        // 21. Hemwick Charnel Lane - Witch Abode
+        const plat_20 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_20.position.set(-36, 0.4, 35);
+        plat_20.receiveShadow = true;
+        this.scene.add(plat_20);
+        this.createStandingBrazier(-36, 1, 30, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(-36, 1, 35, '#aa44ff', "Hemwick Charnel Lane", "Gloomy hill village of crooked gravestones, bone");
+    
+        // 22. Hirata Estate - Burning Main Hall
+        const plat_21 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_21.position.set(-16, 2.4, -50);
+        plat_21.receiveShadow = true;
+        this.scene.add(plat_21);
+        this.createStandingBrazier(-16, 3, -55, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(-16, 3, -50, '#ffaa44', "Hirata Estate", "A magnificent bamboo estate consumed by raging f");
+    
+        // 23. Ashina Castle - Upper Tower Ashina Dojo
+        const plat_22 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_22.position.set(8, 9.4, 50);
+        plat_22.receiveShadow = true;
+        this.scene.add(plat_22);
+        this.createStandingBrazier(8, 10, 45, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(8, 10, 50, '#ffaa44', "Ashina Castle", "A pristine tatami mat dojo atop Ashina Castle wh");
+    
+        // 24. Sunken Valley - Gun Fort Iron Cavern
+        const plat_23 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_23.position.set(46, -2.6, 60);
+        plat_23.receiveShadow = true;
+        this.scene.add(plat_23);
+        this.createStandingBrazier(46, -2, 55, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(46, -2, 60, '#00ccff', "Sunken Valley", "A fortified iron-gated canyon where elite sniper");
+    
+        // 25. Caelid - Sellia, Town of Sorcery
+        const plat_24 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_24.position.set(-58, 1.4, 70);
+        plat_24.receiveShadow = true;
+        this.scene.add(plat_24);
+        this.createStandingBrazier(-58, 2, 65, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(-58, 2, 70, '#00ccff', "Caelid", "A spectral town beneath the scarlet sky where bl");
+    
+        // 26. Nokron, Eternal City - Ancestral Woods
+        const plat_25 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_25.position.set(22, -8.6, 120);
+        plat_25.receiveShadow = true;
+        this.scene.add(plat_25);
+        this.createStandingBrazier(22, -8, 115, 0xaa44ff, 4.0, 26);
+        this.createFloorSoapstone(22, -8, 120, '#aa44ff', "Nokron, Eternal City", "An underground city under a star-strewn false co");
+    
+        // 27. Altus Plateau - Leyndell Capital Ramparts
+        const plat_26 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_26.position.set(50, 7.4, -30);
+        plat_26.receiveShadow = true;
+        this.scene.add(plat_26);
+        this.createStandingBrazier(50, 8, -35, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(50, 8, -30, '#ffaa44', "Altus Plateau", "Golden autumn grasslands stretching towards the ");
+    
+        // 28. Mountaintops of the Giants - Flame Cauldron
+        const plat_27 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_27.position.set(30, 15.4, 150);
+        plat_27.receiveShadow = true;
+        this.scene.add(plat_27);
+        this.createStandingBrazier(30, 16, 145, 0xffaa44, 4.0, 26);
+        this.createFloorSoapstone(30, 16, 150, '#ffaa44', "Mountaintops of the Giants", "A colossal iron cauldron rising from eternal bli");
+    
+        // 29. Shadow Realm - Scadu Altus Highroad Cross
+        const plat_28 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_28.position.set(-62, 4.4, -10);
+        plat_28.receiveShadow = true;
+        this.scene.add(plat_28);
+        this.createStandingBrazier(-62, 5, -15, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(-62, 5, -10, '#00ccff', "Shadow Realm", "A haunted shadow highland under the weeping veil");
+    
+        // 30. Belurat - Tower Settlement Stage
+        const plat_29 = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 1.2, 12), this.stoneMat);
+        plat_29.position.set(-44, 3.4, 15);
+        plat_29.receiveShadow = true;
+        this.scene.add(plat_29);
+        this.createStandingBrazier(-44, 4, 10, 0x00ccff, 4.0, 26);
+        this.createFloorSoapstone(-44, 4, 15, '#00ccff', "Belurat", "Ancient spiral streets carved from storm-grey st");
+    
         // ----------------------------------------------------
         // PATH 1: THE HIGH CASTLE RAMPARTS (UP: Y = 6.0)
         // Grand Stone Staircase, Battlements, Overlooks, Watchtower

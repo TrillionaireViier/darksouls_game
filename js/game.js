@@ -4564,7 +4564,7 @@ class DarkSoulsGame {
         if (!container) return;
 
         const locs = window.DARK_SOULS_LOCATIONS || [];
-        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill'];
+        const unlocked = this.unlockedLocations || ['royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill', 'ds1_chasm_of_abyss_manus', 'ds1_ash_lake_dragon_tree', 'ds1_painted_world_statue', 'ds1_new_londo_sealer', 'ds1_lost_izalith_bed', 'ds1_catacombs_blacksmith', 'ds2_heides_blue_cathedral', 'ds2_iron_keep_smelter', 'ds2_shrine_of_amana_altar', 'ds2_undead_crypt_agdayne', 'ds2_harvest_valley_mines', 'ds2_doors_of_pharros', 'ds3_irithyll_dungeon_cells', 'ds3_lothric_twin_princes', 'ds3_cathedral_of_deep_roof', 'ds3_untended_graves_champion', 'ds3_ringed_city_abyssal_chasm', 'bb_old_yharnam_clocktower', 'bb_cainhurst_snow_roof', 'bb_upper_cathedral_orphanage', 'bb_hemwick_charnel_lane', 'sekiro_hirata_estate_blaze', 'sekiro_ashina_castle_dojo', 'sekiro_sunken_valley_gun_fort', 'er_caelid_sellia_town', 'er_nokron_eternal_city', 'er_altus_plateau_erdtree', 'er_mountaintops_fire_giant', 'sote_scadu_altus_highroad', 'sote_belurat_tower_settlement'];
 
         const filtered = locs.filter(l => {
             if (activeFilter === 'all') return true;
@@ -4788,6 +4788,48 @@ window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllL
 
 // 300+ Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
+    {"id":"sote_belurat_tower_settlement","name":"Belurat - Tower Settlement Stage","zone":"Belurat","pos":[-44,4,15],"elev":"+4m","danger":"Tier IV (Severe)","boss":"Divine Beast Dancing Lion","desc":"Ancient spiral streets carved from storm-grey stone leading to the grand stage of the lion dance.","light":1.2},
+
+    {"id":"sote_scadu_altus_highroad","name":"Shadow Realm - Scadu Altus Highroad Cross","zone":"Scadu Altus","pos":[-62,5,-10],"elev":"+5m","danger":"Tier V (Legendary)","boss":"Furnace Golem & Black Knights","desc":"A haunted shadow highland under the weeping veil of the Scadutree where wicker golems roam.","light":1.15},
+
+    {"id":"er_mountaintops_fire_giant","name":"Mountaintops of the Giants - Flame Cauldron","zone":"Mountaintops","pos":[30,16,150],"elev":"+16m","danger":"Tier V (Legendary)","boss":"Fire Giant","desc":"A colossal iron cauldron rising from eternal blizzard peaks where the flame of ruin smolders.","light":1.35},
+
+    {"id":"er_altus_plateau_erdtree","name":"Altus Plateau - Leyndell Capital Ramparts","zone":"Altus Plateau","pos":[50,8,-30],"elev":"+8m","danger":"Tier IV (Severe)","boss":"Draconic Tree Sentinel","desc":"Golden autumn grasslands stretching towards the monumental outer walls under the Erdtree.","light":1.45},
+
+    {"id":"er_caelid_sellia_town","name":"Caelid - Sellia, Town of Sorcery","zone":"Caelid","pos":[-58,2,70],"elev":"+2m","danger":"Tier IV (Severe)","boss":"Nox Swordstress & Priest","desc":"A spectral town beneath the scarlet sky where blue candle barriers guard glintstone treasures.","light":1},
+
+    {"id":"sekiro_sunken_valley_gun_fort","name":"Sunken Valley - Gun Fort Iron Cavern","zone":"Sunken Valley","pos":[46,-2,60],"elev":"-2m","danger":"Tier IV (Severe)","boss":"Long-arm Centipede Giraffe","desc":"A fortified iron-gated canyon where elite snipers fire explosive cannon shots from perches.","light":0.95},
+
+    {"id":"sekiro_ashina_castle_dojo","name":"Ashina Castle - Upper Tower Ashina Dojo","zone":"Ashina Castle","pos":[8,10,50],"elev":"+10m","danger":"Tier IV (Severe)","boss":"Genichiro Ashina & Ashina Elite","desc":"A pristine tatami mat dojo atop Ashina Castle where masters of lightning test the shinobi.","light":1.25},
+
+    {"id":"bb_cainhurst_snow_roof","name":"Castle Cainhurst - Annalise's Throne Roof","zone":"Castle Cainhurst","pos":[38,11,105],"elev":"+11m","danger":"Tier V (Legendary)","boss":"Martyr Logarius & Queen Annalise","desc":"The frozen gothic snow spires of the Vileblood citadel where Logarius guards the Queen's crown.","light":1.15},
+
+    {"id":"bb_old_yharnam_clocktower","name":"Old Yharnam - Djura's Gatling Tower","zone":"Old Yharnam","pos":[-22,9,45],"elev":"+9m","danger":"Tier III (Moderate)","boss":"Djura & Blood-starved Beast","desc":"A burning ruined city of ash and crucifix beasts where Djura sweeps the cobblestones with a Gatling gun.","light":1.05},
+
+    {"id":"ds3_ringed_city_abyssal_chasm","name":"The Ringed City - Midir's Abyssal Chasm","zone":"The Ringed City","pos":[25,-12,160],"elev":"-12m","danger":"Tier V (Nightmare)","boss":"Darkeater Midir","desc":"The deepest cavern at the edge of the world where the immortal archdragon swallowed the dark.","light":0.55},
+
+    {"id":"ds3_cathedral_of_deep_roof","name":"Cathedral of the Deep - Cleansing Chapel Roof","zone":"Cathedral of the Deep","pos":[-18,8,70],"elev":"+8m","danger":"Tier IV (Severe)","boss":"Deacons of the Deep & Cathedral Knights","desc":"Dizzying narrow slate roofs and flying buttresses patrolled by hollow thralls and gargoyles.","light":0.95},
+
+    {"id":"ds3_lothric_twin_princes","name":"Grand Archives - Twin Princes' Bedchamber","zone":"Lothric Castle","pos":[18,14,140],"elev":"+14m","danger":"Tier V (Legendary)","boss":"Lorian & Lothric, Twin Princes","desc":"The gilded rooftop throne room of Lothric Castle where the crippled princes refuse to link the fire.","light":1.3},
+
+    {"id":"ds2_doors_of_pharros","name":"Doors of Pharros - Gyrm Aqueduct Basin","zone":"Doors of Pharros","pos":[-32,2.5,80],"elev":"+2.5m","danger":"Tier III (Moderate)","boss":"Royal Rat Authority & Gyrm Warriors","desc":"Ancient flooded stone halls honeycombed with Pharros lock mechanisms, carved out by exiled Gyrm.","light":1.05},
+
+    {"id":"ds2_harvest_valley_mines","name":"Harvest Valley - Poison Mire Excavation","zone":"Harvest Valley","pos":[28,-3,95],"elev":"-3m","danger":"Tier III (Moderate)","boss":"Covetous Demon & Desert Sorceresses","desc":"Deep toxic green quarry pits filled with sulfur mist, poisonous sludge pools, and giant brutes.","light":0.8},
+
+    {"id":"ds2_undead_crypt_agdayne","name":"Undead Crypt - Grave Warden Agdayne's Hall","zone":"Undead Crypt","pos":[-20,-7,160],"elev":"-7m","danger":"Tier V (Nightmare)","boss":"Grave Warden Agdayne & Velstadt","desc":"A silent cavern of tombs where light is forbidden, guarded by Bell Ringers and royal knights.","light":0.5},
+
+    {"id":"ds2_heides_blue_cathedral","name":"Heide's Tower - Cathedral of Blue Ocean Pier","zone":"Heide's Tower of Flame","pos":[-38,1,-60],"elev":"+1m","danger":"Tier III (Moderate)","boss":"Old Dragonslayer & Blue Sentinels","desc":"Submerged turquoise maritime arches jutting from crashing ocean waves guarded by towering Old Knights.","light":1.25},
+
+    {"id":"ds1_catacombs_blacksmith","name":"Catacombs - Vamos' Secret Crypt Wall","zone":"Sunken Catacombs","pos":[-26,-5.5,60],"elev":"-5.5m","danger":"Tier III (Moderate)","boss":"Blacksmith Vamos & Wheel Skeletons","desc":"A hidden skeletal blacksmith workshop carved behind a broken stone sarcophagus lit by fire lanterns.","light":0.9},
+
+    {"id":"ds1_new_londo_sealer","name":"New Londo - Crimson Sealer's Floodgate","zone":"New Londo Ruins","pos":[-28,-6.5,75],"elev":"-6.5m","danger":"Tier IV (Severe)","boss":"Ingward the Crimson Sealer","desc":"The high stone sluice mechanism that holds back millions of gallons of water over drowned ruins.","light":0.7},
+
+    {"id":"ds1_painted_world_statue","name":"Painted World of Ariamis - Phalanx Courtyard","zone":"Painted World","pos":[32,2,145],"elev":"+2m","danger":"Tier IV (Severe)","boss":"Crossbreed Priscilla & Phalanx Slime","desc":"Snow-swept courtyard of decaying gothic towers where Priscilla hides behind illusory frost veil.","light":1.1},
+
+    {"id":"ds1_ash_lake_dragon_tree","name":"Ash Lake - Great Stone Dragon Hollow","zone":"Ash Lake","pos":[-15,0,-95],"elev":"0m","danger":"Tier V (Legendary)","boss":"Everlasting Stone Dragon","desc":"An endless white sand shore beneath towering stone archtrees echoing with ancient choral chants.","light":1.35},
+
+    {"id":"ds1_chasm_of_abyss_manus","name":"Chasm of the Abyss - Primordial Father's Lair","zone":"Chasm of the Abyss","pos":[-40,-11,130],"elev":"-11m","danger":"Tier V (Nightmare)","boss":"Manus, Father of the Abyss","desc":"A terrifying pitch-black abyss of pulsating humanity spirits where the primeval human rests.","light":0.65},
+
     {"id":"outside_darkroot_expanse","name":"Darkroot Ashen Woods - Outer Glade (Expedition Bonfire)","zone":"Outside Realm","pos":[-75,0,0],"elev":"0m","danger":"Tier III (Exploration Hub)","boss":"Ancient Treants & Basilisks","desc":"An expansive primeval forest glade outside the citadel walls, surrounded by ancient Archtrees and an unquenchable expedition bonfire.","light":1.25},
 
     {"id":"outside_astral_meteor_crater","name":"Astral Meteor Crater - Starlight Fissure","zone":"Outside Realm","pos":[-160,-2.5,-60],"elev":"-2.5m","danger":"Tier V (Nightmare)","boss":"Adult Fallingstar Beast & Void Mindflayers","desc":"A smoldering cosmic impact crater glistening with cyan starlight crystals and celestial augur tendrils.","light":1.30},

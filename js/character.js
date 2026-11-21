@@ -90,7 +90,7 @@ class DarkSoulsCharacters {
         sCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         sCtx.lineWidth = 2;
         for (let i = 0; i < 512; i += 12) {
-            sCtx.beginPath();
+            scalesCtx.beginPath();
             sCtx.moveTo(i, 0);
             sCtx.lineTo(i, 512);
             sCtx.stroke();
@@ -110,7 +110,7 @@ class DarkSoulsCharacters {
             sCtx.fillStyle = '#f5d061';
             sCtx.beginPath();
             sCtx.arc(cx, cy, 10, 0, Math.PI * 2);
-            sCtx.fill();
+            scalesCtx.fill();
             sCtx.fillStyle = '#543b0c';
             sCtx.beginPath();
             sCtx.arc(cx - 2, cy - 2, 4, 0, Math.PI * 2);
@@ -397,16 +397,16 @@ class DarkSoulsCharacters {
         const scalesCanvas = document.createElement('canvas');
         scalesCanvas.width = 256;
         scalesCanvas.height = 256;
-        const sCtx = scalesCanvas.getContext('2d');
-        sCtx.fillStyle = '#808080';
-        sCtx.fillRect(0, 0, 256, 256);
+        const scalesCtx = scalesCanvas.getContext('2d');
+        scalesCtx.fillStyle = '#808080';
+        scalesCtx.fillRect(0, 0, 256, 256);
         for (let y = 0; y < 256; y += 12) {
             for (let x = 0; x < 256; x += 12) {
                 const shift = (y / 12) % 2 === 0 ? 0 : 6;
                 const brightness = Math.floor(100 + Math.random() * 80);
-                sCtx.fillStyle = `rgb(${brightness},${brightness},${brightness})`;
+                scalesCtx.fillStyle = `rgb(${brightness},${brightness},${brightness})`;
                 sCtx.beginPath();
-                sCtx.arc((x + shift) % 256, y, 5, 0, Math.PI * 2);
+                scalesCtx.arc((x + shift) % 256, y, 5, 0, Math.PI * 2);
                 sCtx.fill();
             }
         }
