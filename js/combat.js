@@ -2004,7 +2004,7 @@ class DarkSoulsCombat {
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createKingAllant(x, z)
             },
-{
+            {
                 id: 'ludwig',
                 name: 'LUDWIG THE ACCURSED & HOLY BLADE',
                 title: 'Underground Corpse Pile &bull; Moonlight Arcane Beams, Bestial Charge & Moonlight Greatsword',
@@ -2264,7 +2264,6 @@ class DarkSoulsCombat {
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createEldenBeast(x, z)
             },
-            // 40 EXPANDED LORDS: ELDEN RING ERDTREE, BLOODBORNE, SEKIRO & DS3 (61–100)
             {
                 id: 'messmer_the_impaler',
                 name: 'MESSMER THE IMPALER, LORD OF FLAMES',
@@ -2865,9 +2864,6 @@ class DarkSoulsCombat {
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'halflight_spear_church', theme: 'holy', bossScale: 2.1 }, x, z)
             },
-            // ----------------------------------------------------
-            // 28 NEW LEGENDARY SOULSBORNE LORDS & APEX BOSSES (141-168)
-            // ----------------------------------------------------
             {
                 id: 'godfrey_first_elden_lord',
                 name: 'GODFREY, FIRST ELDEN LORD & HOARAH LOUX',
@@ -3004,21 +3000,6 @@ class DarkSoulsCombat {
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'sister_friede_ariandel', theme: 'frost', bossScale: 2.0 }, x, z)
             },
             {
-                id: 'darkeater_midir',
-                name: 'DARKEATER MIDIR, DESCENDANT OF ARCHAIC DRAGONS',
-                title: 'Ringed City Chasm &bull; Dark Laser Rampage, Black Humanity Swarm & Clustered Dragon Fire',
-                unlockLocationId: 'ds3_ringed_city_streets',
-                icon: '🐲',
-                theme: 'dark',
-                bossScale: 2.9,
-                maxHp: 32000,
-                damage: 1520,
-                souls: 1900000,
-                radius: 4.0,
-                spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'darkeater_midir', theme: 'dark', bossScale: 2.9 }, x, z)
-            },
-            {
                 id: 'demon_in_pain_below',
                 name: 'DEMONS IN PAIN & FROM BELOW',
                 title: 'Dreg Heap Earthen Peak &bull; Chaos Poison Claw, Searing Magma Dive & Twin Demon Trample',
@@ -3049,21 +3030,6 @@ class DarkSoulsCombat {
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'lady_maria_clocktower', theme: 'blood', bossScale: 2.0 }, x, z)
             },
             {
-                id: 'orphan_of_kos',
-                name: 'ORPHAN OF KOS, BOTTOMLESS SEA CHILD',
-                title: 'Fishing Hamlet Beached Shore &bull; Placenta Meat Cleaver, Lightning Screech & Leaping Bombs',
-                unlockLocationId: 'bb_fishing_hamlet_coast',
-                icon: '🦐',
-                theme: 'cosmic',
-                bossScale: 2.2,
-                maxHp: 28500,
-                damage: 1420,
-                souls: 1550000,
-                radius: 3.1,
-                spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'orphan_of_kos', theme: 'cosmic', bossScale: 2.2 }, x, z)
-            },
-            {
                 id: 'ludwig_holy_blade',
                 name: 'LUDWIG, THE ACCURSED & THE HOLY BLADE',
                 title: 'Hunter Nightmare Underground Corpse Pile &bull; Moonlight Greatsword Waves, Bestial Trample & Arcane Slam',
@@ -3092,21 +3058,6 @@ class DarkSoulsCombat {
                 radius: 3.8,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'laurence_first_vicar', theme: 'flame', bossScale: 2.7 }, x, z)
-            },
-            {
-                id: 'isshin_sword_saint',
-                name: 'ISSHIN, THE SWORD SAINT',
-                title: 'Silvergrass Field &bull; Cross Spear Flurry, Glock Repeating Fire, Dragon Slash & Lightning Reversal',
-                unlockLocationId: 'sekiro_ashina_reservoir',
-                icon: '🍶',
-                theme: 'dragon',
-                bossScale: 2.1,
-                maxHp: 28500,
-                damage: 1430,
-                souls: 1550000,
-                radius: 3.0,
-                spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'isshin_sword_saint', theme: 'dragon', bossScale: 2.1 }, x, z)
             },
             {
                 id: 'emma_gentle_blade',
@@ -3214,21 +3165,6 @@ class DarkSoulsCombat {
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'sinh_slumbering_dragon', theme: 'rot', bossScale: 2.8 }, x, z)
             },
             {
-                id: 'burnt_ivory_king',
-                name: 'BURNT IVORY KING & LOYCE ORDER',
-                title: 'Old Chaos Flame Caldera &bull; Radiant White Light Blade, Loyce Portal Gates & Chaos Wave',
-                unlockLocationId: 'ds2_frozen_eleum_loyce',
-                icon: '👑',
-                theme: 'flame',
-                bossScale: 2.4,
-                maxHp: 29000,
-                damage: 1430,
-                souls: 1550000,
-                radius: 3.4,
-                spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'burnt_ivory_king', theme: 'flame', bossScale: 2.4 }, x, z)
-            },
-            {
                 id: 'flamelurker_volcano',
                 name: 'FLAMELURKER, PRIMAL ASH ARCHDEMON',
                 title: 'Stonefang Tunnel Mine Cavern &bull; Explosive Lava Fists, Leaping Volcanic Stomp & Frenzy Charge',
@@ -3288,9 +3224,6 @@ class DarkSoulsCombat {
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'old_monk_golden_robe', theme: 'magic', bossScale: 2.0 }, x, z)
             },
-            // ----------------------------------------------------
-            // 6 NEW TITAN & DLC LEGENDARY BOSSES (OUTSIDE & APEX ROSTER)
-            // ----------------------------------------------------
             {
                 id: 'radahn_starscourge',
                 name: 'STARCOURGE RADAHN, GENERAL OF REDMANE',
@@ -3305,51 +3238,6 @@ class DarkSoulsCombat {
                 radius: 3.8,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createStarscourgeRadahn(x, z)
-            },
-            {
-                id: 'bayle_the_dread',
-                name: 'BAYLE THE DREAD, VILE DRAKE TYRANT',
-                title: 'Jagged Peak Summit &bull; Charred Magma Breath, Lightning Talons & Molten Tail Annihilation',
-                unlockLocationId: 'wyrm_cliffside_plateau',
-                icon: '🐲',
-                theme: 'flame',
-                bossScale: 3.2,
-                maxHp: 35000,
-                damage: 1550,
-                souls: 2500000,
-                radius: 4.2,
-                spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createBayleTheDread(x, z)
-            },
-            {
-                id: 'messmer_the_impaler',
-                name: 'MESSMER THE IMPALER, LORD OF SHADOW FLAME',
-                title: 'Shadow Keep Specimen Storehouse &bull; 4.8m Spear of Messmer, Coiled Abyssal Serpents & Scarlet Flame',
-                unlockLocationId: 'ancient_archtree_sanctuary',
-                icon: '🔥',
-                theme: 'flame',
-                bossScale: 2.5,
-                maxHp: 31000,
-                damage: 1460,
-                souls: 1900000,
-                radius: 3.0,
-                spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createMessmerTheImpaler(x, z)
-            },
-            {
-                id: 'rellana_twin_moon',
-                name: 'RELLANA, TWIN MOON KNIGHT',
-                title: 'Castle Ensis Moonrise Chamber &bull; Twin Carian Moon Blades, Magic Wave & Flame Tornado',
-                unlockLocationId: 'outside_darkroot_expanse',
-                icon: '🌙',
-                theme: 'magic',
-                bossScale: 2.2,
-                maxHp: 29500,
-                damage: 1420,
-                souls: 1800000,
-                radius: 2.8,
-                spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createRellanaTwinMoon(x, z)
             },
             {
                 id: 'dancing_lion',
@@ -3427,19 +3315,79 @@ class DarkSoulsCombat {
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_erdtree_avatar', theme: 'rot', bossScale: 2.6 }, x, z)
             },
             {
-                id: 'midra_frenzied_flame',
-                name: 'MIDRA, LORD OF FRENZIED FLAME',
-                title: "Midra's Manse Depths &bull; Greatsword of Damnation, Sun of Frenzy & Golden Flame Burst",
-                unlockLocationId: 'sunlight_dragon_ridge',
-                icon: '☀️',
-                theme: 'flame',
-                bossScale: 2.3,
-                maxHp: 33000,
-                damage: 1520,
-                souls: 2200000,
-                radius: 2.9,
+                id: 'outside_grave_warden_black_knight',
+                name: 'GRAVE WARDEN BLACK KNIGHT CHAMPION',
+                title: 'Outside Realm: Darkroot Woods &bull; Colossal Black Knight Greataxe & Dark Flame Stance',
+                unlockLocationId: 'outside_darkroot_bonfire',
+                icon: '🪓',
+                theme: 'dark',
+                bossScale: 2.2,
+                maxHp: 28000,
+                damage: 1350,
+                souls: 1400000,
+                radius: 2.8,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createMidraFrenziedFlame(x, z)
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_grave_warden_black_knight', theme: 'dark', bossScale: 2.2 }, x, z)
+            },
+            {
+                id: 'outside_ancient_dragon_lansseax',
+                name: 'ANCIENT DRAGON LANSSEAX, PRIESTESS OF LIGHTNING',
+                title: 'Outside Realm: Wyrm Ridge Altar &bull; Crimson Red Lightning Glaive & Draconic Roar',
+                unlockLocationId: 'outside_wyrm_ridge_altar',
+                icon: '⚡',
+                theme: 'dragon',
+                bossScale: 2.8,
+                maxHp: 32000,
+                damage: 1480,
+                souls: 2000000,
+                radius: 4.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_ancient_dragon_lansseax', theme: 'dragon', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'outside_sanctuary_stone_titan',
+                name: 'SANCTUARY TITAN, GUARDIAN OF THE PRECIPICE',
+                title: 'Outside Realm: Western Precipice &bull; Colossal Granite Greatsword & Earthquake Slam',
+                unlockLocationId: 'outside_western_precipice',
+                icon: '🗿',
+                theme: 'holy',
+                bossScale: 2.7,
+                maxHp: 31000,
+                damage: 1420,
+                souls: 1900000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_sanctuary_stone_titan', theme: 'holy', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'er_bell_bearing_hunter',
+                name: 'ELEMER OF THE BRIAR, BELL BEARING HUNTER',
+                title: 'The Shaded Castle Inner Keep &bull; Marais Dancing Executioner Sword & Telekinetic Whirlwind',
+                unlockLocationId: 'er_altus_windmill_village',
+                icon: '🗡️',
+                theme: 'blood',
+                bossScale: 2.2,
+                maxHp: 27000,
+                damage: 1380,
+                souls: 1500000,
+                radius: 2.6,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'er_bell_bearing_hunter', theme: 'blood', bossScale: 2.2 }, x, z)
+            },
+            {
+                id: 'er_draconic_tree_sentinel',
+                name: 'DRACONIC TREE SENTINEL OF THE CAPITAL',
+                title: 'Leyndell Outer Wall Ramparts &bull; Dragon Greatclaw, Malformed Shield & Red Lightning Smite',
+                unlockLocationId: 'er_leyndell_outer_moat',
+                icon: '🛡️',
+                theme: 'gold',
+                bossScale: 2.5,
+                maxHp: 29000,
+                damage: 1400,
+                souls: 1650000,
+                radius: 3.4,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'er_draconic_tree_sentinel', theme: 'gold', bossScale: 2.5 }, x, z)
             }
         ];
     }

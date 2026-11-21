@@ -1,6 +1,6 @@
 // ============================================================================
 // DARK SOULS: COMPREHENSIVE GOD-MODE DEV MAP & CARTOGRAPHY RADAR
-// Visualizes all 300 Locations, Bosses, 330 NPCs, Bonfires, Lore, Architecture & Live Player Tracker
+// Visualizes all 350 Locations, 135 Bosses, 330 NPCs, 640 Mobs, Bonfires, Architecture & Live Player Tracker
 // Features: Click-to-Teleport, Pan & Zoom, Search Filter, Elevation Layering
 // ============================================================================
 
@@ -581,6 +581,9 @@
 
                 // Sunken Serpent Courtyard (-4m)
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
+
+                // Outside Realm: Darkroot Archtrees & Ashen Wilds (x: -190 to -28, z: -85 to 85)
+                this.drawZoneRect(ctx, -220, -110, 192, 220, "rgba(18, 55, 28, 0.55)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: DARKROOT ARCHTREES & METEOR CRATER (0m)");
             }
 
             // 3. Draw All World Pins

@@ -3870,8 +3870,45 @@ class DarkSoulsGame {
     }
 
     updateBossRosterUI() {
-        if (!this.combat) return;
+        if (!this.combat || !this.combat.bossRoster) return;
+        const grid = document.querySelector('.boss-cards-grid');
         const defeated = this.combat.defeatedBosses || [];
+
+        // Update modal title
+        const modalHeader = document.querySelector('#boss-select-modal .modal-header');
+        if (modalHeader) {
+            modalHeader.innerHTML = 'LORDS OF LORDRAN &bull; ' + this.combat.bossRoster.length + ' BOSS ROSTER';
+        }
+
+        // Dynamically create missing boss cards for all bosses in roster
+        if (grid) {
+            const existingCards = grid.querySelectorAll('.boss-card');
+            const existingIds = [];
+            for (let i = 0; i < existingCards.length; i++) {
+                existingIds.push(existingCards[i].getAttribute('data-boss-id'));
+            }
+            this.combat.bossRoster.forEach((b, idx) => {
+                if (!existingIds.includes(b.id)) {
+                    const card = document.createElement('div');
+                    card.className = 'boss-card';
+                    card.setAttribute('data-boss-id', b.id);
+                    const hpStr = (b.maxHp || 3000).toLocaleString();
+                    const soulsStr = (b.souls || 10000).toLocaleString();
+                    card.innerHTML = 
+                        '<div class="boss-card-info">' +
+                            '<div class="boss-card-icon">' + (b.icon || '👑') + '</div>' +
+                            '<div class="boss-card-text">' +
+                                '<div class="boss-card-name">' + (idx + 1) + '. ' + b.name + '</div>' +
+                                '<div class="boss-card-desc">' + (b.title || 'Lord of Lordran') + '</div>' +
+                                '<div class="boss-card-stats">HP: ' + hpStr + ' &bull; REWARD: ' + soulsStr + ' SOULS</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<button class="btn-fight-boss" onclick="chooseBoss(\'' + b.id + '\')">CHALLENGE</button>';
+                    grid.appendChild(card);
+                }
+            });
+        }
+
         const cards = document.querySelectorAll('.boss-card');
         cards.forEach(card => {
             const bossId = card.getAttribute('data-boss-id');
