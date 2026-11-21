@@ -4631,6 +4631,110 @@ class DarkSoulsGame {
         container.innerHTML = html;
     }
 
+    
+    showLocationBanner(loc) {
+        const banner = document.getElementById('location-banner');
+        const titleEl = document.getElementById('loc-banner-title');
+        const metaEl = document.getElementById('loc-banner-meta');
+        if (!banner || !titleEl || !metaEl) return;
+
+        titleEl.textContent = loc.name;
+        metaEl.textContent = `ZONE: ${(loc.zone || 'LORDRAN').toUpperCase()} • BOSS: ${(loc.boss || 'NONE').toUpperCase()} • ELEV: ${loc.elev || '0m'}`;
+
+        banner.classList.add('banner-visible');
+        if (this._locBannerTimer) clearTimeout(this._locBannerTimer);
+        this._locBannerTimer = setTimeout(() => {
+            banner.classList.remove('banner-visible');
+        }, 4200);
+    }
+
+    applyLocationBiome(loc) {
+        if (!this.world || !this.scene) return;
+        const id = (loc.id || '').toLowerCase();
+        const zone = (loc.zone || '').toLowerCase();
+
+        // 1. Lava / Chaos Realms
+        if (id.includes('lava') || id.includes('ruins') || id.includes('iron_keep') || id.includes('izalith') || id.includes('smelter') || id.includes('volcano') || id.includes('fire_giant')) {
+            if (this.scene.fog) {
+                this.scene.fog.color.setHex(0x320a02);
+                this.scene.fog.density = 0.016;
+            }
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x551500);
+            if (this.world.moonlight) this.world.moonlight.color.setHex(0xff4411);
+            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.3, 1.25);
+        }
+        // 2. Abyss / Subterranean Darkness
+        else if (id.includes('abyss') || id.includes('new_londo') || id.includes('tomb') || id.includes('midir') || id.includes('untended') || id.includes('catacomb') || id.includes('crypt')) {
+            if (this.scene.fog) {
+                this.scene.fog.color.setHex(0x040208);
+                this.scene.fog.density = 0.024;
+            }
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x110822);
+            if (this.world.moonlight) this.world.moonlight.color.setHex(0x332255);
+            if (this.renderer) this.renderer.toneMappingExposure = Math.min(loc.light || 0.7, 0.75);
+        }
+        // 3. Frost / Frozen Blizzards
+        else if (id.includes('painted') || id.includes('cainhurst') || id.includes('ariandel') || id.includes('frozen') || id.includes('mountaintop') || id.includes('snow')) {
+            if (this.scene.fog) {
+                this.scene.fog.color.setHex(0xd0e0f0);
+                this.scene.fog.density = 0.014;
+            }
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x6688aa);
+            if (this.world.moonlight) this.world.moonlight.color.setHex(0xddeeff);
+            if (this.renderer) this.renderer.toneMappingExposure = loc.light || 1.25;
+        }
+        // 4. Cosmic / Celestial Glintstone
+        else if (id.includes('nokron') || id.includes('crystal') || id.includes('byrgenwerth') || id.includes('moonlight') || id.includes('orphanage') || id.includes('mana')) {
+            if (this.scene.fog) {
+                this.scene.fog.color.setHex(0x0a1428);
+                this.scene.fog.density = 0.015;
+            }
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x004466);
+            if (this.world.moonlight) this.world.moonlight.color.setHex(0x22ddff);
+            if (this.renderer) this.renderer.toneMappingExposure = loc.light || 1.15;
+        }
+        // 5. Scarlet Rot / Poison Mires
+        else if (id.includes('caelid') || id.includes('sellia') || id.includes('blighttown') || id.includes('harvest') || id.includes('poison') || id.includes('malenia') || id.includes('rot')) {
+            if (this.scene.fog) {
+                this.scene.fog.color.setHex(0x381014);
+                this.scene.fog.density = 0.020;
+            }
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x440810);
+            if (this.world.moonlight) this.world.moonlight.color.setHex(0xff3344);
+            if (this.renderer) this.renderer.toneMappingExposure = loc.light || 1.1;
+        }
+        // 6. Golden Erdtree / Sunset Heights
+        else if (id.includes('altus') || id.includes('majula') || id.includes('heide') || id.includes('stormhill') || id.includes('sunlit') || id.includes('senpou')) {
+            if (this.scene.fog) {
+                this.scene.fog.color.setHex(0x352614);
+                this.scene.fog.density = 0.010;
+            }
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x553818);
+            if (this.world.moonlight) this.world.moonlight.color.setHex(0xffd577);
+            if (this.renderer) this.renderer.toneMappingExposure = loc.light || 1.35;
+        }
+        // 7. Ash Lake Everlasting Shore
+        else if (id.includes('ash_lake')) {
+            if (this.scene.fog) {
+                this.scene.fog.color.setHex(0xd5e2e8);
+                this.scene.fog.density = 0.009;
+            }
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x556677);
+            if (this.world.moonlight) this.world.moonlight.color.setHex(0xffffff);
+            if (this.renderer) this.renderer.toneMappingExposure = 1.35;
+        }
+        // 8. Default Lordran Fortress Twilight
+        else {
+            if (this.scene.fog) {
+                this.scene.fog.color.setHex(0x324458);
+                this.scene.fog.density = 0.0035;
+            }
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x202a38);
+            if (this.world.moonlight) this.world.moonlight.color.setHex(0xffedd2);
+            if (this.renderer) this.renderer.toneMappingExposure = 0.95;
+        }
+    }
+
     travelToLocation(locationId, keepDiscoveredWaystone = false) {
         const locs = window.DARK_SOULS_LOCATIONS || [];
         const loc = locs.find(l => l.id === locationId);
@@ -4697,9 +4801,8 @@ class DarkSoulsGame {
             );
             this.camera.lookAt(targetPos);
 
-            if (loc.light && this.renderer) {
-                this.renderer.toneMappingExposure = loc.light;
-            }
+            this.applyLocationBiome(loc);
+            this.showLocationBanner(loc);
 
             // Save last active bonfire checkpoint
             this.lastBonfirePos = this.playerMesh.position.clone();

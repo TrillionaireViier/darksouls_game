@@ -578,6 +578,63 @@
             pointer-events: none;
         }
 
+        
+        /* CINEMATIC SOULSLIKE LOCATION TITLE BANNER */
+        #location-banner {
+            position: absolute;
+            top: 28%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 120;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+            width: 90vw;
+            max-width: 900px;
+        }
+        #location-banner.banner-visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.0);
+        }
+        .loc-banner-realm {
+            font-size: 0.78rem;
+            letter-spacing: 6px;
+            color: #d4af37;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+            margin-bottom: 6px;
+        }
+        .loc-banner-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.4rem, 3.2vw, 2.5rem);
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #fff4db;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.95), 0 0 15px rgba(255, 215, 0, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .loc-banner-line {
+            width: 140px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            margin-bottom: 8px;
+            box-shadow: 0 0 8px #ffd700;
+        }
+        .loc-banner-meta {
+            font-size: 0.82rem;
+            letter-spacing: 2px;
+            color: #d8c39e;
+            text-shadow: 0 0 8px rgba(0,0,0,0.9);
+            font-style: italic;
+        }
+
         /* NOTIFICATION PILL */
         #game-notification {
             position: absolute;
@@ -1754,6 +1811,15 @@
     </div>
 
     <div id="game-notification">WELCOME TO LORDRAN</div>
+
+    <!-- CINEMATIC SOULSLIKE LOCATION TITLE BANNER -->
+    <div id="location-banner">
+        <div class="loc-banner-realm">✦ DISCOVERED REALM ✦</div>
+        <div class="loc-banner-title" id="loc-banner-title">ASH LAKE • EVERLASTING SHORE</div>
+        <div class="loc-banner-line"></div>
+        <div class="loc-banner-meta" id="loc-banner-meta">ZONE: ASH LAKE • WARDEN: EVERLASTING STONE DRAGON • ELEV: 0m</div>
+    </div>
+
 
     <!-- ==============================================
          CINEMATIC OVERLAYS
@@ -7717,25 +7783,25 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/audio.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/lore_items.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/world.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/character.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/siege_warfare.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/collision_system.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/combat.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/postprocessing.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/qa_suite.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/inventory_system.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/compendium_300_models.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/death_quotes_300.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/game.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
-    <script src="js/dev_map.js?v=20261122_30_NEW_LOCATIONS_V9"></script>
+    <script src="js/three.min.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/audio.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/lore_items.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/world.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/character.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/siege_warfare.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/collision_system.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/combat.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/postprocessing.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/qa_suite.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/inventory_system.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/compendium_300_models.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/death_quotes_300.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/game.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
+    <script src="js/dev_map.js?v=20261122_UNIQUE_LOCATIONS_V10"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {
