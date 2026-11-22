@@ -14,8 +14,8 @@
             this.ctx = null;
             this.isOpen = false;
             
-            // Map view transformation
-            this.scale = 1.4; // pixels per meter
+            // Map view transformation - 2x larger default tactical zoom
+            this.scale = 2.8; // pixels per meter (expanded scale)
             this.offsetX = 0;
             this.offsetZ = 0;
             this.isDragging = false;
@@ -532,8 +532,8 @@
             const w = this.canvas.width;
             const h = this.canvas.height;
 
-            // Clear Background (Deep obsidian abyss)
-            ctx.fillStyle = '#080a0e';
+            // Clear Background (High-contrast tactical navy canvas)
+            ctx.fillStyle = '#141c28';
             ctx.fillRect(0, 0, w, h);
 
             // 1. Draw Grid Lines (10m and 50m intervals)
@@ -549,7 +549,7 @@
 
                 for (let x = startX; x <= endX; x += 10) {
                     const isMajor = x % 50 === 0;
-                    ctx.strokeStyle = isMajor ? 'rgba(0, 229, 255, 0.22)' : 'rgba(255, 255, 255, 0.05)';
+                    ctx.strokeStyle = isMajor ? 'rgba(0, 229, 255, 0.45)' : 'rgba(255, 255, 255, 0.12)';
                     const s = this.worldToScreen(x, 0);
                     ctx.beginPath();
                     ctx.moveTo(s.x, 0);
@@ -557,7 +557,7 @@
                     ctx.stroke();
 
                     if (isMajor) {
-                        ctx.fillStyle = 'rgba(0, 229, 255, 0.4)';
+                        ctx.fillStyle = 'rgba(0, 229, 255, 0.75)';
                         ctx.font = '10px monospace';
                         ctx.fillText(`X:${x}m`, s.x + 3, 12);
                     }
@@ -565,7 +565,7 @@
 
                 for (let z = startZ; z <= endZ; z += 10) {
                     const isMajor = z % 50 === 0;
-                    ctx.strokeStyle = isMajor ? 'rgba(0, 229, 255, 0.22)' : 'rgba(255, 255, 255, 0.05)';
+                    ctx.strokeStyle = isMajor ? 'rgba(0, 229, 255, 0.45)' : 'rgba(255, 255, 255, 0.12)';
                     const s = this.worldToScreen(0, z);
                     ctx.beginPath();
                     ctx.moveTo(0, s.y);
@@ -573,7 +573,7 @@
                     ctx.stroke();
 
                     if (isMajor) {
-                        ctx.fillStyle = 'rgba(0, 229, 255, 0.4)';
+                        ctx.fillStyle = 'rgba(0, 229, 255, 0.75)';
                         ctx.font = '10px monospace';
                         ctx.fillText(`Z:${z}m`, 4, s.y - 3);
                     }

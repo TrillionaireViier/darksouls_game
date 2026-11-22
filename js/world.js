@@ -666,10 +666,10 @@ class DarkSoulsWorld {
         skyCanvas.height = 512;
         const skyCtx = skyCanvas.getContext('2d');
         const skyGrad = skyCtx.createLinearGradient(0, 0, 0, 512);
-        skyGrad.addColorStop(0.0, '#152538'); // Dark twilight azure zenith
-        skyGrad.addColorStop(0.45, '#2e4862'); // Atmospheric sky blue
-        skyGrad.addColorStop(0.75, '#5c5244'); // Warm golden dust haze
-        skyGrad.addColorStop(1.0, '#786048'); // Sunlit mountain horizon glow
+        skyGrad.addColorStop(0.0, '#366088'); // Rich clear sky blue zenith
+        skyGrad.addColorStop(0.45, '#5c86ab'); // Radiant daylight azure
+        skyGrad.addColorStop(0.75, '#9da3a8'); // Soft horizon haze
+        skyGrad.addColorStop(1.0, '#d8c09a'); // Warm golden sunlight horizon
         skyCtx.fillStyle = skyGrad;
         skyCtx.fillRect(0, 0, 512, 512);
 
@@ -683,21 +683,21 @@ class DarkSoulsWorld {
         const skyDome = new THREE.Mesh(skyDomeGeo, skyDomeMat);
         this.scene.add(skyDome);
 
-        this.scene.background = new THREE.Color(0x28384a);
+        this.scene.background = new THREE.Color(0x6a8caa);
 
-        // 2. Exponential Natural Atmospheric Depth Fog (Dark Souls / Elden Ring depth)
-        this.scene.fog = new THREE.FogExp2(0x324458, 0.0008);
+        // 2. Clear Natural Atmospheric Depth Fog
+        this.scene.fog = new THREE.FogExp2(0x7692ae, 0.0004);
 
-        // 3. Balanced Ambient Light (retains deep, dramatic shadow crevices without washing out)
-        this.ambientLight = new THREE.AmbientLight(0x202a38, 0.35);
+        // 3. Balanced Warm Daylight Ambient (illuminates geometry crevices without wash)
+        this.ambientLight = new THREE.AmbientLight(0x7d8fa3, 0.85);
         this.scene.add(this.ambientLight);
 
-        // 4. Sky and ground bounce hemisphere lighting (slate blue sky + warm stone bounce)
-        this.hemiLight = new THREE.HemisphereLight(0x4a6d95, 0x221a14, 0.45);
+        // 4. Sky and ground bounce hemisphere lighting (sky blue + warm stone bounce)
+        this.hemiLight = new THREE.HemisphereLight(0x9fc5f8, 0x6e5e4e, 0.95);
         this.scene.add(this.hemiLight);
 
-        // 5. Cinematic Golden Lordran Sunlight (dramatic rake angle casting long soft shadows)
-        this.moonlight = new THREE.DirectionalLight(0xffedd2, 1.4);
+        // 5. Cinematic Radiant Lordran Sunlight (casting crisp warm shadows)
+        this.moonlight = new THREE.DirectionalLight(0xfffaea, 2.4);
         this.moonlight.position.set(45, 80, -25);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 1024;
@@ -1615,26 +1615,33 @@ class DarkSoulsWorld {
         waterPlane.receiveShadow = true;
         this.scene.add(waterPlane);
 
-        // Crypt Side Fortress Walls (z=22 to 270)
-        this.createWall(-24.6, -2.0, 146, 1.2, 6.5, 248);
-        this.createWall(-15.4, -2.0, 146, 1.2, 6.5, 248);
+        // Crypt Side Fortress Walls - Elevated to 14m height so no open void is visible above
+        this.createWall(-25.2, 1.5, 146, 1.5, 14.0, 252);
+        this.createWall(-14.8, 1.5, 146, 1.5, 14.0, 252);
 
-        // Flooded Crypt Corridor Vaulted Stone Ceiling (y=1.5, z=22 to 270)
-        const cryptCeilGeo = new THREE.BoxGeometry(9.6, 0.8, 248);
-        const cryptCeil = new THREE.Mesh(cryptCeilGeo, this.stoneMat);
-        cryptCeil.position.set(-20, 1.5, 146);
+        // Crypt End-Cap Enclosure Walls (seals entry and exit against void leaks)
+        this.createWall(-20, 1.5, 21.0, 12.0, 14.0, 1.5);
+        this.createWall(-20, 1.5, 271.5, 12.0, 14.0, 1.5);
+
+        // Flooded Crypt Corridor High Vaulted Stone Ceiling (y=4.2, wide double-sided slab covering entire span)
+        const cryptCeilMat = this.stoneMat.clone();
+        cryptCeilMat.side = THREE.DoubleSide;
+        const cryptCeilGeo = new THREE.BoxGeometry(15.0, 1.2, 254);
+        const cryptCeil = new THREE.Mesh(cryptCeilGeo, cryptCeilMat);
+        cryptCeil.position.set(-20, 4.2, 146);
         cryptCeil.receiveShadow = true;
         this.scene.add(cryptCeil);
 
         // Overhead Vaulted Stone Arches along the Crypt every 18m
         for (let caz = 32; caz <= 264; caz += 18) {
-            const cryptArch = new THREE.Mesh(new THREE.BoxGeometry(8.8, 1.2, 1.2), this.wallMat);
-            cryptArch.position.set(-20, 0.8, caz);
+            const cryptArch = new THREE.Mesh(new THREE.BoxGeometry(11.0, 1.4, 1.4), this.wallMat);
+            cryptArch.position.set(-20, 3.2, caz);
             cryptArch.castShadow = true;
             this.scene.add(cryptArch);
 
             // Emerald Ghostfire Braziers in Crypt
-            this.createStandingBrazier(-18.5, -4.9, caz, 0x00ffaa, 2.5, 16);
+            this.createStandingBrazier(-18.5, -4.9, caz, 0x00ffaa, 3.2, 20);
+            this.createStandingBrazier(-21.5, -4.9, caz, 0x00ffaa, 3.2, 20);
         }
 
         // Return Portal to Surface Courtyard from inside the Catacombs (Entryway at z=28)

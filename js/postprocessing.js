@@ -43,9 +43,9 @@ class DarkSoulsPostProcessing {
                 resolution: { value: new THREE.Vector2(width * pr, height * pr) },
                 time: { value: 0.0 },
                 bloomIntensity: { value: 0.42 },
-                vignetteStrength: { value: 1.15 },
-                filmGrainStrength: { value: 0.022 },
-                colorGradingStrength: { value: 0.65 }
+                vignetteStrength: { value: 0.35 },
+                filmGrainStrength: { value: 0.015 },
+                colorGradingStrength: { value: 0.50 }
             },
             vertexShader: `
                 varying vec2 vUv;
@@ -110,14 +110,14 @@ class DarkSoulsPostProcessing {
                     graded *= mix(shadowTint, midTint, smoothstep(0.0, 0.5, lum));
                     graded = mix(graded, graded * highTint, smoothstep(0.5, 1.0, lum));
 
-                    // Cinematic Contrast S-Curve (smooth, avoids crushing darks or blowing highlights)
+                    // Smooth contrast curve that avoids crushing shadows
                     vec3 curve = graded * graded * (3.0 - 2.0 * graded);
-                    graded = mix(graded, curve, 0.35);
+                    graded = mix(graded, curve, 0.10);
                     col = mix(col, graded, colorGradingStrength);
 
-                    // 3. Cinematic Vignette (Subtle lens perimeter falloff)
+                    // 3. Ultra-soft Vignette (no heavy black corners)
                     float d = distance(uv, vec2(0.5));
-                    float vig = smoothstep(0.92, 0.42, d * vignetteStrength);
+                    float vig = smoothstep(1.15, 0.45, d * vignetteStrength);
                     col *= vig;
 
                     // 4. Micro Film Grain (Tactile dark fantasy realism & anti-banding)
