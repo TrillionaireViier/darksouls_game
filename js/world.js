@@ -660,16 +660,16 @@ class DarkSoulsWorld {
     }
 
     buildLighting() {
-        // 1. Panoramic Gothic Sky Dome with Vertical Horizon Gradient
+        // 1. Panoramic Gothic Sky Dome with Natural Atmospheric Horizon Gradient
         const skyCanvas = document.createElement('canvas');
         skyCanvas.width = 512;
         skyCanvas.height = 512;
         const skyCtx = skyCanvas.getContext('2d');
         const skyGrad = skyCtx.createLinearGradient(0, 0, 0, 512);
-        skyGrad.addColorStop(0.0, '#5a9ae6'); // Clear brilliant sky blue zenith
-        skyGrad.addColorStop(0.40, '#88beff'); // Radiant daylight azure
-        skyGrad.addColorStop(0.70, '#cce4ff'); // Sunlit atmospheric haze
-        skyGrad.addColorStop(1.0, '#fff4e0'); // Warm golden sunlight horizon
+        skyGrad.addColorStop(0.0, '#3a5570'); // Deep atmospheric slate zenith
+        skyGrad.addColorStop(0.40, '#567595'); // Natural daylight azure
+        skyGrad.addColorStop(0.70, '#8ca2b8'); // Soft horizon mist
+        skyGrad.addColorStop(1.0, '#d8caa8'); // Warm golden sun horizon glow
         skyCtx.fillStyle = skyGrad;
         skyCtx.fillRect(0, 0, 512, 512);
 
@@ -683,21 +683,21 @@ class DarkSoulsWorld {
         const skyDome = new THREE.Mesh(skyDomeGeo, skyDomeMat);
         this.scene.add(skyDome);
 
-        this.scene.background = new THREE.Color(0xb0d8ff);
+        this.scene.background = new THREE.Color(0x566d84);
 
-        // 2. Clear Natural Atmospheric Depth Fog
-        this.scene.fog = new THREE.FogExp2(0xc0e2ff, 0.0001);
+        // 2. Clear Natural Atmospheric Depth Fog (Balanced distance silhouettes)
+        this.scene.fog = new THREE.FogExp2(0x5e758c, 0.00045);
 
-        // 3. Brilliant Pure Daylight Ambient (illuminates ALL architecture without dark shadows)
-        this.ambientLight = new THREE.AmbientLight(0xffffff, 2.2);
+        // 3. Balanced Ambient Light (Clear visibility across all architecture without washing out)
+        this.ambientLight = new THREE.AmbientLight(0x4c5e72, 0.60);
         this.scene.add(this.ambientLight);
 
-        // 4. Sky and ground bounce hemisphere lighting (pure white sky + soft sky blue ground)
-        this.hemiLight = new THREE.HemisphereLight(0xffffff, 0xd0e4ff, 2.0);
+        // 4. Sky and ground bounce hemisphere lighting (Slate blue sky + warm stone bounce)
+        this.hemiLight = new THREE.HemisphereLight(0x8eb0d0, 0x5a4e40, 0.65);
         this.scene.add(this.hemiLight);
 
-        // 5. Cinematic Radiant Lordran Sunlight (primary sun from South-East)
-        this.moonlight = new THREE.DirectionalLight(0xfffaea, 3.6);
+        // 5. Cinematic Radiant Lordran Sunlight (primary sun from South-East, rich shadows & highlights)
+        this.moonlight = new THREE.DirectionalLight(0xfff0dc, 1.85);
         this.moonlight.position.set(45, 80, -25);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 1024;
@@ -709,27 +709,27 @@ class DarkSoulsWorld {
         this.moonlight.shadow.camera.right = d;
         this.moonlight.shadow.camera.top = d;
         this.moonlight.shadow.camera.bottom = -d;
-        this.moonlight.shadow.bias = -0.0003;
-        this.moonlight.shadow.radius = 1.0;
+        this.moonlight.shadow.bias = -0.0005;
+        this.moonlight.shadow.radius = 1.2;
         this.scene.add(this.moonlight);
 
-        // Secondary Omni-Directional Fill Sunlight (eliminates dark rear shadow sides)
-        this.fillSunlight = new THREE.DirectionalLight(0xfff6ea, 2.0);
+        // Secondary Omni-Directional Fill Sunlight (Soft sky bounce, prevents pitch-black crevices)
+        this.fillSunlight = new THREE.DirectionalLight(0x7c9cb8, 0.50);
         this.fillSunlight.position.set(-50, 75, 40);
         this.scene.add(this.fillSunlight);
 
         // 6. Radiant Golden Sun Disc & Volumetric Aura
-        const sunGeo = new THREE.SphereGeometry(8, 20, 20);
-        const sunMat = new THREE.MeshBasicMaterial({ color: 0xfffae4 });
+        const sunGeo = new THREE.SphereGeometry(7.5, 20, 20);
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xfff6dc });
         const sun = new THREE.Mesh(sunGeo, sunMat);
         sun.position.set(65, 125, 45);
         this.scene.add(sun);
 
-        const sunAuraGeo = new THREE.RingGeometry(8.2, 22.0, 32);
+        const sunAuraGeo = new THREE.RingGeometry(7.6, 20.0, 32);
         const sunAuraMat = new THREE.MeshBasicMaterial({
-            color: 0xffeed0,
+            color: 0xffdfa8,
             transparent: true,
-            opacity: 0.65,
+            opacity: 0.45,
             side: THREE.DoubleSide
         });
         const sunAura = new THREE.Mesh(sunAuraGeo, sunAuraMat);

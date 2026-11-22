@@ -110,8 +110,10 @@ class DarkSoulsPostProcessing {
                     graded *= mix(shadowTint, midTint, smoothstep(0.0, 0.5, lum));
                     graded = mix(graded, graded * highTint, smoothstep(0.5, 1.0, lum));
 
-                    // Radiant Daylight Lighting: Smooth gamma lift (pow 0.82) to boost all shadows and unlit crevices
-                    col = clamp(pow(col, vec3(0.82)) * 1.18, 0.0, 1.0);
+                    // Normal Balanced Contrast & Saturation (Natural Soulsborne Look)
+                    col = mix(vec3(lum), graded, 1.06);
+                    col = (col - 0.5) * 1.05 + 0.5;
+                    col = clamp(col, 0.0, 1.0);
 
                     gl_FragColor = vec4(col, 1.0);
                 }
