@@ -2354,7 +2354,7 @@ class DarkSoulsCombat {
                 souls: 1100000,
                 radius: 3.2,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'messmer_the_impaler', theme: 'flame', bossScale: 2.1 }, x, z)
+                create: (cf, x, z) => cf.createMessmerTheImpaler ? cf.createMessmerTheImpaler(x, z) : cf.createSoulsborneBoss({ id: 'messmer_the_impaler', theme: 'flame', bossScale: 2.1 }, x, z)
             },
             {
                 id: 'radahn_consort',
@@ -2384,7 +2384,7 @@ class DarkSoulsCombat {
                 souls: 1250000,
                 radius: 3.8,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'bayle_the_dread', theme: 'flame', bossScale: 2.8 }, x, z)
+                create: (cf, x, z) => cf.createBayleTheDread ? cf.createBayleTheDread(x, z) : cf.createSoulsborneBoss({ id: 'bayle_the_dread', theme: 'flame', bossScale: 2.8 }, x, z)
             },
             {
                 id: 'midra_frenzied_flame',
@@ -2399,7 +2399,7 @@ class DarkSoulsCombat {
                 souls: 1050000,
                 radius: 3.0,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'midra_frenzied_flame', theme: 'frenzy', bossScale: 2.0 }, x, z)
+                create: (cf, x, z) => cf.createMidraFrenziedFlame ? cf.createMidraFrenziedFlame(x, z) : cf.createSoulsborneBoss({ id: 'midra_frenzied_flame', theme: 'frenzy', bossScale: 2.0 }, x, z)
             },
             {
                 id: 'rellana_twin_moon',
@@ -3359,7 +3359,7 @@ class DarkSoulsCombat {
                 souls: 1950000,
                 radius: 3.6,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_death_rite_bird', theme: 'dark', bossScale: 2.7 }, x, z)
+                create: (cf, x, z) => cf.createDeathRiteBird ? cf.createDeathRiteBird(x, z) : cf.createSoulsborneBoss({ id: 'outside_death_rite_bird', theme: 'dark', bossScale: 2.7 }, x, z)
             },
             {
                 id: 'outside_fallingstar_beast',
@@ -3374,7 +3374,7 @@ class DarkSoulsCombat {
                 souls: 2100000,
                 radius: 3.9,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_fallingstar_beast', theme: 'cosmic', bossScale: 2.9 }, x, z)
+                create: (cf, x, z) => cf.createFallingstarBeast ? cf.createFallingstarBeast(x, z) : cf.createSoulsborneBoss({ id: 'outside_fallingstar_beast', theme: 'cosmic', bossScale: 2.9 }, x, z)
             },
             {
                 id: 'outside_erdtree_avatar',
@@ -3389,7 +3389,7 @@ class DarkSoulsCombat {
                 souls: 1850000,
                 radius: 3.5,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_erdtree_avatar', theme: 'rot', bossScale: 2.6 }, x, z)
+                create: (cf, x, z) => cf.createErdtreeAvatar ? cf.createErdtreeAvatar(x, z) : cf.createSoulsborneBoss({ id: 'outside_erdtree_avatar', theme: 'rot', bossScale: 2.6 }, x, z)
             },
             {
                 id: 'outside_grave_warden_black_knight',
@@ -3419,7 +3419,7 @@ class DarkSoulsCombat {
                 souls: 2000000,
                 radius: 4.2,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_ancient_dragon_lansseax', theme: 'dragon', bossScale: 2.8 }, x, z)
+                create: (cf, x, z) => cf.createAncientDragonLansseax ? cf.createAncientDragonLansseax(x, z) : cf.createSoulsborneBoss({ id: 'outside_ancient_dragon_lansseax', theme: 'dragon', bossScale: 2.8 }, x, z)
             },
             {
                 id: 'outside_sanctuary_stone_titan',
@@ -3434,7 +3434,7 @@ class DarkSoulsCombat {
                 souls: 1900000,
                 radius: 3.8,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_sanctuary_stone_titan', theme: 'holy', bossScale: 2.7 }, x, z)
+                create: (cf, x, z) => cf.createSanctuaryStoneTitan ? cf.createSanctuaryStoneTitan(x, z) : cf.createSoulsborneBoss({ id: 'outside_sanctuary_stone_titan', theme: 'holy', bossScale: 2.7 }, x, z)
             },
             {
                 id: 'er_bell_bearing_hunter',
@@ -3555,6 +3555,171 @@ class DarkSoulsCombat {
                 radius: 4.0,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createConsortRadahn ? cf.createConsortRadahn(x, z) : cf.createSoulsborneBoss({ id: 'consort_radahn_miquella', theme: 'holy', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'malenia_goddess_of_rot',
+                name: 'MALENIA, GODDESS OF ROT',
+                title: 'Caelid Rot Miasma Swamp &bull; Waterfowl Dance Katana, Aeonian Scarlet Wings & Flower Bloom',
+                unlockLocationId: 'outside_rot_miasma_swamp',
+                icon: '🌺',
+                theme: 'rot',
+                bossScale: 2.6,
+                maxHp: 48000,
+                damage: 1780,
+                souls: 3800000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createMaleniaGoddessOfRot ? cf.createMaleniaGoddessOfRot(x, z) : cf.createSoulsborneBoss({ id: 'malenia_goddess_of_rot', theme: 'rot', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'fire_giant_flame_peak',
+                name: 'FIRE GIANT OF THE MOUNTAINTOPS',
+                title: 'Mountaintops Flame Peak &bull; Fell God Chest Eye, Avalanching Bone Basin & Volcanic Slam',
+                unlockLocationId: 'outside_flame_peak_cauldron',
+                icon: '🔥',
+                theme: 'fire',
+                bossScale: 3.6,
+                maxHp: 55000,
+                damage: 1850,
+                souls: 4200000,
+                radius: 4.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createFireGiantFlamePeak ? cf.createFireGiantFlamePeak(x, z) : cf.createSoulsborneBoss({ id: 'fire_giant_flame_peak', theme: 'fire', bossScale: 3.6 }, x, z)
+            },
+            {
+                id: 'astel_naturalborn_void',
+                name: 'ASTEL, NATURALBORN OF THE VOID',
+                title: 'Nokstella Eternal Moon Terrace &bull; Cosmic Gravity Pincers, Nebula Beam & Meteor Shower',
+                unlockLocationId: 'outside_nokstella_moon_terrace',
+                icon: '🌌',
+                theme: 'cosmic',
+                bossScale: 3.0,
+                maxHp: 44000,
+                damage: 1680,
+                souls: 3400000,
+                radius: 4.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createAstelNaturalbornVoid ? cf.createAstelNaturalbornVoid(x, z) : cf.createSoulsborneBoss({ id: 'astel_naturalborn_void', theme: 'cosmic', bossScale: 3.0 }, x, z)
+            },
+            {
+                id: 'bayle_the_dread',
+                name: 'BAYLE THE DREAD',
+                title: 'Farum Azula Crumbling Tempest &bull; Dread Magma Horns, Severed Dragon Wings & Tempest Lightning',
+                unlockLocationId: 'outside_farum_azula_tempest',
+                icon: '🐉',
+                theme: 'dragon',
+                bossScale: 3.5,
+                maxHp: 52000,
+                damage: 1820,
+                souls: 4000000,
+                radius: 4.6,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createBayleTheDread ? cf.createBayleTheDread(x, z) : cf.createSoulsborneBoss({ id: 'bayle_the_dread', theme: 'dragon', bossScale: 3.5 }, x, z)
+            },
+            {
+                id: 'godfrey_first_elden_lord',
+                name: 'GODFREY, FIRST ELDEN LORD',
+                title: 'Leyndell Erdtree Colosseum &bull; Axe of Godfrey, Beast Regent Serosh & Earthshaker Tremor',
+                unlockLocationId: 'outside_golden_capital_colosseum',
+                icon: '🏛️',
+                theme: 'holy',
+                bossScale: 2.7,
+                maxHp: 47000,
+                damage: 1750,
+                souls: 3700000,
+                radius: 3.9,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createGodfreyFirstEldenLord ? cf.createGodfreyFirstEldenLord(x, z) : cf.createSoulsborneBoss({ id: 'godfrey_first_elden_lord', theme: 'holy', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'ludwig_holy_blade',
+                name: 'LUDWIG THE HOLY BLADE',
+                title: 'Cathedral of the Deep &bull; Moonlight Greatsword, Accursed Beast Maw & Arcane Beam Waves',
+                unlockLocationId: 'outside_drowned_abyssal_necropolis',
+                icon: '🗡️',
+                theme: 'magic',
+                bossScale: 2.9,
+                maxHp: 46000,
+                damage: 1710,
+                souls: 3600000,
+                radius: 4.1,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createLudwigHolyBlade ? cf.createLudwigHolyBlade(x, z) : cf.createSoulsborneBoss({ id: 'ludwig_holy_blade', theme: 'magic', bossScale: 2.9 }, x, z)
+            },
+            {
+                id: 'outside_bayle_the_dread',
+                name: 'BAYLE THE DREAD, APEX DRAGON OF DREAD',
+                title: 'Outside Realm: Jagged Peak Caldera &bull; Magma Breath, Severed Dragon Wings & Tempest Scarlet Lightning',
+                unlockLocationId: 'outside_jagged_peak_caldera',
+                icon: '🐉',
+                theme: 'flame',
+                bossScale: 3.5,
+                maxHp: 56000,
+                damage: 1850,
+                souls: 4200000,
+                radius: 4.6,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createBayleTheDread ? cf.createBayleTheDread(x, z) : cf.createSoulsborneBoss({ id: 'bayle_the_dread', theme: 'flame', bossScale: 3.5 }, x, z)
+            },
+            {
+                id: 'outside_messmer_the_impaler',
+                name: 'MESSMER THE IMPALER, LORD OF SHADOW KEEP',
+                title: 'Outside Realm: Shadow Keep Ramparts &bull; Crimson Flame Spear, Coiled Abyssal Serpents & Impalement',
+                unlockLocationId: 'outside_shadow_keep_ramparts',
+                icon: '🐍',
+                theme: 'flame',
+                bossScale: 2.6,
+                maxHp: 51000,
+                damage: 1780,
+                souls: 3900000,
+                radius: 3.6,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createMessmerTheImpaler ? cf.createMessmerTheImpaler(x, z) : cf.createSoulsborneBoss({ id: 'messmer_the_impaler', theme: 'flame', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'outside_midra_frenzied_flame',
+                name: 'MIDRA, LORD OF FRENZIED FLAME',
+                title: 'Outside Realm: Frenzied Flame Abyss &bull; Barbed Greatsword of Damnation, Frenzied Burst & Searing Sun Head',
+                unlockLocationId: 'outside_frenzied_flame_abyss',
+                icon: '👁️',
+                theme: 'frenzy',
+                bossScale: 2.7,
+                maxHp: 49000,
+                damage: 1750,
+                souls: 3800000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createMidraFrenziedFlame ? cf.createMidraFrenziedFlame(x, z) : cf.createSoulsborneBoss({ id: 'midra_frenzied_flame', theme: 'frenzy', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'outside_bloodhound_darriwil',
+                name: 'BLOODHOUND KNIGHT DARRIWIL',
+                title: 'Outside Realm: Forlorn Bloodhound Evergaol &bull; Predatory Low-Slung Sweep, Bloodhound Step & Cold Fang Blade',
+                unlockLocationId: 'outside_bloodhound_gaol',
+                icon: '🐺',
+                theme: 'frost',
+                bossScale: 2.4,
+                maxHp: 42000,
+                damage: 1640,
+                souls: 3200000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createBloodhoundKnightMob ? cf.createBloodhoundKnightMob(x, z, 0, 0) : cf.createSoulsborneBoss({ id: 'bloodhound_knight', theme: 'frost', bossScale: 2.4 }, x, z)
+            },
+            {
+                id: 'outside_crystalian_matrix_trio',
+                name: 'CRYSTALIAN MATRIX HIGH TRIO',
+                title: 'Outside Realm: Glintstone Crystalian Matrix &bull; Refractive Chakram Blades, Glintstone Ring Throw & Crystalline Armor',
+                unlockLocationId: 'outside_crystalian_cavern_matrix',
+                icon: '💎',
+                theme: 'magic',
+                bossScale: 2.5,
+                maxHp: 47000,
+                damage: 1690,
+                souls: 3600000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createCrystalianBlademaiden ? cf.createCrystalianBlademaiden(x, z, 0, 0) : cf.createSoulsborneBoss({ id: 'crystalian_matrix', theme: 'magic', bossScale: 2.5 }, x, z)
             }
         ];
     }
@@ -3828,14 +3993,33 @@ class DarkSoulsCombat {
             [-62.0, 0.0, -70.0], [-68.0, 0.0, -80.0], [-72.0, 0.0, -74.0],   // Forbidden Mistwood Ruins
             [-220.0, -4.0, -32.0], [-228.0, -4.0, -38.0], [-225.0, -4.0, -42.0], // Abyssal Eclipse Chasm
             [-236.0, 6.0, 12.0], [-244.0, 6.0, 18.0], [-240.0, 6.0, 22.0],   // Frozen Wyrmpeak Precipice
-            [-140.0, 4.0, -92.0], [-148.0, 4.0, -98.0], [-144.0, 4.0, -90.0]  // Stormveil Cliffside Ramparts
+            [-140.0, 4.0, -92.0], [-148.0, 4.0, -98.0], [-144.0, 4.0, -90.0],  // Stormveil Cliffside Ramparts
+            // New Outside Expansion Patrols (Rot Miasma, Flame Peak, Nokstella, Farum Azula, Leyndell, Abyssal Necropolis)
+            [-180.0, 0.0, -95.0], [-188.0, 0.0, -105.0], [-185.0, 0.0, -112.0], // Caelid Rot Miasma Swamp
+            [-240.0, 8.0, -75.0], [-248.0, 8.0, -85.0], [-245.0, 8.0, -90.0],   // Mountaintops Flame Peak Cauldron
+            [-120.0, -3.0, 100.0], [-128.0, -3.0, 110.0], [-125.0, -3.0, 115.0], // Nokstella Eternal Moon Terrace
+            [-230.0, 7.0, -115.0], [-238.0, 7.0, -125.0], [-235.0, 7.0, -130.0], // Farum Azula Crumbling Tempest
+            [-170.0, 5.0, 110.0], [-178.0, 5.0, 120.0], [-175.0, 5.0, 125.0],   // Leyndell Erdtree Colosseum
+            [-90.0, -2.5, 120.0], [-98.0, -2.5, 130.0], [-95.0, -2.5, 135.0],    // Cathedral Drowned Necropolis
+            // Outside Apex Expedition Patrols (Caldera, Shadow Keep, Frenzied Abyss, Haligtree, Archdragon, Evergaol, Crystal Matrix)
+            [-260.0, 4.0, 75.0], [-268.0, 4.0, 82.0], [-254.0, 4.0, 68.0],        // Jagged Peak Caldera (Draconic Beastmen & Bayle)
+            [-175.0, 4.0, -115.0], [-182.0, 4.0, -122.0], [-168.0, 4.0, -108.0],    // Shadow Keep Ramparts (Crucible Horned Sentinels)
+            [-245.0, -4.0, -85.0], [-252.0, -4.0, -92.0], [-238.0, -4.0, -78.0],    // Frenzied Flame Abyss (Frenzied Flame Acolytes)
+            [-95.0, 2.0, 95.0], [-102.0, 2.0, 102.0], [-88.0, 2.0, 88.0],           // Haligtree Canopy Roots (Crystalian Blademaidens)
+            [-270.0, 7.0, -25.0], [-278.0, 7.0, -32.0], [-262.0, 7.0, -18.0],       // Archdragon Thunder Belfry (Onyx Meteor Lords)
+            [-80.0, 0.0, -110.0], [-86.0, 0.0, -116.0], [-74.0, 0.0, -104.0],       // Forlorn Bloodhound Evergaol (Bloodhound Knights)
+            [-120.0, -2.0, -110.0], [-128.0, -2.0, -118.0], [-112.0, -2.0, -102.0]  // Glintstone Crystalian Matrix (Crystalians)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
                 'treant_guardian', 'cursed_basilisk', 'gorgon_medusa', 
                 'crystal_drake_whelp', 'crucible_knight_sentinel', 'gorgon_medusa',
                 'dire_shadow_wolf', 'abyssal_pus_beast', 'black_knife_assassin',
-                'ancestral_horned_shaman', 'gorgon_medusa', 'magma_wyrm_hatchling'
+                'ancestral_horned_shaman', 'gorgon_medusa', 'magma_wyrm_hatchling',
+                'cleanrot_knight', 'fire_monk_prelate', 'nox_swordstress',
+                'farum_beastman', 'royal_perfumer', 'abyssal_grave_warden',
+                'crucible_horned_sentinel', 'bloodhound_knight', 'frenzied_flame_acolyte',
+                'crystalian_blademaiden', 'draconic_beastman', 'onyx_meteor_lord'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

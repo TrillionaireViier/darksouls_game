@@ -1748,8 +1748,8 @@
                 <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
                 <button class="btn-icon-bar" onclick="openNPCsModal()" title="330 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (330)</span></button>
-                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,050 3D Models: 340 Armors, 330 NPCs & 380 Mobs" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,050)</span></button>
-                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="222 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (222)</span></button>
+                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,062 3D Models: 340 Armors, 330 NPCs, 386 Mobs & 6 New Outside Apex Bosses" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,062)</span></button>
+                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="228 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (228)</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" title="50 Legendary Soulsborne Weapons & Arsenal" style="border-color: #d4af37; color: #ffd778; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);">⚔️ <span class="btn-label-text">WEAPONS (50)</span></button>
                 <button class="btn-icon-bar" onclick="openRingsModal()" title="30 Legendary Soulsborne Rings & Talismans (4 Equip Slots)" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">💍 <span class="btn-label-text">RINGS (30)</span></button>
@@ -4186,6 +4186,84 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('consort_radahn_miquella')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 223: Malenia, Goddess of Rot -->
+                <div class="boss-card" data-boss-id="malenia_goddess_of_rot">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌺</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">223. MALENIA, GODDESS OF ROT</div>
+                            <div class="boss-card-desc">Caelid Rot Miasma Swamp &bull; Waterfowl Dance Katana, Aeonian Scarlet Wings & Flower Bloom</div>
+                            <div class="boss-card-stats">HP: 48,000 &bull; REWARD: 3,800,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('malenia_goddess_of_rot')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 224: Fire Giant of the Mountaintops -->
+                <div class="boss-card" data-boss-id="fire_giant_flame_peak">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">224. FIRE GIANT OF THE PEAK</div>
+                            <div class="boss-card-desc">Mountaintops Flame Peak &bull; Fell God Chest Eye, Avalanching Bone Basin & Volcanic Slam</div>
+                            <div class="boss-card-stats">HP: 55,000 &bull; REWARD: 4,200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('fire_giant_flame_peak')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 225: Astel, Naturalborn of the Void -->
+                <div class="boss-card" data-boss-id="astel_naturalborn_void">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌌</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">225. ASTEL, NATURALBORN OF VOID</div>
+                            <div class="boss-card-desc">Nokstella Eternal Moon Terrace &bull; Cosmic Gravity Pincers, Nebula Beam & Meteor Shower</div>
+                            <div class="boss-card-stats">HP: 44,000 &bull; REWARD: 3,400,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('astel_naturalborn_void')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 226: Bayle the Dread -->
+                <div class="boss-card" data-boss-id="bayle_the_dread">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">226. BAYLE THE DREAD</div>
+                            <div class="boss-card-desc">Farum Azula Crumbling Tempest &bull; Dread Magma Horns, Severed Dragon Wings & Tempest Lightning</div>
+                            <div class="boss-card-stats">HP: 52,000 &bull; REWARD: 4,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('bayle_the_dread')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 227: Godfrey, First Elden Lord -->
+                <div class="boss-card" data-boss-id="godfrey_first_elden_lord">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🏛️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">227. GODFREY, FIRST ELDEN LORD</div>
+                            <div class="boss-card-desc">Leyndell Erdtree Colosseum &bull; Axe of Godfrey, Beast Regent Serosh & Earthshaker Tremor</div>
+                            <div class="boss-card-stats">HP: 47,000 &bull; REWARD: 3,700,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('godfrey_first_elden_lord')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 228: Ludwig the Holy Blade -->
+                <div class="boss-card" data-boss-id="ludwig_holy_blade">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">228. LUDWIG THE HOLY BLADE</div>
+                            <div class="boss-card-desc">Cathedral of the Deep &bull; Moonlight Greatsword, Accursed Beast Maw & Arcane Beam Waves</div>
+                            <div class="boss-card-stats">HP: 46,000 &bull; REWARD: 3,600,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('ludwig_holy_blade')">CHALLENGE</button>
                 </div>
             </div>
 
@@ -6930,7 +7008,7 @@
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openNPCsModal();" style="border-color: #00e5ff; color: #80d8ff; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 10px rgba(0,229,255,0.4);">🧙 330 NPCS & ALLIES</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openCompendiumModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">🗿 1,000 3D MODELS (ARMORS, NPCS, MOBS)</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); if(window.compendiumInstance)window.compendiumInstance.clearSpawned();" style="border-color: #ff6666; color: #ffaaaa; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(60, 20, 20, 0.75); box-shadow: 0 0 10px rgba(255,85,85,0.4);">🧹 CLEAR SPAWNED 3D</button>
-                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 222 BOSS ROSTER</button>
+                    <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openBossSelectModal();" style="border-color: #c49a45; color: #ffd276; justify-content: center; padding: 10px 12px; font-weight: 800;">⚔️ 228 BOSS ROSTER</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openDevMapModal();" style="border-color: #00ffaa; color: #a5ffbe; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.4);">🗺️ DEV MAP [M]</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLocationsModal();" style="border-color: #00ffaa; color: #a5d6a7; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(10, 45, 30, 0.75); box-shadow: 0 0 10px rgba(0,255,170,0.3);">🗺️ 480 LOCATIONS</button>
                     <button class="btn-icon-bar" onclick="closeQuickMenuModal(); openLoreCodexModal();" style="border-color: #ffd700; color: #fff3a8; justify-content: center; padding: 10px 12px; font-weight: 800; background: rgba(55, 42, 12, 0.75); box-shadow: 0 0 10px rgba(255,215,0,0.4);">📜 LORE (690 MOBS)</button>
@@ -7932,26 +8010,26 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/audio.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/lore_items.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/merchants_30.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/world.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/character.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/siege_warfare.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/collision_system.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/combat.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/postprocessing.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/qa_suite.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/inventory_system.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/compendium_300_models.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/death_quotes_300.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/game.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
-    <script src="js/dev_map.js?v=20261122_V31_X6_LOCATIONS_AND_FALLEN_SPACESHIP"></script>
+    <script src="js/three.min.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/audio.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/lore_items.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/merchants_30.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/world.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/character.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/siege_warfare.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/collision_system.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/combat.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/postprocessing.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/qa_suite.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/inventory_system.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/compendium_300_models.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/death_quotes_300.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/game.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
+    <script src="js/dev_map.js?v=20261122_V32_OUTSIDE_REALM_EXPANSION_BOSSES_AND_MOBS"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {

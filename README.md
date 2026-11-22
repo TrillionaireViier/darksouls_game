@@ -67,8 +67,8 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 222 Legendary Boss Roster
-Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 222 legendary bosses across all Soulsborne eras:
+### 🌲 Outside Realm Apex Bosses & 228 Legendary Boss Roster
+Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 228 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
 - **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Scorched Dragonbarrow
@@ -81,7 +81,19 @@ Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderne
   - Translucent azure permafrost dragon with crystalline icicle stalagmites and howling blizzard breath.
 - **Promised Consort Radahn (Обещанный Консорт Радан)** — Stormveil Cliffside Ramparts
   - Gilded lion armor, Young Miquella clinging to his shoulders with cascading braided hair, twin Greatswords of Light, and divine solar pillar.
-- **Plus Ancient Dragon Senessax, Death Rite Bird, Fallingstar Beast, Starscourge Radahn, Bayle the Dread, Messmer the Impaler, Rellana, Midra, and 210+ more!****
+- **Malenia, Goddess of Rot (Маления, Богиня Гнили)** — Caelid Rot Miasma Swamp
+  - Unalloyed gold winged helmet, flowing crimson hair, Hand of Malenia prosthetic curved katana, and 4 blossoming Scarlet Aeonia butterfly wings dripping toxic rot pollen.
+- **Fire Giant of the Mountaintops (Огненный Великан Вершин)** — Mountaintops Flame Peak Cauldron
+  - Colossal stone-muscled titan with braided crimson beard, cyclopean Fell God chest eye, and massive circular iron avalanche dish.
+- **Astel, Naturalborn of the Void (Астель, Рожденный Бездной)** — Nokstella Eternal Moon Terrace
+  - Cosmic skull cranium with solitary purple stellar eye, serrated gravity mandibles, translucent constellation dragonfly wings, and segmented gravity stinger tail.
+- **Bayle the Dread (Бейл Грозный)** — Farum Azula Crumbling Tempest
+  - Battle-ravaged magma dragon skull with broken jagged horns, scarred chest with magma veins, severed wing bone stumps, and pierced ancient dragon harpoons.
+- **Godfrey, First Elden Lord (Годфри, Первый Повелитель Элдена)** — Leyndell Erdtree Colosseum
+  - Regal barbarian armor in burnished gold, flowing white mane and crown, massive double-bitted Great Axe of Godfrey, and ethereal phantom lion Beast Regent Serosh clutched across back.
+- **Ludwig the Holy Blade (Людвиг Священный Клинок)** — Cathedral of the Deep Drowned Necropolis
+  - Monstrous chimeric equine-human beast with weeping arcane eye bulbs, ragged hunter bandages, and the legendary glowing emerald Moonlight Greatsword.
+- **Plus Ancient Dragon Senessax, Death Rite Bird, Fallingstar Beast, Starscourge Radahn, Messmer the Impaler, Rellana, Midra, and 220+ more!**
 
 ---
 
@@ -93,16 +105,28 @@ Step through the western rampart archway or press `[ O ]` to enter the expansive
 4. **Rotten Grove Sanctum**: Toxic fungal mounds veiled in spore clouds and primordial tree roots.
 5. **Sunken Dragon Crypt**: Ancient sub-surface subterranean vault housing fossilized dragonkin.
 6. **Ancient Dolmen Colonnade**: Megalithic stone rings marking ancient astronomical leylines.
-7. **Primeval Waystone Portals & Waypoints**: Instantaneous traversal back to Courtyard, Boss Arenas, or the Citadel.
+7. **Caelid Rot Miasma Swamp**: Deep scarlet rot morass with towering Aeonian mushroom trees, weeping Haligtree roots, and bubbling toxic spore bogs.
+8. **Mountaintops Flame Peak Cauldron**: Elevated basalt caldera (+8.0m) bound by colossal giant iron chains and stoked by primordial Fell God embers.
+9. **Nokstella Eternal Moon Terrace**: Sunken nocturnal lapis terrace (-3.0m) crowned by a hovering Silver Moon core with orbital rings and obsidian obelisks.
+10. **Farum Azula Crumbling Tempest**: Floating sky temple island (+7.0m) suspended amidst vortex clouds, red lightning conductors, and dragon god mausoleum altar.
+11. **Leyndell Erdtree Colosseum**: Elevated golden marble amphitheater (+5.0m) flanked by Corinthian colonnades, royal lion sculptures, and radiant Erdtree bough archway.
+12. **Cathedral of the Deep Drowned Necropolis**: Flooded sunken cemetery (-2.5m) with leaning gothic spires bound in rusted chains, colossal grave steles, and turquoise ghostfire braziers.
+13. **Primeval Waystone Portals & Waypoints**: Instantaneous traversal back to Courtyard, Boss Arenas, or the Citadel.
 
 ---
 
-## 🕷️ Procedural 3D Mob Models & Bestiary (1,050 Models / 690 Lore Entries)
+## 🕷️ Procedural 3D Mob Models & Bestiary (1,062 Models / 690 Lore Entries)
 Encounter newly crafted, fully rigged Three.js procedural 3D creatures with custom locomotion, attack animations, and hitboxes:
 - **Lesser Red Wolf of Radagon / Dire Shadow Wolf**: Sleek night-shadow pelt, pointed lupine ears, glowing cyan lunar eyes, articulated quadruped paws, and an ethereal blue magic sword gripped crosswise in its jaws!
 - **Abyssal Pus of Man / Corrupted Serpent Beast**: Grotesque gaping abyssal serpent exploding from a hollow host body, 5 glowing crimson eyes, and a colossal mutated talon arm.
 - **Black Knife Assassin / Shadow Stalker**: Translucent stealth shroud, blank porcelain oval mask, cowled hood, and signature reverse-grip Black Knife dagger with crimson Destined Death flame!
 - **Ancestral Horned Shaman**: Muscular primeval titan with massive 8-pointed branching stag antlers (1.8m span), spirit soul staff, and glowing soul lantern.
+- **Scarlet Cleanrot Knight of Miquella**: Slender articulated winged brass cuirass, crescent-winged helmet with flowing veil, wielding thrusting Cleanrot rapier and winged scythe.
+- **Fire Monk Prelate of the Forge**: Colossal bulbous red-iron hammered armor, grinning furnace mask with glowing flame eye slits, chimney collar, and giant Prelate's Inferno Crozier hammer.
+- **Nox Swordstress of the Eternal City**: Layered shimmering white silk robes, mirrored conical silver headdress, and fluid segmented liquid silver whip-sword.
+- **Farum Azula Draconic Beastman**: Muscular hunchbacked lupine-draconic predator with stone dorsal scales, beast fangs, and chipped ancient stone Azula cleaver.
+- **Leyndell Royal Perfumer**: Gold-trimmed leather apothecary vestments, brass beak respirator mask, atomizer spray phial with explosive golden sparks, and slender rapier.
+- **Abyssal Grave Warden**: Titanic executioner brute wrapped in mummy bandages and barbed iron wire, dual-wielding colossal carved granite gravestones with engraved cross motifs.
 - **Glintstone Sorcery Marionette**: 4-armed clockwork brass automaton with avian bird-mask helmet, turning gears, dual curved scythes, and glintstone core!
 - **Magma Wyrm Hatchling**: Heavy quadruped reptilian basalt chassis with glowing molten lava channels, 3 smoking volcanic spine vents, and lava-dripping maw.
 - **Dragonkin Wyrm**: Swept-back magma horns, glowing internal chest vent with pointlight, spiked tail, and molten curved greatsword.

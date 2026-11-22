@@ -822,8 +822,68 @@ class DarkSoulsWorld {
             return -4.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-265, -28], z in [-140, 140]
-        if (x >= -265 && x <= -28 && z >= -140 && z <= 140) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-550, -28], z in [-350, 350]
+        if (x >= -550 && x <= -28 && z >= -350 && z <= 350) {
+            // 1. Celestial Falls & Moonlit Shrine (outside_celestial_falls_basin)
+            if (x >= -298 && x <= -262 && z >= -98 && z <= -62) {
+                return -2.0;
+            }
+            // 2. Cathedral of Dragon Communion (outside_cathedral_dragon_communion)
+            if (x >= -328 && x <= -292 && z >= 92 && z <= 128) {
+                return 3.0;
+            }
+            // 3. Tower of the Frenzied Flame (outside_frenzied_flame_overlook)
+            if (x >= -358 && x <= -322 && z >= -158 && z <= -122) {
+                return 8.0;
+            }
+            // 4. Golden Erdtree Royal Colonnade (outside_royal_colonnade_sanctum)
+            if (x >= -278 && x <= -242 && z >= 162 && z <= 198) {
+                return 2.0;
+            }
+            // 5. Forlorn Hound Evergaol Seal (outside_evergaol_bloodhound)
+            if (x >= -208 && x <= -172 && z >= -178 && z <= -142) {
+                return 0.0;
+            }
+            // 6. Titanite Colossus Smelting Caldera (outside_titan_forge_caldera)
+            if (x >= -378 && x <= -342 && z >= 22 && z <= 58) {
+                return -1.0;
+            }
+            // 7. Necromancer's Bone Barrow (outside_necromancer_bone_barrow)
+            if (x >= -408 && x <= -372 && z >= -78 && z <= -42) {
+                return 1.0;
+            }
+            // 8. Sunken Mist Lake & Spectral Gondola Pier (outside_sunken_gondola_harbor)
+            if (x >= -438 && x <= -402 && z >= 72 && z <= 108) {
+                return -3.0;
+            }
+            // 9. World-Tree Aerial Canopy Bridges (outside_ancient_archtree_canopy)
+            if (x >= -468 && x <= -432 && z >= -38 && z <= -2) {
+                return 12.0;
+            }
+            // 10. Emerald Farron Shrine (outside_emerald_farron_shrine)
+            if (x >= -498 && x <= -462 && z >= -128 && z <= -92) {
+                return 2.0;
+            }
+            // Mountaintops Flame Peak Cauldron (outside_flame_peak_cauldron) (x in [-265, -225], z in [-95, -65])
+            if (x >= -265 && x <= -225 && z >= -95 && z <= -65) {
+                return 8.0;
+            }
+            // Farum Azula Crumbling Tempest (outside_farum_azula_tempest) (x in [-255, -215], z in [-135, -105])
+            if (x >= -255 && x <= -215 && z >= -135 && z <= -105) {
+                return 7.0;
+            }
+            // Leyndell Erdtree Colosseum (outside_golden_capital_colosseum) (x in [-195, -155], z in [100, 130])
+            if (x >= -195 && x <= -155 && z >= 100 && z <= 130) {
+                return 5.0;
+            }
+            // Nokstella Eternal Moon Terrace (outside_nokstella_moon_terrace) (x in [-145, -105], z in [90, 120])
+            if (x >= -145 && x <= -105 && z >= 90 && z <= 120) {
+                return -3.0;
+            }
+            // Cathedral Drowned Necropolis (outside_drowned_abyssal_necropolis) (x in [-115, -75], z in [110, 140])
+            if (x >= -115 && x <= -75 && z >= 110 && z <= 140) {
+                return -2.5;
+            }
             // Carian Star Observatory (x in [-120, -90], z in [-100, -70])
             if (x >= -120 && x <= -90 && z >= -100 && z <= -70) {
                 return 3.5;
@@ -2197,13 +2257,533 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-135, 4.0, -95, 0xffd700, 4.0, 24);
         this.createPathBeacon(-145, 4.0, -95, 0xffd700, "⚡ STORMVEIL CLIFFSIDE RAMPARTS [ELEV +4.0m]", "WINDSWEPT PARAPETS • CRUCIBLE SENTINELS & CONSORT RADAHN", "#fef08a");
 
-        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded to 265m)
-        // North mountain ridge: z = -140, x: -265 to -28
-        this.createWall(-146, 8, -140, 242, 22, 6);
-        // South mountain ridge: z = 140, x: -265 to -28
-        this.createWall(-146, 8, 140, 242, 22, 6);
-        // West boundary mountain: x = -265, z: -140 to 140
-        this.createWall(-265, 10, 0, 6, 26, 285);
+        // G. Caelid Rot Miasma Swamp (outside_rot_miasma_swamp) (x = -185, z = -100, elev = 0m)
+        const rotSwampGroup = new THREE.Group();
+        rotSwampGroup.position.set(-185, 0, -100);
+
+        // Bubbling Scarlet Rot Bog Fissure
+        const rotBog = new THREE.Mesh(new THREE.BoxGeometry(36, 0.35, 36), new THREE.MeshStandardMaterial({
+            color: 0x8b0000,
+            roughness: 0.85,
+            emissive: 0x550011,
+            emissiveIntensity: 0.6
+        }));
+        rotBog.position.y = 0.15;
+        rotSwampGroup.add(rotBog);
+
+        // Towering Aeonian Spore Mushroom Tree
+        const shroomTrunk = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.8, 8.5, 8), this.stoneMat);
+        shroomTrunk.position.y = 4.25;
+        rotSwampGroup.add(shroomTrunk);
+
+        const shroomCap = new THREE.Mesh(new THREE.CylinderGeometry(7.5, 6.0, 1.8, 16), new THREE.MeshStandardMaterial({
+            color: 0xd6336c,
+            emissive: 0xa61e4d,
+            emissiveIntensity: 0.8,
+            roughness: 0.6
+        }));
+        shroomCap.position.y = 8.5;
+        rotSwampGroup.add(shroomCap);
+
+        // Arching Weeping Haligtree Root
+        const rotRoot = new THREE.Mesh(new THREE.TorusGeometry(8.5, 0.8, 8, 20, Math.PI * 0.8), this.stoneMat);
+        rotRoot.position.set(0, 0, 0);
+        rotRoot.rotation.set(Math.PI / 3, 0.5, 0);
+        rotSwampGroup.add(rotRoot);
+
+        const rotLight = new THREE.PointLight(0xff1493, 3.8, 30.0);
+        rotLight.position.set(0, 5.5, 0);
+        rotSwampGroup.add(rotLight);
+        outsideGroup.add(rotSwampGroup);
+
+        this.createStandingBrazier(-185, 0, -90, 0xff1493, 4.0, 24);
+        this.createStandingBrazier(-185, 0, -110, 0xff1493, 4.0, 24);
+        this.createPathBeacon(-185, 0, -100, 0xff1493, "🌺 CAELID ROT MIASMA SWAMP [0m]", "SCARLET AEONIA • MALENIA BLADE OF MIQUELLA & CLEANROT KNIGHTS", "#fecdd3");
+
+        // H. Mountaintops Flame Peak Cauldron (outside_flame_peak_cauldron) (x = -245, z = -80, elev = +8.0m)
+        const flamePeakPlat = new THREE.Mesh(new THREE.BoxGeometry(42, 8.0, 42), this.cliffRockMat);
+        flamePeakPlat.position.set(-245, 4.0, -80);
+        flamePeakPlat.receiveShadow = true;
+        outsideGroup.add(flamePeakPlat);
+
+        // Circular Iron Forge Basin with bubbling molten slag
+        const cauldronBasin = new THREE.Mesh(new THREE.CylinderGeometry(9.0, 8.2, 2.2, 18), this.darkSteelMat);
+        cauldronBasin.position.set(-245, 8.8, -80);
+        outsideGroup.add(cauldronBasin);
+
+        const cauldronMagma = new THREE.Mesh(new THREE.CylinderGeometry(8.2, 8.2, 0.4, 18), this.demonLavaMat || this.stoneMat);
+        cauldronMagma.position.set(-245, 9.8, -80);
+        outsideGroup.add(cauldronMagma);
+
+        // Colossal Giant Iron Chains spanning peak
+        for (let ch = -1; ch <= 1; ch += 2) {
+            const chainLink = new THREE.Mesh(new THREE.TorusGeometry(3.8, 0.45, 8, 20), this.darkSteelMat);
+            chainLink.position.set(-245 + ch * 11, 9.5, -80);
+            chainLink.rotation.set(0.4, ch * 0.6, 0);
+            outsideGroup.add(chainLink);
+        }
+
+        const cauldronLight = new THREE.PointLight(0xff3300, 4.5, 32.0);
+        cauldronLight.position.set(-245, 11.5, -80);
+        outsideGroup.add(cauldronLight);
+        this.createStandingBrazier(-245, 8.0, -68, 0xff4400, 4.5, 26);
+        this.createStandingBrazier(-245, 8.0, -92, 0xff4400, 4.5, 26);
+        this.createPathBeacon(-245, 8.0, -80, 0xff3300, "🔥 MOUNTAINTOPS FLAME PEAK [ELEV +8.0m]", "GIANTS CALDERA FORGE • FELL GOD EYE & SMOLDERING PRELATES", "#fed7aa");
+
+        // I. Nokstella Eternal Moon Terrace (outside_nokstella_moon_terrace) (x = -125, z = 105, elev = -3.0m)
+        const nokstellaPlat = new THREE.Mesh(new THREE.CylinderGeometry(26, 26, 1.2, 24), this.darkSteelMat);
+        nokstellaPlat.position.set(-125, -3.6, 105);
+        nokstellaPlat.receiveShadow = true;
+        outsideGroup.add(nokstellaPlat);
+
+        // Hovering Silver Moon Core with Orbit Rings
+        const silverMoon = new THREE.Mesh(new THREE.SphereGeometry(2.2, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0xe0e8f8,
+            emissive: 0x7c92b8,
+            emissiveIntensity: 0.9,
+            roughness: 0.2
+        }));
+        silverMoon.position.set(-125, 1.5, 105);
+        outsideGroup.add(silverMoon);
+
+        const moonOrbitRing = new THREE.Mesh(new THREE.TorusGeometry(3.6, 0.12, 8, 24), this.goldMat || this.stoneMat);
+        moonOrbitRing.position.set(-125, 1.5, 105);
+        moonOrbitRing.rotation.set(0.6, 0.3, 0);
+        outsideGroup.add(moonOrbitRing);
+
+        // 4 Fluted Obsidian Obelisks channeling purple starlight
+        [[-135, 95], [-115, 95], [-135, 115], [-115, 115]].forEach(([ox, oz]) => {
+            const ob = new THREE.Mesh(new THREE.ConeGeometry(0.7, 5.5, 5), this.darkSteelMat);
+            ob.position.set(ox, -0.5, oz);
+            outsideGroup.add(ob);
+            this.createStandingBrazier(ox, -3.0, oz, 0x9900ff, 4.0, 24);
+        });
+
+        const nokstellaLight = new THREE.PointLight(0x9900ff, 3.8, 30.0);
+        nokstellaLight.position.set(-125, 2.5, 105);
+        outsideGroup.add(nokstellaLight);
+        this.createPathBeacon(-125, -3.0, 105, 0x9900ff, "🌌 NOKSTELLA ETERNAL MOON TERRACE [ELEV -3.0m]", "SILVER TEAR BASIN • ASTEL VOID NATURALBORN & NOX SWORDSTRESSES", "#e9d5ff");
+
+        // J. Farum Azula Crumbling Tempest (outside_farum_azula_tempest) (x = -235, z = -120, elev = +7.0m)
+        const azulaPlat = new THREE.Mesh(new THREE.BoxGeometry(36, 7.0, 36), this.stoneMat);
+        azulaPlat.position.set(-235, 3.5, -120);
+        azulaPlat.receiveShadow = true;
+        outsideGroup.add(azulaPlat);
+
+        // Dragon God Mausoleum Altar flanked by Stone Dragon Wings
+        const altarBase = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 5.2, 1.2, 12), this.stoneMat);
+        altarBase.position.set(-235, 7.6, -120);
+        outsideGroup.add(altarBase);
+
+        for (let side = -1; side <= 1; side += 2) {
+            const dragonWing = new THREE.Mesh(new THREE.BoxGeometry(0.35, 5.5, 3.5), this.stoneMat);
+            dragonWing.position.set(-235 + side * 5.5, 9.5, -120);
+            dragonWing.rotation.set(0, 0, -side * 0.4);
+            outsideGroup.add(dragonWing);
+        }
+
+        // Floating shattered ruin fragments hovering in air
+        for (let fr = 0; fr < 6; fr++) {
+            const fang = (fr / 6) * Math.PI * 2;
+            const floatRuin = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.4, 2.2), this.stoneMat);
+            floatRuin.position.set(-235 + Math.cos(fang) * 12, 11.5 + (fr % 2) * 1.5, -120 + Math.sin(fang) * 12);
+            floatRuin.rotation.set(fr * 0.3, fr * 0.5, 0);
+            outsideGroup.add(floatRuin);
+        }
+
+        const azulaLight = new THREE.PointLight(0xff0044, 4.2, 32.0);
+        azulaLight.position.set(-235, 11.0, -120);
+        outsideGroup.add(azulaLight);
+        this.createStandingBrazier(-235, 7.0, -108, 0xff0044, 4.5, 26);
+        this.createStandingBrazier(-235, 7.0, -132, 0xff0044, 4.5, 26);
+        this.createPathBeacon(-235, 7.0, -120, 0xff0044, "⚡ FARUM AZULA CRUMBLING TEMPEST [ELEV +7.0m]", "DRAGON MAUSOLEUM • BAYLE THE DREAD & DRACONIC BEASTMEN", "#fda4af");
+
+        // K. Leyndell Erdtree Colosseum (outside_golden_capital_colosseum) (x = -175, z = 115, elev = +5.0m)
+        const colosseumPlat = new THREE.Mesh(new THREE.CylinderGeometry(28, 30, 5.0, 24), this.stoneMat);
+        colosseumPlat.position.set(-175, 2.5, 115);
+        colosseumPlat.receiveShadow = true;
+        outsideGroup.add(colosseumPlat);
+
+        // Circular Golden Colonnade around amphitheater
+        for (let cp = 0; cp < 8; cp++) {
+            const cang = (cp / 8) * Math.PI * 2;
+            const col = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.65, 5.2, 10), this.goldMat || this.stoneMat);
+            col.position.set(-175 + Math.cos(cang) * 22, 7.6, 115 + Math.sin(cang) * 22);
+            outsideGroup.add(col);
+        }
+
+        // Radiant Golden Erdtree Archway
+        const erdtreeArch = new THREE.Mesh(new THREE.TorusGeometry(5.5, 0.45, 8, 20, Math.PI), new THREE.MeshStandardMaterial({
+            color: 0xffd700,
+            emissive: 0xffaa00,
+            emissiveIntensity: 0.95
+        }));
+        erdtreeArch.position.set(-175, 5.0, 115);
+        erdtreeArch.rotation.y = Math.PI / 4;
+        outsideGroup.add(erdtreeArch);
+
+        const colosseumLight = new THREE.PointLight(0xffd700, 4.0, 30.0);
+        colosseumLight.position.set(-175, 8.5, 115);
+        outsideGroup.add(colosseumLight);
+        this.createStandingBrazier(-185, 5.0, 115, 0xffd700, 4.0, 24);
+        this.createStandingBrazier(-165, 5.0, 115, 0xffd700, 4.0, 24);
+        this.createPathBeacon(-175, 5.0, 115, 0xffd700, "🏛️ LEYNDELL ERDTREE COLOSSEUM [ELEV +5.0m]", "ROYAL AMPHITHEATER • GODFREY FIRST ELDEN LORD & ROYAL PERFUMERS", "#fef08a");
+
+        // L. Cathedral of the Deep Drowned Necropolis (outside_drowned_abyssal_necropolis) (x = -95, z = 125, elev = -2.5m)
+        const necropolisPlat = new THREE.Mesh(new THREE.BoxGeometry(38, 1.2, 38), this.darkSteelMat || this.stoneMat);
+        necropolisPlat.position.set(-95, -3.1, 125);
+        necropolisPlat.receiveShadow = true;
+        outsideGroup.add(necropolisPlat);
+
+        // Drowned Leaning Gothic Spires wrapped in chains
+        for (let sp = 0; sp < 4; sp++) {
+            const sang = (sp / 4) * Math.PI * 2;
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(0.85, 7.5, 5), this.stoneMat);
+            spire.position.set(-95 + Math.cos(sang) * 14, 0.5, 125 + Math.sin(sang) * 14);
+            spire.rotation.set(Math.sin(sang) * 0.25, 0, Math.cos(sang) * 0.25);
+            outsideGroup.add(spire);
+        }
+
+        // Colossal Weeping Monolithic Gravestones
+        for (let gr = -1; gr <= 1; gr += 2) {
+            const graveStone = new THREE.Mesh(new THREE.BoxGeometry(0.7, 3.8, 1.8), this.stoneMat);
+            graveStone.position.set(-95 + gr * 6, -0.6, 125);
+            outsideGroup.add(graveStone);
+        }
+
+        const deepLight = new THREE.PointLight(0x00ffcc, 3.8, 28.0);
+        deepLight.position.set(-95, 1.5, 125);
+        outsideGroup.add(deepLight);
+        this.createStandingBrazier(-95, -2.5, 113, 0x00ffcc, 4.0, 24);
+        this.createStandingBrazier(-95, -2.5, 137, 0x00ffcc, 4.0, 24);
+        this.createPathBeacon(-95, -2.5, 125, 0x00ffcc, "🌊 CATHEDRAL DROWNED NECROPOLIS [ELEV -2.5m]", "DEEP FLOODED CEMETERY • LUDWIG HOLY BLADE & ABYSSAL GRAVE WARDENS", "#99f6e4");
+
+        // --- 7d. BRAND NEW BESPOKE 3D REALM EXPEDITIONS & LANDMARKS ---
+        // 1. Celestial Falls & Moonlit Shrine (outside_celestial_falls_basin) (x = -280, z = -80, elev = -2.0m)
+        const fallPool = new THREE.Mesh(new THREE.CylinderGeometry(28, 28, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x0a223a,
+            roughness: 0.1,
+            metalness: 0.85,
+            transparent: true,
+            opacity: 0.85
+        }));
+        fallPool.position.set(-280, -2.1, -80);
+        fallPool.receiveShadow = true;
+        outsideGroup.add(fallPool);
+
+        // Towering Azure Crystal Waterfall Cliff
+        const fallCliff = new THREE.Mesh(new THREE.BoxGeometry(4.0, 16.0, 22.0), this.cliffRockMat);
+        fallCliff.position.set(-295, 6.0, -80);
+        outsideGroup.add(fallCliff);
+
+        const crystalVein = new THREE.Mesh(new THREE.BoxGeometry(1.2, 14.0, 16.0), new THREE.MeshStandardMaterial({
+            color: 0x88f5ff,
+            emissive: 0x00ccee,
+            emissiveIntensity: 0.9,
+            roughness: 0.2
+        }));
+        crystalVein.position.set(-293, 5.0, -80);
+        outsideGroup.add(crystalVein);
+
+        // Levitating Glintstone Lotus Runestones in pool
+        for (let lt = 0; lt < 5; lt++) {
+            const lang = (lt / 5) * Math.PI * 2;
+            const lotus = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.4, 6), new THREE.MeshStandardMaterial({
+                color: 0x00f5ff,
+                emissive: 0x0099cc,
+                emissiveIntensity: 0.8
+            }));
+            lotus.position.set(-280 + Math.cos(lang) * 14, -1.2, -80 + Math.sin(lang) * 14);
+            lotus.rotation.x = Math.PI;
+            outsideGroup.add(lotus);
+        }
+
+        const fallLight = new THREE.PointLight(0x00f5ff, 3.8, 32.0);
+        fallLight.position.set(-280, 0.5, -80);
+        outsideGroup.add(fallLight);
+        this.createStandingBrazier(-270, -2.0, -90, 0x00f5ff, 3.5, 24);
+        this.createStandingBrazier(-270, -2.0, -70, 0x00f5ff, 3.5, 24);
+        this.createPathBeacon(-280, -2.0, -80, 0x00f5ff, "🌌 CELESTIAL FALLS BASIN [ELEV -2.0m]", "AZURE CRYSTAL WATERFALL • ASTRAL SCHOLARS & STARLIGHT LOTUS", "#a5f3fc");
+
+        // 2. Cathedral of Dragon Communion (outside_cathedral_dragon_communion) (x = -310, z = 110, elev = +3.0m)
+        const cathedralDais = new THREE.Mesh(new THREE.CylinderGeometry(28, 32, 3.0, 16), this.stoneMat);
+        cathedralDais.position.set(-310, 1.5, 110);
+        cathedralDais.receiveShadow = true;
+        outsideGroup.add(cathedralDais);
+
+        // Colossal Dragon Skull Temple Gateway Arch
+        const skullArch = new THREE.Mesh(new THREE.TorusGeometry(8.5, 0.85, 8, 16, Math.PI), this.dragonBoneMat || this.stoneMat);
+        skullArch.position.set(-310, 3.0, 96);
+        skullArch.rotation.y = Math.PI / 2;
+        outsideGroup.add(skullArch);
+
+        for (let dh = 0; dh < 4; dh++) {
+            const dHorn = new THREE.Mesh(new THREE.ConeGeometry(0.8, 5.5, 5), this.dragonBoneMat || this.stoneMat);
+            dHorn.position.set(-318 + dh * 5.2, 8.5, 96);
+            dHorn.rotation.z = -0.3 + dh * 0.2;
+            outsideGroup.add(dHorn);
+        }
+
+        // Sacrificial Chalice of Dragon Heart Flames
+        const chalice = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 1.2, 2.2, 10), this.darkSteelMat);
+        chalice.position.set(-310, 4.1, 110);
+        outsideGroup.add(chalice);
+
+        const heartFlame = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), new THREE.MeshStandardMaterial({
+            color: 0xff2200,
+            emissive: 0xff4400,
+            emissiveIntensity: 1.2
+        }));
+        heartFlame.position.set(-310, 5.2, 110);
+        outsideGroup.add(heartFlame);
+
+        const communionLight = new THREE.PointLight(0xff2200, 4.2, 32.0);
+        communionLight.position.set(-310, 5.5, 110);
+        outsideGroup.add(communionLight);
+        this.createStandingBrazier(-310, 3.0, 122, 0xff3300, 4.2, 26);
+        this.createPathBeacon(-310, 3.0, 110, 0xff2200, "🐉 CATHEDRAL OF DRAGON COMMUNION [ELEV +3.0m]", "TITANIC DRAGON SKULL • DRACONIC PYROMANCERS & DRAGON BLOOD", "#fed7aa");
+
+        // 3. Tower of the Frenzied Flame (outside_frenzied_flame_overlook) (x = -340, z = -140, elev = +8.0m)
+        const towerShaft = new THREE.Mesh(new THREE.CylinderGeometry(7.5, 10.5, 16.0, 12), this.stoneMat);
+        towerShaft.position.set(-340, 0.0, -140);
+        towerShaft.receiveShadow = true;
+        outsideGroup.add(towerShaft);
+
+        const towerBrambles = new THREE.Mesh(new THREE.CylinderGeometry(9.0, 9.0, 1.8, 12), this.stoneMat);
+        towerBrambles.position.set(-340, 8.9, -140);
+        outsideGroup.add(towerBrambles);
+
+        // Blazing Yellow Frenzy Ocular Pinnacle
+        const frenzyEye = new THREE.Mesh(new THREE.SphereGeometry(2.2, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0xffcc00,
+            emissive: 0xff9900,
+            emissiveIntensity: 1.2
+        }));
+        frenzyEye.position.set(-340, 13.0, -140);
+        outsideGroup.add(frenzyEye);
+
+        const eyeRing = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.15, 8, 24), new THREE.MeshStandardMaterial({
+            color: 0xffaa00,
+            emissive: 0xff6600,
+            emissiveIntensity: 1.0
+        }));
+        eyeRing.position.set(-340, 13.0, -140);
+        outsideGroup.add(eyeRing);
+
+        const frenzyLight = new THREE.PointLight(0xffaa00, 4.8, 36.0);
+        frenzyLight.position.set(-340, 13.5, -140);
+        outsideGroup.add(frenzyLight);
+        this.createStandingBrazier(-340, 8.0, -148, 0xffaa00, 4.5, 26);
+        this.createStandingBrazier(-340, 8.0, -132, 0xffaa00, 4.5, 26);
+        this.createPathBeacon(-340, 8.0, -140, 0xffaa00, "🔥 TOWER OF THE FRENZIED FLAME [ELEV +8.0m]", "INCANDESCENT EYE SPIRE • FRENZIED NOMAD ZEALOTS & THREE FINGERS", "#fef08a");
+
+        // 4. Golden Erdtree Royal Colonnade (outside_royal_colonnade_sanctum) (x = -260, z = 180, elev = +2.0m)
+        const colonnadeBase = new THREE.Mesh(new THREE.BoxGeometry(45, 2.0, 36), this.stoneMat);
+        colonnadeBase.position.set(-260, 1.0, 180);
+        colonnadeBase.receiveShadow = true;
+        outsideGroup.add(colonnadeBase);
+
+        [-16, -8, 0, 8, 16].forEach(px => {
+            [-12, 12].forEach(pz => {
+                const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.7, 7.5, 8), this.goldMat || this.stoneMat);
+                pillar.position.set(-260 + px, 5.75, 180 + pz);
+                outsideGroup.add(pillar);
+            });
+        });
+
+        // Gilded Beam Archway
+        const beamN = new THREE.Mesh(new THREE.BoxGeometry(38, 1.2, 2.0), this.goldMat || this.stoneMat);
+        beamN.position.set(-260, 9.5, 168);
+        outsideGroup.add(beamN);
+        const beamS = new THREE.Mesh(new THREE.BoxGeometry(38, 1.2, 2.0), this.goldMat || this.stoneMat);
+        beamS.position.set(-260, 9.5, 192);
+        outsideGroup.add(beamS);
+
+        // Golden Grace Fountain in Center
+        const graceCore = new THREE.Mesh(new THREE.SphereGeometry(1.4, 12, 12), new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            emissive: 0xffdd44,
+            emissiveIntensity: 1.1
+        }));
+        graceCore.position.set(-260, 4.2, 180);
+        outsideGroup.add(graceCore);
+
+        const colonnadeLight = new THREE.PointLight(0xffdd44, 4.2, 32.0);
+        colonnadeLight.position.set(-260, 5.0, 180);
+        outsideGroup.add(colonnadeLight);
+        this.createStandingBrazier(-260, 2.0, 165, 0xffd700, 4.2, 26);
+        this.createStandingBrazier(-260, 2.0, 195, 0xffd700, 4.2, 26);
+        this.createPathBeacon(-260, 2.0, 180, 0xffdd44, "⚜️ GOLDEN ERDTREE ROYAL COLONNADE [ELEV +2.0m]", "GILDED PERISTYLE • CRUCIBLE WARLORDS & ERDTREE GRACE", "#fef08a");
+
+        // 5. Forlorn Hound Evergaol Seal (outside_evergaol_bloodhound) (x = -190, z = -160, elev = 0.0m)
+        const evergaolPlate = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 0.35, 24), this.darkSteelMat || this.stoneMat);
+        evergaolPlate.position.set(-190, 0.1, -160);
+        evergaolPlate.receiveShadow = true;
+        outsideGroup.add(evergaolPlate);
+
+        // 8 Basalt Monoliths around ring
+        for (let em = 0; em < 8; em++) {
+            const eang = (em / 8) * Math.PI * 2;
+            const mono = new THREE.Mesh(new THREE.BoxGeometry(1.2, 5.5, 1.0), this.stoneMat);
+            mono.position.set(-190 + Math.cos(eang) * 15, 2.75, -160 + Math.sin(eang) * 15);
+            mono.rotation.y = eang;
+            outsideGroup.add(mono);
+        }
+
+        // Void Rift in center
+        const riftCenter = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 3.5, 0.1, 16), new THREE.MeshStandardMaterial({
+            color: 0x330055,
+            emissive: 0x8800cc,
+            emissiveIntensity: 1.0
+        }));
+        riftCenter.position.set(-190, 0.2, -160);
+        outsideGroup.add(riftCenter);
+
+        const evergaolLight = new THREE.PointLight(0x8800cc, 3.8, 28.0);
+        evergaolLight.position.set(-190, 2.0, -160);
+        outsideGroup.add(evergaolLight);
+        this.createPathBeacon(-190, 0.0, -160, 0x8800cc, "⛓️ FORLORN HOUND EVERGAOL [NORTH WILDLANDS]", "RUNIC VOID SEAL • BLOODHOUND STALKERS & DARK MOON SHARDS", "#e9d5ff");
+
+        // 6. Titanite Colossus Smelting Caldera (outside_titan_forge_caldera) (x = -360, z = 40, elev = -1.0m)
+        const calderaRim = new THREE.Mesh(new THREE.TorusGeometry(26, 3.8, 10, 24), this.cliffRockMat);
+        calderaRim.position.set(-360, -0.2, 40);
+        calderaRim.rotation.x = Math.PI / 2;
+        outsideGroup.add(calderaRim);
+
+        const lavaBath = new THREE.Mesh(new THREE.CylinderGeometry(24, 24, 0.4, 20), this.demonLavaMat || this.stoneMat);
+        lavaBath.position.set(-360, -1.0, 40);
+        outsideGroup.add(lavaBath);
+
+        // Titanic Anvil of the Primordial Smith
+        const anvil = new THREE.Mesh(new THREE.BoxGeometry(5.5, 2.2, 3.2), this.darkSteelMat);
+        anvil.position.set(-360, 0.1, 40);
+        outsideGroup.add(anvil);
+
+        const calderaLight = new THREE.PointLight(0xff3300, 4.4, 32.0);
+        calderaLight.position.set(-360, 2.0, 40);
+        outsideGroup.add(calderaLight);
+        this.createStandingBrazier(-360, -1.0, 22, 0xff4400, 4.2, 26);
+        this.createPathBeacon(-360, -1.0, 40, 0xff3300, "⚒️ TITANITE COLOSSUS CALDERA [ELEV -1.0m]", "PRIMAL SMELTING FORGE • SLAG GOLEMS & TITANITE SLABS", "#fed7aa");
+
+        // 7. Necromancer's Bone Barrow (outside_necromancer_bone_barrow) (x = -390, z = -60, elev = +1.0m)
+        const barrowMound = new THREE.Mesh(new THREE.SphereGeometry(18, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5), this.stoneMat);
+        barrowMound.position.set(-390, 0, -60);
+        outsideGroup.add(barrowMound);
+
+        // Crypt Entrance Dolmen
+        const ossuaryL = new THREE.Mesh(new THREE.BoxGeometry(1.4, 6.0, 1.4), this.stoneMat);
+        ossuaryL.position.set(-390 - 3.5, 3.0, -42);
+        outsideGroup.add(ossuaryL);
+        const ossuaryR = new THREE.Mesh(new THREE.BoxGeometry(1.4, 6.0, 1.4), this.stoneMat);
+        ossuaryR.position.set(-390 + 3.5, 3.0, -42);
+        outsideGroup.add(ossuaryR);
+        const ossuaryTop = new THREE.Mesh(new THREE.BoxGeometry(9.5, 1.5, 2.2), this.stoneMat);
+        ossuaryTop.position.set(-390, 6.5, -42);
+        outsideGroup.add(ossuaryTop);
+
+        const ghostflameCauldron = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 0.9, 1.4, 8), this.darkSteelMat);
+        ghostflameCauldron.position.set(-390, 1.7, -42);
+        outsideGroup.add(ghostflameCauldron);
+
+        const ghostFlame = new THREE.Mesh(new THREE.SphereGeometry(0.75, 8, 8), new THREE.MeshStandardMaterial({
+            color: 0x00f5ff,
+            emissive: 0x00ccdd,
+            emissiveIntensity: 1.1
+        }));
+        ghostFlame.position.set(-390, 2.6, -42);
+        outsideGroup.add(ghostFlame);
+
+        const necromancerLight = new THREE.PointLight(0x00f5ff, 3.8, 28.0);
+        necromancerLight.position.set(-390, 3.0, -42);
+        outsideGroup.add(necromancerLight);
+        this.createPathBeacon(-390, 1.0, -60, 0x00f5ff, "💀 NECROMANCER'S BONE BARROW [ELEV +1.0m]", "ANCIENT SKULL MOUND • GHOSTFLAME GRAVE WRAITHS & DEATHBLIGHT", "#a5f3fc");
+
+        // 8. Sunken Mist Lake & Spectral Gondola Pier (outside_sunken_gondola_harbor) (x = -420, z = 90, elev = -3.0m)
+        const mistLake = new THREE.Mesh(new THREE.BoxGeometry(55, 0.4, 65), new THREE.MeshStandardMaterial({
+            color: 0x0b1720,
+            roughness: 0.15,
+            metalness: 0.9
+        }));
+        mistLake.position.set(-420, -3.1, 90);
+        outsideGroup.add(mistLake);
+
+        // Wooden Mooring Jetty
+        const jetty = new THREE.Mesh(new THREE.BoxGeometry(28, 0.6, 5.0), this.stoneMat);
+        jetty.position.set(-420, -2.7, 90);
+        outsideGroup.add(jetty);
+
+        // Spectral Gondola Boat
+        const boat = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1.2, 11.0), this.darkSteelMat);
+        boat.position.set(-436, -2.4, 90);
+        outsideGroup.add(boat);
+
+        const mistLight = new THREE.PointLight(0x60a5fa, 3.6, 28.0);
+        mistLight.position.set(-420, -1.2, 90);
+        outsideGroup.add(mistLight);
+        this.createPathBeacon(-420, -3.0, 90, 0x60a5fa, "🛶 SUNKEN MIST LAKE & GONDOLA PIER [ELEV -3.0m]", "SPECTRAL MOORINGS • BANSHEES & ABYSSAL DEEP WATER", "#bfdbfe");
+
+        // 9. World-Tree Aerial Canopy Bridges (outside_ancient_archtree_canopy) (x = -450, z = -20, elev = +12.0m)
+        const treePlatform = new THREE.Mesh(new THREE.CylinderGeometry(20, 24, 3.0, 12), this.stoneMat);
+        treePlatform.position.set(-450, 10.5, -20);
+        outsideGroup.add(treePlatform);
+
+        // Massive Archtree Trunk piercing platform
+        const trunkCol = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 7.5, 36, 12), this.archtreeBarkMat || this.stoneMat);
+        trunkCol.position.set(-450, 18, -20);
+        outsideGroup.add(trunkCol);
+
+        // Suspension Rope Bridge
+        const bridge = new THREE.Mesh(new THREE.BoxGeometry(32, 0.4, 4.0), this.stoneMat);
+        bridge.position.set(-426, 12.0, -20);
+        outsideGroup.add(bridge);
+
+        const canopyLight = new THREE.PointLight(0x4ade80, 4.0, 32.0);
+        canopyLight.position.set(-450, 14.0, -20);
+        outsideGroup.add(canopyLight);
+        this.createStandingBrazier(-450, 12.0, -32, 0x4ade80, 4.0, 24);
+        this.createStandingBrazier(-450, 12.0, -8, 0x4ade80, 4.0, 24);
+        this.createPathBeacon(-450, 12.0, -20, 0x4ade80, "🌲 PRIMEVAL AERIAL CANOPY BRIDGES [ELEV +12.0m]", "WORLD-TREE BOUGHS • HIGH FOREST WALKWAY & BIRD'S EYE VIEW", "#bbf7d0");
+
+        // 10. Emerald Farron Shrine of the Abyss Watchers (outside_emerald_farron_shrine) (x = -480, z = -110, elev = +2.0m)
+        const shrineDais = new THREE.Mesh(new THREE.CylinderGeometry(22, 26, 2.0, 12), this.stoneMat);
+        shrineDais.position.set(-480, 1.0, -110);
+        shrineDais.receiveShadow = true;
+        outsideGroup.add(shrineDais);
+
+        // 4 Emerald Sarcophagus Pillars
+        [[-10, -10], [10, -10], [-10, 10], [10, 10]].forEach(([px, pz]) => {
+            const pillar = new THREE.Mesh(new THREE.BoxGeometry(1.6, 6.5, 1.6), this.stoneMat);
+            pillar.position.set(-480 + px, 4.25, -110 + pz);
+            outsideGroup.add(pillar);
+        });
+
+        // Upright Wolf Knight Greatsword Monument in Center
+        const swordHilt = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 1.8, 6), this.darkSteelMat);
+        swordHilt.position.set(-480, 4.5, -110);
+        outsideGroup.add(swordHilt);
+
+        const swordCross = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.14, 0.2), this.darkSteelMat);
+        swordCross.position.set(-480, 4.0, -110);
+        outsideGroup.add(swordCross);
+
+        const swordBlade = new THREE.Mesh(new THREE.BoxGeometry(0.35, 3.8, 0.08), this.bladeMat || this.darkSteelMat);
+        swordBlade.position.set(-480, 2.0, -110);
+        outsideGroup.add(swordBlade);
+
+        const farronLight = new THREE.PointLight(0x10b981, 4.2, 30.0);
+        farronLight.position.set(-480, 3.5, -110);
+        outsideGroup.add(farronLight);
+        this.createStandingBrazier(-480, 2.0, -122, 0x10b981, 4.2, 26);
+        this.createStandingBrazier(-480, 2.0, -98, 0x10b981, 4.2, 26);
+        this.createPathBeacon(-480, 2.0, -110, 0x10b981, "⚔️ EMERALD FARRON SHRINE [WEST EXPEDITION]", "ABYSS WATCHERS ALTAR • WOLF LEGION BANNERS & EMERALD FIRE", "#a7f3d0");
+
+        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded to 550m)
+        // North mountain ridge: z = -380, x: -550 to -28
+        this.createWall(-289, 14, -380, 522, 32, 12);
+        // South mountain ridge: z = 380, x: -550 to -28
+        this.createWall(-289, 14, 380, 522, 32, 12);
+        // West boundary mountain: x = -550, z: -380 to 380
+        this.createWall(-550, 16, 0, 12, 36, 760);
 
         // Floating forest firefly particles
         const fireflyGeo = new THREE.BufferGeometry();
