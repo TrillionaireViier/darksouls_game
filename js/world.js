@@ -674,7 +674,7 @@ class DarkSoulsWorld {
         skyCtx.fillRect(0, 0, 512, 512);
 
         const skyTex = new THREE.CanvasTexture(skyCanvas);
-        const skyDomeGeo = new THREE.SphereGeometry(340, 32, 16);
+        const skyDomeGeo = new THREE.SphereGeometry(2040, 32, 16);
         const skyDomeMat = new THREE.MeshBasicMaterial({
             map: skyTex,
             side: THREE.BackSide,
@@ -686,7 +686,7 @@ class DarkSoulsWorld {
         this.scene.background = new THREE.Color(0x28384a);
 
         // 2. Exponential Natural Atmospheric Depth Fog (Dark Souls / Elden Ring depth)
-        this.scene.fog = new THREE.FogExp2(0x324458, 0.0035);
+        this.scene.fog = new THREE.FogExp2(0x324458, 0.0008);
 
         // 3. Balanced Ambient Light (retains deep, dramatic shadow crevices without washing out)
         this.ambientLight = new THREE.AmbientLight(0x202a38, 0.35);
@@ -878,21 +878,26 @@ class DarkSoulsWorld {
             }
         }
 
-        // 6b. Outside Realm: Primeval Darkroot Archtree Forest & Ashen Wilds (x in [-195, -28], z in [-90, 90])
-        if (x >= -195.0 && x <= -28.0 && z >= -90.0 && z <= 90.0) {
+        // Fallen Starship Interior Deck & Ramp (x in [-118, -34], z in [16, 64])
+        if (x >= -118 && x <= -34 && z >= 16 && z <= 64) {
+            return 0.0;
+        }
+
+        // 6b. Outside Realm: Primeval Darkroot Forest & Expanded Wildlands (x in [-1590, -28], z in [-850, 850])
+        if (x >= -1590.0 && x <= -28.0 && z >= -850.0 && z <= 850.0) {
             if (currentY === null || currentY >= -2.5) {
                 return 0.0;
             }
         }
 
-        // 7. Dynamic Fast-Travel Lordran Realm Ground Height
+        // 7. Dynamic Fast-Travel Lordran Realm Ground Height (Expanded x6 influence radius = 240m)
         if (window.DARK_SOULS_LOCATIONS) {
             for (let i = 0; i < window.DARK_SOULS_LOCATIONS.length; i++) {
                 const loc = window.DARK_SOULS_LOCATIONS[i];
                 const dx = x - loc.pos[0];
                 const dz = z - loc.pos[2];
-                if (dx * dx + dz * dz < 40 * 40) {
-                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 8.0) {
+                if (dx * dx + dz * dz < 240 * 240) {
+                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 12.0) {
                         return loc.pos[1];
                     }
                 }
@@ -921,7 +926,7 @@ class DarkSoulsWorld {
         }
 
         // 8. Citadel & Outside Realm Perimeter Failsafe: Never fall into void within explored grounds
-        if ((x >= -38 && x <= 38 && z >= -35 && z <= 390) || (x >= -195 && x <= -28 && z >= -90 && z <= 90)) {
+        if ((x >= -38 && x <= 38 && z >= -35 && z <= 390) || (x >= -1590 && x <= -28 && z >= -850 && z <= 850)) {
             if (currentY === null || currentY >= -1.8) {
                 return (x <= -130 && x >= -185 && z >= 15 && z <= 80) ? 2.0 : 0.0;
             }
@@ -1671,77 +1676,106 @@ class DarkSoulsWorld {
     buildOutsideRealm() {
         const outsideGroup = new THREE.Group();
 
-        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (x in [-265, -28], z in [-140, 140], y = 0.0)
-        const outdoorFloorGeo = new THREE.PlaneGeometry(245, 285);
+        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (x in [-1590, -28], z in [-850, 850], y = 0.0)
+        const outdoorFloorGeo = new THREE.PlaneGeometry(1470, 1710);
         const outdoorFloor = new THREE.Mesh(outdoorFloorGeo, this.forestGrassMat);
         outdoorFloor.rotation.x = -Math.PI / 2;
-        outdoorFloor.position.set(-146, 0, 0);
+        outdoorFloor.position.set(-750, 0, 0);
         outdoorFloor.receiveShadow = true;
         outsideGroup.add(outdoorFloor);
 
-        // 2. Cobblestone Trails Connecting Destinations
-        // Main Way: West Gate (x = -30, z = 0) to Primeval Mother Archtree (x = -110, z = 0)
-        const mainPathGeo = new THREE.PlaneGeometry(80, 5.0);
+        // 2. Cobblestone Trails Connecting Destinations (x6 Expanded)
+        // Main Way: West Gate (x = -30, z = 0) to Primeval Mother Archtree & Starship
+        const mainPathGeo = new THREE.PlaneGeometry(480, 16.0);
         const mainPath = new THREE.Mesh(mainPathGeo, this.stoneMat);
         mainPath.rotation.x = -Math.PI / 2;
-        mainPath.position.set(-70, 0.02, 0);
+        mainPath.position.set(-270, 0.02, 0);
         mainPath.receiveShadow = true;
         outsideGroup.add(mainPath);
 
-        // Branching Trail South to Wyrm Ridge (x: -90 to -145, z: 0 to 45)
-        const wyrmPathGeo = new THREE.PlaneGeometry(6, 65);
+        // Branching Trail South to Wyrm Ridge
+        const wyrmPathGeo = new THREE.PlaneGeometry(16, 390);
         const wyrmPath = new THREE.Mesh(wyrmPathGeo, this.stoneMat);
         wyrmPath.rotation.x = -Math.PI / 2;
         wyrmPath.rotation.z = -0.65;
-        wyrmPath.position.set(-115, 0.02, 22);
+        wyrmPath.position.set(-215, 0.02, 120);
         wyrmPath.receiveShadow = true;
         outsideGroup.add(wyrmPath);
 
-        // Branching Trail North to Ashen Hollow (x: -90 to -135, z: 0 to -45)
-        const ashenPathGeo = new THREE.PlaneGeometry(6, 60);
+        // Branching Trail North to Ashen Hollow
+        const ashenPathGeo = new THREE.PlaneGeometry(16, 360);
         const ashenPath = new THREE.Mesh(ashenPathGeo, this.stoneMat);
         ashenPath.rotation.x = -Math.PI / 2;
         ashenPath.rotation.z = 0.65;
-        ashenPath.position.set(-110, 0.02, -22);
+        ashenPath.position.set(-210, 0.02, -120);
         ashenPath.receiveShadow = true;
         outsideGroup.add(ashenPath);
 
-        // 3. Eight Majestic Archtrees with Colossal Gnarled Trunks & Canopies
+        // Branching Highway leading into Fallen Spaceship Trading Post
+        const starshipPathGeo = new THREE.PlaneGeometry(14, 45);
+        const starshipPath = new THREE.Mesh(starshipPathGeo, this.stoneMat);
+        starshipPath.rotation.x = -Math.PI / 2;
+        starshipPath.rotation.z = 0.95;
+        starshipPath.position.set(-42, 0.03, 22);
+        starshipPath.receiveShadow = true;
+        outsideGroup.add(starshipPath);
+
+        // 3. High-Poly Majestic Archtrees with Organic Gnarled Trunks, Spreading Boughs & Lush Canopies
         const createArchtree = (tx, tz, scale = 1.0, tint = 0x153520) => {
             const treeGroup = new THREE.Group();
             treeGroup.position.set(tx, 0, tz);
 
-            // Tapered trunk
-            const trunkGeo = new THREE.CylinderGeometry(1.4 * scale, 2.8 * scale, 22 * scale, 8);
+            // Gnarled high-poly trunk with smooth curvature (16 radial segments)
+            const trunkGeo = new THREE.CylinderGeometry(1.6 * scale, 3.4 * scale, 24 * scale, 16);
             const trunk = new THREE.Mesh(trunkGeo, this.archtreeBarkMat);
-            trunk.position.y = 11 * scale;
+            trunk.position.y = 12 * scale;
             trunk.castShadow = true;
             trunk.receiveShadow = true;
             treeGroup.add(trunk);
 
-            // 4 Root flares radiating outward
-            for (let a = 0; a < 4; a++) {
-                const ang = (a / 4) * Math.PI * 2;
-                const rootGeo = new THREE.CylinderGeometry(0.45 * scale, 1.2 * scale, 5 * scale, 5);
+            // 6 Organic Root Flares anchoring tree into the turf
+            for (let a = 0; a < 6; a++) {
+                const ang = (a / 6) * Math.PI * 2;
+                const rootGeo = new THREE.CylinderGeometry(0.5 * scale, 1.4 * scale, 6.5 * scale, 8);
                 const rootMesh = new THREE.Mesh(rootGeo, this.archtreeBarkMat);
-                rootMesh.position.set(Math.cos(ang) * 2.4 * scale, 2.0 * scale, Math.sin(ang) * 2.4 * scale);
-                rootMesh.rotation.z = Math.cos(ang) * 0.45;
-                rootMesh.rotation.x = Math.sin(ang) * 0.45;
+                rootMesh.position.set(Math.cos(ang) * 3.0 * scale, 2.2 * scale, Math.sin(ang) * 3.0 * scale);
+                rootMesh.rotation.z = Math.cos(ang) * 0.52;
+                rootMesh.rotation.x = Math.sin(ang) * 0.52;
                 rootMesh.castShadow = true;
                 treeGroup.add(rootMesh);
             }
 
-            // Canopy foliage clusters
-            const folMat = new THREE.MeshStandardMaterial({ color: tint, roughness: 0.88, flatShading: true });
+            // Spreading Primary Boughs
+            const boughAngles = [0.2, 1.5, 2.8, 4.1, 5.3];
+            boughAngles.forEach((bang, bIdx) => {
+                const boughGeo = new THREE.CylinderGeometry(0.7 * scale, 1.1 * scale, 8 * scale, 8);
+                const bough = new THREE.Mesh(boughGeo, this.archtreeBarkMat);
+                bough.position.set(Math.cos(bang) * 3.2 * scale, 17 * scale + bIdx * 0.8 * scale, Math.sin(bang) * 3.2 * scale);
+                bough.rotation.z = Math.cos(bang) * 0.75;
+                bough.rotation.x = Math.sin(bang) * 0.75;
+                bough.castShadow = true;
+                treeGroup.add(bough);
+            });
+
+            // Rich multi-tiered canopy foliage clusters with smooth surface normals
+            const folMat = new THREE.MeshStandardMaterial({
+                color: tint,
+                roughness: 0.75,
+                metalness: 0.08,
+                flatShading: false
+            });
+
             const canopyOffsets = [
-                [0, 22 * scale, 0, 5.5 * scale],
-                [-3.2 * scale, 19 * scale, 2.5 * scale, 4.2 * scale],
-                [3.5 * scale, 20 * scale, -2.8 * scale, 4.0 * scale],
-                [2.2 * scale, 18 * scale, 3.2 * scale, 3.8 * scale],
-                [-2.8 * scale, 20 * scale, -3.0 * scale, 4.2 * scale]
+                [0, 24 * scale, 0, 6.8 * scale],
+                [-4.2 * scale, 21 * scale, 3.2 * scale, 5.5 * scale],
+                [4.5 * scale, 22 * scale, -3.5 * scale, 5.2 * scale],
+                [3.0 * scale, 20 * scale, 4.2 * scale, 5.0 * scale],
+                [-3.6 * scale, 22 * scale, -3.8 * scale, 5.4 * scale],
+                [0, 28 * scale, 0, 5.0 * scale]
             ];
             canopyOffsets.forEach(([fx, fy, fz, fr]) => {
-                const fol = new THREE.Mesh(new THREE.DodecahedronGeometry(fr, 1), folMat);
+                const fol = new THREE.Mesh(new THREE.SphereGeometry(fr, 16, 12), folMat);
+                fol.scale.set(1.15, 0.85, 1.15);
                 fol.position.set(fx, fy, fz);
                 fol.castShadow = true;
                 fol.receiveShadow = true;
@@ -1750,8 +1784,8 @@ class DarkSoulsWorld {
 
             this.scene.add(treeGroup);
             this.colliders.push(new THREE.Box3(
-                new THREE.Vector3(tx - 2.0 * scale, 0, tz - 2.0 * scale),
-                new THREE.Vector3(tx + 2.0 * scale, 24 * scale, tz + 2.0 * scale)
+                new THREE.Vector3(tx - 2.5 * scale, 0, tz - 2.5 * scale),
+                new THREE.Vector3(tx + 2.5 * scale, 28 * scale, tz + 2.5 * scale)
             ));
         };
 
@@ -1852,7 +1886,7 @@ class DarkSoulsWorld {
         });
 
         // 6. Wyrm Cliffside Plateau (x: -130 to -185, z: 15 to 80, y = 2.0)
-        const plateauGeo = new THREE.BoxGeometry(55, 2.0, 65);
+        const plateauGeo = new THREE.BoxGeometry(165, 2.0, 195);
         const plateauMesh = new THREE.Mesh(plateauGeo, this.cliffRockMat);
         plateauMesh.position.set(-157.5, 1.0, 47.5);
         plateauMesh.receiveShadow = true;
@@ -1921,7 +1955,7 @@ class DarkSoulsWorld {
 
         // --- 7b. NEW OUTSIDE REALM 3D EXPEDITIONS ---
         // A. Astral Meteor Crater with Starlight Monoliths (x = -160, z = -60, elev = -2.5m)
-        const craterRim = new THREE.Mesh(new THREE.TorusGeometry(12.0, 1.8, 8, 16), this.cliffRockMat);
+        const craterRim = new THREE.Mesh(new THREE.TorusGeometry(36.0, 4.5, 12, 24), this.cliffRockMat);
         craterRim.position.set(-160, -1.2, -60);
         craterRim.rotation.x = Math.PI / 2;
         outsideGroup.add(craterRim);
@@ -1942,7 +1976,7 @@ class DarkSoulsWorld {
         this.createPathBeacon(-160, -2.5, -60, 0x00f5ff, "🌌 ASTRAL METEOR CRATER [ELEV -2.5m]", "COSMIC FALLEN STAR • MINDFLAYERS & STARLIGHT CRYSTALS", "#a5f3fc");
 
         // B. Magma Chasm Falls (x = -180, z = -25, elev = -1.5m)
-        const magmaPool = new THREE.Mesh(new THREE.BoxGeometry(16.0, 0.4, 14.0), this.demonLavaMat || this.stoneMat);
+        const magmaPool = new THREE.Mesh(new THREE.BoxGeometry(48.0, 0.4, 42.0), this.demonLavaMat || this.stoneMat);
         magmaPool.position.set(-180, -1.5, -25);
         outsideGroup.add(magmaPool);
         const magmaLight = new THREE.PointLight(0xff4500, 2.8, 28.0);
@@ -1967,7 +2001,7 @@ class DarkSoulsWorld {
 
         // --- 7c. BESPOKE UNIQUE 3D REALM LANDMARKS (NEW OUTSIDE EXPEDITIONS) ---
         // A. Carian Star Observatory (outside_carian_star_observatory) (x = -105, z = -85, elev = +3.5m)
-        const observatoryDais = new THREE.Mesh(new THREE.CylinderGeometry(14, 15, 3.5, 18), this.stoneMat);
+        const observatoryDais = new THREE.Mesh(new THREE.CylinderGeometry(38, 42, 3.5, 24), this.stoneMat);
         observatoryDais.position.set(-105, 1.75, -85);
         observatoryDais.receiveShadow = true;
         outsideGroup.add(observatoryDais);
@@ -2005,7 +2039,7 @@ class DarkSoulsWorld {
         this.createPathBeacon(-105, 3.5, -85, 0x00d0ff, "🌌 CARIAN STAR OBSERVATORY [ELEV +3.5m]", "GLINTSTONE ASTROLABE • FULL MOON SORCERY & MARIONETTES", "#a5f3fc");
 
         // B. Scorched Dragonbarrow (outside_scorched_dragonbarrow) (x = -210, z = 60, elev = +2.0m)
-        const barrowPlat = new THREE.Mesh(new THREE.BoxGeometry(32, 2.0, 32), this.cliffRockMat);
+        const barrowPlat = new THREE.Mesh(new THREE.BoxGeometry(96, 2.0, 96), this.cliffRockMat);
         barrowPlat.position.set(-210, 1.0, 60);
         barrowPlat.receiveShadow = true;
         outsideGroup.add(barrowPlat);
@@ -2231,12 +2265,12 @@ class DarkSoulsWorld {
         courtyardFloor.receiveShadow = true;
         sanctumGroup.add(courtyardFloor);
 
-        // Perimeter Walls for Sunken Courtyard (y: -2.5, height: 10m)
-        this.createWall(-32, 2.5, -53, 2, 10, 36); // West Wall
-        this.createWall(32, 2.5, -53, 2, 10, 36);  // East Wall
+        // Perimeter Walls for Sunken Courtyard (Anchored y: -5.0 to 12.0, seamless corner seals)
+        this.createWall(-34, 3.5, -53, 4, 16, 38); // West Wall
+        this.createWall(34, 3.5, -53, 4, 16, 38);  // East Wall
         // South retaining wall segments around stairs
-        this.createWall(-22, 2.5, -36, 20, 10, 2);
-        this.createWall(22, 2.5, -36, 20, 10, 2);
+        this.createWall(-23, 3.5, -35, 22, 16, 4);
+        this.createWall(23, 3.5, -35, 22, 16, 4);
 
         // 4. Toxic Swamp / Poison Marsh Pool at Center of Sunken Courtyard
         const poolGeo = new THREE.CylinderGeometry(8.5, 8.5, 0.2, 16);
@@ -2284,93 +2318,53 @@ class DarkSoulsWorld {
             step.receiveShadow = true;
             sanctumGroup.add(step);
         }
-        // Retaining walls beside inner stairs (anchored down to y = -6.0)
-        this.createWall(-23, 1.0, -70, 22, 14, 3);
-        this.createWall(23, 1.0, -70, 22, 14, 3);
-        this.createWall(-13.5, 1.0, -74, 2.0, 14, 11);
-        this.createWall(13.5, 1.0, -74, 2.0, 14, 11);
+        // Seamless Flanking Enclosing Walls beside inner stairs (anchored from y = -6.0 up to y = 14.0)
+        this.createWall(-26, 4.0, -74, 24, 18, 8);
+        this.createWall(26, 4.0, -74, 24, 18, 8);
+        this.createWall(-38, 4.0, -74, 4, 18, 12);
+        this.createWall(38, 4.0, -74, 4, 18, 12);
 
-        // Solid Stone Foundation Masonry sealing under the stairs (x in [-13.5, 13.5], z in [-78, -70])
-        this.createWall(0, -3.25, -74, 27, 2.6, 9);
-
-        // South Enclosing Retaining Walls for Gorgon's Inner Sanctum at z = -78 (anchored down to y = -6.0)
-        this.createWall(-25.5, 1.0, -78, 27, 14, 4);
-        this.createWall(25.5, 1.0, -78, 27, 14, 4);
-
-        // Corner connecting walls at x = ±38 between z = -70 and z = -78
-        this.createWall(-38, 1.0, -74, 3, 14, 10);
-        this.createWall(38, 1.0, -74, 3, 14, 10);
-
-        // Upper Terrace Floor Slabs beside the stairs between z = -70 and z = -78 (y = -2.5)
-        const terraceL = new THREE.Mesh(new THREE.PlaneGeometry(24, 8), this.serpentStoneMat);
-        terraceL.rotation.x = -Math.PI / 2;
-        terraceL.position.set(-25.5, -2.5, -74);
-        terraceL.receiveShadow = true;
-        sanctumGroup.add(terraceL);
-
-        const terraceR = new THREE.Mesh(new THREE.PlaneGeometry(24, 8), this.serpentStoneMat);
-        terraceR.rotation.x = -Math.PI / 2;
-        terraceR.position.set(25.5, -2.5, -74);
-        terraceR.receiveShadow = true;
-        sanctumGroup.add(terraceR);
-
-        // Add Terrace and Courtyard Colliders so camera raycasts and physics never penetrate floor slabs
-        this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(-38, -6.0, -78.5),
-            new THREE.Vector3(-13, -2.4, -69.5)
-        ));
-        this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(13, -6.0, -78.5),
-            new THREE.Vector3(38, -2.4, -69.5)
-        ));
-        this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(-35, -6.0, -70),
-            new THREE.Vector3(35, -2.4, -30)
-        ));
-
-        // 8. Gorgon's Inner Sanctum Floor Slab (z: -78 to -115, x: -38 to 38, y = -4.0)
-        const innerFloorGeo = new THREE.PlaneGeometry(76, 37);
+        // 8. Gorgon's Inner Sanctum Floor Slab (z: -78 to -116, x: -38 to 38, y = -4.0)
+        const innerFloorGeo = new THREE.PlaneGeometry(76, 38);
         const innerFloor = new THREE.Mesh(innerFloorGeo, this.serpentStoneMat);
         innerFloor.rotation.x = -Math.PI / 2;
-        innerFloor.position.set(0, -4.0, -96.5);
+        innerFloor.position.set(0, -4.0, -97.0);
         innerFloor.receiveShadow = true;
         sanctumGroup.add(innerFloor);
 
-        // Vaulted Underground Temple Ceiling for Gorgon's Inner Sanctum (z: -70 to -115, x: -39 to 39, y = 7.0)
-        const sanctumCeiling = new THREE.Mesh(new THREE.BoxGeometry(78, 1.8, 46), this.serpentStoneMat);
-        sanctumCeiling.position.set(0, 7.0, -92.5);
+        // Monumental Vaulted High Ceiling for Gorgon's Inner Sanctum (y = 12.0m, completely clear above camera)
+        const sanctumCeiling = new THREE.Mesh(new THREE.BoxGeometry(84, 2.0, 52), this.serpentStoneMat);
+        sanctumCeiling.position.set(0, 12.0, -93.0);
         sanctumCeiling.receiveShadow = true;
         sanctumGroup.add(sanctumCeiling);
 
-        // Monumental Egyptian/Serpentine Temple Portal Pediment Arch over stairs at z = -70
-        // Front Portal Beam / Entablature spanning the entrance opening (x in [-14, 14], y: 5.6 to 8.0, z: -70)
+        // Monumental Serpentine Temple Portal Arch over stairs at z = -70 (High overhead clearance at y = 10.5m)
         const portalArchitrave = new THREE.Mesh(new THREE.BoxGeometry(29, 2.4, 3.2), this.serpentStoneMat);
-        portalArchitrave.position.set(0, 6.8, -70);
+        portalArchitrave.position.set(0, 10.5, -70);
         portalArchitrave.receiveShadow = true;
         sanctumGroup.add(portalArchitrave);
 
-        // Carved Serpentine Cornice running along the top of the portal
         const portalCornice = new THREE.Mesh(new THREE.BoxGeometry(30, 0.6, 3.6), this.serpentJadeMat);
-        portalCornice.position.set(0, 8.1, -70);
+        portalCornice.position.set(0, 11.8, -70);
         sanctumGroup.add(portalCornice);
 
-        // Flanking Portal Entrance Columns supporting the entablature at x = -13.5 and 13.5
-        this.createSerpentPillar(-13.5, -70, -2.5, 10.4);
-        this.createSerpentPillar(13.5, -70, -2.5, 10.4);
+        // Flanking Portal Entrance Columns supporting the high entablature at x = -13.5 and 13.5
+        this.createSerpentPillar(-13.5, -70, -2.5, 14.5);
+        this.createSerpentPillar(13.5, -70, -2.5, 14.5);
 
-        // Side Architrave wings extending outwards to the perimeter walls at x in [-38, -13] and [13, 38]
+        // Side Architrave wings extending outwards to the perimeter walls
         const portalWingL = new THREE.Mesh(new THREE.BoxGeometry(25, 2.4, 3.2), this.serpentStoneMat);
-        portalWingL.position.set(-25.5, 6.8, -70);
+        portalWingL.position.set(-25.5, 10.5, -70);
         sanctumGroup.add(portalWingL);
 
         const portalWingR = new THREE.Mesh(new THREE.BoxGeometry(25, 2.4, 3.2), this.serpentStoneMat);
-        portalWingR.position.set(25.5, 6.8, -70);
+        portalWingR.position.set(25.5, 10.5, -70);
         sanctumGroup.add(portalWingR);
 
-        // Perimeter Enclosing Walls for Inner Sanctum
-        this.createWall(-38, 1.0, -96.5, 2, 12, 39); // West Wall
-        this.createWall(38, 1.0, -96.5, 2, 12, 39);  // East Wall
-        this.createWall(0, 1.0, -115, 78, 12, 2);    // Far North Wall
+        // Perimeter Enclosing Walls for Inner Sanctum (Anchored y: -6.0 to 14.0, 4m thick, no gaps)
+        this.createWall(-38, 4.0, -96.5, 4, 18, 42); // West Wall
+        this.createWall(38, 4.0, -96.5, 4, 18, 42);  // East Wall
+        this.createWall(0, 4.0, -116, 80, 18, 4);    // Far North Wall
 
         // 9. Colonnade of Medusa (8 Colossal Columns wrapped in Stone Snakes)
         const colonnadeCoords = [
@@ -2622,19 +2616,20 @@ class DarkSoulsWorld {
             color: 0x1c242e,
             roughness: 0.95,
             metalness: 0.05,
-            flatShading: true
+            flatShading: false
         });
 
+        // Organic Distant Mountain Ranges (20 radial segments with smooth shading, scaled out to 1200m–1680m radius)
         const mountainCoords = [
-            [-220, 35, -190, 60, 120], [-130, 45, -270, 65, 140], [0, 50, -280, 75, 160],
-            [130, 45, -270, 65, 140], [220, 35, -190, 60, 120],
-            [-230, 20, 40, 52, 95], [230, 20, 40, 52, 100],
-            [-200, 22, 180, 58, 115], [200, 22, 180, 58, 115],
-            [-110, 28, 250, 65, 130], [0, 40, 275, 80, 155], [110, 28, 250, 65, 125]
+            [-1320, 180, -1140, 360, 480], [-780, 220, -1620, 390, 540], [0, 250, -1680, 450, 600],
+            [780, 220, -1620, 390, 540], [1320, 180, -1140, 360, 480],
+            [-1380, 120, 240, 320, 380], [1380, 120, 240, 320, 400],
+            [-1200, 130, 1080, 350, 460], [1200, 130, 1080, 350, 460],
+            [-660, 160, 1500, 390, 520], [0, 220, 1650, 480, 620], [660, 160, 1500, 390, 500]
         ];
 
         mountainCoords.forEach(([mx, my, mz, mw, mh]) => {
-            const mGeo = new THREE.ConeGeometry(mw, mh, 5);
+            const mGeo = new THREE.ConeGeometry(mw, mh, 20);
             const mMesh = new THREE.Mesh(mGeo, mountainMat);
             mMesh.position.set(mx, my, mz);
             mMesh.rotation.y = Math.random() * Math.PI;
@@ -3479,7 +3474,233 @@ class DarkSoulsWorld {
     // ----------------------------------------------------
     // UNDEAD & SOULSBORNE MERCHANTS (30 BESPOKE 3D NPCS)
     // ----------------------------------------------------
+    buildFallenSpaceshipHouse() {
+        if (this._spaceshipBuilt) return;
+        this._spaceshipBuilt = true;
+
+        const shipGroup = new THREE.Group();
+        const cx = -75;
+        const cy = 0;
+        const cz = 40;
+        shipGroup.position.set(cx, cy, cz);
+
+        // Materials for Dreadnought Starship
+        const hullMat = this.darkSteelMat || new THREE.MeshStandardMaterial({ color: 0x22262e, metalness: 0.85, roughness: 0.35 });
+        const armorPlatesMat = new THREE.MeshStandardMaterial({ color: 0x181c22, metalness: 0.90, roughness: 0.28 });
+        const canopyGlassMat = new THREE.MeshStandardMaterial({ color: 0x00d4ff, metalness: 0.2, roughness: 0.1, transparent: true, opacity: 0.65 });
+        const engineGlowMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+        const goldTrimMat = this.goldTrimMat || new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.3 });
+        const warningStripesMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x14181f, metalness: 0.75, roughness: 0.45 });
+
+        // 1. Impact Crater Scorched Basin
+        const craterRimGeo = new THREE.RingGeometry(32, 44, 24);
+        const craterMat = new THREE.MeshStandardMaterial({ color: 0x100e0d, roughness: 0.95 });
+        const craterRim = new THREE.Mesh(craterRimGeo, craterMat);
+        craterRim.rotation.x = -Math.PI / 2;
+        craterRim.position.y = 0.01;
+        shipGroup.add(craterRim);
+
+        // Crater burning embers
+        for (let i = 0; i < 16; i++) {
+            const ang = (i / 16) * Math.PI * 2;
+            const er = 34 + Math.random() * 8;
+            const ember = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35 + Math.random() * 0.4), new THREE.MeshBasicMaterial({ color: 0xff4400 }));
+            ember.position.set(Math.cos(ang) * er, 0.2, Math.sin(ang) * er);
+            shipGroup.add(ember);
+        }
+
+        // 2. Interior Trading Deck Floor (Spans 65m along X, 44m along Z, y = 0.03)
+        const deckGeo = new THREE.PlaneGeometry(64, 42);
+        const deckFloor = new THREE.Mesh(deckGeo, floorMat);
+        deckFloor.rotation.x = -Math.PI / 2;
+        deckFloor.position.set(0, 0.03, 0);
+        deckFloor.receiveShadow = true;
+        shipGroup.add(deckFloor);
+
+        // Deck running hazard stripes
+        [-18, 18].forEach(stripZ => {
+            const stripeGeo = new THREE.PlaneGeometry(62, 0.6);
+            const stripe = new THREE.Mesh(stripeGeo, warningStripesMat);
+            stripe.rotation.x = -Math.PI / 2;
+            stripe.position.set(0, 0.035, stripZ);
+            shipGroup.add(stripe);
+        });
+
+        // 3. Colossal Titanium Hull Superstructure (Spans x: [-35, 35], z: [-24, 24], height: 16m)
+        const fuselageGeo = new THREE.BoxGeometry(68, 14, 46);
+        const fuselage = new THREE.Mesh(fuselageGeo, hullMat);
+        fuselage.position.set(0, 7.0, 0);
+        fuselage.castShadow = true;
+        fuselage.receiveShadow = true;
+        shipGroup.add(fuselage);
+
+        // Angled Armor Plating on Hull Exterior (Heavy Beveled Shoulders)
+        [-24, 24].forEach(sideZ => {
+            const wedgeGeo = new THREE.CylinderGeometry(4, 24, 68, 4, 1, false, Math.PI * 0.25, Math.PI * 0.5);
+            const wedge = new THREE.Mesh(wedgeGeo, armorPlatesMat);
+            wedge.rotation.z = Math.PI / 2;
+            wedge.position.set(0, 7.0, sideZ);
+            shipGroup.add(wedge);
+        });
+
+        // Swept Combat Wings (Angled forward/down into the dirt)
+        [-34, 34].forEach(wingZ => {
+            const wingGeo = new THREE.BoxGeometry(42, 1.8, 18);
+            const wing = new THREE.Mesh(wingGeo, armorPlatesMat);
+            wing.position.set(-6, 4.0, wingZ);
+            wing.rotation.x = (wingZ > 0 ? 0.25 : -0.25);
+            wing.rotation.y = (wingZ > 0 ? -0.15 : 0.15);
+            shipGroup.add(wing);
+
+            // Wing Solar Panels
+            const solarGeo = new THREE.PlaneGeometry(36, 12);
+            const solarMat = new THREE.MeshStandardMaterial({ color: 0x0a1428, metalness: 0.9, roughness: 0.1 });
+            const solar = new THREE.Mesh(solarGeo, solarMat);
+            solar.rotation.x = (wingZ > 0 ? -Math.PI / 2 + 0.25 : -Math.PI / 2 - 0.25);
+            solar.position.set(-6, 5.0, wingZ);
+            shipGroup.add(solar);
+        });
+
+        // 4. Twin Colossal Hyperdrive Thruster Engines (Rear West End: x = -35)
+        [-12, 12].forEach(engZ => {
+            const engNacelle = new THREE.Mesh(new THREE.CylinderGeometry(5.2, 5.8, 16, 16), armorPlatesMat);
+            engNacelle.rotation.z = Math.PI / 2;
+            engNacelle.position.set(-36, 6.5, engZ);
+            shipGroup.add(engNacelle);
+
+            const exhaustRim = new THREE.Mesh(new THREE.TorusGeometry(5.4, 0.6, 8, 20), goldTrimMat);
+            exhaustRim.rotation.y = Math.PI / 2;
+            exhaustRim.position.set(-44, 6.5, engZ);
+            shipGroup.add(exhaustRim);
+
+            const plasmaCore = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 1.2, 16), engineGlowMat);
+            plasmaCore.rotation.z = Math.PI / 2;
+            plasmaCore.position.set(-43.5, 6.5, engZ);
+            shipGroup.add(plasmaCore);
+
+            const engLight = new THREE.PointLight(0x00f0ff, 3.5, 25);
+            engLight.position.set(-46, 6.5, engZ);
+            shipGroup.add(engLight);
+        });
+
+        // 5. Forward Cockpit Observation Canopy Dome (East End: x = 32)
+        const canopyGeo = new THREE.SphereGeometry(9, 16, 16, 0, Math.PI, 0, Math.PI * 0.5);
+        const canopy = new THREE.Mesh(canopyGeo, canopyGlassMat);
+        canopy.rotation.z = -Math.PI / 2;
+        canopy.position.set(32, 4.0, 0);
+        shipGroup.add(canopy);
+
+        // 6. Lowered Hydraulic Steel Cargo Ramp (Entrance at x = 34 to 48, z = [-8, 8])
+        const rampGeo = new THREE.BoxGeometry(16, 0.4, 14);
+        const ramp = new THREE.Mesh(rampGeo, hullMat);
+        ramp.position.set(39, 0.2, 0);
+        ramp.rotation.z = -0.04;
+        ramp.receiveShadow = true;
+        shipGroup.add(ramp);
+
+        // Runway Guidance Lights along Cargo Ramp
+        for (let r = 0; r < 5; r++) {
+            const rx = 33 + r * 3.5;
+            [-6.5, 6.5].forEach(rz => {
+                const guideLight = new THREE.Mesh(new THREE.SphereGeometry(0.18, 8, 8), engineGlowMat);
+                guideLight.position.set(rx, 0.45, rz);
+                shipGroup.add(guideLight);
+            });
+        }
+
+        // 7. Holographic Neon Outpost Archway Sign
+        const signBeamGeo = new THREE.BoxGeometry(1.2, 1.2, 16);
+        const signBeam = new THREE.Mesh(signBeamGeo, armorPlatesMat);
+        signBeam.position.set(34, 7.5, 0);
+        shipGroup.add(signBeam);
+
+        const holoSignGeo = new THREE.PlaneGeometry(14, 2.2);
+        const holoSignMat = new THREE.MeshBasicMaterial({ color: 0x00f5ff, side: THREE.DoubleSide });
+        const holoSign = new THREE.Mesh(holoSignGeo, holoSignMat);
+        holoSign.rotation.y = Math.PI / 2;
+        holoSign.position.set(34.2, 8.8, 0);
+        shipGroup.add(holoSign);
+
+        const holoLight = new THREE.PointLight(0x00f5ff, 4.0, 22);
+        holoLight.position.set(35, 8.5, 0);
+        shipGroup.add(holoLight);
+
+        // 8. Five Vaulted Interior Bulkhead Ribs spanning overhead (x: [-24, -12, 0, 12, 24])
+        [-24, -12, 0, 12, 24].forEach(ribX => {
+            const ribArchGeo = new THREE.TorusGeometry(18, 0.75, 8, 24, Math.PI);
+            const ribArch = new THREE.Mesh(ribArchGeo, armorPlatesMat);
+            ribArch.rotation.y = Math.PI / 2;
+            ribArch.position.set(ribX, 0, 0);
+            shipGroup.add(ribArch);
+
+            const tubeGeo = new THREE.TorusGeometry(17.6, 0.18, 6, 24, Math.PI);
+            const tube = new THREE.Mesh(tubeGeo, engineGlowMat);
+            tube.rotation.y = Math.PI / 2;
+            tube.position.set(ribX, 0, 0);
+            shipGroup.add(tube);
+        });
+
+        // 9. Central Antimatter Warp Core (Atrium Center: x = 0, z = 0, y = 3.5)
+        const coreBase = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.8, 1.4, 12), armorPlatesMat);
+        coreBase.position.set(0, 0.7, 0);
+        shipGroup.add(coreBase);
+
+        const coreSphere = new THREE.Mesh(new THREE.SphereGeometry(1.8, 16, 16), coreMat);
+        coreSphere.position.set(0, 3.8, 0);
+        shipGroup.add(coreSphere);
+
+        const ringGeo = new THREE.TorusGeometry(2.6, 0.22, 8, 20);
+        const ring1 = new THREE.Mesh(ringGeo, goldTrimMat);
+        ring1.position.set(0, 3.8, 0);
+        ring1.rotation.x = Math.PI / 3;
+        shipGroup.add(ring1);
+
+        const ring2 = new THREE.Mesh(ringGeo, goldTrimMat);
+        ring2.position.set(0, 3.8, 0);
+        ring2.rotation.y = Math.PI / 3;
+        shipGroup.add(ring2);
+
+        const coreGlow = new THREE.PointLight(0x00ffff, 4.5, 30);
+        coreGlow.position.set(0, 4.5, 0);
+        shipGroup.add(coreGlow);
+
+        const bayLightN = new THREE.PointLight(0xa5f3fc, 2.5, 26);
+        bayLightN.position.set(-10, 6.0, -10);
+        shipGroup.add(bayLightN);
+
+        const bayLightS = new THREE.PointLight(0xa5f3fc, 2.5, 26);
+        bayLightS.position.set(-10, 6.0, 10);
+        shipGroup.add(bayLightS);
+
+        this.scene.add(shipGroup);
+
+        // Add colliders for spaceship exterior walls so player remains safely inside
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(cx - 36, 0, cz - 24),
+            new THREE.Vector3(cx + 36, 14, cz - 21)
+        ));
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(cx - 36, 0, cz + 21),
+            new THREE.Vector3(cx + 36, 14, cz + 24)
+        ));
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(cx - 36, 0, cz - 22),
+            new THREE.Vector3(cx - 33, 14, cz + 22)
+        ));
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(cx + 31, 0, cz - 22),
+            new THREE.Vector3(cx + 34, 14, cz - 7.5)
+        ));
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(cx + 31, 0, cz + 7.5),
+            new THREE.Vector3(cx + 34, 14, cz + 22)
+        ));
+    }
+
     buildMerchant() {
+        this.buildFallenSpaceshipHouse();
         if (window.DARK_SOULS_MERCHANTS_30 && typeof window.createMerchant3DModel === 'function') {
             this.merchantMeshes = [];
             window.DARK_SOULS_MERCHANTS_30.forEach((m, idx) => {
@@ -4051,6 +4272,12 @@ class DarkSoulsWorld {
         group.name = 'discovered_waystone_portal';
         group.position.set(x, y, z);
 
+        // Monumental 24-Meter Stone Sanctuary Terrace Dais
+        const dais = new THREE.Mesh(new THREE.CylinderGeometry(12, 13, 0.4, 24), this.stoneMat);
+        dais.position.set(0, 0.2, 0);
+        dais.receiveShadow = true;
+        group.add(dais);
+
         // 1. Carved Ash-Granite Fluted Pillars
         const pillarGeo = new THREE.CylinderGeometry(0.38, 0.48, 4.2, 10);
         const pillarMat = new THREE.MeshStandardMaterial({
@@ -4100,6 +4327,7 @@ class DarkSoulsWorld {
         pLight.position.set(0, 2.2, 0);
         group.add(pLight);
 
+        group.scale.set(3.0, 3.0, 3.0);
         this.scene.add(group);
         this.discoveredWaystoneMesh = group;
 
@@ -4107,7 +4335,7 @@ class DarkSoulsWorld {
         this.interactables.push({
             type: 'discovered_waystone',
             position: new THREE.Vector3(x, y, z),
-            radius: 4.2,
+            radius: 12.0,
             prompt: `[ E ] TRAVEL TO ${loc.name.toUpperCase()} [ENTER]`,
             targetLocationId: loc.id
         });

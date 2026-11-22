@@ -10,7 +10,7 @@ class DarkSoulsGame {
 
         // Three.js Core
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1500);
+        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 4500);
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             powerPreference: 'high-performance'
@@ -306,6 +306,9 @@ class DarkSoulsGame {
                 } else {
                     this.openLocationsModal();
                 }
+            }
+            if (e.code === 'KeyU' || e.key === 'u' || e.key === 'U' || e.key === 'г' || e.key === 'Г') {
+                this.travelToLocation('outside_fallen_spaceship_bazaar');
             }
             if (e.code === 'KeyE' || e.key === 'e' || e.key === 'E' || e.key === 'у' || e.key === 'У') this.handleInteraction();
             if (e.code === 'KeyG' || e.key === 'g' || e.key === 'G' || e.key === 'п' || e.key === 'П') {
@@ -3025,12 +3028,10 @@ class DarkSoulsGame {
         let cy = targetPos.y + allowedDist * this._camDir.y;
         let cz = targetPos.z + allowedDist * this._camDir.z;
 
-        // Subterranean ceiling & surface floor clamping
+        // Subterranean ceiling & surface floor clamping (Vaulted high ceiling y = 12m, generous subterranean clearance)
         if (targetPos.y < -3.0 && targetPos.z < -30) {
-            // Deep Inner Sanctum (z in [-115, -78]): Keep camera inside sanctum boundaries
-            if (cz > -78.2) cz = -78.2;
-            cy = Math.max(cy, -3.55);
-            cy = Math.min(cy, -1.8);
+            cy = Math.max(cy, targetPos.y + 0.45);
+            cy = Math.min(cy, 10.5);
         } else if (targetPos.y < -1.0) {
             // Subterranean Catacombs / Blighttown Corridor (y = -4.92, z in [22, 274])
             cy = Math.max(cy, targetPos.y + 0.45);
@@ -3134,10 +3135,13 @@ class DarkSoulsGame {
         }
 
         // Check Interactable Proximity (Completely hidden while dead, stunned, or death screen visible)
-        const isDead = (this.combat && (this.combat.isDead || this.combat.hp <= 0)) || document.body.classList.contains('player-is-dead') || (this.ui.deathScreen && this.ui.deathScreen.style.display === 'flex');
-        const isStunned = (this.combat && (this.combat.isStaggered || this.combat.poise <= 0));
+        const isDead = (this.combat && (this.combat.isDead || this.combat.hp <= 0)) || document.body.classList.contains('player-is-dead') || (this.ui.deathScreen && (this.ui.deathScreen.classList.contains('active') || this.ui.deathScreen.style.display === 'flex'));
+        const isStunned = (this.combat && (this.combat.isStaggered || this.combat.staggerTime > 0));
         if (isDead || isStunned) {
-            if (this.ui.interactionPrompt) this.ui.interactionPrompt.style.display = 'none';
+            if (this.ui.interactionPrompt) {
+                this.ui.interactionPrompt.style.display = 'none';
+                this.ui.interactionPrompt.style.visibility = 'hidden';
+            }
             return;
         }
 
@@ -3400,6 +3404,8 @@ class DarkSoulsGame {
         document.body.classList.add('player-is-dead');
         if (this.ui.interactionPrompt) {
             this.ui.interactionPrompt.style.display = 'none';
+            this.ui.interactionPrompt.style.visibility = 'hidden';
+            if (this.ui.promptText) this.ui.promptText.textContent = '';
         }
         if (this.ui.deathScreen) {
             // Pick random death banner title (YOU DIED, YOU CROAKED, etc.)
@@ -5943,7 +5949,8 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'er_sote_scadutree_chalice', name: 'Shadow Realm - Scadutree Chalice Sanctum', zone: 'Scadutree Chalice', pos: [0, 8.0, -150], elev: '+8.0m', danger: 'Tier VI (Shadow Fragment)', boss: 'Commander Gaius & Scadutree Avatar', desc: 'A monumental stone chalice terrace located directly beneath the weeping trunk of the colossal black Scadutree.', light: 1.30 },
     { id: 'er_sote_shaman_village', name: 'Hinterland - Golden Shaman Bough Village', zone: 'Shaman Village', pos: [-45, 2.0, -115], elev: '+2.0m', danger: 'Tier IV (Golden Bough)', boss: 'Minor Erdtree Spirit', desc: 'A secluded, sun-drenched flower meadow where Marika was born, surrounded by silent golden trees and empty homes.', light: 1.45 },
     { id: 'er_nokstella_waterfall_basin', name: 'Nokstella, Eternal City - Dragonkin Waterfall Basin', zone: 'Nokstella', pos: [-115, -6.5, -40], elev: '-6.5m', danger: 'Tier V (Nox Dynasty)', boss: 'Dragonkin Soldier of Nokstella', desc: 'A cavernous underground basin under a false starry sky where celestial silver teardrops guard black-iron thrones.', light: 0.85 },
-    { id: 'er_leyndell_subterranean_shunning', name: 'Subterranean Shunning-Grounds - Forsaken Omen Depths', zone: 'Subterranean Shunning-Grounds', pos: [-24, -6.0, 160], elev: '-6.0m', danger: 'Tier V (Frenzied Omen)', boss: 'Mohg, the Omen & Dung Eater', desc: 'A labyrinth of massive sewer pipes and discarded prisoner cells where the horned omens were abandoned in darkness.', light: 0.60 }
+    { id: 'er_leyndell_subterranean_shunning', name: 'Subterranean Shunning-Grounds - Forsaken Omen Depths', zone: 'Subterranean Shunning-Grounds', pos: [-24, -6.0, 160], elev: '-6.0m', danger: 'Tier V (Frenzied Omen)', boss: 'Mohg, the Omen & Dung Eater', desc: 'A labyrinth of massive sewer pipes and discarded prisoner cells where the horned omens were abandoned in darkness.', light: 0.60 },
+    { id: 'outside_fallen_spaceship_bazaar', name: '🛸 Fallen Starship Outpost - 30 Merchants Bazaar House', zone: 'Fallen Starship', pos: [-55, 0.0, 40], elev: '0m', danger: 'Sanctuary (Bazaar)', boss: 'Interstellar Safe Haven', desc: 'A colossal dreadnought starship crashed in the outer wildlands, converted into a thriving multi-deck trading house where all 30 legendary Soulsborne merchants reside.', light: 1.50 }
 ];
 
 // Locations & Save Slot Global Window Helpers

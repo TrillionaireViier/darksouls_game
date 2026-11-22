@@ -9222,11 +9222,10 @@ class DarkSoulsCharacters {
     ];
 
     createGorgonMedusa(x, z, angle = 0, y = 0, mobDef = null) {
-        // Resolve 1 of 30 Bespoke Gorgon Variants
         let variant = DarkSoulsCharacters.GORGON_VARIANTS[0];
         if (mobDef) {
-            if (typeof mobDef.variantIndex === 'number' && mobDef.variantIndex >= 0) {
-                variant = DarkSoulsCharacters.GORGON_VARIANTS[mobDef.variantIndex % DarkSoulsCharacters.GORGON_VARIANTS.length];
+            if (typeof mobDef.variantIndex === 'number' && DarkSoulsCharacters.GORGON_VARIANTS[mobDef.variantIndex]) {
+                variant = DarkSoulsCharacters.GORGON_VARIANTS[mobDef.variantIndex];
             } else if (mobDef.variantId) {
                 const found = DarkSoulsCharacters.GORGON_VARIANTS.find(v => v.id === mobDef.variantId);
                 if (found) variant = found;
@@ -9248,484 +9247,464 @@ class DarkSoulsCharacters {
         root.rotation.y = angle;
 
         const bodyGroup = new THREE.Group();
-        bodyGroup.position.y = 1.35;
+        bodyGroup.position.y = 1.25;
         root.add(bodyGroup);
 
-        const skinMat = new THREE.MeshStandardMaterial({ color: variant.skinColor, roughness: 0.52, metalness: 0.18 });
-        const scaleMat = new THREE.MeshStandardMaterial({ color: variant.scaleColor, roughness: 0.32, metalness: 0.50 });
-        const bellyMat = new THREE.MeshStandardMaterial({ color: variant.bellyColor, roughness: 0.65, metalness: 0.12 });
-        const armorMat = new THREE.MeshStandardMaterial({ color: variant.armorColor, roughness: 0.25, metalness: 0.88 });
-        const hairMat = new THREE.MeshStandardMaterial({ color: variant.hairColor, roughness: 0.28, metalness: 0.45 });
+        // Bespoke High-Fidelity Materials for Gorgon Medusa
+        const skinMat = new THREE.MeshStandardMaterial({
+            color: variant.skinColor,
+            roughness: 0.42,
+            metalness: 0.15
+        });
+        const scaleMat = new THREE.MeshStandardMaterial({
+            color: variant.scaleColor,
+            roughness: 0.30,
+            metalness: 0.55
+        });
+        const bellyMat = new THREE.MeshStandardMaterial({
+            color: variant.bellyColor,
+            roughness: 0.60,
+            metalness: 0.10
+        });
+        const armorMat = new THREE.MeshStandardMaterial({
+            color: variant.armorColor,
+            roughness: 0.22,
+            metalness: 0.88
+        });
+        const hairMat = new THREE.MeshStandardMaterial({
+            color: variant.hairColor,
+            roughness: 0.25,
+            metalness: 0.50
+        });
         const eyeMat = new THREE.MeshBasicMaterial({ color: variant.eyeColor });
-        const gemMat = new THREE.MeshStandardMaterial({ color: variant.gemColor, emissive: variant.gemColor, emissiveIntensity: 0.8, roughness: 0.1 });
-        const goldMat = this.goldTrimMat || new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.22, metalness: 0.9 });
-        const darkSteelMat = this.darkSteelMat || new THREE.MeshStandardMaterial({ color: 0x222228, roughness: 0.35, metalness: 0.8 });
-        const venomMat = this.venomAcidMat || new THREE.MeshStandardMaterial({ color: 0x33ff66, emissive: 0x11bb33, emissiveIntensity: 1.2, roughness: 0.15 });
+        const gemMat = new THREE.MeshStandardMaterial({
+            color: variant.gemColor,
+            emissive: variant.gemColor,
+            emissiveIntensity: 0.85,
+            roughness: 0.1
+        });
+        const goldMat = this.goldTrimMat || new THREE.MeshStandardMaterial({
+            color: 0xd4af37,
+            roughness: 0.20,
+            metalness: 0.92
+        });
+        const darkSteelMat = this.darkSteelMat || new THREE.MeshStandardMaterial({
+            color: 0x222228,
+            roughness: 0.32,
+            metalness: 0.82
+        });
+        const venomMat = this.venomAcidMat || new THREE.MeshStandardMaterial({
+            color: 0x00f5ff,
+            emissive: variant.auraColor,
+            emissiveIntensity: 1.2,
+            roughness: 0.15,
+            transparent: true,
+            opacity: 0.85
+        });
 
-        // 1. Serpentine Tail (14 articulated spine segments)
+        // 1. Colossal Ground-Coiling Serpentine Body (16 articulated spine segments coiling forward & around)
         const tailSegments = [];
         const tailGroup = new THREE.Group();
         bodyGroup.add(tailGroup);
 
-        const segCount = 14;
+        const segCount = 16;
         for (let i = 0; i < segCount; i++) {
             const t = i / segCount;
-            const segRadius = 0.55 * (1.0 - t * 0.78);
-            const segLen = 0.48;
+            const segRadius = 0.58 * (1.0 - t * 0.72);
+            const segLen = 0.55;
 
             const segMesh = new THREE.Mesh(
-                new THREE.CylinderGeometry(segRadius, segRadius * 0.92, segLen, 12),
+                new THREE.CylinderGeometry(segRadius, segRadius * 0.94, segLen, 14),
                 scaleMat
             );
             segMesh.castShadow = true;
             segMesh.receiveShadow = true;
 
-            // Pale ventral belly scutes
+            // Ventral belly scutes (ridged underside plates)
             const belly = new THREE.Mesh(
-                new THREE.PlaneGeometry(segRadius * 1.5, segLen * 0.95),
+                new THREE.BoxGeometry(segRadius * 1.5, segLen * 0.96, segRadius * 0.4),
                 bellyMat
             );
-            belly.rotation.x = Math.PI / 2;
-            belly.position.set(0, -segRadius * 0.85, 0);
+            belly.position.set(0, 0, segRadius * 0.75);
             segMesh.add(belly);
 
-            // Dorsal ridge spine fin
+            // Dorsal spinal ridge spikes
             if (i < segCount - 2) {
                 const fin = new THREE.Mesh(
-                    new THREE.ConeGeometry(segRadius * 0.24, segLen * 0.5, 4),
-                    armorMat
+                    new THREE.ConeGeometry(segRadius * 0.22, segLen * 0.55, 4),
+                    goldMat
                 );
-                fin.position.set(0, segRadius * 0.85, 0);
-                fin.rotation.z = Math.PI;
+                fin.position.set(0, 0, -segRadius * 0.85);
+                fin.rotation.x = -Math.PI / 2;
                 segMesh.add(fin);
             }
 
-            // Sinuous S-curve on the floor
-            const sx = Math.sin(t * Math.PI * 2.2) * (0.65 * (1 - t * 0.35));
-            const sz = -0.3 - i * 0.44;
-            const sy = -0.5 - t * 0.65;
+            // Elegant coiling path curving forward, sideways, and around on the ground
+            // Segments 0-3 descend from waist to floor (y = -0.1 to -1.25)
+            // Segments 4-15 loop across the floor in front and to the side
+            let sx, sy, sz, rx, ry, rz;
+            if (i < 4) {
+                const dt = i / 4;
+                sx = Math.sin(dt * 0.8) * 0.25;
+                sy = -0.25 - dt * 1.0;
+                sz = -0.2 - dt * 0.4;
+                rx = 0.45;
+                ry = 0;
+                rz = 0.1;
+            } else {
+                const coilT = (i - 4) / 12;
+                const coilAng = coilT * Math.PI * 2.2;
+                const coilR = 0.85 + coilT * 0.6;
+                sx = Math.cos(coilAng) * coilR;
+                sz = Math.sin(coilAng) * coilR;
+                sy = -1.22 + Math.sin(coilT * Math.PI) * 0.12;
+                rx = Math.PI / 2;
+                ry = coilAng + Math.PI / 2;
+                rz = 0;
+            }
+
             segMesh.position.set(sx, sy, sz);
-            segMesh.rotation.x = 0.22;
+            segMesh.rotation.set(rx, ry, rz);
             segMesh.userData = { baseX: sx, baseZ: sz, sIdx: i };
 
             tailGroup.add(segMesh);
             tailSegments.push(segMesh);
         }
 
-        // Rattlesnake Rattle & Tail Stinger on final segment
+        // Golden Rattlesnake Rattle Tip on tail
         const tipSeg = tailSegments[tailSegments.length - 1];
         const rattleGroup = new THREE.Group();
-        rattleGroup.position.set(0, 0, -0.28);
-        for (let r = 0; r < 3; r++) {
+        rattleGroup.position.set(0, -0.28, 0);
+        for (let r = 0; r < 4; r++) {
             const bead = new THREE.Mesh(
-                new THREE.TorusGeometry(0.06 - r * 0.015, 0.02, 6, 12),
+                new THREE.TorusGeometry(0.08 - r * 0.015, 0.025, 6, 14),
                 goldMat
             );
-            bead.position.z = -r * 0.06;
+            bead.position.y = -r * 0.06;
             rattleGroup.add(bead);
         }
         const stinger = new THREE.Mesh(
-            new THREE.ConeGeometry(0.045, 0.22, 6),
+            new THREE.ConeGeometry(0.045, 0.24, 6),
             darkSteelMat
         );
-        stinger.rotation.x = -Math.PI / 2;
-        stinger.position.z = -0.24;
+        stinger.position.y = -0.26;
+        stinger.rotation.x = Math.PI;
         rattleGroup.add(stinger);
         tipSeg.add(rattleGroup);
 
-        // 2. Sculpted Feminine Torso & Antique Cuirass
+        // 2. Sculpted Anatomical Feminine Torso & Antique Cuirass
         const torso = new THREE.Group();
-        torso.position.y = 0.18;
+        torso.position.y = 0.15;
         bodyGroup.add(torso);
 
-        // Scaled waist transition
-        const waistScales = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.36, 0.46, 0.45, 12),
+        // Waist cinch transition (tapered waist)
+        const waist = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.26, 0.38, 0.42, 14),
             scaleMat
         );
-        waistScales.position.y = -0.25;
-        waistScales.castShadow = true;
-        torso.add(waistScales);
+        waist.position.y = -0.18;
+        waist.castShadow = true;
+        torso.add(waist);
 
-        // Embossed antique cuirass / corslet
+        // Sculpted Cuirass / Corslet with anatomical curve
         const cuirass = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.32, 0.37, 0.68, 12),
+            new THREE.CylinderGeometry(0.32, 0.28, 0.62, 14),
             armorMat
         );
-        cuirass.position.y = 0.12;
+        cuirass.position.y = 0.22;
         cuirass.castShadow = true;
         torso.add(cuirass);
 
-        // Pectoral armor plates
-        [-0.14, 0.14].forEach((px) => {
+        // Sculpted Breastplate Contours
+        [-0.12, 0.12].forEach((px) => {
             const pec = new THREE.Mesh(
-                new THREE.SphereGeometry(0.12, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.5),
+                new THREE.SphereGeometry(0.12, 12, 10, 0, Math.PI * 2, 0, Math.PI * 0.6),
                 armorMat
             );
-            pec.position.set(px, 0.22, 0.26);
-            pec.rotation.x = Math.PI / 2;
-            cuirass.add(pec);
+            pec.position.set(px, 0.30, 0.20);
+            pec.rotation.x = 1.25;
+            torso.add(pec);
+
+            // Gold snake coil inlay on each cup
+            const coilInlay = new THREE.Mesh(
+                new THREE.TorusGeometry(0.075, 0.014, 6, 14),
+                goldMat
+            );
+            coilInlay.position.set(px, 0.30, 0.26);
+            torso.add(coilInlay);
         });
 
-        // Embossed twin serpents motif on chest
-        const chestSnakeL = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.014, 6, 14, Math.PI * 1.5), goldMat);
-        chestSnakeL.position.set(-0.12, 0.18, 0.32);
-        cuirass.add(chestSnakeL);
-        const chestSnakeR = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.014, 6, 14, Math.PI * 1.5), goldMat);
-        chestSnakeR.position.set(0.12, 0.18, 0.32);
-        chestSnakeR.rotation.y = Math.PI;
-        cuirass.add(chestSnakeR);
-
-        // Ornate Gorgon Gorget Collar with central gem
-        const gorget = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.035, 6, 16), goldMat);
-        gorget.position.set(0, 0.46, 0.05);
+        // Ornate Gorgon Gorget Collar & Center Gem
+        const gorget = new THREE.Mesh(new THREE.TorusGeometry(0.20, 0.038, 8, 18), goldMat);
+        gorget.position.set(0, 0.52, 0.04);
         gorget.rotation.x = Math.PI / 2;
-        cuirass.add(gorget);
+        torso.add(gorget);
 
-        const gorgetGem = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), gemMat);
-        gorgetGem.position.set(0, 0.46, 0.27);
-        cuirass.add(gorgetGem);
+        const gorgetGem = new THREE.Mesh(new THREE.OctahedronGeometry(0.065, 0), gemMat);
+        gorgetGem.position.set(0, 0.52, 0.24);
+        torso.add(gorgetGem);
 
-        // Serpent Hip Faulds / Tassets
-        const faulds = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.39, 0.46, 0.26, 12, 1, true, -Math.PI * 0.45, Math.PI * 0.90),
-            armorMat
-        );
-        faulds.position.set(0, -0.15, 0.02);
-        torso.add(faulds);
+        // Flared Layered Pauldrons on Shoulders
+        [-0.42, 0.42].forEach(pSide => {
+            const pGroup = new THREE.Group();
+            pGroup.position.set(pSide, 0.46, 0);
 
-        // Dorsal spine fin crest
-        const spineFin = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.72, 0.16), armorMat);
-        spineFin.position.set(0, 0.18, -0.36);
-        torso.add(spineFin);
+            const p1 = new THREE.Mesh(new THREE.SphereGeometry(0.18, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.55), armorMat);
+            p1.scale.set(1.0, 0.7, 1.2);
+            p1.rotation.z = (pSide > 0 ? -0.4 : 0.4);
+            pGroup.add(p1);
 
-        // 3. Sculpted Head & Menacing Chiseled Face
+            const pTrim = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.02, 6, 14), goldMat);
+            pTrim.rotation.x = Math.PI / 2;
+            pGroup.add(pTrim);
+
+            torso.add(pGroup);
+        });
+
+        // 3. Sculpted Feminine Head & Menacing Chiseled Facial Geometry
         const headGroup = new THREE.Group();
-        headGroup.position.set(0, 0.74, 0.04);
+        headGroup.position.set(0, 0.78, 0.04);
         torso.add(headGroup);
 
-        // Cranium with sculpted hollow cheeks and brow
+        // Sculpted Cranium with chiseled jawline
         const cranium = new THREE.Mesh(
-            new THREE.SphereGeometry(0.20, 14, 12),
+            new THREE.SphereGeometry(0.21, 16, 14),
             skinMat
         );
-        cranium.scale.set(0.88, 1.15, 0.96);
+        cranium.scale.set(0.85, 1.15, 0.95);
         cranium.castShadow = true;
         headGroup.add(cranium);
 
-        // Serpentine Scalp & Textured Hair Cap (Covers crown and back of head)
-        const hairCap = new THREE.Mesh(
-            new THREE.SphereGeometry(0.21, 14, 12, 0, Math.PI * 2, 0, Math.PI * 0.72),
-            hairMat
-        );
-        hairCap.scale.set(0.92, 1.18, 1.02);
-        hairCap.position.set(0, 0.02, -0.02);
-        headGroup.add(hairCap);
+        // Chiseled jaw and chin
+        const chin = new THREE.Mesh(new THREE.ConeGeometry(0.10, 0.16, 6), skinMat);
+        chin.position.set(0, -0.16, 0.08);
+        chin.rotation.x = -0.4;
+        headGroup.add(chin);
 
-        // Draped Serpentine Cowl Mantle (Flows down back of head over neck)
-        const hoodMantle = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.22, 0.36, 0.62, 12, 1, true, -Math.PI * 0.75, Math.PI * 1.5),
-            scaleMat
-        );
-        hoodMantle.position.set(0, -0.20, -0.10);
-        hoodMantle.rotation.x = 0.22;
-        headGroup.add(hoodMantle);
-
-        // Chiseled cheekbone contours
-        [-0.14, 0.14].forEach((cx) => {
-            const cheek = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.08), skinMat);
-            cheek.position.set(cx, -0.04, 0.12);
-            cheek.rotation.y = (cx > 0 ? -0.35 : 0.35);
+        // Sculpted Cheekbones & Brow
+        [-0.12, 0.12].forEach((cx) => {
+            const cheek = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.10, 0.08), skinMat);
+            cheek.position.set(cx, -0.02, 0.14);
+            cheek.rotation.y = (cx > 0 ? -0.32 : 0.32);
             headGroup.add(cheek);
         });
 
-        // Menacing brow ridge
-        const brow = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.04, 0.06), skinMat);
-        brow.position.set(0, 0.08, 0.18);
-        brow.rotation.x = -0.18;
+        const brow = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.045, 0.08), skinMat);
+        brow.position.set(0, 0.08, 0.17);
+        brow.rotation.x = -0.22;
         headGroup.add(brow);
 
-        // Hinged unmasked jaw with open venomous maw
-        const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.08, 0.16), skinMat);
-        jaw.position.set(0, -0.16, 0.08);
-        jaw.rotation.x = 0.25;
-        headGroup.add(jaw);
-
-        // 4 Viper Fangs
-        [[-0.05, 0.16], [0.05, 0.16], [-0.04, 0.12], [0.04, 0.12]].forEach(([fx, fz], fIdx) => {
-            const fang = new THREE.Mesh(new THREE.ConeGeometry(0.016, 0.07, 5), goldMat);
-            fang.position.set(fx, fIdx < 2 ? -0.10 : -0.18, fz);
-            fang.rotation.x = fIdx < 2 ? Math.PI : 0;
-            headGroup.add(fang);
-        });
-
-        // Forked flickering tongue
-        const tongue = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.005, 0.18), venomMat);
-        tongue.position.set(0, -0.14, 0.22);
-        tongue.rotation.x = 0.15;
-        headGroup.add(tongue);
-
-        // Piercing Reptilian Slit Eyes
+        // Piercing Glowing Reptilian Eyes with Slit Pupils
         [-0.08, 0.08].forEach((ex) => {
-            const eyeSocket = new THREE.Mesh(new THREE.SphereGeometry(0.044, 8, 8), darkSteelMat);
+            const eyeSocket = new THREE.Mesh(new THREE.SphereGeometry(0.048, 8, 8), darkSteelMat);
             eyeSocket.position.set(ex, 0.03, 0.17);
             headGroup.add(eyeSocket);
 
-            const eyePupil = new THREE.Mesh(new THREE.SphereGeometry(0.038, 8, 8), eyeMat);
-            eyePupil.scale.set(0.65, 1.25, 0.65);
+            const eyePupil = new THREE.Mesh(new THREE.SphereGeometry(0.040, 8, 8), eyeMat);
+            eyePupil.scale.set(0.55, 1.35, 0.65);
             eyePupil.position.set(ex, 0.03, 0.19);
             headGroup.add(eyePupil);
+
+            // Subtle eye glow lens
+            const eyeGlow = new THREE.Mesh(new THREE.SphereGeometry(0.022, 6, 6), gemMat);
+            eyeGlow.position.set(ex, 0.03, 0.22);
+            headGroup.add(eyeGlow);
         });
 
-        // High-luminance Gaze Aura PointLight
-        const gazeLight = new THREE.PointLight(variant.auraColor, 3.2, 14);
-        gazeLight.position.set(0, 0.08, 0.42);
-        headGroup.add(gazeLight);
+        // Open mouth with visible twin viper fangs
+        const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.04, 0.06), darkSteelMat);
+        mouth.position.set(0, -0.11, 0.18);
+        headGroup.add(mouth);
 
-        // Headpiece / Crown
-        if (variant.crownType === 'royal_tiara' || variant.crownType === 'diadem') {
-            const tiara = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.024, 6, 16, Math.PI * 1.2), goldMat);
-            tiara.position.set(0, 0.14, 0.02);
-            tiara.rotation.x = -Math.PI * 0.45;
-            headGroup.add(tiara);
+        [-0.04, 0.04].forEach(fx => {
+            const fang = new THREE.Mesh(new THREE.ConeGeometry(0.015, 0.07, 5), goldMat);
+            fang.position.set(fx, -0.11, 0.19);
+            fang.rotation.x = Math.PI;
+            headGroup.add(fang);
+        });
 
-            const crownGem = new THREE.Mesh(new THREE.OctahedronGeometry(0.045, 0), gemMat);
-            crownGem.position.set(0, 0.24, 0.16);
-            headGroup.add(crownGem);
+        // Forked flickering venom tongue
+        const tongue = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.005, 0.18), venomMat);
+        tongue.position.set(0, -0.12, 0.24);
+        tongue.rotation.x = 0.20;
+        headGroup.add(tongue);
 
-            if (variant.crownType === 'royal_tiara') {
-                for (let sp = -2; sp <= 2; sp++) {
-                    const spire = new THREE.Mesh(new THREE.ConeGeometry(0.024, 0.14 - Math.abs(sp) * 0.025, 5), goldMat);
-                    spire.position.set(sp * 0.065, 0.26 - Math.abs(sp) * 0.02, 0.12 - Math.abs(sp) * 0.02);
-                    spire.rotation.x = -0.15;
-                    headGroup.add(spire);
-                }
-            }
-        } else if (variant.crownType === 'pharaoh_cobra') {
-            const nemes = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.36, 0.45, 12, 1, true, -Math.PI * 0.5, Math.PI), goldMat);
-            nemes.position.set(0, 0.05, -0.06);
-            nemes.rotation.x = 0.25;
-            headGroup.add(nemes);
+        // Royal Diadem Crown / Crest
+        const tiara = new THREE.Mesh(new THREE.TorusGeometry(0.20, 0.024, 6, 18, Math.PI * 1.2), goldMat);
+        tiara.position.set(0, 0.14, 0.04);
+        tiara.rotation.x = -Math.PI * 0.45;
+        headGroup.add(tiara);
 
-            const uraeus = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 0.22, 6), goldMat);
-            uraeus.position.set(0, 0.26, 0.18);
-            uraeus.rotation.x = -0.45;
-            headGroup.add(uraeus);
-        } else if (variant.crownType === 'glintstone_crown') {
-            for (let gc = 0; gc < 5; gc++) {
-                const crystal = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.22, 6), gemMat);
-                const gang = (gc - 2) * 0.42;
-                crystal.position.set(Math.sin(gang) * 0.18, 0.24, Math.cos(gang) * 0.14);
-                crystal.rotation.z = -gang * 0.5;
-                headGroup.add(crystal);
-            }
-        } else if (variant.crownType === 'erdtree_halo' || variant.crownType === 'silver_halo') {
-            const halo = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.022, 6, 24), goldMat);
-            halo.position.set(0, 0.12, -0.15);
-            headGroup.add(halo);
-        } else if (variant.crownType === 'bone_horns' || variant.crownType === 'void_horns' || variant.crownType === 'dragon_horns' || variant.crownType === 'lightning_horns' || variant.crownType === 'cinder_horns') {
-            [-0.16, 0.16].forEach((hx) => {
-                const horn = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.38, 6), darkSteelMat);
-                horn.position.set(hx, 0.24, -0.02);
-                horn.rotation.z = (hx > 0 ? -0.55 : 0.55);
-                horn.rotation.x = -0.35;
-                headGroup.add(horn);
-            });
-        }
+        const crownGem = new THREE.Mesh(new THREE.OctahedronGeometry(0.055, 0), gemMat);
+        crownGem.position.set(0, 0.26, 0.18);
+        headGroup.add(crownGem);
 
-        // 4. Living Crown of 32 Articulated Sinuous Serpents (Crest, Temples, & Back Mane)
+        // 4. Voluminous Mane of 40 Living Curved Serpents (Cascading Tresses & Coils)
         const snakeHair = [];
 
-        // Helper to build a realistic curved serpent with flared viper head & gemstone eyes
-        const buildSerpent = (rootAng, radius, yOffset, pitch, roll, length = 0.45) => {
+        // Realistic curved serpent builder (S-curve body, hooded viper head, ruby eyes, forked tongue)
+        const buildSerpent = (rootAng, radius, yOffset, pitch, roll, length = 0.55, thickness = 0.032) => {
             const sGroup = new THREE.Group();
             const bx = Math.cos(rootAng) * radius;
             const bz = Math.sin(rootAng) * radius;
             sGroup.position.set(bx, yOffset, bz);
 
-            // S-curve lower segment (torus arc)
-            const arcLower = new THREE.Mesh(new THREE.TorusGeometry(length * 0.32, 0.025, 6, 10, Math.PI * 0.7), hairMat);
+            // Lower curved segment (torus arc curve)
+            const arcLower = new THREE.Mesh(new THREE.TorusGeometry(length * 0.35, thickness, 8, 12, Math.PI * 0.75), hairMat);
             arcLower.rotation.z = roll;
             arcLower.rotation.x = pitch;
             sGroup.add(arcLower);
 
-            // S-curve upper segment
-            const arcUpper = new THREE.Mesh(new THREE.CylinderGeometry(0.020, 0.028, length * 0.6, 6), hairMat);
-            arcUpper.position.set(Math.cos(rootAng) * 0.10, length * 0.35, Math.sin(rootAng) * 0.10);
-            arcUpper.rotation.z = roll * 0.7;
-            arcUpper.rotation.x = pitch * 0.7;
+            // Upper sinuous segment
+            const arcUpper = new THREE.Mesh(new THREE.CylinderGeometry(thickness * 0.8, thickness, length * 0.65, 8), hairMat);
+            arcUpper.position.set(Math.cos(rootAng) * 0.12, length * 0.40, Math.sin(rootAng) * 0.12);
+            arcUpper.rotation.z = roll * 0.75;
+            arcUpper.rotation.x = pitch * 0.75;
             sGroup.add(arcUpper);
 
-            // Flared Viper Head with side horns
-            const sHead = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.12, 5), hairMat);
-            sHead.position.set(Math.cos(rootAng) * 0.18, length * 0.65, Math.sin(rootAng) * 0.18);
+            // Flared Viper Head with side venom pouches
+            const sHead = new THREE.Mesh(new THREE.ConeGeometry(thickness * 1.8, 0.13, 6), hairMat);
+            sHead.position.set(Math.cos(rootAng) * 0.22, length * 0.72, Math.sin(rootAng) * 0.22);
             sHead.rotation.x = pitch;
             sHead.rotation.z = roll;
 
-            // Twin glowing gemstone eyes
-            const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.012, 4, 4), gemMat);
-            e1.position.set(0.024, -0.03, 0.03);
-            sHead.add(e1);
-            const e2 = new THREE.Mesh(new THREE.SphereGeometry(0.012, 4, 4), gemMat);
-            e2.position.set(-0.024, -0.03, 0.03);
-            sHead.add(e2);
+            // Twin glowing gemstone eyes on each snake
+            [-0.024, 0.024].forEach(sex => {
+                const sEye = new THREE.Mesh(new THREE.SphereGeometry(0.014, 4, 4), gemMat);
+                sEye.position.set(sex, -0.02, 0.035);
+                sHead.add(sEye);
+            });
 
-            // Viper Hood flap
-            const hoodFlap = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.04, 0.015), scaleMat);
-            hoodFlap.position.set(0, -0.01, -0.01);
-            sHead.add(hoodFlap);
+            // Cobra hood flare
+            const hood = new THREE.Mesh(new THREE.BoxGeometry(thickness * 2.6, 0.05, 0.015), scaleMat);
+            hood.position.set(0, -0.02, 0);
+            sHead.add(hood);
 
             sGroup.add(sHead);
             headGroup.add(sGroup);
             snakeHair.push(sGroup);
         };
 
-        // Tier 1: 10 Crest Serpents (Top Arching Forward & Outward)
-        for (let s = 0; s < 10; s++) {
-            const ang = (s / 10) * Math.PI * 2;
-            buildSerpent(ang, 0.15, 0.18, Math.sin(ang) * 0.65, Math.cos(ang) * 0.65, 0.48);
-        }
-
-        // Tier 2: 10 Temple Serpents (Sides Coiling Outward)
-        for (let s = 0; s < 10; s++) {
-            const side = (s < 5 ? -1 : 1);
-            const idx = s % 5;
-            const sang = (side > 0 ? 0.3 : Math.PI - 0.3) + idx * 0.22;
-            buildSerpent(sang, 0.18 + idx * 0.02, 0.06 - idx * 0.03, -0.25, side * (0.85 + idx * 0.1), 0.44);
-        }
-
-        // Tier 3: 12 Mane Serpents (Cascading down the back of head & neck)
+        // Tier 1: 12 Crest Serpents (Crown arching gracefully forward and over forehead)
         for (let s = 0; s < 12; s++) {
+            const ang = (s / 12) * Math.PI * 2;
+            buildSerpent(ang, 0.16, 0.18, Math.sin(ang) * 0.55, Math.cos(ang) * 0.55, 0.52, 0.028);
+        }
+
+        // Tier 2: 12 Temple & Cheek Serpents (Framing the face, cascading over shoulders)
+        for (let s = 0; s < 12; s++) {
+            const side = (s < 6 ? -1 : 1);
+            const idx = s % 6;
+            const sang = (side > 0 ? 0.25 : Math.PI - 0.25) + idx * 0.18;
+            buildSerpent(sang, 0.18 + idx * 0.02, 0.08 - idx * 0.04, -0.35, side * (0.85 + idx * 0.08), 0.58, 0.032);
+        }
+
+        // Tier 3: 16 Mane Serpents (Cascading down the back of neck and spine like thick braids)
+        for (let s = 0; s < 16; s++) {
             const col = s % 4;
             const row = Math.floor(s / 4);
-            const sx = (col - 1.5) * 0.075;
-            const sz = -0.16 - row * 0.06;
-            const sy = 0.06 - row * 0.08;
-            const maneAng = -Math.PI / 2 + (col - 1.5) * 0.25;
-            buildSerpent(maneAng, 0.16 + row * 0.04, sy, -0.65 - row * 0.2, (col - 1.5) * 0.35, 0.52);
+            const maneAng = -Math.PI / 2 + (col - 1.5) * 0.28;
+            buildSerpent(maneAng, 0.17 + row * 0.035, 0.04 - row * 0.07, -0.85 - row * 0.15, (col - 1.5) * 0.32, 0.65 + row * 0.06, 0.034);
         }
 
-        // Ornate Golden Back Plate & Spinal Bone Crest on Torso
-        const backPlate = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.62, 0.12), armorMat);
-        backPlate.position.set(0, 0.12, -0.22);
-        torso.add(backPlate);
-
-        // Coiled Snake Relief on Back Plate
-        const backSnakeRelief = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.020, 6, 16), goldMat);
-        backSnakeRelief.position.set(0, 0.12, -0.29);
-        torso.add(backSnakeRelief);
-
-        // 5 Gilded Vertebrae Spikes down the back
-        for (let v = 0; v < 5; v++) {
-            const vSpike = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.10, 4), goldMat);
-            vSpike.position.set(0, 0.32 - v * 0.10, -0.28);
-            vSpike.rotation.x = -Math.PI / 2;
-            torso.add(vSpike);
-        }
-
-        // 5. Scaled Arms & Golden Ouroboros Armlets
+        // 5. Articulated Arms, Forearms & Combat Grip
         const rightShoulder = new THREE.Group();
-        rightShoulder.position.set(0.52, 0.34, 0);
+        rightShoulder.position.set(0.44, 0.38, 0);
         torso.add(rightShoulder);
 
-        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.080, 0.72, 8), skinMat);
-        rArm.position.y = -0.36;
-        rArm.castShadow = true;
-        rightShoulder.add(rArm);
+        // Bicep (angled outward and slightly back)
+        const rBicep = new THREE.Mesh(new THREE.CylinderGeometry(0.080, 0.072, 0.38, 10), skinMat);
+        rBicep.position.set(0.08, -0.16, -0.04);
+        rBicep.rotation.z = -0.35;
+        rightShoulder.add(rBicep);
 
-        const rOuroboros = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.022, 6, 14), goldMat);
-        rOuroboros.position.y = -0.22;
-        rOuroboros.rotation.x = Math.PI / 2;
-        rightShoulder.add(rOuroboros);
+        // Golden Armlet band
+        const rArmlet = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.018, 6, 14), goldMat);
+        rArmlet.position.set(0.08, -0.16, -0.04);
+        rArmlet.rotation.x = Math.PI / 2;
+        rightShoulder.add(rArmlet);
 
+        // Forearm (angled forward ready to strike)
+        const rForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.072, 0.065, 0.42, 10), skinMat);
+        rForearm.position.set(0.18, -0.44, 0.12);
+        rForearm.rotation.x = 0.55;
+        rForearm.rotation.z = -0.25;
+        rightShoulder.add(rForearm);
+
+        // Sculpted Hand with Claws
+        const rHand = new THREE.Mesh(new THREE.SphereGeometry(0.062, 8, 8), skinMat);
+        rHand.position.set(0.24, -0.60, 0.25);
+        rightShoulder.add(rHand);
+
+        // Left Arm
         const leftShoulder = new THREE.Group();
-        leftShoulder.position.set(-0.52, 0.34, 0);
+        leftShoulder.position.set(-0.44, 0.38, 0);
         torso.add(leftShoulder);
 
-        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.080, 0.72, 8), skinMat);
-        lArm.position.y = -0.36;
-        lArm.castShadow = true;
-        leftShoulder.add(lArm);
+        const lBicep = new THREE.Mesh(new THREE.CylinderGeometry(0.080, 0.072, 0.38, 10), skinMat);
+        lBicep.position.set(-0.08, -0.16, -0.04);
+        lBicep.rotation.z = 0.35;
+        leftShoulder.add(lBicep);
 
-        const lOuroboros = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.022, 6, 14), goldMat);
-        lOuroboros.position.y = -0.22;
-        lOuroboros.rotation.x = Math.PI / 2;
-        leftShoulder.add(lOuroboros);
+        const lArmlet = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.018, 6, 14), goldMat);
+        lArmlet.position.set(-0.08, -0.16, -0.04);
+        lArmlet.rotation.x = Math.PI / 2;
+        leftShoulder.add(lArmlet);
 
-        // 6. Weapon Rigging based on weaponType
-        let rightWeapon = new THREE.Group();
-        let leftWeapon = new THREE.Group();
+        const lForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.072, 0.065, 0.42, 10), skinMat);
+        lForearm.position.set(-0.18, -0.44, 0.12);
+        lForearm.rotation.x = 0.55;
+        lForearm.rotation.z = 0.25;
+        leftShoulder.add(lForearm);
 
-        if (variant.weaponType === 'khopesh') {
-            [rightWeapon, leftWeapon].forEach((wGroup, wIdx) => {
-                const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.032, 0.36, 8), darkSteelMat);
-                hilt.position.y = -0.15;
-                wGroup.add(hilt);
+        const lHand = new THREE.Mesh(new THREE.SphereGeometry(0.062, 8, 8), skinMat);
+        lHand.position.set(-0.24, -0.60, 0.25);
+        leftShoulder.add(lHand);
 
-                const blade = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.85, 0.14), goldMat);
-                blade.position.set(0, 0.35, 0);
-                wGroup.add(blade);
+        // 6. Sculpted Dual Serpentine Khopesh Curved Swords
+        const buildKhopesh = (isRight) => {
+            const wGroup = new THREE.Group();
 
-                const hook = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.035, 6, 12, Math.PI * 0.7), darkSteelMat);
-                hook.position.set(wIdx === 0 ? 0.12 : -0.12, 0.75, 0);
-                hook.rotation.z = (wIdx === 0 ? 0.4 : -0.4);
-                wGroup.add(hook);
-            });
-        } else if (variant.weaponType === 'serpent_scythe') {
-            const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 2.2, 8), darkSteelMat);
-            staff.position.y = 0.3;
-            rightWeapon.add(staff);
+            // Leather hilt
+            const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.026, 0.30, 8), darkSteelMat);
+            hilt.rotation.x = Math.PI / 2;
+            wGroup.add(hilt);
 
-            const blade = new THREE.Mesh(new THREE.ConeGeometry(0.12, 1.1, 4), goldMat);
-            blade.position.set(0.48, 1.35, 0);
-            blade.rotation.z = -Math.PI * 0.45;
-            rightWeapon.add(blade);
-        } else if (variant.weaponType === 'glintstone_bow') {
-            const bow = new THREE.Mesh(new THREE.TorusGeometry(0.65, 0.032, 6, 18, Math.PI), darkSteelMat);
-            bow.rotation.y = Math.PI / 2;
-            leftWeapon.add(bow);
+            // Golden snake guard
+            const guard = new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.02, 6, 12), goldMat);
+            guard.position.z = 0.12;
+            wGroup.add(guard);
 
-            const arrow = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 1.1, 6), gemMat);
-            arrow.rotation.x = Math.PI / 2;
-            rightWeapon.add(arrow);
-        } else if (variant.weaponType === 'caduceus_staff') {
-            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 2.0, 8), goldMat);
-            shaft.position.y = 0.3;
-            rightWeapon.add(shaft);
+            // Curved sickle/khopesh blade
+            const straightBlade = new THREE.Mesh(new THREE.BoxGeometry(0.038, 0.08, 0.45), goldMat);
+            straightBlade.position.z = 0.36;
+            wGroup.add(straightBlade);
 
-            const orb = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), gemMat);
-            orb.position.y = 1.35;
-            rightWeapon.add(orb);
-        } else {
-            // Default: twin_kris or blood_sickles
-            [rightWeapon, leftWeapon].forEach((wGroup) => {
-                const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.030, 0.32, 8), darkSteelMat);
-                hilt.position.y = -0.12;
-                wGroup.add(hilt);
+            // Dramatic forward hook curve
+            const hookCurve = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.034, 8, 16, Math.PI * 0.72), goldMat);
+            hookCurve.position.set(isRight ? -0.12 : 0.12, 0, 0.55);
+            hookCurve.rotation.y = (isRight ? Math.PI * 0.45 : -Math.PI * 0.45);
+            wGroup.add(hookCurve);
 
-                // Wavy flamberge Kris blade
-                for (let b = 0; b < 3; b++) {
-                    const wave = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.32, 0.14), darkSteelMat);
-                    wave.position.set((b % 2 === 0 ? 0.02 : -0.02), 0.16 + b * 0.28, 0);
-                    wave.rotation.z = (b % 2 === 0 ? 0.08 : -0.08);
-                    wGroup.add(wave);
-                }
+            // Glowing runic edge inlay
+            const runeGlow = new THREE.Mesh(new THREE.BoxGeometry(0.042, 0.02, 0.52), venomMat);
+            runeGlow.position.z = 0.42;
+            wGroup.add(runeGlow);
 
-                const venomGlow = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.85, 0.16), venomMat);
-                venomGlow.position.y = 0.45;
-                wGroup.add(venomGlow);
-            });
-        }
+            return wGroup;
+        };
 
-        rightWeapon.position.set(0, -0.72, 0.18);
-        rightWeapon.rotation.x = Math.PI / 3.5;
+        const rightWeapon = buildKhopesh(true);
+        rightWeapon.position.set(0.24, -0.60, 0.25);
+        rightWeapon.rotation.set(-0.35, 0.2, -0.15);
         rightShoulder.add(rightWeapon);
 
-        leftWeapon.position.set(0, -0.72, 0.18);
-        leftWeapon.rotation.x = Math.PI / 3.5;
+        const leftWeapon = buildKhopesh(false);
+        leftWeapon.position.set(-0.24, -0.60, 0.25);
+        leftWeapon.rotation.set(-0.35, -0.2, 0.15);
         leftShoulder.add(leftWeapon);
 
-        // Dummy hip groups for animation safety
+        // Dummy hips for animation stability
         const rightHip = new THREE.Group();
         const leftHip = new THREE.Group();
         torso.add(rightHip);
@@ -9744,9 +9723,12 @@ class DarkSoulsCharacters {
             blending: THREE.AdditiveBlending
         });
         const gorgonGazeBeam = new THREE.Mesh(gazeBeamGeo, gazeBeamMat);
-        gazeBeamGeo.translate(0, 0, 8.0);
         gorgonGazeBeam.visible = false;
         headGroup.add(gorgonGazeBeam);
+
+        const gazeLight = new THREE.PointLight(variant.auraColor, 3.2, 14);
+        gazeLight.position.set(0, 0.08, 0.42);
+        headGroup.add(gazeLight);
 
         root.userData = {
             bodyGroup,
