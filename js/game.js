@@ -27,7 +27,7 @@ class DarkSoulsGame {
         this.renderer.shadowMap.enabled = !this.performanceMode;
         this.renderer.shadowMap.type = THREE.PCFShadowMap; // 2.5x faster shadow filtering
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.35;
+        this.renderer.toneMappingExposure = 1.65;
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -96,23 +96,23 @@ class DarkSoulsGame {
         this.moveSpeed = 4.8;
         this.sprintSpeed = 7.2;
 
-        // Player Local Warm Fill Light (illuminates character and surroundings)
-        this.playerLantern = new THREE.PointLight(0xfffaea, 1.5, 24, 1.2);
+        // Player Local Radiant Warm Fill Light (illuminates character and surroundings)
+        this.playerLantern = new THREE.PointLight(0xfffaea, 2.4, 36, 1.0);
         this.playerLantern.position.set(0, 2.2, 0);
         this.playerMesh.add(this.playerLantern);
 
         // Player Back Fill Light (Gleaming knight armor highlights)
-        this.playerBackLight = new THREE.PointLight(0xddeeff, 0.9, 16, 1.2);
+        this.playerBackLight = new THREE.PointLight(0xddeeff, 1.4, 24, 1.0);
         this.playerBackLight.position.set(0, 1.5, -1.2);
         this.playerMesh.add(this.playerBackLight);
 
-        // Character Rim Light (Gives silhouetted edge separation against dark fortress geometry)
-        this.playerRimLight = new THREE.DirectionalLight(0x7898c0, 0.85);
+        // Character Rim Light (Gives silhouetted edge separation against fortress geometry)
+        this.playerRimLight = new THREE.DirectionalLight(0x9bc0e4, 1.1);
         this.playerRimLight.position.set(-15, 25, -20);
         this.scene.add(this.playerRimLight);
 
-        // Camera Soft Ambient Headlight Fill (keeps viewport illuminated)
-        this.cameraLight = new THREE.DirectionalLight(0xffffff, 0.35);
+        // Camera Soft Ambient Headlight Fill (keeps entire viewport crystal clear)
+        this.cameraLight = new THREE.DirectionalLight(0xffffff, 0.65);
         this.camera.add(this.cameraLight);
         this.scene.add(this.camera);
 
@@ -1240,32 +1240,32 @@ class DarkSoulsGame {
 
         const btn = document.getElementById('btn-brightness-toggle');
         if (this.brightnessLevel === 0) {
-            this.renderer.toneMappingExposure = 1.35;
-            if (this.world.moonlight) this.world.moonlight.intensity = 2.4;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.85;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.95;
-            if (this.playerLantern) this.playerLantern.intensity = 1.5;
-            if (this.cameraLight) this.cameraLight.intensity = 0.35;
+            this.renderer.toneMappingExposure = 1.65;
+            if (this.world.moonlight) this.world.moonlight.intensity = 3.2;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.35;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 1.35;
+            if (this.playerLantern) this.playerLantern.intensity = 2.4;
+            if (this.cameraLight) this.cameraLight.intensity = 0.65;
             if (btn) btn.textContent = '☀️ LORDRAN SUN';
-            this.showNotification("LIGHTING: RADIANT LORDRAN SUNLIGHT");
+            this.showNotification("LIGHTING: MAXIMUM RADIANT SUNLIGHT");
         } else if (this.brightnessLevel === 1) {
-            this.renderer.toneMappingExposure = 1.60;
-            if (this.world.moonlight) this.world.moonlight.intensity = 3.0;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.15;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 1.25;
-            if (this.playerLantern) this.playerLantern.intensity = 2.0;
-            if (this.cameraLight) this.cameraLight.intensity = 0.55;
+            this.renderer.toneMappingExposure = 1.95;
+            if (this.world.moonlight) this.world.moonlight.intensity = 4.0;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.65;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 1.65;
+            if (this.playerLantern) this.playerLantern.intensity = 3.0;
+            if (this.cameraLight) this.cameraLight.intensity = 0.85;
             if (btn) btn.textContent = '☀️ MAXIMUM+';
-            this.showNotification("LIGHTING: MAXIMUM BRILLIANCE DAYLIGHT");
+            this.showNotification("LIGHTING: ULTRA BRILLIANCE NOON");
         } else {
-            this.renderer.toneMappingExposure = 1.20;
-            if (this.world.moonlight) this.world.moonlight.intensity = 1.8;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 0.70;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 0.80;
-            if (this.playerLantern) this.playerLantern.intensity = 1.2;
-            if (this.cameraLight) this.cameraLight.intensity = 0.25;
+            this.renderer.toneMappingExposure = 1.45;
+            if (this.world.moonlight) this.world.moonlight.intensity = 2.6;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.10;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 1.10;
+            if (this.playerLantern) this.playerLantern.intensity = 1.8;
+            if (this.cameraLight) this.cameraLight.intensity = 0.45;
             if (btn) btn.textContent = '☀️ WARM DUSK';
-            this.showNotification("LIGHTING: WARM GOLDEN DUSK");
+            this.showNotification("LIGHTING: WARM GOLDEN DAYLIGHT");
         }
     }
 
@@ -5108,12 +5108,12 @@ class DarkSoulsGame {
         // 8. Default Lordran Fortress Twilight & Daylight
         else {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0x7a96b4);
-                this.scene.fog.density = 0.0004;
+                this.scene.fog.color.setHex(0x9bc0e4);
+                this.scene.fog.density = 0.0002;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x7d8fa3);
+            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0xc8d8e8);
             if (this.world.moonlight) this.world.moonlight.color.setHex(0xfffaea);
-            if (this.renderer) this.renderer.toneMappingExposure = 1.35;
+            if (this.renderer) this.renderer.toneMappingExposure = 1.65;
         }
     }
 

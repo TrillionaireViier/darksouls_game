@@ -77,21 +77,21 @@ class DarkSoulsWorld {
                 const bw = cw - 8;
                 const bh = rh - 8;
 
-                // Authentic grim Dark Souls flagstone palette (Dark slate, weathered basalt & aged granite)
+                // Radiant sunlit Lordran flagstone palette (warm cathedral limestone & aged travertine)
                 const palSeed = Math.random();
                 let baseR, baseG, baseB;
                 if (palSeed < 0.35) {
-                    baseR = 40 + Math.floor(Math.random() * 8);
-                    baseG = 38 + Math.floor(Math.random() * 8);
-                    baseB = 36 + Math.floor(Math.random() * 8);
+                    baseR = 148 + Math.floor(Math.random() * 16);
+                    baseG = 142 + Math.floor(Math.random() * 14);
+                    baseB = 132 + Math.floor(Math.random() * 14);
                 } else if (palSeed < 0.7) {
-                    baseR = 46 + Math.floor(Math.random() * 10);
-                    baseG = 43 + Math.floor(Math.random() * 8);
-                    baseB = 39 + Math.floor(Math.random() * 8);
+                    baseR = 162 + Math.floor(Math.random() * 18);
+                    baseG = 154 + Math.floor(Math.random() * 16);
+                    baseB = 140 + Math.floor(Math.random() * 14);
                 } else {
-                    baseR = 35 + Math.floor(Math.random() * 6);
-                    baseG = 34 + Math.floor(Math.random() * 6);
-                    baseB = 33 + Math.floor(Math.random() * 6);
+                    baseR = 138 + Math.floor(Math.random() * 14);
+                    baseG = 135 + Math.floor(Math.random() * 14);
+                    baseB = 128 + Math.floor(Math.random() * 12);
                 }
 
                 // Fill stone slab
@@ -202,21 +202,21 @@ class DarkSoulsWorld {
                 const w = wcw - 8;
                 const h = wrh - 8;
 
-                // Rich varied Lordran fortress limestone and granite tones
+                // Rich sun-baked Lordran fortress limestone and golden ashlar tones
                 const toneSeed = Math.random();
                 let rC, gC, bC;
                 if (toneSeed < 0.35) {
-                    rC = 88 + Math.floor(Math.random() * 14); // Weathered dark basalt
-                    gC = 82 + Math.floor(Math.random() * 14);
-                    bC = 76 + Math.floor(Math.random() * 14);
+                    rC = 160 + Math.floor(Math.random() * 16); // Sunlit ashlar
+                    gC = 152 + Math.floor(Math.random() * 14);
+                    bC = 142 + Math.floor(Math.random() * 14);
                 } else if (toneSeed < 0.70) {
-                    rC = 112 + Math.floor(Math.random() * 16); // Warm sun-baked ashlar
-                    gC = 104 + Math.floor(Math.random() * 16);
-                    bC = 94 + Math.floor(Math.random() * 16);
+                    rC = 185 + Math.floor(Math.random() * 18); // Warm golden limestone
+                    gC = 175 + Math.floor(Math.random() * 16);
+                    bC = 158 + Math.floor(Math.random() * 16);
                 } else {
-                    rC = 98 + Math.floor(Math.random() * 14); // Classic gray Lordran granite
-                    gC = 96 + Math.floor(Math.random() * 14);
-                    bC = 94 + Math.floor(Math.random() * 14);
+                    rC = 168 + Math.floor(Math.random() * 16); // Classic Lordran granite
+                    gC = 165 + Math.floor(Math.random() * 16);
+                    bC = 158 + Math.floor(Math.random() * 14);
                 }
 
                 wCtx.fillStyle = `rgb(${rC}, ${gC}, ${bC})`;
@@ -602,14 +602,14 @@ class DarkSoulsWorld {
         grassCanvas.width = 512;
         grassCanvas.height = 512;
         const gCtx = grassCanvas.getContext('2d');
-        gCtx.fillStyle = '#182416';
+        gCtx.fillStyle = '#447832';
         gCtx.fillRect(0, 0, 512, 512);
         for (let i = 0; i < 4000; i++) {
             const gx = Math.random() * 512;
             const gy = Math.random() * 512;
             const gr = 1.0 + Math.random() * 2.5;
             const gShade = Math.random();
-            gCtx.fillStyle = gShade < 0.4 ? 'rgba(38, 54, 32, 0.45)' : (gShade < 0.8 ? 'rgba(24, 38, 20, 0.6)' : 'rgba(48, 40, 26, 0.5)');
+            gCtx.fillStyle = gShade < 0.4 ? 'rgba(95, 158, 68, 0.65)' : (gShade < 0.8 ? 'rgba(72, 130, 50, 0.7)' : 'rgba(125, 175, 88, 0.55)');
             gCtx.beginPath();
             gCtx.arc(gx, gy, gr, 0, Math.PI * 2);
             gCtx.fill();
@@ -621,26 +621,26 @@ class DarkSoulsWorld {
 
         this.forestGrassMat = new THREE.MeshStandardMaterial({
             map: grassTex,
-            roughness: 0.92,
+            roughness: 0.82,
             metalness: 0.05
         });
 
         this.cliffRockMat = new THREE.MeshStandardMaterial({
-            color: 0x22262a,
-            roughness: 0.90,
+            color: 0x647488,
+            roughness: 0.85,
             metalness: 0.12,
             flatShading: true
         });
 
         this.archtreeBarkMat = new THREE.MeshStandardMaterial({
-            color: 0x2a2118,
-            roughness: 0.95,
+            color: 0x5a4434,
+            roughness: 0.88,
             metalness: 0.05
         });
 
         this.foliageMat = new THREE.MeshStandardMaterial({
-            color: 0x153520,
-            roughness: 0.85,
+            color: 0x3d7a36,
+            roughness: 0.75,
             flatShading: true
         });
 
@@ -683,21 +683,21 @@ class DarkSoulsWorld {
         const skyDome = new THREE.Mesh(skyDomeGeo, skyDomeMat);
         this.scene.add(skyDome);
 
-        this.scene.background = new THREE.Color(0x6a8caa);
+        this.scene.background = new THREE.Color(0x8cb4d8);
 
         // 2. Clear Natural Atmospheric Depth Fog
-        this.scene.fog = new THREE.FogExp2(0x7692ae, 0.0004);
+        this.scene.fog = new THREE.FogExp2(0x9bc0e4, 0.0002);
 
-        // 3. Balanced Warm Daylight Ambient (illuminates geometry crevices without wash)
-        this.ambientLight = new THREE.AmbientLight(0x7d8fa3, 0.85);
+        // 3. Brilliant Warm Daylight Ambient (illuminates all architecture crevices)
+        this.ambientLight = new THREE.AmbientLight(0xc8d8e8, 1.4);
         this.scene.add(this.ambientLight);
 
         // 4. Sky and ground bounce hemisphere lighting (sky blue + warm stone bounce)
-        this.hemiLight = new THREE.HemisphereLight(0x9fc5f8, 0x6e5e4e, 0.95);
+        this.hemiLight = new THREE.HemisphereLight(0xe0f0ff, 0x9e8e7c, 1.4);
         this.scene.add(this.hemiLight);
 
         // 5. Cinematic Radiant Lordran Sunlight (casting crisp warm shadows)
-        this.moonlight = new THREE.DirectionalLight(0xfffaea, 2.4);
+        this.moonlight = new THREE.DirectionalLight(0xfffaea, 3.2);
         this.moonlight.position.set(45, 80, -25);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 1024;
@@ -773,14 +773,14 @@ class DarkSoulsWorld {
             return t * 6.0;
         }
 
-        // 2. Surface Boss Arena (z in [272, 390], wide arena span x in [-24, 24])
+        // 2. Surface Boss Arena (z in [272, 425], expanded arena span x in [-45, 45])
         // If player is on surface (currentY === null || currentY >= -2.2), ALWAYS stay solid at y = 0.0!
-        if (x >= -24 && x <= 24 && z >= 272 && z <= 390 && (currentY === null || currentY >= -2.2)) {
+        if (x >= -45 && x <= 45 && z >= 272 && z <= 425 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
-        // 3. Central Royal Bridge (z in [24, 274], walkable bridge span x in [-9.0, 9.0]) - Extended across 240m!
-        if (x >= -9.0 && x <= 9.0 && z >= 24 && z <= 274 && (currentY === null || currentY >= -2.2)) {
+        // 3. Central Royal Bridge (z in [24, 274], expanded walkable bridge span x in [-16.0, 16.0]) - Extended across 240m!
+        if (x >= -16.0 && x <= 16.0 && z >= 24 && z <= 274 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
@@ -1004,16 +1004,16 @@ class DarkSoulsWorld {
 
     buildEnvironment() {
         // 1. Courtyard Floor (Starting area) with Open Trenches for Catacombs Descent & Ramparts Stairs
-        // North Courtyard Floor Slab (z in [-30, 4], x in [-30, 30])
-        const northCourtyardGeo = new THREE.PlaneGeometry(60, 34);
+        // North Courtyard Floor Slab (z in [-50, 4], x in [-70, 70] - Vast expanded grand court)
+        const northCourtyardGeo = new THREE.PlaneGeometry(140, 54);
         const northCourtyard = new THREE.Mesh(northCourtyardGeo, this.stoneMat);
         northCourtyard.rotation.x = -Math.PI / 2;
-        northCourtyard.position.set(0, 0, -13);
+        northCourtyard.position.set(0, 0, -23);
         northCourtyard.receiveShadow = true;
         this.scene.add(northCourtyard);
 
-        // Center Promenade Floor Slab (z in [4, 30], x in [-15, 15] - between stairwells)
-        const centerCourtyardGeo = new THREE.PlaneGeometry(30, 26);
+        // Center Promenade Floor Slab (z in [4, 30], x in [-20, 20] - wide gateway promenade)
+        const centerCourtyardGeo = new THREE.PlaneGeometry(40, 26);
         const centerCourtyard = new THREE.Mesh(centerCourtyardGeo, this.stoneMat);
         centerCourtyard.rotation.x = -Math.PI / 2;
         centerCourtyard.position.set(0, 0, 17);
@@ -1513,31 +1513,31 @@ class DarkSoulsWorld {
         // PATH 2: ROYAL PROCESSION BRIDGE / CITADEL VIADUCT (MAIN: Y = 0.0)
         // Extended 3-4x from 65m to 240 METERS! (z = 30 to z = 270)
         // ----------------------------------------------------
-        const bridgeGeo = new THREE.BoxGeometry(14, 2, 240);
+        const bridgeGeo = new THREE.BoxGeometry(28, 2, 240);
         const bridgeMat = this.stoneMat.clone();
         bridgeMat.map = bridgeMat.map.clone();
-        bridgeMat.map.repeat.set(4, 60);
+        bridgeMat.map.repeat.set(6, 60);
         if (bridgeMat.bumpMap) {
             bridgeMat.bumpMap = bridgeMat.bumpMap.clone();
-            bridgeMat.bumpMap.repeat.set(4, 60);
+            bridgeMat.bumpMap.repeat.set(6, 60);
         }
         if (bridgeMat.roughnessMap) {
             bridgeMat.roughnessMap = bridgeMat.roughnessMap.clone();
-            bridgeMat.roughnessMap.repeat.set(4, 60);
+            bridgeMat.roughnessMap.repeat.set(6, 60);
         }
         const bridge = new THREE.Mesh(bridgeGeo, bridgeMat);
         bridge.position.set(0, -1, 150);
         bridge.receiveShadow = true;
         this.scene.add(bridge);
 
-        // Bridge Parapets (prevent falling off)
-        this.createWall(-7.5, 1.5, 150, 1, 3, 240); // Left rail
-        this.createWall(7.5, 1.5, 150, 1, 3, 240);  // Right rail
+        // Bridge Parapets (expanded 28m wide viaduct)
+        this.createWall(-14.5, 1.5, 150, 1, 3, 240); // Left rail
+        this.createWall(14.5, 1.5, 150, 1, 3, 240);  // Right rail
 
         // Continuous Torches along both parapets of the Royal Bridge (Every 14m)
         for (let btz = 36; btz <= 264; btz += 14) {
-            this.createTorch(-6.8, 2.8, btz, { intensity: 2.8, radius: 20 });
-            this.createTorch(6.8, 2.8, btz, { intensity: 2.8, radius: 20 });
+            this.createTorch(-13.8, 2.8, btz, { intensity: 3.2, radius: 24 });
+            this.createTorch(13.8, 2.8, btz, { intensity: 3.2, radius: 24 });
         }
 
         // Grand Standing Braziers at Bridge Portal, Causeway, and Gatehouses
@@ -1748,11 +1748,11 @@ class DarkSoulsWorld {
     buildOutsideRealm() {
         const outsideGroup = new THREE.Group();
 
-        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (x in [-1590, -28], z in [-850, 850], y = 0.0)
-        const outdoorFloorGeo = new THREE.PlaneGeometry(1470, 1710);
+        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (x in [-3300, 200], z in [-1800, 1800], y = 0.0)
+        const outdoorFloorGeo = new THREE.PlaneGeometry(3600, 3600);
         const outdoorFloor = new THREE.Mesh(outdoorFloorGeo, this.forestGrassMat);
         outdoorFloor.rotation.x = -Math.PI / 2;
-        outdoorFloor.position.set(-750, 0, 0);
+        outdoorFloor.position.set(-1500, 0, 0);
         outdoorFloor.receiveShadow = true;
         outsideGroup.add(outdoorFloor);
 
