@@ -4092,6 +4092,12 @@ class DarkSoulsCombat {
     // ----------------------------------------------------
     checkLineOfSight(pos1, pos2) {
         if (!this.world || !this.world.colliders || this.world.colliders.length === 0) return true;
+        // In close-quarters combat (within 7m), enemies always have line-of-sight
+        const dx = pos1.x - pos2.x;
+        const dy = pos1.y - pos2.y;
+        const dz = pos1.z - pos2.z;
+        if (dx * dx + dy * dy + dz * dz < 49.0) return true;
+
         const colliders = this.world.colliders;
         for (let i = 1; i <= 4; i++) {
             const t = i / 5.0;
@@ -4101,6 +4107,8 @@ class DarkSoulsCombat {
 
             for (let c = 0; c < colliders.length; c++) {
                 const box = colliders[c];
+                // Ignore horizontal thin floor/terrace plates (<1.6m high) so rays aren't clipped by floor slabs
+                if ((box.max.y - box.min.y) < 1.6) continue;
                 if (sy >= box.min.y && sy <= box.max.y &&
                     sx >= box.min.x && sx <= box.max.x &&
                     sz >= box.min.z && sz <= box.max.z) {
@@ -6630,6 +6638,9 @@ equipWeapon(weaponId) {
                 }
             }
 
+            // Continuously tick down mob cooldown every frame so attacks trigger promptly when in range
+            e.cooldown = Math.max(0, (e.cooldown || 0) - delta);
+
             this._scratchMobVec.subVectors(playerPos, e.mesh.position);
             const dist = this._scratchMobVec.length();
             const heightDiff = Math.abs(playerPos.y - e.mesh.position.y);
@@ -6935,10 +6946,10 @@ equipWeapon(weaponId) {
             }
 
             // 5. Aggro & Locomotion Logic (Mob Matrix 5 Archetypes)
-            if (dist < aggroRange && (heightDiff < 4.2 || behavior === 'Ranged' || e.isArcher || behavior === 'Caster')) {
+            if (dist < aggroRange && (heightDiff < 7.5 || dist < 8.0 || behavior === 'Ranged' || e.isArcher || behavior === 'Caster')) {
                 // Line of Sight: Aggro drops if blocked by walls for >4s
                 const hasLoS = this.checkLineOfSight(e.mesh.position, playerPos);
-                if (!hasLoS) {
+                if (!hasLoS && dist >= 7.0) {
                     e.losBlockedTimer = (e.losBlockedTimer || 0) + delta;
                     if (e.losBlockedTimer > 4.0) {
                         e.state = 'PATROL';
@@ -6986,19 +6997,20 @@ equipWeapon(weaponId) {
                 let shouldRetreat = false;
 
                 if (behavior === 'Ranged' || behavior === 'Caster') {
-                    if (dist < 4.5) {
+                    if (dist < 4.5 && dist > 1.8) {
                         shouldRetreat = true;
                     } else if (dist > preferredDist + 1.5) {
                         shouldAdvance = true;
                     }
                 } else {
-                    if (dist > preferredDist) {
+                    // Close distance aggressively to enter weapon reach
+                    if (dist > Math.max(1.2, reach * 0.75)) {
                         shouldAdvance = true;
                     }
                 }
 
                 if (shouldAdvance) {
-                    if (dist > (e.radius || 0.65) + 0.55) {
+                    if (dist > (e.radius || 0.65) + 0.35) {
                         const moveSpeed = (e.speed || 2.4) * speedMult;
                         e.mesh.position.x += Math.sin(targetAngle) * moveSpeed * delta;
                         e.mesh.position.z += Math.cos(targetAngle) * moveSpeed * delta;
@@ -7032,12 +7044,12 @@ equipWeapon(weaponId) {
                 }
 
                 // If in attack range, trigger attack when cooldown expires
+                const attackReachThreshold = Math.max(2.65, (reach || 2.0) + 0.75);
                 const canAttack = (behavior === 'Ranged' || behavior === 'Caster' || e.isArcher) ? 
-                    (dist >= 3.0 && dist <= aggroRange) : 
-                    (dist <= preferredDist + 0.35 && activeMeleeStrikes < 2);
+                    (dist <= aggroRange) : 
+                    (dist <= attackReachThreshold && activeMeleeStrikes < 6);
                 if (canAttack) {
-                    e.cooldown -= delta;
-                    if (e.cooldown <= 0 && !e.isAttacking) {
+                    if ((e.cooldown || 0) <= 0 && !e.isAttacking) {
                         e.isAttacking = true;
                         e.attackTime = 0;
                         e._damageDelivered = false;

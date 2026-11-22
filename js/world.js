@@ -791,12 +791,12 @@ class DarkSoulsWorld {
             return -t * 4.92;
         }
 
-        // Flooded Subterranean Catacombs Corridor (z in [22, 268], x in [-25.5, -14.5])
-        if (x >= -25.5 && x <= -14.5 && z > 22 && z <= 268 && (currentY === null || currentY < 0.5)) {
+        // Flooded Subterranean Catacombs Corridor (z in [22, 268], x in [-28.0, -12.0])
+        if (x >= -28.0 && x <= -12.0 && z > 22 && z <= 268 && (currentY === null || currentY < 0.5)) {
             return -4.92;
         }
-        // Crypt Exit Ascent Ramp back to surface before Fog Gate (z in [268, 274], x in [-25.5, -14.5])
-        if (x >= -25.5 && x <= -14.5 && z > 268 && z <= 274 && (currentY === null || currentY < 0.5)) {
+        // Crypt Exit Ascent Ramp back to surface before Fog Gate (z in [268, 274], x in [-28.0, -12.0])
+        if (x >= -28.0 && x <= -12.0 && z > 268 && z <= 274 && (currentY === null || currentY < 0.5)) {
             const t = (z - 268) / 6;
             return -4.92 + t * 4.92;
         }
