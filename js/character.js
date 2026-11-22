@@ -10027,7 +10027,7 @@ class DarkSoulsCharacters {
         return root;
     }
 
-    // PETRIFIED WARRIORS (Victims of Medusa's Petrifying Gaze)
+    // PETRIFIED WARRIORS (High-Poly Sculpted Victims of Medusa's Petrifying Gaze)
     createPetrifiedWarrior(x, z, angle = 0, y = 0, poseIndex = 0) {
         const root = new THREE.Group();
         root.position.set(x, y, z);
@@ -10036,21 +10036,64 @@ class DarkSoulsCharacters {
         const stoneMat = this.petrifiedStoneMat;
 
         const bodyGroup = new THREE.Group();
-        bodyGroup.position.y = 0.9;
+        bodyGroup.position.y = 0.95;
         root.add(bodyGroup);
 
-        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.75, 0.32), stoneMat);
-        torso.castShadow = true;
-        torso.receiveShadow = true;
+        const torso = new THREE.Group();
         bodyGroup.add(torso);
 
-        const head = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.32, 0.28), stoneMat);
-        head.position.y = 0.55;
+        // Sculpted Gothic Knight Cuirass with central ridge
+        const cuirass = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.20, 0.62, 8), stoneMat);
+        cuirass.scale.set(1.15, 1.0, 0.85);
+        cuirass.castShadow = true;
+        cuirass.receiveShadow = true;
+        torso.add(cuirass);
+
+        const breastplateRidge = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.56, 0.08), stoneMat);
+        breastplateRidge.position.set(0, 0.02, 0.18);
+        torso.add(breastplateRidge);
+
+        // Waist Faulds / Tassets
+        const tassets = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 0.24, 8), stoneMat);
+        tassets.position.y = -0.32;
+        torso.add(tassets);
+
+        // Sculpted Knight Helm with Visor Slit & Comb Crest
+        const head = new THREE.Group();
+        head.position.y = 0.48;
         torso.add(head);
 
-        const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 0.38, 6), stoneMat);
-        helm.position.y = 0.12;
-        head.add(helm);
+        const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), stoneMat);
+        cranium.scale.set(0.9, 1.1, 1.05);
+        head.add(cranium);
+
+        const visor = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.22, 5), stoneMat);
+        visor.rotation.x = Math.PI / 2;
+        visor.position.set(0, -0.04, 0.14);
+        head.add(visor);
+
+        const visorSlit = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.02, 0.06), this.darkSteelMat);
+        visorSlit.position.set(0, 0.02, 0.16);
+        head.add(visorSlit);
+
+        const helmCrest = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.12, 0.30), stoneMat);
+        helmCrest.position.set(0, 0.14, -0.02);
+        head.add(helmCrest);
+
+        // Layered Stone Pauldrons
+        [-0.30, 0.30].forEach(px => {
+            const pauldron = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8, 0, Math.PI * 2, 0, Math.PI * 0.6), stoneMat);
+            pauldron.position.set(px, 0.24, 0);
+            pauldron.rotation.z = (px > 0 ? -0.45 : 0.45);
+            torso.add(pauldron);
+        });
+
+        // Contoured Legs & Greaves
+        [-0.14, 0.14].forEach(lx => {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.06, 0.65, 8), stoneMat);
+            leg.position.set(lx, -0.62, 0);
+            torso.add(leg);
+        });
 
         if (poseIndex === 0) {
             // Shield-raised in terror
@@ -14809,13 +14852,75 @@ class DarkSoulsCharacters {
             wheel.add(spike);
         }
 
-        // Skeletal Skull Peering Through Upper Spokes
+        // Sculpted High-Detail Human Skull Peering Through Upper Spokes
         const headGroup = new THREE.Group();
-        headGroup.position.set(0, 0.35, 0.12);
+        headGroup.position.set(0, 0.38, 0.14);
         torso.add(headGroup);
 
-        const skull = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, 0.26), boneMat);
-        headGroup.add(skull);
+        // Cranium vault
+        const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.13, 10, 8), boneMat);
+        cranium.scale.set(0.92, 1.05, 1.12);
+        cranium.castShadow = true;
+        headGroup.add(cranium);
+
+        // Brow Ridge & Zygomatic Arches (Cheekbones)
+        const brow = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.04, 0.08), boneMat);
+        brow.position.set(0, 0.04, 0.11);
+        headGroup.add(brow);
+
+        [-0.08, 0.08].forEach(cx => {
+            const cheek = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.08, 0.06), boneMat);
+            cheek.position.set(cx, -0.04, 0.10);
+            headGroup.add(cheek);
+        });
+
+        // Sunken Orbital Sockets with glowing crimson death embers
+        const emberMat = this.emberGlowMat || new THREE.MeshBasicMaterial({ color: 0xff2200 });
+        [-0.05, 0.05].forEach(ex => {
+            const socket = new THREE.Mesh(new THREE.SphereGeometry(0.032, 6, 6), this.darkSteelMat);
+            socket.position.set(ex, 0.01, 0.11);
+            headGroup.add(socket);
+
+            const emberEye = new THREE.Mesh(new THREE.SphereGeometry(0.016, 4, 4), emberMat);
+            emberEye.position.set(ex, 0.01, 0.13);
+            headGroup.add(emberEye);
+        });
+
+        // Nasal Cavity
+        const noseCavity = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.045, 0.03), this.darkSteelMat);
+        noseCavity.position.set(0, -0.03, 0.13);
+        headGroup.add(noseCavity);
+
+        // Maxilla & Snapping Mandible with teeth
+        const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.06, 0.10), boneMat);
+        jaw.position.set(0, -0.10, 0.07);
+        jaw.rotation.x = 0.18;
+        headGroup.add(jaw);
+
+        // Individual teeth
+        for (let t = -3; t <= 3; t++) {
+            const tooth = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.022, 0.012), boneMat);
+            tooth.position.set(t * 0.016, -0.07, 0.11);
+            headGroup.add(tooth);
+        }
+
+        // Cervical Spine Vertebrae connecting head to hub
+        for (let v = 0; v < 3; v++) {
+            const vert = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.05, 6), boneMat);
+            vert.position.set(0, -0.14 - v * 0.055, 0.02 - v * 0.01);
+            headGroup.add(vert);
+        }
+
+        // Ribcage strapped across wheel hub
+        const ribcage = new THREE.Group();
+        ribcage.position.set(0, 0.05, 0.02);
+        torso.add(ribcage);
+        for (let r = 0; r < 4; r++) {
+            const rib = new THREE.Mesh(new THREE.TorusGeometry(0.18 - r * 0.015, 0.02, 4, 8, Math.PI), boneMat);
+            rib.position.y = -r * 0.08;
+            rib.rotation.x = Math.PI;
+            ribcage.add(rib);
+        }
 
         // Bone Arms Strapped to Wheel Spokes
         const rightShoulder = new THREE.Group();

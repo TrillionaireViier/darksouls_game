@@ -2342,6 +2342,31 @@ class DarkSoulsWorld {
         sanctumCeiling.receiveShadow = true;
         sanctumGroup.add(sanctumCeiling);
 
+        // Monumental Egyptian/Serpentine Temple Portal Pediment Arch over stairs at z = -70
+        // Front Portal Beam / Entablature spanning the entrance opening (x in [-14, 14], y: 5.6 to 8.0, z: -70)
+        const portalArchitrave = new THREE.Mesh(new THREE.BoxGeometry(29, 2.4, 3.2), this.serpentStoneMat);
+        portalArchitrave.position.set(0, 6.8, -70);
+        portalArchitrave.receiveShadow = true;
+        sanctumGroup.add(portalArchitrave);
+
+        // Carved Serpentine Cornice running along the top of the portal
+        const portalCornice = new THREE.Mesh(new THREE.BoxGeometry(30, 0.6, 3.6), this.serpentJadeMat);
+        portalCornice.position.set(0, 8.1, -70);
+        sanctumGroup.add(portalCornice);
+
+        // Flanking Portal Entrance Columns supporting the entablature at x = -13.5 and 13.5
+        this.createSerpentPillar(-13.5, -70, -2.5, 10.4);
+        this.createSerpentPillar(13.5, -70, -2.5, 10.4);
+
+        // Side Architrave wings extending outwards to the perimeter walls at x in [-38, -13] and [13, 38]
+        const portalWingL = new THREE.Mesh(new THREE.BoxGeometry(25, 2.4, 3.2), this.serpentStoneMat);
+        portalWingL.position.set(-25.5, 6.8, -70);
+        sanctumGroup.add(portalWingL);
+
+        const portalWingR = new THREE.Mesh(new THREE.BoxGeometry(25, 2.4, 3.2), this.serpentStoneMat);
+        portalWingR.position.set(25.5, 6.8, -70);
+        sanctumGroup.add(portalWingR);
+
         // Perimeter Enclosing Walls for Inner Sanctum
         this.createWall(-38, 1.0, -96.5, 2, 12, 39); // West Wall
         this.createWall(38, 1.0, -96.5, 2, 12, 39);  // East Wall

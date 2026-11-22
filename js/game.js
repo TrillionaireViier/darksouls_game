@@ -2779,14 +2779,29 @@ class DarkSoulsGame {
             targetPosX = 0.02; targetPosY = 0.02; targetPosZ = 0.04;
         }
 
+        // If blade is displaced by more than 0.35 rad (e.g. from an attack combo or interruption), snap quickly to eliminate horizontal clipping
+        if (Math.abs(uData.swordGroup.rotation.z - targetRotZ) > 0.35 || Math.abs(uData.swordGroup.rotation.x - targetRotX) > 0.8) {
+            uData.swordGroup.rotation.z = THREE.MathUtils.lerp(uData.swordGroup.rotation.z, targetRotZ, Math.min(1.0, delta * 30));
+            uData.swordGroup.rotation.x = THREE.MathUtils.lerp(uData.swordGroup.rotation.x, targetRotX, Math.min(1.0, delta * 30));
+        }
+
         // Smoothly glide back to the natural ready stance every frame
-        const blend = Math.min(1.0, delta * 15);
+        const blend = Math.min(1.0, delta * 18);
         uData.swordGroup.rotation.x = THREE.MathUtils.lerp(uData.swordGroup.rotation.x, targetRotX, blend);
         uData.swordGroup.rotation.y = THREE.MathUtils.lerp(uData.swordGroup.rotation.y, targetRotY, blend);
         uData.swordGroup.rotation.z = THREE.MathUtils.lerp(uData.swordGroup.rotation.z, targetRotZ, blend);
         uData.swordGroup.position.x = THREE.MathUtils.lerp(uData.swordGroup.position.x, targetPosX, blend);
         uData.swordGroup.position.y = THREE.MathUtils.lerp(uData.swordGroup.position.y, targetPosY, blend);
         uData.swordGroup.position.z = THREE.MathUtils.lerp(uData.swordGroup.position.z, targetPosZ, blend);
+
+        // Stabilize weapon arm shoulder when not attacking, moving or emoting
+        if (uData.rightShoulder && !this.combat.isAttacking && !this.combat.isDrinkingEstus && !this.combat.isStaggered && !this.combat.isParrying && !this.activeGesture) {
+            if (!isMoving) {
+                uData.rightShoulder.rotation.x = THREE.MathUtils.lerp(uData.rightShoulder.rotation.x, 0, blend);
+                uData.rightShoulder.rotation.y = THREE.MathUtils.lerp(uData.rightShoulder.rotation.y, 0, blend);
+                uData.rightShoulder.rotation.z = THREE.MathUtils.lerp(uData.rightShoulder.rotation.z, 0, blend);
+            }
+        }
 
         // Continuous mutual collision resolution (runs every frame even when standing still, drinking Estus, or parrying)
         this.resolvePlayerCollisions();
@@ -3118,8 +3133,10 @@ class DarkSoulsGame {
             }
         }
 
-        // Check Interactable Proximity (Completely hidden while dead)
-        if (this.combat && (this.combat.isDead || this.combat.hp <= 0)) {
+        // Check Interactable Proximity (Completely hidden while dead, stunned, or death screen visible)
+        const isDead = (this.combat && (this.combat.isDead || this.combat.hp <= 0)) || document.body.classList.contains('player-is-dead') || (this.ui.deathScreen && this.ui.deathScreen.style.display === 'flex');
+        const isStunned = (this.combat && (this.combat.isStaggered || this.combat.poise <= 0));
+        if (isDead || isStunned) {
             if (this.ui.interactionPrompt) this.ui.interactionPrompt.style.display = 'none';
             return;
         }
@@ -3380,6 +3397,7 @@ class DarkSoulsGame {
     }
 
     triggerDeathScreen() {
+        document.body.classList.add('player-is-dead');
         if (this.ui.interactionPrompt) {
             this.ui.interactionPrompt.style.display = 'none';
         }
@@ -3666,6 +3684,7 @@ class DarkSoulsGame {
         );
         this.camera.lookAt(targetPos);
 
+        document.body.classList.remove('player-is-dead');
         if (this.playerMesh && this.playerMesh.userData) {
             const uData = this.playerMesh.userData;
             this.playerMesh.rotation.set(0, 0, 0);
@@ -5904,7 +5923,27 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'er_haligtree_malenia_roots', name: 'Miquella\'s Haligtree - Roots of the Rot Goddess', zone: 'Haligtree Roots', pos: [-150, -6.5, 0], elev: '-6.5m', danger: 'Tier VI (Scarlet Bloom)', boss: 'Malenia, Blade of Miquella', desc: 'The colossal hollow root sanctum where the Aeonian Bloom erupted, blanketing the soil in scarlet rot.', light: 0.95 },
     { id: 'er_farum_azula_dragon_temple', name: 'Crumbling Farum Azula - Dragon Temple Lift', zone: 'Farum Azula', pos: [140, 5.5, 0], elev: '+5.5m', danger: 'Tier VI (Tempest Ruin)', boss: 'Maliketh & Godskin Duo', desc: 'Prehistoric floating stone ruins suspended in an eternal tornado vortex where ancient dragons dwell.', light: 1.35 },
     { id: 'er_sote_enir_ilim_belurat', name: 'Enir-Ilim - Spiral Gate of the Divine Spire', zone: 'Enir-Ilim', pos: [0, 10.0, -180], elev: '+10.0m', danger: 'Tier VI (Divine Ascension)', boss: 'Promised Consort Radahn', desc: 'The monumental stone staircase ascending toward the Gate of Divinity amidst swirling golden dust.', light: 1.50 },
-    { id: 'liturgy_sunken_scriptorium', name: 'The Sunken Liturgy - Scriptorium of the Blank Page', zone: 'The Sunken Liturgy', pos: [-35, -5.0, 160], elev: '-5.0m', danger: 'Tier V (Apocryphal)', boss: 'First Arbiter of the Grand Ledger', desc: 'An underwater library of submerged stone desks where scribes etched human debts in indelible kraken ink.', light: 0.85 }
+    { id: 'liturgy_sunken_scriptorium', name: 'The Sunken Liturgy - Scriptorium of the Blank Page', zone: 'The Sunken Liturgy', pos: [-35, -5.0, 160], elev: '-5.0m', danger: 'Tier V (Apocryphal)', boss: 'First Arbiter of the Grand Ledger', desc: 'An underwater library of submerged stone desks where scribes etched human debts in indelible kraken ink.', light: 0.85 },
+    { id: 'liturgy_ossuary_of_collateral', name: 'The Sunken Liturgy - Ossuary of Forfeited Bones', zone: 'The Sunken Liturgy', pos: [-22, -4.92, 195], elev: '-4.9m', danger: 'Tier V (Liquidation)', boss: 'The High Liquidator', desc: 'A colossal catacomb vault constructed entirely from the calcified skeletons of debtors who failed the primeval covenant.', light: 0.80 },
+    { id: 'liturgy_submerged_mint', name: 'The Sunken Liturgy - Submerged Mint of the Gilded Scrip', zone: 'The Sunken Liturgy', pos: [-18, -4.92, 225], elev: '-4.9m', danger: 'Tier V (Primal Mintage)', boss: 'The Gilded Mintmaster', desc: 'Drowned hydraulic stamp-presses that once minted sovereign soul coins from molten gold and crystallized memory.', light: 0.90 },
+    { id: 'liturgy_hall_of_cancelled_names', name: 'The Sunken Liturgy - Hall of Cancelled Names', zone: 'The Sunken Liturgy', pos: [-25, -4.92, 255], elev: '-4.9m', danger: 'Tier VI (Oblivion)', boss: 'Arch-Inquisitor of the Null Ledger', desc: 'A silent basalt gallery where the carved names of erased dynasties have been chiselled away beneath creeping black moss.', light: 0.70 },
+    { id: 'ds1_sen_fortress_tar_pit', name: 'Sen\'s Fortress - Tar Pit of Titanite Demons', zone: 'Sen\'s Fortress', pos: [-16, -5.5, 70], elev: '-5.5m', danger: 'Tier IV (Titanite Pit)', boss: 'Titanite Demon Clones & Cobra Sentinels', desc: 'The subterranean sludge basin at the base of Sen\'s gauntlet where headless demons drag stone catch-poles through toxic black muck.', light: 0.65 },
+    { id: 'ds1_ash_lake_hollow_tree', name: 'Ash Lake - The Great Hollow Archtree Trunk', zone: 'Ash Lake', pos: [-185, 0.5, -95], elev: '0m', danger: 'Tier V (Everlasting)', boss: 'Everlasting Stone Dragon & Hydra', desc: 'The interior of a world-pillar archtree descending into the infinite horizon of ash beaches and eternal waters.', light: 1.10 },
+    { id: 'ds1_anor_londo_grand_archive_steps', name: 'Anor Londo - Grand Marble Colonnade Stairway', zone: 'Anor Londo', pos: [15, 6.0, 75], elev: '+6.0m', danger: 'Tier IV (Sunlight Guard)', boss: 'Ornstein & Smough Phantoms', desc: 'Sweeping white marble staircases flanked by gilded brass balustrades and towering royal banners of Gwynevere.', light: 1.40 },
+    { id: 'ds2_brume_tower_fume_sanctum', name: 'Brume Tower - Smoldering Throne of Nadalia', zone: 'Brume Tower', pos: [22, 6.0, 165], elev: '+6.0m', danger: 'Tier V (Ashen Flame)', boss: 'Fume Knight Raime', desc: 'The ash-choked lower sanctum where the exiled knight guards the charred remains of the Bride of Ash with dual colossal blades.', light: 0.95 },
+    { id: 'ds2_dragon_aerie_sky_bridge', name: 'Dragon Aerie - Windswept Skybridge Peaks', zone: 'Dragon Aerie', pos: [-70, 4.0, 110], elev: '+4.0m', danger: 'Tier V (Aerial Wyrms)', boss: 'Guardian Drakes & Explosive Mummies', desc: 'Fragile rope bridges spanning vertiginous chasms between petrified limestone spires where drakes nest among glowing eggs.', light: 1.35 },
+    { id: 'ds2_aldias_keep_dragon_hall', name: 'Aldia\'s Keep - Skeletal Dragon Laboratory', zone: 'Aldia\'s Keep', pos: [18, 0.0, 120], elev: '0m', danger: 'Tier IV (Forbidden Experiments)', boss: 'Aldia, Scholar of the First Sin', desc: 'A gothic manor hall dominated by the animated skeleton of a colossal dragon reanimated through blasphemous research.', light: 1.05 },
+    { id: 'ds3_archdragon_peak_belfry', name: 'Archdragon Peak - Dragonkin Belfry of the Storm', zone: 'Archdragon Peak', pos: [25, 6.0, 185], elev: '+6.0m', danger: 'Tier V (Storm Dragon)', boss: 'The Nameless King & King of the Storm', desc: 'A mountain summit belltower overlooking a boundless sea of stormclouds where the firstborn war god summons thunder.', light: 1.45 },
+    { id: 'ds3_irithyll_distantsun_courtyard', name: 'Irithyll of the Boreal Valley - Pontiff\'s Moonlit Plaza', zone: 'Irithyll of Boreal Valley', pos: [-12, 0.0, 155], elev: '0m', danger: 'Tier V (Boreal Frost)', boss: 'Pontiff Sulyvahn & Fire Witches', desc: 'A cold, moonlit cobblestone square beneath towering spires where ghostly Outrider Knights wander with frosted blades.', light: 1.15 },
+    { id: 'ds3_ringed_city_swamp_monolith', name: 'The Ringed City - Abyssal Mire Monolith', zone: 'The Ringed City', pos: [20, 6.0, 195], elev: '+6.0m', danger: 'Tier VI (Dark Soul)', boss: 'Judicator Argo & Ringed Knights', desc: 'A colossal sunken mud hollow filled with sunken cathedral ruins where ancient Ringed Knights patrol with fire weapons.', light: 0.85 },
+    { id: 'bb_cainhurst_grand_library', name: 'Forsaken Cainhurst Castle - Frozen Royal Gallery', zone: 'Forsaken Cainhurst', pos: [12, 6.0, 95], elev: '+6.0m', danger: 'Tier V (Vileblood Royalty)', boss: 'Vileblood Queen Annalise', desc: 'A frostbitten library lined with gilded portraits and dust sheets where ghostly noblewomen weep among towering candelabras.', light: 0.90 },
+    { id: 'bb_fishing_hamlet_underground', name: 'Fishing Hamlet - Underground Corpse Trench', zone: 'Fishing Hamlet', pos: [-16, -4.0, 85], elev: '-4.0m', danger: 'Tier V (Great One Slumber)', boss: 'Orphan of Kos & Fishmen', desc: 'Subterranean tunnels carved beneath rotting whale carcasses where luminous snail-women guard the secret of the old sins.', light: 0.70 },
+    { id: 'bb_healing_church_altar', name: 'Cathedral Ward - Healing Church Blood Altar', zone: 'Cathedral Ward', pos: [6, 0.0, 65], elev: '0m', danger: 'Tier IV (Beast Scourge)', boss: 'Vicar Amelia', desc: 'A grand marble cathedral altar bathed in moonlight through fractured stained glass where the golden pendant was clutched.', light: 1.10 },
+    { id: 'er_sote_jagged_peak_abyssal_rift', name: 'Jagged Peak - Drake Mountain Abyss Rift', zone: 'Jagged Peak', pos: [-135, 4.0, 35], elev: '+4.0m', danger: 'Tier VI (Dread Wyrms)', boss: 'Bayle the Dread & Jagged Drakes', desc: 'A violently storm-lashed volcanic peak strewn with colossal dragon bones and crackling scarlet lightning storms.', light: 1.25 },
+    { id: 'er_sote_scadutree_chalice', name: 'Shadow Realm - Scadutree Chalice Sanctum', zone: 'Scadutree Chalice', pos: [0, 8.0, -150], elev: '+8.0m', danger: 'Tier VI (Shadow Fragment)', boss: 'Commander Gaius & Scadutree Avatar', desc: 'A monumental stone chalice terrace located directly beneath the weeping trunk of the colossal black Scadutree.', light: 1.30 },
+    { id: 'er_sote_shaman_village', name: 'Hinterland - Golden Shaman Bough Village', zone: 'Shaman Village', pos: [-45, 2.0, -115], elev: '+2.0m', danger: 'Tier IV (Golden Bough)', boss: 'Minor Erdtree Spirit', desc: 'A secluded, sun-drenched flower meadow where Marika was born, surrounded by silent golden trees and empty homes.', light: 1.45 },
+    { id: 'er_nokstella_waterfall_basin', name: 'Nokstella, Eternal City - Dragonkin Waterfall Basin', zone: 'Nokstella', pos: [-115, -6.5, -40], elev: '-6.5m', danger: 'Tier V (Nox Dynasty)', boss: 'Dragonkin Soldier of Nokstella', desc: 'A cavernous underground basin under a false starry sky where celestial silver teardrops guard black-iron thrones.', light: 0.85 },
+    { id: 'er_leyndell_subterranean_shunning', name: 'Subterranean Shunning-Grounds - Forsaken Omen Depths', zone: 'Subterranean Shunning-Grounds', pos: [-24, -6.0, 160], elev: '-6.0m', danger: 'Tier V (Frenzied Omen)', boss: 'Mohg, the Omen & Dung Eater', desc: 'A labyrinth of massive sewer pipes and discarded prisoner cells where the horned omens were abandoned in darkness.', light: 0.60 }
 ];
 
 // Locations & Save Slot Global Window Helpers
