@@ -351,15 +351,14 @@
                 });
             }
 
-            // 3. NPCs (In-World & Spawns)
+            // 3. NPCs & 30 Iconic Merchants (In-World & Spawns)
             if (this.layers.npcs) {
                 // Permanent Courtyard NPCs
                 const courtyardNPCs = [
                     { id: 'npc_1_solaire', name: 'Solaire of Astora', x: -5.5, y: 0, z: 7.5, quote: 'Praise the Sun!', icon: '☀️' },
                     { id: 'npc_2_siegmeyer', name: 'Siegmeyer of Catarina', x: 7.5, y: 0, z: 3.5, quote: 'Hmm... Mmm...', icon: '🧅' },
                     { id: 'npc_164_fire_keeper_ds3', name: 'Fire Keeper of Firelink', x: -2.4, y: 0, z: -1.8, quote: 'Welcome home, Ashen One.', icon: '🔥' },
-                    { id: 'npc_101_ranni_witch', name: 'Ranni the Witch', x: 4.8, y: 0, z: -8.0, quote: 'I stole death long ago.', icon: '🌙' },
-                    { id: 'merchant_undead', name: 'Undead Merchant (Male)', x: -8.5, y: 0, z: 3.5, quote: 'Y-you there! Care to purchase?', icon: '🛒' }
+                    { id: 'npc_101_ranni_witch', name: 'Ranni the Witch', x: 4.8, y: 0, z: -8.0, quote: 'I stole death long ago.', icon: '🌙' }
                 ];
 
                 courtyardNPCs.forEach(npc => {
@@ -377,6 +376,25 @@
                         color: '#00e5ff'
                     });
                 });
+
+                // 30 Iconic Soulsborne Merchants
+                if (window.DARK_SOULS_MERCHANTS_30) {
+                    window.DARK_SOULS_MERCHANTS_30.forEach(m => {
+                        if (this.searchQuery && !m.name.toLowerCase().includes(this.searchQuery) && !m.zone.toLowerCase().includes(this.searchQuery)) return;
+                        items.push({
+                            type: 'npc',
+                            id: m.id,
+                            name: `🛒 ${m.name} (${m.title})`,
+                            x: m.pos[0],
+                            y: m.pos[1] || 0,
+                            z: m.pos[2],
+                            elev: `${m.pos[1] || 0}m`,
+                            desc: `[${m.game} • ${m.zone}] "${m.quote}"`,
+                            icon: m.icon || '🛒',
+                            color: '#ffd700'
+                        });
+                    });
+                }
 
                 // Spawned Compendium Phantoms/Entities
                 if (window.compendiumInstance && window.compendiumInstance.spawnedEntities) {

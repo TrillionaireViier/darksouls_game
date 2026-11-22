@@ -4172,179 +4172,46 @@
         </div>
     </div>
 
-    <!-- UNDEAD MERCHANT MODAL -->
+    <!-- 30 ICONIC SOULSBORNE MERCHANTS MODAL -->
     <div id="merchant-modal" class="modal-overlay">
-        <div class="modal-box" style="max-width: 680px;">
-            <div class="modal-header">🛒 UNDEAD MERCHANT &bull; LORDRAN PEDDLER</div>
-            <div style="background: rgba(28, 20, 14, 0.85); border: 1px solid #4a3622; padding: 12px 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; border-radius: 4px;">
-                <div style="font-size: 2.2rem;">🧙‍♂️</div>
-                <div style="font-family: 'EB Garamond', serif; font-size: 0.98rem; color: #d6c6b2; font-style: italic; line-height: 1.45;">
-                    &ldquo;Heh heh heh... Well, what have we here? An Undead with his wits intact! Care for a weapon, friend? Steel and miracles are the only currency that buys tomorrow in Lordran.&rdquo;
+        <div class="modal-box" style="max-width: 780px;">
+            <div id="merchant-modal-title" class="modal-header">🛒 30 ICONIC SOULSBORNE MERCHANTS &bull; THE GRAND BAZAAR</div>
+            
+            <!-- Horizontal Scrollable Selector of All 30 Merchants -->
+            <div id="merchant-tabs-bar" style="display: flex; gap: 8px; overflow-x: auto; padding: 6px 4px 10px 4px; margin-bottom: 12px; scrollbar-width: thin;">
+                <!-- Populated dynamically by updateMerchantUI -->
+            </div>
+
+            <!-- Merchant Dialogue & Lore Quote Banner -->
+            <div id="merchant-quote-banner" style="background: rgba(28, 20, 14, 0.92); border: 1.5px solid #5a4228; padding: 14px 18px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 16px; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.6);">
+                <div style="font-size: 2.4rem;">🧙‍♂️</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 6px;">
+                        <span style="font-size: 0.82rem; letter-spacing: 1.5px; color: #ffd700; font-weight: 800;">UNDEAD MERCHANT &bull; <span style="color: #cbd5e1; font-weight: 600;">Lordran Undead Burg Peddler</span></span>
+                        <span style="font-size: 0.72rem; color: #60a5fa; background: rgba(30, 58, 138, 0.35); border: 1px solid rgba(96, 165, 250, 0.4); padding: 2px 8px; border-radius: 9999px;">📍 Undead Burg Courtyard [DS1]</span>
+                    </div>
+                    <div style="font-family: 'EB Garamond', serif; font-size: 0.98rem; color: #d6c6b2; font-style: italic; line-height: 1.45;">
+                        &ldquo;Heh heh heh... Well, what have we here? An Undead with his wits intact! Care for a weapon, friend? Steel and miracles are the only currency that buys tomorrow in Lordran.&rdquo;
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                        <button onclick="window.teleportToMerchant('merchant_undead_male')" style="padding: 6px 12px; border: 1.5px solid #ffd700; border-radius: 6px; font-weight: 800; font-family: 'Cinzel', serif; font-size: 0.78rem; color: #fff3a8; background: linear-gradient(180deg, #664411 0%, #332205 100%); cursor: pointer; box-shadow: 0 0 8px rgba(255,215,0,0.35);">
+                            📍 WARP TO THIS MERCHANT
+                        </button>
+                        <button onclick="window.spawnMerchantAtPlayer('merchant_undead_male')" style="padding: 6px 12px; border: 1.5px solid #60a5fa; border-radius: 6px; font-weight: 800; font-family: 'Cinzel', serif; font-size: 0.78rem; color: #bfdbfe; background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); cursor: pointer; box-shadow: 0 0 8px rgba(96,165,250,0.35);">
+                            📦 SPAWN 3D MERCHANT HERE
+                        </button>
+                    </div>
                 </div>
             </div>
             
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(12, 10, 8, 0.7); padding: 8px 14px; border: 1px solid #3d2c1c; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(12, 10, 8, 0.8); padding: 8px 16px; border: 1px solid #3d2c1c; border-radius: 4px; margin-bottom: 12px;">
                 <span style="font-size: 0.82rem; color: #ffd276; letter-spacing: 1.5px; font-weight: 700;">YOUR SOULS PURSE:</span>
                 <span style="font-size: 1.15rem; color: #fff; font-weight: 700; text-shadow: 0 0 10px #88ccff;"><span id="merchant-souls-val">0</span> SOULS</span>
             </div>
 
-            <!-- Merchant Catalogue List -->
-            <div class="boss-cards-grid" style="max-height: 52vh;">
-                <!-- Weapon: Zweihander -->
-                <div class="boss-card merchant-weapon-card" data-weapon-id="zweihander">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🗡️</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">ZWEIHANDER</div>
-                            <div class="boss-card-desc">Colossal Ultra Greatsword &bull; Extreme reach, crushes enemy poise and flattens hollows</div>
-                            <div class="boss-card-stats">DMG: 260 / 490 &bull; REACH: 4.4m &bull; STAMINA: 35 &bull; COST: 2,500 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss btn-merchant-action">BUY (2,500)</button>
-                </div>
-
-                <!-- Weapon: Uchigatana -->
-                <div class="boss-card merchant-weapon-card" data-weapon-id="uchigatana">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🎌</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">UCHIGATANA</div>
-                            <div class="boss-card-desc">Eastern Katana &bull; Lacerating rapid slashes (1.35x speed) with deadly backstab crits</div>
-                            <div class="boss-card-stats">DMG: 175 / 320 &bull; SPEED: 1.35x &bull; STAMINA: 15 &bull; COST: 3,500 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss btn-merchant-action">BUY (3,500)</button>
-                </div>
-
-                <!-- Weapon: Black Knight Halberd -->
-                <div class="boss-card merchant-weapon-card" data-weapon-id="halberd">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🔱</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">BLACK KNIGHT HALBERD</div>
-                            <div class="boss-card-desc">Lordran Polearm &bull; Colossal 4.8m attack reach allows striking from safe distance</div>
-                            <div class="boss-card-stats">DMG: 210 / 390 &bull; REACH: 4.8m &bull; STAMINA: 26 &bull; COST: 5,000 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss btn-merchant-action">BUY (5,000)</button>
-                </div>
-
-                <!-- Weapon: Dragon Tooth -->
-                <div class="boss-card merchant-weapon-card" data-weapon-id="dragontooth">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🦴</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">DRAGON TOOTH</div>
-                            <div class="boss-card-desc">Everlasting Dragon Tooth &bull; Heavy attack triggers crushing ground shockwaves</div>
-                            <div class="boss-card-stats">DMG: 310 / 580 &bull; POISE: 3.4x &bull; STAMINA: 44 &bull; COST: 6,500 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss btn-merchant-action">BUY (6,500)</button>
-                </div>
-
-                <!-- Weapon: Moonlight Greatsword -->
-                <div class="boss-card merchant-weapon-card" data-weapon-id="moonlight">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">✨</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">MOONLIGHT GREATSWORD</div>
-                            <div class="boss-card-desc">Seath's Luminous Relic &bull; Heavy attack fires crescent moon magical beam wave</div>
-                            <div class="boss-card-stats">DMG: 230 / 440 &bull; BEAM: 260 MAGIC &bull; COST: 10,000 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss btn-merchant-action">BUY (10,000)</button>
-                </div>
-
-                <!-- Weapon: Rivers of Blood -->
-                <div class="boss-card merchant-weapon-card" data-weapon-id="rivers_of_blood">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🩸</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">RIVERS OF BLOOD</div>
-                            <div class="boss-card-desc">Cursed Red Katana &bull; Rapid Corpse Piler bleed slashes & blood-flame DoT</div>
-                            <div class="boss-card-stats">DMG: 215 / 395 &bull; SPEED: 1.45x &bull; COST: 8,000 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss btn-merchant-action">BUY (8,000)</button>
-                </div>
-
-                <!-- Weapon: Dark Moon Greatsword -->
-                <div class="boss-card merchant-weapon-card" data-weapon-id="dark_moon_greatsword">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🌙</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">DARK MOON GREATSWORD</div>
-                            <div class="boss-card-desc">Ranni's Moonlight Blade &bull; Freezing waves of moonlight rime & high poise shatter</div>
-                            <div class="boss-card-stats">DMG: 280 / 520 &bull; POISE: 2.4x &bull; COST: 12,000 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss btn-merchant-action">BUY (12,000)</button>
-                </div>
-
-                <!-- Consumable: Estus Shard -->
-                <div class="boss-card">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🧪</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">ESTUS FLASK SHARD</div>
-                            <div class="boss-card-desc">Ancient glass fragment &bull; Permanently increases Max Estus Flask capacity (+1)</div>
-                            <div class="boss-card-stats">PERMANENT UPGRADE &bull; COST: 1,500 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss" onclick="buyMerchantItem('estus_shard')" style="border-color: #55aa66; color: #aaffaa; background: rgba(20, 60, 30, 0.4);">UPGRADE (1,500)</button>
-                </div>
-
-                <!-- Consumable: Divine Blessing -->
-                <div class="boss-card">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🛡️</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">DIVINE BLESSING</div>
-                            <div class="boss-card-desc">Holy water of Goddess Gwynevere &bull; Instantly restores 100% HP and Stamina</div>
-                            <div class="boss-card-stats">FULL RESTORATION &bull; COST: 800 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss" onclick="buyMerchantItem('divine_blessing')" style="border-color: #66aacc; color: #aadcff; background: rgba(20, 40, 70, 0.4);">BUY (800)</button>
-                </div>
-
-                <!-- Consumable: Charcoal Pine Resin -->
-                <div class="boss-card">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🔥</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">CHARCOAL PINE RESIN</div>
-                            <div class="boss-card-desc">Imbues right-hand weapon with blazing fire &bull; +60 Fire Damage for 45 seconds</div>
-                            <div class="boss-card-stats">FLAME BUFF &bull; COST: 500 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss" onclick="buyMerchantItem('charcoal_resin')" style="border-color: #cc6633; color: #ffb888; background: rgba(60, 30, 15, 0.4);">BUY (500)</button>
-                </div>
-
-                <!-- Consumable: Homeward Bone -->
-                <div class="boss-card">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🦴</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">HOMEWARD BONE</div>
-                            <div class="boss-card-desc">White ash bone &bull; Return safely to the Bonfire from anywhere in Lordran</div>
-                            <div class="boss-card-stats">WARP TO BONFIRE &bull; COST: 300 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss" onclick="buyMerchantItem('homeward_bone')" style="border-color: #ccaa44; color: #fff0aa; background: rgba(50, 40, 15, 0.4);">BUY (300)</button>
-                </div>
-
-                <!-- Consumable: Flask of Torch Pitch -->
-                <div class="boss-card">
-                    <div class="boss-card-info">
-                        <div class="boss-card-icon">🪔</div>
-                        <div class="boss-card-text">
-                            <div class="boss-card-name">FLASK OF TORCH PITCH</div>
-                            <div class="boss-card-desc">Distilled mineral pitch &bull; Immediately refills Handheld Torch fuel to 100%</div>
-                            <div class="boss-card-stats">TORCH REFUEL &bull; COST: 100 SOULS</div>
-                        </div>
-                    </div>
-                    <button class="btn-fight-boss" onclick="buyMerchantItem('torch_pitch')" style="border-color: #ff7722; color: #ffaa55; background: rgba(50, 25, 10, 0.4);">BUY (100)</button>
-                </div>
+            <!-- Merchant Catalogue List (Dynamic Wares Grid) -->
+            <div id="merchant-wares-grid" class="boss-cards-grid" style="max-height: 48vh; overflow-y: auto;">
+                <!-- Populated dynamically by updateMerchantUI -->
             </div>
 
             <button class="btn-modal-close" onclick="closeMerchantModal()">FAREWELL</button>
@@ -8044,25 +7911,26 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/audio.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/lore_items.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/world.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/character.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/siege_warfare.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/collision_system.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/combat.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/postprocessing.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/qa_suite.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/inventory_system.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/compendium_300_models.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/death_quotes_300.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/game.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
-    <script src="js/dev_map.js?v=20261122_STAGGER_KNOCKBACK_V19"></script>
+    <script src="js/three.min.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/audio.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/lore_items.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/merchants_30.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/world.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/character.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/siege_warfare.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/collision_system.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/combat.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/postprocessing.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/qa_suite.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/inventory_system.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/compendium_300_models.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/death_quotes_300.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/game.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
+    <script src="js/dev_map.js?v=20261122_MERCHANTS_30_LOCATIONS_V20"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {

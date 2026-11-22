@@ -3381,9 +3381,37 @@ class DarkSoulsWorld {
     }
 
     // ----------------------------------------------------
-    // UNDEAD MERCHANT NPC (LORDRAN PEDDLER)
+    // UNDEAD & SOULSBORNE MERCHANTS (30 BESPOKE 3D NPCS)
     // ----------------------------------------------------
     buildMerchant() {
+        if (window.DARK_SOULS_MERCHANTS_30 && typeof window.createMerchant3DModel === 'function') {
+            this.merchantMeshes = [];
+            window.DARK_SOULS_MERCHANTS_30.forEach((m, idx) => {
+                try {
+                    const merchantModel = window.createMerchant3DModel(m, this);
+                    this.scene.add(merchantModel);
+                    this.merchantMeshes.push(merchantModel);
+
+                    if (idx === 0) {
+                        this.merchantGroup = merchantModel;
+                    }
+
+                    // Register interactable in the world
+                    this.interactables.push({
+                        type: 'merchant',
+                        merchantId: m.id,
+                        merchantName: m.name,
+                        position: new THREE.Vector3(m.pos[0], m.pos[1], m.pos[2]),
+                        radius: 3.5,
+                        prompt: `[ E ] TALK TO ${m.name.toUpperCase()} (${m.title})`
+                    });
+                } catch (err) {
+                    console.error('Error generating 3D merchant:', m.id, err);
+                }
+            });
+            return;
+        }
+
         const merchantGroup = new THREE.Group();
 
         // 1. Merchant Rug / Blanket spread on flagstones
@@ -3501,6 +3529,7 @@ class DarkSoulsWorld {
         // Register interactable
         this.interactables.push({
             type: 'merchant',
+            merchantId: 'merchant_undead_male',
             position: new THREE.Vector3(-8.5, 0, 3.5),
             radius: 3.5,
             prompt: '[ E ] TALK TO UNDEAD MERCHANT'

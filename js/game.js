@@ -168,14 +168,30 @@ class DarkSoulsGame {
         const savedSkin = localStorage.getItem('darksouls_equipped_skin') || 'warrior';
         this.selectSkin(savedSkin, false);
 
-        // Unlocked Fast-Travel Lordran Realms
+        // Unlocked Fast-Travel Lordran Realms (62 Base + 20 New Expansion Locations = 82 Total)
         let savedLocs = null;
         try {
             savedLocs = JSON.parse(localStorage.getItem('ds_unlocked_locations'));
         } catch (e) {}
-        this.unlockedLocations = Array.isArray(savedLocs) && savedLocs.length > 0 
-            ? savedLocs 
-            : ['royal_bridge_arena', 'outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+        const defaultUnlockedLocations = [
+            'royal_bridge_arena', 'outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream',
+            // 20 Brand-New Authentic Soulsborne Locations
+            'ds1_firelink_altar_lordvessel', 'ds1_sanctuary_garden_pool', 'ds1_oolacile_township_dungeon', 'ds1_crystal_cave_invisible_walk',
+            'ds2_shrine_of_winter_portal', 'ds2_black_gulch_oil_pools', 'ds2_iron_keep_molten_bridge', 'ds2_memory_of_jeigh_ramparts',
+            'ds3_profaned_capital_yhorm_throne', 'ds3_irithyll_anor_londo_parapet', 'ds3_dreg_heap_earthen_ruins', 'ds3_painted_world_corvian_settlement',
+            'bb_byrgenwerth_moonside_lake', 'bb_nightmare_frontier_poison_valley', 'bb_yahargul_unseen_chapel',
+            'sekiro_great_shinobi_rooftop',
+            'er_haligtree_malenia_roots', 'er_farum_azula_dragon_temple', 'er_sote_enir_ilim_belurat',
+            'liturgy_sunken_scriptorium'
+        ];
+        if (Array.isArray(savedLocs) && savedLocs.length > 0) {
+            defaultUnlockedLocations.forEach(id => {
+                if (!savedLocs.includes(id)) savedLocs.push(id);
+            });
+            this.unlockedLocations = savedLocs;
+        } else {
+            this.unlockedLocations = defaultUnlockedLocations;
+        }
 
         // Auto-Save Management (Periodic 15s & Event-Driven)
         this.autoSaveInterval = 15.0;
@@ -767,7 +783,7 @@ class DarkSoulsGame {
                         return;
                     }
                 } else if (item.type === 'merchant') {
-                    this.openMerchantModal();
+                    this.openMerchantModal(item.merchantId);
                     return;
                 } else if (item.type === 'route_portal') {
                     this.teleportPlayer(item.targetPos.x, item.targetPos.y, item.targetPos.z, item.label);
@@ -813,13 +829,25 @@ class DarkSoulsGame {
         }
     }
 
-    openMerchantModal() {
+    openMerchantModal(merchantId = null) {
         const modal = document.getElementById('merchant-modal');
         if (modal) {
             modal.style.display = 'flex';
-            this.updateMerchantUI();
-            this.audio.playRoll();
+            if (merchantId) {
+                this.currentMerchantId = merchantId;
+            } else if (!this.currentMerchantId) {
+                this.currentMerchantId = 'merchant_undead_male';
+            }
+            this.updateMerchantUI(this.currentMerchantId);
+            if (this.audio && this.audio.playRoll) this.audio.playRoll();
         }
+    }
+
+    switchMerchant(merchantId) {
+        if (!merchantId) return;
+        this.currentMerchantId = merchantId;
+        this.updateMerchantUI(merchantId);
+        if (this.audio && this.audio.playRoll) this.audio.playRoll();
     }
 
     closeMerchantModal() {
@@ -1266,11 +1294,190 @@ class DarkSoulsGame {
         }
     }
 
-    updateMerchantUI() {
+    updateMerchantUI(merchantId = null) {
         if (!this.combat) return;
         const soulsEl = document.getElementById('merchant-souls-val');
         if (soulsEl) soulsEl.textContent = this.combat.souls.toLocaleString();
 
+        const mId = merchantId || this.currentMerchantId || 'merchant_undead_male';
+        this.currentMerchantId = mId;
+
+        const m = (window.getMerchantById ? window.getMerchantById(mId) : null) || 
+                  (window.DARK_SOULS_MERCHANTS_30 && window.DARK_SOULS_MERCHANTS_30[0]) || 
+                  { id: 'merchant_undead_male', name: 'Undead Merchant', title: 'Lordran Peddler', quote: 'Steel and miracles are the only currency that buys tomorrow in Lordran.', zone: 'Undead Burg Courtyard', game: 'DS1', icon: '🧙‍♂️', pos: [-8.5, 0, 3.5], wares: [] };
+
+        // Update Modal Title
+        const titleEl = document.getElementById('merchant-modal-title');
+        if (titleEl) {
+            titleEl.innerHTML = `🛒 ${m.name.toUpperCase()} &bull; ${m.title.toUpperCase()}`;
+        }
+
+        // Update Tabs Bar
+        const tabsBar = document.getElementById('merchant-tabs-bar');
+        if (tabsBar && window.DARK_SOULS_MERCHANTS_30) {
+            tabsBar.innerHTML = window.DARK_SOULS_MERCHANTS_30.map(curr => {
+                const isActive = curr.id === m.id;
+                const activeStyle = isActive 
+                    ? 'border-color: #ffd700; color: #fff3a8; background: linear-gradient(180deg, #664411 0%, #332205 100%); box-shadow: 0 0 10px rgba(255,215,0,0.5); font-weight: 800;'
+                    : 'border-color: #4a3622; color: #a89886; background: rgba(20, 16, 12, 0.7); font-weight: 600;';
+                return `<button onclick="window.switchMerchant('${curr.id}')" style="padding: 6px 12px; border-radius: 6px; border: 1.5px solid; cursor: pointer; white-space: nowrap; font-size: 0.78rem; font-family: 'Cinzel', serif; transition: all 0.15s ease; ${activeStyle}">
+                    ${curr.icon} ${curr.name} <span style="font-size: 0.65rem; opacity: 0.75; margin-left: 3px;">[${curr.game}]</span>
+                </button>`;
+            }).join('');
+        }
+
+        // Update Merchant Dialogue & Lore Quote Banner
+        const bannerEl = document.getElementById('merchant-quote-banner');
+        if (bannerEl) {
+            bannerEl.innerHTML = `
+                <div style="font-size: 2.4rem; filter: drop-shadow(0 0 8px ${m.lightColor ? '#' + m.lightColor.toString(16).padStart(6, '0') : '#ffa834'});">${m.icon || '🧙‍♂️'}</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 6px;">
+                        <span style="font-size: 0.82rem; letter-spacing: 1.5px; color: #ffd700; font-weight: 800;">${m.name.toUpperCase()} &bull; <span style="color: #cbd5e1; font-weight: 600;">${m.title}</span></span>
+                        <span style="font-size: 0.72rem; color: #60a5fa; background: rgba(30, 58, 138, 0.35); border: 1px solid rgba(96, 165, 250, 0.4); padding: 2px 8px; border-radius: 9999px;">📍 ${m.zone} [${m.game}]</span>
+                    </div>
+                    <div style="font-family: 'EB Garamond', serif; font-size: 0.98rem; color: #d6c6b2; font-style: italic; line-height: 1.45;">
+                        &ldquo;${m.quote}&rdquo;
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                        <button onclick="window.teleportToMerchant('${m.id}')" style="padding: 6px 12px; border: 1.5px solid #ffd700; border-radius: 6px; font-weight: 800; font-family: 'Cinzel', serif; font-size: 0.78rem; color: #fff3a8; background: linear-gradient(180deg, #664411 0%, #332205 100%); cursor: pointer; box-shadow: 0 0 8px rgba(255,215,0,0.35);">
+                            📍 WARP TO THIS MERCHANT
+                        </button>
+                        <button onclick="window.spawnMerchantAtPlayer('${m.id}')" style="padding: 6px 12px; border: 1.5px solid #60a5fa; border-radius: 6px; font-weight: 800; font-family: 'Cinzel', serif; font-size: 0.78rem; color: #bfdbfe; background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); cursor: pointer; box-shadow: 0 0 8px rgba(96,165,250,0.35);">
+                            📦 SPAWN 3D MERCHANT HERE
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Dynamic Wares Grid
+        const gridEl = document.getElementById('merchant-wares-grid');
+        if (gridEl) {
+            let waresHtml = '';
+            if (Array.isArray(m.wares) && m.wares.length > 0) {
+                waresHtml += m.wares.map(w => {
+                    const costStr = (w.cost || 0).toLocaleString();
+                    let actionBtn = '';
+                    if (w.type === 'weapon') {
+                        const isEquipped = this.combat.currentWeaponId === w.id;
+                        const isOwned = this.combat.unlockedWeapons.includes(w.id);
+                        if (isEquipped) {
+                            actionBtn = `<button class="btn-fight-boss" disabled style="border-color: #88ff88; color: #88ff88; background: rgba(20, 80, 40, 0.4); cursor: default;">EQUIPPED</button>`;
+                        } else if (isOwned) {
+                            actionBtn = `<button class="btn-fight-boss" onclick="window.equipMerchantWeapon('${w.id}')" style="border-color: #ffd276; color: #ffd276; background: rgba(70, 50, 20, 0.5); cursor: pointer;">EQUIP</button>`;
+                        } else {
+                            const canAfford = this.combat.souls >= w.cost;
+                            actionBtn = `<button class="btn-fight-boss" onclick="window.buyMerchantWeapon('${w.id}')" ${canAfford ? '' : 'disabled'} style="border-color: ${canAfford ? '#ffd276' : '#554433'}; color: ${canAfford ? '#fff' : '#887766'}; background: ${canAfford ? 'linear-gradient(180deg, #64441e 0%, #322008 100%)' : '#221a14'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'};">BUY (${costStr})</button>`;
+                        }
+                    } else if (w.type === 'ring') {
+                        const ringsOwned = this.combat.unlockedRings || [];
+                        const isOwned = ringsOwned.includes(w.id);
+                        if (isOwned) {
+                            actionBtn = `<button class="btn-fight-boss" onclick="window.openRingsModal()" style="border-color: #a855f7; color: #e9d5ff; background: rgba(88, 28, 135, 0.4); cursor: pointer;">OWNED &bull; EQUIP RING</button>`;
+                        } else {
+                            const canAfford = this.combat.souls >= w.cost;
+                            actionBtn = `<button class="btn-fight-boss" onclick="window.buyMerchantRing('${w.id}', ${w.cost})" ${canAfford ? '' : 'disabled'} style="border-color: ${canAfford ? '#c084fc' : '#554433'}; color: ${canAfford ? '#fff' : '#887766'}; background: ${canAfford ? 'linear-gradient(180deg, #581c87 0%, #2e1065 100%)' : '#221a14'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'};">BUY RING (${costStr})</button>`;
+                        }
+                    } else {
+                        // Consumable
+                        const canAfford = this.combat.souls >= w.cost;
+                        actionBtn = `<button class="btn-fight-boss" onclick="window.buyMerchantItem('${w.id}')" ${canAfford ? '' : 'disabled'} style="border-color: ${canAfford ? '#ffd276' : '#554433'}; color: ${canAfford ? '#fff' : '#887766'}; background: ${canAfford ? 'linear-gradient(180deg, #64441e 0%, #322008 100%)' : '#221a14'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'};">BUY (${costStr})</button>`;
+                    }
+
+                    return `
+                        <div class="boss-card">
+                            <div class="boss-card-info">
+                                <div class="boss-card-icon">${w.icon || '📦'}</div>
+                                <div class="boss-card-text">
+                                    <div class="boss-card-name">${w.name.toUpperCase()}</div>
+                                    <div class="boss-card-desc">${w.desc || ''}</div>
+                                    <div class="boss-card-stats">${w.stat || ''} &bull; COST: ${costStr} SOULS</div>
+                                </div>
+                            </div>
+                            ${actionBtn}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Always append standard essentials at bottom of wares
+            const canAffordShard = this.combat.souls >= 1500;
+            const canAffordBlessing = this.combat.souls >= 800;
+            const canAffordResin = this.combat.souls >= 500;
+            const canAffordBone = this.combat.souls >= 300;
+            const canAffordPitch = this.combat.souls >= 100;
+
+            waresHtml += `
+                <div style="grid-column: 1 / -1; margin-top: 10px; padding: 6px 12px; background: rgba(35, 25, 15, 0.7); border: 1px solid #4a3622; border-radius: 6px; font-size: 0.78rem; font-weight: 800; color: #ffd700; letter-spacing: 1.5px;">
+                    🛡️ UNIVERSAL LORDRAN PROVISIONS & REINFORCEMENTS
+                </div>
+                <!-- Estus Shard -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🧪</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">ESTUS FLASK SHARD</div>
+                            <div class="boss-card-desc">Permanently increases Max Estus Flask capacity (+1)</div>
+                            <div class="boss-card-stats">CURRENT: ${this.combat.maxEstus} FLASKS &bull; COST: 1,500 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="window.buyMerchantItem('estus_shard')" ${canAffordShard ? '' : 'disabled'} style="border-color: #55aa66; color: #aaffaa; background: rgba(20, 60, 30, 0.4); cursor: ${canAffordShard ? 'pointer' : 'not-allowed'};">UPGRADE (1,500)</button>
+                </div>
+                <!-- Divine Blessing -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🛡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">DIVINE BLESSING</div>
+                            <div class="boss-card-desc">Holy water of Gwynevere &bull; Instantly restores 100% HP and Stamina</div>
+                            <div class="boss-card-stats">FULL RESTORATION &bull; COST: 800 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="window.buyMerchantItem('divine_blessing')" ${canAffordBlessing ? '' : 'disabled'} style="border-color: #66aacc; color: #aadcff; background: rgba(20, 40, 70, 0.4); cursor: ${canAffordBlessing ? 'pointer' : 'not-allowed'};">BUY (800)</button>
+                </div>
+                <!-- Charcoal Pine Resin -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">CHARCOAL PINE RESIN</div>
+                            <div class="boss-card-desc">+60 Fire Damage buff for right-hand weapon for 45 seconds</div>
+                            <div class="boss-card-stats">FLAME BUFF &bull; COST: 500 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="window.buyMerchantItem('charcoal_resin')" ${canAffordResin ? '' : 'disabled'} style="border-color: #cc6633; color: #ffb888; background: rgba(60, 30, 15, 0.4); cursor: ${canAffordResin ? 'pointer' : 'not-allowed'};">BUY (500)</button>
+                </div>
+                <!-- Homeward Bone -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦴</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">HOMEWARD BONE</div>
+                            <div class="boss-card-desc">Return safely to the Bonfire from anywhere in the realm</div>
+                            <div class="boss-card-stats">WARP TO BONFIRE &bull; COST: 300 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="window.buyMerchantItem('homeward_bone')" ${canAffordBone ? '' : 'disabled'} style="border-color: #ccaa44; color: #fff0aa; background: rgba(50, 40, 15, 0.4); cursor: ${canAffordBone ? 'pointer' : 'not-allowed'};">BUY (300)</button>
+                </div>
+                <!-- Flask of Torch Pitch -->
+                <div class="boss-card">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🪔</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">FLASK OF TORCH PITCH</div>
+                            <div class="boss-card-desc">Immediately refills Handheld Torch fuel to 100%</div>
+                            <div class="boss-card-stats">TORCH REFUEL &bull; COST: 100 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="window.buyMerchantItem('torch_pitch')" ${canAffordPitch ? '' : 'disabled'} style="border-color: #ff7722; color: #ffaa55; background: rgba(50, 25, 10, 0.4); cursor: ${canAffordPitch ? 'pointer' : 'not-allowed'};">BUY (100)</button>
+                </div>
+            `;
+
+            gridEl.innerHTML = waresHtml;
+        }
+
+        // Backward compatibility with static modal elements if present
         const cards = document.querySelectorAll('.merchant-weapon-card');
         cards.forEach(card => {
             const wid = card.getAttribute('data-weapon-id');
@@ -4646,7 +4853,7 @@ class DarkSoulsGame {
         if (!container) return;
 
         const locs = window.DARK_SOULS_LOCATIONS || [];
-        const unlocked = this.unlockedLocations || ['outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill', 'ds1_chasm_of_abyss_manus', 'ds1_ash_lake_dragon_tree', 'ds1_painted_world_statue', 'ds1_new_londo_sealer', 'ds1_lost_izalith_bed', 'ds1_catacombs_blacksmith', 'ds2_heides_blue_cathedral', 'ds2_iron_keep_smelter', 'ds2_shrine_of_amana_altar', 'ds2_undead_crypt_agdayne', 'ds2_harvest_valley_mines', 'ds2_doors_of_pharros', 'ds3_irithyll_dungeon_cells', 'ds3_lothric_twin_princes', 'ds3_cathedral_of_deep_roof', 'ds3_untended_graves_champion', 'ds3_ringed_city_abyssal_chasm', 'bb_old_yharnam_clocktower', 'bb_cainhurst_snow_roof', 'bb_upper_cathedral_orphanage', 'bb_hemwick_charnel_lane', 'sekiro_hirata_estate_blaze', 'sekiro_ashina_castle_dojo', 'sekiro_sunken_valley_gun_fort', 'er_caelid_sellia_town', 'er_nokron_eternal_city', 'er_altus_plateau_erdtree', 'er_mountaintops_fire_giant', 'sote_scadu_altus_highroad', 'sote_belurat_tower_settlement'];
+        const unlocked = this.unlockedLocations || ['outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill', 'ds1_chasm_of_abyss_manus', 'ds1_ash_lake_dragon_tree', 'ds1_painted_world_statue', 'ds1_new_londo_sealer', 'ds1_lost_izalith_bed', 'ds1_catacombs_blacksmith', 'ds2_heides_blue_cathedral', 'ds2_iron_keep_smelter', 'ds2_shrine_of_amana_altar', 'ds2_undead_crypt_agdayne', 'ds2_harvest_valley_mines', 'ds2_doors_of_pharros', 'ds3_irithyll_dungeon_cells', 'ds3_lothric_twin_princes', 'ds3_cathedral_of_deep_roof', 'ds3_untended_graves_champion', 'ds3_ringed_city_abyssal_chasm', 'bb_old_yharnam_clocktower', 'bb_cainhurst_snow_roof', 'bb_upper_cathedral_orphanage', 'bb_hemwick_charnel_lane', 'sekiro_hirata_estate_blaze', 'sekiro_ashina_castle_dojo', 'sekiro_sunken_valley_gun_fort', 'er_caelid_sellia_town', 'er_nokron_eternal_city', 'er_altus_plateau_erdtree', 'er_mountaintops_fire_giant', 'sote_scadu_altus_highroad', 'sote_belurat_tower_settlement', 'ds1_firelink_altar_lordvessel', 'ds1_sanctuary_garden_pool', 'ds1_oolacile_township_dungeon', 'ds1_crystal_cave_invisible_walk', 'ds2_shrine_of_winter_portal', 'ds2_black_gulch_oil_pools', 'ds2_iron_keep_molten_bridge', 'ds2_memory_of_jeigh_ramparts', 'ds3_profaned_capital_yhorm_throne', 'ds3_irithyll_anor_londo_parapet', 'ds3_dreg_heap_earthen_ruins', 'ds3_painted_world_corvian_settlement', 'bb_byrgenwerth_moonside_lake', 'bb_nightmare_frontier_poison_valley', 'bb_yahargul_unseen_chapel', 'sekiro_great_shinobi_rooftop', 'er_haligtree_malenia_roots', 'er_farum_azula_dragon_temple', 'er_sote_enir_ilim_belurat', 'liturgy_sunken_scriptorium'];
 
         const filtered = locs.filter(l => {
             if (activeFilter === 'all') return true;
@@ -4823,7 +5030,7 @@ class DarkSoulsGame {
         if (!loc || !this.playerMesh) return;
 
         // Check unlock status
-        const unlocked = this.unlockedLocations || ['outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+        const unlocked = this.unlockedLocations || ['outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_firelink_altar_lordvessel', 'ds1_sanctuary_garden_pool', 'ds1_oolacile_township_dungeon', 'ds1_crystal_cave_invisible_walk', 'ds2_shrine_of_winter_portal', 'ds2_black_gulch_oil_pools', 'ds2_iron_keep_molten_bridge', 'ds2_memory_of_jeigh_ramparts', 'ds3_profaned_capital_yhorm_throne', 'ds3_irithyll_anor_londo_parapet', 'ds3_dreg_heap_earthen_ruins', 'ds3_painted_world_corvian_settlement', 'bb_byrgenwerth_moonside_lake', 'bb_nightmare_frontier_poison_valley', 'bb_yahargul_unseen_chapel', 'sekiro_great_shinobi_rooftop', 'er_haligtree_malenia_roots', 'er_farum_azula_dragon_temple', 'er_sote_enir_ilim_belurat', 'liturgy_sunken_scriptorium'];
         if (!unlocked.includes(locationId) && locationId !== 'royal_bridge_arena') {
             this.showNotification(`🔒 THIS REALM IS LOCKED! DEFEAT ITS WARDEN TO UNLOCK.`);
             if (this.audio && this.audio.playParry) this.audio.playParry();
@@ -4970,6 +5177,74 @@ window.openLoreCodexModal = () => { if (window.game) window.game.openLoreCodexMo
 window.closeLoreCodexModal = () => { if (window.game) window.game.closeLoreCodexModal(); };
 window.filterLoreCodex = (cat) => { if (window.game) window.game.renderLoreCodexContent(cat); };
 window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllLore(); };
+
+// 30 Iconic Soulsborne Merchants Global Helpers
+window.switchMerchant = (id) => { if (window.game) window.game.switchMerchant(id); };
+window.openMerchantModal = (id) => { if (window.game) window.game.openMerchantModal(id); };
+window.closeMerchantModal = () => { if (window.game) window.game.closeMerchantModal(); };
+window.teleportToMerchant = (id) => {
+    if (!window.game) return;
+    const m = window.getMerchantById ? window.getMerchantById(id) : null;
+    if (!m) return;
+    window.game.teleportPlayer(m.pos[0], m.pos[1] || 0, m.pos[2], `${m.name} (${m.zone})`);
+    window.game.closeMerchantModal();
+};
+window.spawnMerchantAtPlayer = (id) => {
+    if (!window.game || !window.game.world) return;
+    const m = window.getMerchantById ? window.getMerchantById(id) : null;
+    if (!m) return;
+    const pPos = window.game.playerMesh ? window.game.playerMesh.position : { x: 0, y: 0, z: 0 };
+    const spawnDef = Object.assign({}, m, {
+        pos: [pPos.x + 2.0, pPos.y, pPos.z + 2.0]
+    });
+    const model = window.createMerchant3DModel(spawnDef, window.game.world);
+    window.game.scene.add(model);
+    window.game.world.interactables.push({
+        type: 'merchant',
+        merchantId: m.id,
+        merchantName: m.name,
+        position: new THREE.Vector3(spawnDef.pos[0], spawnDef.pos[1], spawnDef.pos[2]),
+        radius: 3.5,
+        prompt: `[ E ] TALK TO ${m.name.toUpperCase()} (${m.title})`
+    });
+    window.game.showNotification(`✨ ${m.name.toUpperCase()} SUMMONED TO YOUR POSITION!`);
+    if (window.game.audio && window.game.audio.playBonfireIgnite) window.game.audio.playBonfireIgnite();
+    window.game.closeMerchantModal();
+};
+window.buyMerchantItem = (id) => {
+    if (window.game && window.game.combat) {
+        window.game.combat.buyItem(id);
+    }
+};
+window.buyMerchantWeapon = (id) => {
+    if (window.game && window.game.combat) {
+        window.game.combat.buyWeapon(id);
+        window.game.updateMerchantUI();
+    }
+};
+window.equipMerchantWeapon = (id) => {
+    if (window.game && window.game.combat) {
+        window.game.combat.equipWeapon(id);
+        window.game.updateMerchantUI();
+    }
+};
+window.buyMerchantRing = (ringId, cost) => {
+    if (!window.game || !window.game.combat) return;
+    if (window.game.combat.souls < cost) {
+        window.game.showNotification("INSUFFICIENT SOULS TO PURCHASE RING");
+        if (window.game.audio && window.game.audio.playParry) window.game.audio.playParry();
+        return;
+    }
+    window.game.combat.souls -= cost;
+    window.game.combat.unlockedRings = window.game.combat.unlockedRings || [];
+    if (!window.game.combat.unlockedRings.includes(ringId)) {
+        window.game.combat.unlockedRings.push(ringId);
+    }
+    if (window.game.audio && window.game.audio.playBonfireIgnite) window.game.audio.playBonfireIgnite();
+    window.game.showNotification(`💍 RING PURCHASED & ACQUIRED!`);
+    window.game.updateMerchantUI();
+    if (window.game.saveGame) window.game.saveGame(false);
+};
 
 // 300+ Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
@@ -5529,7 +5804,29 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'sekiro_sunken_valley_bog', name: 'Sunken Valley - Bodhisattva Valley Watering Hole', zone: 'Sunken Valley', pos: [75, 0, -55], elev: '0m', danger: 'Tier III (Toxic Mist)', boss: 'Guardian Ape', desc: 'A deep jungle canyon flanked by colossal weathered stone Buddha statues and hot sulfur springs.', light: 1.10 },
     { id: 'sekiro_mibu_village_meadow', name: 'Ashina Depths - Mibu Village Watermill Meadow', zone: 'Mibu Village', pos: [-65, 0, -55], elev: '0m', danger: 'Tier III (Eerie Gloom)', boss: 'Corrupted Monk', desc: 'An eerie village shrouded in purple dusk mist where cursed villagers wander beneath weeping willows.', light: 0.75 },
     { id: 'sekiro_fountainhead_sakura', name: 'Fountainhead Palace - Great Sakura Branch Terrace', zone: 'Fountainhead Palace', pos: [0, 0, -85], elev: '0m', danger: 'Tier IV (Celestial Waters)', boss: 'Okami Leader Shizu & Divine Dragon', desc: 'A majestic weeping pink cherry blossom tree arching over crystal-clear turquoise palace lakes.', light: 1.40 },
-    { id: 'sekiro_ashina_reservoir_cliff', name: 'Ashina Castle - Reservoir Secret Reed Passage', zone: 'Ashina Reservoir', pos: [30, 0, 45], elev: '0m', danger: 'Tier I (Moonlit Reeds)', boss: 'Seven Ashina Spears', desc: 'The historic moonlit silver grass field where the Wolf fought Genichiro beneath the moonlight.', light: 1.05 }
+    { id: 'sekiro_ashina_reservoir_cliff', name: 'Ashina Castle - Reservoir Secret Reed Passage', zone: 'Ashina Reservoir', pos: [30, 0, 45], elev: '0m', danger: 'Tier I (Moonlit Reeds)', boss: 'Seven Ashina Spears', desc: 'The historic moonlit silver grass field where the Wolf fought Genichiro beneath the moonlight.', light: 1.05 },
+
+    // 20 Brand-New Authentic Soulsborne Locations (Expanding to 82 Total Fast-Travel Locations)
+    { id: 'ds1_firelink_altar_lordvessel', name: 'Firelink Altar - The Lordvessel Crucible', zone: 'Firelink Altar', pos: [0, -7.5, 30], elev: '-7.5m', danger: 'Tier V (Lord Souls)', boss: 'Kingseeker Frampt & Darkstalker Kaathe', desc: 'Subterranean kiln sanctuary where the golden Lordvessel rests, awaiting the souls of the four Great Lords.', light: 1.15 },
+    { id: 'ds1_sanctuary_garden_pool', name: 'Oolacile Sanctuary Garden - Moonlit Pool', zone: 'Sanctuary Garden', pos: [-85, 1.5, -45], elev: '+1.5m', danger: 'Tier IV (Ancient Grove)', boss: 'Sanctuary Guardian', desc: 'A serene ancient garden bathed in silver mist, surrounding a deep water basin guarded by the winged manticore.', light: 1.25 },
+    { id: 'ds1_oolacile_township_dungeon', name: 'Oolacile Township - Chasm of the Abyss Prison', zone: 'Oolacile Township', pos: [-95, -6.0, -110], elev: '-6.0m', danger: 'Tier V (Primordial Abyss)', boss: 'Bloatheads & Manus', desc: 'Dank stone dungeon chambers where humanity ran wild, mutating citizens into hollow monstrosities.', light: 0.60 },
+    { id: 'ds1_crystal_cave_invisible_walk', name: 'Crystal Cave - Shimmering Prism Path', zone: 'Crystal Cave', pos: [70, -3.5, 130], elev: '-3.5m', danger: 'Tier IV (Crystalline Abyss)', boss: 'Moonlight Butterflies & Seath', desc: 'Invisible crystal walkways suspended over a starry abyss, illuminated only by falling snowflakes.', light: 1.30 },
+    { id: 'ds2_shrine_of_winter_portal', name: 'Shrine of Winter - Frozen Shrine Portal', zone: 'Shrine of Winter', pos: [-60, 2.0, 75], elev: '+2.0m', danger: 'Tier III (Royal Pilgrimage)', boss: 'Drangleic Royal Guards', desc: 'An ancient cylindrical altar shrine nestled in a mountain pass opening the way to Drangleic Castle.', light: 1.10 },
+    { id: 'ds2_black_gulch_oil_pools', name: 'Black Gulch - Tar Pit of the Rotten', zone: 'Black Gulch', pos: [-110, -8.0, 25], elev: '-8.0m', danger: 'Tier IV (Poison & Acid)', boss: 'The Rotten & Tar Beasts', desc: 'Pitch-black cavern floor filled with ignitable oil pools and thousands of spitting poison statues.', light: 0.65 },
+    { id: 'ds2_iron_keep_molten_bridge', name: 'Iron Keep - Threshold Molten Bridge', zone: 'Iron Keep', pos: [110, 0.5, -60], elev: '+0.5m', danger: 'Tier IV (Lava Fortress)', boss: 'Alonne Knights & Iron King', desc: 'Heavy iron span crossing a bubbling sea of magma leading into the sunken castle of the Old Iron King.', light: 1.45 },
+    { id: 'ds2_memory_of_jeigh_ramparts', name: 'Memory of Jeigh - Ashen Giant War Rampart', zone: 'Memory of Jeigh', pos: [90, 4.5, 40], elev: '+4.5m', danger: 'Tier V (War of the Giants)', boss: 'Giant Lord', desc: 'A burning castle wall caught in a frozen moment of time during the catastrophic giant invasion.', light: 1.35 },
+    { id: 'ds3_profaned_capital_yhorm_throne', name: 'Profaned Capital - Yhorm the Giant Throne Dais', zone: 'Profaned Capital', pos: [-130, -5.0, 85], elev: '-5.0m', danger: 'Tier V (Profaned Flame)', boss: 'Yhorm the Giant & Gargoyles', desc: 'A vast treasure hall lined with gold mountains beneath the towering iron throne of the lonely giant king.', light: 1.05 },
+    { id: 'ds3_irithyll_anor_londo_parapet', name: 'Anor Londo Parapet - Giant Blacksmith Stairway', zone: 'Anor Londo (Lothric)', pos: [-40, 5.0, -135], elev: '+5.0m', danger: 'Tier IV (Silver Knights)', boss: 'Aldrich, Devourer of Gods', desc: 'Snowy cathedral battlements patrolled by Silver Knight greatbow archers leading to the ruined cathedral nave.', light: 1.25 },
+    { id: 'ds3_dreg_heap_earthen_ruins', name: 'The Dreg Heap - Collapsed Earthen Peak Peak', zone: 'The Dreg Heap', pos: [45, -2.0, 190], elev: '-2.0m', danger: 'Tier V (World Convergence)', boss: 'Demon Prince & Murkmen', desc: 'Centuries of collapsed kingdoms crushed into a vertical mountain of ash and tilted church towers.', light: 0.90 },
+    { id: 'ds3_painted_world_corvian_settlement', name: 'Painted World of Ariandel - Corvian Shantytown', zone: 'Painted World of Ariandel', pos: [-80, -1.5, 140], elev: '-1.5m', danger: 'Tier III (Rot & Frost)', boss: 'Sister Friede & Corvian Knights', desc: 'A rotting timber settlement clinging to frozen cliffs where diseased Corvians wait for the rot to burn.', light: 0.85 },
+    { id: 'bb_byrgenwerth_moonside_lake', name: 'Byrgenwerth - Moonside Lake Balcony', zone: 'Byrgenwerth', pos: [50, 1.0, -140], elev: '+1.0m', danger: 'Tier IV (Cosmic Insight)', boss: 'Rom, the Vacuous Spider', desc: 'The decrepit lakeside veranda of Master Willem gazing into the reflective, endless waters of the lake.', light: 1.15 },
+    { id: 'bb_nightmare_frontier_poison_valley', name: 'Nightmare Frontier - Amygdala Basin Ravine', zone: 'Nightmare Frontier', pos: [-120, -3.0, -80], elev: '-3.0m', danger: 'Tier IV (Frenzy & Poison)', boss: 'Amygdala & Silverbeasts', desc: 'An alien rocky canyon riddled with toxic green sludge rivers and slumbering Great Ones perched aloft.', light: 0.80 },
+    { id: 'bb_yahargul_unseen_chapel', name: 'Yahar\'gul, Unseen Village - Advent Plaza Chapel', zone: 'Yahar\'gul', pos: [80, -2.5, -90], elev: '-2.5m', danger: 'Tier IV (Blood Moon Void)', boss: 'The One Reborn & Bell Ringers', desc: 'A nightmare town bathed in crimson moonlight where red bell-ringers resurrect shambling corpse amalgams.', light: 0.70 },
+    { id: 'sekiro_great_shinobi_rooftop', name: 'Ashina Castle - Tenshu Tower Rooftop Duel', zone: 'Ashina Castle', pos: [0, 8.0, -120], elev: '+8.0m', danger: 'Tier V (Iron Code)', boss: 'Great Shinobi Owl / Isshin', desc: 'The highest tiled roof of Ashina Castle where shinobi oaths are tested under an overcast stormy sky.', light: 1.30 },
+    { id: 'er_haligtree_malenia_roots', name: 'Miquella\'s Haligtree - Roots of the Rot Goddess', zone: 'Haligtree Roots', pos: [-150, -6.5, 0], elev: '-6.5m', danger: 'Tier VI (Scarlet Bloom)', boss: 'Malenia, Blade of Miquella', desc: 'The colossal hollow root sanctum where the Aeonian Bloom erupted, blanketing the soil in scarlet rot.', light: 0.95 },
+    { id: 'er_farum_azula_dragon_temple', name: 'Crumbling Farum Azula - Dragon Temple Lift', zone: 'Farum Azula', pos: [140, 5.5, 0], elev: '+5.5m', danger: 'Tier VI (Tempest Ruin)', boss: 'Maliketh & Godskin Duo', desc: 'Prehistoric floating stone ruins suspended in an eternal tornado vortex where ancient dragons dwell.', light: 1.35 },
+    { id: 'er_sote_enir_ilim_belurat', name: 'Enir-Ilim - Spiral Gate of the Divine Spire', zone: 'Enir-Ilim', pos: [0, 10.0, -180], elev: '+10.0m', danger: 'Tier VI (Divine Ascension)', boss: 'Promised Consort Radahn', desc: 'The monumental stone staircase ascending toward the Gate of Divinity amidst swirling golden dust.', light: 1.50 },
+    { id: 'liturgy_sunken_scriptorium', name: 'The Sunken Liturgy - Scriptorium of the Blank Page', zone: 'The Sunken Liturgy', pos: [-35, -5.0, 160], elev: '-5.0m', danger: 'Tier V (Apocryphal)', boss: 'First Arbiter of the Grand Ledger', desc: 'An underwater library of submerged stone desks where scribes etched human debts in indelible kraken ink.', light: 0.85 }
 ];
 
 // Locations & Save Slot Global Window Helpers
