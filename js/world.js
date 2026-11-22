@@ -736,8 +736,8 @@ class DarkSoulsWorld {
         const courtyardTorches = [
             // North perimeter wall (flanking doorway)
             [-26, 3.5, -29], [-13, 3.5, -29], [13, 3.5, -29], [26, 3.5, -29],
-            // West wall
-            [-29, 3.5, -14], [-29, 3.5, 0], [-29, 3.5, 14],
+            // West wall (archway open at z: -7 to 7, no floating torch in doorway!)
+            [-29, 3.5, -14], [-29, 3.5, 14],
             // East wall
             [29, 3.5, -14], [29, 3.5, 0], [29, 3.5, 14],
             // South wall flanking bridge arch
@@ -998,13 +998,22 @@ class DarkSoulsWorld {
         this.createPillar(-30, 7, 9);
         this.createTorch(-29.2, 5.0, -6.8, { intensity: 2.5, color: 0x2ecc71 });
         this.createTorch(-29.2, 5.0, 6.8, { intensity: 2.5, color: 0x2ecc71 });
-        this.createPathBeacon(-28, 0, 0, 0x2ecc71, "🌲 OUTSIDE REALM: DARKROOT WOODS & CLIFFS [WEST]", "ANCIENT ARCHTREES • DRAGON CLIFFS • WYRMS & BASILISKS", "#a8ffb2");
+
+        // Flanking West Gate Waystone Brazier placed beside North pillar (keeps 14m archway walkway 100% open)
+        this.createPathBeacon(-29.0, 0, -5.5, 0x2ecc71, "🌲 OUTSIDE REALM: DARKROOT WOODS & CLIFFS [WEST]", "ANCIENT ARCHTREES • DRAGON CLIFFS • WYRMS & BASILISKS", "#a8ffb2", false);
+
+        // Cobblestone flagstone threshold paving connecting Firelink to Darkroot
+        const gatePaving = new THREE.Mesh(new THREE.PlaneGeometry(12, 10), this.cobbleMat || this.stoneMat);
+        gatePaving.rotation.x = -Math.PI / 2;
+        gatePaving.position.set(-30, 0.015, 0);
+        gatePaving.receiveShadow = true;
+        this.scene.add(gatePaving);
 
         // West Gate In-World Portal to Outside Darkroot Bonfire
         this.interactables.push({
             type: 'route_portal',
-            position: new THREE.Vector3(-26, 0, 0),
-            radius: 4.5,
+            position: new THREE.Vector3(-27, 0, 0),
+            radius: 4.8,
             prompt: '🌲 [ E ] WAYSTONE: WARP TO OUTSIDE DARKROOT EXPEDITION',
             targetPos: new THREE.Vector3(-75, 0, 0),
             label: 'DARKROOT OUTSIDE REALM'
@@ -2823,7 +2832,7 @@ class DarkSoulsWorld {
         this.colliders.push(new THREE.Box3().setFromObject(mesh));
     }
 
-    createPathBeacon(x, y, z, colorHex, title, desc, titleColor) {
+    createPathBeacon(x, y, z, colorHex, title, desc, titleColor, addSoapstone = true) {
         const beaconGroup = new THREE.Group();
 
         // 1. Lordran Wrought-Iron Brazier & Ember Core
@@ -2861,7 +2870,9 @@ class DarkSoulsWorld {
         this.scene.add(beaconGroup);
 
         // 2. Authentic Floor Soapstone Guidance Rune lying flat on cobblestone
-        this.createFloorSoapstone(x, y, z + 2.5, titleColor || ('#' + colorHex.toString(16).padStart(6, '0')), title, desc);
+        if (addSoapstone) {
+            this.createFloorSoapstone(x, y, z + 2.5, titleColor || ('#' + colorHex.toString(16).padStart(6, '0')), title, desc);
+        }
 
         // 3. Interactive Teleport Portal
         let targetPos = null;

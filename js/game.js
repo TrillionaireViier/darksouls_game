@@ -3740,28 +3740,35 @@ class DarkSoulsGame {
         if (p.z >= 24 && p.z <= 274 && Math.abs(p.x) <= 14) {
             return 'Royal Viaduct Bridge (0m)';
         }
+        // 5b. West Gate Archway & Waystone to Outside Realm
+        if (p.x <= -18 && p.x >= -34 && Math.abs(p.z) <= 10) {
+            return 'Firelink West Gate • Waystone to Darkroot (0m)';
+        }
         // 6. Firelink Courtyard Sanctuary
         if (p.z >= -30 && p.z < 24 && Math.abs(p.x) <= 35) {
             return 'Firelink Courtyard Sanctuary (0m)';
         }
-        // 7. Outside Realms / Teleported Locations
-        const locs = window.DARK_SOULS_LOCATIONS || [];
-        let closest = null, minDist = Infinity;
-        for (let i = 0; i < locs.length; i++) {
-            const loc = locs[i];
-            if (loc.pos) {
-                const dx = p.x - loc.pos[0];
-                const dy = p.y - loc.pos[1];
-                const dz = p.z - loc.pos[2];
-                const dist = dx * dx + dy * dy + dz * dz;
-                if (dist < minDist) {
-                    minDist = dist;
-                    closest = loc;
+        // 7. Outside Realm & Extended Expeditions
+        if (p.x < -32) {
+            const locs = window.DARK_SOULS_LOCATIONS || [];
+            let closest = null, minDist = Infinity;
+            for (let i = 0; i < locs.length; i++) {
+                const loc = locs[i];
+                if (loc.pos) {
+                    const dx = p.x - loc.pos[0];
+                    const dy = p.y - loc.pos[1];
+                    const dz = p.z - loc.pos[2];
+                    const dist = dx * dx + dy * dy + dz * dz;
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closest = loc;
+                    }
                 }
             }
-        }
-        if (closest && minDist < 6400) {
-            return `${closest.name} (${closest.elev || '0m'})`;
+            if (closest && minDist < 2500) {
+                return `${closest.name} (${closest.elev || '0m'})`;
+            }
+            return 'Outside Realm • Darkroot Archtree Forest (0m)';
         }
         return 'Lordran Kingdom Expedition';
     }
