@@ -110,24 +110,8 @@ class DarkSoulsPostProcessing {
                     graded *= mix(shadowTint, midTint, smoothstep(0.0, 0.5, lum));
                     graded = mix(graded, graded * highTint, smoothstep(0.5, 1.0, lum));
 
-                    // Smooth contrast curve that avoids crushing shadows
-                    vec3 curve = graded * graded * (3.0 - 2.0 * graded);
-                    graded = mix(graded, curve, 0.10);
-                    col = mix(col, graded, colorGradingStrength);
-
-                    // 3. Vignette disabled for maximum edge-to-edge clarity and brightness
-                    if (vignetteStrength > 0.01) {
-                        float d = distance(uv, vec2(0.5));
-                        float vig = smoothstep(1.15, 0.45, d * vignetteStrength);
-                        col *= vig;
-                    }
-
-                    // 4. Micro Film Grain (Tactile dark fantasy realism & anti-banding)
-                    float noise = fract(sin(dot(uv * (time * 0.05 + 1.0), vec2(12.9898, 78.233))) * 43758.5453);
-                    col += (noise - 0.5) * filmGrainStrength;
-
-                    // 5. ACES Filmic Tone Mapping
-                    col = acesFilmic(col);
+                    // Radiant Daylight Lighting: Smooth gamma lift (pow 0.82) to boost all shadows and unlit crevices
+                    col = clamp(pow(col, vec3(0.82)) * 1.18, 0.0, 1.0);
 
                     gl_FragColor = vec4(col, 1.0);
                 }

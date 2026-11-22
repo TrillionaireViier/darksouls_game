@@ -26,8 +26,8 @@ class DarkSoulsGame {
         this.renderer.setPixelRatio(effectivePr);
         this.renderer.shadowMap.enabled = !this.performanceMode;
         this.renderer.shadowMap.type = THREE.PCFShadowMap; // 2.5x faster shadow filtering
-        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.65;
+        this.renderer.toneMapping = THREE.LinearToneMapping;
+        this.renderer.toneMappingExposure = 1.45;
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -97,22 +97,22 @@ class DarkSoulsGame {
         this.sprintSpeed = 7.2;
 
         // Player Local Radiant Warm Fill Light (illuminates character and surroundings)
-        this.playerLantern = new THREE.PointLight(0xfffaea, 2.4, 36, 1.0);
+        this.playerLantern = new THREE.PointLight(0xfffaea, 3.8, 55, 0.8);
         this.playerLantern.position.set(0, 2.2, 0);
         this.playerMesh.add(this.playerLantern);
 
         // Player Back Fill Light (Gleaming knight armor highlights)
-        this.playerBackLight = new THREE.PointLight(0xddeeff, 1.4, 24, 1.0);
+        this.playerBackLight = new THREE.PointLight(0xddeeff, 2.0, 30, 0.9);
         this.playerBackLight.position.set(0, 1.5, -1.2);
         this.playerMesh.add(this.playerBackLight);
 
         // Character Rim Light (Gives silhouetted edge separation against fortress geometry)
-        this.playerRimLight = new THREE.DirectionalLight(0x9bc0e4, 1.1);
+        this.playerRimLight = new THREE.DirectionalLight(0xb8d8ff, 1.6);
         this.playerRimLight.position.set(-15, 25, -20);
         this.scene.add(this.playerRimLight);
 
         // Camera Soft Ambient Headlight Fill (keeps entire viewport crystal clear)
-        this.cameraLight = new THREE.DirectionalLight(0xffffff, 0.65);
+        this.cameraLight = new THREE.DirectionalLight(0xffffff, 1.25);
         this.camera.add(this.cameraLight);
         this.scene.add(this.camera);
 
@@ -1240,30 +1240,33 @@ class DarkSoulsGame {
 
         const btn = document.getElementById('btn-brightness-toggle');
         if (this.brightnessLevel === 0) {
-            this.renderer.toneMappingExposure = 1.65;
-            if (this.world.moonlight) this.world.moonlight.intensity = 3.2;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.35;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 1.35;
-            if (this.playerLantern) this.playerLantern.intensity = 2.4;
-            if (this.cameraLight) this.cameraLight.intensity = 0.65;
+            this.renderer.toneMappingExposure = 1.45;
+            if (this.world.moonlight) this.world.moonlight.intensity = 3.6;
+            if (this.world.fillSunlight) this.world.fillSunlight.intensity = 2.2;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 2.2;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 2.0;
+            if (this.playerLantern) this.playerLantern.intensity = 3.8;
+            if (this.cameraLight) this.cameraLight.intensity = 1.25;
             if (btn) btn.textContent = '☀️ LORDRAN SUN';
             this.showNotification("LIGHTING: MAXIMUM RADIANT SUNLIGHT");
         } else if (this.brightnessLevel === 1) {
-            this.renderer.toneMappingExposure = 1.95;
-            if (this.world.moonlight) this.world.moonlight.intensity = 4.0;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.65;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 1.65;
-            if (this.playerLantern) this.playerLantern.intensity = 3.0;
-            if (this.cameraLight) this.cameraLight.intensity = 0.85;
+            this.renderer.toneMappingExposure = 1.75;
+            if (this.world.moonlight) this.world.moonlight.intensity = 4.4;
+            if (this.world.fillSunlight) this.world.fillSunlight.intensity = 2.6;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 2.6;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 2.4;
+            if (this.playerLantern) this.playerLantern.intensity = 4.5;
+            if (this.cameraLight) this.cameraLight.intensity = 1.5;
             if (btn) btn.textContent = '☀️ MAXIMUM+';
             this.showNotification("LIGHTING: ULTRA BRILLIANCE NOON");
         } else {
-            this.renderer.toneMappingExposure = 1.45;
-            if (this.world.moonlight) this.world.moonlight.intensity = 2.6;
-            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.10;
-            if (this.world.hemiLight) this.world.hemiLight.intensity = 1.10;
-            if (this.playerLantern) this.playerLantern.intensity = 1.8;
-            if (this.cameraLight) this.cameraLight.intensity = 0.45;
+            this.renderer.toneMappingExposure = 1.35;
+            if (this.world.moonlight) this.world.moonlight.intensity = 3.0;
+            if (this.world.fillSunlight) this.world.fillSunlight.intensity = 1.8;
+            if (this.world.ambientLight) this.world.ambientLight.intensity = 1.9;
+            if (this.world.hemiLight) this.world.hemiLight.intensity = 1.8;
+            if (this.playerLantern) this.playerLantern.intensity = 3.0;
+            if (this.cameraLight) this.cameraLight.intensity = 1.0;
             if (btn) btn.textContent = '☀️ WARM DUSK';
             this.showNotification("LIGHTING: WARM GOLDEN DAYLIGHT");
         }
@@ -4608,14 +4611,13 @@ class DarkSoulsGame {
 
         if (this.performanceMode) {
             this.postProcessingEnabled = false;
-            this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            this.renderer.toneMappingExposure = 1.10;
+            this.renderer.toneMapping = THREE.LinearToneMapping;
+            this.renderer.toneMappingExposure = 1.45;
             this.showNotification("⚡ 60 FPS PERFORMANCE MODE: ACTIVE (SMOOTH & FAST)");
         } else {
             this.postProcessingEnabled = (this.postProcessing !== null);
-            if (this.postProcessingEnabled) {
-                this.renderer.toneMapping = THREE.NoToneMapping;
-            }
+            this.renderer.toneMapping = THREE.LinearToneMapping;
+            this.renderer.toneMappingExposure = 1.45;
             this.showNotification("✨ AAA GRAPHICS MODE: ACTIVE (CINEMATIC)");
         }
 
@@ -5038,82 +5040,130 @@ class DarkSoulsGame {
         // 1. Lava / Chaos / Dragonbarrow Realms
         if (id.includes('lava') || id.includes('ruins') || id.includes('iron_keep') || id.includes('izalith') || id.includes('smelter') || id.includes('volcano') || id.includes('fire_giant') || id.includes('dragonbarrow')) {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0x320a02);
-                this.scene.fog.density = 0.016;
+                this.scene.fog.color.setHex(0xffd0b8);
+                this.scene.fog.density = 0.0001;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x551500);
-            if (this.world.moonlight) this.world.moonlight.color.setHex(0xff4411);
-            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.3, 1.25);
+            if (this.world.ambientLight) {
+                this.world.ambientLight.color.setHex(0xffffff);
+                this.world.ambientLight.intensity = 2.2;
+            }
+            if (this.world.moonlight) {
+                this.world.moonlight.color.setHex(0xff9944);
+                this.world.moonlight.intensity = 3.6;
+            }
+            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.45, 1.45);
         }
-        // 2. Abyss / Subterranean Darkness (Moody but clearly visible)
+        // 2. Abyss / Subterranean Darkness (Radiant clear visibility)
         else if (id.includes('abyss') || id.includes('new_londo') || id.includes('tomb') || id.includes('midir') || id.includes('untended') || id.includes('catacomb') || id.includes('crypt')) {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0x242d38);
-                this.scene.fog.density = 0.008;
+                this.scene.fog.color.setHex(0xc0e2ff);
+                this.scene.fog.density = 0.0001;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x4a586a);
-            if (this.world.moonlight) this.world.moonlight.color.setHex(0x8898b0);
-            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.22, 1.20);
+            if (this.world.ambientLight) {
+                this.world.ambientLight.color.setHex(0xffffff);
+                this.world.ambientLight.intensity = 2.2;
+            }
+            if (this.world.moonlight) {
+                this.world.moonlight.color.setHex(0xfffaea);
+                this.world.moonlight.intensity = 3.6;
+            }
+            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.45, 1.45);
         }
         // 3. Frost / Frozen Blizzards
         else if (id.includes('painted') || id.includes('cainhurst') || id.includes('ariandel') || id.includes('frozen') || id.includes('mountaintop') || id.includes('snow')) {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0xd0e0f0);
-                this.scene.fog.density = 0.005;
+                this.scene.fog.color.setHex(0xe4f2ff);
+                this.scene.fog.density = 0.0001;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x88aacc);
-            if (this.world.moonlight) this.world.moonlight.color.setHex(0xedf4ff);
-            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.30, 1.25);
+            if (this.world.ambientLight) {
+                this.world.ambientLight.color.setHex(0xffffff);
+                this.world.ambientLight.intensity = 2.2;
+            }
+            if (this.world.moonlight) {
+                this.world.moonlight.color.setHex(0xedf4ff);
+                this.world.moonlight.intensity = 3.6;
+            }
+            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.45, 1.45);
         }
         // 4. Cosmic / Celestial Glintstone
         else if (id.includes('nokron') || id.includes('crystal') || id.includes('byrgenwerth') || id.includes('moonlight') || id.includes('orphanage') || id.includes('mana')) {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0x1a2840);
-                this.scene.fog.density = 0.006;
+                this.scene.fog.color.setHex(0xc8e8ff);
+                this.scene.fog.density = 0.0001;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x226688);
-            if (this.world.moonlight) this.world.moonlight.color.setHex(0x44eeff);
-            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.25, 1.22);
+            if (this.world.ambientLight) {
+                this.world.ambientLight.color.setHex(0xffffff);
+                this.world.ambientLight.intensity = 2.2;
+            }
+            if (this.world.moonlight) {
+                this.world.moonlight.color.setHex(0x88eeff);
+                this.world.moonlight.intensity = 3.6;
+            }
+            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.45, 1.45);
         }
         // 5. Scarlet Rot / Poison Mires
         else if (id.includes('caelid') || id.includes('sellia') || id.includes('blighttown') || id.includes('harvest') || id.includes('poison') || id.includes('malenia') || id.includes('rot')) {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0x441c20);
-                this.scene.fog.density = 0.007;
+                this.scene.fog.color.setHex(0xffd8d0);
+                this.scene.fog.density = 0.0001;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x66222c);
-            if (this.world.moonlight) this.world.moonlight.color.setHex(0xff5566);
-            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.25, 1.22);
+            if (this.world.ambientLight) {
+                this.world.ambientLight.color.setHex(0xffffff);
+                this.world.ambientLight.intensity = 2.2;
+            }
+            if (this.world.moonlight) {
+                this.world.moonlight.color.setHex(0xff8877);
+                this.world.moonlight.intensity = 3.6;
+            }
+            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.45, 1.45);
         }
         // 6. Golden Erdtree / Sunset Heights
         else if (id.includes('altus') || id.includes('majula') || id.includes('heide') || id.includes('stormhill') || id.includes('sunlit') || id.includes('senpou')) {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0x554428);
-                this.scene.fog.density = 0.004;
+                this.scene.fog.color.setHex(0xfff2d4);
+                this.scene.fog.density = 0.0001;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x886638);
-            if (this.world.moonlight) this.world.moonlight.color.setHex(0xffea99);
-            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.40, 1.35);
+            if (this.world.ambientLight) {
+                this.world.ambientLight.color.setHex(0xffffff);
+                this.world.ambientLight.intensity = 2.2;
+            }
+            if (this.world.moonlight) {
+                this.world.moonlight.color.setHex(0xffea99);
+                this.world.moonlight.intensity = 3.6;
+            }
+            if (this.renderer) this.renderer.toneMappingExposure = Math.max(loc.light || 1.45, 1.45);
         }
         // 7. Ash Lake Everlasting Shore
         else if (id.includes('ash_lake')) {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0xd5e2e8);
-                this.scene.fog.density = 0.003;
+                this.scene.fog.color.setHex(0xe8f4fa);
+                this.scene.fog.density = 0.0001;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0x778899);
-            if (this.world.moonlight) this.world.moonlight.color.setHex(0xffffff);
-            if (this.renderer) this.renderer.toneMappingExposure = 1.40;
+            if (this.world.ambientLight) {
+                this.world.ambientLight.color.setHex(0xffffff);
+                this.world.ambientLight.intensity = 2.2;
+            }
+            if (this.world.moonlight) {
+                this.world.moonlight.color.setHex(0xffffff);
+                this.world.moonlight.intensity = 3.6;
+            }
+            if (this.renderer) this.renderer.toneMappingExposure = 1.45;
         }
         // 8. Default Lordran Fortress Twilight & Daylight
         else {
             if (this.scene.fog) {
-                this.scene.fog.color.setHex(0x9bc0e4);
-                this.scene.fog.density = 0.0002;
+                this.scene.fog.color.setHex(0xc0e2ff);
+                this.scene.fog.density = 0.0001;
             }
-            if (this.world.ambientLight) this.world.ambientLight.color.setHex(0xc8d8e8);
-            if (this.world.moonlight) this.world.moonlight.color.setHex(0xfffaea);
-            if (this.renderer) this.renderer.toneMappingExposure = 1.65;
+            if (this.world.ambientLight) {
+                this.world.ambientLight.color.setHex(0xffffff);
+                this.world.ambientLight.intensity = 2.2;
+            }
+            if (this.world.moonlight) {
+                this.world.moonlight.color.setHex(0xfffaea);
+                this.world.moonlight.intensity = 3.6;
+            }
+            if (this.renderer) this.renderer.toneMappingExposure = 1.45;
         }
     }
 

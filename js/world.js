@@ -77,21 +77,21 @@ class DarkSoulsWorld {
                 const bw = cw - 8;
                 const bh = rh - 8;
 
-                // Radiant sunlit Lordran flagstone palette (warm cathedral limestone & aged travertine)
+                // Radiant sunlit Lordran flagstone palette (bright cathedral limestone & sunlit travertine)
                 const palSeed = Math.random();
                 let baseR, baseG, baseB;
                 if (palSeed < 0.35) {
-                    baseR = 148 + Math.floor(Math.random() * 16);
-                    baseG = 142 + Math.floor(Math.random() * 14);
-                    baseB = 132 + Math.floor(Math.random() * 14);
+                    baseR = 188 + Math.floor(Math.random() * 16);
+                    baseG = 182 + Math.floor(Math.random() * 14);
+                    baseB = 170 + Math.floor(Math.random() * 14);
                 } else if (palSeed < 0.7) {
-                    baseR = 162 + Math.floor(Math.random() * 18);
-                    baseG = 154 + Math.floor(Math.random() * 16);
-                    baseB = 140 + Math.floor(Math.random() * 14);
+                    baseR = 205 + Math.floor(Math.random() * 18);
+                    baseG = 196 + Math.floor(Math.random() * 16);
+                    baseB = 180 + Math.floor(Math.random() * 14);
                 } else {
-                    baseR = 138 + Math.floor(Math.random() * 14);
-                    baseG = 135 + Math.floor(Math.random() * 14);
-                    baseB = 128 + Math.floor(Math.random() * 12);
+                    baseR = 178 + Math.floor(Math.random() * 14);
+                    baseG = 175 + Math.floor(Math.random() * 14);
+                    baseB = 168 + Math.floor(Math.random() * 12);
                 }
 
                 // Fill stone slab
@@ -206,17 +206,17 @@ class DarkSoulsWorld {
                 const toneSeed = Math.random();
                 let rC, gC, bC;
                 if (toneSeed < 0.35) {
-                    rC = 160 + Math.floor(Math.random() * 16); // Sunlit ashlar
-                    gC = 152 + Math.floor(Math.random() * 14);
-                    bC = 142 + Math.floor(Math.random() * 14);
+                    rC = 195 + Math.floor(Math.random() * 16); // Sunlit ashlar
+                    gC = 188 + Math.floor(Math.random() * 14);
+                    bC = 175 + Math.floor(Math.random() * 14);
                 } else if (toneSeed < 0.70) {
-                    rC = 185 + Math.floor(Math.random() * 18); // Warm golden limestone
-                    gC = 175 + Math.floor(Math.random() * 16);
-                    bC = 158 + Math.floor(Math.random() * 16);
+                    rC = 218 + Math.floor(Math.random() * 18); // Warm golden limestone
+                    gC = 208 + Math.floor(Math.random() * 16);
+                    bC = 192 + Math.floor(Math.random() * 16);
                 } else {
-                    rC = 168 + Math.floor(Math.random() * 16); // Classic Lordran granite
-                    gC = 165 + Math.floor(Math.random() * 16);
-                    bC = 158 + Math.floor(Math.random() * 14);
+                    rC = 202 + Math.floor(Math.random() * 16); // Classic Lordran granite
+                    gC = 198 + Math.floor(Math.random() * 16);
+                    bC = 190 + Math.floor(Math.random() * 14);
                 }
 
                 wCtx.fillStyle = `rgb(${rC}, ${gC}, ${bC})`;
@@ -602,14 +602,14 @@ class DarkSoulsWorld {
         grassCanvas.width = 512;
         grassCanvas.height = 512;
         const gCtx = grassCanvas.getContext('2d');
-        gCtx.fillStyle = '#447832';
+        gCtx.fillStyle = '#5ca23e';
         gCtx.fillRect(0, 0, 512, 512);
         for (let i = 0; i < 4000; i++) {
             const gx = Math.random() * 512;
             const gy = Math.random() * 512;
             const gr = 1.0 + Math.random() * 2.5;
             const gShade = Math.random();
-            gCtx.fillStyle = gShade < 0.4 ? 'rgba(95, 158, 68, 0.65)' : (gShade < 0.8 ? 'rgba(72, 130, 50, 0.7)' : 'rgba(125, 175, 88, 0.55)');
+            gCtx.fillStyle = gShade < 0.4 ? 'rgba(125, 195, 88, 0.75)' : (gShade < 0.8 ? 'rgba(95, 168, 65, 0.75)' : 'rgba(155, 210, 110, 0.65)');
             gCtx.beginPath();
             gCtx.arc(gx, gy, gr, 0, Math.PI * 2);
             gCtx.fill();
@@ -621,26 +621,26 @@ class DarkSoulsWorld {
 
         this.forestGrassMat = new THREE.MeshStandardMaterial({
             map: grassTex,
-            roughness: 0.82,
+            roughness: 0.70,
             metalness: 0.05
         });
 
         this.cliffRockMat = new THREE.MeshStandardMaterial({
-            color: 0x647488,
-            roughness: 0.85,
+            color: 0x8294a8,
+            roughness: 0.75,
             metalness: 0.12,
             flatShading: true
         });
 
         this.archtreeBarkMat = new THREE.MeshStandardMaterial({
-            color: 0x5a4434,
-            roughness: 0.88,
+            color: 0x7a5e46,
+            roughness: 0.80,
             metalness: 0.05
         });
 
         this.foliageMat = new THREE.MeshStandardMaterial({
-            color: 0x3d7a36,
-            roughness: 0.75,
+            color: 0x4da844,
+            roughness: 0.65,
             flatShading: true
         });
 
@@ -666,10 +666,10 @@ class DarkSoulsWorld {
         skyCanvas.height = 512;
         const skyCtx = skyCanvas.getContext('2d');
         const skyGrad = skyCtx.createLinearGradient(0, 0, 0, 512);
-        skyGrad.addColorStop(0.0, '#366088'); // Rich clear sky blue zenith
-        skyGrad.addColorStop(0.45, '#5c86ab'); // Radiant daylight azure
-        skyGrad.addColorStop(0.75, '#9da3a8'); // Soft horizon haze
-        skyGrad.addColorStop(1.0, '#d8c09a'); // Warm golden sunlight horizon
+        skyGrad.addColorStop(0.0, '#5a9ae6'); // Clear brilliant sky blue zenith
+        skyGrad.addColorStop(0.40, '#88beff'); // Radiant daylight azure
+        skyGrad.addColorStop(0.70, '#cce4ff'); // Sunlit atmospheric haze
+        skyGrad.addColorStop(1.0, '#fff4e0'); // Warm golden sunlight horizon
         skyCtx.fillStyle = skyGrad;
         skyCtx.fillRect(0, 0, 512, 512);
 
@@ -683,21 +683,21 @@ class DarkSoulsWorld {
         const skyDome = new THREE.Mesh(skyDomeGeo, skyDomeMat);
         this.scene.add(skyDome);
 
-        this.scene.background = new THREE.Color(0x8cb4d8);
+        this.scene.background = new THREE.Color(0xb0d8ff);
 
         // 2. Clear Natural Atmospheric Depth Fog
-        this.scene.fog = new THREE.FogExp2(0x9bc0e4, 0.0002);
+        this.scene.fog = new THREE.FogExp2(0xc0e2ff, 0.0001);
 
-        // 3. Brilliant Warm Daylight Ambient (illuminates all architecture crevices)
-        this.ambientLight = new THREE.AmbientLight(0xc8d8e8, 1.4);
+        // 3. Brilliant Pure Daylight Ambient (illuminates ALL architecture without dark shadows)
+        this.ambientLight = new THREE.AmbientLight(0xffffff, 2.2);
         this.scene.add(this.ambientLight);
 
-        // 4. Sky and ground bounce hemisphere lighting (sky blue + warm stone bounce)
-        this.hemiLight = new THREE.HemisphereLight(0xe0f0ff, 0x9e8e7c, 1.4);
+        // 4. Sky and ground bounce hemisphere lighting (pure white sky + soft sky blue ground)
+        this.hemiLight = new THREE.HemisphereLight(0xffffff, 0xd0e4ff, 2.0);
         this.scene.add(this.hemiLight);
 
-        // 5. Cinematic Radiant Lordran Sunlight (casting crisp warm shadows)
-        this.moonlight = new THREE.DirectionalLight(0xfffaea, 3.2);
+        // 5. Cinematic Radiant Lordran Sunlight (primary sun from South-East)
+        this.moonlight = new THREE.DirectionalLight(0xfffaea, 3.6);
         this.moonlight.position.set(45, 80, -25);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 1024;
@@ -712,6 +712,11 @@ class DarkSoulsWorld {
         this.moonlight.shadow.bias = -0.0003;
         this.moonlight.shadow.radius = 1.0;
         this.scene.add(this.moonlight);
+
+        // Secondary Omni-Directional Fill Sunlight (eliminates dark rear shadow sides)
+        this.fillSunlight = new THREE.DirectionalLight(0xfff6ea, 2.0);
+        this.fillSunlight.position.set(-50, 75, 40);
+        this.scene.add(this.fillSunlight);
 
         // 6. Radiant Golden Sun Disc & Volumetric Aura
         const sunGeo = new THREE.SphereGeometry(8, 20, 20);
@@ -1626,23 +1631,36 @@ class DarkSoulsWorld {
         // Flooded Crypt Corridor High Vaulted Stone Ceiling (y=4.2, wide double-sided slab covering entire span)
         const cryptCeilMat = this.stoneMat.clone();
         cryptCeilMat.side = THREE.DoubleSide;
+        cryptCeilMat.roughness = 0.55;
+        cryptCeilMat.emissive = new THREE.Color(0x3a4c5e);
+        cryptCeilMat.emissiveIntensity = 0.45;
         const cryptCeilGeo = new THREE.BoxGeometry(15.0, 1.2, 254);
         const cryptCeil = new THREE.Mesh(cryptCeilGeo, cryptCeilMat);
         cryptCeil.position.set(-20, 4.2, 146);
         cryptCeil.receiveShadow = true;
         this.scene.add(cryptCeil);
 
-        // Overhead Vaulted Stone Arches along the Crypt every 18m
-        for (let caz = 32; caz <= 264; caz += 18) {
+        // Radiant Overhead Lanterns and Vaulted Stone Arches along the Crypt every 12m
+        for (let caz = 24; caz <= 268; caz += 12) {
+            // Radiant Crypt Lantern Light illuminating both floor and vaulted ceiling
+            const cryptLantern = new THREE.PointLight(0x80e0ff, 3.8, 28, 0.9);
+            cryptLantern.position.set(-20, 1.8, caz);
+            this.scene.add(cryptLantern);
+
             const cryptArch = new THREE.Mesh(new THREE.BoxGeometry(11.0, 1.4, 1.4), this.wallMat);
             cryptArch.position.set(-20, 3.2, caz);
             cryptArch.castShadow = true;
             this.scene.add(cryptArch);
 
             // Emerald Ghostfire Braziers in Crypt
-            this.createStandingBrazier(-18.5, -4.9, caz, 0x00ffaa, 3.2, 20);
-            this.createStandingBrazier(-21.5, -4.9, caz, 0x00ffaa, 3.2, 20);
+            this.createStandingBrazier(-18.5, -4.9, caz, 0x00ffcc, 4.0, 24);
+            this.createStandingBrazier(-21.5, -4.9, caz, 0x00ffcc, 4.0, 24);
         }
+
+        // Golden Surface Portal Light at Crypt Entryway (z=28)
+        const surfacePortalLight = new THREE.PointLight(0xfffaea, 4.5, 30, 0.8);
+        surfacePortalLight.position.set(-20, -1.0, 28);
+        this.scene.add(surfacePortalLight);
 
         // Return Portal to Surface Courtyard from inside the Catacombs (Entryway at z=28)
         this.interactables.push({
@@ -4428,6 +4446,23 @@ class DarkSoulsWorld {
         const bayLightS = new THREE.PointLight(0xa5f3fc, 2.5, 26);
         bayLightS.position.set(-10, 6.0, 10);
         shipGroup.add(bayLightS);
+
+        // Radiant Interior Market Illumination across all merchant stalls (including Quelana)
+        const marketLightE = new THREE.PointLight(0xfff5e6, 3.8, 35);
+        marketLightE.position.set(12, 7.5, 0);
+        shipGroup.add(marketLightE);
+
+        const marketLightW = new THREE.PointLight(0xfff5e6, 3.8, 35);
+        marketLightW.position.set(-22, 7.5, 0);
+        shipGroup.add(marketLightW);
+
+        const marketLightNW = new THREE.PointLight(0xfff5e6, 3.5, 30);
+        marketLightNW.position.set(-22, 7.5, -12);
+        shipGroup.add(marketLightNW);
+
+        const marketLightSW = new THREE.PointLight(0xfff5e6, 3.8, 32); // Illuminates Quelana of Izalith
+        marketLightSW.position.set(-22, 7.5, 12);
+        shipGroup.add(marketLightSW);
 
         this.scene.add(shipGroup);
 
