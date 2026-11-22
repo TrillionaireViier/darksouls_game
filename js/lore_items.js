@@ -1015,7 +1015,7 @@
             name: 'CRYSTAL LONGBOW ARCHER',
             zone: 'The Duke',
             tier: 'ramparts',
-            defaultPos: [26.0, 6.0, 18.0],
+            defaultPos: [20.0, 6.0, 48.0],
             hp: 380,
             damage: 76,
             souls: 600,

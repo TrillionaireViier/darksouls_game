@@ -3750,7 +3750,7 @@ class DarkSoulsCombat {
             });
         }
 
-        // 3X SERPENT SANCTUM MOBS (15 Mobs across descending halls)
+        // 3X SERPENT SANCTUM MOBS (16 Mobs across descending halls featuring 30 Gorgon Medusa Variants)
         const sanctumPositions = [
             [-5.0, 0, -28.0], [5.0, 0, -28.0], [0, 0, -32.0],
             [-10.0, -2.5, -45.0], [10.0, -2.5, -45.0], [0, -2.5, -50.0],
@@ -3760,16 +3760,21 @@ class DarkSoulsCombat {
             [0, -4.0, -92.0]
         ];
         sanctumPositions.forEach((pos, idx) => {
-            const isMatriarch = (idx >= 13);
+            const isGorgon = (idx % 2 === 1) || (idx >= 8);
+            const gVariants = DarkSoulsCharacters.GORGON_VARIANTS || [];
+            const variantIdx = idx % (gVariants.length || 1);
+            const variant = gVariants[variantIdx] || { id: 'medusa_petrified_queen', name: 'MEDUSA, PETRIFIED QUEEN' };
             const sMob = {
-                id: `serpent_mob_${idx}`,
-                name: isMatriarch ? 'GORGON MATRIARCH ELITE' : 'MAN-SERPENT TEMPLE GUARD',
-                meshType: isMatriarch ? 'gorgon_medusa' : 'man_serpent_warrior',
-                hp: isMatriarch ? 1200 : 620,
-                damage: isMatriarch ? 160 : 110,
-                souls: isMatriarch ? 3500 : 1600,
+                id: isGorgon ? `gorgon_sanctum_${idx}` : `serpent_mob_${idx}`,
+                name: isGorgon ? variant.name : 'MAN-SERPENT TEMPLE GUARD',
+                variantIndex: variantIdx,
+                variantId: variant.id,
+                meshType: isGorgon ? 'gorgon_medusa' : 'man_serpent_warrior',
+                hp: isGorgon ? (idx >= 13 ? 1600 : 1250) : 620,
+                damage: isGorgon ? (idx >= 13 ? 180 : 145) : 110,
+                souls: isGorgon ? (idx >= 13 ? 4200 : 3200) : 1600,
                 speed: 2.7,
-                attackReach: isMatriarch ? 3.2 : 2.8,
+                attackReach: isGorgon ? 3.4 : 2.8,
                 behaviorType: 'Heavy Tank'
             };
             this.createCustomMob(sMob, pos[0], pos[2], 0, pos[1]);
@@ -3827,15 +3832,21 @@ class DarkSoulsCombat {
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
-                'treant_guardian', 'cursed_basilisk', 'fell_omen_gladiator', 
-                'crystal_drake_whelp', 'crucible_knight_sentinel', 'fire_chimera_hound',
+                'treant_guardian', 'cursed_basilisk', 'gorgon_medusa', 
+                'crystal_drake_whelp', 'crucible_knight_sentinel', 'gorgon_medusa',
                 'dire_shadow_wolf', 'abyssal_pus_beast', 'black_knife_assassin',
-                'ancestral_horned_shaman', 'glintstone_automaton', 'magma_wyrm_hatchling'
+                'ancestral_horned_shaman', 'gorgon_medusa', 'magma_wyrm_hatchling'
             ];
             const mType = types[idx % types.length];
+            const isGorgon = (mType === 'gorgon_medusa');
+            const gVariants = DarkSoulsCharacters.GORGON_VARIANTS || [];
+            const variantIdx = (idx + 14) % (gVariants.length || 1);
+            const variant = isGorgon ? (gVariants[variantIdx] || { name: 'GORGON MEDUSA', id: 'medusa_petrified_queen' }) : null;
             const oMob = {
                 id: `outside_mob_${idx}`,
-                name: mType.toUpperCase().replace(/_/g, ' '),
+                name: isGorgon ? variant.name : mType.toUpperCase().replace(/_/g, ' '),
+                variantIndex: isGorgon ? variantIdx : undefined,
+                variantId: isGorgon ? variant.id : undefined,
                 meshType: mType,
                 hp: 1250 + (idx % 6) * 220,
                 damage: 135 + (idx % 6) * 18,
@@ -6609,6 +6620,16 @@ equipWeapon(weaponId) {
                 }
             }
 
+            // Solid ground anchoring: enforce ground height every frame so no mob ever floats in mid-air
+            if (this.world && this.world.getGroundHeight && e.mesh) {
+                const targetG = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z, e.mesh.position.y);
+                if (e.mesh.position.y > targetG + 0.05) {
+                    e.mesh.position.y = Math.max(targetG, e.mesh.position.y - delta * 12.0);
+                } else if (e.mesh.position.y < targetG - 0.05) {
+                    e.mesh.position.y = targetG;
+                }
+            }
+
             this._scratchMobVec.subVectors(playerPos, e.mesh.position);
             const dist = this._scratchMobVec.length();
             const heightDiff = Math.abs(playerPos.y - e.mesh.position.y);
@@ -7104,13 +7125,23 @@ equipWeapon(weaponId) {
                         u.tongue.scale.z = 1.0 + Math.sin(e.animTime * 14) * 0.45;
                     }
                 } else if (u.isGorgon && u.tailSegments) {
+                    const waveTime = e.animTime * 8.5;
                     u.tailSegments.forEach((seg, sIdx) => {
-                        seg.position.x = Math.sin(e.animTime * 7.0 + sIdx * 0.8) * 0.38;
+                        const base = (seg.userData && seg.userData.baseX) || 0;
+                        const baseRot = (seg.userData && seg.userData.baseRotY) || 0;
+                        seg.position.x = base + Math.sin(waveTime - sIdx * 0.55) * 0.32 * (1.0 + sIdx * 0.10);
+                        seg.rotation.y = baseRot + Math.cos(waveTime - sIdx * 0.55) * 0.28;
                     });
                     if (u.snakeHair) {
                         u.snakeHair.forEach((sn, snIdx) => {
-                            sn.rotation.z = Math.sin(e.animTime * 8.0 + snIdx) * 0.3;
+                            const bX = (sn.userData && sn.userData.baseRotX) || 0;
+                            const bZ = (sn.userData && sn.userData.baseRotZ) || 0;
+                            sn.rotation.x = bX + Math.sin(e.animTime * 6.5 + snIdx * 0.75) * 0.22;
+                            sn.rotation.z = bZ + Math.cos(e.animTime * 7.2 + snIdx * 0.85) * 0.18;
                         });
+                    }
+                    if (u.tongue) {
+                        u.tongue.scale.z = 1.0 + Math.sin(e.animTime * 15.0) * 0.55;
                     }
                 }
             } else {
@@ -7191,6 +7222,25 @@ equipWeapon(weaponId) {
                     });
                     if (u.tongue) {
                         u.tongue.scale.z = 1.0 + Math.sin(e.animTime * 5.0) * 0.3;
+                    }
+                } else if (u.isGorgon && u.tailSegments) {
+                    const idleTime = e.animTime * 2.2 + (e.idleSeed || 0);
+                    u.tailSegments.forEach((seg, sIdx) => {
+                        const base = (seg.userData && seg.userData.baseX) || 0;
+                        const baseRot = (seg.userData && seg.userData.baseRotY) || 0;
+                        seg.position.x = base + Math.sin(idleTime - sIdx * 0.45) * 0.12 * (1.0 + sIdx * 0.08);
+                        seg.rotation.y = baseRot + Math.cos(idleTime - sIdx * 0.45) * 0.09;
+                    });
+                    if (u.snakeHair) {
+                        u.snakeHair.forEach((sn, snIdx) => {
+                            const bX = (sn.userData && sn.userData.baseRotX) || 0;
+                            const bZ = (sn.userData && sn.userData.baseRotZ) || 0;
+                            sn.rotation.x = bX + Math.sin(idleTime * 1.8 + snIdx * 0.8) * 0.12;
+                            sn.rotation.z = bZ + Math.cos(idleTime * 2.1 + snIdx * 0.6) * 0.10;
+                        });
+                    }
+                    if (u.tongue) {
+                        u.tongue.scale.z = 1.0 + Math.sin(e.animTime * 6.0) * 0.35;
                     }
                 }
             }
@@ -7289,17 +7339,24 @@ equipWeapon(weaponId) {
         // 1. Serpentine Tail Slither Undulation
         if (u.tailSegments) {
             u.tailSegments.forEach((seg, idx) => {
-                seg.position.x = Math.sin(time * 6.5 + idx * 0.8) * 0.45;
-                seg.rotation.y = Math.cos(time * 6.5 + idx * 0.8) * 0.35;
+                const base = (seg.userData && seg.userData.baseX) || 0;
+                const baseRot = (seg.userData && seg.userData.baseRotY) || 0;
+                seg.position.x = base + Math.sin(time * 6.5 - idx * 0.55) * 0.42 * (1.0 + idx * 0.10);
+                seg.rotation.y = baseRot + Math.cos(time * 6.5 - idx * 0.55) * 0.32;
             });
         }
 
         // 2. Writhing Snake Hair Animation
         if (u.snakeHair) {
             u.snakeHair.forEach((sn, idx) => {
-                sn.rotation.z = Math.sin(time * 7.5 + idx * 1.2) * 0.35;
-                sn.rotation.x = Math.cos(time * 6.0 + idx * 0.9) * 0.25;
+                const bX = (sn.userData && sn.userData.baseRotX) || 0;
+                const bZ = (sn.userData && sn.userData.baseRotZ) || 0;
+                sn.rotation.x = bX + Math.sin(time * 7.0 + idx * 0.75) * 0.24;
+                sn.rotation.z = bZ + Math.cos(time * 6.5 + idx * 0.85) * 0.20;
             });
+        }
+        if (u.tongue) {
+            u.tongue.scale.z = 1.0 + Math.sin(time * 15.0) * 0.55;
         }
 
         // 3. Movement towards player (slithering locomotion)

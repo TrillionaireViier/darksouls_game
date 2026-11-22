@@ -5368,7 +5368,7 @@ window.DARK_SOULS_LOCATIONS = [
 
     {"id":"ds1_painted_world_statue","name":"Painted World of Ariamis - Phalanx Courtyard","zone":"Painted World","pos":[32,2,145],"elev":"+2m","danger":"Tier IV (Severe)","boss":"Crossbreed Priscilla & Phalanx Slime","desc":"Snow-swept courtyard of decaying gothic towers where Priscilla hides behind illusory frost veil.","light":1.1},
 
-    {"id":"ds1_ash_lake_dragon_tree","name":"Ash Lake - Great Stone Dragon Hollow","zone":"Ash Lake","pos":[-15,0,-95],"elev":"0m","danger":"Tier V (Legendary)","boss":"Everlasting Stone Dragon","desc":"An endless white sand shore beneath towering stone archtrees echoing with ancient choral chants.","light":1.35},
+    {"id":"ds1_ash_lake_dragon_tree","name":"Ash Lake - Great Stone Dragon Hollow","zone":"Ash Lake","pos":[-180,0,-110],"elev":"0m","danger":"Tier V (Legendary)","boss":"Everlasting Stone Dragon","desc":"An endless white sand shore beneath towering stone archtrees echoing with ancient choral chants.","light":1.35},
 
     {"id":"ds1_chasm_of_abyss_manus","name":"Chasm of the Abyss - Primordial Father's Lair","zone":"Chasm of the Abyss","pos":[-40,-11,130],"elev":"-11m","danger":"Tier V (Nightmare)","boss":"Manus, Father of the Abyss","desc":"A terrifying pitch-black abyss of pulsating humanity spirits where the primeval human rests.","light":0.65},
 

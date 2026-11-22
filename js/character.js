@@ -3729,8 +3729,8 @@ class DarkSoulsCharacters {
             return this.createCrucibleKnightSentinel(x, z, angle, y, mobDef);
         } else if (type.includes('fire_chimera') || type.includes('chimera_hound')) {
             return this.createFireChimeraHound(x, z, angle, y, mobDef);
-        } else if (type.includes('gorgon')) {
-            return this.createGorgonMedusa(x, z, angle, y);
+        } else if (type.includes('gorgon') || type.includes('medusa')) {
+            return this.createGorgonMedusa(x, z, angle, y, mobDef);
         } else if (type.includes('giant_cobra') || type.includes('pit_viper') || type.includes('serpent_swarm') || type === 'snake' || type === 'serpent' || type.includes('viper')) {
             return this.createGiantSerpent(x, z, angle, y);
         } else if (type.includes('man_serpent')) {
@@ -8975,8 +8975,274 @@ class DarkSoulsCharacters {
         return root;
     }
 
-    // 37. MEDUSA, GORGON MATRIARCH (Sunken Serpent Sanctum)
-    createGorgonMedusa(x, z, angle = 0, y = 0) {
+    // ====================================================
+    // 37. GORGON MEDUSA (30 BESPOKE 3D VARIANTS & HIGH-POLY SCULPT)
+    // ====================================================
+    static GORGON_VARIANTS = [
+        {
+            id: 'medusa_petrified_queen',
+            name: 'MEDUSA, PETRIFIED QUEEN',
+            title: 'Sunken Temple Matriarch • Emerald Petro-Gaze & Serpentine Kris',
+            skinColor: 0x8ba695, scaleColor: 0x1e452c, bellyColor: 0xa8c8b4,
+            armorColor: 0x7c5a2c, hairColor: 0x163422, eyeColor: 0x00ff88,
+            auraColor: 0x00ff88, weaponType: 'twin_kris', crownType: 'diadem', gemColor: 0x00e676
+        },
+        {
+            id: 'euryale_abyssal_siren',
+            name: 'EURYALE, ABYSSAL SIREN',
+            title: 'Void Depths Siren • Abyssal Shadow Gaze & Dual Obsidian Khopeshes',
+            skinColor: 0x423854, scaleColor: 0x181024, bellyColor: 0x62547a,
+            armorColor: 0x2d1f42, hairColor: 0x120c1c, eyeColor: 0xb388ff,
+            auraColor: 0x9c27b0, weaponType: 'khopesh', crownType: 'void_horns', gemColor: 0x7c4dff
+        },
+        {
+            id: 'stheno_blood_gorgon',
+            name: 'STHENO, BLOOD GORGON',
+            title: 'Immortal Slayer • Sanguine Bloodboil Gaze & Jagged Bone Sickles',
+            skinColor: 0x7a3038, scaleColor: 0x3d0c14, bellyColor: 0xa84852,
+            armorColor: 0x5a1820, hairColor: 0x2a050b, eyeColor: 0xff1744,
+            auraColor: 0xd50000, weaponType: 'blood_sickles', crownType: 'bone_horns', gemColor: 0xff1744
+        },
+        {
+            id: 'mytha_baneful_queen',
+            name: 'MYTHA, THE BANEFUL QUEEN',
+            title: 'Earthen Peak Matriarch • Poison Mire Gaze & Venomous Stilettos',
+            skinColor: 0x5a7a60, scaleColor: 0x203824, bellyColor: 0x7aa684,
+            armorColor: 0xb89040, hairColor: 0x142818, eyeColor: 0x76ff03,
+            auraColor: 0x00e676, weaponType: 'twin_kris', crownType: 'royal_tiara', gemColor: 0x00e676
+        },
+        {
+            id: 'viper_empress_sunken',
+            name: 'VIPER EMPRESS OF THE SUNKEN CRYPT',
+            title: 'Pharaonic Sovereign • Golden Solar Gaze & Ceremonial Khopesh',
+            skinColor: 0x9e8a60, scaleColor: 0x4d3f1a, bellyColor: 0xd4c08e,
+            armorColor: 0xe6b800, hairColor: 0x382c0c, eyeColor: 0xffd700,
+            auraColor: 0xffab00, weaponType: 'khopesh', crownType: 'pharaoh_cobra', gemColor: 0xffab00
+        },
+        {
+            id: 'carian_glintstone_gorgon',
+            name: 'CARIAN GLINTSTONE GORGON',
+            title: 'Academy Stargazer • Glintstone Sorcery Gaze & Starlight Recurve Bow',
+            skinColor: 0x587896, scaleColor: 0x162c45, bellyColor: 0x88a8cc,
+            armorColor: 0x244266, hairColor: 0x0e1c2e, eyeColor: 0x00e5ff,
+            auraColor: 0x00b0ff, weaponType: 'glintstone_bow', crownType: 'glintstone_crown', gemColor: 0x00e5ff
+        },
+        {
+            id: 'magma_broodmother',
+            name: 'MAGMA BROODMOTHER GORGON',
+            title: 'Volcanic Fissure Matron • Molten Lava Gaze & Magma Kris',
+            skinColor: 0x3a2c28, scaleColor: 0x1f1412, bellyColor: 0xd85820,
+            armorColor: 0x4a2018, hairColor: 0x1a0e0c, eyeColor: 0xff3d00,
+            auraColor: 0xff5722, weaponType: 'twin_kris', crownType: 'magma_spires', gemColor: 0xff3d00
+        },
+        {
+            id: 'pale_albinauric_gorgon',
+            name: 'PALE ALBINAURIC GORGON',
+            title: 'Consecrated Snowfield Hybrid • Glacial Frost Gaze & Silver Scythe',
+            skinColor: 0xd8e0e8, scaleColor: 0x8aa0b4, bellyColor: 0xf0f4f8,
+            armorColor: 0xb0c4d8, hairColor: 0x70889c, eyeColor: 0x80d8ff,
+            auraColor: 0x40c4ff, weaponType: 'serpent_scythe', crownType: 'silver_halo', gemColor: 0x00e5ff
+        },
+        {
+            id: 'shadow_priestess_gorgon',
+            name: 'SHADOW PRIESTESS OF MIQUELLA',
+            title: 'Unalloyed Sanctuary Sentinel • Sacred Grace Gaze & Holy Halberd',
+            skinColor: 0x8c7c64, scaleColor: 0x4a402a, bellyColor: 0xb8a88a,
+            armorColor: 0xf5d061, hairColor: 0x332a18, eyeColor: 0xffea00,
+            auraColor: 0xffd600, weaponType: 'halberd', crownType: 'erdtree_halo', gemColor: 0xffd600
+        },
+        {
+            id: 'scarlet_rot_gorgon',
+            name: 'MALENIA’S ROT BROOD GORGON',
+            title: 'Aeonian Bloom Matriarch • Scarlet Rot Gaze & Corrupted Daggers',
+            skinColor: 0x8a4b48, scaleColor: 0x4c2020, bellyColor: 0xc47870,
+            armorColor: 0x5a2b28, hairColor: 0x361414, eyeColor: 0xff5252,
+            auraColor: 0xff1744, weaponType: 'twin_kris', crownType: 'rot_bloom', gemColor: 0xff5252
+        },
+        {
+            id: 'ancient_lightning_gorgon',
+            name: 'ANCIENT LIGHTNING DRAKE GORGON',
+            title: 'Dragonlord Acolyte • Red Dragon Lightning Gaze & Bolttip Javelin',
+            skinColor: 0x7a6e5a, scaleColor: 0x3d3526, bellyColor: 0xaba088,
+            armorColor: 0xc49a45, hairColor: 0x262014, eyeColor: 0xffd600,
+            auraColor: 0xffab00, weaponType: 'lightning_spear', crownType: 'lightning_horns', gemColor: 0xffd600
+        },
+        {
+            id: 'darkwraith_abyss_gorgon',
+            name: 'ABYSSAL DARKWRAITH GORGON',
+            title: 'New Londo Dread Matron • Lifedrain Gaze & Abyssal Claws',
+            skinColor: 0x2c2c34, scaleColor: 0x121218, bellyColor: 0x454552,
+            armorColor: 0x1e1e24, hairColor: 0x0a0a0e, eyeColor: 0xd500f9,
+            auraColor: 0xaa00ff, weaponType: 'claws', crownType: 'skull_mask', gemColor: 0xd500f9
+        },
+        {
+            id: 'emerald_alchemist_gorgon',
+            name: 'EMERALD TOXICOLOGIST GORGON',
+            title: 'Grand Apothecary • Caustic Acid Gaze & Toxic Kris Daggers',
+            skinColor: 0x507a4a, scaleColor: 0x1d3d18, bellyColor: 0x7cb574,
+            armorColor: 0x2e5426, hairColor: 0x132610, eyeColor: 0x69f0ae,
+            auraColor: 0x00e676, weaponType: 'twin_kris', crownType: 'diadem', gemColor: 0x00e676
+        },
+        {
+            id: 'ivory_bone_weaver',
+            name: 'IVORY BONE WEAVER GORGON',
+            title: 'Catacombs Osteomancer • Soulflame Gaze & Carved Ivory Scythe',
+            skinColor: 0xd2cbbe, scaleColor: 0x7a7468, bellyColor: 0xeee8da,
+            armorColor: 0x8a8478, hairColor: 0x545048, eyeColor: 0x00e5ff,
+            auraColor: 0x18ffff, weaponType: 'serpent_scythe', crownType: 'bone_crest', gemColor: 0x00e5ff
+        },
+        {
+            id: 'crimson_sanguine_matron',
+            name: 'SANGUINE NOBLE GORGON',
+            title: 'Lord of Blood Consort • Blood Oath Gaze & Ritual Kris',
+            skinColor: 0x5e2a34, scaleColor: 0x2b0e14, bellyColor: 0x8c4250,
+            armorColor: 0x3d121c, hairColor: 0x1a060a, eyeColor: 0xff1744,
+            auraColor: 0xd50000, weaponType: 'twin_kris', crownType: 'royal_tiara', gemColor: 0xff1744
+        },
+        {
+            id: 'cosmic_void_gorgon',
+            name: 'ASTEL VOIDBORN GORGON',
+            title: 'Nokron Naturalborn • Gravitational Singularity Gaze & Astral Caduceus',
+            skinColor: 0x3b325c, scaleColor: 0x140e28, bellyColor: 0x5f528f,
+            armorColor: 0x261b45, hairColor: 0x0c071a, eyeColor: 0xe040fb,
+            auraColor: 0xd500f9, weaponType: 'caduceus_staff', crownType: 'cosmic_spires', gemColor: 0xe040fb
+        },
+        {
+            id: 'moonlight_huntress_gorgon',
+            name: 'MOONLIGHT HUNTRESS GORGON',
+            title: 'Moonlit Lake Stalker • Pale Lunar Gaze & Silver Recurve Greatbow',
+            skinColor: 0x7a90a8, scaleColor: 0x283e54, bellyColor: 0xa4bed8,
+            armorColor: 0x426080, hairColor: 0x182838, eyeColor: 0xb2ebf2,
+            auraColor: 0x80deea, weaponType: 'glintstone_bow', crownType: 'lunar_crescent', gemColor: 0x80deea
+        },
+        {
+            id: 'sunken_crypt_wraith',
+            name: 'SUNKEN CRYPT WRAITH GORGON',
+            title: 'Subterranean Shade • Funerary Specter Gaze & Crypt Flamberge',
+            skinColor: 0x485854, scaleColor: 0x1a2624, bellyColor: 0x6e8480,
+            armorColor: 0x2e3c38, hairColor: 0x101816, eyeColor: 0x64ffda,
+            auraColor: 0x1de9b6, weaponType: 'serpent_scythe', crownType: 'tattered_cowl', gemColor: 0x1de9b6
+        },
+        {
+            id: 'dragonkin_matron_gorgon',
+            name: 'DRAGONKIN MATRON GORGON',
+            title: 'Nokstella Dragon Abomination • Cold Magma Gaze & Draconic Greatblade',
+            skinColor: 0x5a5450, scaleColor: 0x262220, bellyColor: 0x857e78,
+            armorColor: 0x38322e, hairColor: 0x181514, eyeColor: 0xff9100,
+            auraColor: 0xff6d00, weaponType: 'khopesh', crownType: 'dragon_horns', gemColor: 0xff9100
+        },
+        {
+            id: 'golden_order_arbiter',
+            name: 'GOLDEN ORDER ARBITER GORGON',
+            title: 'Erdtree Inquisitor • Golden Grace Gaze & Gilded Longsword',
+            skinColor: 0x94825e, scaleColor: 0x4d4024, bellyColor: 0xc4b288,
+            armorColor: 0xf5c842, hairColor: 0x332912, eyeColor: 0xffea00,
+            auraColor: 0xffd600, weaponType: 'halberd', crownType: 'erdtree_halo', gemColor: 0xffd600
+        },
+        {
+            id: 'ashen_kiln_gorgon',
+            name: 'ASHEN KILN GORGON',
+            title: 'Cinder Brood Matron • Smoldering Ash Gaze & Flame-Forged Sickles',
+            skinColor: 0x403836, scaleColor: 0x181414, bellyColor: 0x6e6260,
+            armorColor: 0x282020, hairColor: 0x100c0c, eyeColor: 0xff5722,
+            auraColor: 0xff3d00, weaponType: 'blood_sickles', crownType: 'cinder_horns', gemColor: 0xff5722
+        },
+        {
+            id: 'leviathan_deep_gorgon',
+            name: 'LEVIATHAN DEEP GORGON',
+            title: 'Sunken Trench Terror • Bioluminescent Tidal Gaze & Coral Trident',
+            skinColor: 0x28606e, scaleColor: 0x0c2830, bellyColor: 0x4896a8,
+            armorColor: 0x143c48, hairColor: 0x06181e, eyeColor: 0x00e5ff,
+            auraColor: 0x00b0ff, weaponType: 'serpent_scythe', crownType: 'coral_crest', gemColor: 0x00e5ff
+        },
+        {
+            id: 'grave_warden_duelist',
+            name: 'GRAVE WARDEN DUELIST GORGON',
+            title: 'Colosseum Champion • Frenzied Blood Gaze & Dual Serpent Battleaxes',
+            skinColor: 0x85664a, scaleColor: 0x422e1c, bellyColor: 0xb39070,
+            armorColor: 0x694625, hairColor: 0x2e1c0e, eyeColor: 0xff9100,
+            auraColor: 0xff6d00, weaponType: 'khopesh', crownType: 'gladiator_crest', gemColor: 0xff9100
+        },
+        {
+            id: 'nights_cavalry_gorgon',
+            name: 'NIGHT’S CAVALRY GORGON',
+            title: 'Midnight Highway Inquisitor • Eclipse Shadow Gaze & Flail of Serpents',
+            skinColor: 0x242428, scaleColor: 0x0c0c10, bellyColor: 0x3e3e46,
+            armorColor: 0x141418, hairColor: 0x060608, eyeColor: 0x7c4dff,
+            auraColor: 0x651fff, weaponType: 'chaos_whip', crownType: 'tattered_cowl', gemColor: 0x7c4dff
+        },
+        {
+            id: 'royal_sentinel_gorgon',
+            name: 'ROYAL SENTINEL GORGON',
+            title: 'Capital High Bastion Matron • Peerless Steel Gaze & Tower Spear',
+            skinColor: 0x78848a, scaleColor: 0x364045, bellyColor: 0xa4b2ba,
+            armorColor: 0x546268, hairColor: 0x20282c, eyeColor: 0xe0e0e0,
+            auraColor: 0xffffff, weaponType: 'halberd', crownType: 'diadem', gemColor: 0xffffff
+        },
+        {
+            id: 'frost_witch_gorgon',
+            name: 'FROST WITCH GORGON',
+            title: 'Ranni’s Moonlit Disciple • Freezing Blizzard Gaze & Rime Kris Daggers',
+            skinColor: 0x8aa8c4, scaleColor: 0x304860, bellyColor: 0xb8d4ec,
+            armorColor: 0x486888, hairColor: 0x1c2e40, eyeColor: 0x00e5ff,
+            auraColor: 0x80d8ff, weaponType: 'twin_kris', crownType: 'glintstone_crown', gemColor: 0x00e5ff
+        },
+        {
+            id: 'duskborn_deathroot_gorgon',
+            name: 'DUSKBORN DEATHROOT GORGON',
+            title: 'Godwyn’s Blighted Spawn • Deathblight Thorn Gaze & Thorny Scythe',
+            skinColor: 0x383430, scaleColor: 0x161412, bellyColor: 0x58524c,
+            armorColor: 0x24201c, hairColor: 0x0c0a08, eyeColor: 0xffab00,
+            auraColor: 0xff6d00, weaponType: 'serpent_scythe', crownType: 'bone_horns', gemColor: 0xffab00
+        },
+        {
+            id: 'sunken_liturgy_hierophant',
+            name: 'SUNKEN LITURGY HIGH PRIESTESS',
+            title: 'Cathedral of Scales Sovereign • Liturgical Grace Gaze & Sacred Caduceus',
+            skinColor: 0x94866c, scaleColor: 0x483e2c, bellyColor: 0xc4b698,
+            armorColor: 0x736345, hairColor: 0x2c2416, eyeColor: 0xffd700,
+            auraColor: 0xffc400, weaponType: 'caduceus_staff', crownType: 'royal_tiara', gemColor: 0xffd700
+        },
+        {
+            id: 'chaos_bed_gorgon',
+            name: 'CHAOS BED DEMON GORGON',
+            title: 'Izalith Flame Daughter • Chaos Magma Gaze & Chaos Flame Whip',
+            skinColor: 0x5c2818, scaleColor: 0x2c0e06, bellyColor: 0x8f4632,
+            armorColor: 0x3d160c, hairColor: 0x1c0602, eyeColor: 0xff3d00,
+            auraColor: 0xff1744, weaponType: 'chaos_whip', crownType: 'magma_spires', gemColor: 0xff3d00
+        },
+        {
+            id: 'apex_titan_empress',
+            name: 'APEX TITAN GORGON EMPRESS',
+            title: 'Primordial World Serpent Deity • Supreme Sovereign Petro-Gaze & Celestial Twin Khopeshes',
+            skinColor: 0x8a9299, scaleColor: 0x2a323a, bellyColor: 0xb8c2cc,
+            armorColor: 0xd4af37, hairColor: 0x121820, eyeColor: 0x00ffff,
+            auraColor: 0x00e5ff, weaponType: 'khopesh', crownType: 'royal_tiara', gemColor: 0x00ffff
+        }
+    ];
+
+    createGorgonMedusa(x, z, angle = 0, y = 0, mobDef = null) {
+        // Resolve 1 of 30 Bespoke Gorgon Variants
+        let variant = DarkSoulsCharacters.GORGON_VARIANTS[0];
+        if (mobDef) {
+            if (typeof mobDef.variantIndex === 'number' && mobDef.variantIndex >= 0) {
+                variant = DarkSoulsCharacters.GORGON_VARIANTS[mobDef.variantIndex % DarkSoulsCharacters.GORGON_VARIANTS.length];
+            } else if (mobDef.variantId) {
+                const found = DarkSoulsCharacters.GORGON_VARIANTS.find(v => v.id === mobDef.variantId);
+                if (found) variant = found;
+            } else if (mobDef.name) {
+                const upper = mobDef.name.toUpperCase();
+                const found = DarkSoulsCharacters.GORGON_VARIANTS.find(v => upper.includes(v.id.toUpperCase().split('_')[0]));
+                if (found) variant = found;
+                else {
+                    let hash = 0;
+                    const str = (mobDef.id || mobDef.name || '') + '_' + Math.round(x) + '_' + Math.round(z);
+                    for (let c = 0; c < str.length; c++) hash = (hash * 31 + str.charCodeAt(c)) & 0x7fffffff;
+                    variant = DarkSoulsCharacters.GORGON_VARIANTS[hash % DarkSoulsCharacters.GORGON_VARIANTS.length];
+                }
+            }
+        }
+
         const root = new THREE.Group();
         root.position.set(x, y, z);
         root.rotation.y = angle;
@@ -8985,93 +9251,471 @@ class DarkSoulsCharacters {
         bodyGroup.position.y = 1.35;
         root.add(bodyGroup);
 
-        // 1. Long Coiled Serpentine Tail (8 articulated spine segments)
+        const skinMat = new THREE.MeshStandardMaterial({ color: variant.skinColor, roughness: 0.52, metalness: 0.18 });
+        const scaleMat = new THREE.MeshStandardMaterial({ color: variant.scaleColor, roughness: 0.32, metalness: 0.50 });
+        const bellyMat = new THREE.MeshStandardMaterial({ color: variant.bellyColor, roughness: 0.65, metalness: 0.12 });
+        const armorMat = new THREE.MeshStandardMaterial({ color: variant.armorColor, roughness: 0.25, metalness: 0.88 });
+        const hairMat = new THREE.MeshStandardMaterial({ color: variant.hairColor, roughness: 0.28, metalness: 0.45 });
+        const eyeMat = new THREE.MeshBasicMaterial({ color: variant.eyeColor });
+        const gemMat = new THREE.MeshStandardMaterial({ color: variant.gemColor, emissive: variant.gemColor, emissiveIntensity: 0.8, roughness: 0.1 });
+        const goldMat = this.goldTrimMat || new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.22, metalness: 0.9 });
+        const darkSteelMat = this.darkSteelMat || new THREE.MeshStandardMaterial({ color: 0x222228, roughness: 0.35, metalness: 0.8 });
+        const venomMat = this.venomAcidMat || new THREE.MeshStandardMaterial({ color: 0x33ff66, emissive: 0x11bb33, emissiveIntensity: 1.2, roughness: 0.15 });
+
+        // 1. Serpentine Tail (14 articulated spine segments)
         const tailSegments = [];
         const tailGroup = new THREE.Group();
         bodyGroup.add(tailGroup);
 
-        const segCount = 8;
+        const segCount = 14;
         for (let i = 0; i < segCount; i++) {
-            const segRadius = 0.44 * (1.0 - (i / segCount) * 0.75);
-            const segLength = 0.55;
+            const t = i / segCount;
+            const segRadius = 0.55 * (1.0 - t * 0.78);
+            const segLen = 0.48;
+
             const segMesh = new THREE.Mesh(
-                new THREE.CylinderGeometry(segRadius, segRadius * 0.9, segLength, 10),
-                this.serpentScaleMat
+                new THREE.CylinderGeometry(segRadius, segRadius * 0.92, segLen, 12),
+                scaleMat
             );
             segMesh.castShadow = true;
             segMesh.receiveShadow = true;
-            
-            // Belly plates on bottom
+
+            // Pale ventral belly scutes
             const belly = new THREE.Mesh(
-                new THREE.PlaneGeometry(segRadius * 1.5, segLength * 0.95),
-                this.serpentBellyMat
+                new THREE.PlaneGeometry(segRadius * 1.5, segLen * 0.95),
+                bellyMat
             );
             belly.rotation.x = Math.PI / 2;
             belly.position.set(0, -segRadius * 0.85, 0);
             segMesh.add(belly);
 
-            // Natural initial serpentine S-curve trailing backwards
-            const t = i / segCount;
-            const sx = Math.sin(t * Math.PI * 2) * 0.45;
-            const sz = -i * 0.55;
-            const sy = -0.5 - t * 0.6;
+            // Dorsal ridge spine fin
+            if (i < segCount - 2) {
+                const fin = new THREE.Mesh(
+                    new THREE.ConeGeometry(segRadius * 0.24, segLen * 0.5, 4),
+                    armorMat
+                );
+                fin.position.set(0, segRadius * 0.85, 0);
+                fin.rotation.z = Math.PI;
+                segMesh.add(fin);
+            }
+
+            // Sinuous S-curve on the floor
+            const sx = Math.sin(t * Math.PI * 2.2) * (0.65 * (1 - t * 0.35));
+            const sz = -0.3 - i * 0.44;
+            const sy = -0.5 - t * 0.65;
             segMesh.position.set(sx, sy, sz);
-            segMesh.rotation.x = 0.25;
+            segMesh.rotation.x = 0.22;
+            segMesh.userData = { baseX: sx, baseZ: sz, sIdx: i };
 
             tailGroup.add(segMesh);
             tailSegments.push(segMesh);
         }
 
-        // 2. Humanoid Torso with Antique Bronze Chitin Armor
+        // Rattlesnake Rattle & Tail Stinger on final segment
+        const tipSeg = tailSegments[tailSegments.length - 1];
+        const rattleGroup = new THREE.Group();
+        rattleGroup.position.set(0, 0, -0.28);
+        for (let r = 0; r < 3; r++) {
+            const bead = new THREE.Mesh(
+                new THREE.TorusGeometry(0.06 - r * 0.015, 0.02, 6, 12),
+                goldMat
+            );
+            bead.position.z = -r * 0.06;
+            rattleGroup.add(bead);
+        }
+        const stinger = new THREE.Mesh(
+            new THREE.ConeGeometry(0.045, 0.22, 6),
+            darkSteelMat
+        );
+        stinger.rotation.x = -Math.PI / 2;
+        stinger.position.z = -0.24;
+        rattleGroup.add(stinger);
+        tipSeg.add(rattleGroup);
+
+        // 2. Sculpted Feminine Torso & Antique Cuirass
         const torso = new THREE.Group();
-        torso.position.y = 0.2;
+        torso.position.y = 0.18;
         bodyGroup.add(torso);
 
-        const breastplate = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.36, 0.42, 0.95, 8),
-            this.gorgonArmorMat
+        // Scaled waist transition
+        const waistScales = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.36, 0.46, 0.45, 12),
+            scaleMat
         );
-        breastplate.castShadow = true;
-        torso.add(breastplate);
+        waistScales.position.y = -0.25;
+        waistScales.castShadow = true;
+        torso.add(waistScales);
 
-        // Serpentine Rib Scales
-        const ribScales = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.38, 0.44, 0.4, 8),
-            this.serpentScaleMat
+        // Embossed antique cuirass / corslet
+        const cuirass = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.32, 0.37, 0.68, 12),
+            armorMat
         );
-        ribScales.position.y = -0.3;
-        torso.add(ribScales);
+        cuirass.position.y = 0.12;
+        cuirass.castShadow = true;
+        torso.add(cuirass);
 
-        // 3. Gorgon Head with Glowing Jade Eyes & Fangs
+        // Pectoral armor plates
+        [-0.14, 0.14].forEach((px) => {
+            const pec = new THREE.Mesh(
+                new THREE.SphereGeometry(0.12, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.5),
+                armorMat
+            );
+            pec.position.set(px, 0.22, 0.26);
+            pec.rotation.x = Math.PI / 2;
+            cuirass.add(pec);
+        });
+
+        // Embossed twin serpents motif on chest
+        const chestSnakeL = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.014, 6, 14, Math.PI * 1.5), goldMat);
+        chestSnakeL.position.set(-0.12, 0.18, 0.32);
+        cuirass.add(chestSnakeL);
+        const chestSnakeR = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.014, 6, 14, Math.PI * 1.5), goldMat);
+        chestSnakeR.position.set(0.12, 0.18, 0.32);
+        chestSnakeR.rotation.y = Math.PI;
+        cuirass.add(chestSnakeR);
+
+        // Ornate Gorgon Gorget Collar with central gem
+        const gorget = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.035, 6, 16), goldMat);
+        gorget.position.set(0, 0.46, 0.05);
+        gorget.rotation.x = Math.PI / 2;
+        cuirass.add(gorget);
+
+        const gorgetGem = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), gemMat);
+        gorgetGem.position.set(0, 0.46, 0.27);
+        cuirass.add(gorgetGem);
+
+        // Serpent Hip Faulds / Tassets
+        const faulds = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.39, 0.46, 0.26, 12, 1, true, -Math.PI * 0.45, Math.PI * 0.90),
+            armorMat
+        );
+        faulds.position.set(0, -0.15, 0.02);
+        torso.add(faulds);
+
+        // Dorsal spine fin crest
+        const spineFin = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.72, 0.16), armorMat);
+        spineFin.position.set(0, 0.18, -0.36);
+        torso.add(spineFin);
+
+        // 3. Sculpted Head & Menacing Chiseled Face
         const headGroup = new THREE.Group();
-        headGroup.position.set(0, 0.75, 0);
+        headGroup.position.set(0, 0.74, 0.04);
         torso.add(headGroup);
 
-        const face = new THREE.Mesh(
-            new THREE.SphereGeometry(0.25, 8, 8),
-            this.gorgonSkinMat
+        // Cranium with sculpted hollow cheeks and brow
+        const cranium = new THREE.Mesh(
+            new THREE.SphereGeometry(0.20, 14, 12),
+            skinMat
         );
-        face.scale.set(0.9, 1.15, 1.0);
-        headGroup.add(face);
+        cranium.scale.set(0.88, 1.15, 0.96);
+        cranium.castShadow = true;
+        headGroup.add(cranium);
 
-        // Piercing Emerald Gaze Eyes
-        const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 6), this.gorgonGlowMat);
-        leftEye.position.set(-0.1, 0.06, 0.22);
-        headGroup.add(leftEye);
+        // Chiseled cheekbone contours
+        [-0.14, 0.14].forEach((cx) => {
+            const cheek = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.08), skinMat);
+            cheek.position.set(cx, -0.04, 0.12);
+            cheek.rotation.y = (cx > 0 ? -0.35 : 0.35);
+            headGroup.add(cheek);
+        });
 
-        const rightEye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 6), this.gorgonGlowMat);
-        rightEye.position.set(0.1, 0.06, 0.22);
-        headGroup.add(rightEye);
+        // Menacing brow ridge
+        const brow = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.04, 0.06), skinMat);
+        brow.position.set(0, 0.08, 0.18);
+        brow.rotation.x = -0.18;
+        headGroup.add(brow);
 
-        const gazeLight = new THREE.PointLight(0x00ff88, 2.5, 12);
-        gazeLight.position.set(0, 0.1, 0.4);
+        // Hinged unmasked jaw with open venomous maw
+        const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.08, 0.16), skinMat);
+        jaw.position.set(0, -0.16, 0.08);
+        jaw.rotation.x = 0.25;
+        headGroup.add(jaw);
+
+        // 4 Viper Fangs
+        [[-0.05, 0.16], [0.05, 0.16], [-0.04, 0.12], [0.04, 0.12]].forEach(([fx, fz], fIdx) => {
+            const fang = new THREE.Mesh(new THREE.ConeGeometry(0.016, 0.07, 5), goldMat);
+            fang.position.set(fx, fIdx < 2 ? -0.10 : -0.18, fz);
+            fang.rotation.x = fIdx < 2 ? Math.PI : 0;
+            headGroup.add(fang);
+        });
+
+        // Forked flickering tongue
+        const tongue = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.005, 0.18), venomMat);
+        tongue.position.set(0, -0.14, 0.22);
+        tongue.rotation.x = 0.15;
+        headGroup.add(tongue);
+
+        // Piercing Reptilian Slit Eyes
+        [-0.08, 0.08].forEach((ex) => {
+            const eyeSocket = new THREE.Mesh(new THREE.SphereGeometry(0.044, 8, 8), darkSteelMat);
+            eyeSocket.position.set(ex, 0.03, 0.17);
+            headGroup.add(eyeSocket);
+
+            const eyePupil = new THREE.Mesh(new THREE.SphereGeometry(0.038, 8, 8), eyeMat);
+            eyePupil.scale.set(0.65, 1.25, 0.65);
+            eyePupil.position.set(ex, 0.03, 0.19);
+            headGroup.add(eyePupil);
+        });
+
+        // High-luminance Gaze Aura PointLight
+        const gazeLight = new THREE.PointLight(variant.auraColor, 3.2, 14);
+        gazeLight.position.set(0, 0.08, 0.42);
         headGroup.add(gazeLight);
 
-        // Volumetric Petrifying Gaze Beam Cone (activated during Stone Stare)
+        // Headpiece / Crown
+        if (variant.crownType === 'royal_tiara' || variant.crownType === 'diadem') {
+            const tiara = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.024, 6, 16, Math.PI * 1.2), goldMat);
+            tiara.position.set(0, 0.14, 0.02);
+            tiara.rotation.x = -Math.PI * 0.45;
+            headGroup.add(tiara);
+
+            const crownGem = new THREE.Mesh(new THREE.OctahedronGeometry(0.045, 0), gemMat);
+            crownGem.position.set(0, 0.24, 0.16);
+            headGroup.add(crownGem);
+
+            if (variant.crownType === 'royal_tiara') {
+                for (let sp = -2; sp <= 2; sp++) {
+                    const spire = new THREE.Mesh(new THREE.ConeGeometry(0.024, 0.14 - Math.abs(sp) * 0.025, 5), goldMat);
+                    spire.position.set(sp * 0.065, 0.26 - Math.abs(sp) * 0.02, 0.12 - Math.abs(sp) * 0.02);
+                    spire.rotation.x = -0.15;
+                    headGroup.add(spire);
+                }
+            }
+        } else if (variant.crownType === 'pharaoh_cobra') {
+            const nemes = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.36, 0.45, 12, 1, true, -Math.PI * 0.5, Math.PI), goldMat);
+            nemes.position.set(0, 0.05, -0.06);
+            nemes.rotation.x = 0.25;
+            headGroup.add(nemes);
+
+            const uraeus = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 0.22, 6), goldMat);
+            uraeus.position.set(0, 0.26, 0.18);
+            uraeus.rotation.x = -0.45;
+            headGroup.add(uraeus);
+        } else if (variant.crownType === 'glintstone_crown') {
+            for (let gc = 0; gc < 5; gc++) {
+                const crystal = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.22, 6), gemMat);
+                const gang = (gc - 2) * 0.42;
+                crystal.position.set(Math.sin(gang) * 0.18, 0.24, Math.cos(gang) * 0.14);
+                crystal.rotation.z = -gang * 0.5;
+                headGroup.add(crystal);
+            }
+        } else if (variant.crownType === 'erdtree_halo' || variant.crownType === 'silver_halo') {
+            const halo = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.022, 6, 24), goldMat);
+            halo.position.set(0, 0.12, -0.15);
+            headGroup.add(halo);
+        } else if (variant.crownType === 'bone_horns' || variant.crownType === 'void_horns' || variant.crownType === 'dragon_horns' || variant.crownType === 'lightning_horns' || variant.crownType === 'cinder_horns') {
+            [-0.16, 0.16].forEach((hx) => {
+                const horn = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.38, 6), darkSteelMat);
+                horn.position.set(hx, 0.24, -0.02);
+                horn.rotation.z = (hx > 0 ? -0.55 : 0.55);
+                horn.rotation.x = -0.35;
+                headGroup.add(horn);
+            });
+        }
+
+        // 4. Living Crown of 24 Articulated Serpents (3 Anatomical Tiers)
+        const snakeHair = [];
+
+        // Tier 1: 8 Crest Serpents (Top Arching Forward)
+        for (let s = 0; s < 8; s++) {
+            const ang = (s / 8) * Math.PI * 2;
+            const sGroup = new THREE.Group();
+            const rad = 0.14;
+            sGroup.position.set(Math.cos(ang) * rad, 0.20, Math.sin(ang) * rad);
+
+            const sBody = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.032, 0.48, 6), hairMat);
+            sBody.position.set(Math.cos(ang) * 0.08, 0.18, Math.sin(ang) * 0.08);
+            sBody.rotation.z = Math.cos(ang) * 0.55;
+            sBody.rotation.x = Math.sin(ang) * 0.55;
+            sGroup.add(sBody);
+
+            const sHead = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.12, 5), hairMat);
+            sHead.position.set(Math.cos(ang) * 0.16, 0.40, Math.sin(ang) * 0.16);
+            sHead.rotation.x = Math.PI;
+
+            const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.012, 4, 4), gemMat);
+            e1.position.set(0.024, -0.04, 0.03);
+            sHead.add(e1);
+            const e2 = new THREE.Mesh(new THREE.SphereGeometry(0.012, 4, 4), gemMat);
+            e2.position.set(-0.024, -0.04, 0.03);
+            sHead.add(e2);
+
+            sGroup.add(sHead);
+            headGroup.add(sGroup);
+            snakeHair.push(sGroup);
+        }
+
+        // Tier 2: 8 Temple Serpents (Sides Coiling Outward)
+        for (let s = 0; s < 8; s++) {
+            const side = (s < 4 ? -1 : 1);
+            const idx = s % 4;
+            const sGroup = new THREE.Group();
+            sGroup.position.set(side * (0.16 + idx * 0.025), 0.06 - idx * 0.04, 0.06 - idx * 0.04);
+
+            const sBody = new THREE.Mesh(new THREE.CylinderGeometry(0.020, 0.030, 0.44, 6), hairMat);
+            sBody.position.set(side * 0.12, 0.08, -0.04);
+            sBody.rotation.z = -side * 0.85;
+            sGroup.add(sBody);
+
+            const sHead = new THREE.Mesh(new THREE.ConeGeometry(0.040, 0.11, 5), hairMat);
+            sHead.position.set(side * 0.28, 0.14, 0.02);
+            sHead.rotation.z = -side * 1.1;
+
+            const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.011, 4, 4), gemMat);
+            e1.position.set(0.02, -0.03, 0.025);
+            sHead.add(e1);
+            const e2 = new THREE.Mesh(new THREE.SphereGeometry(0.011, 4, 4), gemMat);
+            e2.position.set(-0.02, -0.03, 0.025);
+            sHead.add(e2);
+
+            sGroup.add(sHead);
+            headGroup.add(sGroup);
+            snakeHair.push(sGroup);
+        }
+
+        // Tier 3: 8 Mane Serpents (Flowing down back & shoulders)
+        for (let s = 0; s < 8; s++) {
+            const sGroup = new THREE.Group();
+            const sx = (s - 3.5) * 0.048;
+            sGroup.position.set(sx, 0.08, -0.16);
+
+            const sBody = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.030, 0.52, 6), hairMat);
+            sBody.position.set(0, -0.18, -0.08);
+            sBody.rotation.x = -0.45;
+            sGroup.add(sBody);
+
+            const sHead = new THREE.Mesh(new THREE.ConeGeometry(0.042, 0.12, 5), hairMat);
+            sHead.position.set(0, -0.42, -0.16);
+            sHead.rotation.x = -0.2;
+
+            const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.011, 4, 4), gemMat);
+            e1.position.set(0.02, 0.02, 0.03);
+            sHead.add(e1);
+            const e2 = new THREE.Mesh(new THREE.SphereGeometry(0.011, 4, 4), gemMat);
+            e2.position.set(-0.02, 0.02, 0.03);
+            sHead.add(e2);
+
+            sGroup.add(sHead);
+            headGroup.add(sGroup);
+            snakeHair.push(sGroup);
+        }
+
+        // 5. Scaled Arms & Golden Ouroboros Armlets
+        const rightShoulder = new THREE.Group();
+        rightShoulder.position.set(0.52, 0.34, 0);
+        torso.add(rightShoulder);
+
+        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.080, 0.72, 8), skinMat);
+        rArm.position.y = -0.36;
+        rArm.castShadow = true;
+        rightShoulder.add(rArm);
+
+        const rOuroboros = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.022, 6, 14), goldMat);
+        rOuroboros.position.y = -0.22;
+        rOuroboros.rotation.x = Math.PI / 2;
+        rightShoulder.add(rOuroboros);
+
+        const leftShoulder = new THREE.Group();
+        leftShoulder.position.set(-0.52, 0.34, 0);
+        torso.add(leftShoulder);
+
+        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.080, 0.72, 8), skinMat);
+        lArm.position.y = -0.36;
+        lArm.castShadow = true;
+        leftShoulder.add(lArm);
+
+        const lOuroboros = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.022, 6, 14), goldMat);
+        lOuroboros.position.y = -0.22;
+        lOuroboros.rotation.x = Math.PI / 2;
+        leftShoulder.add(lOuroboros);
+
+        // 6. Weapon Rigging based on weaponType
+        let rightWeapon = new THREE.Group();
+        let leftWeapon = new THREE.Group();
+
+        if (variant.weaponType === 'khopesh') {
+            [rightWeapon, leftWeapon].forEach((wGroup, wIdx) => {
+                const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.032, 0.36, 8), darkSteelMat);
+                hilt.position.y = -0.15;
+                wGroup.add(hilt);
+
+                const blade = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.85, 0.14), goldMat);
+                blade.position.set(0, 0.35, 0);
+                wGroup.add(blade);
+
+                const hook = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.035, 6, 12, Math.PI * 0.7), darkSteelMat);
+                hook.position.set(wIdx === 0 ? 0.12 : -0.12, 0.75, 0);
+                hook.rotation.z = (wIdx === 0 ? 0.4 : -0.4);
+                wGroup.add(hook);
+            });
+        } else if (variant.weaponType === 'serpent_scythe') {
+            const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 2.2, 8), darkSteelMat);
+            staff.position.y = 0.3;
+            rightWeapon.add(staff);
+
+            const blade = new THREE.Mesh(new THREE.ConeGeometry(0.12, 1.1, 4), goldMat);
+            blade.position.set(0.48, 1.35, 0);
+            blade.rotation.z = -Math.PI * 0.45;
+            rightWeapon.add(blade);
+        } else if (variant.weaponType === 'glintstone_bow') {
+            const bow = new THREE.Mesh(new THREE.TorusGeometry(0.65, 0.032, 6, 18, Math.PI), darkSteelMat);
+            bow.rotation.y = Math.PI / 2;
+            leftWeapon.add(bow);
+
+            const arrow = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 1.1, 6), gemMat);
+            arrow.rotation.x = Math.PI / 2;
+            rightWeapon.add(arrow);
+        } else if (variant.weaponType === 'caduceus_staff') {
+            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 2.0, 8), goldMat);
+            shaft.position.y = 0.3;
+            rightWeapon.add(shaft);
+
+            const orb = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), gemMat);
+            orb.position.y = 1.35;
+            rightWeapon.add(orb);
+        } else {
+            // Default: twin_kris or blood_sickles
+            [rightWeapon, leftWeapon].forEach((wGroup) => {
+                const hilt = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.030, 0.32, 8), darkSteelMat);
+                hilt.position.y = -0.12;
+                wGroup.add(hilt);
+
+                // Wavy flamberge Kris blade
+                for (let b = 0; b < 3; b++) {
+                    const wave = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.32, 0.14), darkSteelMat);
+                    wave.position.set((b % 2 === 0 ? 0.02 : -0.02), 0.16 + b * 0.28, 0);
+                    wave.rotation.z = (b % 2 === 0 ? 0.08 : -0.08);
+                    wGroup.add(wave);
+                }
+
+                const venomGlow = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.85, 0.16), venomMat);
+                venomGlow.position.y = 0.45;
+                wGroup.add(venomGlow);
+            });
+        }
+
+        rightWeapon.position.set(0, -0.72, 0.18);
+        rightWeapon.rotation.x = Math.PI / 3.5;
+        rightShoulder.add(rightWeapon);
+
+        leftWeapon.position.set(0, -0.72, 0.18);
+        leftWeapon.rotation.x = Math.PI / 3.5;
+        leftShoulder.add(leftWeapon);
+
+        // Dummy hip groups for animation safety
+        const rightHip = new THREE.Group();
+        const leftHip = new THREE.Group();
+        torso.add(rightHip);
+        torso.add(leftHip);
+
+        // Volumetric Petrifying Gaze Beam Cone
         const gazeBeamGeo = new THREE.ConeGeometry(3.5, 16, 16, 1, true);
         gazeBeamGeo.rotateX(Math.PI / 2);
+        gazeBeamGeo.translate(0, 0, 8.0);
         const gazeBeamMat = new THREE.MeshBasicMaterial({
-            color: 0x00ff88,
+            color: variant.auraColor,
             transparent: true,
             opacity: 0.35,
             side: THREE.DoubleSide,
@@ -9083,90 +9727,6 @@ class DarkSoulsCharacters {
         gorgonGazeBeam.visible = false;
         headGroup.add(gorgonGazeBeam);
 
-        // 4. Writhing Snake Hair (10 distinct articulated serpent tendrils)
-        const snakeHair = [];
-        for (let s = 0; s < 10; s++) {
-            const angle = (s / 10) * Math.PI * 2;
-            const snakeRoot = new THREE.Group();
-            snakeRoot.position.set(
-                Math.cos(angle) * 0.18,
-                0.15 + (s % 2) * 0.1,
-                Math.sin(angle) * 0.18 - 0.05
-            );
-
-            // Wavy snake body
-            const body = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.025, 0.035, 0.45, 5),
-                this.gorgonSnakeHairMat
-            );
-            body.position.set(Math.cos(angle) * 0.12, 0.18, Math.sin(angle) * 0.12);
-            body.rotation.z = Math.cos(angle) * 0.45;
-            body.rotation.x = Math.sin(angle) * 0.45;
-            snakeRoot.add(body);
-
-            // Snake head with ruby eyes
-            const sHead = new THREE.Mesh(
-                new THREE.BoxGeometry(0.06, 0.04, 0.09),
-                this.gorgonSnakeHairMat
-            );
-            sHead.position.set(Math.cos(angle) * 0.22, 0.38, Math.sin(angle) * 0.22);
-            const rEye = new THREE.Mesh(new THREE.SphereGeometry(0.015, 4, 4), this.gorgonRubyEyeMat);
-            rEye.position.set(0.025, 0.015, 0.035);
-            sHead.add(rEye);
-            const lEye = new THREE.Mesh(new THREE.SphereGeometry(0.015, 4, 4), this.gorgonRubyEyeMat);
-            lEye.position.set(-0.025, 0.015, 0.035);
-            sHead.add(lEye);
-            snakeRoot.add(sHead);
-
-            headGroup.add(snakeRoot);
-            snakeHair.push(snakeRoot);
-        }
-
-        // 5. Dual Serrated Viper Kris Daggers (Venom-dripping wavy blades)
-        const rightShoulder = new THREE.Group();
-        rightShoulder.position.set(0.55, 0.35, 0);
-        torso.add(rightShoulder);
-        const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.08, 0.75, 6), this.gorgonSkinMat);
-        rArm.position.y = -0.38;
-        rightShoulder.add(rArm);
-
-        // Right Viper Kris
-        const rightKris = new THREE.Group();
-        rightKris.position.set(0, -0.75, 0.2);
-        rightKris.rotation.x = Math.PI / 3;
-        const rBlade = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.1, 0.16), this.darkSteelMat);
-        rBlade.position.y = 0.45;
-        rightKris.add(rBlade);
-        const rVenom = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.18), this.venomAcidMat);
-        rVenom.position.y = 0.55;
-        rightKris.add(rVenom);
-        rightShoulder.add(rightKris);
-
-        const leftShoulder = new THREE.Group();
-        leftShoulder.position.set(-0.55, 0.35, 0);
-        torso.add(leftShoulder);
-        const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.08, 0.75, 6), this.gorgonSkinMat);
-        lArm.position.y = -0.38;
-        leftShoulder.add(lArm);
-
-        // Left Viper Kris
-        const leftKris = new THREE.Group();
-        leftKris.position.set(0, -0.75, 0.2);
-        leftKris.rotation.x = Math.PI / 3;
-        const lBlade = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.1, 0.16), this.darkSteelMat);
-        lBlade.position.y = 0.45;
-        leftKris.add(lBlade);
-        const lVenom = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.18), this.venomAcidMat);
-        lVenom.position.y = 0.55;
-        leftKris.add(lVenom);
-        leftShoulder.add(leftKris);
-
-        // Generic leg dummy groups for 100% animation safety
-        const rightHip = new THREE.Group();
-        const leftHip = new THREE.Group();
-        torso.add(rightHip);
-        torso.add(leftHip);
-
         root.userData = {
             bodyGroup,
             torso,
@@ -9176,11 +9736,13 @@ class DarkSoulsCharacters {
             leftShoulder,
             rightHip,
             leftHip,
-            weapon: rightKris,
+            weapon: rightWeapon,
             tailSegments,
             snakeHair,
+            tongue,
             gorgonGazeBeam,
             gazeLight,
+            variant,
             isGorgon: true
         };
 

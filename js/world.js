@@ -757,28 +757,20 @@ class DarkSoulsWorld {
     }
 
     getGroundHeight(x, z, currentY = null) {
-        // 1. East Upper Ramparts & Stairs (y = 6.0) - Extended across 248m
-        if (currentY !== null && currentY >= 2.5 && x >= 11.0 && x <= 26.5 && z >= 18 && z <= 274) {
-            if (z > 268) {
-                const t = (274 - z) / 6;
-                return Math.max(0, t * 6.0);
-            }
-            return 6.0;
-        }
-
-        // Ascending Stairs from Courtyard to Ramparts (z in [4, 22], x in [14.0, 26.0])
-        if (x >= 14.0 && x <= 26.0 && z >= 4 && z <= 22) {
-            const t = (z - 4) / 18;
+        // 1. East Upper Ramparts & Stairs (Climbing from y = 0.0 at z = 4.5 to y = 6.0 at z = 22.0)
+        // Ascending Stairs from Courtyard to Ramparts (z in [4.0, 22.0], x in [14.5, 25.5])
+        if (x >= 14.5 && x <= 25.5 && z >= 4.0 && z <= 22.0) {
+            const t = Math.max(0, Math.min(1.0, (z - 4.5) / 17.5));
             return t * 6.0;
         }
-        // High Ramparts Battlement Walkway (z in [22, 268], x in [11.0, 26.5])
-        if (x >= 11.0 && x <= 26.5 && z > 22 && z <= 268) {
+        // High Ramparts Battlement Walkway (z in [22.0, 268.0], x in [14.5, 25.5])
+        if (x >= 14.5 && x <= 25.5 && z > 22.0 && z <= 268.0) {
             return 6.0;
         }
-        // Watchtower & Descent Ramp to Fog Gate (z in [268, 274], x in [11.0, 26.5])
-        if (x >= 11.0 && x <= 26.5 && z > 268 && z <= 274) {
-            const t = (274 - z) / 6;
-            return Math.max(0, t * 6.0);
+        // Watchtower & Descent Ramp to Fog Gate (z in [268.0, 274.0], x in [14.5, 25.5])
+        if (x >= 14.5 && x <= 25.5 && z > 268.0 && z <= 274.0) {
+            const t = Math.max(0, (274.0 - z) / 6.0);
+            return t * 6.0;
         }
 
         // 2. Surface Boss Arena (z in [272, 390], wide arena span x in [-24, 24])
@@ -1138,16 +1130,16 @@ class DarkSoulsWorld {
         // ----------------------------------------------------
         // BESPOKE UNIQUE 3D SCULPTED LANDMARKS FOR ALL REALMS
         // ----------------------------------------------------
-        // 1. Ash Lake: Towering Ancient Archtree Trunk & White Quartz Shore ([-15, 0, -95])
+        // 1. Ash Lake: Towering Ancient Archtree Trunk & White Quartz Shore (Far West Outside Realm: [-180, 0, -110])
         const archtreeTrunk = new THREE.Mesh(new THREE.CylinderGeometry(14, 22, 50, 16, 1, true), this.archtreeBarkMat || this.wallMat);
-        archtreeTrunk.position.set(-15, 25, -95);
+        archtreeTrunk.position.set(-180, 25, -110);
         this.scene.add(archtreeTrunk);
         const ashLakeSand = new THREE.Mesh(new THREE.CylinderGeometry(24, 24, 1.0, 24), new THREE.MeshStandardMaterial({ color: 0xeeece8, roughness: 0.95 }));
-        ashLakeSand.position.set(-15, -0.5, -95);
+        ashLakeSand.position.set(-180, -0.5, -110);
         ashLakeSand.receiveShadow = true;
         this.scene.add(ashLakeSand);
-        this.createStandingBrazier(-15, 0, -88, 0xffffff, 5.0, 36);
-        this.createFloorSoapstone(-15, 0, -92, '#ffffff', "🌊 ASH LAKE", "Ancient Archtree rising into infinity");
+        this.createStandingBrazier(-180, 0, -103, 0xffffff, 5.0, 36);
+        this.createFloorSoapstone(-180, 0, -107, '#ffffff', "🌊 ASH LAKE", "Ancient Archtree rising into infinity");
 
         // 2. Chasm of the Abyss: Obsidian Monoliths & Humanity Sprites ([-40, -11, 130])
         const abyssFloor = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 1.2, 16), this.darkSteelMat || this.stoneMat);
