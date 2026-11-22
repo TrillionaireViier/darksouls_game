@@ -790,7 +790,10 @@
             cushion.position.y = 0.18;
             npcGroup.add(cushion);
 
-            const catBody = new THREE.Mesh(new THREE.CapsuleGeometry ? new THREE.CapsuleGeometry(0.22, 0.45, 8, 8) : new THREE.CylinderGeometry(0.22, 0.22, 0.55, 8), clothMat);
+            const catBodyGeo = (typeof THREE.CapsuleGeometry === 'function') 
+                ? new THREE.CapsuleGeometry(0.22, 0.45, 8, 8) 
+                : new THREE.CylinderGeometry(0.22, 0.22, 0.55, 8);
+            const catBody = new THREE.Mesh(catBodyGeo, clothMat);
             catBody.rotation.z = Math.PI / 2.8;
             catBody.position.set(0, 0.48, 0);
             npcGroup.add(catBody);
