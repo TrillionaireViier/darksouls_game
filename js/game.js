@@ -5915,3 +5915,41 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'outside_castle_sol_eclipse', name: 'Outside Realm - Castle Sol Eclipse Ramparts & Cathedral', zone: 'Outside Darkroot Wilds', pos: [-600, 6.0, -120], elev: '+6.0m', danger: 'Tier VI (Frost & Lightning)', boss: 'Commander Niall & Banished Knights of the Eclipse', desc: 'Windswept frost-covered stone battlements and crenelated parapets flying solar eclipse standards in howling snow.', light: 1.45 },
     { id: 'outside_ranni_lunar_spire', name: 'Outside Realm - Carian Royal Moongazing Spire', zone: 'Outside Darkroot Wilds', pos: [-620, 12.0, 160], elev: '+12.0m', danger: 'Tier VI (Lunar Glintstone)', boss: 'Royal Knight Loretta & Carian Preceptors', desc: 'A lofty moongazing terrace crowned by a hovering Silver Full Moon core with orbital celestial rings and glintstone crystal formations.', light: 1.60 }
 ];
+
+// Locations & Save Slot Global Window Helpers
+window.openLocationsModal = () => { if (window.game) window.game.openLocationsModal(); };
+window.closeLocationsModal = () => { if (window.game) window.game.closeLocationsModal(); };
+window.filterLocations = (f) => { if (window.game) window.game.renderLocationsUI(f); };
+window.travelToLordranLocation = (id) => { if (window.game) window.game.travelToLocation(id); };
+
+window.saveToSlot = (id) => { if (window.game) window.game.saveToSlot(id); };
+window.loadFromSlot = (id) => { if (window.game) window.game.loadFromSlot(id); };
+window.deleteSlot = (id) => { if (window.game) window.game.deleteSlot(id); };
+window.exportSaveJson = () => { if (window.game) window.game.exportSaveJson(); };
+window.importSaveJsonPrompt = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            if (window.game) window.game.importSaveJson(ev.target.result);
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+};
+window.resetJourney = () => { if (window.game) window.game.resetJourney(); };
+
+// Global initialization
+if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!window.game) window.game = new DarkSoulsGame();
+        });
+    } else {
+        if (!window.game) window.game = new DarkSoulsGame();
+    }
+}
