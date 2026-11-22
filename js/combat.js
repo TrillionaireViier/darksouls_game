@@ -4614,9 +4614,8 @@ class DarkSoulsCombat {
                         const isSmallMob = (behavior === 'Swarm' || behavior === 'Flanker' || behavior === 'Ranged' || e.isArcher || e.type === 'hollow' || e.type === 'skeleton' || !e.type || e.type === 'mob' || (e.maxHp && e.maxHp < 900));
 
                         if (isSmallMob) {
-                            // Small mobs stagger for 0.30s; occurs rarely on light hits, scaling up with level
-                            const lvlStaggerBonus = Math.min(0.35, (this.level - 1) * 0.02);
-                            const staggerChance = isHeavySlash ? 0.80 : (0.22 + lvlStaggerBonus);
+                            // Small mobs stagger for strictly 0.30s; occurs rarely (20% on light hits, 75% on heavy)
+                            const staggerChance = isHeavySlash ? 0.75 : 0.20;
                             const doesStagger = Math.random() < staggerChance;
 
                             if (doesStagger) {
@@ -4627,7 +4626,15 @@ class DarkSoulsCombat {
                                 e.state = 'STAGGER';
                                 e.attackPhase = 'IDLE';
                                 e.isAttacking = false;
-                                e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.35 + Math.random() * 0.2);
+                                e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.45 + Math.random() * 0.2);
+
+                                // Physical knockback recoil: push back 0.55m so stagger is immediately felt!
+                                const pushDir = new THREE.Vector3().subVectors(e.mesh.position, playerPos);
+                                pushDir.y = 0;
+                                if (pushDir.lengthSq() > 0.001) {
+                                    pushDir.normalize();
+                                    e.mesh.position.addScaledVector(pushDir, 0.55);
+                                }
                             }
                         } else {
                             // Elite / Heavy mobs require poise break (or heavy attacks)
@@ -5930,8 +5937,7 @@ equipWeapon(weaponId) {
                         const behavior = e.behaviorType || 'Swarm';
                         const isSmallMob = (behavior === 'Swarm' || behavior === 'Flanker' || behavior === 'Ranged' || e.isArcher || e.type === 'hollow' || e.type === 'skeleton' || !e.type || e.type === 'mob' || (e.maxHp && e.maxHp < 900));
                         if (isSmallMob) {
-                            const lvlStaggerBonus = Math.min(0.30, (this.level - 1) * 0.02);
-                            const doesStagger = Math.random() < (0.22 + lvlStaggerBonus);
+                            const doesStagger = Math.random() < 0.20;
                             if (doesStagger) {
                                 e.isStaggered = true;
                                 e.staggerTimer = 0.30;
@@ -5939,6 +5945,12 @@ equipWeapon(weaponId) {
                                 e.state = 'STAGGER';
                                 e.attackPhase = 'IDLE';
                                 e.isAttacking = false;
+                                const pushDir = new THREE.Vector3().subVectors(e.mesh.position, p.mesh.position);
+                                pushDir.y = 0;
+                                if (pushDir.lengthSq() > 0.001) {
+                                    pushDir.normalize();
+                                    e.mesh.position.addScaledVector(pushDir, 0.45);
+                                }
                             }
                         }
                     }
@@ -6517,35 +6529,40 @@ equipWeapon(weaponId) {
                 continue;
             }
 
-            // 3. Stagger / Flinch Recoil Animation on Weapon Hit
+            // 3. Stagger / Flinch Recoil Animation on Weapon Hit (0.30s)
             if (e.isStaggered) {
                 e.staggerTimer -= delta;
-                const maxStagger = e.maxStaggerTimer || 0.45;
+                const maxStagger = e.maxStaggerTimer || 0.30;
                 const progress = Math.max(0, e.staggerTimer / maxStagger);
                 const hitDir = e._hitDir || 0.25;
 
-                if (u.torso) {
-                    u.torso.rotation.x = -0.52 * progress;
+                if (u && u.torso) {
+                    u.torso.rotation.x = -0.55 * progress;
                     u.torso.rotation.z = hitDir * progress;
                 }
-                if (u.head) {
-                    u.head.rotation.x = -0.4 * progress;
+                if (u && u.head) {
+                    u.head.rotation.x = -0.45 * progress;
                     u.head.rotation.y = hitDir * 1.2 * progress;
                 }
-                if (u.rightShoulder) {
-                    u.rightShoulder.rotation.x = -0.8 * progress;
+                if (u && u.rightShoulder) {
+                    u.rightShoulder.rotation.x = -0.85 * progress;
                     u.rightShoulder.rotation.z = 0.55 * progress;
                 }
-                if (u.leftShoulder) {
-                    u.leftShoulder.rotation.x = -0.55 * progress;
+                if (u && u.leftShoulder) {
+                    u.leftShoulder.rotation.x = -0.6 * progress;
                     u.leftShoulder.rotation.z = -0.6 * progress;
+                }
+                // Fallback for non-segmented models: tilt root mesh so stagger is 100% visible on every mob type
+                if (e.mesh && (!u || !u.torso)) {
+                    e.mesh.rotation.x = -0.35 * progress;
                 }
 
                 if (e.staggerTimer <= 0) {
                     e.isStaggered = false;
                     e.poise = e.maxPoise || 50; // Full poise reset on recovery
-                    if (u.torso) u.torso.rotation.set(0, 0, 0);
-                    if (u.head) u.head.rotation.set(0, 0, 0);
+                    if (u && u.torso) u.torso.rotation.set(0, 0, 0);
+                    if (u && u.head) u.head.rotation.set(0, 0, 0);
+                    if (e.mesh && (!u || !u.torso)) e.mesh.rotation.x = 0;
                 }
                 continue;
             }
