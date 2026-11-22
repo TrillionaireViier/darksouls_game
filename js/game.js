@@ -229,6 +229,12 @@ class DarkSoulsGame {
     }
 
     cacheUIElements() {
+        const existingFade = document.getElementById('teleport-fade-overlay');
+        if (existingFade) {
+            existingFade.style.opacity = '0';
+            existingFade.style.pointerEvents = 'none';
+        }
+
         this.ui = {
             hpBar: document.getElementById('hp-bar-fill'),
             hpText: document.getElementById('hp-text'),
@@ -266,7 +272,21 @@ class DarkSoulsGame {
     teleportPlayer(x, y, z, label = "") {
         if (!this.playerMesh) return;
         this.playerMesh.position.set(x, y, z);
-        this.playerVelocity.set(0, 0, 0);
+        if (this.playerVelocity) this.playerVelocity.set(0, 0, 0);
+        this.cameraYaw = 0;
+        this.cameraPitch = 0.22;
+        if (this.camera) {
+            const targetPos = this.playerMesh.position.clone().add(new THREE.Vector3(0, 1.4, 0));
+            const dist = this.cameraDistance || 4.2;
+            this.camera.position.set(
+                targetPos.x,
+                targetPos.y + dist * Math.sin(0.22),
+                targetPos.z + dist * Math.cos(0.22)
+            );
+            this.camera.lookAt(targetPos);
+        }
+        const fadeEl = document.getElementById('teleport-fade-overlay');
+        if (fadeEl) fadeEl.style.opacity = '0';
         if (this.audio && this.audio.playRoll) this.audio.playRoll();
         if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(this.playerMesh.position, true);
         if (this.shakeCamera) this.shakeCamera(0.15, 0.2);
@@ -5205,78 +5225,82 @@ class DarkSoulsGame {
         fadeEl.style.opacity = '1.0';
 
         setTimeout(() => {
-            const targetY = typeof loc.pos[1] === 'number' ? loc.pos[1] : 0;
-            this.playerMesh.position.set(loc.pos[0], targetY, loc.pos[2]);
+            try {
+                const targetY = typeof loc.pos[1] === 'number' ? loc.pos[1] : 0;
+                this.playerMesh.position.set(loc.pos[0], targetY, loc.pos[2]);
 
-            // Ensure ground height receives target elevation so it never falls into the void
-            const groundY = this.world.getGroundHeight(loc.pos[0], loc.pos[2], targetY);
-            if (groundY > -20.0) {
-                this.playerMesh.position.y = groundY;
-            } else {
-                this.playerMesh.position.y = targetY;
-            }
-
-            // Zero velocity and cancel rolling/stagger to prevent carrying motion
-            if (this.playerVelocity) this.playerVelocity.set(0, 0, 0);
-            if (this.combat) {
-                this.combat.isRolling = false;
-                this.combat.isAttacking = false;
-                this.combat.isStaggered = false;
-            }
-
-            this.cameraYaw = 0;
-            this.cameraPitch = 0.22;
-
-            // Immediately snap camera position to prevent flying across the world from far away
-            const targetPos = this.playerMesh.position.clone().add(new THREE.Vector3(0, 1.4, 0));
-            const dist = this.cameraDistance || 4.2;
-            this.camera.position.set(
-                targetPos.x,
-                targetPos.y + dist * Math.sin(0.22),
-                targetPos.z + dist * Math.cos(0.22)
-            );
-            this.camera.lookAt(targetPos);
-
-            this.applyLocationBiome(loc);
-            this.showLocationBanner(loc);
-
-            // Save last active bonfire checkpoint
-            this.lastBonfirePos = this.playerMesh.position.clone();
-
-            // Spawn return waystone behind player if traveling outside hub
-            const isHub = (locationId === 'royal_bridge_arena' || locationId === 'undead_burg_courtyard' || locationId === 'undead_burg');
-            if (!isHub && this.world && this.world.spawnReturnWaystone) {
-                const rx = loc.pos[0] - 2.0;
-                const rz = loc.pos[2] - 2.5;
-                const ry = this.playerMesh.position.y;
-                this.world.spawnReturnWaystone(rx, ry, rz);
-            } else if (isHub) {
-                if (this.world && this.world.removeReturnWaystone) {
-                    this.world.removeReturnWaystone();
+                // Ensure ground height receives target elevation so it never falls into the void
+                const groundY = this.world.getGroundHeight(loc.pos[0], loc.pos[2], targetY);
+                if (groundY > -20.0) {
+                    this.playerMesh.position.y = groundY;
+                } else {
+                    this.playerMesh.position.y = targetY;
                 }
+
+                // Zero velocity and cancel rolling/stagger to prevent carrying motion
+                if (this.playerVelocity) this.playerVelocity.set(0, 0, 0);
+                if (this.combat) {
+                    this.combat.isRolling = false;
+                    this.combat.isAttacking = false;
+                    this.combat.isStaggered = false;
+                }
+
+                this.cameraYaw = 0;
+                this.cameraPitch = 0.22;
+
+                // Immediately snap camera position to prevent flying across the world from far away
+                const targetPos = this.playerMesh.position.clone().add(new THREE.Vector3(0, 1.4, 0));
+                const dist = this.cameraDistance || 4.2;
+                this.camera.position.set(
+                    targetPos.x,
+                    targetPos.y + dist * Math.sin(0.22),
+                    targetPos.z + dist * Math.cos(0.22)
+                );
+                this.camera.lookAt(targetPos);
+
+                this.applyLocationBiome(loc);
+                this.showLocationBanner(loc);
+
+                // Save last active bonfire checkpoint
+                this.lastBonfirePos = this.playerMesh.position.clone();
+
+                // Spawn return waystone behind player if traveling outside hub
+                const isHub = (locationId === 'royal_bridge_arena' || locationId === 'undead_burg_courtyard' || locationId === 'undead_burg');
+                if (!isHub && this.world && this.world.spawnReturnWaystone) {
+                    const rx = loc.pos[0] - 2.0;
+                    const rz = loc.pos[2] - 2.5;
+                    const ry = this.playerMesh.position.y;
+                    this.world.spawnReturnWaystone(rx, ry, rz);
+                } else if (isHub) {
+                    if (this.world && this.world.removeReturnWaystone) {
+                        this.world.removeReturnWaystone();
+                    }
+                }
+
+                // Restore health, stamina, and flasks on fast-travel rest
+                if (this.combat) {
+                    this.combat.hp = this.combat.maxHp;
+                    this.combat.stamina = this.combat.maxStamina;
+                    this.combat.estusFlasks = this.combat.maxEstus;
+                    this.combat.isPoisoned = false;
+                    this.combat.isPetrified = false;
+                }
+
+                if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+                this.showNotification(`🗺️ FAST-TRAVEL: ${loc.name.toUpperCase()} (${loc.elev})`);
+
+                this.closeLocationsModal();
+                if (this.closeBonfireModal) this.closeBonfireModal();
+                if (typeof closeQuickMenuModal === 'function') closeQuickMenuModal();
+                this.updateHUD();
+                this.updateEscapeMenuUI();
+            } catch (travelErr) {
+                console.error("Fast-travel execution error:", travelErr);
+            } finally {
+                setTimeout(() => {
+                    if (fadeEl) fadeEl.style.opacity = '0';
+                }, 60);
             }
-
-            // Restore health, stamina, and flasks on fast-travel rest
-            if (this.combat) {
-                this.combat.hp = this.combat.maxHp;
-                this.combat.stamina = this.combat.maxStamina;
-                this.combat.estusFlasks = this.combat.maxEstus;
-                this.combat.isPoisoned = false;
-                this.combat.isPetrified = false;
-            }
-
-            if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
-            this.showNotification(`🗺️ FAST-TRAVEL: ${loc.name.toUpperCase()} (${loc.elev})`);
-
-            this.closeLocationsModal();
-            if (this.closeBonfireModal) this.closeBonfireModal();
-            if (typeof closeQuickMenuModal === 'function') closeQuickMenuModal();
-            this.updateHUD();
-            this.updateEscapeMenuUI();
-
-            setTimeout(() => {
-                fadeEl.style.opacity = '0';
-            }, 60);
         }, 180);
     }
 

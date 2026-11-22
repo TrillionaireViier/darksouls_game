@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT';
+            var TARGET_BUILD = '20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1744,6 +1744,8 @@
                 <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
                     <span>📦</span> <span class="btn-label-text">DOWNLOAD</span>
                 </button>
+                <!-- EMERGENCY RESCUE TO SUNLIT COURTYARD -->
+                <button class="btn-icon-bar" onclick="if(window.game)window.game.teleportPlayer(0,0,5,'Sunlit Courtyard Bonfire')" title="Escape to Brilliant Sunlit Starting Courtyard [0]" style="border-color: #ffd700; color: #fff7b8; font-weight: 800; background: rgba(70, 50, 10, 0.85); box-shadow: 0 0 14px rgba(255, 215, 0, 0.6);">☀️ <span class="btn-label-text">DAYLIGHT COURTYARD</span></button>
                 <button class="btn-icon-bar" onclick="openQASuiteModal()" title="Open Automated QA Test Suite, 1-HP Sandbox & Watchdog" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🛠️ <span class="btn-label-text">QA SUITE</span></button>
                 <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
@@ -8175,26 +8177,26 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/audio.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/lore_items.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/merchants_30.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/world.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/character.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/siege_warfare.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/collision_system.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/combat.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/postprocessing.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/qa_suite.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/inventory_system.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/compendium_300_models.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/death_quotes_300.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/game.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
-    <script src="js/dev_map.js?v=20261122_V37_AUTOSTART_GAME_AND_PERFECT_DAYLIGHT"></script>
+    <script src="js/three.min.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/audio.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/lore_items.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/merchants_30.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/world.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/character.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/siege_warfare.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/heraldry_nobility.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/apothecary_crafting.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/collision_system.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/qa_bot_tester.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/combat.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/postprocessing.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/qa_suite.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/blacksmith_forge.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/inventory_system.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/compendium_300_models.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/death_quotes_300.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/game.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
+    <script src="js/dev_map.js?v=20261123_V38_FIX_MOHGCHALICE_AND_DAYLIGHT_RESCUE"></script>
     <script>
         // Automatic Game Initialization Failsafe
         (function() {

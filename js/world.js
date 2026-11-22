@@ -2587,7 +2587,7 @@ class DarkSoulsWorld {
         // Sacrificial Chalice of Dragon Heart Flames
         const chalice = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 1.2, 2.2, 10), this.darkSteelMat);
         chalice.position.set(-310, 4.1, 110);
-        outsideGroup.add(mohgChalice);
+        outsideGroup.add(chalice);
 
         const heartFlame = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), new THREE.MeshStandardMaterial({
             color: 0xff2200,
@@ -2853,11 +2853,11 @@ class DarkSoulsWorld {
         }
 
         const jaggedCalderaLava = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 0.4, 20), this.demonLavaMat || this.stoneMat);
-        calderaLava.position.set(-260, 4.1, 75);
+        jaggedCalderaLava.position.set(-260, 4.1, 75);
         outsideGroup.add(jaggedCalderaLava);
 
         const jaggedCalderaLight = new THREE.PointLight(0xff1744, 4.5, 32.0);
-        calderaLight.position.set(-260, 7.5, 75);
+        jaggedCalderaLight.position.set(-260, 7.5, 75);
         outsideGroup.add(jaggedCalderaLight);
         this.createStandingBrazier(-260, 4.0, 62, 0xff1744, 4.5, 26);
         this.createStandingBrazier(-260, 4.0, 88, 0xff1744, 4.5, 26);
@@ -3018,8 +3018,8 @@ class DarkSoulsWorld {
                 metalness: 0.9,
                 roughness: 0.2
             }));
-            obelisk.position.set(-520 + Math.cos(obAng) * 18, 0.9, 140 + Math.sin(obAng) * 18);
-            obelisk.rotation.y = obAng;
+            mohgObelisk.position.set(-520 + Math.cos(obAng) * 18, 0.9, 140 + Math.sin(obAng) * 18);
+            mohgObelisk.rotation.y = obAng;
             outsideGroup.add(mohgObelisk);
         }
 
@@ -3029,8 +3029,8 @@ class DarkSoulsWorld {
             metalness: 0.9,
             roughness: 0.25
         }));
-        chalice.position.set(-520, -4.9, 140);
-        outsideGroup.add(chalice);
+        mohgChalice.position.set(-520, -4.9, 140);
+        outsideGroup.add(mohgChalice);
 
         const bloodPool = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.2, 16), new THREE.MeshStandardMaterial({
             color: 0xaa0022,
@@ -3079,7 +3079,7 @@ class DarkSoulsWorld {
             emissive: 0x330055,
             emissiveIntensity: 1.8
         }));
-        brazier.position.set(-550, 9.5, -80);
+        godskinBrazier.position.set(-550, 9.5, -80);
         outsideGroup.add(godskinBrazier);
 
         const godskinLight = new THREE.PointLight(0xaaccff, 4.5, 36);
@@ -3149,9 +3149,9 @@ class DarkSoulsWorld {
                 color: 0x111618,
                 roughness: 0.95
             }));
-            rootMesh.position.set(-510 + Math.cos(rang) * 12, -4.0, -160 + Math.sin(rang) * 12);
-            rootMesh.rotation.x = Math.PI / 2;
-            rootMesh.rotation.y = rang;
+            deeprootArchMesh.position.set(-510 + Math.cos(rang) * 12, -4.0, -160 + Math.sin(rang) * 12);
+            deeprootArchMesh.rotation.x = Math.PI / 2;
+            deeprootArchMesh.rotation.y = rang;
             outsideGroup.add(deeprootArchMesh);
         }
 
@@ -3298,7 +3298,7 @@ class DarkSoulsWorld {
             emissiveIntensity: 1.6,
             roughness: 0.1
         }));
-        silverMoon.position.set(-620, 19.0, 160);
+        ranniSilverMoon.position.set(-620, 19.0, 160);
         outsideGroup.add(ranniSilverMoon);
 
         // Orbital Celestial Rings
