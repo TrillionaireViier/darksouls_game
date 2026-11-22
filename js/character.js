@@ -3335,7 +3335,7 @@ class DarkSoulsCharacters {
             quiverGroup.add(fletch);
         }
 
-        // 4. Left Arm holding the Longbow
+        // 4. Left Arm holding the Sculpted 3D Longbow
         const leftShoulder = new THREE.Group();
         leftShoulder.position.set(-0.32, 0.20, 0);
         torso.add(leftShoulder);
@@ -3344,25 +3344,96 @@ class DarkSoulsCharacters {
         lArm.position.y = -0.23;
         leftShoulder.add(lArm);
 
+        // Authentic Dark Souls Yew Longbow (held firmly in left hand)
         const bowGroup = new THREE.Group();
-        bowGroup.position.set(0, -0.42, 0.15);
+        bowGroup.position.set(0, -0.44, 0.08);
         leftShoulder.add(bowGroup);
 
-        const bowCurve = new THREE.Mesh(
-            new THREE.TorusGeometry(0.55, 0.024, 6, 14, Math.PI * 0.72),
-            new THREE.MeshStandardMaterial({ color: 0x5a3d28, roughness: 0.7 })
-        );
-        bowCurve.rotation.z = Math.PI * 0.64;
-        bowGroup.add(bowCurve);
+        const bowWoodMat = new THREE.MeshStandardMaterial({
+            color: 0x422a18,
+            roughness: 0.65,
+            metalness: 0.12
+        });
+        const bowIronMat = new THREE.MeshStandardMaterial({
+            color: 0x242424,
+            roughness: 0.45,
+            metalness: 0.85
+        });
+        const bowStringMat = new THREE.MeshBasicMaterial({ color: 0xf0f0ea });
 
-        const bowString = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.004, 0.004, 0.95, 4),
-            new THREE.MeshBasicMaterial({ color: 0xeeeeee })
-        );
-        bowString.position.x = 0.16;
-        bowGroup.add(bowString);
+        // Central Leather Riser Grip
+        const bowHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.026, 0.16, 8), this.leatherMat);
+        bowGroup.add(bowHandle);
 
-        // 5. Right Arm (Draw Arm & Notched Arrow)
+        // Upper Recurve Limb
+        const upperLimb = new THREE.Group();
+        bowGroup.add(upperLimb);
+
+        const uStave = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.022, 0.38, 7), bowWoodMat);
+        uStave.position.set(0, 0.24, 0.04);
+        uStave.rotation.x = -0.28;
+        upperLimb.add(uStave);
+
+        const uTip = new THREE.Mesh(new THREE.CylinderGeometry(0.010, 0.016, 0.32, 6), bowWoodMat);
+        uTip.position.set(0, 0.52, 0.02);
+        uTip.rotation.x = 0.22;
+        upperLimb.add(uTip);
+
+        const uNock = new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.06, 5), bowIronMat);
+        uNock.position.set(0, 0.67, 0.0);
+        upperLimb.add(uNock);
+
+        // Lower Recurve Limb
+        const lowerLimb = new THREE.Group();
+        bowGroup.add(lowerLimb);
+
+        const lStave = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.016, 0.38, 7), bowWoodMat);
+        lStave.position.set(0, -0.24, 0.04);
+        lStave.rotation.x = 0.28;
+        lowerLimb.add(lStave);
+
+        const lTip = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.010, 0.32, 6), bowWoodMat);
+        lTip.position.set(0, -0.52, 0.02);
+        lTip.rotation.x = -0.22;
+        lowerLimb.add(lTip);
+
+        const lNock = new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.06, 5), bowIronMat);
+        lNock.position.set(0, -0.67, 0.0);
+        lNock.rotation.x = Math.PI;
+        lowerLimb.add(lNock);
+
+        // Dynamic Dual-Segment Bowstring (Draws back under tension)
+        const upperString = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.68, 4), bowStringMat);
+        upperString.position.set(0, 0.34, 0.02);
+        bowGroup.add(upperString);
+
+        const lowerString = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.68, 4), bowStringMat);
+        lowerString.position.set(0, -0.34, 0.02);
+        bowGroup.add(lowerString);
+
+        // Notched Bodkin Arrow (Mounted on bow arrow-shelf)
+        const notchedArrow = new THREE.Group();
+        notchedArrow.position.set(0, 0, 0.02);
+        bowGroup.add(notchedArrow);
+
+        const nShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.90, 6), this.leatherMat);
+        nShaft.rotation.x = Math.PI / 2;
+        nShaft.position.z = 0.45;
+        notchedArrow.add(nShaft);
+
+        const nTip = new THREE.Mesh(new THREE.ConeGeometry(0.026, 0.12, 4), this.steelMat);
+        nTip.rotation.x = -Math.PI / 2;
+        nTip.position.z = 0.94;
+        notchedArrow.add(nTip);
+
+        for (let f = 0; f < 3; f++) {
+            const fletch = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.045, 0.11), new THREE.MeshStandardMaterial({ color: 0xcc2222 }));
+            fletch.position.set(0, 0, 0.05);
+            fletch.rotation.z = (f * Math.PI * 2) / 3;
+            notchedArrow.add(fletch);
+        }
+
+        // 5. Right Arm (Draw Arm & Archer Gauntlet)
         const rightShoulder = new THREE.Group();
         rightShoulder.position.set(0.32, 0.20, 0);
         torso.add(rightShoulder);
@@ -3371,21 +3442,11 @@ class DarkSoulsCharacters {
         rArm.position.y = -0.23;
         rightShoulder.add(rArm);
 
-        const notchedArrow = new THREE.Group();
-        notchedArrow.position.set(0, -0.42, 0.1);
-        rightShoulder.add(notchedArrow);
+        const rHand = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.10, 0.09), this.leatherMat);
+        rHand.position.set(0, -0.46, 0);
+        rightShoulder.add(rHand);
 
-        const nShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.85, 6), this.leatherMat);
-        nShaft.rotation.x = Math.PI / 2;
-        nShaft.position.z = 0.42;
-        notchedArrow.add(nShaft);
-
-        const nTip = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.14, 4), this.steelMat);
-        nTip.rotation.x = -Math.PI / 2;
-        nTip.position.z = 0.88;
-        notchedArrow.add(nTip);
-
-        // 6. Legs
+        // 6. Athletic Grounded Legs
         const rightHip = new THREE.Group();
         rightHip.position.set(0.15, -0.32, 0);
         torso.add(rightHip);
@@ -3411,7 +3472,9 @@ class DarkSoulsCharacters {
             rightHip,
             leftHip,
             bowGroup,
-            bowString,
+            upperString,
+            lowerString,
+            bowString: upperString,
             notchedArrow,
             quiverGroup
         };

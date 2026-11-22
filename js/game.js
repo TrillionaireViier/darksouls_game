@@ -3011,11 +3011,22 @@ class DarkSoulsGame {
         let cz = targetPos.z + allowedDist * this._camDir.z;
 
         // Subterranean ceiling & surface floor clamping
-        if (targetPos.y < -1.0) {
+        if (targetPos.y < -3.0) {
+            // Deep Inner Sanctum: Keep camera inside sanctum boundaries and above sanctum floor
+            if (cz > -78.2) cz = -78.2;
+            cy = Math.max(cy, -3.55);
+            cy = Math.min(cy, -1.8);
+        } else if (targetPos.y < -1.0) {
             cy = Math.min(cy, 0.4);
             cy = Math.max(cy, targetPos.y - 0.2);
         } else {
             cy = Math.max(cy, 0.6);
+        }
+
+        // Ensure camera never penetrates local ground height
+        if (this.world && this.world.getGroundHeight) {
+            const camGround = this.world.getGroundHeight(cx, cz, cy);
+            cy = Math.max(cy, camGround + 0.40);
         }
 
         // Screen shake

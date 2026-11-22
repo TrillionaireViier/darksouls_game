@@ -3775,15 +3775,18 @@ class DarkSoulsCombat {
             this.createCustomMob(sMob, pos[0], pos[2], 0, pos[1]);
         });
 
-        // 3X LORDRAN ARCHERS (18 Archers across high battlements)
+        // 3X LORDRAN ARCHERS (18 Archers solidly grounded on ramparts & defenses)
         const archerPositions = [
+            // East High Castle Ramparts (y = 6.0, battlements walkway)
             [18.0, 6.0, 36.0], [18.0, 6.0, 55.0], [18.0, 6.0, 75.0],
             [18.0, 6.0, 95.0], [18.0, 6.0, 120.0], [18.0, 6.0, 140.0],
-            [18.0, 6.0, 165.0], [18.0, 6.0, 190.0], [21.0, 10.0, 215.0],
-            [21.0, 10.0, 240.0], [21.0, 10.0, 268.0],
-            [-18.0, 6.0, 45.0], [-18.0, 6.0, 75.0], [-18.0, 6.0, 110.0],
-            [-18.0, 6.0, 150.0], [0.0, 6.5, 150.0], [0.0, 6.5, -45.0],
-            [-18.0, 6.0, 210.0]
+            [18.0, 6.0, 165.0], [18.0, 6.0, 190.0], [21.0, 6.0, 215.0],
+            [21.0, 6.0, 240.0], [21.0, 6.0, 268.0],
+            // Royal Viaduct Bridge Parapets & Sentries (y = 0.0)
+            [-7.5, 0.0, 45.0], [-7.5, 0.0, 75.0], [-7.5, 0.0, 110.0],
+            [-7.5, 0.0, 150.0], [-7.5, 0.0, 210.0],
+            // Courtyard Watch Sentries (y = 0.0)
+            [-12.0, 0.0, 14.0], [12.0, 0.0, 14.0]
         ];
         archerPositions.forEach((pos, idx) => {
             const aMob = {
@@ -3855,7 +3858,13 @@ class DarkSoulsCombat {
     }
 
     createCustomMob(mobDef, x, z, angle = 0, y = 0) {
+        if (this.world && this.world.getGroundHeight) {
+            y = this.world.getGroundHeight(x, z, y);
+        }
         const mesh = this.charFactory.createMob(mobDef, x, z, angle, y);
+        if (mesh) {
+            mesh.position.y = y;
+        }
         const isQaOneHp = (this.qaOneHpMobs || (window.qaSuite && window.qaSuite.qaOneHpMobsActive));
         const isQaOneHpDmg = (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive));
         const maxHp = isQaOneHp ? 1 : (mobDef.hp || 200);
@@ -6604,12 +6613,13 @@ equipWeapon(weaponId) {
                 speedMult = 1.25;
                 preferredDist = reach;
             } else if (behavior === 'Ranged' || e.isArcher) {
-                windupEnd = 0.70;
-                strikeEnd = 0.90;
-                totalDur = 1.35;
-                aggroRange = 38;
-                speedMult = 0.85;
-                preferredDist = 18.0;
+                // Aggressive Rapid-Fire Volley Timings: 0.30s draw, 0.42s release snap, 0.52s total cycle
+                windupEnd = 0.30;
+                strikeEnd = 0.42;
+                totalDur = 0.52;
+                aggroRange = 40;
+                speedMult = 0.90;
+                preferredDist = 16.0;
             } else if (behavior === 'Caster') {
                 windupEnd = 0.75;
                 strikeEnd = 0.95;
@@ -6641,11 +6651,23 @@ equipWeapon(weaponId) {
                         if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 * t; u.leftShoulder.rotation.z = -0.8 * t; }
                     } else if (behavior === 'Ranged' || e.isArcher) {
                         // Drawing bowstring / sighting line
-                        if (u.torso) { u.torso.rotation.y = 0.75 * t; }
-                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.4 * t; u.rightShoulder.rotation.y = -0.4 * t; }
-                        if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 * t; u.leftShoulder.rotation.z = -0.7 * t; }
-                        if (u.bowString) { u.bowString.position.x = 0.16 + 0.22 * t; }
-                        if (u.notchedArrow) { u.notchedArrow.position.z = 0.42 - 0.25 * t; }
+                        if (u.torso) { u.torso.rotation.y = 0.65 * t; u.torso.rotation.x = -0.08 * t; }
+                        if (u.leftShoulder) { 
+                            u.leftShoulder.rotation.x = -1.55; 
+                            u.leftShoulder.rotation.y = 0.15; 
+                            u.leftShoulder.rotation.z = -0.05; 
+                        }
+                        if (u.rightShoulder) { 
+                            u.rightShoulder.rotation.x = -1.50 * t; 
+                            u.rightShoulder.rotation.y = -0.45 * t; 
+                            u.rightShoulder.rotation.z = 0.35 * t; 
+                        }
+                        if (u.bowString) { u.bowString.position.z = -0.22 * t; }
+                        if (u.notchedArrow) { u.notchedArrow.position.z = 0.02 - 0.26 * t; }
+                        if (u.rightHip && u.leftHip) {
+                            u.rightHip.rotation.x = -0.25;
+                            u.leftHip.rotation.x = 0.25;
+                        }
                     } else {
                         // Flanker / Swarm / default — 10 attack variant animations (#7-16)
                         if (!e._attackVariant) e._attackVariant = Math.floor(Math.random() * 10);
@@ -6728,10 +6750,10 @@ equipWeapon(weaponId) {
                         if (u.leftShoulder) { u.leftShoulder.rotation.x = -1.5 + 2.0 * t; }
                     } else if (behavior === 'Ranged' || e.isArcher) {
                         // Release shot & bowstring recoil
-                        if (u.torso) { u.torso.rotation.y = 0.75 - 0.25 * t; }
-                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.4 + 0.8 * t; }
-                        if (u.bowString) { u.bowString.position.x = 0.16; }
-                        if (u.notchedArrow) { u.notchedArrow.position.z = 0.42; }
+                        if (u.torso) { u.torso.rotation.y = 0.65 - 0.15 * t; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.50 + 0.25 * t; }
+                        if (u.bowString) { u.bowString.position.z = 0.02; }
+                        if (u.notchedArrow) { u.notchedArrow.position.z = 0.02; }
                     } else {
                         // Flanker / Swarm — variant strike animations (#7-16)
                         const av = e._attackVariant || 0;
@@ -6774,7 +6796,8 @@ equipWeapon(weaponId) {
                     }
 
                     // Strike Impact Frame
-                    if (!e._damageDelivered && t >= 0.35) {
+                    const triggerT = (behavior === 'Ranged' || e.isArcher) ? 0.20 : 0.35;
+                    if (!e._damageDelivered && t >= triggerT) {
                         e._damageDelivered = true;
                         if (behavior === 'Ranged' || e.isArcher) {
                             if (this.audio && this.audio.playArrowRelease) this.audio.playArrowRelease();
@@ -6816,12 +6839,28 @@ equipWeapon(weaponId) {
                         u.leftShoulder.rotation.x = THREE.MathUtils.lerp(-0.35, -0.15, t);
                     }
                 } else {
+                    if (behavior === 'Ranged' || e.isArcher) {
+                        e._burstCount = (e._burstCount || 0) + 1;
+                        if (e._burstCount < (e._burstTotal || 1)) {
+                            // Aggressive Rapid-Fire Volley: Immediately trigger next shot in 2-4 burst!
+                            e.attackTime = 0;
+                            e._damageDelivered = false;
+                            e.state = 'WINDUP';
+                            e.attackPhase = 'WINDUP';
+                            const toTarget = new THREE.Vector3().subVectors(playerPos, e.mesh.position);
+                            e.mesh.rotation.y = Math.atan2(toTarget.x, toTarget.z);
+                            if (this.audio && this.audio.playBowDraw) this.audio.playBowDraw();
+                            continue;
+                        }
+                    }
                     e.isAttacking = false;
                     e._damageDelivered = false;
+                    e._burstCount = 0;
+                    e._burstTotal = 0;
                     e.attackPhase = 'IDLE';
                     e.state = 'CHASE';
-                    const baseCd = behavior === 'Heavy Tank' ? 1.9 : (behavior === 'Flanker' ? 0.9 : 1.3);
-                    e.cooldown = baseCd + Math.random() * 0.6;
+                    const baseCd = (behavior === 'Ranged' || e.isArcher) ? (1.2 + Math.random() * 0.4) : (behavior === 'Heavy Tank' ? 1.9 : (behavior === 'Flanker' ? 0.9 : 1.3));
+                    e.cooldown = baseCd + Math.random() * 0.4;
                 }
                 continue;
             }
@@ -6895,11 +6934,7 @@ equipWeapon(weaponId) {
                         e.mesh.position.x += Math.sin(targetAngle) * moveSpeed * delta;
                         e.mesh.position.z += Math.cos(targetAngle) * moveSpeed * delta;
                     }
-                    if (e.startPos && e.startPos.y > 2.0) {
-                        e.mesh.position.y = e.startPos.y; // Keep sniper roost perch height
-                    } else {
-                        e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z, e.mesh.position.y);
-                    }
+                    e.mesh.position.y = this.world.getGroundHeight(e.mesh.position.x, e.mesh.position.z, e.mesh.position.y);
                 } else if (shouldRetreat) {
                     const moveSpeed = (e.speed || 2.4) * 0.85;
                     e.mesh.position.x -= Math.sin(targetAngle) * moveSpeed * delta;
@@ -6939,34 +6974,68 @@ equipWeapon(weaponId) {
                         e._damageDelivered = false;
                         e.state = 'WINDUP';
                         e.attackPhase = 'WINDUP';
+                        if (behavior === 'Ranged' || e.isArcher) {
+                            e._burstTotal = Math.floor(Math.random() * 3) + 2; // Aggressive rapid-fire volley: 2, 3, or 4 attacks in a row!
+                            e._burstCount = 0;
+                            if (this.audio && this.audio.playBowDraw) this.audio.playBowDraw();
+                        }
                     }
                 }
 
-                // Shambling / locomotion animation kinetics
-                const freq = behavior === 'Heavy Tank' ? 4.8 : (behavior === 'Flanker' ? 9.5 : 7.2);
-                const stride = e.animTime * freq;
-                if (u.rightHip && u.leftHip) {
-                    u.rightHip.rotation.x = Math.sin(stride) * 0.68;
-                    u.leftHip.rotation.x = -Math.sin(stride) * 0.68;
-                    u.rightHip.rotation.z = Math.sin(stride) * 0.06;
-                    u.leftHip.rotation.z = -Math.sin(stride) * 0.06;
-                }
-                if (u.torso) {
-                    u.torso.rotation.x = behavior === 'Heavy Tank' ? 0.35 : 0.25;
-                    u.torso.rotation.z = Math.sin(stride) * 0.09;
-                    u.torso.position.y = Math.abs(Math.sin(stride)) * 0.08;
-                }
-                if (u.leftShoulder) {
-                    u.leftShoulder.rotation.x = Math.sin(stride) * 0.45;
-                    u.leftShoulder.rotation.z = -0.25;
-                }
-                if (u.rightShoulder) {
-                    u.rightShoulder.rotation.x = -0.38 + Math.cos(stride) * 0.25;
-                    u.rightShoulder.rotation.z = 0.25;
-                }
-                if (u.head) {
-                    u.head.rotation.x = 0.12 + Math.sin(stride * 2) * 0.06;
-                    u.head.rotation.y = Math.sin(e.animTime * 2.2) * 0.12;
+                if (behavior === 'Ranged' || e.isArcher) {
+                    // Disciplined Bladed Archery Stance during chase / sighting
+                    if (u.leftShoulder) { 
+                        u.leftShoulder.rotation.x = -1.45; 
+                        u.leftShoulder.rotation.y = 0.15; 
+                        u.leftShoulder.rotation.z = -0.05; 
+                    }
+                    if (u.rightShoulder) { 
+                        u.rightShoulder.rotation.x = -0.75; 
+                        u.rightShoulder.rotation.y = -0.30; 
+                        u.rightShoulder.rotation.z = 0.20; 
+                    }
+                    if (u.torso) { 
+                        u.torso.rotation.y = 0.50; 
+                        u.torso.rotation.x = 0.05; 
+                    }
+                    if (u.head) { 
+                        u.head.rotation.y = -0.45; 
+                        u.head.rotation.x = 0; 
+                    }
+                    if (u.rightHip && u.leftHip) {
+                        const stride = e.animTime * 6.5;
+                        u.rightHip.rotation.x = Math.sin(stride) * 0.45;
+                        u.leftHip.rotation.x = -Math.sin(stride) * 0.45;
+                    }
+                    if (u.bowString) { u.bowString.position.z = 0.02; }
+                    if (u.notchedArrow) { u.notchedArrow.position.z = 0.02; }
+                } else {
+                    // Shambling / locomotion animation kinetics
+                    const freq = behavior === 'Heavy Tank' ? 4.8 : (behavior === 'Flanker' ? 9.5 : 7.2);
+                    const stride = e.animTime * freq;
+                    if (u.rightHip && u.leftHip) {
+                        u.rightHip.rotation.x = Math.sin(stride) * 0.68;
+                        u.leftHip.rotation.x = -Math.sin(stride) * 0.68;
+                        u.rightHip.rotation.z = Math.sin(stride) * 0.06;
+                        u.leftHip.rotation.z = -Math.sin(stride) * 0.06;
+                    }
+                    if (u.torso) {
+                        u.torso.rotation.x = behavior === 'Heavy Tank' ? 0.35 : 0.25;
+                        u.torso.rotation.z = Math.sin(stride) * 0.09;
+                        u.torso.position.y = Math.abs(Math.sin(stride)) * 0.08;
+                    }
+                    if (u.leftShoulder) {
+                        u.leftShoulder.rotation.x = Math.sin(stride) * 0.45;
+                        u.leftShoulder.rotation.z = -0.25;
+                    }
+                    if (u.rightShoulder) {
+                        u.rightShoulder.rotation.x = -0.38 + Math.cos(stride) * 0.25;
+                        u.rightShoulder.rotation.z = 0.25;
+                    }
+                    if (u.head) {
+                        u.head.rotation.x = 0.12 + Math.sin(stride * 2) * 0.06;
+                        u.head.rotation.y = Math.sin(e.animTime * 2.2) * 0.12;
+                    }
                 }
 
                 // Serpentine undulating slither kinetics
@@ -6992,57 +7061,70 @@ equipWeapon(weaponId) {
                 // 6. Idle / Patrol Breathing & Scanning Animation — 6 Fidget Variants (#17-22)
                 e.state = 'PATROL';
                 e.attackPhase = 'IDLE';
-                if (!e._idleVariant) e._idleVariant = Math.floor(Math.random() * 6);
                 const breath = Math.sin(e.animTime * 2.2 + e.idleSeed);
-                const iv = e._idleVariant;
-                
-                if (iv === 1) {
-                    // Idle #18: Head scratch / neck rub
-                    if (u.torso) { u.torso.position.y = breath * 0.03; u.torso.rotation.x = 0.1; u.torso.rotation.z = 0; }
-                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 1.2) * 0.15; u.head.rotation.x = -0.15 + Math.sin(e.animTime * 3.0) * 0.08; }
-                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.2 + Math.sin(e.animTime * 2.5) * 0.15; u.rightShoulder.rotation.z = 0.5; }
-                } else if (iv === 2) {
-                    // Idle #19: Weight shifting (swaying side to side)
-                    if (u.torso) { u.torso.position.y = breath * 0.04; u.torso.rotation.z = Math.sin(e.animTime * 1.5) * 0.12; u.torso.rotation.x = 0.08; }
-                    if (u.rightHip) u.rightHip.rotation.z = Math.sin(e.animTime * 1.5) * 0.08;
-                    if (u.leftHip) u.leftHip.rotation.z = -Math.sin(e.animTime * 1.5) * 0.08;
-                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 0.7) * 0.25; u.head.rotation.x = 0.05; }
-                } else if (iv === 3) {
-                    // Idle #20: Aggressive posturing (taunting forward lean)
-                    if (u.torso) { u.torso.position.y = breath * 0.025; u.torso.rotation.x = 0.25 + Math.sin(e.animTime * 3.0) * 0.08; u.torso.rotation.z = 0; }
-                    if (u.head) { u.head.rotation.x = 0.2; u.head.rotation.y = Math.sin(e.animTime * 2.5 + e.idleSeed) * 0.4; }
-                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.6 + Math.sin(e.animTime * 1.8) * 0.15; u.rightShoulder.rotation.z = 0.3; }
-                } else if (iv === 4) {
-                    // Idle #21: Weapon check / arm flex
-                    const flex = Math.sin(e.animTime * 1.0 + e.idleSeed);
-                    if (u.torso) { u.torso.position.y = breath * 0.03; u.torso.rotation.x = 0.08; u.torso.rotation.z = 0; }
-                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.5 + flex * 0.4; u.rightShoulder.rotation.z = 0.2 + Math.abs(flex) * 0.3; }
-                    if (u.head) { u.head.rotation.y = flex * 0.2; u.head.rotation.x = -0.1 + Math.abs(flex) * 0.1; }
-                } else if (iv === 5) {
-                    // Idle #22: Nervous trembling (scared low-tier mob)
-                    const tremble = Math.sin(e.animTime * 18 + e.idleSeed) * 0.03;
-                    if (u.torso) { u.torso.position.y = breath * 0.02; u.torso.rotation.x = 0.15 + tremble; u.torso.rotation.z = tremble * 2; }
-                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 1.0) * 0.4 + tremble; u.head.rotation.x = 0.1 + tremble; }
-                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.15 + tremble * 3; u.rightShoulder.rotation.z = 0.12 + tremble; }
-                    if (u.leftShoulder) { u.leftShoulder.rotation.x = -0.1 + tremble * 3; u.leftShoulder.rotation.z = -0.12 - tremble; }
+
+                if (behavior === 'Ranged' || e.isArcher) {
+                    // Disciplined Sentry Watchtower Idle: Bow held vertically at left side, watchful horizon scan
+                    if (u.leftShoulder) { u.leftShoulder.rotation.x = -0.15; u.leftShoulder.rotation.y = 0.0; u.leftShoulder.rotation.z = -0.12; }
+                    if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.10; u.rightShoulder.rotation.y = 0.0; u.rightShoulder.rotation.z = 0.12; }
+                    if (u.torso) { u.torso.rotation.y = 0.0; u.torso.rotation.x = Math.sin(e.animTime * 1.5) * 0.03; u.torso.position.y = breath * 0.02; }
+                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 0.8) * 0.25; u.head.rotation.x = 0; }
+                    if (u.rightHip) u.rightHip.rotation.x = 0;
+                    if (u.leftHip) u.leftHip.rotation.x = 0;
+                    if (u.bowString) { u.bowString.position.z = 0.02; }
+                    if (u.notchedArrow) { u.notchedArrow.position.z = 0.02; }
                 } else {
-                    // Idle #17: Default breathing (original)
-                    if (u.torso) { u.torso.position.y = breath * 0.035; u.torso.rotation.x = 0.12 + breath * 0.04; u.torso.rotation.z = 0; }
-                    if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 0.85 + e.idleSeed) * 0.32; u.head.rotation.x = 0.08 + Math.cos(e.animTime * 1.6) * 0.05; }
-                }
-                
-                if (iv === 0 || iv >= 3) {
-                    if (u.rightShoulder && iv !== 3 && iv !== 4 && iv !== 5) {
-                        u.rightShoulder.rotation.x = -0.28 + breath * 0.05;
-                        u.rightShoulder.rotation.z = 0.18;
+                    if (!e._idleVariant) e._idleVariant = Math.floor(Math.random() * 6);
+                    const iv = e._idleVariant;
+                    
+                    if (iv === 1) {
+                        // Idle #18: Head scratch / neck rub
+                        if (u.torso) { u.torso.position.y = breath * 0.03; u.torso.rotation.x = 0.1; u.torso.rotation.z = 0; }
+                        if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 1.2) * 0.15; u.head.rotation.x = -0.15 + Math.sin(e.animTime * 3.0) * 0.08; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -1.2 + Math.sin(e.animTime * 2.5) * 0.15; u.rightShoulder.rotation.z = 0.5; }
+                    } else if (iv === 2) {
+                        // Idle #19: Weight shifting (swaying side to side)
+                        if (u.torso) { u.torso.position.y = breath * 0.04; u.torso.rotation.z = Math.sin(e.animTime * 1.5) * 0.12; u.torso.rotation.x = 0.08; }
+                        if (u.rightHip) u.rightHip.rotation.z = Math.sin(e.animTime * 1.5) * 0.08;
+                        if (u.leftHip) u.leftHip.rotation.z = -Math.sin(e.animTime * 1.5) * 0.08;
+                        if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 0.7) * 0.25; u.head.rotation.x = 0.05; }
+                    } else if (iv === 3) {
+                        // Idle #20: Aggressive posturing (taunting forward lean)
+                        if (u.torso) { u.torso.position.y = breath * 0.025; u.torso.rotation.x = 0.25 + Math.sin(e.animTime * 3.0) * 0.08; u.torso.rotation.z = 0; }
+                        if (u.head) { u.head.rotation.x = 0.2; u.head.rotation.y = Math.sin(e.animTime * 2.5 + e.idleSeed) * 0.4; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.6 + Math.sin(e.animTime * 1.8) * 0.15; u.rightShoulder.rotation.z = 0.3; }
+                    } else if (iv === 4) {
+                        // Idle #21: Weapon check / arm flex
+                        const flex = Math.sin(e.animTime * 1.0 + e.idleSeed);
+                        if (u.torso) { u.torso.position.y = breath * 0.03; u.torso.rotation.x = 0.08; u.torso.rotation.z = 0; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.5 + flex * 0.4; u.rightShoulder.rotation.z = 0.2 + Math.abs(flex) * 0.3; }
+                        if (u.head) { u.head.rotation.y = flex * 0.2; u.head.rotation.x = -0.1 + Math.abs(flex) * 0.1; }
+                    } else if (iv === 5) {
+                        // Idle #22: Nervous trembling (scared low-tier mob)
+                        const tremble = Math.sin(e.animTime * 18 + e.idleSeed) * 0.03;
+                        if (u.torso) { u.torso.position.y = breath * 0.02; u.torso.rotation.x = 0.15 + tremble; u.torso.rotation.z = tremble * 2; }
+                        if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 1.0) * 0.4 + tremble; u.head.rotation.x = 0.1 + tremble; }
+                        if (u.rightShoulder) { u.rightShoulder.rotation.x = -0.15 + tremble * 3; u.rightShoulder.rotation.z = 0.12 + tremble; }
+                        if (u.leftShoulder) { u.leftShoulder.rotation.x = -0.1 + tremble * 3; u.leftShoulder.rotation.z = -0.12 - tremble; }
+                    } else {
+                        // Idle #17: Default breathing (original)
+                        if (u.torso) { u.torso.position.y = breath * 0.035; u.torso.rotation.x = 0.12 + breath * 0.04; u.torso.rotation.z = 0; }
+                        if (u.head) { u.head.rotation.y = Math.sin(e.animTime * 0.85 + e.idleSeed) * 0.32; u.head.rotation.x = 0.08 + Math.cos(e.animTime * 1.6) * 0.05; }
                     }
+                    
+                    if (iv === 0 || iv >= 3) {
+                        if (u.rightShoulder && iv !== 3 && iv !== 4 && iv !== 5) {
+                            u.rightShoulder.rotation.x = -0.28 + breath * 0.05;
+                            u.rightShoulder.rotation.z = 0.18;
+                        }
+                    }
+                    if (u.leftShoulder && iv !== 1 && iv !== 5) {
+                        u.leftShoulder.rotation.x = -0.16 - breath * 0.04;
+                        u.leftShoulder.rotation.z = -0.22;
+                    }
+                    if (u.rightHip) u.rightHip.rotation.x = 0;
+                    if (u.leftHip) u.leftHip.rotation.x = 0;
                 }
-                if (u.leftShoulder && iv !== 1 && iv !== 5) {
-                    u.leftShoulder.rotation.x = -0.16 - breath * 0.04;
-                    u.leftShoulder.rotation.z = -0.22;
-                }
-                if (u.rightHip) u.rightHip.rotation.x = 0;
-                if (u.leftHip) u.leftHip.rotation.x = 0;
 
                 // Idle Serpentine Breathing & Coiling kinetics
                 if (u.isSerpent && u.segments) {

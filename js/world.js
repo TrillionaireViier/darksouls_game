@@ -814,12 +814,17 @@ class DarkSoulsWorld {
             const t = Math.max(0, Math.min(1.0, (-30 - z) / 6.0));
             return -t * 2.5;
         }
-        if (x >= -32 && x <= 32 && z >= -70 && z < -36.5) {
+        if (x >= -35 && x <= 35 && z >= -70 && z < -36.5) {
             return -2.5;
         }
-        if (x >= -14 && x <= 14 && z >= -78 && z < -70) {
-            const t = (-70 - z) / 8.0;
-            return -2.5 - t * 1.5;
+        if (z >= -78 && z < -70) {
+            if (x >= -14 && x <= 14) {
+                const t = (-70 - z) / 8.0;
+                return -2.5 - t * 1.5;
+            }
+            if (Math.abs(x) <= 38) {
+                return -2.5;
+            }
         }
         if (x >= -38 && x <= 38 && z >= -115 && z < -78) {
             return -4.0;
@@ -2279,18 +2284,21 @@ class DarkSoulsWorld {
             sanctumGroup.add(step);
         }
         // Retaining walls beside inner stairs (anchored down to y = -6.0)
-        this.createWall(-23, 1.0, -70, 20, 14, 2);
-        this.createWall(23, 1.0, -70, 20, 14, 2);
-        this.createWall(-13.5, 1.0, -74, 1.2, 14, 9);
-        this.createWall(13.5, 1.0, -74, 1.2, 14, 9);
+        this.createWall(-23, 1.0, -70, 22, 14, 3);
+        this.createWall(23, 1.0, -70, 22, 14, 3);
+        this.createWall(-13.5, 1.0, -74, 2.0, 14, 11);
+        this.createWall(13.5, 1.0, -74, 2.0, 14, 11);
+
+        // Solid Stone Foundation Masonry sealing under the stairs (x in [-13.5, 13.5], z in [-78, -70])
+        this.createWall(0, -3.25, -74, 27, 2.6, 9);
 
         // South Enclosing Retaining Walls for Gorgon's Inner Sanctum at z = -78 (anchored down to y = -6.0)
-        this.createWall(-25.5, 1.0, -78, 25, 14, 2);
-        this.createWall(25.5, 1.0, -78, 25, 14, 2);
+        this.createWall(-25.5, 1.0, -78, 27, 14, 4);
+        this.createWall(25.5, 1.0, -78, 27, 14, 4);
 
         // Corner connecting walls at x = ±38 between z = -70 and z = -78
-        this.createWall(-38, 1.0, -74, 2, 14, 8);
-        this.createWall(38, 1.0, -74, 2, 14, 8);
+        this.createWall(-38, 1.0, -74, 3, 14, 10);
+        this.createWall(38, 1.0, -74, 3, 14, 10);
 
         // Upper Terrace Floor Slabs beside the stairs between z = -70 and z = -78 (y = -2.5)
         const terraceL = new THREE.Mesh(new THREE.PlaneGeometry(24, 8), this.serpentStoneMat);
@@ -2304,6 +2312,20 @@ class DarkSoulsWorld {
         terraceR.position.set(25.5, -2.5, -74);
         terraceR.receiveShadow = true;
         sanctumGroup.add(terraceR);
+
+        // Add Terrace and Courtyard Colliders so camera raycasts and physics never penetrate floor slabs
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(-38, -6.0, -78.5),
+            new THREE.Vector3(-13, -2.4, -69.5)
+        ));
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(13, -6.0, -78.5),
+            new THREE.Vector3(38, -2.4, -69.5)
+        ));
+        this.colliders.push(new THREE.Box3(
+            new THREE.Vector3(-35, -6.0, -70),
+            new THREE.Vector3(35, -2.4, -30)
+        ));
 
         // 8. Gorgon's Inner Sanctum Floor Slab (z: -78 to -115, x: -38 to 38, y = -4.0)
         const innerFloorGeo = new THREE.PlaneGeometry(76, 37);
