@@ -2344,6 +2344,13 @@ class DarkSoulsWorld {
         innerFloor.receiveShadow = true;
         sanctumGroup.add(innerFloor);
 
+        // Vaulted Underground Temple Ceiling for Gorgon's Inner Sanctum (z: -70 to -115, x: -39 to 39, y = 7.0)
+        const sanctumCeiling = new THREE.Mesh(new THREE.PlaneGeometry(78, 46), this.serpentStoneMat);
+        sanctumCeiling.rotation.x = Math.PI / 2; // Facing downward into the crypt
+        sanctumCeiling.position.set(0, 7.0, -92.5);
+        sanctumCeiling.receiveShadow = true;
+        sanctumGroup.add(sanctumCeiling);
+
         // Perimeter Enclosing Walls for Inner Sanctum
         this.createWall(-38, 1.0, -96.5, 2, 12, 39); // West Wall
         this.createWall(38, 1.0, -96.5, 2, 12, 39);  // East Wall
@@ -3067,6 +3074,25 @@ class DarkSoulsWorld {
             );
             this.scene.add(mesh);
             this.sparkParticles.push({ mesh, vel, life: 0.4, maxLife: 0.4 });
+        }
+    }
+
+    spawnMagicRuneSparks(pos) {
+        const count = 22;
+        for (let i = 0; i < count; i++) {
+            const isGlint = (i % 2 === 0);
+            const mesh = new THREE.Mesh(
+                new THREE.OctahedronGeometry(isGlint ? 0.075 : 0.05),
+                new THREE.MeshBasicMaterial({ color: isGlint ? 0x00ffff : 0x70b5ff })
+            );
+            this.scene.add(mesh);
+            mesh.position.copy(pos);
+            const vel = new THREE.Vector3(
+                (Math.random() - 0.5) * 7.5,
+                Math.random() * 5.5 + 1.2,
+                (Math.random() - 0.5) * 7.5
+            );
+            this.sparkParticles.push({ mesh, vel, life: 0.45, maxLife: 0.45 });
         }
     }
 

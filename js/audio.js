@@ -1395,34 +1395,6 @@ class DarkSoulsAudio {
         this.ensureContext();
         if (!this.ctx || this.isMuted) return;
         const now = this.ctx.currentTime;
-
-        // Wood creak & bowstring tension pitch bend
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(80, now);
-        osc.frequency.exponentialRampToValueAtTime(320, now + 0.45);
-
-        const filter = this.ctx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(450, now);
-        filter.Q.setValueAtTime(4.0, now);
-
-        gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.28, now + 0.35);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.sfxGain);
-        osc.start(now);
-        osc.stop(now + 0.52);
-    }
-
-    playBowDraw() {
-        this.ensureContext();
-        if (!this.ctx || this.isMuted) return;
-        const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'sawtooth';
@@ -1442,6 +1414,90 @@ class DarkSoulsAudio {
         gain.connect(this.sfxGain);
         osc.start(now);
         osc.stop(now + 0.19);
+    }
+
+    playMagicBowDraw() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Ethereal Glintstone Shimmer & Crystal Harmonics
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(440, now);
+        osc1.frequency.exponentialRampToValueAtTime(1180, now + 0.28);
+
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(660, now);
+        osc2.frequency.exponentialRampToValueAtTime(1760, now + 0.28);
+
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.22, now + 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(this.sfxGain);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.33);
+        osc2.stop(now + 0.33);
+    }
+
+    playMagicArrowRelease() {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Celestial Starlight Twang & Glintstone Whoosh
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1400, now);
+        osc.frequency.exponentialRampToValueAtTime(280, now + 0.22);
+
+        gain.gain.setValueAtTime(0.55, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start(now);
+        osc.stop(now + 0.23);
+    }
+
+    playMagicArrowHit(isShield = false) {
+        this.ensureContext();
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Resonant Crystalline Shatter & Arcane Dissipation
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(isShield ? 1800 : 920, now);
+        osc1.frequency.exponentialRampToValueAtTime(240, now + 0.35);
+
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(isShield ? 2400 : 1380, now);
+        osc2.frequency.exponentialRampToValueAtTime(320, now + 0.35);
+
+        gain.gain.setValueAtTime(0.48, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(this.sfxGain);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.38);
+        osc2.stop(now + 0.38);
     }
 
     playArrowRelease() {

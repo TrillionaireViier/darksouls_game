@@ -3287,15 +3287,34 @@ class DarkSoulsCharacters {
         bodyGroup.position.y = 0.95;
         root.add(bodyGroup);
 
-        const torsoMat = this.hollowRagsMat || this.quiltedSkirtMat;
-        const skinMat = this.hollowSkinMat;
+        const isRune = !!(mobDef && (mobDef.isRuneArcher || (mobDef.meshType && mobDef.meshType.includes('rune')) || (mobDef.name && (mobDef.name.includes('RUNE') || mobDef.name.includes('GLINTSTONE') || mobDef.name.includes('MAGIC')))));
 
-        // 1. Torso wearing tattered archer cowl
+        const torsoMat = isRune 
+            ? new THREE.MeshStandardMaterial({ color: 0x141c30, roughness: 0.85, metalness: 0.18 })
+            : (this.hollowRagsMat || this.quiltedSkirtMat);
+        const skinMat = isRune
+            ? new THREE.MeshStandardMaterial({ color: 0x48647e, roughness: 0.72 })
+            : this.hollowSkinMat;
+
+        // 1. Contoured Humanoid Torso wearing hooded archer cowl
         const torso = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.58, 0.28), torsoMat);
         torso.castShadow = true;
         bodyGroup.add(torso);
 
-        // 2. Head with archer cowl / hood
+        // Shoulder cowl drape
+        const cowlMantle = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.24, 0.32, 0.22, 12, 1, false, -Math.PI * 0.45, Math.PI * 0.9),
+            torsoMat
+        );
+        cowlMantle.position.set(0, 0.22, 0.02);
+        torso.add(cowlMantle);
+
+        // Leather belt & waist quiver strap
+        const belt = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.06, 0.30), this.leatherMat);
+        belt.position.y = -0.22;
+        torso.add(belt);
+
+        // 2. Head with contoured archer hood / cowl
         const headGroup = new THREE.Group();
         headGroup.position.y = 0.48;
         torso.add(headGroup);
@@ -3308,29 +3327,39 @@ class DarkSoulsCharacters {
         cowl.position.set(0, 0.04, -0.04);
         headGroup.add(cowl);
 
-        // Authentic Dark Souls sunken eye sockets with deep soul embers
-        this.attachHollowEyes(headGroup, 0xc93010);
+        // Sunken eye sockets with soul embers (Cyan for Rune Archer, Fiery Orange-Red for Hollow)
+        const eyeColor = isRune ? 0x00e5ff : 0xc93010;
+        this.attachHollowEyes(headGroup, eyeColor);
 
-        const soulLight = new THREE.PointLight(0xff2200, 0.45, 1.8);
+        const soulLight = new THREE.PointLight(isRune ? 0x00d8ff : 0xff2200, isRune ? 0.75 : 0.45, isRune ? 2.8 : 1.8);
         soulLight.position.set(0, 0.04, 0.18);
         headGroup.add(soulLight);
 
-        // 3. Quiver with Bodkin Arrows on Back
+        // 3. Quiver with Bodkin / Glintstone Arrows on Back
         const quiverGroup = new THREE.Group();
         quiverGroup.position.set(0.12, 0.10, -0.18);
         quiverGroup.rotation.set(-0.15, 0, -0.38);
         torso.add(quiverGroup);
 
-        const quiverBody = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.065, 0.72, 8), this.leatherMat);
+        const quiverBody = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.08, 0.065, 0.72, 8), 
+            isRune ? new THREE.MeshStandardMaterial({ color: 0x121a2c, roughness: 0.65 }) : this.leatherMat
+        );
         quiverBody.castShadow = true;
         quiverGroup.add(quiverBody);
 
         for (let a = 0; a < 5; a++) {
-            const arrowShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.75, 5), this.leatherMat);
+            const arrowShaft = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.012, 0.012, 0.75, 5), 
+                isRune ? new THREE.MeshStandardMaterial({ color: 0x304860 }) : this.leatherMat
+            );
             arrowShaft.position.set(-0.03 + (a % 3) * 0.03, 0.32 + (a % 2) * 0.06, (a > 2 ? 0.03 : -0.03));
             quiverGroup.add(arrowShaft);
 
-            const fletch = new THREE.Mesh(new THREE.BoxGeometry(0.005, 0.12, 0.05), new THREE.MeshStandardMaterial({ color: 0xdd2222 }));
+            const fletchMat = isRune 
+                ? new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x0088cc, emissiveIntensity: 0.6 })
+                : new THREE.MeshStandardMaterial({ color: 0xdd2222 });
+            const fletch = new THREE.Mesh(new THREE.BoxGeometry(0.005, 0.12, 0.05), fletchMat);
             fletch.position.set(-0.03 + (a % 3) * 0.03, 0.65, (a > 2 ? 0.03 : -0.03));
             quiverGroup.add(fletch);
         }
@@ -3340,29 +3369,37 @@ class DarkSoulsCharacters {
         leftShoulder.position.set(-0.32, 0.20, 0);
         torso.add(leftShoulder);
 
-        const lArm = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.46, 0.11), skinMat);
-        lArm.position.y = -0.23;
-        leftShoulder.add(lArm);
+        const lBicep = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.060, 0.22, 8), skinMat);
+        lBicep.position.y = -0.12;
+        leftShoulder.add(lBicep);
 
-        // Authentic Dark Souls Yew Longbow (held firmly in left hand)
+        const lForearm = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.060, 0.052, 0.24, 8),
+            isRune ? new THREE.MeshStandardMaterial({ color: 0x182438, metalness: 0.4 }) : this.leatherMat
+        );
+        lForearm.position.y = -0.32;
+        leftShoulder.add(lForearm);
+
+        // Authentic Dark Souls Longbow / Carian Glintstone Recurve Bow (held firmly in left hand)
         const bowGroup = new THREE.Group();
         bowGroup.position.set(0, -0.44, 0.08);
         leftShoulder.add(bowGroup);
 
-        const bowWoodMat = new THREE.MeshStandardMaterial({
-            color: 0x422a18,
-            roughness: 0.65,
-            metalness: 0.12
-        });
-        const bowIronMat = new THREE.MeshStandardMaterial({
-            color: 0x242424,
-            roughness: 0.45,
-            metalness: 0.85
-        });
-        const bowStringMat = new THREE.MeshBasicMaterial({ color: 0xf0f0ea });
+        const bowWoodMat = isRune
+            ? new THREE.MeshStandardMaterial({ color: 0x162030, roughness: 0.45, metalness: 0.45 })
+            : new THREE.MeshStandardMaterial({ color: 0x422a18, roughness: 0.65, metalness: 0.12 });
+        const bowIronMat = isRune
+            ? new THREE.MeshStandardMaterial({ color: 0x7ab6d6, roughness: 0.3, metalness: 0.85 })
+            : new THREE.MeshStandardMaterial({ color: 0x242424, roughness: 0.45, metalness: 0.85 });
+        const bowStringMat = isRune
+            ? new THREE.MeshBasicMaterial({ color: 0xa8f5ff })
+            : new THREE.MeshBasicMaterial({ color: 0xf0f0ea });
 
-        // Central Leather Riser Grip
-        const bowHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.026, 0.16, 8), this.leatherMat);
+        // Central Riser Grip
+        const bowHandle = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.024, 0.026, 0.16, 8), 
+            isRune ? new THREE.MeshStandardMaterial({ color: 0x0c1424, roughness: 0.6 }) : this.leatherMat
+        );
         bowGroup.add(bowHandle);
 
         // Upper Recurve Limb
@@ -3411,23 +3448,63 @@ class DarkSoulsCharacters {
         lowerString.position.set(0, -0.34, 0.02);
         bowGroup.add(lowerString);
 
-        // Notched Bodkin Arrow (Mounted on bow arrow-shelf)
+        // Carian Glintstone Rune Rings & Focus Crystal (Only on Rune Archers)
+        let runeRingUpper = null;
+        let runeRingLower = null;
+        if (isRune) {
+            const runeMat = new THREE.MeshBasicMaterial({ color: 0x00d8ff, wireframe: false });
+            runeRingUpper = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.012, 6, 16), runeMat);
+            runeRingUpper.position.set(0, 0.42, 0.02);
+            bowGroup.add(runeRingUpper);
+
+            runeRingLower = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.012, 6, 16), runeMat);
+            runeRingLower.position.set(0, -0.42, 0.02);
+            bowGroup.add(runeRingLower);
+
+            // Glintstone Focus Crystal on Bow Riser
+            const crystalGeo = new THREE.OctahedronGeometry(0.045);
+            const crystalMat = new THREE.MeshStandardMaterial({
+                color: 0x00ffff,
+                emissive: 0x00d8ff,
+                emissiveIntensity: 1.35,
+                roughness: 0.15,
+                metalness: 0.8
+            });
+            const focusCrystal = new THREE.Mesh(crystalGeo, crystalMat);
+            focusCrystal.position.set(0, 0, 0.045);
+            bowGroup.add(focusCrystal);
+
+            const bowGlow = new THREE.PointLight(0x00d8ff, 1.4, 4.0);
+            bowGlow.position.set(0, 0, 0.06);
+            bowGroup.add(bowGlow);
+        }
+
+        // Notched Bodkin / Glintstone Arrow (Mounted on bow arrow-shelf)
         const notchedArrow = new THREE.Group();
         notchedArrow.position.set(0, 0, 0.02);
         bowGroup.add(notchedArrow);
 
-        const nShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.90, 6), this.leatherMat);
+        const nShaft = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.008, 0.008, 0.90, 6),
+            isRune ? new THREE.MeshStandardMaterial({ color: 0xd8eeff, roughness: 0.5 }) : this.leatherMat
+        );
         nShaft.rotation.x = Math.PI / 2;
         nShaft.position.z = 0.45;
         notchedArrow.add(nShaft);
 
-        const nTip = new THREE.Mesh(new THREE.ConeGeometry(0.026, 0.12, 4), this.steelMat);
+        const nTipMat = isRune
+            ? new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00d8ff, emissiveIntensity: 1.5 })
+            : this.steelMat;
+        const nTip = new THREE.Mesh(new THREE.ConeGeometry(isRune ? 0.035 : 0.026, isRune ? 0.15 : 0.12, 6), nTipMat);
         nTip.rotation.x = -Math.PI / 2;
         nTip.position.z = 0.94;
         notchedArrow.add(nTip);
 
         for (let f = 0; f < 3; f++) {
-            const fletch = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.045, 0.11), new THREE.MeshStandardMaterial({ color: 0xcc2222 }));
+            const fletchMat = isRune
+                ? new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x0088cc, emissiveIntensity: 0.6 })
+                : new THREE.MeshStandardMaterial({ color: 0xcc2222 });
+            const fletch = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.045, 0.11), fletchMat);
             fletch.position.set(0, 0, 0.05);
             fletch.rotation.z = (f * Math.PI * 2) / 3;
             notchedArrow.add(fletch);
@@ -3438,32 +3515,59 @@ class DarkSoulsCharacters {
         rightShoulder.position.set(0.32, 0.20, 0);
         torso.add(rightShoulder);
 
-        const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.46, 0.11), skinMat);
-        rArm.position.y = -0.23;
-        rightShoulder.add(rArm);
+        const rBicep = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.060, 0.22, 8), skinMat);
+        rBicep.position.y = -0.12;
+        rightShoulder.add(rBicep);
 
-        const rHand = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.10, 0.09), this.leatherMat);
+        const rForearm = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.060, 0.052, 0.24, 8),
+            isRune ? new THREE.MeshStandardMaterial({ color: 0x182438, metalness: 0.4 }) : this.leatherMat
+        );
+        rForearm.position.y = -0.32;
+        rightShoulder.add(rForearm);
+
+        const rHand = new THREE.Mesh(
+            new THREE.BoxGeometry(0.09, 0.10, 0.09), 
+            isRune ? new THREE.MeshStandardMaterial({ color: 0x0c1424 }) : this.leatherMat
+        );
         rHand.position.set(0, -0.46, 0);
         rightShoulder.add(rHand);
 
-        // 6. Athletic Grounded Legs
+        // 6. Contoured Grounded Legs & Archer Boots
         const rightHip = new THREE.Group();
         rightHip.position.set(0.15, -0.32, 0);
         torso.add(rightHip);
-        const rLeg = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.58, 0.12), skinMat);
-        rLeg.position.y = -0.29;
-        rightHip.add(rLeg);
+
+        const rThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.082, 0.072, 0.32, 8), torsoMat);
+        rThigh.position.y = -0.16;
+        rightHip.add(rThigh);
+
+        const rBoot = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.070, 0.060, 0.30, 8),
+            isRune ? new THREE.MeshStandardMaterial({ color: 0x0c1424 }) : this.leatherMat
+        );
+        rBoot.position.y = -0.44;
+        rightHip.add(rBoot);
 
         const leftHip = new THREE.Group();
         leftHip.position.set(-0.15, -0.32, 0);
         torso.add(leftHip);
-        const lLeg = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.58, 0.12), skinMat);
-        lLeg.position.y = -0.29;
-        leftHip.add(lLeg);
+
+        const lThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.082, 0.072, 0.32, 8), torsoMat);
+        lThigh.position.y = -0.16;
+        leftHip.add(lThigh);
+
+        const lBoot = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.070, 0.060, 0.30, 8),
+            isRune ? new THREE.MeshStandardMaterial({ color: 0x0c1424 }) : this.leatherMat
+        );
+        lBoot.position.y = -0.44;
+        leftHip.add(lBoot);
 
         root.userData = {
-            type: 'archer',
+            type: isRune ? 'rune_archer' : 'archer',
             mobType: 'ranged',
+            isRuneArcher: isRune,
             bodyGroup,
             torso,
             head: headGroup,
@@ -3476,17 +3580,78 @@ class DarkSoulsCharacters {
             lowerString,
             bowString: upperString,
             notchedArrow,
-            quiverGroup
+            quiverGroup,
+            runeRingUpper,
+            runeRingLower
         };
 
         this.scene.add(root);
         return root;
     }
 
-    createArrowMesh() {
+    createArrowMesh(isMagic = false) {
         const arrow = new THREE.Group();
 
-        // 1. Ash wood shaft (length 0.85m)
+        if (isMagic) {
+            // Carian Glintstone Magic Arrow (Ethereal Crystal Spear Projectile)
+            const shaft = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.016, 0.016, 0.92, 8),
+                new THREE.MeshStandardMaterial({
+                    color: 0xd8eeff,
+                    emissive: 0x0088cc,
+                    emissiveIntensity: 0.65,
+                    roughness: 0.25,
+                    metalness: 0.6
+                })
+            );
+            shaft.castShadow = true;
+            arrow.add(shaft);
+
+            // Glowing Glintstone Crystal Broadhead
+            const crystalHead = new THREE.Mesh(
+                new THREE.ConeGeometry(0.048, 0.22, 6),
+                new THREE.MeshStandardMaterial({
+                    color: 0x00ffff,
+                    emissive: 0x00d8ff,
+                    emissiveIntensity: 1.5,
+                    roughness: 0.1,
+                    metalness: 0.8
+                })
+            );
+            crystalHead.position.y = 0.52;
+            crystalHead.castShadow = true;
+            arrow.add(crystalHead);
+
+            // Orbiting Glintstone Rune Ring Collar
+            const runeRing = new THREE.Mesh(
+                new THREE.TorusGeometry(0.065, 0.007, 6, 12),
+                new THREE.MeshBasicMaterial({ color: 0x00d8ff })
+            );
+            runeRing.position.y = 0.40;
+            runeRing.rotation.x = Math.PI / 2;
+            arrow.add(runeRing);
+
+            // Starlight Cyan Fletching
+            for (let f = 0; f < 3; f++) {
+                const feather = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.005, 0.16, 0.05),
+                    new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00aacc, emissiveIntensity: 0.8 })
+                );
+                feather.position.y = -0.35;
+                feather.rotation.y = (f * Math.PI * 2) / 3;
+                arrow.add(feather);
+            }
+
+            // High-luminance Arcane Light Aura
+            const glow = new THREE.PointLight(0x00d8ff, 1.8, 5.0);
+            glow.position.y = 0.35;
+            arrow.add(glow);
+
+            arrow.userData = { isMagic: true };
+            return arrow;
+        }
+
+        // Standard Ash wood shaft (length 0.85m)
         const shaft = new THREE.Mesh(
             new THREE.CylinderGeometry(0.014, 0.014, 0.82, 6),
             new THREE.MeshStandardMaterial({ color: 0x6e4e3a, roughness: 0.75 })
@@ -3494,7 +3659,7 @@ class DarkSoulsCharacters {
         shaft.castShadow = true;
         arrow.add(shaft);
 
-        // 2. Steel pyramid bodkin point
+        // Steel pyramid bodkin point
         const bodkin = new THREE.Mesh(
             new THREE.ConeGeometry(0.038, 0.15, 4),
             this.steelMat
@@ -3503,7 +3668,7 @@ class DarkSoulsCharacters {
         bodkin.castShadow = true;
         arrow.add(bodkin);
 
-        // 3. Fletching (3 vanes)
+        // Fletching (3 vanes)
         for (let f = 0; f < 3; f++) {
             const feather = new THREE.Mesh(
                 new THREE.BoxGeometry(0.005, 0.14, 0.045),
@@ -3519,6 +3684,7 @@ class DarkSoulsCharacters {
         glow.position.y = 0.2;
         arrow.add(glow);
 
+        arrow.userData = { isMagic: false };
         return arrow;
     }
 

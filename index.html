@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261122_STAGGER_KNOCKBACK_V19';
+            var TARGET_BUILD = '20261122_V26_RUNE_ARCHERS_FIXES';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -69,6 +69,13 @@
             background-color: #000;
             font-family: 'Cinzel', serif;
             color: #d8d8d8;
+        }
+
+        /* Guarantee coords hud never overlaps any modal windows */
+        body:has(.modal-overlay[style*="flex"]) #live-coords-hud,
+        body:has(.modal-overlay[style*="block"]) #live-coords-hud,
+        .modal-open #live-coords-hud {
+            display: none !important;
         }
 
         /* 3D WebGL Canvas Viewport */
@@ -1856,7 +1863,7 @@
     </div>
 
     <!-- Live Real-Time Coordinate HUD [Shown when ESC is pressed] -->
-    <div id="live-coords-hud" onclick="if(window.game&&window.game.toggleCoordsHUD)window.game.toggleCoordsHUD();" title="Real-Time Player Coordinates [Shown on ESC key]" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 150; display: none; align-items: center; gap: 8px; background: rgba(8, 12, 18, 0.92); border: 1.5px solid rgba(120, 180, 240, 0.75); border-radius: 6px; padding: 6px 18px; font-family: monospace; font-size: 0.85rem; color: #aadcff; box-shadow: 0 4px 18px rgba(0,0,0,0.9), 0 0 14px rgba(120,180,240,0.3); cursor: pointer; user-select: none; transition: background 0.2s ease;">
+    <div id="live-coords-hud" onclick="if(window.game&&window.game.toggleCoordsHUD)window.game.toggleCoordsHUD();" title="Real-Time Player Coordinates [Shown on ESC key]" style="position: absolute; top: 14px; right: 24px; left: auto; transform: none; z-index: 90; display: none; align-items: center; gap: 8px; background: rgba(8, 12, 18, 0.92); border: 1.5px solid rgba(120, 180, 240, 0.75); border-radius: 6px; padding: 6px 18px; font-family: monospace; font-size: 0.85rem; color: #aadcff; box-shadow: 0 4px 18px rgba(0,0,0,0.9), 0 0 14px rgba(120,180,240,0.3); cursor: pointer; user-select: none; transition: background 0.2s ease;">
         <span style="color: #ffd778; font-weight: bold;">📍 COORDS [ESC]:</span>
         <span id="coords-text">X: 0.0m &bull; Y: 0.0m &bull; Z: 0.0m</span>
     </div>
@@ -7911,26 +7918,26 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/audio.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/lore_items.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/merchants_30.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/world.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/character.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/siege_warfare.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/collision_system.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/combat.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/postprocessing.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/qa_suite.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/inventory_system.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/compendium_300_models.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/death_quotes_300.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/game.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
-    <script src="js/dev_map.js?v=20261122_V25_WESTGATE_ARCHERS_FIXES"></script>
+    <script src="js/three.min.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/audio.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/lore_items.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/merchants_30.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/world.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/character.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/siege_warfare.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/collision_system.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/combat.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/postprocessing.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/qa_suite.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/inventory_system.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/compendium_300_models.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/death_quotes_300.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/game.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
+    <script src="js/dev_map.js?v=20261122_V26_RUNE_ARCHERS_FIXES"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {

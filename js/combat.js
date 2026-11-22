@@ -3785,22 +3785,24 @@ class DarkSoulsCombat {
             // Royal Viaduct Bridge Parapets & Sentries (y = 0.0)
             [-7.5, 0.0, 45.0], [-7.5, 0.0, 75.0], [-7.5, 0.0, 110.0],
             [-7.5, 0.0, 150.0], [-7.5, 0.0, 210.0],
-            // Courtyard Watch Sentries (y = 0.0)
-            [-12.0, 0.0, 14.0], [12.0, 0.0, 14.0]
+            // Courtyard Watch Sentries (firmly grounded at y = 0.0, z = 2.0 on solid courtyard paving)
+            [-12.0, 0.0, 2.0], [12.0, 0.0, 2.0]
         ];
         archerPositions.forEach((pos, idx) => {
+            const isRune = (idx % 2 === 1) || (idx >= 8 && idx <= 10);
             const aMob = {
                 id: `undead_archer_${idx}`,
-                name: (idx >= 15) ? 'ANOR LONDO GREATBOW ARCHER' : 'RAMPART HOLLOW SNIPER',
-                meshType: 'archer',
+                name: isRune ? 'CARIAN GLINTSTONE RUNE ARCHER' : ((idx >= 15) ? 'ANOR LONDO GREATBOW ARCHER' : 'RAMPART HOLLOW SNIPER'),
+                meshType: isRune ? 'rune_archer' : 'archer',
                 isArcher: true,
+                isRuneArcher: isRune,
                 behaviorType: 'Ranged',
                 aiType: 'Ranged',
-                hp: (idx >= 15) ? 420 : 250,
-                damage: (idx >= 15) ? 28 : 20,
-                souls: (idx >= 15) ? 800 : 240,
+                hp: isRune ? 380 : ((idx >= 15) ? 420 : 250),
+                damage: isRune ? 32 : ((idx >= 15) ? 28 : 20),
+                souls: isRune ? 550 : ((idx >= 15) ? 800 : 240),
                 speed: 1.8,
-                attackReach: 36.0
+                attackReach: 38.0
             };
             this.createCustomMob(aMob, pos[0], pos[2], 0, pos[1]);
         });
@@ -3895,6 +3897,8 @@ class DarkSoulsCombat {
             id: mobDef.id,
             type: mobDef.meshType || 'mob',
             name: mobDef.name || 'Undead Mob',
+            isArcher: !!mobDef.isArcher,
+            isRuneArcher: !!(mobDef.isRuneArcher || (mobDef.meshType === 'rune_archer') || (mobDef.name && mobDef.name.includes('RUNE'))),
             loreId: mobDef.loreId,
             loreTitle: mobDef.loreTitle,
             loreCategory: mobDef.loreCategory,
@@ -6240,15 +6244,16 @@ equipWeapon(weaponId) {
     // ----------------------------------------------------
     spawnArrow(fromPos, targetPos, shooter) {
         if (!this.charFactory) return;
-        const arrowMesh = this.charFactory.createArrowMesh();
+        const isMagic = !!(shooter && (shooter.isRuneArcher || (shooter.def && shooter.def.isRuneArcher) || (shooter.name && shooter.name.includes('RUNE'))));
+        const arrowMesh = this.charFactory.createArrowMesh(isMagic);
         arrowMesh.position.copy(fromPos);
 
         // Aim towards player chest
         const target = targetPos.clone().add(new THREE.Vector3(0, 1.1, 0));
         const dist = fromPos.distanceTo(target);
-        const arrowSpeed = 32.0;
+        const arrowSpeed = isMagic ? 36.0 : 32.0;
         const flightTime = Math.max(0.1, dist / arrowSpeed);
-        const upComp = 0.5 * 9.8 * flightTime; // Ballistic parabolic curve compensation
+        const upComp = 0.5 * (isMagic ? 6.5 : 9.8) * flightTime; // Ballistic parabolic curve compensation (magic arrows fly flatter)
 
         const dir = target.clone().sub(fromPos).normalize();
         const vel = dir.clone().multiplyScalar(arrowSpeed).add(new THREE.Vector3(0, upComp, 0));
@@ -6263,7 +6268,8 @@ equipWeapon(weaponId) {
             pos: fromPos.clone(),
             vel: vel,
             shooter: shooter,
-            damage: shooter ? Math.max(12, Math.min(25, shooter.damage || 18)) : 18,
+            isMagic: isMagic,
+            damage: shooter ? Math.max(14, Math.min(32, (shooter.damage || 18) * (isMagic ? 1.25 : 1.0))) : 18,
             life: 4.0,
             stuck: false,
             stuckTimer: 0
@@ -6322,11 +6328,16 @@ equipWeapon(weaponId) {
 
                         if (playerFacing.dot(incomingDir) > 0.25) {
                             // BLOCKED WITH SHIELD!
-                            if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(true);
-                            if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, true);
+                            if (arr.isMagic) {
+                                if (this.audio && this.audio.playMagicArrowHit) this.audio.playMagicArrowHit(true);
+                                if (this.world && this.world.spawnMagicRuneSparks) this.world.spawnMagicRuneSparks(arr.pos);
+                            } else {
+                                if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(true);
+                                if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, true);
+                            }
                             if (this.game && this.game.shakeCamera) this.game.shakeCamera(0.18, 0.2);
 
-                            this.stamina = Math.max(0, this.stamina - 18);
+                            this.stamina = Math.max(0, this.stamina - (arr.isMagic ? 24 : 18));
                             this.staminaDelay = 0.8;
 
                             // Deflect arrow away realistically
@@ -6339,8 +6350,13 @@ equipWeapon(weaponId) {
 
                     // UNBLOCKED HIT!
                     if (!this.isRolling && !this.isInvincible) {
-                        if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(false);
-                        if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, false);
+                        if (arr.isMagic) {
+                            if (this.audio && this.audio.playMagicArrowHit) this.audio.playMagicArrowHit(false);
+                            if (this.world && this.world.spawnMagicRuneSparks) this.world.spawnMagicRuneSparks(arr.pos);
+                        } else {
+                            if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(false);
+                            if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, false);
+                        }
                         const attackerPos = arr.shooter ? (arr.shooter.mesh ? arr.shooter.mesh.position : arr.pos) : arr.pos;
                         this.damagePlayer(arr.damage, attackerPos);
 
@@ -6358,8 +6374,13 @@ equipWeapon(weaponId) {
                 arr.pos.y = groundY + 0.1;
                 arr.mesh.position.y = arr.pos.y;
                 arr.stuck = true;
-                if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(false);
-                if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, false);
+                if (arr.isMagic) {
+                    if (this.audio && this.audio.playMagicArrowHit) this.audio.playMagicArrowHit(false);
+                    if (this.world && this.world.spawnMagicRuneSparks) this.world.spawnMagicRuneSparks(arr.pos);
+                } else {
+                    if (this.audio && this.audio.playArrowHit) this.audio.playArrowHit(false);
+                    if (this.world && this.world.spawnHitSparks) this.world.spawnHitSparks(arr.pos, false);
+                }
                 continue;
             }
 
@@ -6420,6 +6441,10 @@ equipWeapon(weaponId) {
             if (!e.mesh) continue;
 
             const u = e.mesh.userData;
+
+            // Animate orbiting rune rings on Carian Glintstone Rune Archers
+            if (u.runeRingUpper) u.runeRingUpper.rotation.z += 0.04;
+            if (u.runeRingLower) u.runeRingLower.rotation.z -= 0.04;
 
             // 1. Articulated Ragdoll Physics handles deceased entities in updateRagdolls
             if (e.isDead || e.state === 'DEAD') {
@@ -6800,7 +6825,11 @@ equipWeapon(weaponId) {
                     if (!e._damageDelivered && t >= triggerT) {
                         e._damageDelivered = true;
                         if (behavior === 'Ranged' || e.isArcher) {
-                            if (this.audio && this.audio.playArrowRelease) this.audio.playArrowRelease();
+                            if (e.isRuneArcher && this.audio && this.audio.playMagicArrowRelease) {
+                                this.audio.playMagicArrowRelease();
+                            } else if (this.audio && this.audio.playArrowRelease) {
+                                this.audio.playArrowRelease();
+                            }
                             const arrowSpawn = e.mesh.position.clone();
                             arrowSpawn.y += 1.35; // Shoulder & bow height
                             this.spawnArrow(arrowSpawn, playerPos, e);
@@ -6842,14 +6871,31 @@ equipWeapon(weaponId) {
                     if (behavior === 'Ranged' || e.isArcher) {
                         e._burstCount = (e._burstCount || 0) + 1;
                         if (e._burstCount < (e._burstTotal || 1)) {
-                            // Aggressive Rapid-Fire Volley: Immediately trigger next shot in 2-4 burst!
+                            // Aggressive Rapid-Fire Volley: Immediately trigger next shot in 3-4 burst!
                             e.attackTime = 0;
                             e._damageDelivered = false;
                             e.state = 'WINDUP';
                             e.attackPhase = 'WINDUP';
                             const toTarget = new THREE.Vector3().subVectors(playerPos, e.mesh.position);
                             e.mesh.rotation.y = Math.atan2(toTarget.x, toTarget.z);
-                            if (this.audio && this.audio.playBowDraw) this.audio.playBowDraw();
+                            if (e.isRuneArcher && this.audio && this.audio.playMagicBowDraw) {
+                                this.audio.playMagicBowDraw();
+                            } else if (this.audio && this.audio.playBowDraw) {
+                                this.audio.playBowDraw();
+                            }
+                            continue;
+                        }
+                    } else if (behavior !== 'Boss' && behavior !== 'Caster') {
+                        // Melee Mobs: Guaranteed 3-4 consecutive attacks in a row combo chain!
+                        e._comboCount = (e._comboCount || 0) + 1;
+                        if (e._comboCount < (e._comboTotal || 1)) {
+                            e.attackTime = 0;
+                            e._damageDelivered = false;
+                            e._attackVariant = ((e._attackVariant || 0) + 1) % 10;
+                            e.state = 'WINDUP';
+                            e.attackPhase = 'WINDUP';
+                            const toTarget = new THREE.Vector3().subVectors(playerPos, e.mesh.position);
+                            e.mesh.rotation.y = Math.atan2(toTarget.x, toTarget.z);
                             continue;
                         }
                     }
@@ -6857,10 +6903,12 @@ equipWeapon(weaponId) {
                     e._damageDelivered = false;
                     e._burstCount = 0;
                     e._burstTotal = 0;
+                    e._comboCount = 0;
+                    e._comboTotal = 0;
                     e.attackPhase = 'IDLE';
                     e.state = 'CHASE';
-                    const baseCd = (behavior === 'Ranged' || e.isArcher) ? (1.2 + Math.random() * 0.4) : (behavior === 'Heavy Tank' ? 1.9 : (behavior === 'Flanker' ? 0.9 : 1.3));
-                    e.cooldown = baseCd + Math.random() * 0.4;
+                    const baseCd = (behavior === 'Ranged' || e.isArcher) ? (1.0 + Math.random() * 0.3) : (behavior === 'Heavy Tank' ? 1.8 : (behavior === 'Flanker' ? 0.8 : 1.1));
+                    e.cooldown = baseCd + Math.random() * 0.3;
                 }
                 continue;
             }
@@ -6975,9 +7023,17 @@ equipWeapon(weaponId) {
                         e.state = 'WINDUP';
                         e.attackPhase = 'WINDUP';
                         if (behavior === 'Ranged' || e.isArcher) {
-                            e._burstTotal = Math.floor(Math.random() * 3) + 2; // Aggressive rapid-fire volley: 2, 3, or 4 attacks in a row!
+                            e._burstTotal = Math.floor(Math.random() * 2) + 3; // Guaranteed 3 or 4 attacks in a row!
                             e._burstCount = 0;
-                            if (this.audio && this.audio.playBowDraw) this.audio.playBowDraw();
+                            if (e.isRuneArcher && this.audio && this.audio.playMagicBowDraw) {
+                                this.audio.playMagicBowDraw();
+                            } else if (this.audio && this.audio.playBowDraw) {
+                                this.audio.playBowDraw();
+                            }
+                        } else {
+                            // Melee mobs: Guaranteed 3 or 4 combo attacks in a row!
+                            e._comboTotal = Math.floor(Math.random() * 2) + 3;
+                            e._comboCount = 0;
                         }
                     }
                 }
