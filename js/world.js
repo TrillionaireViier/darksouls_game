@@ -950,18 +950,23 @@ class DarkSoulsWorld {
             }
         }
 
-        // 7. Dynamic Fast-Travel Lordran Realm Ground Height (Expanded x6 influence radius = 240m)
+        // 7. Dynamic Fast-Travel Lordran Realm Ground Height (Nearest location dais clamping within 45m radius)
         if (window.DARK_SOULS_LOCATIONS) {
+            let closestLoc = null;
+            let minDistSq = 45 * 45;
             for (let i = 0; i < window.DARK_SOULS_LOCATIONS.length; i++) {
                 const loc = window.DARK_SOULS_LOCATIONS[i];
                 const dx = x - loc.pos[0];
                 const dz = z - loc.pos[2];
-                if (dx * dx + dz * dz < 240 * 240) {
-                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 12.0) {
-                        return loc.pos[1];
+                const d2 = dx * dx + dz * dz;
+                if (d2 < minDistSq) {
+                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 14.0) {
+                        minDistSq = d2;
+                        closestLoc = loc;
                     }
                 }
             }
+            if (closestLoc) return closestLoc.pos[1];
         }
 
         
@@ -2776,6 +2781,169 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-480, 2.0, -122, 0x10b981, 4.2, 26);
         this.createStandingBrazier(-480, 2.0, -98, 0x10b981, 4.2, 26);
         this.createPathBeacon(-480, 2.0, -110, 0x10b981, "⚔️ EMERALD FARRON SHRINE [WEST EXPEDITION]", "ABYSS WATCHERS ALTAR • WOLF LEGION BANNERS & EMERALD FIRE", "#a7f3d0");
+
+        // 11. Jagged Peak Draconic Caldera (outside_jagged_peak_caldera) (x = -260, z = 75, elev = +4.0m)
+        const calderaPlat = new THREE.Mesh(new THREE.BoxGeometry(42, 4.0, 42), this.cliffRockMat);
+        calderaPlat.position.set(-260, 2.0, 75);
+        calderaPlat.receiveShadow = true;
+        outsideGroup.add(calderaPlat);
+
+        // Volcanic Obsidian Basalt Spire & Magma Fissure
+        for (let sp = 0; sp < 6; sp++) {
+            const sang = (sp / 6) * Math.PI * 2;
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(1.2, 8.5, 5), this.cliffRockMat);
+            spire.position.set(-260 + Math.cos(sang) * 16, 6.0, 75 + Math.sin(sang) * 16);
+            spire.rotation.set(Math.sin(sang) * 0.25, 0, Math.cos(sang) * 0.25);
+            outsideGroup.add(spire);
+        }
+
+        const jaggedCalderaLava = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 0.4, 20), this.demonLavaMat || this.stoneMat);
+        calderaLava.position.set(-260, 4.1, 75);
+        outsideGroup.add(jaggedCalderaLava);
+
+        const jaggedCalderaLight = new THREE.PointLight(0xff1744, 4.5, 32.0);
+        calderaLight.position.set(-260, 7.5, 75);
+        outsideGroup.add(jaggedCalderaLight);
+        this.createStandingBrazier(-260, 4.0, 62, 0xff1744, 4.5, 26);
+        this.createStandingBrazier(-260, 4.0, 88, 0xff1744, 4.5, 26);
+        this.createPathBeacon(-260, 4.0, 75, 0xff1744, "🌋 JAGGED PEAK DRACONIC CALDERA [ELEV +4.0m]", "VOLCANIC BASALT CRAGS • BAYLE THE DREAD & DRACONIC BEASTMEN", "#fecdd3");
+
+        // 12. Shadow Keep Impaler Ramparts (outside_shadow_keep_ramparts) (x = -175, z = -115, elev = +4.0m)
+        const keepPlat = new THREE.Mesh(new THREE.BoxGeometry(36, 4.0, 36), this.stoneMat);
+        keepPlat.position.set(-175, 2.0, -115);
+        keepPlat.receiveShadow = true;
+        outsideGroup.add(keepPlat);
+
+        // Iron Impaler Stakes with burning coals
+        for (let ik = -12; ik <= 12; ik += 6) {
+            const stake = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.14, 6.5, 6), this.darkSteelMat);
+            stake.position.set(-175 + ik, 6.5, -130);
+            outsideGroup.add(stake);
+
+            const coal = new THREE.Mesh(new THREE.SphereGeometry(0.25, 6, 6), new THREE.MeshStandardMaterial({
+                color: 0xff3b00,
+                emissive: 0xff2200,
+                emissiveIntensity: 1.5
+            }));
+            coal.position.set(-175 + ik, 9.6, -130);
+            outsideGroup.add(coal);
+        }
+
+        const keepLight = new THREE.PointLight(0xff3b00, 4.2, 30.0);
+        keepLight.position.set(-175, 7.5, -115);
+        outsideGroup.add(keepLight);
+        this.createStandingBrazier(-185, 4.0, -115, 0xff3b00, 4.2, 26);
+        this.createStandingBrazier(-165, 4.0, -115, 0xff3b00, 4.2, 26);
+        this.createPathBeacon(-175, 4.0, -115, 0xff3b00, "🏰 SHADOW KEEP IMPALER RAMPARTS [ELEV +4.0m]", "CRIMSON SERPENT STANDARDS • MESSMER THE IMPALER & CRUCIBLE SENTINELS", "#fed7aa");
+
+        // 13. Midra's Frenzied Flame Catacomb (outside_frenzied_flame_abyss) (x = -245, z = -85, elev = -4.0m)
+        const abyssPlat = new THREE.Mesh(new THREE.CylinderGeometry(24, 26, 1.2, 24), this.stoneMat);
+        abyssPlat.position.set(-245, -4.6, -85);
+        abyssPlat.receiveShadow = true;
+        outsideGroup.add(abyssPlat);
+
+        // Sunken Searing Frenzied Sun Caldera Basin
+        const frenzySunBasin = new THREE.Mesh(new THREE.SphereGeometry(3.5, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0xffaa00,
+            emissive: 0xff8800,
+            emissiveIntensity: 2.0
+        }));
+        frenzySunBasin.position.set(-245, -1.5, -85);
+        outsideGroup.add(frenzySunBasin);
+
+        const abyssLight = new THREE.PointLight(0xffaa00, 4.8, 34.0);
+        abyssLight.position.set(-245, 0.5, -85);
+        outsideGroup.add(abyssLight);
+        this.createStandingBrazier(-245, -4.0, -73, 0xffaa00, 4.5, 26);
+        this.createStandingBrazier(-245, -4.0, -97, 0xffaa00, 4.5, 26);
+        this.createPathBeacon(-245, -4.0, -85, 0xffaa00, "👁️ MIDRA'S FRENZIED FLAME CATACOMB [ELEV -4.0m]", "ABYSSAL RUIN TERRACE • MIDRA LORD OF FRENZIED FLAME & MADNESS ACOLYTES", "#fef08a");
+
+        // 14. Haligtree Sacred Canopy Roots (outside_haligtree_canopy_roots) (x = -95, z = 95, elev = +2.0m)
+        const rootPlat = new THREE.Mesh(new THREE.CylinderGeometry(28, 32, 2.0, 16), this.stoneMat);
+        rootPlat.position.set(-95, 1.0, 95);
+        rootPlat.receiveShadow = true;
+        outsideGroup.add(rootPlat);
+
+        // Woven Golden Boughs & Blooming Scarlet Lotus
+        const lotusBloom = new THREE.Mesh(new THREE.SphereGeometry(2.4, 12, 12), new THREE.MeshStandardMaterial({
+            color: 0xf43f5e,
+            emissive: 0xe11d48,
+            emissiveIntensity: 1.2
+        }));
+        lotusBloom.position.set(-95, 3.8, 95);
+        outsideGroup.add(lotusBloom);
+
+        const rootLight = new THREE.PointLight(0xf43f5e, 4.2, 30.0);
+        rootLight.position.set(-95, 5.0, 95);
+        outsideGroup.add(rootLight);
+        this.createStandingBrazier(-95, 2.0, 82, 0xf43f5e, 4.0, 24);
+        this.createStandingBrazier(-95, 2.0, 108, 0xf43f5e, 4.0, 24);
+        this.createPathBeacon(-95, 2.0, 95, 0xf43f5e, "🌸 HALIGTREE SACRED CANOPY ROOTS [ELEV +2.0m]", "UNALLOYED GOLD BOUGHS • MALENIA GODDESS OF ROT & CRYSTAL MAIDENS", "#fecdd3");
+
+        // 15. Archdragon Thunder Belfry (outside_archdragon_thunder_peak) (x = -270, z = -25, elev = +7.0m)
+        const belfryPlat = new THREE.Mesh(new THREE.BoxGeometry(32, 7.0, 32), this.stoneMat);
+        belfryPlat.position.set(-270, 3.5, -25);
+        belfryPlat.receiveShadow = true;
+        outsideGroup.add(belfryPlat);
+
+        // Colossal Bronze Dragon Belfry Bell
+        const belfryBell = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 3.2, 4.5, 12), this.goldMat || this.stoneMat);
+        belfryBell.position.set(-270, 11.5, -25);
+        outsideGroup.add(belfryBell);
+
+        const belfryLight = new THREE.PointLight(0xffdd44, 4.6, 34.0);
+        belfryLight.position.set(-270, 13.0, -25);
+        outsideGroup.add(belfryLight);
+        this.createStandingBrazier(-270, 7.0, -38, 0xffdd44, 4.5, 26);
+        this.createStandingBrazier(-270, 7.0, -12, 0xffdd44, 4.5, 26);
+        this.createPathBeacon(-270, 7.0, -25, 0xffdd44, "⚡ ARCHDRAGON THUNDER BELFRY [ELEV +7.0m]", "SKYWARD MOUNTAIN BELLTOWER • NAMELESS KING & ONYX METEOR LORDS", "#fef08a");
+
+        // 16. Forlorn Bloodhound Evergaol (outside_bloodhound_gaol) (x = -80, z = -110, elev = 0m)
+        const gaolPlat = new THREE.Mesh(new THREE.CylinderGeometry(16, 16, 0.25, 24), this.darkSteelMat || this.stoneMat);
+        gaolPlat.position.set(-80, 0.05, -110);
+        gaolPlat.receiveShadow = true;
+        outsideGroup.add(gaolPlat);
+
+        for (let gm = 0; gm < 8; gm++) {
+            const gang = (gm / 8) * Math.PI * 2;
+            const gmono = new THREE.Mesh(new THREE.BoxGeometry(0.9, 4.5, 0.9), this.stoneMat);
+            gmono.position.set(-80 + Math.cos(gang) * 14, 2.25, -110 + Math.sin(gang) * 14);
+            gmono.rotation.y = gang;
+            outsideGroup.add(gmono);
+        }
+
+        const gaolLight = new THREE.PointLight(0x38bdf8, 3.8, 26.0);
+        gaolLight.position.set(-80, 1.8, -110);
+        outsideGroup.add(gaolLight);
+        this.createPathBeacon(-80, 0.0, -110, 0x38bdf8, "⛓️ FORLORN BLOODHOUND EVERGAOL [0m]", "RUNIC VOID RING • BLOODHOUND KNIGHT DARRIWIL & DIRE SHADOW WOLVES", "#bae6fd");
+
+        // 17. Glintstone Crystalian Matrix (outside_crystalian_cavern_matrix) (x = -120, z = -110, elev = -2.0m)
+        const matrixPlat = new THREE.Mesh(new THREE.CylinderGeometry(22, 24, 1.0, 16), this.stoneMat);
+        matrixPlat.position.set(-120, -2.5, -110);
+        matrixPlat.receiveShadow = true;
+        outsideGroup.add(matrixPlat);
+
+        // Towering Crystal Cluster Formations
+        for (let cr = 0; cr < 7; cr++) {
+            const crang = (cr / 7) * Math.PI * 2;
+            const crystalMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.75, 6.5 + (cr % 3) * 1.5, 6), new THREE.MeshStandardMaterial({
+                color: 0x00f5ff,
+                emissive: 0x0088cc,
+                emissiveIntensity: 1.2,
+                roughness: 0.1,
+                metalness: 0.3
+            }));
+            crystalMesh.position.set(-120 + Math.cos(crang) * 9.5, 1.0, -110 + Math.sin(crang) * 9.5);
+            crystalMesh.rotation.set(Math.sin(crang) * 0.35, 0, Math.cos(crang) * 0.35);
+            outsideGroup.add(crystalMesh);
+        }
+
+        const matrixLight = new THREE.PointLight(0x00f5ff, 4.2, 30.0);
+        matrixLight.position.set(-120, 1.5, -110);
+        outsideGroup.add(matrixLight);
+        this.createStandingBrazier(-120, -2.0, -98, 0x00f5ff, 4.0, 24);
+        this.createStandingBrazier(-120, -2.0, -122, 0x00f5ff, 4.0, 24);
+        this.createPathBeacon(-120, -2.0, -110, 0x00f5ff, "💎 GLINTSTONE CRYSTALIAN MATRIX [ELEV -2.0m]", "RESONANT AZURE CRYSTAL SPIRES • CRYSTALIAN BLADEMAIDENS & CHAKRAMS", "#a5f3fc");
 
         // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded to 550m)
         // North mountain ridge: z = -380, x: -550 to -28

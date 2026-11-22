@@ -3344,7 +3344,7 @@ class DarkSoulsCombat {
                 souls: 2200000,
                 radius: 4.2,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'outside_ancient_dragon_senessax', theme: 'dragon', bossScale: 3.1 }, x, z)
+                create: (cf, x, z) => cf.createAncientDragonSenessax ? cf.createAncientDragonSenessax(x, z) : cf.createSoulsborneBoss({ id: 'outside_ancient_dragon_senessax', theme: 'dragon', bossScale: 3.1 }, x, z)
             },
             {
                 id: 'outside_death_rite_bird',
@@ -3389,7 +3389,7 @@ class DarkSoulsCombat {
                 souls: 1850000,
                 radius: 3.5,
                 spawnPos: { x: 0, z: 330 },
-                create: (cf, x, z) => cf.createErdtreeAvatar ? cf.createErdtreeAvatar(x, z) : cf.createSoulsborneBoss({ id: 'outside_erdtree_avatar', theme: 'rot', bossScale: 2.6 }, x, z)
+                create: (cf, x, z) => cf.createPutridErdtreeAvatar ? cf.createPutridErdtreeAvatar(x, z) : cf.createSoulsborneBoss({ id: 'outside_erdtree_avatar', theme: 'rot', bossScale: 2.6 }, x, z)
             },
             {
                 id: 'outside_grave_warden_black_knight',
@@ -3435,6 +3435,36 @@ class DarkSoulsCombat {
                 radius: 3.8,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSanctuaryStoneTitan ? cf.createSanctuaryStoneTitan(x, z) : cf.createSoulsborneBoss({ id: 'outside_sanctuary_stone_titan', theme: 'holy', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'outside_crucible_warlord',
+                name: 'CRUCIBLE WARLORD ORDOVIS & DEVONIA',
+                title: 'Golden Erdtree Royal Colonnade &bull; Aspect of Wings, Ordovis Vortex Shockwave & Primal Tail Sweep',
+                unlockLocationId: 'outside_royal_colonnade_sanctum',
+                icon: '👑',
+                theme: 'holy',
+                bossScale: 2.8,
+                maxHp: 34000,
+                damage: 1540,
+                souls: 2300000,
+                radius: 4.0,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createCrucibleWarlordOrdovis ? cf.createCrucibleWarlordOrdovis(x, z) : cf.createSoulsborneBoss({ id: 'outside_crucible_warlord', theme: 'holy', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'outside_frenzied_colossus',
+                name: 'ABYSSAL FRENZIED FLAME COLOSSUS',
+                title: 'Tower of the Frenzied Flame &bull; Howl of Shabriri, Unendurable Frenzy & Molten Basalt Cleave',
+                unlockLocationId: 'outside_frenzied_flame_overlook',
+                icon: '🔥',
+                theme: 'flame',
+                bossScale: 3.0,
+                maxHp: 36000,
+                damage: 1580,
+                souls: 2500000,
+                radius: 4.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createFrenziedFlameColossus ? cf.createFrenziedFlameColossus(x, z) : cf.createSoulsborneBoss({ id: 'outside_frenzied_colossus', theme: 'flame', bossScale: 3.0 }, x, z)
             },
             {
                 id: 'er_bell_bearing_hunter',
@@ -4008,7 +4038,18 @@ class DarkSoulsCombat {
             [-95.0, 2.0, 95.0], [-102.0, 2.0, 102.0], [-88.0, 2.0, 88.0],           // Haligtree Canopy Roots (Crystalian Blademaidens)
             [-270.0, 7.0, -25.0], [-278.0, 7.0, -32.0], [-262.0, 7.0, -18.0],       // Archdragon Thunder Belfry (Onyx Meteor Lords)
             [-80.0, 0.0, -110.0], [-86.0, 0.0, -116.0], [-74.0, 0.0, -104.0],       // Forlorn Bloodhound Evergaol (Bloodhound Knights)
-            [-120.0, -2.0, -110.0], [-128.0, -2.0, -118.0], [-112.0, -2.0, -102.0]  // Glintstone Crystalian Matrix (Crystalians)
+            [-120.0, -2.0, -110.0], [-128.0, -2.0, -118.0], [-112.0, -2.0, -102.0], // Glintstone Crystalian Matrix (Crystalians)
+            // 10 Brand-New Outside Realm Expeditions:
+            [-280.0, -2.0, -80.0], [-288.0, -2.0, -88.0], [-272.0, -2.0, -74.0],   // Celestial Falls Basin (Astral Glintstone Scholars)
+            [-310.0, 3.0, 110.0], [-318.0, 3.0, 118.0], [-302.0, 3.0, 104.0],     // Cathedral of Dragon Communion (Draconic Pyromancers)
+            [-340.0, 8.0, -140.0], [-348.0, 8.0, -148.0], [-332.0, 8.0, -132.0],   // Tower of the Frenzied Flame (Frenzied Nomad Zealots)
+            [-260.0, 2.0, 180.0], [-268.0, 2.0, 188.0], [-252.0, 2.0, 172.0],     // Golden Erdtree Royal Colonnade (Crucible Warlords)
+            [-190.0, 0.0, -160.0], [-198.0, 0.0, -168.0], [-182.0, 0.0, -152.0],   // Forlorn Hound Evergaol (Feral Bloodhound Stalkers)
+            [-360.0, -1.0, 40.0], [-368.0, -1.0, 48.0], [-352.0, -1.0, 32.0],     // Titanite Colossus Caldera (Titanite Slag Golems)
+            [-390.0, 1.0, -60.0], [-398.0, 1.0, -68.0], [-382.0, 1.0, -52.0],     // Necromancer's Bone Barrow (Ghostflame Grave Wraiths)
+            [-420.0, -3.0, 90.0], [-428.0, -3.0, 98.0], [-412.0, -3.0, 82.0],     // Sunken Mist Lake Pier (Ghostflame Grave Wraiths)
+            [-450.0, 12.0, -20.0], [-458.0, 12.0, -28.0], [-442.0, 12.0, -12.0],   // World-Tree Aerial Canopy (Astral Scholars)
+            [-480.0, 2.0, -110.0], [-488.0, 2.0, -118.0], [-472.0, 2.0, -102.0]    // Emerald Farron Shrine (Draconic Pyromancers & Wolf Knights)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -4019,7 +4060,9 @@ class DarkSoulsCombat {
                 'cleanrot_knight', 'fire_monk_prelate', 'nox_swordstress',
                 'farum_beastman', 'royal_perfumer', 'abyssal_grave_warden',
                 'crucible_horned_sentinel', 'bloodhound_knight', 'frenzied_flame_acolyte',
-                'crystalian_blademaiden', 'draconic_beastman', 'onyx_meteor_lord'
+                'crystalian_blademaiden', 'draconic_beastman', 'onyx_meteor_lord',
+                'astral_scholar', 'draconic_pyromancer', 'frenzied_zealot',
+                'bloodhound_stalker', 'titanite_slag_golem', 'ghostflame_grave_wraith'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

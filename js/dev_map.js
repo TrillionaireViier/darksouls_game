@@ -600,8 +600,16 @@
                 // Sunken Serpent Courtyard (-4m)
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
-                // Outside Realm: Darkroot Archtrees & Ashen Wilds (x: -190 to -28, z: -85 to 85)
-                this.drawZoneRect(ctx, -220, -110, 192, 220, "rgba(18, 55, 28, 0.55)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: DARKROOT ARCHTREES & METEOR CRATER (0m)");
+                // Outside Realm: Darkroot Archtrees & Expanded Wildlands
+                this.drawZoneRect(ctx, -520, -200, 492, 400, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
+                this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
+                this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
+                this.drawZoneRect(ctx, -265, -105, 40, 40, "rgba(65, 45, 10, 0.65)", "#eab308", "👁️ FRENZIED FLAME ABYSS (-4m)");
+                this.drawZoneRect(ctx, -115, 75, 40, 40, "rgba(45, 15, 30, 0.60)", "#ec4899", "🌸 HALIGTREE CANOPY ROOTS (+2m)");
+                this.drawZoneRect(ctx, -290, -45, 40, 40, "rgba(40, 40, 15, 0.60)", "#eab308", "⚡ ARCHDRAGON THUNDER BELFRY (+7m)");
+                this.drawZoneRect(ctx, -140, -130, 40, 40, "rgba(10, 35, 55, 0.60)", "#06b6d4", "💎 CRYSTALIAN MATRIX (-2m)");
+                this.drawZoneRect(ctx, -100, -125, 35, 35, "rgba(20, 20, 45, 0.60)", "#38bdf8", "⛓️ BLOODHOUND EVERGAOL (0m)");
             }
 
             // 3. Draw All World Pins

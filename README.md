@@ -223,4 +223,32 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
   - Authentic "BONFIRE LIT", "YOU DIED", and "VICTORY ACHIEVED" screen banners with defeated boss names.
   - Pure procedural Web Audio API sound effects (sword clangs, parry bell chimes, wolf howls, flame breath, sunlight bursts, and ambient gothic music).
 
+
+---
+
+## 🌲 Outside Realm Expeditions & Apex Lords (511 Fast-Travel Locations & 61 Outside Zones)
+
+The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 61 bespoke Outside locations, 60 active mob patrols, and 14 apex Soulsborne lords:
+
+### 🌟 6 New Bespoke 3D Mob Archetypes
+1. **Crucible Horned Sentinel**: Imposing primordial warrior in red-gold iridescent armor with spiraling bull horns, sprouting golden-red feathered wings, colossal Crucible Tree Spear, and tower shield.
+2. **Bloodhound Knight**: Feral low-slung predator with chased burnished steel plate, wolf-snout closed helm, glowing amber eye slits, and reverse-grip Bloodhound's Fang curved greatsword.
+3. **Frenzied Flame Acolyte**: Saffron-robed nomad monk whose head is consumed by a roaring, incandescent Frenzied Sun orb, carrying a scorched resonant fiddle staff with yellow embers.
+4. **Crystalian Blademaiden**: Translucent faceted sapphire/teal crystalline body with an inner cyan refractive core, pointed crystal shard crown, and orbiting floating crystal chakram hoop blades.
+5. **Farum Azula Draconic Beastman**: Hulking wolf-dragon hybrid warrior with thick stone scales, horned dragon skull, and a colossal notched basalt cleaver crackling with crimson dragon lightning.
+6. **Onyx Meteor Lord**: Slender obsidian celestial titan with purple gravitational glowing veins, floating meteorite shoulder pauldrons, an orbiting crown of meteor shards, and a colossal curved Alabaster Greatsword.
+
+### 👑 Bespoke 3D Apex Boss Models & Arenas
+- **Bayle the Dread (Jagged Peak Caldera)**: Scarred magma dragon tyrant with broken wing stumps, jagged basalt horns, and scarlet lightning breath (+4.0m elevation).
+- **Messmer the Impaler (Shadow Keep Ramparts)**: Slender gothic lord in crimson plate with coiled abyssal serpents, golden dragon eye, and the blazing Crimson Impaler Spear (+4.0m elevation).
+- **Midra, Lord of Frenzied Flame (Frenzied Flame Abyss)**: Sunken marble catacomb where Midra's head burns as a golden celestial sun, brandishing the Barbed Greatsword of Damnation (-4.0m elevation).
+- **Malenia, Goddess of Rot (Haligtree Sacred Roots)**: Unalloyed golden winged helm, prosthetics, Hand of Malenia katana, and blossoming Scarlet Aeonia butterfly wings (+2.0m elevation).
+- **The Nameless King (Archdragon Thunder Belfry)**: Skyward mountain belfry towering above stormclouds, ringing a monumental bronze bell with Dragonslayer Swordspear (+7.0m elevation).
+- **Death Rite Bird (Ancient Dolmen Colonnade)**: Skeletal avian god with tattered black pinions, cyan ghostflame eyes, and Death's Poker ghostflame lance.
+- **Full-Grown Fallingstar Beast (Astral Meteor Crater)**: Cosmic bull carapace with cyclopean purple gravity eye, curved mandibles, and segmented scorpion tail.
+- **Putrid Erdtree Avatar (Rotten Mother Grove)**: Headless hollow wood titan crowned in golden boughs, scarlet rot fungi, and golden ritual staff.
+- **Sanctuary Stone Titan (Western Precipice)**: Ancient carved granite golem with mossy shoulders, glowing emerald rune chest core, and monolithic club.
+- **Ancient Dragon Lansseax (Wyrm Ridge Altar)**: Four-winged prehistoric stone dragon priestess clutching a crackling 5-meter Red Lightning Glaive.
+
+
 Developed by VIIER Agency • TrillionaireViier • Dark Souls Project © 2026
