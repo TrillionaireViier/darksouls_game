@@ -1731,7 +1731,7 @@ class DarkSoulsGame {
 
         let isSprinting = false;
 
-        const cannotMove = this.combat.isDrinkingEstus || (this.combat.isStaggered && this.combat.staggerTime > 0.35);
+        const cannotMove = this.combat.isDrinkingEstus || (this.combat.isStaggered && this.combat.staggerTime > 0.20);
         if (isMoving && !this.combat.isAttacking && !cannotMove) {
             isSprinting = (this.keys['ShiftLeft'] || this.keys['ShiftRight']) && this.combat.stamina > 5;
             let speed = isSprinting ? this.sprintSpeed : (this.combat.isBlocking ? this.moveSpeed * 0.55 : this.moveSpeed);

@@ -4341,8 +4341,8 @@ class DarkSoulsCombat {
     tryRoll(moveDir) {
         if (this.bufferAction('ROLL', moveDir)) return;
         if (this.isDead || this.isRolling || this.isDrinkingEstus) return;
-        // Roll-escape: allow breaking out of minor stagger after 0.1s!
-        if (this.isStaggered && this.staggerTime > 0.40) return;
+        // Roll-escape: allow breaking out of minor stagger quickly (after 0.1s)!
+        if (this.isStaggered && this.staggerTime > 0.20) return;
         // Roll-cancel during attack recovery frames
         if (this.isAttacking && this.attackTime < 0.16) return;
         if (this.stamina < 16) return;
@@ -4375,7 +4375,7 @@ class DarkSoulsCombat {
     tryDrinkEstus() {
         if (this.bufferAction('ESTUS')) return;
         if (this.isDead || this.isRolling || this.isDrinkingEstus) return;
-        if (this.isStaggered && this.staggerTime > 0.35) return;
+        if (this.isStaggered && this.staggerTime > 0.20) return;
         if (this.estusFlasks <= 0) {
             this.game.showNotification("NO ESTUS REMAINING");
             return;
@@ -4609,20 +4609,26 @@ class DarkSoulsCombat {
                         const wpnPoiseMult = (currentWpn && currentWpn.poiseBreak) || 1.0;
                         const behavior = e.behaviorType || 'Swarm';
 
-                        // Poise & Stagger System: Small mobs ALWAYS stagger on EVERY hit for 0.4s!
+                        // Poise & Stagger System: Small mobs stagger for 0.3s rarely, scaling with player level
                         const isHeavySlash = (this.attackCombo === 3 || this.attackCombo >= 5 || this.currentWeaponId === 'zweihander' || this.currentWeaponId === 'dragontooth');
                         const isSmallMob = (behavior === 'Swarm' || behavior === 'Flanker' || behavior === 'Ranged' || e.isArcher || e.type === 'hollow' || e.type === 'skeleton' || !e.type || e.type === 'mob' || (e.maxHp && e.maxHp < 900));
 
                         if (isSmallMob) {
-                            // Small / standard mobs stagger for strictly 0.4s on every hit
-                            e.poise = 0;
-                            e.isStaggered = true;
-                            e.staggerTimer = 0.40;
-                            e.maxStaggerTimer = 0.40;
-                            e.state = 'STAGGER';
-                            e.attackPhase = 'IDLE';
-                            e.isAttacking = false;
-                            e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.45 + Math.random() * 0.25);
+                            // Small mobs stagger for 0.30s; occurs rarely on light hits, scaling up with level
+                            const lvlStaggerBonus = Math.min(0.35, (this.level - 1) * 0.02);
+                            const staggerChance = isHeavySlash ? 0.80 : (0.22 + lvlStaggerBonus);
+                            const doesStagger = Math.random() < staggerChance;
+
+                            if (doesStagger) {
+                                e.poise = 0;
+                                e.isStaggered = true;
+                                e.staggerTimer = 0.30;
+                                e.maxStaggerTimer = 0.30;
+                                e.state = 'STAGGER';
+                                e.attackPhase = 'IDLE';
+                                e.isAttacking = false;
+                                e._hitDir = (Math.random() > 0.5 ? 1 : -1) * (0.35 + Math.random() * 0.2);
+                            }
                         } else {
                             // Elite / Heavy mobs require poise break (or heavy attacks)
                             let baseMaxPoise = 75;
@@ -5192,11 +5198,12 @@ equipWeapon(weaponId) {
         if (this.hasRing('cloranthy')) regen = Math.round(regen * 1.5);
         this.staminaRegenRate = regen;
 
-        let basePoise = 100;
+        let basePoise = 100 + (this.level - 1) * 8 + (this.endurance - 10) * 4;
         if (this.hasRing('havel')) basePoise = Math.round(basePoise * 1.5);
         if (this.hasRing('wolf_ring')) basePoise += 40;
         if (this.hasRing('erdtree_favor')) basePoise = Math.round(basePoise * 1.15);
         this.maxPoise = basePoise;
+        this.poise = Math.min(this.poise, this.maxPoise);
 
         if (this.game && this.game.updateHUD) this.game.updateHUD();
     }
@@ -5393,14 +5400,15 @@ equipWeapon(weaponId) {
                 this.poiseRegenDelay = 3.0;
 
                 if (this.stamina <= 0 || this.poise <= 0) {
-                    // Guard broken for 2.2s!
+                    // Guard broken: player stun strictly 0.30s max, reduces further as player levels up
                     this.poise = 0;
                     this.isStaggered = true;
-                    this.staggerTime = 2.2;
-                    this.maxStaggerTimer = 2.2;
+                    const playerStunDuration = Math.max(0.12, 0.30 - Math.min(0.15, (this.level - 1) * 0.005));
+                    this.staggerTime = playerStunDuration;
+                    this.maxStaggerTimer = playerStunDuration;
                     this.isBlocking = false;
                     this.guardCounterWindow = 0;
-                    this.game.showNotification("⚠️ GUARD BROKEN! STAGGERED (2.2s)");
+                    this.game.showNotification(`⚠️ GUARD BROKEN! STUNNED (${playerStunDuration.toFixed(2)}s)`);
                 } else {
                     this.guardCounterWindow = 0.65;
                     this.game.showNotification("🛡️ BLOCKED • [LMB] GUARD COUNTER READY!");
@@ -5417,28 +5425,30 @@ equipWeapon(weaponId) {
         this.game.flashDamageScreen();
         if (this.game.triggerHitstop) this.game.triggerHitstop(3);
 
-        // Poise & Stagger: Poise damage, regenerates after 2.5s delay
-        const directPoiseDmg = Math.max(15, Math.round(damage * 0.35));
+        // Poise & Stagger: Poise damage, regenerates after 2.0s delay
+        const directPoiseDmg = Math.max(6, Math.round(damage * 0.18));
         this.poise -= directPoiseDmg;
-        this.poiseRegenDelay = 2.5;
+        this.poiseRegenDelay = 2.0;
 
         if (this.hp <= 0) {
             this.killPlayer();
         } else if (this.poise <= 0) {
-            // Hitting 0 poise breaks guard and staggers player for 2.2s (riposte / vulnerability window)
+            // Poise broken: player stun strictly 0.30s max, reduces further as player levels up
             this.poise = 0;
             this.isStaggered = true;
-            this.staggerTime = 2.2;
-            this.maxStaggerTimer = 2.2;
+            const playerStunDuration = Math.max(0.12, 0.30 - Math.min(0.15, (this.level - 1) * 0.005));
+            this.staggerTime = playerStunDuration;
+            this.maxStaggerTimer = playerStunDuration;
             this.isAttacking = false;
             this.isBlocking = false;
-            this.game.showNotification("⚠️ POISE BROKEN! STAGGERED (2.2s)");
+            this.game.showNotification(`⚠️ POISE BROKEN! STUNNED (${playerStunDuration.toFixed(2)}s)`);
         } else {
-            // Player still has poise! Only stagger on colossal boss hits (damage >= 85)
-            if (damage >= 85) {
+            // Player still has poise! Only stagger on colossal boss hits (damage >= 90)
+            if (damage >= 90) {
                 this.isStaggered = true;
-                this.staggerTime = 0.22;
-                this.maxStaggerTimer = 0.22;
+                const playerStunDuration = Math.max(0.10, 0.20 - Math.min(0.10, (this.level - 1) * 0.004));
+                this.staggerTime = playerStunDuration;
+                this.maxStaggerTimer = playerStunDuration;
             } else {
                 // Poise absorbs impact! Player retains full movement, attack, and roll freedom!
                 this.isStaggered = false;
@@ -5772,6 +5782,9 @@ equipWeapon(weaponId) {
 
         this.audio.playEstusDrink();
 
+        // Update player poise & stats scaling with level
+        this.applyRingBonuses();
+
         // All mobs level up with player
         this.scaleAllMobsToPlayerLevel();
 
@@ -5917,12 +5930,16 @@ equipWeapon(weaponId) {
                         const behavior = e.behaviorType || 'Swarm';
                         const isSmallMob = (behavior === 'Swarm' || behavior === 'Flanker' || behavior === 'Ranged' || e.isArcher || e.type === 'hollow' || e.type === 'skeleton' || !e.type || e.type === 'mob' || (e.maxHp && e.maxHp < 900));
                         if (isSmallMob) {
-                            e.isStaggered = true;
-                            e.staggerTimer = 0.40;
-                            e.maxStaggerTimer = 0.40;
-                            e.state = 'STAGGER';
-                            e.attackPhase = 'IDLE';
-                            e.isAttacking = false;
+                            const lvlStaggerBonus = Math.min(0.30, (this.level - 1) * 0.02);
+                            const doesStagger = Math.random() < (0.22 + lvlStaggerBonus);
+                            if (doesStagger) {
+                                e.isStaggered = true;
+                                e.staggerTimer = 0.30;
+                                e.maxStaggerTimer = 0.30;
+                                e.state = 'STAGGER';
+                                e.attackPhase = 'IDLE';
+                                e.isAttacking = false;
+                            }
                         }
                     }
                     hitHollow = true;
