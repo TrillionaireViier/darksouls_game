@@ -1657,41 +1657,38 @@ class DarkSoulsWorld {
         this.createWall(-25.2, 1.5, 146, 1.5, 14.0, 252);
         this.createWall(-14.8, 1.5, 146, 1.5, 14.0, 252);
 
-        // Crypt End-Cap Enclosure Walls (seals entry and exit against void leaks)
-        this.createWall(-20, 1.5, 21.0, 12.0, 14.0, 1.5);
+        // Crypt End-Cap Enclosure Wall (seals exit before boss fog gate at z=271.5)
         this.createWall(-20, 1.5, 271.5, 12.0, 14.0, 1.5);
 
-        // Flooded Crypt Corridor High Vaulted Stone Ceiling (y=4.2, wide double-sided slab covering entire span)
-        const cryptCeilMat = this.stoneMat.clone();
-        cryptCeilMat.side = THREE.DoubleSide;
-        cryptCeilMat.roughness = 0.55;
-        cryptCeilMat.emissive = new THREE.Color(0x3a4c5e);
-        cryptCeilMat.emissiveIntensity = 0.45;
-        const cryptCeilGeo = new THREE.BoxGeometry(15.0, 1.2, 254);
-        const cryptCeil = new THREE.Mesh(cryptCeilGeo, cryptCeilMat);
-        cryptCeil.position.set(-20, 4.2, 146);
-        cryptCeil.receiveShadow = true;
-        this.scene.add(cryptCeil);
-
-        // Radiant Overhead Lanterns and Vaulted Stone Arches along the Crypt every 12m
+        // Sunken Catacombs Grand Colonnade Vaulted Arches every 12m (Open to the sunlit azure sky!)
         for (let caz = 24; caz <= 268; caz += 12) {
-            // Radiant Crypt Lantern Light illuminating both floor and vaulted ceiling
-            const cryptLantern = new THREE.PointLight(0x80e0ff, 3.8, 28, 0.9);
-            cryptLantern.position.set(-20, 1.8, caz);
+            // Radiant Crypt Lantern Light illuminating both floor and architecture
+            const cryptLantern = new THREE.PointLight(0xa0e8ff, 4.2, 32, 0.8);
+            cryptLantern.position.set(-20, 2.5, caz);
             this.scene.add(cryptLantern);
 
+            // Overhead Vaulted Stone Arch framing the blue sky
             const cryptArch = new THREE.Mesh(new THREE.BoxGeometry(11.0, 1.4, 1.4), this.wallMat);
-            cryptArch.position.set(-20, 3.2, caz);
+            cryptArch.position.set(-20, 4.5, caz);
             cryptArch.castShadow = true;
             this.scene.add(cryptArch);
 
+            // Flying Buttresses connecting to canyon walls
+            const buttL = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.8, 1.2), this.wallMat);
+            buttL.position.set(-24.5, 3.8, caz);
+            this.scene.add(buttL);
+
+            const buttR = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.8, 1.2), this.wallMat);
+            buttR.position.set(-15.5, 3.8, caz);
+            this.scene.add(buttR);
+
             // Emerald Ghostfire Braziers in Crypt
-            this.createStandingBrazier(-18.5, -4.9, caz, 0x00ffcc, 4.0, 24);
-            this.createStandingBrazier(-21.5, -4.9, caz, 0x00ffcc, 4.0, 24);
+            this.createStandingBrazier(-18.5, -4.9, caz, 0x00ffcc, 4.5, 26);
+            this.createStandingBrazier(-21.5, -4.9, caz, 0x00ffcc, 4.5, 26);
         }
 
         // Golden Surface Portal Light at Crypt Entryway (z=28)
-        const surfacePortalLight = new THREE.PointLight(0xfffaea, 4.5, 30, 0.8);
+        const surfacePortalLight = new THREE.PointLight(0xfffaea, 4.8, 32, 0.8);
         surfacePortalLight.position.set(-20, -1.0, 28);
         this.scene.add(surfacePortalLight);
 
@@ -4608,19 +4605,19 @@ class DarkSoulsWorld {
         const cz = 40;
         shipGroup.position.set(cx, cy, cz);
 
-        // Materials for Dreadnought Starship
-        const hullMat = this.darkSteelMat || new THREE.MeshStandardMaterial({ color: 0x22262e, metalness: 0.85, roughness: 0.35 });
-        const armorPlatesMat = new THREE.MeshStandardMaterial({ color: 0x181c22, metalness: 0.90, roughness: 0.28 });
-        const canopyGlassMat = new THREE.MeshStandardMaterial({ color: 0x00d4ff, metalness: 0.2, roughness: 0.1, transparent: true, opacity: 0.65 });
-        const engineGlowMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
-        const coreMat = new THREE.MeshBasicMaterial({ color: 0x00ffff });
-        const goldTrimMat = this.goldTrimMat || new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.3 });
-        const warningStripesMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
-        const floorMat = new THREE.MeshStandardMaterial({ color: 0x14181f, metalness: 0.75, roughness: 0.45 });
+        // Luminous Sci-Fi Materials for Dreadnought Starship
+        const hullMat = new THREE.MeshStandardMaterial({ color: 0x5a6878, metalness: 0.65, roughness: 0.35 });
+        const armorPlatesMat = new THREE.MeshStandardMaterial({ color: 0x48586c, metalness: 0.70, roughness: 0.30 });
+        const canopyGlassMat = new THREE.MeshStandardMaterial({ color: 0x38d8ff, metalness: 0.1, roughness: 0.05, transparent: true, opacity: 0.75 });
+        const engineGlowMat = new THREE.MeshBasicMaterial({ color: 0x33ffff });
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0x66ffff });
+        const goldTrimMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
+        const warningStripesMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x48586c, metalness: 0.40, roughness: 0.30, emissive: 0x14202c, emissiveIntensity: 0.25 });
 
         // 1. Impact Crater Scorched Basin
         const craterRimGeo = new THREE.RingGeometry(32, 44, 24);
-        const craterMat = new THREE.MeshStandardMaterial({ color: 0x100e0d, roughness: 0.95 });
+        const craterMat = new THREE.MeshStandardMaterial({ color: 0x302a24, roughness: 0.85 });
         const craterRim = new THREE.Mesh(craterRimGeo, craterMat);
         craterRim.rotation.x = -Math.PI / 2;
         craterRim.position.y = 0.01;
@@ -4631,7 +4628,7 @@ class DarkSoulsWorld {
             const ang = (i / 16) * Math.PI * 2;
             const er = 34 + Math.random() * 8;
             const ember = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35 + Math.random() * 0.4), new THREE.MeshBasicMaterial({ color: 0xff4400 }));
-            ember.position.set(Math.cos(obAng) * er, 0.2, Math.sin(obAng) * er);
+            ember.position.set(Math.cos(ang) * er, 0.2, Math.sin(ang) * er);
             shipGroup.add(ember);
         }
 

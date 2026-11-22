@@ -27,7 +27,9 @@ class DarkSoulsGame {
         this.renderer.shadowMap.enabled = !this.performanceMode;
         this.renderer.shadowMap.type = THREE.PCFShadowMap; // 2.5x faster shadow filtering
         this.renderer.toneMapping = THREE.LinearToneMapping;
-        this.renderer.toneMappingExposure = 1.45;
+        this.renderer.toneMappingExposure = 1.60;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.setClearColor(0xb0d8ff, 1.0);
         this.container.appendChild(this.renderer.domElement);
 
         // Subsystems
@@ -4612,12 +4614,14 @@ class DarkSoulsGame {
         if (this.performanceMode) {
             this.postProcessingEnabled = false;
             this.renderer.toneMapping = THREE.LinearToneMapping;
-            this.renderer.toneMappingExposure = 1.45;
+            this.renderer.toneMappingExposure = 1.60;
+            this.renderer.outputEncoding = THREE.sRGBEncoding;
             this.showNotification("⚡ 60 FPS PERFORMANCE MODE: ACTIVE (SMOOTH & FAST)");
         } else {
             this.postProcessingEnabled = (this.postProcessing !== null);
             this.renderer.toneMapping = THREE.LinearToneMapping;
-            this.renderer.toneMappingExposure = 1.45;
+            this.renderer.toneMappingExposure = 1.60;
+            this.renderer.outputEncoding = THREE.sRGBEncoding;
             this.showNotification("✨ AAA GRAPHICS MODE: ACTIVE (CINEMATIC)");
         }
 
