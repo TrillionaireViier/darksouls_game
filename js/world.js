@@ -827,8 +827,41 @@ class DarkSoulsWorld {
             return -4.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-550, -28], z in [-350, 350]
-        if (x >= -550 && x <= -28 && z >= -350 && z <= 350) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-750, -28], z in [-480, 480]
+        if (x >= -750 && x <= -28 && z >= -480 && z <= 480) {
+            // 8 New Apex Outside Realm Elevations
+            // 1. Mohgwyn Blood Mausoleum & Dynastic Altar (outside_mohgwyn_blood_mausoleum) (elev: -6.0m)
+            if (x >= -540 && x <= -500 && z >= 120 && z <= 160) {
+                return -6.0;
+            }
+            // 2. Dragonbarrow Black Flame Sanctum (outside_black_flame_sanctum) (elev: +8.0m)
+            if (x >= -570 && x <= -530 && z >= -100 && z <= -60) {
+                return 8.0;
+            }
+            // 3. Timeless Eye Storm Sanctuary (outside_ancient_dragon_timeless_sanctuary) (elev: +14.0m)
+            if (x >= -600 && x <= -560 && z >= 20 && z <= 60) {
+                return 14.0;
+            }
+            // 4. Deeproot Depths Prince of Death (outside_deeproot_prince_of_death) (elev: -8.0m)
+            if (x >= -530 && x <= -490 && z >= -180 && z <= -140) {
+                return -8.0;
+            }
+            // 5. Sunken City of Shulva (outside_sunken_city_shulva) (elev: -5.0m)
+            if (x >= -590 && x <= -550 && z >= 200 && z <= 240) {
+                return -5.0;
+            }
+            // 6. Brume Tower Ashen Smelter Furnace (outside_brume_tower_foundry) (elev: +10.0m)
+            if (x >= -560 && x <= -520 && z >= -240 && z <= -200) {
+                return 10.0;
+            }
+            // 7. Castle Sol Eclipse Ramparts (outside_castle_sol_eclipse) (elev: +6.0m)
+            if (x >= -620 && x <= -580 && z >= -140 && z <= -100) {
+                return 6.0;
+            }
+            // 8. Carian Royal Moongazing Spire (outside_ranni_lunar_spire) (elev: +12.0m)
+            if (x >= -640 && x <= -600 && z >= 140 && z <= 180) {
+                return 12.0;
+            }
             // 1. Celestial Falls & Moonlit Shrine (outside_celestial_falls_basin)
             if (x >= -298 && x <= -262 && z >= -98 && z <= -62) {
                 return -2.0;
@@ -2557,7 +2590,7 @@ class DarkSoulsWorld {
         // Sacrificial Chalice of Dragon Heart Flames
         const chalice = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 1.2, 2.2, 10), this.darkSteelMat);
         chalice.position.set(-310, 4.1, 110);
-        outsideGroup.add(chalice);
+        outsideGroup.add(mohgChalice);
 
         const heartFlame = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), new THREE.MeshStandardMaterial({
             color: 0xff2200,
@@ -2970,13 +3003,331 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-120, -2.0, -122, 0x00f5ff, 4.0, 24);
         this.createPathBeacon(-120, -2.0, -110, 0x00f5ff, "💎 GLINTSTONE CRYSTALIAN MATRIX [ELEV -2.0m]", "RESONANT AZURE CRYSTAL SPIRES • CRYSTALIAN BLADEMAIDENS & CHAKRAMS", "#a5f3fc");
 
-        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded to 550m)
-        // North mountain ridge: z = -380, x: -550 to -28
-        this.createWall(-289, 14, -380, 522, 32, 12);
-        // South mountain ridge: z = 380, x: -550 to -28
-        this.createWall(-289, 14, 380, 522, 32, 12);
-        // West boundary mountain: x = -550, z: -380 to 380
-        this.createWall(-550, 16, 0, 12, 36, 760);
+        // --- 7e. 8 BRAND-NEW BESPOKE 3D REALM EXPEDITIONS & LANDMARKS ---
+
+        // 1. MOHGWYN BLOOD MAUSOLEUM & DYNASTIC ALTAR (x = -520, z = 140, elev = -6.0m)
+        const bloodPlazaGeo = new THREE.CylinderGeometry(26, 26, 0.4, 24);
+        const bloodMarbleMat = new THREE.MeshStandardMaterial({ color: 0x3b0a12, roughness: 0.35, metalness: 0.75 });
+        const bloodPlaza = new THREE.Mesh(bloodPlazaGeo, bloodMarbleMat);
+        bloodPlaza.position.set(-520, -6.1, 140);
+        bloodPlaza.receiveShadow = true;
+        outsideGroup.add(bloodPlaza);
+
+        // 4 Sanguine Obsidian Obelisks
+        for (let i = 0; i < 4; i++) {
+            const obAng = (i / 4) * Math.PI * 2;
+            const mohgObelisk = new THREE.Mesh(new THREE.ConeGeometry(1.6, 14.0, 4), new THREE.MeshStandardMaterial({
+                color: 0x140608,
+                metalness: 0.9,
+                roughness: 0.2
+            }));
+            obelisk.position.set(-520 + Math.cos(obAng) * 18, 0.9, 140 + Math.sin(obAng) * 18);
+            obelisk.rotation.y = obAng;
+            outsideGroup.add(mohgObelisk);
+        }
+
+        // Central Sacrificial Blood Chalice Basin
+        const mohgChalice = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 2.0, 2.2, 16), new THREE.MeshStandardMaterial({
+            color: 0xd4af37,
+            metalness: 0.9,
+            roughness: 0.25
+        }));
+        chalice.position.set(-520, -4.9, 140);
+        outsideGroup.add(chalice);
+
+        const bloodPool = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.2, 16), new THREE.MeshStandardMaterial({
+            color: 0xaa0022,
+            emissive: 0x880011,
+            emissiveIntensity: 0.9,
+            roughness: 0.1
+        }));
+        bloodPool.position.set(-520, -3.7, 140);
+        outsideGroup.add(bloodPool);
+
+        const mohgLight = new THREE.PointLight(0xff0033, 4.2, 35);
+        mohgLight.position.set(-520, -1.5, 140);
+        outsideGroup.add(mohgLight);
+
+        this.createPathBeacon(-520, -6.0, 140, 0xff0033, "🩸 MOHGWYN BLOOD MAUSOLEUM [ELEV -6.0m]", "SACRED DYNASTIC MAUSOLEUM • MOHG LORD OF BLOOD & SANGUINE NOBLES", "#fca5a5");
+
+        // 2. DRAGONBARROW BLACK FLAME SANCTUM (x = -550, z = -80, elev = +8.0m)
+        const sanctumDais = new THREE.Mesh(new THREE.BoxGeometry(36, 16, 36), this.cliffRockMat);
+        sanctumDais.position.set(-550, 0, -80);
+        outsideGroup.add(sanctumDais);
+
+        const blackPlaza = new THREE.Mesh(new THREE.BoxGeometry(32, 0.4, 32), new THREE.MeshStandardMaterial({
+            color: 0x18181c,
+            roughness: 0.6,
+            metalness: 0.8
+        }));
+        blackPlaza.position.set(-550, 8.1, -80);
+        blackPlaza.receiveShadow = true;
+        outsideGroup.add(blackPlaza);
+
+        // 6 Flared Obsidian Pillars
+        for (let p = 0; p < 6; p++) {
+            const pang = (p / 6) * Math.PI * 2;
+            const pil = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.6, 9.0, 6), new THREE.MeshStandardMaterial({
+                color: 0x0f1114,
+                roughness: 0.3,
+                metalness: 0.9
+            }));
+            pil.position.set(-550 + Math.cos(pang) * 12, 12.5, -80 + Math.sin(pang) * 12);
+            outsideGroup.add(pil);
+        }
+
+        // Godskin Black Flame Brazier
+        const godskinBrazier = new THREE.Mesh(new THREE.SphereGeometry(1.5, 8, 8), new THREE.MeshStandardMaterial({
+            color: 0xeeffff,
+            emissive: 0x330055,
+            emissiveIntensity: 1.8
+        }));
+        brazier.position.set(-550, 9.5, -80);
+        outsideGroup.add(godskinBrazier);
+
+        const godskinLight = new THREE.PointLight(0xaaccff, 4.5, 36);
+        godskinLight.position.set(-550, 12.0, -80);
+        outsideGroup.add(godskinLight);
+
+        this.createPathBeacon(-550, 8.0, -80, 0xaaccff, "🔥 BLACK FLAME SANCTUM [ELEV +8.0m]", "GODSKIN DUO ALTAR • GODSKIN APOSTLE & NOBLE • SWIRLING BLACK FIRE", "#e0e7ff");
+
+        // 3. TIMELESS EYE STORM SANCTUARY (x = -580, z = 40, elev = +14.0m)
+        const eyePlat = new THREE.Mesh(new THREE.CylinderGeometry(28, 34, 28, 16), this.cliffRockMat);
+        eyePlat.position.set(-580, 0, 40);
+        outsideGroup.add(eyePlat);
+
+        // Ring of Levitating Golden Gravestones
+        for (let g = 0; g < 8; g++) {
+            const gravAng = (g / 8) * Math.PI * 2;
+            const grave = new THREE.Mesh(new THREE.BoxGeometry(1.4, 3.2, 0.4), new THREE.MeshStandardMaterial({
+                color: 0xd4af37,
+                metalness: 0.85,
+                roughness: 0.3
+            }));
+            grave.position.set(-580 + Math.cos(gravAng) * 18, 15.0 + Math.sin(gravAng * 2) * 2.5, 40 + Math.sin(gravAng) * 18);
+            grave.rotation.y = gravAng + 0.4;
+            grave.rotation.z = Math.sin(gravAng) * 0.3;
+            outsideGroup.add(grave);
+        }
+
+        // Red Lightning Attractor Spires
+        for (let s = -1; s <= 1; s += 2) {
+            const rod = new THREE.Mesh(new THREE.ConeGeometry(0.5, 8.0, 5), new THREE.MeshStandardMaterial({
+                color: 0xff0044,
+                emissive: 0xee0033,
+                emissiveIntensity: 1.5
+            }));
+            rod.position.set(-580 + s * 10, 18.0, 40);
+            outsideGroup.add(rod);
+        }
+
+        const eyeLight = new THREE.PointLight(0xff0044, 4.8, 38);
+        eyeLight.position.set(-580, 18.0, 40);
+        outsideGroup.add(eyeLight);
+
+        this.createPathBeacon(-580, 14.0, 40, 0xff0044, "⚡ TIMELESS EYE STORM SANCTUARY [ELEV +14.0m]", "DRAGONLORD PLACIDUSAX • FLOATING GOLD GRAVESTONES & RED LIGHTNING", "#fecdd3");
+
+        // 4. DEEPROOT DEPTHS SUNKEN GODWYN CATACOMB (x = -510, z = -160, elev = -8.0m)
+        const deeprootCavern = new THREE.Mesh(new THREE.CylinderGeometry(30, 30, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x081816,
+            roughness: 0.95
+        }));
+        deeprootCavern.position.set(-510, -8.1, -160);
+        deeprootCavern.receiveShadow = true;
+        outsideGroup.add(deeprootCavern);
+
+        // Giant Carved Stone Face of Prince of Death
+        const godwynFace = new THREE.Mesh(new THREE.SphereGeometry(6.5, 12, 12), new THREE.MeshStandardMaterial({
+            color: 0x22302e,
+            roughness: 0.85
+        }));
+        godwynFace.scale.set(1.4, 0.8, 1.2);
+        godwynFace.position.set(-510, -5.0, -174);
+        outsideGroup.add(godwynFace);
+
+        // Arching Deathroot Roots
+        for (let r = 0; r < 4; r++) {
+            const rang = (r / 4) * Math.PI * 2;
+            const deeprootArchMesh = new THREE.Mesh(new THREE.TorusGeometry(8.0, 0.9, 6, 12, Math.PI * 0.7), new THREE.MeshStandardMaterial({
+                color: 0x111618,
+                roughness: 0.95
+            }));
+            rootMesh.position.set(-510 + Math.cos(rang) * 12, -4.0, -160 + Math.sin(rang) * 12);
+            rootMesh.rotation.x = Math.PI / 2;
+            rootMesh.rotation.y = rang;
+            outsideGroup.add(deeprootArchMesh);
+        }
+
+        const deathLight = new THREE.PointLight(0x00ffcc, 4.4, 34);
+        deathLight.position.set(-510, -3.0, -160);
+        outsideGroup.add(deathLight);
+
+        this.createPathBeacon(-510, -8.0, -160, 0x00ffcc, "💀 DEEPROOT PRINCE OF DEATH [ELEV -8.0m]", "PETRIFIED GODWYN VISAGE • DEATHROOT ARCHWAYS • MAUSOLEUM KNIGHTS", "#99f6e4");
+
+        // 5. SUNKEN CITY OF SHULVA (x = -570, z = 220, elev = -5.0m)
+        const shulvaBasin = new THREE.Mesh(new THREE.CylinderGeometry(28, 28, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x0a201c,
+            roughness: 0.8
+        }));
+        shulvaBasin.position.set(-570, -5.1, 220);
+        outsideGroup.add(shulvaBasin);
+
+        // Stepped Ziggurat Pyramid Structure
+        for (let st = 0; st < 3; st++) {
+            const step = new THREE.Mesh(new THREE.BoxGeometry(22 - st * 6, 2.0, 22 - st * 6), new THREE.MeshStandardMaterial({
+                color: 0x1f4038,
+                roughness: 0.7,
+                metalness: 0.3
+            }));
+            step.position.set(-570, -4.0 + st * 2.0, 220);
+            outsideGroup.add(step);
+        }
+
+        // Verdigris Bronze Totem Columns
+        for (let col = -1; col <= 1; col += 2) {
+            const totem = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.2, 9.0, 6), new THREE.MeshStandardMaterial({
+                color: 0x2d5a52,
+                roughness: 0.6,
+                metalness: 0.75
+            }));
+            totem.position.set(-570 + col * 12, -0.5, 220);
+            outsideGroup.add(totem);
+        }
+
+        const poisonLight = new THREE.PointLight(0x00ff88, 4.5, 34);
+        poisonLight.position.set(-570, 2.0, 220);
+        outsideGroup.add(poisonLight);
+
+        this.createPathBeacon(-570, -5.0, 220, 0x00ff88, "🐉 SUNKEN CITY OF SHULVA [ELEV -5.0m]", "SINH SLUMBERING DRAGON • STEPPED PYRAMID • POISON SANCTUM AUTOMATONS", "#a7f3d0");
+
+        // 6. BRUME TOWER ASHEN SMELTER FURNACE (x = -540, z = -220, elev = +10.0m)
+        const smelterTower = new THREE.Mesh(new THREE.CylinderGeometry(22, 28, 20, 16), this.cliffRockMat);
+        smelterTower.position.set(-540, 0, -220);
+        outsideGroup.add(smelterTower);
+
+        const smelterVat = new THREE.Mesh(new THREE.CylinderGeometry(16, 14, 3.0, 16), new THREE.MeshStandardMaterial({
+            color: 0x222428,
+            metalness: 0.9,
+            roughness: 0.35
+        }));
+        smelterVat.position.set(-540, 10.5, -220);
+        outsideGroup.add(smelterVat);
+
+        // Boiling Molten Magma Core
+        const vatMagma = new THREE.Mesh(new THREE.CylinderGeometry(13.5, 13.5, 0.4, 16), new THREE.MeshStandardMaterial({
+            color: 0xff3300,
+            emissive: 0xee2200,
+            emissiveIntensity: 1.8,
+            roughness: 0.1
+        }));
+        vatMagma.position.set(-540, 11.8, -220);
+        outsideGroup.add(vatMagma);
+
+        // 4 Colossal 2.5m Iron Anchor Chains
+        for (let ch = 0; ch < 4; ch++) {
+            const chang = (ch / 4) * Math.PI * 2;
+            const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 18.0, 6), new THREE.MeshStandardMaterial({
+                color: 0x111114,
+                metalness: 0.95,
+                roughness: 0.3
+            }));
+            chain.position.set(-540 + Math.cos(chang) * 14, 5.0, -220 + Math.sin(chang) * 14);
+            chain.rotation.x = Math.sin(chang) * 0.4;
+            chain.rotation.z = -Math.cos(chang) * 0.4;
+            outsideGroup.add(chain);
+        }
+
+        const fumeLight = new THREE.PointLight(0xff4400, 4.6, 36);
+        fumeLight.position.set(-540, 14.0, -220);
+        outsideGroup.add(fumeLight);
+
+        this.createPathBeacon(-540, 10.0, -220, 0xff4400, "⚔️ BRUME TOWER SMELTER FURNACE [ELEV +10.0m]", "FUME KNIGHT RAIME • MOLTEN IRON VAT • COLOSSAL ANCHOR CHAINS", "#fed7aa");
+
+        // 7. CATHEDRAL OF THE ECLIPSE & CASTLE SOL (x = -600, z = -120, elev = +6.0m)
+        const solPlatform = new THREE.Mesh(new THREE.BoxGeometry(32, 12, 32), this.cliffRockMat);
+        solPlatform.position.set(-600, 0, -120);
+        outsideGroup.add(solPlatform);
+
+        const solPaving = new THREE.Mesh(new THREE.BoxGeometry(28, 0.4, 28), new THREE.MeshStandardMaterial({
+            color: 0x8a98a6,
+            metalness: 0.4,
+            roughness: 0.45
+        }));
+        solPaving.position.set(-600, 6.1, -120);
+        outsideGroup.add(solPaving);
+
+        // Fortified Crenelated Parapets
+        for (let wall = 0; wall < 4; wall++) {
+            const wang = (wall / 4) * Math.PI * 2;
+            const parapet = new THREE.Mesh(new THREE.BoxGeometry(26, 1.8, 1.2), this.stoneMat);
+            parapet.position.set(-600 + Math.cos(wang) * 13, 7.0, -120 + Math.sin(wang) * 13);
+            parapet.rotation.y = wang;
+            outsideGroup.add(parapet);
+        }
+
+        // Solar Eclipse Standards
+        for (let st = -1; st <= 1; st += 2) {
+            const standard = new THREE.Mesh(new THREE.BoxGeometry(0.2, 7.0, 1.8), new THREE.MeshStandardMaterial({
+                color: 0x111622,
+                roughness: 0.9
+            }));
+            standard.position.set(-600 + st * 10, 9.5, -120);
+            outsideGroup.add(standard);
+        }
+
+        const solLight = new THREE.PointLight(0x88eeff, 4.2, 32);
+        solLight.position.set(-600, 9.0, -120);
+        outsideGroup.add(solLight);
+
+        this.createPathBeacon(-600, 6.0, -120, 0x88eeff, "⚡ CASTLE SOL ECLIPSE RAMPARTS [ELEV +6.0m]", "COMMANDER NIALL • BLIZZARD FROST BATTLEMENTS • BANISHED KNIGHTS", "#cffafe");
+
+        // 8. CARIAN ROYAL MOONGAZING SPIRE (x = -620, z = 160, elev = +12.0m)
+        const moonSpire = new THREE.Mesh(new THREE.CylinderGeometry(24, 30, 24, 16), this.cliffRockMat);
+        moonSpire.position.set(-620, 0, 160);
+        outsideGroup.add(moonSpire);
+
+        const moonTerrace = new THREE.Mesh(new THREE.CylinderGeometry(20, 20, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x142844,
+            roughness: 0.2,
+            metalness: 0.8
+        }));
+        moonTerrace.position.set(-620, 12.1, 160);
+        outsideGroup.add(moonTerrace);
+
+        // Hovering Luminous Silver Moon Sphere
+        const ranniSilverMoon = new THREE.Mesh(new THREE.SphereGeometry(3.5, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0xddeeff,
+            emissive: 0x66ccee,
+            emissiveIntensity: 1.6,
+            roughness: 0.1
+        }));
+        silverMoon.position.set(-620, 19.0, 160);
+        outsideGroup.add(ranniSilverMoon);
+
+        // Orbital Celestial Rings
+        const moonRing = new THREE.Mesh(new THREE.TorusGeometry(5.2, 0.15, 6, 24), new THREE.MeshStandardMaterial({
+            color: 0x00f5ff,
+            emissive: 0x00aacc,
+            emissiveIntensity: 1.4
+        }));
+        moonRing.position.set(-620, 19.0, 160);
+        moonRing.rotation.x = 0.85;
+        moonRing.rotation.y = 0.35;
+        outsideGroup.add(moonRing);
+
+        const lorettaLight = new THREE.PointLight(0x00bbff, 4.6, 36);
+        lorettaLight.position.set(-620, 16.0, 160);
+        outsideGroup.add(lorettaLight);
+
+        this.createPathBeacon(-620, 12.0, 160, 0x00bbff, "🌙 CARIAN ROYAL LUNAR SPIRE [ELEV +12.0m]", "ROYAL KNIGHT LORETTA • HOVERING SILVER MOON CORE • CARIAN PRECEPTORS", "#bae6fd");
+
+        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded to 750m)
+        // North mountain ridge: z = -480, x: -750 to -28
+        this.createWall(-389, 16, -480, 722, 36, 16);
+        // South mountain ridge: z = 480, x: -750 to -28
+        this.createWall(-389, 16, 480, 722, 36, 16);
+        // West boundary mountain: x = -750, z: -480 to 480
+        this.createWall(-750, 18, 0, 16, 40, 960);
 
         // Floating forest firefly particles
         const fireflyGeo = new THREE.BufferGeometry();
@@ -4280,7 +4631,7 @@ class DarkSoulsWorld {
             const ang = (i / 16) * Math.PI * 2;
             const er = 34 + Math.random() * 8;
             const ember = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35 + Math.random() * 0.4), new THREE.MeshBasicMaterial({ color: 0xff4400 }));
-            ember.position.set(Math.cos(ang) * er, 0.2, Math.sin(ang) * er);
+            ember.position.set(Math.cos(obAng) * er, 0.2, Math.sin(obAng) * er);
             shipGroup.add(ember);
         }
 
@@ -5155,7 +5506,7 @@ class DarkSoulsWorld {
             emissive: 0x221408,
             emissiveIntensity: 0.3
         });
-        const obelisk = new THREE.Mesh(obeliskGeo, obeliskMat);
+        const mohgObelisk = new THREE.Mesh(obeliskGeo, obeliskMat);
         obelisk.position.set(0, 1.7, 0);
         group.add(obelisk);
 

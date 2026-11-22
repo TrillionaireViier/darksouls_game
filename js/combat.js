@@ -3750,6 +3750,126 @@ class DarkSoulsCombat {
                 radius: 3.5,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createCrystalianBlademaiden ? cf.createCrystalianBlademaiden(x, z, 0, 0) : cf.createSoulsborneBoss({ id: 'crystalian_matrix', theme: 'magic', bossScale: 2.5 }, x, z)
+            },
+            {
+                id: 'outside_mohg_lord_of_blood',
+                name: 'MOHG, LORD OF BLOOD',
+                title: 'Outside Realm: Mohgwyn Dynasty &bull; Sacred Spear of Mohgwyn, Bloodflame Talon & Bloodboon Wings',
+                unlockLocationId: 'outside_mohgwyn_blood_mausoleum',
+                icon: '🩸',
+                theme: 'dark',
+                bossScale: 2.8,
+                maxHp: 58000,
+                damage: 1650,
+                souls: 4500000,
+                radius: 3.5,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createMohgLordOfBlood ? cf.createMohgLordOfBlood(x, z) : cf.createSoulsborneBoss({ id: 'mohg_lord_of_blood', theme: 'dark', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'outside_godskin_duo',
+                name: 'GODSKIN DUO: APOSTLE & NOBLE',
+                title: 'Outside Realm: Black Flame Altar &bull; Godskin Peeler Twinblade, Heavy Rapier & Swirling Black Flame',
+                unlockLocationId: 'outside_black_flame_sanctum',
+                icon: '🔥',
+                theme: 'fire',
+                bossScale: 2.7,
+                maxHp: 54000,
+                damage: 1580,
+                souls: 4100000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createGodskinDuo ? cf.createGodskinDuo(x, z) : cf.createSoulsborneBoss({ id: 'godskin_duo', theme: 'fire', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'outside_fume_knight_raime',
+                name: 'FUME KNIGHT RAIME',
+                title: 'Outside Realm: Ashen Smelter &bull; Dual-Wielding Fume Ultra Greatsword & Ashen Longsword',
+                unlockLocationId: 'outside_brume_tower_foundry',
+                icon: '⚔️',
+                theme: 'fire',
+                bossScale: 2.9,
+                maxHp: 52000,
+                damage: 1600,
+                souls: 3950000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createFumeKnightRaime ? cf.createFumeKnightRaime(x, z) : cf.createSoulsborneBoss({ id: 'fume_knight_raime', theme: 'fire', bossScale: 2.9 }, x, z)
+            },
+            {
+                id: 'outside_commander_niall',
+                name: 'COMMANDER NIALL OF CASTLE SOL',
+                title: 'Outside Realm: Castle Sol &bull; Veteran\'s Standard Halberd & Lightning Prosthetic Peg Leg',
+                unlockLocationId: 'outside_castle_sol_eclipse',
+                icon: '⚡',
+                theme: 'lightning',
+                bossScale: 2.7,
+                maxHp: 50000,
+                damage: 1520,
+                souls: 3850000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createCommanderNiall ? cf.createCommanderNiall(x, z) : cf.createSoulsborneBoss({ id: 'commander_niall', theme: 'lightning', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'outside_royal_knight_loretta',
+                name: 'ROYAL KNIGHT LORETTA',
+                title: 'Outside Realm: Lunar Spire &bull; Mounted Carian Knight, Loretta\'s War Sickle & Glintstone Greatbow',
+                unlockLocationId: 'outside_ranni_lunar_spire',
+                icon: '🌙',
+                theme: 'magic',
+                bossScale: 2.8,
+                maxHp: 51500,
+                damage: 1550,
+                souls: 3900000,
+                radius: 3.6,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createRoyalKnightLoretta ? cf.createRoyalKnightLoretta(x, z) : cf.createSoulsborneBoss({ id: 'royal_knight_loretta', theme: 'magic', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'outside_sinh_slumbering_dragon',
+                name: 'SINH, THE SLUMBERING DRAGON',
+                title: 'Outside Realm: Shulva Cavern &bull; Ancient Corroded Drake, Impaled Spear & Toxic Miasma Breath',
+                unlockLocationId: 'outside_sunken_city_shulva',
+                icon: '🐉',
+                theme: 'poison',
+                bossScale: 3.2,
+                maxHp: 57000,
+                damage: 1620,
+                souls: 4300000,
+                radius: 4.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSinhSlumberingDragon ? cf.createSinhSlumberingDragon(x, z) : cf.createSoulsborneBoss({ id: 'sinh_slumbering_dragon', theme: 'poison', bossScale: 3.2 }, x, z)
+            },
+            {
+                id: 'outside_prince_of_death_godwyn',
+                name: 'PRINCE OF DEATH GODWYN AVATAR',
+                title: 'Outside Realm: Deeproot Depths &bull; Aquatic Deathblight Titan, Golden Deathroot Thorny Tendrils',
+                unlockLocationId: 'outside_deeproot_prince_of_death',
+                icon: '💀',
+                theme: 'dark',
+                bossScale: 3.0,
+                maxHp: 55000,
+                damage: 1590,
+                souls: 4250000,
+                radius: 4.0,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createPrinceOfDeathGodwyn ? cf.createPrinceOfDeathGodwyn(x, z) : cf.createSoulsborneBoss({ id: 'prince_of_death_godwyn', theme: 'dark', bossScale: 3.0 }, x, z)
+            },
+            {
+                id: 'outside_dragonlord_placidusax_duo',
+                name: 'DRAGONLORD PLACIDUSAX',
+                title: 'Outside Realm: Crumbling Heart &bull; Dual Golden Dragonheads, Red Lightning Claws & Golden Ruin Breath',
+                unlockLocationId: 'outside_ancient_dragon_timeless_sanctuary',
+                icon: '👑',
+                theme: 'lightning',
+                bossScale: 3.4,
+                maxHp: 62000,
+                damage: 1750,
+                souls: 5000000,
+                radius: 4.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createDragonlordPlacidusaxDuo ? cf.createDragonlordPlacidusaxDuo(x, z) : cf.createSoulsborneBoss({ id: 'dragonlord_placidusax', theme: 'lightning', bossScale: 3.4 }, x, z)
             }
         ];
     }
@@ -4049,7 +4169,16 @@ class DarkSoulsCombat {
             [-390.0, 1.0, -60.0], [-398.0, 1.0, -68.0], [-382.0, 1.0, -52.0],     // Necromancer's Bone Barrow (Ghostflame Grave Wraiths)
             [-420.0, -3.0, 90.0], [-428.0, -3.0, 98.0], [-412.0, -3.0, 82.0],     // Sunken Mist Lake Pier (Ghostflame Grave Wraiths)
             [-450.0, 12.0, -20.0], [-458.0, 12.0, -28.0], [-442.0, 12.0, -12.0],   // World-Tree Aerial Canopy (Astral Scholars)
-            [-480.0, 2.0, -110.0], [-488.0, 2.0, -118.0], [-472.0, 2.0, -102.0]    // Emerald Farron Shrine (Draconic Pyromancers & Wolf Knights)
+            [-480.0, 2.0, -110.0], [-488.0, 2.0, -118.0], [-472.0, 2.0, -102.0],   // Emerald Farron Shrine (Draconic Pyromancers & Wolf Knights)
+            // 8 Brand-New Outside Apex Expeditions Patrols:
+            [-520.0, -6.0, 140.0], [-528.0, -6.0, 148.0], [-512.0, -6.0, 132.0],   // Mohgwyn Blood Mausoleum (Sanguine Noble Duelists)
+            [-550.0, 8.0, -80.0], [-558.0, 8.0, -88.0], [-542.0, 8.0, -72.0],       // Black Flame Sanctum (Blackflame Monk Pyromancers)
+            [-580.0, 14.0, 40.0], [-588.0, 14.0, 48.0], [-572.0, 14.0, 32.0],       // Timeless Eye Storm Sanctuary (Living Mercurial Mimics)
+            [-510.0, -8.0, -160.0], [-518.0, -8.0, -168.0], [-502.0, -8.0, -152.0], // Deeproot Prince of Death (Deeproot Mausoleum Knights)
+            [-570.0, -5.0, 220.0], [-578.0, -5.0, 228.0], [-562.0, -5.0, 212.0],   // Sunken City of Shulva (Sanctum Knight Automatons)
+            [-540.0, 10.0, -220.0], [-548.0, 10.0, -228.0], [-532.0, 10.0, -212.0], // Brume Tower Ashen Foundry (Ashen Iron Warriors)
+            [-600.0, 6.0, -120.0], [-608.0, 6.0, -128.0], [-592.0, 6.0, -112.0],   // Castle Sol Eclipse Ramparts (Banished Knights of the Eclipse)
+            [-620.0, 12.0, 160.0], [-628.0, 12.0, 168.0], [-612.0, 12.0, 152.0]    // Ranni's Lunar Spire (Carian Knight Preceptors)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -4062,7 +4191,10 @@ class DarkSoulsCombat {
                 'crucible_horned_sentinel', 'bloodhound_knight', 'frenzied_flame_acolyte',
                 'crystalian_blademaiden', 'draconic_beastman', 'onyx_meteor_lord',
                 'astral_scholar', 'draconic_pyromancer', 'frenzied_zealot',
-                'bloodhound_stalker', 'titanite_slag_golem', 'ghostflame_grave_wraith'
+                'bloodhound_stalker', 'titanite_slag_golem', 'ghostflame_grave_wraith',
+                'sanguine_noble', 'blackflame_monk', 'mausoleum_knight',
+                'ashen_iron_warrior', 'banished_knight_eclipse', 'carian_knight_preceptor',
+                'sanctum_knight_automaton', 'mimic_tear_mercurial'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

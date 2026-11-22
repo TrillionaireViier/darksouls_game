@@ -68,7 +68,7 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Reward*: 20,000 Souls
 
 ### 🌲 Outside Realm Apex Bosses & 228 Legendary Boss Roster
-Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 228 legendary bosses across all Soulsborne eras:
+Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 241 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
 - **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Scorched Dragonbarrow
@@ -93,7 +93,23 @@ Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderne
   - Regal barbarian armor in burnished gold, flowing white mane and crown, massive double-bitted Great Axe of Godfrey, and ethereal phantom lion Beast Regent Serosh clutched across back.
 - **Ludwig the Holy Blade (Людвиг Священный Клинок)** — Cathedral of the Deep Drowned Necropolis
   - Monstrous chimeric equine-human beast with weeping arcane eye bulbs, ragged hunter bandages, and the legendary glowing emerald Moonlight Greatsword.
-- **Plus Ancient Dragon Senessax, Death Rite Bird, Fallingstar Beast, Starscourge Radahn, Messmer the Impaler, Rellana, Midra, and 220+ more!**
+- **Mohg, Lord of Blood (Мог Повелитель Крови)** — Mohgwyn Blood Mausoleum & Dynastic Altar
+  - Asymmetrical omen ram horns piercing eye socket, dark velvet robe with golden dynastic filigree, obsidian bat wings dripping bloodflame, and the 4.8m Sacred Spear of Mohgwyn (Trident of the Formless Mother) with pulsating crimson bloodboon eruption aura.
+- **Godskin Duo: Apostle & Noble (Апостол и Дворянин Божественной Кожи)** — Dragonbarrow Black Flame Sanctum
+  - Dual encounter featuring the tall, slender Godskin Apostle wielding the spiral Godskin Peeler twinblade and the armored Godskin Noble with stitched leather hood and heavy thrusting rapier, engulfed in swirling black-and-white Godskin pyres.
+- **Fume Knight Raime (Рейм Дымный Рыцарь)** — Brume Tower Ashen Smelter Furnace
+  - Towering knight in scorched ash-black iron plate armor, smoldering ember fractures leaking from gauntlets and helm, dual-wielding the colossal 4.2m slab Fume Ultra Greatsword with molten core and the scorched ashen straight sword.
+- **Commander Niall of Castle Sol (Командир Найлл)** — Castle Sol Eclipse Ramparts & Cathedral
+  - Heavy silver veteran plate mail with white frost wolf fur collar, horned commander crest, left leg replaced by a bladed prosthetic peg leg crackling with yellow storm lightning, and the 4.6m Veteran's Standard halberd with billowing eclipse solar banner.
+- **Royal Knight Loretta (Королевский Рыцарь Лоретта)** — Carian Royal Moongazing Spire
+  - Mounted Carian champion atop an armored war steed draped in navy blue silk caparison, wielding the crescent Loretta's War Sickle polearm in right hand and ethereal glowing blue Greatbow of Loretta mounted on back with brilliant glintstone cyan aura.
+- **Sinh, the Slumbering Dragon (Син Дремлющий Дракон)** — Abyssal Sunken City of Shulva
+  - Colossal 5m pale-teal ancient dragon, quadruped posture, giant ancient dragon spear impaled through its sternum with broken shafts, tattered ribbed wings, and toxic emerald miasma breath.
+- **Prince of Death Godwyn Avatar (Аватар Принца Смерти Годвин)** — Deeproot Depths Sunken Godwyn Catacomb
+  - Oceanic fish-tailed death titan abomination crowned with cascading golden royal tresses, weeping black deathroot tears, multiple branching thorny deathroot branches reaching upwards, and deep turquoise ghostfire soul core.
+- **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Timeless Eye Storm Sanctuary
+  - Titanic 6m ancient dragon lord with two remaining long serpentine golden-scaled necks ending in horned draconic heads, severed third and fourth neck stumps dripping golden dragon blood, massive curled tail, golden dragon wings, and red lightning claw talons.
+- **Plus Ancient Dragon Senessax, Death Rite Bird, Fallingstar Beast, Starscourge Radahn, Messmer the Impaler, Rellana, Midra, and 233+ more!**
 
 ---
 
@@ -111,11 +127,19 @@ Step through the western rampart archway or press `[ O ]` to enter the expansive
 10. **Farum Azula Crumbling Tempest**: Floating sky temple island (+7.0m) suspended amidst vortex clouds, red lightning conductors, and dragon god mausoleum altar.
 11. **Leyndell Erdtree Colosseum**: Elevated golden marble amphitheater (+5.0m) flanked by Corinthian colonnades, royal lion sculptures, and radiant Erdtree bough archway.
 12. **Cathedral of the Deep Drowned Necropolis**: Flooded sunken cemetery (-2.5m) with leaning gothic spires bound in rusted chains, colossal grave steles, and turquoise ghostfire braziers.
-13. **Primeval Waystone Portals & Waypoints**: Instantaneous traversal back to Courtyard, Boss Arenas, or the Citadel.
+13. **Mohgwyn Blood Mausoleum & Dynastic Altar**: Sunken dynastic plaza (-6.0m) of blood-red marble framed by four obsidian obelisks where bloodflame pools bubble with sacred corruption.
+14. **Dragonbarrow Black Flame Sanctum**: Elevated basalt terrace (+8.0m) accessed by a grand ramp, 6 flared obsidian hex pillars, and roaring cauldrons of black-and-white Godskin flame.
+15. **Timeless Eye Storm Sanctuary**: Soaring tempest sky dais (+14.0m) suspended amidst 8 floating golden gravestones, red lightning attractor spires, and the ancient dragon lord's throne.
+16. **Deeproot Depths Sunken Godwyn Catacomb**: Subterranean cavern (-8.0m) dominated by the colossal carved stone visage of Godwyn the Golden, arching petrified deathroot, and turquoise ghostfire.
+17. **Abyssal Sunken City of Shulva**: Ancient stepped ziggurat pyramid city (-5.0m) submerged in emerald poison pools and guarded by verdigris bronze dragon totems.
+18. **Brume Tower Ashen Smelter Furnace**: Suspended iron smelting platform (+10.0m) held by colossal 2.5m thick iron anchor chains over boiling lava vats and cursed ash idols.
+19. **Castle Sol Eclipse Ramparts & Cathedral**: Windswept frost-covered stone battlements (+6.0m) flying solar eclipse standards in howling snow flurries.
+20. **Carian Royal Moongazing Spire**: Lofty moongazing terrace (+12.0m) crowned by a hovering Silver Full Moon core with orbital celestial rings and glintstone crystal formations.
+21. **Primeval Waystone Portals & Waypoints**: Instantaneous traversal back to Courtyard, Boss Arenas, or the Citadel.
 
 ---
 
-## 🕷️ Procedural 3D Mob Models & Bestiary (1,062 Models / 690 Lore Entries)
+## 🕷️ Procedural 3D Mob Models & Bestiary (1,078 Models / 690 Lore Entries)
 Encounter newly crafted, fully rigged Three.js procedural 3D creatures with custom locomotion, attack animations, and hitboxes:
 - **Lesser Red Wolf of Radagon / Dire Shadow Wolf**: Sleek night-shadow pelt, pointed lupine ears, glowing cyan lunar eyes, articulated quadruped paws, and an ethereal blue magic sword gripped crosswise in its jaws!
 - **Abyssal Pus of Man / Corrupted Serpent Beast**: Grotesque gaping abyssal serpent exploding from a hollow host body, 5 glowing crimson eyes, and a colossal mutated talon arm.
@@ -127,6 +151,14 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 - **Farum Azula Draconic Beastman**: Muscular hunchbacked lupine-draconic predator with stone dorsal scales, beast fangs, and chipped ancient stone Azula cleaver.
 - **Leyndell Royal Perfumer**: Gold-trimmed leather apothecary vestments, brass beak respirator mask, atomizer spray phial with explosive golden sparks, and slender rapier.
 - **Abyssal Grave Warden**: Titanic executioner brute wrapped in mummy bandages and barbed iron wire, dual-wielding colossal carved granite gravestones with engraved cross motifs.
+- **Sanguine Noble Duelist**: Hooded cowl with golden filigree, crimson noble velvet tabard, thrusting Bloody Helice rapier with spiraling needle tip, left-hand bloodflame parrying stiletto, and ruby eye glow!
+- **Blackflame Monk Pyromancer**: Flared black iron furnace cowl, layered charcoal habit, heavy spiked flame mace, and swirling black-and-white flame orb hovering above hand.
+- **Deeproot Mausoleum Knight**: Headless spectral steel plate armor, deathbird feather mantle, Spectral Eclipse Greatshield with carved eclipse sun & bone inlay, and winged halberd with turquoise ghostflame sheen.
+- **Ashen Iron Warrior**: Heavy bulbous basalt chest with glowing orange magma fractures, smoking chimney vents on shoulders, and colossal forged square iron greathammer with volcanic heat distortion.
+- **Banished Knight of the Eclipse**: Majestic dragon-wing crest on helmet, flowing red hair plumage, full gothic articulated plate mail, and Banished Knight's Greatsword with cold frost rune engravings.
+- **Carian Knight Preceptor**: Gilded midnight-blue polished plate cuirass, royal navy mantle, Carian Knight's Straight Sword with glowing azure Glintblade phalanx floating overhead.
+- **Sanctum Knight Automaton**: Ancient Mesoamerican/Babylonian engraved verdigris bronze armor, glowing turquoise venom eye slits, and heavy morningstar spiked mace dripping green poison spheres.
+- **Living Mercurial Mimic Tear**: Sleek humanoid liquid-metal mercury anatomy, high specular mirror chrome finish (roughness 0.05, metalness 0.98), right arm morphing into a gleaming curved liquid silver scythe-blade.
 - **Glintstone Sorcery Marionette**: 4-armed clockwork brass automaton with avian bird-mask helmet, turning gears, dual curved scythes, and glintstone core!
 - **Magma Wyrm Hatchling**: Heavy quadruped reptilian basalt chassis with glowing molten lava channels, 3 smoking volcanic spine vents, and lava-dripping maw.
 - **Dragonkin Wyrm**: Swept-back magma horns, glowing internal chest vent with pointlight, spiked tail, and molten curved greatsword.

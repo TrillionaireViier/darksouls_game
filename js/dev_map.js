@@ -601,7 +601,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -520, -200, 492, 400, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -720, -300, 692, 600, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -610,6 +610,14 @@
                 this.drawZoneRect(ctx, -290, -45, 40, 40, "rgba(40, 40, 15, 0.60)", "#eab308", "⚡ ARCHDRAGON THUNDER BELFRY (+7m)");
                 this.drawZoneRect(ctx, -140, -130, 40, 40, "rgba(10, 35, 55, 0.60)", "#06b6d4", "💎 CRYSTALIAN MATRIX (-2m)");
                 this.drawZoneRect(ctx, -100, -125, 35, 35, "rgba(20, 20, 45, 0.60)", "#38bdf8", "⛓️ BLOODHOUND EVERGAOL (0m)");
+                this.drawZoneRect(ctx, -540, 120, 40, 40, "rgba(65, 10, 20, 0.65)", "#f43f5e", "🩸 MOHGWYN BLOOD MAUSOLEUM (-6m)");
+                this.drawZoneRect(ctx, -570, -100, 40, 40, "rgba(35, 20, 45, 0.65)", "#c084fc", "🔥 BLACK FLAME SANCTUM (+8m)");
+                this.drawZoneRect(ctx, -600, 20, 40, 40, "rgba(60, 45, 15, 0.65)", "#fbbf24", "⚡ TIMELESS EYE STORM SANCTUARY (+14m)");
+                this.drawZoneRect(ctx, -530, -180, 40, 40, "rgba(10, 40, 35, 0.65)", "#2dd4bf", "💀 DEEPROOT PRINCE OF DEATH (-8m)");
+                this.drawZoneRect(ctx, -590, 200, 40, 40, "rgba(15, 45, 30, 0.65)", "#34d399", "🐉 SUNKEN CITY OF SHULVA (-5m)");
+                this.drawZoneRect(ctx, -560, -240, 40, 40, "rgba(60, 25, 10, 0.65)", "#fb923c", "⚔️ BRUME TOWER SMELTER (+10m)");
+                this.drawZoneRect(ctx, -620, -140, 40, 40, "rgba(20, 45, 60, 0.65)", "#38bdf8", "❄️ CASTLE SOL ECLIPSE (+6m)");
+                this.drawZoneRect(ctx, -640, 140, 40, 40, "rgba(15, 30, 65, 0.65)", "#60a5fa", "🌙 CARIAN LUNAR SPIRE (+12m)");
             }
 
             // 3. Draw All World Pins
