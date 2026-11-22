@@ -825,8 +825,32 @@ class DarkSoulsWorld {
             return -4.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-220, -28], z in [-115, 115]
-        if (x >= -220 && x <= -28 && z >= -115 && z <= 115) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-265, -28], z in [-140, 140]
+        if (x >= -265 && x <= -28 && z >= -140 && z <= 140) {
+            // Carian Star Observatory (x in [-120, -90], z in [-100, -70])
+            if (x >= -120 && x <= -90 && z >= -100 && z <= -70) {
+                return 3.5;
+            }
+            // Scorched Dragonbarrow (x in [-225, -195], z in [45, 75])
+            if (x >= -225 && x <= -195 && z >= 45 && z <= 75) {
+                return 2.0;
+            }
+            // Forbidden Mistwood Ruins (x in [-80, -50], z in [-90, -60])
+            if (x >= -80 && x <= -50 && z >= -90 && z <= -60) {
+                return 0.0;
+            }
+            // Abyssal Eclipse Chasm (x in [-240, -210], z in [-50, -20])
+            if (x >= -240 && x <= -210 && z >= -50 && z <= -20) {
+                return -4.0;
+            }
+            // Frozen Wyrmpeak Precipice (x in [-255, -225], z in [0, 30])
+            if (x >= -255 && x <= -225 && z >= 0 && z <= 30) {
+                return 6.0;
+            }
+            // Stormveil Cliffside Ramparts (x in [-160, -130], z in [-110, -80])
+            if (x >= -160 && x <= -130 && z >= -110 && z <= -80) {
+                return 4.0;
+            }
             // Astral Meteor Crater (x in [-175, -145], z in [-75, -45])
             if (x >= -175 && x <= -145 && z >= -75 && z <= -45) {
                 return -2.5;
@@ -1641,11 +1665,11 @@ class DarkSoulsWorld {
     buildOutsideRealm() {
         const outsideGroup = new THREE.Group();
 
-        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (x in [-218, -28], z in [-110, 110], y = 0.0)
-        const outdoorFloorGeo = new THREE.PlaneGeometry(192, 222);
+        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (x in [-265, -28], z in [-140, 140], y = 0.0)
+        const outdoorFloorGeo = new THREE.PlaneGeometry(245, 285);
         const outdoorFloor = new THREE.Mesh(outdoorFloorGeo, this.forestGrassMat);
         outdoorFloor.rotation.x = -Math.PI / 2;
-        outdoorFloor.position.set(-123, 0, 0);
+        outdoorFloor.position.set(-146, 0, 0);
         outdoorFloor.receiveShadow = true;
         outsideGroup.add(outdoorFloor);
 
@@ -1935,13 +1959,211 @@ class DarkSoulsWorld {
         outsideGroup.add(rotMound);
         this.createPathBeacon(-130, 0, 65, 0x22c55e, "🌺 ROTTEN GROVE SANCTUM [WEST HOLLOW]", "ARACHNID SCUTTLERS • PEST STINGERS & FUNGAL BLOOM", "#bbf7d0");
 
-        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded)
-        // North mountain ridge: z = -112, x: -220 to -28
-        this.createWall(-124, 8, -112, 196, 20, 5);
-        // South mountain ridge: z = 112, x: -220 to -28
-        this.createWall(-124, 8, 112, 196, 20, 5);
-        // West boundary mountain: x = -220, z: -112 to 112
-        this.createWall(-220, 10, 0, 5, 24, 228);
+        // --- 7c. BESPOKE UNIQUE 3D REALM LANDMARKS (NEW OUTSIDE EXPEDITIONS) ---
+        // A. Carian Star Observatory (outside_carian_star_observatory) (x = -105, z = -85, elev = +3.5m)
+        const observatoryDais = new THREE.Mesh(new THREE.CylinderGeometry(14, 15, 3.5, 18), this.stoneMat);
+        observatoryDais.position.set(-105, 1.75, -85);
+        observatoryDais.receiveShadow = true;
+        outsideGroup.add(observatoryDais);
+
+        // Concentric brass astrolabe armillary rings
+        const ring1 = new THREE.Mesh(new THREE.TorusGeometry(3.6, 0.12, 8, 24), this.goldMat || this.stoneMat);
+        ring1.position.set(-105, 5.8, -85);
+        ring1.rotation.x = Math.PI / 4;
+        outsideGroup.add(ring1);
+        const ring2 = new THREE.Mesh(new THREE.TorusGeometry(2.5, 0.1, 8, 24), this.goldMat || this.stoneMat);
+        ring2.position.set(-105, 5.8, -85);
+        ring2.rotation.y = Math.PI / 3;
+        outsideGroup.add(ring2);
+
+        // Glowing Glintstone Moon Sphere
+        const glintMoon = new THREE.Mesh(new THREE.SphereGeometry(1.2, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0xe0f7ff,
+            emissive: 0x00f5ff,
+            emissiveIntensity: 0.95
+        }));
+        glintMoon.position.set(-105, 5.8, -85);
+        outsideGroup.add(glintMoon);
+
+        const moonLight = new THREE.PointLight(0x00f5ff, 3.2, 30.0);
+        moonLight.position.set(-105, 6.5, -85);
+        outsideGroup.add(moonLight);
+
+        // 4 Surrounding Glintstone obelisks with blue torches
+        [[-113, -93], [-97, -93], [-113, -77], [-97, -77]].forEach(([ox, oz]) => {
+            const obelisk = new THREE.Mesh(new THREE.ConeGeometry(0.5, 4.5, 5), this.darkSteelMat || this.stoneMat);
+            obelisk.position.set(ox, 5.25, oz);
+            outsideGroup.add(obelisk);
+            this.createStandingBrazier(ox, 3.5, oz, 0x00f5ff, 3.8, 24);
+        });
+        this.createPathBeacon(-105, 3.5, -85, 0x00d0ff, "🌌 CARIAN STAR OBSERVATORY [ELEV +3.5m]", "GLINTSTONE ASTROLABE • FULL MOON SORCERY & MARIONETTES", "#a5f3fc");
+
+        // B. Scorched Dragonbarrow (outside_scorched_dragonbarrow) (x = -210, z = 60, elev = +2.0m)
+        const barrowPlat = new THREE.Mesh(new THREE.BoxGeometry(32, 2.0, 32), this.cliffRockMat);
+        barrowPlat.position.set(-210, 1.0, 60);
+        barrowPlat.receiveShadow = true;
+        outsideGroup.add(barrowPlat);
+
+        // Colossal Dragon Horns erupting from crag
+        for (let dh = 0; dh < 3; dh++) {
+            const horn = new THREE.Mesh(new THREE.ConeGeometry(1.1, 7.5, 5), this.dragonBoneMat || this.stoneMat);
+            horn.position.set(-218 + dh * 8, 4.5, 54 + (dh % 2) * 12);
+            horn.rotation.z = -0.3 + dh * 0.25;
+            outsideGroup.add(horn);
+        }
+
+        // Bubbling magma fissure
+        const barrowLava = new THREE.Mesh(new THREE.BoxGeometry(16, 0.4, 6), this.demonLavaMat || this.stoneMat);
+        barrowLava.position.set(-210, 2.1, 60);
+        outsideGroup.add(barrowLava);
+
+        const barrowLight = new THREE.PointLight(0xff3300, 3.4, 30.0);
+        barrowLight.position.set(-210, 3.2, 60);
+        outsideGroup.add(barrowLight);
+        this.createStandingBrazier(-210, 2.0, 52, 0xff4400, 4.5, 26);
+        this.createStandingBrazier(-210, 2.0, 68, 0xff4400, 4.5, 26);
+        this.createPathBeacon(-210, 2.0, 60, 0xff3300, "🐉 SCORCHED DRAGONBARROW [ELEV +2.0m]", "MOLTEN BASALT CRAGS • DRAGONLORD PLACIDUSAX TEMPEST", "#fed7aa");
+
+        // C. Forbidden Mistwood Ruins (outside_forbidden_mistwood) (x = -65, z = -75, elev = 0m)
+        const mistwoodDolmen = new THREE.Group();
+        mistwoodDolmen.position.set(-65, 0, -75);
+        for (let mi = 0; mi < 4; mi++) {
+            const mang = (mi / 4) * Math.PI * 2;
+            const mp = new THREE.Mesh(new THREE.BoxGeometry(1.2, 5.0, 1.2), this.stoneMat);
+            mp.position.set(Math.cos(mang) * 5.0, 2.5, Math.sin(mang) * 5.0);
+            mistwoodDolmen.add(mp);
+        }
+        const mLintel = new THREE.Mesh(new THREE.TorusGeometry(5.2, 0.5, 6, 16), this.stoneMat);
+        mLintel.position.y = 5.2;
+        mLintel.rotation.x = Math.PI / 2;
+        mistwoodDolmen.add(mLintel);
+
+        // Wolf Knight Runestone & Thrust Sword
+        const runeStone = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.5, 1.2, 8), this.stoneMat);
+        runeStone.position.y = 0.6;
+        mistwoodDolmen.add(runeStone);
+
+        const swordThrust = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.2, 0.28), this.darkSteelMat);
+        swordThrust.position.set(0, 1.9, 0);
+        swordThrust.rotation.z = 0.15;
+        mistwoodDolmen.add(swordThrust);
+        outsideGroup.add(mistwoodDolmen);
+
+        this.createStandingBrazier(-65, 0, -68, 0x00f5cc, 4.0, 24);
+        this.createStandingBrazier(-65, 0, -82, 0x00f5cc, 4.0, 24);
+        this.createPathBeacon(-65, 0, -75, 0x00f5cc, "🐺 FORBIDDEN MISTWOOD RUINS [NORTH GLADE]", "WOLF KNIGHT SHRINE • DIRE SHADOW WOLVES & BLACK KNIFE ASSASSINS", "#bbf7d0");
+
+        // D. Abyssal Eclipse Chasm (outside_abyssal_eclipse_chasm) (x = -225, z = -35, elev = -4.0m)
+        const eclipseFloor = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 1.2, 18), this.darkSteelMat || this.stoneMat);
+        eclipseFloor.position.set(-225, -4.6, -35);
+        eclipseFloor.receiveShadow = true;
+        outsideGroup.add(eclipseFloor);
+
+        // 6 Curved Obsidian Monoliths leaning inward
+        for (let em = 0; em < 6; em++) {
+            const eang = (em / 6) * Math.PI * 2;
+            const emono = new THREE.Mesh(new THREE.ConeGeometry(0.9, 8.5, 5), this.darkSteelMat);
+            emono.position.set(-225 + Math.cos(eang) * 12, 0.0, -35 + Math.sin(eang) * 12);
+            emono.rotation.set(Math.sin(eang) * 0.35, eang, -Math.cos(eang) * 0.35);
+            outsideGroup.add(emono);
+        }
+
+        // Hovering Black Sun Eclipse Orb with Violet Corona
+        const blackSun = new THREE.Mesh(new THREE.SphereGeometry(2.0, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0x050308,
+            roughness: 0.2,
+            metalness: 0.95
+        }));
+        blackSun.position.set(-225, 0.5, -35);
+        outsideGroup.add(blackSun);
+
+        const coronaRing = new THREE.Mesh(new THREE.TorusGeometry(2.8, 0.14, 8, 24), new THREE.MeshStandardMaterial({
+            color: 0xaa00ee,
+            emissive: 0x8800cc,
+            emissiveIntensity: 1.1,
+            roughness: 0.2
+        }));
+        coronaRing.position.set(-225, 0.5, -35);
+        outsideGroup.add(coronaRing);
+
+        const eclipseLight = new THREE.PointLight(0x8800cc, 3.6, 28.0);
+        eclipseLight.position.set(-225, 1.5, -35);
+        outsideGroup.add(eclipseLight);
+        this.createPathBeacon(-225, -4.0, -35, 0x9900ee, "🌑 ABYSSAL ECLIPSE CHASM [ELEV -4.0m]", "CORRUPTED BLACK SUN • PUS OF MAN & DESTINED DEATH MALIKETH", "#e9d5ff");
+
+        // E. Frozen Wyrmpeak Precipice (outside_frozen_wyrmpeak_precipice) (x = -240, z = 15, elev = +6.0m)
+        const peakPlat = new THREE.Mesh(new THREE.BoxGeometry(26, 6.0, 26), new THREE.MeshStandardMaterial({
+            color: 0xdaeef8,
+            roughness: 0.35,
+            metalness: 0.5
+        }));
+        peakPlat.position.set(-240, 3.0, 15);
+        peakPlat.receiveShadow = true;
+        outsideGroup.add(peakPlat);
+
+        // Frosted Icicle Spires
+        for (let ic = 0; ic < 4; ic++) {
+            const iang = (ic / 4) * Math.PI * 2;
+            const ispire = new THREE.Mesh(new THREE.ConeGeometry(0.75, 6.0, 5), new THREE.MeshStandardMaterial({
+                color: 0xc8f0ff,
+                emissive: 0x0099bb,
+                emissiveIntensity: 0.8,
+                roughness: 0.15
+            }));
+            ispire.position.set(-240 + Math.cos(iang) * 9, 8.5, 15 + Math.sin(iang) * 9);
+            outsideGroup.add(ispire);
+        }
+
+        // Petrified Frost Dragon Wing frozen in azure ice
+        const frostWing = new THREE.Mesh(new THREE.BoxGeometry(9.0, 6.5, 0.4), new THREE.MeshStandardMaterial({
+            color: 0x88e0ff,
+            transparent: true,
+            opacity: 0.85,
+            roughness: 0.2
+        }));
+        frostWing.position.set(-240, 9.0, 15);
+        frostWing.rotation.set(0.3, 0.5, 0.4);
+        outsideGroup.add(frostWing);
+
+        const frostLight = new THREE.PointLight(0x88ddff, 3.4, 28.0);
+        frostLight.position.set(-240, 8.5, 15);
+        outsideGroup.add(frostLight);
+        this.createStandingBrazier(-240, 6.0, 8, 0xa5f3fc, 4.2, 26);
+        this.createStandingBrazier(-240, 6.0, 22, 0xa5f3fc, 4.2, 26);
+        this.createPathBeacon(-240, 6.0, 15, 0x88ddff, "❄️ FROZEN WYRMPEAK PRECIPICE [ELEV +6.0m]", "GLACIAL BLIZZARD SUMMIT • BOREALIS FREEZING FOG & ICE DRAGON", "#e0f2fe");
+
+        // F. Stormveil Cliffside Ramparts (outside_stormveil_cliffside_ramparts) (x = -145, z = -95, elev = +4.0m)
+        const rampartPlat = new THREE.Mesh(new THREE.BoxGeometry(30, 4.0, 24), this.stoneMat);
+        rampartPlat.position.set(-145, 2.0, -95);
+        rampartPlat.receiveShadow = true;
+        outsideGroup.add(rampartPlat);
+
+        // Stone parapet battlements
+        for (let bt = -12; bt <= 12; bt += 4) {
+            const cren = new THREE.Mesh(new THREE.BoxGeometry(2.5, 1.4, 1.2), this.stoneMat);
+            cren.position.set(-145 + bt, 4.7, -106);
+            outsideGroup.add(cren);
+        }
+
+        // Tempest Lightning Rod & Golden Banner
+        const lightningRod = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.14, 7.5, 6), this.goldMat || this.stoneMat);
+        lightningRod.position.set(-145, 7.5, -95);
+        outsideGroup.add(lightningRod);
+
+        const stormLight = new THREE.PointLight(0xffd700, 3.5, 28.0);
+        stormLight.position.set(-145, 6.0, -95);
+        outsideGroup.add(stormLight);
+        this.createStandingBrazier(-155, 4.0, -95, 0xffd700, 4.0, 24);
+        this.createStandingBrazier(-135, 4.0, -95, 0xffd700, 4.0, 24);
+        this.createPathBeacon(-145, 4.0, -95, 0xffd700, "⚡ STORMVEIL CLIFFSIDE RAMPARTS [ELEV +4.0m]", "WINDSWEPT PARAPETS • CRUCIBLE SENTINELS & CONSORT RADAHN", "#fef08a");
+
+        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded to 265m)
+        // North mountain ridge: z = -140, x: -265 to -28
+        this.createWall(-146, 8, -140, 242, 22, 6);
+        // South mountain ridge: z = 140, x: -265 to -28
+        this.createWall(-146, 8, 140, 242, 22, 6);
+        // West boundary mountain: x = -265, z: -140 to 140
+        this.createWall(-265, 10, 0, 6, 26, 285);
 
         // Floating forest firefly particles
         const fireflyGeo = new THREE.BufferGeometry();

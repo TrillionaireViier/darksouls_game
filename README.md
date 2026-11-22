@@ -67,17 +67,21 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & Roster Expansion (138+ Selectable Lords)
-Traverse beyond the West Courtyard Gatehouse into the uncharted Outside wilderness to battle legendary open-world horrors:
-- **Ancient Dragon Senessax (Древний Дракон Сенессакс)** — Wyrm Cliffside Plateau
-  - Lightning-charged ancient scales, red lightning glaive thrusts, electric shockwaves.
-- **Death Rite Bird (Птица Погребального Обряда)** — Titan Bone Cemetery
-  - Ghostflame ignition, spectral spear sweeps, piercing cryogenic black flame bursts.
-- **Fallingstar Beast (Зверь Падающей Звезды)** — Astral Meteor Crater
-  - Gravitational crush, crystalline pincer charges, violet gravity field detonations.
-- **Erdtree Avatar (Воплощение Древа Эрд)** — Primeval Archtree Sanctum
-  - Golden holy staff ground slams, holy light projectile volleys, golden shockwaves.
-- **Starscourge Radahn, Bayle the Dread, Messmer the Impaler, Rellana Twin Moon Knight, Midra Lord of Frenzied Flame, Divine Beast Dancing Lion, and 130+ more!**
+### 🌲 Outside Realm Apex Bosses & 222 Legendary Boss Roster
+Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 222 legendary bosses across all Soulsborne eras:
+- **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
+  - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
+- **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Scorched Dragonbarrow
+  - Titanic dual-headed ancient archdragon with golden scales, red lightning claws, and golden ruin breath.
+- **Lichdragon Fortissax (Дракон-лич Фортиссакс)** — Forbidden Mistwood Ruins
+  - Deathblight-corrupted 4-winged wyrm hurling dual red lightning spears and breathing death mist.
+- **Rennala, Queen of the Full Moon (Реннала Полнолунная)** — Carian Star Observatory
+  - Astrologer royal robes, towering conical moon headdress, spinning Carian Regal Scepter, and hovering luminous Full Moon sphere.
+- **Borealis, The Freezing Fog (Бореалис Леденящий Туман)** — Frozen Wyrmpeak Precipice
+  - Translucent azure permafrost dragon with crystalline icicle stalagmites and howling blizzard breath.
+- **Promised Consort Radahn (Обещанный Консорт Радан)** — Stormveil Cliffside Ramparts
+  - Gilded lion armor, Young Miquella clinging to his shoulders with cascading braided hair, twin Greatswords of Light, and divine solar pillar.
+- **Plus Ancient Dragon Senessax, Death Rite Bird, Fallingstar Beast, Starscourge Radahn, Bayle the Dread, Messmer the Impaler, Rellana, Midra, and 210+ more!****
 
 ---
 
@@ -95,6 +99,12 @@ Step through the western rampart archway or press `[ O ]` to enter the expansive
 
 ## 🕷️ Procedural 3D Mob Models & Bestiary (1,050 Models / 690 Lore Entries)
 Encounter newly crafted, fully rigged Three.js procedural 3D creatures with custom locomotion, attack animations, and hitboxes:
+- **Lesser Red Wolf of Radagon / Dire Shadow Wolf**: Sleek night-shadow pelt, pointed lupine ears, glowing cyan lunar eyes, articulated quadruped paws, and an ethereal blue magic sword gripped crosswise in its jaws!
+- **Abyssal Pus of Man / Corrupted Serpent Beast**: Grotesque gaping abyssal serpent exploding from a hollow host body, 5 glowing crimson eyes, and a colossal mutated talon arm.
+- **Black Knife Assassin / Shadow Stalker**: Translucent stealth shroud, blank porcelain oval mask, cowled hood, and signature reverse-grip Black Knife dagger with crimson Destined Death flame!
+- **Ancestral Horned Shaman**: Muscular primeval titan with massive 8-pointed branching stag antlers (1.8m span), spirit soul staff, and glowing soul lantern.
+- **Glintstone Sorcery Marionette**: 4-armed clockwork brass automaton with avian bird-mask helmet, turning gears, dual curved scythes, and glintstone core!
+- **Magma Wyrm Hatchling**: Heavy quadruped reptilian basalt chassis with glowing molten lava channels, 3 smoking volcanic spine vents, and lava-dripping maw.
 - **Dragonkin Wyrm**: Swept-back magma horns, glowing internal chest vent with pointlight, spiked tail, and molten curved greatsword.
 - **Crucible Knight Sentinel**: Red-gold Ordovis armor plate, antlered helm, golden feathered wings, runic greatsword, and spiked hornshield.
 - **Abductor Virgin**: Heavy iron maiden cylindrical chassis with glowing internal furnace, rotating chariot wheels, and twin pendular executioner scythes.

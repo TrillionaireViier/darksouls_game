@@ -175,7 +175,7 @@ class DarkSoulsGame {
         } catch (e) {}
         this.unlockedLocations = Array.isArray(savedLocs) && savedLocs.length > 0 
             ? savedLocs 
-            : ['royal_bridge_arena', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+            : ['royal_bridge_arena', 'outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
 
         // Auto-Save Management (Periodic 15s & Event-Driven)
         this.autoSaveInterval = 15.0;
@@ -3229,7 +3229,7 @@ class DarkSoulsGame {
     unlockLocationForBoss(bossId, locId) {
         if (!locId) return null;
         if (!this.unlockedLocations) {
-            this.unlockedLocations = ['royal_bridge_arena', 'outside_darkroot_bonfire', 'outside_primeval_archtree', 'outside_wyrm_ridge_altar', 'outside_ashen_hollow', 'outside_western_precipice', 'outside_wilds_gateway', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+            this.unlockedLocations = ['royal_bridge_arena', 'outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'outside_darkroot_bonfire', 'outside_primeval_archtree', 'outside_wyrm_ridge_altar', 'outside_ashen_hollow', 'outside_western_precipice', 'outside_wilds_gateway', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
         }
         if (!this.unlockedLocations.includes(locId)) {
             this.unlockedLocations.push(locId);
@@ -3526,7 +3526,7 @@ class DarkSoulsGame {
             } : null,
             currentBossType: this.combat.currentBossType,
             defeatedBosses: this.combat.defeatedBosses || [],
-            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'],
+            unlockedLocations: this.unlockedLocations || ['royal_bridge_arena', 'outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'outside_darkroot_expanse', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'],
             adminModeUnlocked: !!(this.combat && this.combat.adminModeUnlocked),
             isGodMode: !!(this.combat && this.combat.isGodMode),
             equippedSkin: localStorage.getItem('darksouls_equipped_skin') || 'warrior',
@@ -4646,7 +4646,7 @@ class DarkSoulsGame {
         if (!container) return;
 
         const locs = window.DARK_SOULS_LOCATIONS || [];
-        const unlocked = this.unlockedLocations || ['lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill', 'ds1_chasm_of_abyss_manus', 'ds1_ash_lake_dragon_tree', 'ds1_painted_world_statue', 'ds1_new_londo_sealer', 'ds1_lost_izalith_bed', 'ds1_catacombs_blacksmith', 'ds2_heides_blue_cathedral', 'ds2_iron_keep_smelter', 'ds2_shrine_of_amana_altar', 'ds2_undead_crypt_agdayne', 'ds2_harvest_valley_mines', 'ds2_doors_of_pharros', 'ds3_irithyll_dungeon_cells', 'ds3_lothric_twin_princes', 'ds3_cathedral_of_deep_roof', 'ds3_untended_graves_champion', 'ds3_ringed_city_abyssal_chasm', 'bb_old_yharnam_clocktower', 'bb_cainhurst_snow_roof', 'bb_upper_cathedral_orphanage', 'bb_hemwick_charnel_lane', 'sekiro_hirata_estate_blaze', 'sekiro_ashina_castle_dojo', 'sekiro_sunken_valley_gun_fort', 'er_caelid_sellia_town', 'er_nokron_eternal_city', 'er_altus_plateau_erdtree', 'er_mountaintops_fire_giant', 'sote_scadu_altus_highroad', 'sote_belurat_tower_settlement'];
+        const unlocked = this.unlockedLocations || ['outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream', 'ds1_undead_burg_outskirts', 'ds1_darkroot_basin_waterfall', 'ds1_sen_fortress_rooftops', 'ds1_demon_ruins_lava', 'ds1_crystal_cave_abyss', 'ds1_sanctuary_garden', 'ds2_majula_cliff_monument', 'ds2_dragon_aerie_peaks', 'ds3_cemetery_of_ash', 'er_limgrave_stormhill', 'ds1_chasm_of_abyss_manus', 'ds1_ash_lake_dragon_tree', 'ds1_painted_world_statue', 'ds1_new_londo_sealer', 'ds1_lost_izalith_bed', 'ds1_catacombs_blacksmith', 'ds2_heides_blue_cathedral', 'ds2_iron_keep_smelter', 'ds2_shrine_of_amana_altar', 'ds2_undead_crypt_agdayne', 'ds2_harvest_valley_mines', 'ds2_doors_of_pharros', 'ds3_irithyll_dungeon_cells', 'ds3_lothric_twin_princes', 'ds3_cathedral_of_deep_roof', 'ds3_untended_graves_champion', 'ds3_ringed_city_abyssal_chasm', 'bb_old_yharnam_clocktower', 'bb_cainhurst_snow_roof', 'bb_upper_cathedral_orphanage', 'bb_hemwick_charnel_lane', 'sekiro_hirata_estate_blaze', 'sekiro_ashina_castle_dojo', 'sekiro_sunken_valley_gun_fort', 'er_caelid_sellia_town', 'er_nokron_eternal_city', 'er_altus_plateau_erdtree', 'er_mountaintops_fire_giant', 'sote_scadu_altus_highroad', 'sote_belurat_tower_settlement'];
 
         const filtered = locs.filter(l => {
             if (activeFilter === 'all') return true;
@@ -4735,8 +4735,8 @@ class DarkSoulsGame {
         const id = (loc.id || '').toLowerCase();
         const zone = (loc.zone || '').toLowerCase();
 
-        // 1. Lava / Chaos Realms
-        if (id.includes('lava') || id.includes('ruins') || id.includes('iron_keep') || id.includes('izalith') || id.includes('smelter') || id.includes('volcano') || id.includes('fire_giant')) {
+        // 1. Lava / Chaos / Dragonbarrow Realms
+        if (id.includes('lava') || id.includes('ruins') || id.includes('iron_keep') || id.includes('izalith') || id.includes('smelter') || id.includes('volcano') || id.includes('fire_giant') || id.includes('dragonbarrow')) {
             if (this.scene.fog) {
                 this.scene.fog.color.setHex(0x320a02);
                 this.scene.fog.density = 0.016;
@@ -4823,7 +4823,7 @@ class DarkSoulsGame {
         if (!loc || !this.playerMesh) return;
 
         // Check unlock status
-        const unlocked = this.unlockedLocations || ['lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
+        const unlocked = this.unlockedLocations || ['outside_carian_star_observatory', 'outside_scorched_dragonbarrow', 'outside_forbidden_mistwood', 'outside_abyssal_eclipse_chasm', 'outside_frozen_wyrmpeak_precipice', 'outside_stormveil_cliffside_ramparts', 'lordran_flooded_catacombs', 'lordran_high_ramparts', 'lordran_royal_bridge', 'liturgy_grand_counting_house', 'liturgy_vault_settlement', 'liturgy_suspended_scales', 'royal_bridge_arena', 'firelink_shrine', 'undead_asylum', 'undead_burg_bridge', 'majula_cliffside', 'heides_tower_ruins', 'boletaria_palace_gate', 'central_yharnam_bridge', 'limgrave_first_step', 'hunters_dream'];
         if (!unlocked.includes(locationId) && locationId !== 'royal_bridge_arena') {
             this.showNotification(`🔒 THIS REALM IS LOCKED! DEFEAT ITS WARDEN TO UNLOCK.`);
             if (this.audio && this.audio.playParry) this.audio.playParry();
@@ -4973,6 +4973,12 @@ window.adminUnlockAllLore = () => { if (window.game) window.game.adminUnlockAllL
 
 // 300+ Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
+    {"id":"outside_carian_star_observatory","name":"🌌 Carian Star Observatory - Starlight Glade","zone":"Outside Realm","pos":[-105,3.5,-85],"elev":"+3.5m","danger":"Tier V (Celestial)","boss":"Rennala, Queen of Full Moon & Marionettes","desc":"A raised lapis-marble observation dais under an eternal starry sky featuring an ancient armillary astrolabe and hovering moon prism.","light":1.35},
+    {"id":"outside_scorched_dragonbarrow","name":"🐉 Scorched Dragonbarrow - Red Basalt Crag","zone":"Outside Realm","pos":[-210,2.0,60],"elev":"+2.0m","danger":"Tier VI (Dragonbarrow)","boss":"Dragonlord Placidusax & Magma Wyrm Hatchlings","desc":"Jagged scorched basalt spires surrounded by smoldering brimstone fissures and dragon bone megaliths.","light":1.40},
+    {"id":"outside_forbidden_mistwood","name":"🐺 Forbidden Mistwood Ruins - Wolf Knight Shrine","zone":"Outside Realm","pos":[-65,0.0,-75],"elev":"0m","danger":"Tier IV (Mistwood)","boss":"Lichdragon Fortissax, Dire Wolves & Black Knives","desc":"Ancient moss-covered Celtic dolmen arches where a runic broadsword marks the sanctuary of feral shadow wolves.","light":1.15},
+    {"id":"outside_abyssal_eclipse_chasm","name":"🌑 Abyssal Eclipse Chasm - Black Sun Crater","zone":"Outside Realm","pos":[-225,-4.0,-35],"elev":"-4.0m","danger":"Tier VI (Eclipse Void)","boss":"Maliketh, Black Blade & Pus of Man","desc":"A sunken obsidian hollow dominated by an ominous Black Sun eclipse sphere radiating dark purple corona flares.","light":0.70},
+    {"id":"outside_frozen_wyrmpeak_precipice","name":"❄️ Frozen Wyrmpeak Precipice - Glacial Summit","zone":"Outside Realm","pos":[-240,6.0,15],"elev":"+6.0m","danger":"Tier VI (Glacial Peak)","boss":"Borealis, Freezing Fog & Frost Wyrms","desc":"A dizzying frozen terrace of blue glacier ice and towering frost spires high above the cloud layer.","light":1.30},
+    {"id":"outside_stormveil_cliffside_ramparts","name":"⚡ Stormveil Cliffside Ramparts - Tempest Bastion","zone":"Outside Realm","pos":[-145,4.0,-95],"elev":"+4.0m","danger":"Tier V (Storm Bastion)","boss":"Promised Consort Radahn & Crucible Sentinels","desc":"Windswept castle battlements jutting out over the abyss with storm ballistas and royal golden lion banners.","light":1.25},
     {"id":"lordran_flooded_catacombs","name":"💀 Subterranean Catacombs - Flooded Crypts","zone":"Lordran Undead Burg","pos":[-20,-4.92,32],"elev":"-5m","danger":"Tier III (Crypts)","boss":"Skeleton Warriors & Necromancers","desc":"Ancient flooded crypts deep beneath the viaduct, illuminated by emerald ghostfire and patrolled by skeletal squads.","light":1.0},
     {"id":"lordran_high_ramparts","name":"👑 High Castle Ramparts - Archer Watchtowers","zone":"Lordran Undead Burg","pos":[20,6.0,32],"elev":"+6m","danger":"Tier II (Ramparts)","boss":"Hollow Archers & Tower Knights","desc":"Sun-drenched battlements overlooking the valley with ballistas, archer watchtowers, and heavy iron patrols.","light":1.35},
     {"id":"lordran_royal_bridge","name":"⚔️ Royal Viaduct Bridge - Fog Gate Approach","zone":"Lordran Undead Burg","pos":[0,0,272],"elev":"0m","danger":"Tier II (Viaduct)","boss":"Citadel Soldiers & Taurus Demon","desc":"Colossal stone procession bridge leading straight to the Taurus Demon fog gate and boss arena.","light":1.2},

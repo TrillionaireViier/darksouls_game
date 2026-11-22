@@ -3465,6 +3465,96 @@ class DarkSoulsCombat {
                 radius: 3.4,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createSoulsborneBoss({ id: 'er_draconic_tree_sentinel', theme: 'gold', bossScale: 2.5 }, x, z)
+            },
+            {
+                id: 'maliketh_black_blade',
+                name: 'MALIKETH, THE BLACK BLADE',
+                title: 'Abyssal Eclipse Chasm &bull; Destined Death Greatsword, Bestial Incantations & Red Black Wave',
+                unlockLocationId: 'outside_abyssal_eclipse_chasm',
+                icon: '🗡️',
+                theme: 'blood',
+                bossScale: 2.6,
+                maxHp: 36000,
+                damage: 1580,
+                souls: 2500000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createMalikethBlackBlade ? cf.createMalikethBlackBlade(x, z) : cf.createSoulsborneBoss({ id: 'maliketh_black_blade', theme: 'blood', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'dragonlord_placidusax',
+                name: 'DRAGONLORD PLACIDUSAX',
+                title: 'Scorched Dragonbarrow &bull; Dual Heads Golden Ruin Breath, Red Lightning Claw & Tempest Storm',
+                unlockLocationId: 'outside_scorched_dragonbarrow',
+                icon: '🐉',
+                theme: 'gold',
+                bossScale: 3.5,
+                maxHp: 42000,
+                damage: 1650,
+                souls: 3000000,
+                radius: 4.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createDragonlordPlacidusax ? cf.createDragonlordPlacidusax(x, z) : cf.createSoulsborneBoss({ id: 'dragonlord_placidusax', theme: 'gold', bossScale: 3.5 }, x, z)
+            },
+            {
+                id: 'lichdragon_fortissax',
+                name: 'LICHDRAGON FORTISSAX',
+                title: 'Forbidden Mistwood Ruins &bull; Twin Red Lightning Spears, Deathblight Fog & Corrupted Wings',
+                unlockLocationId: 'outside_forbidden_mistwood',
+                icon: '⚡',
+                theme: 'dark',
+                bossScale: 3.2,
+                maxHp: 38000,
+                damage: 1600,
+                souls: 2750000,
+                radius: 4.4,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createLichdragonFortissax ? cf.createLichdragonFortissax(x, z) : cf.createSoulsborneBoss({ id: 'lichdragon_fortissax', theme: 'dark', bossScale: 3.2 }, x, z)
+            },
+            {
+                id: 'rennala_queen_full_moon',
+                name: 'RENNALA, QUEEN OF THE FULL MOON',
+                title: 'Carian Star Observatory &bull; Full Moon Sorcery, Carian Regal Scepter & Glintstone Comets',
+                unlockLocationId: 'outside_carian_star_observatory',
+                icon: '🌕',
+                theme: 'magic',
+                bossScale: 2.2,
+                maxHp: 34000,
+                damage: 1480,
+                souls: 2200000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createRennalaFullMoon ? cf.createRennalaFullMoon(x, z) : cf.createSoulsborneBoss({ id: 'rennala_queen_full_moon', theme: 'magic', bossScale: 2.2 }, x, z)
+            },
+            {
+                id: 'borealis_freezing_fog',
+                name: 'BOREALIS, THE FREEZING FOG',
+                title: 'Frozen Wyrmpeak Precipice &bull; Piercing Glacial Roar, Blizzard Breath & Prismatic Icicles',
+                unlockLocationId: 'outside_frozen_wyrmpeak_precipice',
+                icon: '❄️',
+                theme: 'frost',
+                bossScale: 3.4,
+                maxHp: 37000,
+                damage: 1550,
+                souls: 2600000,
+                radius: 4.5,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createBorealisFreezingFog ? cf.createBorealisFreezingFog(x, z) : cf.createSoulsborneBoss({ id: 'borealis_freezing_fog', theme: 'frost', bossScale: 3.4 }, x, z)
+            },
+            {
+                id: 'consort_radahn_miquella',
+                name: 'PROMISED CONSORT RADAHN',
+                title: 'Stormveil Cliffside Ramparts &bull; Twin Greatswords of Light, Miquella Golden Halo & Divine Pillar',
+                unlockLocationId: 'outside_stormveil_cliffside_ramparts',
+                icon: '👑',
+                theme: 'holy',
+                bossScale: 2.8,
+                maxHp: 45000,
+                damage: 1720,
+                souls: 3500000,
+                radius: 4.0,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createConsortRadahn ? cf.createConsortRadahn(x, z) : cf.createSoulsborneBoss({ id: 'consort_radahn_miquella', theme: 'holy', bossScale: 2.8 }, x, z)
             }
         ];
     }
@@ -3712,7 +3802,7 @@ class DarkSoulsCombat {
             this.createCustomMob(aMob, pos[0], pos[2], 0, pos[1]);
         });
 
-        // 3X OUTSIDE REALM MOBS (24 Mobs across outskirts, dragon chasm & darkroot)
+        // 3X OUTSIDE REALM MOBS (42 Mobs across outskirts, dragon chasm, darkroot & new expeditions)
         const outsidePositions = [
             [-50.0, -2.0, 8.0], [-54.0, -2.0, 14.0], [-62.0, -2.0, 20.0],
             [-56.0, -2.0, 28.0], [-68.0, -2.0, 12.0], [-65.0, -2.0, 32.0],
@@ -3721,21 +3811,33 @@ class DarkSoulsCombat {
             [-125.0, 0, -35.0], [-120.0, 0, -25.0], [-135.0, 0, -18.0],
             [-148.0, 2.0, 38.0], [-155.0, 2.0, 44.0], [-168.0, 2.0, 55.0],
             [-175.0, 2.0, 62.0], [-182.0, 2.0, 48.0], [-140.0, 0, -10.0],
-            [-110.0, 0, -42.0], [-78.0, 0, -15.0], [-52.0, -2.0, 22.0]
+            [-110.0, 0, -42.0], [-78.0, 0, -15.0], [-52.0, -2.0, 22.0],
+            // New Outside Expedition Patrols:
+            [-105.0, 3.5, -80.0], [-108.0, 3.5, -90.0], [-98.0, 3.5, -85.0], // Carian Star Observatory
+            [-205.0, 2.0, 55.0], [-215.0, 2.0, 65.0], [-210.0, 2.0, 50.0],   // Scorched Dragonbarrow
+            [-62.0, 0.0, -70.0], [-68.0, 0.0, -80.0], [-72.0, 0.0, -74.0],   // Forbidden Mistwood Ruins
+            [-220.0, -4.0, -32.0], [-228.0, -4.0, -38.0], [-225.0, -4.0, -42.0], // Abyssal Eclipse Chasm
+            [-236.0, 6.0, 12.0], [-244.0, 6.0, 18.0], [-240.0, 6.0, 22.0],   // Frozen Wyrmpeak Precipice
+            [-140.0, 4.0, -92.0], [-148.0, 4.0, -98.0], [-144.0, 4.0, -90.0]  // Stormveil Cliffside Ramparts
         ];
         outsidePositions.forEach((pos, idx) => {
-            const types = ['treant_guardian', 'cursed_basilisk', 'fell_omen_gladiator', 'crystal_drake_whelp', 'crucible_knight_sentinel'];
+            const types = [
+                'treant_guardian', 'cursed_basilisk', 'fell_omen_gladiator', 
+                'crystal_drake_whelp', 'crucible_knight_sentinel', 'fire_chimera_hound',
+                'dire_shadow_wolf', 'abyssal_pus_beast', 'black_knife_assassin',
+                'ancestral_horned_shaman', 'glintstone_automaton', 'magma_wyrm_hatchling'
+            ];
             const mType = types[idx % types.length];
             const oMob = {
                 id: `outside_mob_${idx}`,
                 name: mType.toUpperCase().replace(/_/g, ' '),
                 meshType: mType,
-                hp: 1100 + (idx % 5) * 200,
-                damage: 130 + (idx % 5) * 15,
-                souls: 2500 + (idx % 5) * 500,
-                speed: 2.6,
-                attackReach: 3.0,
-                behaviorType: (idx % 2 === 0) ? 'Heavy Tank' : 'Flanker'
+                hp: 1250 + (idx % 6) * 220,
+                damage: 135 + (idx % 6) * 18,
+                souls: 2800 + (idx % 6) * 550,
+                speed: 2.65,
+                attackReach: 3.2,
+                behaviorType: (idx % 3 === 0) ? 'Heavy Tank' : ((idx % 3 === 1) ? 'Flanker' : 'Swarm')
             };
             this.createCustomMob(oMob, pos[0], pos[2], 0, pos[1]);
         });
