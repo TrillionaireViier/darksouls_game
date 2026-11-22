@@ -2278,11 +2278,32 @@ class DarkSoulsWorld {
             step.receiveShadow = true;
             sanctumGroup.add(step);
         }
-        // Retaining walls beside inner stairs
-        this.createWall(-23, 2.5, -70, 20, 10, 2);
-        this.createWall(23, 2.5, -70, 20, 10, 2);
-        this.createWall(-13.5, 1.5, -74, 1.2, 8, 9);
-        this.createWall(13.5, 1.5, -74, 1.2, 8, 9);
+        // Retaining walls beside inner stairs (anchored down to y = -6.0)
+        this.createWall(-23, 1.0, -70, 20, 14, 2);
+        this.createWall(23, 1.0, -70, 20, 14, 2);
+        this.createWall(-13.5, 1.0, -74, 1.2, 14, 9);
+        this.createWall(13.5, 1.0, -74, 1.2, 14, 9);
+
+        // South Enclosing Retaining Walls for Gorgon's Inner Sanctum at z = -78 (anchored down to y = -6.0)
+        this.createWall(-25.5, 1.0, -78, 25, 14, 2);
+        this.createWall(25.5, 1.0, -78, 25, 14, 2);
+
+        // Corner connecting walls at x = ±38 between z = -70 and z = -78
+        this.createWall(-38, 1.0, -74, 2, 14, 8);
+        this.createWall(38, 1.0, -74, 2, 14, 8);
+
+        // Upper Terrace Floor Slabs beside the stairs between z = -70 and z = -78 (y = -2.5)
+        const terraceL = new THREE.Mesh(new THREE.PlaneGeometry(24, 8), this.serpentStoneMat);
+        terraceL.rotation.x = -Math.PI / 2;
+        terraceL.position.set(-25.5, -2.5, -74);
+        terraceL.receiveShadow = true;
+        sanctumGroup.add(terraceL);
+
+        const terraceR = new THREE.Mesh(new THREE.PlaneGeometry(24, 8), this.serpentStoneMat);
+        terraceR.rotation.x = -Math.PI / 2;
+        terraceR.position.set(25.5, -2.5, -74);
+        terraceR.receiveShadow = true;
+        sanctumGroup.add(terraceR);
 
         // 8. Gorgon's Inner Sanctum Floor Slab (z: -78 to -115, x: -38 to 38, y = -4.0)
         const innerFloorGeo = new THREE.PlaneGeometry(76, 37);

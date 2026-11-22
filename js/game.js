@@ -2012,7 +2012,7 @@ class DarkSoulsGame {
                 if (uData.shieldGroup) {
                     uData.shieldGroup.visible = !this.isTorchActive;
                     if (!this.isTorchActive) {
-                        uData.shieldGroup.position.set(-0.08, 0.02, 0.02);
+                        uData.shieldGroup.position.set(-0.08, 0.14, 0.02);
                         uData.shieldGroup.rotation.set(0.08, -1.35, -0.06);
                     }
                 }
@@ -2395,7 +2395,7 @@ class DarkSoulsGame {
             if (uData.shieldGroup) {
                 uData.shieldGroup.visible = !this.isTorchActive;
                 if (!this.isTorchActive) {
-                    uData.shieldGroup.position.set(-0.08, 0.02, 0.02);
+                    uData.shieldGroup.position.set(-0.08, 0.14, 0.02);
                     uData.shieldGroup.rotation.set(0.08, -1.35, -0.06);
                 }
             }
@@ -2755,28 +2755,28 @@ class DarkSoulsGame {
         if (!uData || !uData.swordGroup) return;
 
         const wpnId = uData.currentWeaponId || (uData.swordGroup.userData && uData.swordGroup.userData.weaponId) || 'sword';
-        // Natural Dark Souls ready stance: sword held forward & angled slightly down at hip level
-        let targetRotX = 2.05, targetRotY = 0.10, targetRotZ = -0.12;
-        let targetPosX = 0.04, targetPosY = -0.02, targetPosZ = 0.08;
+        // Natural Dark Souls ready stance: blade hangs naturally down along outer thigh without clipping
+        let targetRotX = 3.02, targetRotY = 0.05, targetRotZ = 0.05;
+        let targetPosX = 0.02, targetPosY = 0.0, targetPosZ = 0.04;
 
         if (wpnId === 'halberd') {
-            targetRotX = 1.95; targetRotY = 0.05; targetRotZ = -0.06;
-            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.02;
+            targetRotX = 2.95; targetRotY = 0.04; targetRotZ = 0.04;
+            targetPosX = 0.02; targetPosY = 0.02; targetPosZ = 0.02;
         } else if (wpnId === 'zweihander' || wpnId === 'dark_moon_greatsword') {
-            targetRotX = 2.10; targetRotY = 0.08; targetRotZ = -0.14;
-            targetPosX = 0.02; targetPosY = 0.05; targetPosZ = 0.06;
+            targetRotX = 2.95; targetRotY = 0.06; targetRotZ = 0.06;
+            targetPosX = 0.02; targetPosY = 0.02; targetPosZ = 0.04;
         } else if (wpnId === 'dragontooth') {
-            targetRotX = 2.05; targetRotY = 0.08; targetRotZ = -0.12;
-            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
+            targetRotX = 2.95; targetRotY = 0.06; targetRotZ = 0.06;
+            targetPosX = 0.02; targetPosY = 0.02; targetPosZ = 0.04;
         } else if (wpnId === 'torch') {
             targetRotX = 0.12; targetRotY = 0.0; targetRotZ = -0.05;
             targetPosX = 0.0; targetPosY = 0.06; targetPosZ = 0.04;
         } else if (wpnId === 'uchigatana' || wpnId === 'rivers_of_blood') {
-            targetRotX = 2.05; targetRotY = 0.06; targetRotZ = -0.10;
-            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
+            targetRotX = 3.02; targetRotY = 0.04; targetRotZ = 0.05;
+            targetPosX = 0.02; targetPosY = 0.0; targetPosZ = 0.04;
         } else if (wpnId === 'moonlight') {
-            targetRotX = 2.05; targetRotY = 0.08; targetRotZ = -0.12;
-            targetPosX = 0.02; targetPosY = 0.04; targetPosZ = 0.06;
+            targetRotX = 2.95; targetRotY = 0.06; targetRotZ = 0.06;
+            targetPosX = 0.02; targetPosY = 0.02; targetPosZ = 0.04;
         }
 
         // Smoothly glide back to the natural ready stance every frame
@@ -3595,9 +3595,9 @@ class DarkSoulsGame {
             this.updateEscapeMenuUI();
         }
 
-        // Show coordinates HUD when Escape button is pressed
+        // Coordinates are cleanly presented inside the Command Menu's status card; keep HUD pill hidden to prevent header overlap
         const hud = document.getElementById('live-coords-hud');
-        if (hud) hud.style.display = 'flex';
+        if (hud) hud.style.display = 'none';
 
         // 4. Smoothly scroll header actions to start and trigger golden pulse
         const bar = document.getElementById('header-actions-bar') || document.querySelector('.header-actions');
@@ -3655,7 +3655,7 @@ class DarkSoulsGame {
             if (uData.rightShoulder) uData.rightShoulder.rotation.set(0, 0, 0);
             if (uData.leftHip) uData.leftHip.rotation.set(0, 0, 0);
             if (uData.rightHip) uData.rightHip.rotation.set(0, 0, 0);
-            if (uData.swordGroup) { uData.swordGroup.rotation.set(2.05, 0.10, -0.12); uData.swordGroup.position.set(0.04, -0.02, 0.08); }
+            if (uData.swordGroup) { uData.swordGroup.rotation.set(3.02, 0.05, 0.05); uData.swordGroup.position.set(0.02, 0.0, 0.04); }
         }
 
         // Respawns hollow soldiers
@@ -3704,12 +3704,63 @@ class DarkSoulsGame {
         }, 1600);
     }
 
+    getCurrentZoneName(p) {
+        if (!p) return 'Lordran Kingdom';
+        // 1. Serpent Sanctuary & Temple of the Gorgon
+        if (p.z <= -75 && Math.abs(p.x) <= 45) {
+            return 'Serpent Sanctuary • Temple of the Gorgon (-4m)';
+        }
+        if (p.z < -30 && p.z > -75 && Math.abs(p.x) <= 45) {
+            return 'Serpent Sanctuary • Sunken Courtyard (-2.5m)';
+        }
+        // 2. Subterranean Catacombs
+        if (p.x >= -26 && p.x <= -14 && p.z >= 20 && p.z <= 274 && p.y < -2.0) {
+            return 'Subterranean Catacombs (-5m Depth)';
+        }
+        // 3. High Castle Ramparts
+        if (p.x >= 14 && p.x <= 26 && p.z >= 20 && p.z <= 274 && p.y > 2.0) {
+            return 'High Castle Ramparts (+6m)';
+        }
+        // 4. Colosseum Boss Arena
+        if (p.z > 275 && Math.abs(p.x) <= 50) {
+            return 'Colosseum Boss Arena';
+        }
+        // 5. Royal Viaduct Bridge
+        if (p.z >= 24 && p.z <= 274 && Math.abs(p.x) <= 14) {
+            return 'Royal Viaduct Bridge (0m)';
+        }
+        // 6. Firelink Courtyard Sanctuary
+        if (p.z >= -30 && p.z < 24 && Math.abs(p.x) <= 35) {
+            return 'Firelink Courtyard Sanctuary (0m)';
+        }
+        // 7. Outside Realms / Teleported Locations
+        const locs = window.DARK_SOULS_LOCATIONS || [];
+        let closest = null, minDist = Infinity;
+        for (let i = 0; i < locs.length; i++) {
+            const loc = locs[i];
+            if (loc.pos) {
+                const dx = p.x - loc.pos[0];
+                const dy = p.y - loc.pos[1];
+                const dz = p.z - loc.pos[2];
+                const dist = dx * dx + dy * dy + dz * dz;
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = loc;
+                }
+            }
+        }
+        if (closest && minDist < 6400) {
+            return `${closest.name} (${closest.elev || '0m'})`;
+        }
+        return 'Lordran Kingdom Expedition';
+    }
+
     saveGame(showNotification = true, context = 'MANUAL', slotKey = 'darksouls_save_v1') {
         if (!this.combat) return false;
 
         const p = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
         const rotY = this.playerMesh ? this.playerMesh.rotation.y : 0;
-        const zoneName = p.y <= -3.5 ? 'Catacombs (-5m Depth)' : (p.x > 12 ? 'High Ramparts (+6m)' : (p.z > 95 ? 'Boss Arena' : 'Royal Bridge (0m)'));
+        const zoneName = this.getCurrentZoneName(p);
 
         const saveData = {
             version: 2,
@@ -4069,7 +4120,7 @@ class DarkSoulsGame {
         if (elSkin) elSkin.textContent = currentSkin.toUpperCase();
 
         const p = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
-        const zoneName = p.y <= -3.5 ? 'Catacombs (-5m Depth)' : (p.x > 12 ? 'High Ramparts (+6m)' : (p.z > 95 ? 'Boss Arena' : 'Royal Bridge (0m)'));
+        const zoneName = this.getCurrentZoneName(p);
         if (elZone) elZone.textContent = zoneName;
 
         const elCoords = document.getElementById('esc-stat-coords');

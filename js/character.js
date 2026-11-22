@@ -1686,23 +1686,24 @@ class DarkSoulsCharacters {
         const isKatana = ['uchigatana', 'rivers_of_blood', 'moonveil', 'kusabimaru', 'chikage', 'rakuyo', 'chaos_blade', 'mortal_blade', 'hand_of_malenia', 'frayed_blade'].includes(weaponId);
 
         if (isPolearm) {
-            newWeapon.rotation.set(1.95, 0.05, -0.06);
-            newWeapon.position.set(0.02, 0.04, 0.02);
+            newWeapon.rotation.set(2.95, 0.04, 0.04);
+            newWeapon.position.set(0.02, 0.02, 0.02);
         } else if (isColossal) {
-            newWeapon.rotation.set(2.10, 0.08, -0.14);
-            newWeapon.position.set(0.02, 0.05, 0.06);
+            newWeapon.rotation.set(2.95, 0.06, 0.06);
+            newWeapon.position.set(0.02, 0.02, 0.04);
         } else if (isGreatImpact) {
-            newWeapon.rotation.set(2.05, 0.08, -0.12);
-            newWeapon.position.set(0.02, 0.04, 0.06);
+            newWeapon.rotation.set(2.95, 0.06, 0.06);
+            newWeapon.position.set(0.02, 0.02, 0.04);
         } else if (weaponId === 'torch') {
             newWeapon.rotation.set(0.12, 0, -0.05);
             newWeapon.position.set(0, 0.06, 0.04);
         } else if (isKatana) {
-            newWeapon.rotation.set(2.05, 0.06, -0.10);
-            newWeapon.position.set(0.02, 0.04, 0.06);
+            newWeapon.rotation.set(3.02, 0.04, 0.05);
+            newWeapon.position.set(0.02, 0.0, 0.04);
         } else {
-            newWeapon.rotation.set(2.05, 0.10, -0.12);
-            newWeapon.position.set(0.04, -0.02, 0.08);
+            // Authentic straight sword idle posture (blade hangs naturally down along outer thigh)
+            newWeapon.rotation.set(3.02, 0.05, 0.05);
+            newWeapon.position.set(0.02, 0.0, 0.04);
         }
         rHand.add(newWeapon);
 
@@ -1741,12 +1742,12 @@ class DarkSoulsCharacters {
         torso.add(rightShoulder);
 
         const rHand = new THREE.Group();
-        rHand.position.y = -0.44;
+        rHand.position.y = -0.58;
         rightShoulder.add(rHand);
 
         const swordGroup = this.createWeaponMesh('sword');
-        swordGroup.rotation.set(2.05, 0.10, -0.12);
-        swordGroup.position.set(0.04, -0.02, 0.08);
+        swordGroup.rotation.set(3.02, 0.05, 0.05);
+        swordGroup.position.set(0.02, 0.0, 0.04);
         rHand.add(swordGroup);
 
         // 4. Left Arm (Shield & Offhand Arm)
@@ -1755,7 +1756,7 @@ class DarkSoulsCharacters {
         torso.add(leftShoulder);
 
         const lHand = new THREE.Group();
-        lHand.position.y = -0.44;
+        lHand.position.y = -0.58;
         leftShoulder.add(lHand);
 
         // Authentic Sculpted 3D Dark Souls Crest Shield (Gothic Curved Heater Plate with Double-Sided Detailing)
@@ -1903,7 +1904,7 @@ class DarkSoulsCharacters {
         shieldGroup.add(handleBar);
 
         // Anatomically strapped to outer forearm: covers entire left flank & front-left
-        shieldGroup.position.set(-0.08, 0.02, 0.02);
+        shieldGroup.position.set(-0.08, 0.14, 0.02);
         shieldGroup.rotation.set(0.08, -1.35, -0.06);
         lHand.add(shieldGroup);
 

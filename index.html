@@ -1856,7 +1856,7 @@
     </div>
 
     <!-- Live Real-Time Coordinate HUD [Shown when ESC is pressed] -->
-    <div id="live-coords-hud" onclick="if(window.game&&window.game.toggleCoordsHUD)window.game.toggleCoordsHUD();" title="Real-Time Player Coordinates [Shown on ESC key]" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 300; display: none; align-items: center; gap: 8px; background: rgba(8, 12, 18, 0.92); border: 1.5px solid rgba(120, 180, 240, 0.75); border-radius: 6px; padding: 6px 18px; font-family: monospace; font-size: 0.85rem; color: #aadcff; box-shadow: 0 4px 18px rgba(0,0,0,0.9), 0 0 14px rgba(120,180,240,0.3); cursor: pointer; user-select: none; transition: background 0.2s ease;">
+    <div id="live-coords-hud" onclick="if(window.game&&window.game.toggleCoordsHUD)window.game.toggleCoordsHUD();" title="Real-Time Player Coordinates [Shown on ESC key]" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 150; display: none; align-items: center; gap: 8px; background: rgba(8, 12, 18, 0.92); border: 1.5px solid rgba(120, 180, 240, 0.75); border-radius: 6px; padding: 6px 18px; font-family: monospace; font-size: 0.85rem; color: #aadcff; box-shadow: 0 4px 18px rgba(0,0,0,0.9), 0 0 14px rgba(120,180,240,0.3); cursor: pointer; user-select: none; transition: background 0.2s ease;">
         <span style="color: #ffd778; font-weight: bold;">📍 COORDS [ESC]:</span>
         <span id="coords-text">X: 0.0m &bull; Y: 0.0m &bull; Z: 0.0m</span>
     </div>
@@ -7016,7 +7016,7 @@
             const modal = document.getElementById('quick-menu-modal');
             if (modal) modal.style.display = 'flex';
             const hud = document.getElementById('live-coords-hud');
-            if (hud) hud.style.display = 'flex';
+            if (hud) hud.style.display = 'none'; // Keep hidden during modal to prevent title overlap
             if (window.game && window.game.updateEscapeMenuUI) {
                 window.game.updateEscapeMenuUI();
             }
@@ -7911,26 +7911,26 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/audio.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/lore_items.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/merchants_30.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/world.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/character.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/siege_warfare.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/heraldry_nobility.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/apothecary_crafting.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/collision_system.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/qa_bot_tester.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/combat.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/postprocessing.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/qa_suite.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/blacksmith_forge.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/inventory_system.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/compendium_300_models.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/death_quotes_300.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/game.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
-    <script src="js/dev_map.js?v=20261122_MERCHANTS_30_LOCATIONS_V21"></script>
+    <script src="js/three.min.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/audio.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/lore_items.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/merchants_30.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/world.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/character.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/siege_warfare.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/heraldry_nobility.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/apothecary_crafting.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/collision_system.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/qa_bot_tester.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/combat.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/postprocessing.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/qa_suite.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/blacksmith_forge.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/inventory_system.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/compendium_300_models.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/death_quotes_300.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/game.js?v=20261122_V23_SERPENT_FIXES"></script>
+    <script src="js/dev_map.js?v=20261122_V23_SERPENT_FIXES"></script>
     <script>
         // 300 Death Quotes UI Logic
         window.openDeathQuotesModal = function() {
