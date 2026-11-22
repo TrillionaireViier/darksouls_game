@@ -2337,8 +2337,7 @@ class DarkSoulsWorld {
         sanctumGroup.add(innerFloor);
 
         // Vaulted Underground Temple Ceiling for Gorgon's Inner Sanctum (z: -70 to -115, x: -39 to 39, y = 7.0)
-        const sanctumCeiling = new THREE.Mesh(new THREE.PlaneGeometry(78, 46), this.serpentStoneMat);
-        sanctumCeiling.rotation.x = Math.PI / 2; // Facing downward into the crypt
+        const sanctumCeiling = new THREE.Mesh(new THREE.BoxGeometry(78, 1.8, 46), this.serpentStoneMat);
         sanctumCeiling.position.set(0, 7.0, -92.5);
         sanctumCeiling.receiveShadow = true;
         sanctumGroup.add(sanctumCeiling);
@@ -2602,11 +2601,11 @@ class DarkSoulsWorld {
         });
 
         const mountainCoords = [
-            [-180, 25, -120, 55, 110], [-110, 20, -160, 45, 95], [0, 30, -180, 65, 130],
-            [120, 25, -160, 50, 105], [190, 20, -110, 55, 115],
-            [-210, 15, 40, 48, 90], [210, 15, 40, 52, 100],
-            [-190, 18, 160, 55, 110], [190, 18, 160, 55, 110],
-            [-100, 25, 230, 60, 125], [0, 35, 250, 75, 145], [110, 25, 230, 60, 120]
+            [-220, 35, -190, 60, 120], [-130, 45, -270, 65, 140], [0, 50, -280, 75, 160],
+            [130, 45, -270, 65, 140], [220, 35, -190, 60, 120],
+            [-230, 20, 40, 52, 95], [230, 20, 40, 52, 100],
+            [-200, 22, 180, 58, 115], [200, 22, 180, 58, 115],
+            [-110, 28, 250, 65, 130], [0, 40, 275, 80, 155], [110, 28, 250, 65, 125]
         ];
 
         mountainCoords.forEach(([mx, my, mz, mw, mh]) => {
@@ -2630,9 +2629,9 @@ class DarkSoulsWorld {
         });
 
         const distantSpires = [
-            [-85, 0, -90, 7, 55], [-45, 0, -115, 6, 68], [55, 0, -110, 6.5, 62], [95, 0, -85, 7.5, 52],
-            [-125, -5, 110, 8, 50], [125, -5, 110, 8, 50],
-            [-80, 0, 195, 9, 78], [80, 0, 195, 9, 78]
+            [-95, 0, -165, 7, 55], [-55, 0, -175, 6, 68], [65, 0, -175, 6.5, 62], [105, 0, -165, 7.5, 52],
+            [-135, -5, 125, 8, 50], [135, -5, 125, 8, 50],
+            [-85, 0, 215, 9, 78], [85, 0, 215, 9, 78]
         ];
 
         distantSpires.forEach(([tx, ty, tz, tr, th]) => {

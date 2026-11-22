@@ -9413,6 +9413,24 @@ class DarkSoulsCharacters {
         cranium.castShadow = true;
         headGroup.add(cranium);
 
+        // Serpentine Scalp & Textured Hair Cap (Covers crown and back of head)
+        const hairCap = new THREE.Mesh(
+            new THREE.SphereGeometry(0.21, 14, 12, 0, Math.PI * 2, 0, Math.PI * 0.72),
+            hairMat
+        );
+        hairCap.scale.set(0.92, 1.18, 1.02);
+        hairCap.position.set(0, 0.02, -0.02);
+        headGroup.add(hairCap);
+
+        // Draped Serpentine Cowl Mantle (Flows down back of head over neck)
+        const hoodMantle = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.22, 0.36, 0.62, 12, 1, true, -Math.PI * 0.75, Math.PI * 1.5),
+            scaleMat
+        );
+        hoodMantle.position.set(0, -0.20, -0.10);
+        hoodMantle.rotation.x = 0.22;
+        headGroup.add(hoodMantle);
+
         // Chiseled cheekbone contours
         [-0.14, 0.14].forEach((cx) => {
             const cheek = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.08), skinMat);
@@ -9515,91 +9533,94 @@ class DarkSoulsCharacters {
             });
         }
 
-        // 4. Living Crown of 24 Articulated Serpents (3 Anatomical Tiers)
+        // 4. Living Crown of 32 Articulated Sinuous Serpents (Crest, Temples, & Back Mane)
         const snakeHair = [];
 
-        // Tier 1: 8 Crest Serpents (Top Arching Forward)
-        for (let s = 0; s < 8; s++) {
-            const ang = (s / 8) * Math.PI * 2;
+        // Helper to build a realistic curved serpent with flared viper head & gemstone eyes
+        const buildSerpent = (rootAng, radius, yOffset, pitch, roll, length = 0.45) => {
             const sGroup = new THREE.Group();
-            const rad = 0.14;
-            sGroup.position.set(Math.cos(ang) * rad, 0.20, Math.sin(ang) * rad);
+            const bx = Math.cos(rootAng) * radius;
+            const bz = Math.sin(rootAng) * radius;
+            sGroup.position.set(bx, yOffset, bz);
 
-            const sBody = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.032, 0.48, 6), hairMat);
-            sBody.position.set(Math.cos(ang) * 0.08, 0.18, Math.sin(ang) * 0.08);
-            sBody.rotation.z = Math.cos(ang) * 0.55;
-            sBody.rotation.x = Math.sin(ang) * 0.55;
-            sGroup.add(sBody);
+            // S-curve lower segment (torus arc)
+            const arcLower = new THREE.Mesh(new THREE.TorusGeometry(length * 0.32, 0.025, 6, 10, Math.PI * 0.7), hairMat);
+            arcLower.rotation.z = roll;
+            arcLower.rotation.x = pitch;
+            sGroup.add(arcLower);
 
+            // S-curve upper segment
+            const arcUpper = new THREE.Mesh(new THREE.CylinderGeometry(0.020, 0.028, length * 0.6, 6), hairMat);
+            arcUpper.position.set(Math.cos(rootAng) * 0.10, length * 0.35, Math.sin(rootAng) * 0.10);
+            arcUpper.rotation.z = roll * 0.7;
+            arcUpper.rotation.x = pitch * 0.7;
+            sGroup.add(arcUpper);
+
+            // Flared Viper Head with side horns
             const sHead = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.12, 5), hairMat);
-            sHead.position.set(Math.cos(ang) * 0.16, 0.40, Math.sin(ang) * 0.16);
-            sHead.rotation.x = Math.PI;
+            sHead.position.set(Math.cos(rootAng) * 0.18, length * 0.65, Math.sin(rootAng) * 0.18);
+            sHead.rotation.x = pitch;
+            sHead.rotation.z = roll;
 
+            // Twin glowing gemstone eyes
             const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.012, 4, 4), gemMat);
-            e1.position.set(0.024, -0.04, 0.03);
+            e1.position.set(0.024, -0.03, 0.03);
             sHead.add(e1);
             const e2 = new THREE.Mesh(new THREE.SphereGeometry(0.012, 4, 4), gemMat);
-            e2.position.set(-0.024, -0.04, 0.03);
+            e2.position.set(-0.024, -0.03, 0.03);
             sHead.add(e2);
+
+            // Viper Hood flap
+            const hoodFlap = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.04, 0.015), scaleMat);
+            hoodFlap.position.set(0, -0.01, -0.01);
+            sHead.add(hoodFlap);
 
             sGroup.add(sHead);
             headGroup.add(sGroup);
             snakeHair.push(sGroup);
+        };
+
+        // Tier 1: 10 Crest Serpents (Top Arching Forward & Outward)
+        for (let s = 0; s < 10; s++) {
+            const ang = (s / 10) * Math.PI * 2;
+            buildSerpent(ang, 0.15, 0.18, Math.sin(ang) * 0.65, Math.cos(ang) * 0.65, 0.48);
         }
 
-        // Tier 2: 8 Temple Serpents (Sides Coiling Outward)
-        for (let s = 0; s < 8; s++) {
-            const side = (s < 4 ? -1 : 1);
-            const idx = s % 4;
-            const sGroup = new THREE.Group();
-            sGroup.position.set(side * (0.16 + idx * 0.025), 0.06 - idx * 0.04, 0.06 - idx * 0.04);
-
-            const sBody = new THREE.Mesh(new THREE.CylinderGeometry(0.020, 0.030, 0.44, 6), hairMat);
-            sBody.position.set(side * 0.12, 0.08, -0.04);
-            sBody.rotation.z = -side * 0.85;
-            sGroup.add(sBody);
-
-            const sHead = new THREE.Mesh(new THREE.ConeGeometry(0.040, 0.11, 5), hairMat);
-            sHead.position.set(side * 0.28, 0.14, 0.02);
-            sHead.rotation.z = -side * 1.1;
-
-            const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.011, 4, 4), gemMat);
-            e1.position.set(0.02, -0.03, 0.025);
-            sHead.add(e1);
-            const e2 = new THREE.Mesh(new THREE.SphereGeometry(0.011, 4, 4), gemMat);
-            e2.position.set(-0.02, -0.03, 0.025);
-            sHead.add(e2);
-
-            sGroup.add(sHead);
-            headGroup.add(sGroup);
-            snakeHair.push(sGroup);
+        // Tier 2: 10 Temple Serpents (Sides Coiling Outward)
+        for (let s = 0; s < 10; s++) {
+            const side = (s < 5 ? -1 : 1);
+            const idx = s % 5;
+            const sang = (side > 0 ? 0.3 : Math.PI - 0.3) + idx * 0.22;
+            buildSerpent(sang, 0.18 + idx * 0.02, 0.06 - idx * 0.03, -0.25, side * (0.85 + idx * 0.1), 0.44);
         }
 
-        // Tier 3: 8 Mane Serpents (Flowing down back & shoulders)
-        for (let s = 0; s < 8; s++) {
-            const sGroup = new THREE.Group();
-            const sx = (s - 3.5) * 0.048;
-            sGroup.position.set(sx, 0.08, -0.16);
+        // Tier 3: 12 Mane Serpents (Cascading down the back of head & neck)
+        for (let s = 0; s < 12; s++) {
+            const col = s % 4;
+            const row = Math.floor(s / 4);
+            const sx = (col - 1.5) * 0.075;
+            const sz = -0.16 - row * 0.06;
+            const sy = 0.06 - row * 0.08;
+            const maneAng = -Math.PI / 2 + (col - 1.5) * 0.25;
+            buildSerpent(maneAng, 0.16 + row * 0.04, sy, -0.65 - row * 0.2, (col - 1.5) * 0.35, 0.52);
+        }
 
-            const sBody = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.030, 0.52, 6), hairMat);
-            sBody.position.set(0, -0.18, -0.08);
-            sBody.rotation.x = -0.45;
-            sGroup.add(sBody);
+        // Ornate Golden Back Plate & Spinal Bone Crest on Torso
+        const backPlate = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.62, 0.12), armorMat);
+        backPlate.position.set(0, 0.12, -0.22);
+        torso.add(backPlate);
 
-            const sHead = new THREE.Mesh(new THREE.ConeGeometry(0.042, 0.12, 5), hairMat);
-            sHead.position.set(0, -0.42, -0.16);
-            sHead.rotation.x = -0.2;
+        // Coiled Snake Relief on Back Plate
+        const backSnakeRelief = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.020, 6, 16), goldMat);
+        backSnakeRelief.position.set(0, 0.12, -0.29);
+        torso.add(backSnakeRelief);
 
-            const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.011, 4, 4), gemMat);
-            e1.position.set(0.02, 0.02, 0.03);
-            sHead.add(e1);
-            const e2 = new THREE.Mesh(new THREE.SphereGeometry(0.011, 4, 4), gemMat);
-            e2.position.set(-0.02, 0.02, 0.03);
-            sHead.add(e2);
-
-            sGroup.add(sHead);
-            headGroup.add(sGroup);
-            snakeHair.push(sGroup);
+        // 5 Gilded Vertebrae Spikes down the back
+        for (let v = 0; v < 5; v++) {
+            const vSpike = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.10, 4), goldMat);
+            vSpike.position.set(0, 0.32 - v * 0.10, -0.28);
+            vSpike.rotation.x = -Math.PI / 2;
+            torso.add(vSpike);
         }
 
         // 5. Scaled Arms & Golden Ouroboros Armlets

@@ -5237,10 +5237,10 @@ equipWeapon(weaponId) {
         if (this.hasRing('cloranthy')) regen = Math.round(regen * 1.5);
         this.staminaRegenRate = regen;
 
-        let basePoise = 100 + (this.level - 1) * 8 + (this.endurance - 10) * 4;
+        let basePoise = 180 + (this.level - 1) * 12 + (this.endurance - 10) * 6;
         if (this.hasRing('havel')) basePoise = Math.round(basePoise * 1.5);
-        if (this.hasRing('wolf_ring')) basePoise += 40;
-        if (this.hasRing('erdtree_favor')) basePoise = Math.round(basePoise * 1.15);
+        if (this.hasRing('wolf_ring')) basePoise += 60;
+        if (this.hasRing('erdtree_favor')) basePoise = Math.round(basePoise * 1.25);
         this.maxPoise = basePoise;
         this.poise = Math.min(this.poise, this.maxPoise);
 
@@ -5464,32 +5464,34 @@ equipWeapon(weaponId) {
         this.game.flashDamageScreen();
         if (this.game.triggerHitstop) this.game.triggerHitstop(3);
 
-        // Poise & Stagger: Poise damage, regenerates after 2.0s delay
-        const directPoiseDmg = Math.max(6, Math.round(damage * 0.18));
+        // Poise & Stagger: Minimal poise wear from small mobs, regenerates quickly
+        const isBossHit = !!(this.boss && this.boss.isAttacking && !this.boss.isDead);
+        const directPoiseDmg = isBossHit ? Math.max(8, Math.round(damage * 0.12)) : Math.max(1, Math.round(damage * 0.035));
         this.poise -= directPoiseDmg;
-        this.poiseRegenDelay = 2.0;
+        this.poiseRegenDelay = 1.6;
 
         if (this.hp <= 0) {
             this.killPlayer();
         } else if (this.poise <= 0) {
-            // Poise broken: player stun strictly 0.30s max, reduces further as player levels up
+            // Poise broken: rare player stun strictly 0.20s max, reduces down to 0.08s with level scaling
             this.poise = 0;
             this.isStaggered = true;
-            const playerStunDuration = Math.max(0.12, 0.30 - Math.min(0.15, (this.level - 1) * 0.005));
+            const playerStunDuration = Math.max(0.08, 0.20 - Math.min(0.12, (this.level - 1) * 0.005));
             this.staggerTime = playerStunDuration;
             this.maxStaggerTimer = playerStunDuration;
             this.isAttacking = false;
             this.isBlocking = false;
             this.game.showNotification(`⚠️ POISE BROKEN! STUNNED (${playerStunDuration.toFixed(2)}s)`);
         } else {
-            // Player still has poise! Only stagger on colossal boss hits (damage >= 90)
-            if (damage >= 90) {
+            // Player still has poise! Small mobs NEVER stagger the player.
+            // Only colossal boss hits (damage >= 180 from an attacking boss) cause a brief stagger.
+            if (isBossHit && damage >= 180) {
                 this.isStaggered = true;
-                const playerStunDuration = Math.max(0.10, 0.20 - Math.min(0.10, (this.level - 1) * 0.004));
+                const playerStunDuration = Math.max(0.08, 0.15 - Math.min(0.07, (this.level - 1) * 0.003));
                 this.staggerTime = playerStunDuration;
                 this.maxStaggerTimer = playerStunDuration;
             } else {
-                // Poise absorbs impact! Player retains full movement, attack, and roll freedom!
+                // Poise absorbs impact! Player retains 100% fluid movement, attack combos, and roll freedom!
                 this.isStaggered = false;
             }
         }
@@ -5701,6 +5703,9 @@ equipWeapon(weaponId) {
         }
 
         this.audio.playYouDied();
+        if (this.game && this.game.ui && this.game.ui.interactionPrompt) {
+            this.game.ui.interactionPrompt.style.display = 'none';
+        }
         this.game.triggerDeathScreen();
     }
 

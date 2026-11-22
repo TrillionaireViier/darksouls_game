@@ -3000,7 +3000,7 @@ class DarkSoulsGame {
                 if (this._camRay.intersectBox(box, this._camHit)) {
                     const hitDist = targetPos.distanceTo(this._camHit);
                     if (hitDist < allowedDist) {
-                        allowedDist = Math.max(0.65, hitDist - 0.32); // 32cm safety clearance buffer
+                        allowedDist = Math.max(1.15, hitDist - 0.25); // 25cm safety buffer, never clips inside player
                     }
                 }
             }
@@ -3011,14 +3011,15 @@ class DarkSoulsGame {
         let cz = targetPos.z + allowedDist * this._camDir.z;
 
         // Subterranean ceiling & surface floor clamping
-        if (targetPos.y < -3.0) {
-            // Deep Inner Sanctum: Keep camera inside sanctum boundaries and above sanctum floor
+        if (targetPos.y < -3.0 && targetPos.z < -30) {
+            // Deep Inner Sanctum (z in [-115, -78]): Keep camera inside sanctum boundaries
             if (cz > -78.2) cz = -78.2;
             cy = Math.max(cy, -3.55);
             cy = Math.min(cy, -1.8);
         } else if (targetPos.y < -1.0) {
-            cy = Math.min(cy, 0.4);
-            cy = Math.max(cy, targetPos.y - 0.2);
+            // Subterranean Catacombs / Blighttown Corridor (y = -4.92, z in [22, 274])
+            cy = Math.max(cy, targetPos.y + 0.45);
+            cy = Math.min(cy, 0.6);
         } else {
             cy = Math.max(cy, 0.6);
         }
@@ -3117,7 +3118,12 @@ class DarkSoulsGame {
             }
         }
 
-        // Check Interactable Proximity
+        // Check Interactable Proximity (Completely hidden while dead)
+        if (this.combat && (this.combat.isDead || this.combat.hp <= 0)) {
+            if (this.ui.interactionPrompt) this.ui.interactionPrompt.style.display = 'none';
+            return;
+        }
+
         let activePrompt = null;
         this._nearbyCompendiumEntity = null;
         for (const item of this.world.interactables) {
@@ -3374,6 +3380,9 @@ class DarkSoulsGame {
     }
 
     triggerDeathScreen() {
+        if (this.ui.interactionPrompt) {
+            this.ui.interactionPrompt.style.display = 'none';
+        }
         if (this.ui.deathScreen) {
             // Pick random death banner title (YOU DIED, YOU CROAKED, etc.)
             const titleEl = document.getElementById('death-title-text') || (this.ui.deathScreen ? this.ui.deathScreen.querySelector('.death-title') : null);
@@ -3618,7 +3627,7 @@ class DarkSoulsGame {
             setTimeout(() => bar.classList.remove('header-actions-glow'), 1200);
         }
 
-        this.showNotification("⚜️ LORDRAN COMMAND MENU • [ESC] RESUME");
+        this.showNotification("⚜️ WARRIORS' DREAM COMMAND MENU • [ESC] RESUME");
     }
 
     respawnPlayer() {

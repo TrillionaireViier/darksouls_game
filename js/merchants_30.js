@@ -839,40 +839,233 @@
                 npcGroup.add(mArm);
             }
 
-        } else {
-            // Standard Humanoid Seated/Standing Merchant
-            const stool = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.35, 8), woodMat);
+        } else if (m.modelType === 'witch_floating') {
+            // Quelana of Izalith - Mother of Pyromancy
+            // Lotus stone meditation dais
+            const dais = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.65, 0.28, 12), stoneMat);
+            dais.position.y = 0.14;
+            npcGroup.add(dais);
+
+            // Flowing black silk robes with gold embroidery hem
+            const robe = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.52, 1.15, 12), clothMat);
+            robe.position.y = 0.65;
+            npcGroup.add(robe);
+
+            const goldHem = new THREE.Mesh(new THREE.TorusGeometry(0.51, 0.025, 6, 16), goldMat);
+            goldHem.position.y = 0.12;
+            goldHem.rotation.x = Math.PI / 2;
+            npcGroup.add(goldHem);
+
+            // Gold-hemmed cowl mantle
+            const mantle = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.42, 0.38, 10), clothMat);
+            mantle.position.y = 1.05;
+            npcGroup.add(mantle);
+
+            const mantleTrim = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.02, 6, 14), goldMat);
+            mantleTrim.position.y = 0.88;
+            mantleTrim.rotation.x = Math.PI / 2;
+            npcGroup.add(mantleTrim);
+
+            // Shadowed Hood
+            const hood = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.48, 10), clothMat);
+            hood.position.set(0, 1.45, -0.04);
+            hood.rotation.x = -0.12;
+            npcGroup.add(hood);
+
+            const hoodTrim = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.022, 6, 14), goldMat);
+            hoodTrim.position.set(0, 1.28, 0.06);
+            hoodTrim.rotation.x = 0.35;
+            npcGroup.add(hoodTrim);
+
+            // Shadow face with twin amber eyes
+            const faceDark = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 8), new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.95 }));
+            faceDark.position.set(0, 1.25, 0.04);
+            npcGroup.add(faceDark);
+
+            const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.022, 6, 6), new THREE.MeshBasicMaterial({ color: 0xffaa00 }));
+            eyeL.position.set(-0.06, 1.27, 0.16);
+            npcGroup.add(eyeL);
+            const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.022, 6, 6), new THREE.MeshBasicMaterial({ color: 0xffaa00 }));
+            eyeR.position.set(0.06, 1.27, 0.16);
+            npcGroup.add(eyeR);
+
+            // Arms: Left holds Izalith Catalyst, Right cups Dancing Primal Chaos Fire
+            const armL = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.52, 6), clothMat);
+            armL.position.set(-0.35, 0.75, 0.15);
+            armL.rotation.set(0.4, 0, 0.2);
+            npcGroup.add(armL);
+
+            const catalyst = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.022, 1.6, 6), woodMat);
+            catalyst.position.set(-0.45, 0.75, 0.3);
+            catalyst.rotation.x = 0.2;
+            npcGroup.add(catalyst);
+            const catHead = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.2, 5), goldMat);
+            catHead.position.set(-0.45, 1.5, 0.45);
+            npcGroup.add(catHead);
+
+            const armR = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.52, 6), clothMat);
+            armR.position.set(0.32, 0.75, 0.18);
+            armR.rotation.set(0.6, 0, -0.3);
+            npcGroup.add(armR);
+
+            // Floating Primal Chaos Fire
+            const fireLight = new THREE.PointLight(0xff6600, 3.2, 12, 1.4);
+            fireLight.position.set(0.38, 0.95, 0.38);
+            npcGroup.add(fireLight);
+
+            const fireCore = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.12),
+                new THREE.MeshBasicMaterial({ color: 0xff7700 })
+            );
+            fireCore.position.set(0.38, 0.95, 0.38);
+            npcGroup.add(fireCore);
+
+        } else if (m.modelType === 'squatting_rogue') {
+            // Trusty Patches - Squatting rogue with Eagle Kite Shield & Winged Spear
+            const thighL = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.10, 0.45, 6), clothMat);
+            thighL.position.set(-0.25, 0.45, 0.15);
+            thighL.rotation.x = 1.1;
+            npcGroup.add(thighL);
+            const calfL = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.42, 6), new THREE.MeshStandardMaterial({ color: 0x221810 }));
+            calfL.position.set(-0.25, 0.22, 0.28);
+            calfL.rotation.x = -1.1;
+            npcGroup.add(calfL);
+
+            const thighR = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.10, 0.45, 6), clothMat);
+            thighR.position.set(0.25, 0.45, 0.15);
+            thighR.rotation.x = 1.1;
+            npcGroup.add(thighR);
+            const calfR = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.42, 6), new THREE.MeshStandardMaterial({ color: 0x221810 }));
+            calfR.position.set(0.25, 0.22, 0.28);
+            calfR.rotation.x = -1.1;
+            npcGroup.add(calfR);
+
+            const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.22, 0.55, 8), clothMat);
+            torso.position.set(0, 0.52, -0.05);
+            torso.rotation.x = 0.35;
+            npcGroup.add(torso);
+
+            // Bald shining head with smirk
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), skinMat);
+            head.position.set(0, 0.88, 0.08);
+            head.scale.set(0.9, 1.1, 0.95);
+            npcGroup.add(head);
+
+            // Eagle Kite Shield resting on ground
+            const shield = new THREE.Mesh(new THREE.BoxGeometry(0.55, 1.1, 0.06), woodMat);
+            shield.position.set(-0.52, 0.55, 0.25);
+            shield.rotation.set(0.1, 0.4, 0.15);
+            npcGroup.add(shield);
+            const shieldBoss = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.08, 8), ironMat);
+            shieldBoss.position.set(-0.52, 0.65, 0.29);
+            shieldBoss.rotation.x = Math.PI / 2;
+            npcGroup.add(shieldBoss);
+
+            // Winged Spear resting vertically
+            const spear = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 2.2, 6), ironMat);
+            spear.position.set(0.55, 1.0, 0.15);
+            spear.rotation.z = -0.15;
+            npcGroup.add(spear);
+
+        } else if (m.modelType === 'blacksmith') {
+            // Master Blacksmith Andre of Astora
+            const stool = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.45, 0.35, 10), woodMat);
             stool.position.y = 0.18;
             npcGroup.add(stool);
 
-            const legs = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.35, 0.55), new THREE.MeshStandardMaterial({ color: 0x2e241c, roughness: 0.8 }));
-            legs.position.set(0, 0.25, 0.15);
-            legs.castShadow = true;
+            const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.34, 0.42, 8), clothMat);
+            legs.position.set(0, 0.22, 0.12);
             npcGroup.add(legs);
 
-            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.72, 0.42), clothMat);
+            // Muscular Torso & Smithing Leather Apron
+            const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.28, 0.68, 8), skinMat);
+            torso.position.y = 0.70;
+            npcGroup.add(torso);
+
+            const apron = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.62, 0.12), new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.85 }));
+            apron.position.set(0, 0.65, 0.16);
+            npcGroup.add(apron);
+
+            // Sculpted Head & Long Braided Silver Beard
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 10, 10), skinMat);
+            head.position.y = 1.15;
+            npcGroup.add(head);
+
+            const beard = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.55, 6), new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.7 }));
+            beard.position.set(0, 0.90, 0.18);
+            beard.rotation.x = -0.15;
+            npcGroup.add(beard);
+
+            // Muscular Arms: Right holds Smithing Hammer
+            const armR = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.55, 6), skinMat);
+            armR.position.set(0.42, 0.72, 0.15);
+            armR.rotation.set(0.4, 0, -0.3);
+            npcGroup.add(armR);
+
+            const hammerHaft = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.65, 6), woodMat);
+            hammerHaft.position.set(0.55, 0.68, 0.35);
+            hammerHaft.rotation.x = Math.PI / 2;
+            npcGroup.add(hammerHaft);
+            const hammerHead = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.14, 0.28), ironMat);
+            hammerHead.position.set(0.55, 0.68, 0.65);
+            npcGroup.add(hammerHead);
+
+            // Massive Anvil with Glowing Hot Steel Bar
+            const anvilStump = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.50, 0.55, 10), woodMat);
+            anvilStump.position.set(0, 0.28, 0.85);
+            npcGroup.add(anvilStump);
+
+            const anvil = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.38, 0.42), ironMat);
+            anvil.position.set(0, 0.70, 0.85);
+            npcGroup.add(anvil);
+
+            const hotSteel = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.06, 0.45), new THREE.MeshStandardMaterial({ color: 0xff3300, emissive: 0xff4400, emissiveIntensity: 1.2 }));
+            hotSteel.position.set(0, 0.91, 0.85);
+            npcGroup.add(hotSteel);
+
+        } else {
+            // Enhanced Organic Seated Humanoid Merchant (Flowing Cloth, Sculpted Anatomy)
+            const stool = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.38, 0.32, 10), woodMat);
+            stool.position.y = 0.16;
+            npcGroup.add(stool);
+
+            // Seated Robe Drapery with flared hem
+            const robeBase = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.48, 0.48, 10), clothMat);
+            robeBase.position.set(0, 0.26, 0.10);
+            npcGroup.add(robeBase);
+
+            // Torso with belt & layered tunic
+            const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.25, 0.65, 8), clothMat);
             torso.position.y = 0.72;
             torso.castShadow = true;
             npcGroup.add(torso);
 
-            const scarf = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.24, 0.48), accentMat);
-            scarf.position.y = 1.0;
+            const belt = new THREE.Mesh(new THREE.TorusGeometry(0.27, 0.024, 6, 12), new THREE.MeshStandardMaterial({ color: 0x221810 }));
+            belt.position.y = 0.46;
+            belt.rotation.x = Math.PI / 2;
+            npcGroup.add(belt);
+
+            const scarf = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.06, 6, 12), accentMat);
+            scarf.position.y = 1.02;
+            scarf.rotation.x = Math.PI / 2;
             npcGroup.add(scarf);
 
-            const head = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.35, 0.32), skinMat);
-            head.position.y = 1.28;
+            // Sculpted Head with cowl/hair
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), skinMat);
+            head.position.y = 1.24;
+            head.scale.set(0.9, 1.1, 0.95);
             head.castShadow = true;
             npcGroup.add(head);
 
-            // Arms resting forward
-            const armL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.48, 0.14), clothMat);
-            armL.position.set(-0.32, 0.55, 0.16);
-            armL.rotation.x = 0.42;
+            // Arms resting forward on knees
+            const armL = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.065, 0.52, 6), clothMat);
+            armL.position.set(-0.32, 0.62, 0.18);
+            armL.rotation.x = 0.52;
             npcGroup.add(armL);
 
-            const armR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.48, 0.14), clothMat);
-            armR.position.set(0.32, 0.55, 0.16);
-            armR.rotation.x = 0.42;
+            const armR = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.065, 0.52, 6), clothMat);
+            armR.position.set(0.32, 0.62, 0.18);
+            armR.rotation.x = 0.52;
             npcGroup.add(armR);
 
             // Unique Hat Styles:
