@@ -41,21 +41,21 @@ class CollisionSystem {
         const initialX = pos.x;
         const initialZ = pos.z;
 
-        // A. Royal Bridge Parapets (z in [22.0, 272.0]) - Monumental 75m wide viaduct
-        if (pos.z >= 22.0 && pos.z <= 272.0 && Math.abs(pos.x) <= 38.0) {
+        // A. Royal Bridge Parapets (z in [22.0, 272.0]) - Monumental 85m wide Imperial Viaduct
+        if (pos.z >= 22.0 && pos.z <= 272.0 && Math.abs(pos.x) <= 44.0) {
             if (y >= -1.0 && y <= 3.5) {
-                const minX = -36.5 + radius;
-                const maxX = 36.5 - radius;
+                const minX = -41.5 + radius;
+                const maxX = 41.5 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             }
         }
 
-        // B. Surface Boss Arena (z in [272.0, 635.0]) - Grand 180m x 360m Colosseum Arena
-        if (pos.z >= 272.0 && pos.z <= 635.0 && y >= -1.0 && y <= 6.0) {
-            const minX = -89.0 + radius;
-            const maxX = 89.0 - radius;
+        // B. Surface Boss Arena (z in [272.0, 695.0]) - Grand 240m x 420m Colosseum Arena
+        if (pos.z >= 272.0 && pos.z <= 695.0 && y >= -1.0 && y <= 6.0) {
+            const minX = -118.5 + radius;
+            const maxX = 118.5 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            pos.z = Math.min(630.0 - radius, pos.z);
+            pos.z = Math.min(688.0 - radius, pos.z);
         }
 
         // C. Flooded Catacombs Corridor (z in [22.0, 90.0], y < 1.0)
@@ -81,30 +81,30 @@ class CollisionSystem {
             pos.z = Math.min(94.5 - radius, pos.z);
         }
 
-        // F. Courtyard Starting Arena (z in [-30.0, 28.0], x in [-75.0, 75.0]) - Scaled 3x Grand Plaza
-        if (pos.z >= -30.0 && pos.z < 28.0 && pos.x >= -75.0 && y > -2.0) {
-            const inWestGate = (pos.z >= -10.0 && pos.z <= 10.0);
-            const minX = inWestGate ? -2000.0 : (-73.0 + radius);
-            const maxX = 73.0 - radius;
+        // F. Courtyard Starting Arena (z in [-30.0, 28.0], x in [-100.0, 100.0]) - Monumental 200m Imperial Acropolis
+        if (pos.z >= -30.0 && pos.z < 28.0 && pos.x >= -100.0 && y > -2.0) {
+            const inWestGate = (pos.z >= -14.0 && pos.z <= 14.0);
+            const minX = inWestGate ? -2000.0 : (-98.0 + radius);
+            const maxX = 98.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            if (pos.x >= -73.0 && (pos.x < -14.0 || pos.x > 14.0)) {
+            if (pos.x >= -98.0 && (pos.x < -14.0 || pos.x > 14.0)) {
                 pos.z = Math.max(-28.0 + radius, pos.z);
             }
         }
 
-        // G. Serpent Sanctuary & Gorgon Temple (z in [-115.0, -30.0], x in [-38.0, 38.0])
+        // G. Serpent Sanctuary & Gorgon Temple (z in [-135.0, -30.0], x in [-60.0, 60.0]) - Expanded Colossal Temple
         if (pos.z < -30.0) {
-            if (pos.z >= -70.0) {
-                // Sunken Serpent Courtyard
-                const minX = -31.0 + radius;
-                const maxX = 31.0 - radius;
+            if (pos.z >= -76.0) {
+                // Sunken Serpent Courtyard (100m wide)
+                const minX = -49.0 + radius;
+                const maxX = 49.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             } else {
-                // Gorgon Inner Sanctum
-                const minX = -37.0 + radius;
-                const maxX = 37.0 - radius;
+                // Gorgon Inner Sanctum (120m wide)
+                const minX = -58.0 + radius;
+                const maxX = 58.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
-                pos.z = Math.max(-113.0 + radius, pos.z);
+                pos.z = Math.max(-128.0 + radius, pos.z);
             }
         }
 
