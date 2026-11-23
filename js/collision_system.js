@@ -81,13 +81,14 @@ class CollisionSystem {
             pos.z = Math.min(94.5 - radius, pos.z);
         }
 
-        // F. Courtyard Starting Arena (z in [-28.0, 28.0], x in [-28.0, 28.0])
-        if (pos.z >= -30.0 && pos.z < 28.0 && y > -2.0) {
-            const minX = -28.0 + radius;
-            const maxX = 28.0 - radius;
+        // F. Courtyard Starting Arena (z in [-30.0, 28.0], x in [-75.0, 75.0]) - Scaled 3x Grand Plaza
+        if (pos.z >= -30.0 && pos.z < 28.0 && pos.x >= -75.0 && y > -2.0) {
+            const inWestGate = (pos.z >= -10.0 && pos.z <= 10.0);
+            const minX = inWestGate ? -2000.0 : (-73.0 + radius);
+            const maxX = 73.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            if (pos.x < -9.5 || pos.x > 9.5) {
-                pos.z = Math.max(minX, pos.z);
+            if (pos.x >= -73.0 && (pos.x < -14.0 || pos.x > 14.0)) {
+                pos.z = Math.max(-28.0 + radius, pos.z);
             }
         }
 

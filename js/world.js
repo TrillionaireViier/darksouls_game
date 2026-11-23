@@ -1018,36 +1018,36 @@ class DarkSoulsWorld {
             return 0.0;
         }
 
-        // 6. Main Courtyard Starting Arena (z in [-55, 35], x in [-60, 60] - Grand Expanded)
-        if (x >= -60 && x <= 60 && z >= -55 && z <= 35) {
+        // 6. Main Courtyard Starting Arena (z in [-55, 35], x in [-90, 90] - Grand Expanded 3x Plaza)
+        if (x >= -90 && x <= 90 && z >= -55 && z <= 35) {
             if (!inStairTrench && (currentY === null || currentY >= -1.5)) {
                 return 0.0;
             }
         }
 
-        // Fallen Starship Interior Deck & Ramp (x in [-135, -18], z in [8, 72])
-        if (x >= -135 && x <= -18 && z >= 8 && z <= 72) {
+        // Fallen Starship Interior Deck & Ramp (x in [-180, -18], z in [-40, 100]) - 3x Expanded Deck
+        if (x >= -180 && x <= -18 && z >= -40 && z <= 100) {
             return 0.0;
         }
 
-        // 6b. Outside Realm: Primeval Darkroot Forest & Expanded Wildlands (x in [-1590, -28], z in [-850, 850])
-        if (x >= -1590.0 && x <= -28.0 && z >= -850.0 && z <= 850.0) {
+        // 6b. Outside Realm: Primeval Darkroot Forest & Expanded Wildlands (Scaled 3x)
+        if (x >= -3600.0 && x <= -70.0 && z >= -3600.0 && z <= 3600.0) {
             if (currentY === null || currentY >= -2.5) {
                 return 0.0;
             }
         }
 
-        // 7. Dynamic Fast-Travel Lordran Realm Ground Height (Nearest location dais clamping within 80m radius)
+        // 7. Dynamic Fast-Travel Lordran Realm Ground Height (Nearest location dais clamping within 160m radius for 3x expanded locations)
         if (window.DARK_SOULS_LOCATIONS) {
             let closestLoc = null;
-            let minDistSq = 80 * 80;
+            let minDistSq = 160 * 160;
             for (let i = 0; i < window.DARK_SOULS_LOCATIONS.length; i++) {
                 const loc = window.DARK_SOULS_LOCATIONS[i];
                 const dx = x - loc.pos[0];
                 const dz = z - loc.pos[2];
                 const d2 = dx * dx + dz * dz;
                 if (d2 < minDistSq) {
-                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 14.0) {
+                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 18.0) {
                         minDistSq = d2;
                         closestLoc = loc;
                     }
@@ -1090,106 +1090,100 @@ class DarkSoulsWorld {
     }
 
     buildEnvironment() {
-        // 1. Courtyard Floor (Starting area) with Open Trenches for Catacombs Descent & Ramparts Stairs
-        // North Courtyard Floor Slab (z in [-50, 4], x in [-70, 70] - Vast expanded grand court)
-        const northCourtyardGeo = new THREE.PlaneGeometry(140, 54);
+        // 1. Courtyard Floor (Starting area) - Scaled 3x Grand Monumental Plaza (160m x 80m)
+        // North Courtyard Floor Slab (z in [-50, 4], x in [-85, 85])
+        const northCourtyardGeo = new THREE.PlaneGeometry(170, 54);
         const northCourtyard = new THREE.Mesh(northCourtyardGeo, this.stoneMat);
         northCourtyard.rotation.x = -Math.PI / 2;
         northCourtyard.position.set(0, 0, -23);
         northCourtyard.receiveShadow = true;
         this.scene.add(northCourtyard);
 
-        // Center Promenade Floor Slab (z in [4, 30], x in [-20, 20] - wide gateway promenade)
-        const centerCourtyardGeo = new THREE.PlaneGeometry(40, 26);
+        // Center Promenade Floor Slab (z in [4, 30], x in [-40, 40] - 80m wide gateway promenade)
+        const centerCourtyardGeo = new THREE.PlaneGeometry(80, 26);
         const centerCourtyard = new THREE.Mesh(centerCourtyardGeo, this.stoneMat);
         centerCourtyard.rotation.x = -Math.PI / 2;
         centerCourtyard.position.set(0, 0, 17);
         centerCourtyard.receiveShadow = true;
         this.scene.add(centerCourtyard);
 
-        // Far West Battlement Floor Slab (z in [4, 30], x in [-30, -25])
-        const westCourtyardGeo = new THREE.PlaneGeometry(5, 26);
+        // Far West Battlement Floor Slab (z in [4, 30], x in [-75, -40])
+        const westCourtyardGeo = new THREE.PlaneGeometry(35, 26);
         const westCourtyard = new THREE.Mesh(westCourtyardGeo, this.stoneMat);
         westCourtyard.rotation.x = -Math.PI / 2;
-        westCourtyard.position.set(-27.5, 0, 17);
+        westCourtyard.position.set(-57.5, 0, 17);
         westCourtyard.receiveShadow = true;
         this.scene.add(westCourtyard);
 
-        // Far East Battlement Floor Slab (z in [4, 30], x in [25, 30])
-        const eastCourtyardGeo = new THREE.PlaneGeometry(5, 26);
+        // Far East Battlement Floor Slab (z in [4, 30], x in [40, 75])
+        const eastCourtyardGeo = new THREE.PlaneGeometry(35, 26);
         const eastCourtyard = new THREE.Mesh(eastCourtyardGeo, this.stoneMat);
         eastCourtyard.rotation.x = -Math.PI / 2;
-        eastCourtyard.position.set(27.5, 0, 17);
+        eastCourtyard.position.set(57.5, 0, 17);
         eastCourtyard.receiveShadow = true;
         this.scene.add(eastCourtyard);
 
-        // Protective Gothic Stone Balustrades flanking Center Promenade (prevents falling into side trenches)
-        this.createWall(-15.0, 1.2, 17.0, 0.6, 2.4, 26); // West Promenade Balustrade
-        this.createWall(15.0, 1.2, 17.0, 0.6, 2.4, 26);  // East Promenade Balustrade
+        // Protective Gothic Stone Balustrades flanking Center Promenade (at x = -37.5 and x = 37.5, matching 75m bridge)
+        this.createWall(-37.5, 1.2, 17.0, 0.6, 2.4, 26); // West Promenade Balustrade
+        this.createWall(37.5, 1.2, 17.0, 0.6, 2.4, 26);  // East Promenade Balustrade
 
         // Outer balustrades along West and East battlements
-        this.createWall(-25.0, 1.2, 17.0, 0.6, 2.4, 26); // West Outer Balustrade
-        this.createWall(25.0, 1.2, 17.0, 0.6, 2.4, 26);  // East Outer Balustrade
+        this.createWall(-75.0, 1.2, 17.0, 0.6, 2.4, 26); // West Outer Balustrade
+        this.createWall(75.0, 1.2, 17.0, 0.6, 2.4, 26);  // East Outer Balustrade
 
         // Corner abutments connecting promenade to Bridge portal (sealing gap at z=30)
-        this.createWall(-11.0, 1.5, 30.0, 8.0, 3.0, 1.2);
-        this.createWall(11.0, 1.5, 30.0, 8.0, 3.0, 1.2);
+        this.createWall(-56.0, 1.5, 30.0, 36.0, 3.0, 1.2);
+        this.createWall(56.0, 1.5, 30.0, 36.0, 3.0, 1.2);
 
-        // Outer Courtyard Fortress Walls (North Gate open at x in [-7, 7] for Serpent Sanctuary)
-        this.createWall(-18.5, 5, -30, 23, 10, 2); // West segment of North wall (x: -30 to -7)
-        this.createWall(18.5, 5, -30, 23, 10, 2);  // East segment of North wall (x: 7 to 30)
-        this.createWall(0, 9.5, -30, 14, 3, 2);    // Overhead monumental arch lintel above doorway
-        // Outer West Fortress Wall (Gate Arch open at z in [-7, 7] leading to OUTSIDE REALM)
-        this.createWall(-30, 5, -18.5, 2, 10, 23); // North segment of West wall (z: -30 to -7)
-        this.createWall(-30, 5, 18.5, 2, 10, 23);  // South segment of West wall (z: 7 to 30)
-        this.createWall(-30, 9.5, 0, 2, 3, 14);    // Overhead monumental arch lintel above West Gate
-        this.createPillar(-30, -7, 9);
-        this.createPillar(-30, 7, 9);
-        this.createTorch(-29.2, 5.0, -6.8, { intensity: 2.5, color: 0x2ecc71 });
-        this.createTorch(-29.2, 5.0, 6.8, { intensity: 2.5, color: 0x2ecc71 });
+        // Outer Courtyard Fortress Walls (North Gate open at x in [-14, 14] for Serpent Sanctuary)
+        this.createWall(-44.0, 5, -30, 62, 10, 2); // West segment of North wall (x: -75 to -14)
+        this.createWall(44.0, 5, -30, 62, 10, 2);  // East segment of North wall (x: 14 to 75)
+        this.createWall(0, 9.5, -30, 28, 3, 2);    // Overhead monumental arch lintel above doorway
 
-        // Flanking West Gate Waystone Brazier placed beside North pillar (keeps 14m archway walkway 100% open)
-        this.createPathBeacon(-29.0, 0, -5.5, 0x2ecc71, "🌲 OUTSIDE REALM: DARKROOT WOODS & CLIFFS [WEST]", "ANCIENT ARCHTREES • DRAGON CLIFFS • WYRMS & BASILISKS", "#a8ffb2", false);
+        // Outer West Fortress Wall (Gate Arch open at z in [-9, 9] leading to OUTSIDE REALM)
+        this.createWall(-75, 5, -20.5, 2, 10, 19); // North segment of West wall (z: -30 to -11)
+        this.createWall(-75, 5, 20.5, 2, 10, 19);  // South segment of West wall (z: 11 to 30)
+        this.createWall(-75, 9.5, 0, 2, 3, 22);    // Overhead monumental arch lintel above West Gate
+        this.createPillar(-75, -11, 9);
+        this.createPillar(-75, 11, 9);
+        this.createTorch(-74.2, 5.0, -10.8, { intensity: 3.0, color: 0x2ecc71 });
+        this.createTorch(-74.2, 5.0, 10.8, { intensity: 3.0, color: 0x2ecc71 });
+
+        // Flanking West Gate Waystone Brazier placed beside North pillar
+        this.createPathBeacon(-74.0, 0, -9.5, 0x2ecc71, "🌲 OUTSIDE REALM: DARKROOT WOODS & CLIFFS [WEST]", "ANCIENT ARCHTREES • DRAGON CLIFFS • WYRMS & BASILISKS", "#a8ffb2", false);
 
         // Cobblestone flagstone threshold paving connecting Firelink to Darkroot
-        const gatePaving = new THREE.Mesh(new THREE.PlaneGeometry(12, 10), this.cobbleMat || this.stoneMat);
+        const gatePaving = new THREE.Mesh(new THREE.PlaneGeometry(24, 18), this.cobbleMat || this.stoneMat);
         gatePaving.rotation.x = -Math.PI / 2;
-        gatePaving.position.set(-30, 0.015, 0);
+        gatePaving.position.set(-75, 0.015, 0);
         gatePaving.receiveShadow = true;
         this.scene.add(gatePaving);
 
         // West Gate In-World Portal to Outside Darkroot Bonfire
         this.interactables.push({
             type: 'route_portal',
-            position: new THREE.Vector3(-27, 0, 0),
-            radius: 4.8,
+            position: new THREE.Vector3(-72, 0, 0),
+            radius: 5.5,
             prompt: '🌲 [ E ] WAYSTONE: WARP TO OUTSIDE DARKROOT EXPEDITION',
-            targetPos: new THREE.Vector3(-75, 0, 0),
+            targetPos: new THREE.Vector3(-110, 0, 0),
             label: 'DARKROOT OUTSIDE REALM'
         });
 
-        this.createWall(30, 5, 0, 2, 10, 60);    // East wall
+        this.createWall(75, 5, 0, 2, 10, 60);    // East wall (at x = 75)
 
-        // South Wall Openings (Central Bridge opening x=[-6, 6])
-        // West South Wall (leaves archway open for Catacombs Descent at x=[-25, -15])
-        this.createWall(-10.5, 5, 30, 9, 10, 2);
-        this.createWall(-27.5, 5, 30, 5, 10, 2);
-        this.createWall(-20, 6.5, 30, 10, 7, 2); // Overhead lintel above sunken stairs
+        // South Wall Openings (Central Bridge opening matches 75m viaduct at x=[-37.5, 37.5])
+        this.createWall(-56.0, 5, 30, 36, 10, 2);
+        this.createWall(56.0, 5, 30, 36, 10, 2);
 
-        // East South Wall (leaves archway open for High Ramparts Walkway at x=[15, 25])
-        this.createWall(10.5, 5, 30, 9, 10, 2);
-        this.createWall(27.5, 5, 30, 5, 10, 2);
-        this.createWall(20, 11, 30, 10, 2, 2);  // Overhead lintel above ramparts walkway
-
-        // Gothic pillars in courtyard
+        // Gothic pillars in courtyard (Expanded 3x spread)
         const pillarCoords = [
-            [-12, -12], [12, -12],
-            [-12, 12], [12, 12],
-            [-20, -4], [20, -4],
-            [-20, 20], [20, 20]
+            [-28, -16], [28, -16],
+            [-28, 14], [28, 14],
+            [-54, -6], [54, -6],
+            [-54, 22], [54, 22]
         ];
         pillarCoords.forEach(([px, pz]) => {
-            this.createPillar(px, pz, 8);
+            this.createPillar(px, pz, 9);
         });
 
         
@@ -1287,58 +1281,58 @@ class DarkSoulsWorld {
         // ----------------------------------------------------
         // BESPOKE UNIQUE 3D SCULPTED LANDMARKS FOR ALL REALMS
         // ----------------------------------------------------
-        // 1. Ash Lake: Towering Ancient Archtree Trunk & White Quartz Shore (Far West Outside Realm: [-180, 0, -110])
-        const archtreeTrunk = new THREE.Mesh(new THREE.CylinderGeometry(14, 22, 50, 16, 1, true), this.archtreeBarkMat || this.wallMat);
-        archtreeTrunk.position.set(-180, 25, -110);
+        // 1. Ash Lake: Towering Ancient Archtree Trunk & White Quartz Shore (Far West Outside Realm: [-180, 0, -110]) - Scaled 3x Grand Shore
+        const archtreeTrunk = new THREE.Mesh(new THREE.CylinderGeometry(28, 44, 75, 16, 1, true), this.archtreeBarkMat || this.wallMat);
+        archtreeTrunk.position.set(-180, 35, -110);
         this.scene.add(archtreeTrunk);
-        const ashLakeSand = new THREE.Mesh(new THREE.CylinderGeometry(24, 24, 1.0, 24), new THREE.MeshStandardMaterial({ color: 0xeeece8, roughness: 0.95 }));
+        const ashLakeSand = new THREE.Mesh(new THREE.CylinderGeometry(60, 60, 1.2, 24), new THREE.MeshStandardMaterial({ color: 0xeeece8, roughness: 0.95 }));
         ashLakeSand.position.set(-180, -0.5, -110);
         ashLakeSand.receiveShadow = true;
         this.scene.add(ashLakeSand);
         this.createStandingBrazier(-180, 0, -103, 0xffffff, 5.0, 36);
         this.createFloorSoapstone(-180, 0, -107, '#ffffff', "🌊 ASH LAKE", "Ancient Archtree rising into infinity");
 
-        // 2. Chasm of the Abyss: Obsidian Monoliths & Humanity Sprites ([-40, -11, 130])
-        const abyssFloor = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 1.2, 16), this.darkSteelMat || this.stoneMat);
+        // 2. Chasm of the Abyss: Obsidian Monoliths & Humanity Sprites ([-40, -11, 130]) - Scaled 3x Grand Dais
+        const abyssFloor = new THREE.Mesh(new THREE.CylinderGeometry(54, 54, 1.2, 20), this.darkSteelMat || this.stoneMat);
         abyssFloor.position.set(-40, -11.6, 130);
         this.scene.add(abyssFloor);
         for (let i = 0; i < 6; i++) {
             const ang = (i / 6) * Math.PI * 2;
-            const spire = new THREE.Mesh(new THREE.ConeGeometry(1.2, 8, 5), this.darkSteelMat || this.stoneMat);
-            spire.position.set(-40 + Math.cos(ang) * 12, -7.0, 130 + Math.sin(ang) * 12);
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(2.4, 14, 5), this.darkSteelMat || this.stoneMat);
+            spire.position.set(-40 + Math.cos(ang) * 24, -4.0, 130 + Math.sin(ang) * 24);
             spire.castShadow = true;
             this.scene.add(spire);
         }
-        const humanityOrb = new THREE.Mesh(new THREE.SphereGeometry(1.8, 12, 10), new THREE.MeshStandardMaterial({ color: 0x110218, emissive: 0x660088, roughness: 0.1 }));
-        humanityOrb.position.set(-40, -6.0, 130);
+        const humanityOrb = new THREE.Mesh(new THREE.SphereGeometry(3.6, 12, 10), new THREE.MeshStandardMaterial({ color: 0x110218, emissive: 0x660088, roughness: 0.1 }));
+        humanityOrb.position.set(-40, -4.0, 130);
         this.scene.add(humanityOrb);
         this.createStandingBrazier(-40, -11, 124, 0x8800ff, 4.5, 30);
         this.createFloorSoapstone(-40, -11, 128, '#aa00ff', "👁️ CHASM OF THE ABYSS", "Manus, Father of the Abyss");
 
-        // 3. Lost Izalith: Searing Magma Lake & Chaos Tree Roots ([-48, -10, 150])
-        const izalithLava = new THREE.Mesh(new THREE.PlaneGeometry(36, 36), new THREE.MeshStandardMaterial({ color: 0xff3300, emissive: 0xff4400, emissiveIntensity: 0.85, roughness: 0.2 }));
+        // 3. Lost Izalith: Searing Magma Lake & Chaos Tree Roots ([-48, -10, 150]) - Scaled 3x Grand Basin
+        const izalithLava = new THREE.Mesh(new THREE.PlaneGeometry(108, 108), new THREE.MeshStandardMaterial({ color: 0xff3300, emissive: 0xff4400, emissiveIntensity: 0.85, roughness: 0.2 }));
         izalithLava.rotation.x = -Math.PI / 2;
         izalithLava.position.set(-48, -10.2, 150);
         this.scene.add(izalithLava);
-        const izalithDais = new THREE.Mesh(new THREE.CylinderGeometry(10, 12, 1.2, 8), this.darkSteelMat || this.stoneMat);
+        const izalithDais = new THREE.Mesh(new THREE.CylinderGeometry(30, 36, 1.2, 16), this.darkSteelMat || this.stoneMat);
         izalithDais.position.set(-48, -9.6, 150);
         izalithDais.receiveShadow = true;
         this.scene.add(izalithDais);
-        const chaosRoot = new THREE.Mesh(new THREE.TorusGeometry(8, 1.4, 8, 16, Math.PI), this.wallMat);
-        chaosRoot.position.set(-48, -5, 156);
+        const chaosRoot = new THREE.Mesh(new THREE.TorusGeometry(18, 2.5, 8, 16, Math.PI), this.wallMat);
+        chaosRoot.position.set(-48, -4, 156);
         chaosRoot.rotation.x = Math.PI / 2;
         this.scene.add(chaosRoot);
         this.createStandingBrazier(-48, -10, 144, 0xff2200, 5.5, 36);
         this.createFloorSoapstone(-48, -10, 148, '#ff3300', "🔥 LOST IZALITH", "Lava Throne of the Bed of Chaos");
 
-        // 4. Crystal Cave: Giant Glinting Turquoise Crystal Spires ([45, 4, 85])
-        const crystalPlat = new THREE.Mesh(new THREE.BoxGeometry(22, 1.2, 24), this.wallMat);
+        // 4. Crystal Cave: Giant Glinting Turquoise Crystal Spires ([45, 4, 85]) - Scaled 3x Grand Platform
+        const crystalPlat = new THREE.Mesh(new THREE.BoxGeometry(66, 1.2, 72), this.wallMat);
         crystalPlat.position.set(45, 3.4, 85);
         this.scene.add(crystalPlat);
         const crystalMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x0088aa, roughness: 0.1, metalness: 0.6 });
         for (let i = 0; i < 5; i++) {
-            const crySpire = new THREE.Mesh(new THREE.ConeGeometry(1.6, 9, 6), crystalMat);
-            crySpire.position.set(40 + i * 2.5, 7.0, 78 + (i % 3) * 5);
+            const crySpire = new THREE.Mesh(new THREE.ConeGeometry(3.2, 18, 6), crystalMat);
+            crySpire.position.set(35 + i * 5.0, 11.0, 72 + (i % 3) * 10);
             crySpire.rotation.x = 0.35 * (i % 2 === 0 ? 1 : -1);
             crySpire.rotation.z = 0.35 * (i % 2 === 0 ? -1 : 1);
             this.scene.add(crySpire);
@@ -1346,126 +1340,126 @@ class DarkSoulsWorld {
         this.createStandingBrazier(45, 4, 78, 0x00f5ff, 4.5, 32);
         this.createFloorSoapstone(45, 4, 83, '#00ffff', "💎 CRYSTAL CAVE", "Glimmering prisms of Seath the Scaleless");
 
-        // 5. Painted World of Ariamis: Snowy Gothic Battlements & Icicles ([32, 2, 145])
-        const snowPlat = new THREE.Mesh(new THREE.BoxGeometry(24, 1.2, 26), new THREE.MeshStandardMaterial({ color: 0xdae6f0, roughness: 0.7 }));
+        // 5. Painted World of Ariamis: Snowy Gothic Battlements & Icicles ([32, 2, 145]) - Scaled 3x Grand Bastion
+        const snowPlat = new THREE.Mesh(new THREE.BoxGeometry(72, 1.2, 78), new THREE.MeshStandardMaterial({ color: 0xdae6f0, roughness: 0.7 }));
         snowPlat.position.set(32, 1.4, 145);
         this.scene.add(snowPlat);
-        const frostArch = new THREE.Mesh(new THREE.BoxGeometry(16, 8, 2), this.wallMat);
-        frostArch.position.set(32, 6, 154);
+        const frostArch = new THREE.Mesh(new THREE.BoxGeometry(32, 14, 4), this.wallMat);
+        frostArch.position.set(32, 8, 154);
         this.scene.add(frostArch);
         this.createStandingBrazier(32, 2, 138, 0xddf0ff, 4.0, 28);
         this.createFloorSoapstone(32, 2, 143, '#dae6f0', "❄️ PAINTED WORLD", "Crossbreed Priscilla's snowy refuge");
 
-        // 6. Heide's Tower of Flame: Maritime White Marble Pier & Crashing Waves ([-38, 1, -60])
-        const heidePier = new THREE.Mesh(new THREE.BoxGeometry(16, 1.2, 32), new THREE.MeshStandardMaterial({ color: 0xeeeeea, roughness: 0.4 }));
+        // 6. Heide's Tower of Flame: Maritime White Marble Pier & Crashing Waves ([-38, 1, -60]) - Scaled 3x Grand Pier
+        const heidePier = new THREE.Mesh(new THREE.BoxGeometry(48, 1.2, 96), new THREE.MeshStandardMaterial({ color: 0xeeeeea, roughness: 0.4 }));
         heidePier.position.set(-38, 0.4, -60);
         this.scene.add(heidePier);
         for (let i = -1; i <= 1; i += 2) {
-            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.9, 10, 12), this.wallMat);
-            pillar.position.set(-38 + i * 6, 5.0, -50);
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.8, 15, 12), this.wallMat);
+            pillar.position.set(-38 + i * 14, 7.5, -50);
             this.scene.add(pillar);
         }
         this.createStandingBrazier(-38, 1, -68, 0x00e5ff, 4.5, 30);
         this.createFloorSoapstone(-38, 1, -64, '#77ddff', "🌊 HEIDE'S PIER", "Cathedral of Blue ocean causeway");
 
-        // 7. Caelid / Sellia: Scarlet Rot Spore Forest ([-58, 2, 70])
-        const rotGround = new THREE.Mesh(new THREE.BoxGeometry(26, 1.2, 26), new THREE.MeshStandardMaterial({ color: 0x440810, roughness: 0.8 }));
+        // 7. Caelid / Sellia: Scarlet Rot Spore Forest ([-58, 2, 70]) - Scaled 3x Grand Terrace
+        const rotGround = new THREE.Mesh(new THREE.BoxGeometry(78, 1.2, 78), new THREE.MeshStandardMaterial({ color: 0x440810, roughness: 0.8 }));
         rotGround.position.set(-58, 1.4, 70);
         this.scene.add(rotGround);
-        const sporeTree = new THREE.Mesh(new THREE.SphereGeometry(3.5, 8, 8), new THREE.MeshStandardMaterial({ color: 0x881122, roughness: 0.6 }));
-        sporeTree.position.set(-58, 6.0, 78);
+        const sporeTree = new THREE.Mesh(new THREE.SphereGeometry(7.0, 8, 8), new THREE.MeshStandardMaterial({ color: 0x881122, roughness: 0.6 }));
+        sporeTree.position.set(-58, 9.0, 78);
         sporeTree.scale.set(1.2, 1.8, 1.2);
         this.scene.add(sporeTree);
         this.createStandingBrazier(-58, 2, 63, 0xff2244, 4.2, 30);
         this.createFloorSoapstone(-58, 2, 68, '#ff3355', "🥀 SELLIA & CAELID", "Town of Sorcery beneath the scarlet sky");
 
-        // 8. Nokron Eternal City: Star-lit Celestial Colonnade ([22, -8, 120])
-        const nokronPlat = new THREE.Mesh(new THREE.BoxGeometry(22, 1.2, 24), new THREE.MeshStandardMaterial({ color: 0x121424, roughness: 0.3 }));
+        // 8. Nokron Eternal City: Star-lit Celestial Colonnade ([22, -8, 120]) - Scaled 3x Grand Colonnade
+        const nokronPlat = new THREE.Mesh(new THREE.BoxGeometry(66, 1.2, 72), new THREE.MeshStandardMaterial({ color: 0x121424, roughness: 0.3 }));
         nokronPlat.position.set(22, -8.6, 120);
         this.scene.add(nokronPlat);
-        const cosmicStar = new THREE.Mesh(new THREE.OctahedronGeometry(1.5, 1), new THREE.MeshStandardMaterial({ color: 0x88ccff, emissive: 0x2288ff, roughness: 0.1 }));
-        cosmicStar.position.set(22, -3.0, 126);
+        const cosmicStar = new THREE.Mesh(new THREE.OctahedronGeometry(3.5, 1), new THREE.MeshStandardMaterial({ color: 0x88ccff, emissive: 0x2288ff, roughness: 0.1 }));
+        cosmicStar.position.set(22, -1.0, 126);
         this.scene.add(cosmicStar);
         this.createStandingBrazier(22, -8, 114, 0x4488ff, 4.5, 32);
         this.createFloorSoapstone(22, -8, 118, '#88aaff', "🌌 NOKRON ETERNAL CITY", "Ancestral Woods under the false night sky");
 
-        // 9. Iron Keep: Grated Bridge over Smelting Furnace ([42, 6.5, 115])
-        const ironBridge = new THREE.Mesh(new THREE.BoxGeometry(14, 0.8, 30), this.darkSteelMat || this.stoneMat);
+        // 9. Iron Keep: Grated Bridge over Smelting Furnace ([42, 6.5, 115]) - Scaled 3x Grand Bridge
+        const ironBridge = new THREE.Mesh(new THREE.BoxGeometry(42, 0.8, 90), this.darkSteelMat || this.stoneMat);
         ironBridge.position.set(42, 6.1, 115);
         this.scene.add(ironBridge);
-        const smelterAnvil = new THREE.Mesh(new THREE.BoxGeometry(3.5, 2.5, 4), this.darkSteelMat || this.stoneMat);
-        smelterAnvil.position.set(42, 7.75, 124);
+        const smelterAnvil = new THREE.Mesh(new THREE.BoxGeometry(8, 5, 8), this.darkSteelMat || this.stoneMat);
+        smelterAnvil.position.set(42, 8.5, 124);
         this.scene.add(smelterAnvil);
         this.createStandingBrazier(42, 6.5, 107, 0xff4400, 5.2, 34);
         this.createFloorSoapstone(42, 6.5, 112, '#ff6600', "🌋 IRON KEEP", "Smelter Demon furnace battlements");
 
-        // 10. Hirata Estate: Japanese Crimson Torii Shrine ([-16, 3, -50])
-        const hirataPlat = new THREE.Mesh(new THREE.BoxGeometry(20, 1.2, 22), this.woodMat || this.stoneMat);
+        // 10. Hirata Estate: Japanese Crimson Torii Shrine ([-16, 3, -50]) - Scaled 3x Grand Shrine
+        const hirataPlat = new THREE.Mesh(new THREE.BoxGeometry(60, 1.2, 66), this.woodMat || this.stoneMat);
         hirataPlat.position.set(-16, 2.4, -50);
         this.scene.add(hirataPlat);
-        const toriiTop = new THREE.Mesh(new THREE.BoxGeometry(10, 0.8, 1.2), new THREE.MeshStandardMaterial({ color: 0xaa2211, roughness: 0.5 }));
-        toriiTop.position.set(-16, 8.5, -44);
+        const toriiTop = new THREE.Mesh(new THREE.BoxGeometry(20, 1.4, 2.0), new THREE.MeshStandardMaterial({ color: 0xaa2211, roughness: 0.5 }));
+        toriiTop.position.set(-16, 11.5, -44);
         this.scene.add(toriiTop);
         for (let i = -1; i <= 1; i += 2) {
-            const toriiCol = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.45, 6, 8), new THREE.MeshStandardMaterial({ color: 0xaa2211, roughness: 0.5 }));
-            toriiCol.position.set(-16 + i * 3.8, 5.5, -44);
+            const toriiCol = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.9, 10, 8), new THREE.MeshStandardMaterial({ color: 0xaa2211, roughness: 0.5 }));
+            toriiCol.position.set(-16 + i * 7.5, 6.5, -44);
             this.scene.add(toriiCol);
         }
         this.createStandingBrazier(-16, 3, -56, 0xff7722, 4.5, 30);
         this.createFloorSoapstone(-16, 3, -52, '#ff6633', "⛩️ HIRATA ESTATE", "Burning bamboo courtyard of Lady Butterfly");
 
-        // 11. Mountaintops of the Giants: Forge Cauldron Rim ([30, 16, 150])
-        const forgeRim = new THREE.Mesh(new THREE.TorusGeometry(12, 1.8, 8, 20), this.darkSteelMat || this.stoneMat);
+        // 11. Mountaintops of the Giants: Forge Cauldron Rim ([30, 16, 150]) - Scaled 3x Grand Forge
+        const forgeRim = new THREE.Mesh(new THREE.TorusGeometry(32, 3.2, 8, 20), this.darkSteelMat || this.stoneMat);
         forgeRim.position.set(30, 16.0, 150);
         forgeRim.rotation.x = Math.PI / 2;
         this.scene.add(forgeRim);
-        const snowPeak = new THREE.Mesh(new THREE.CylinderGeometry(15, 17, 1.2, 16), new THREE.MeshStandardMaterial({ color: 0xdde8f2, roughness: 0.8 }));
+        const snowPeak = new THREE.Mesh(new THREE.CylinderGeometry(45, 51, 1.2, 20), new THREE.MeshStandardMaterial({ color: 0xdde8f2, roughness: 0.8 }));
         snowPeak.position.set(30, 15.4, 150);
         this.scene.add(snowPeak);
         this.createStandingBrazier(30, 16, 142, 0xff5511, 5.5, 36);
         this.createFloorSoapstone(30, 16, 147, '#ffccaa', "🏔️ FORGE OF GIANTS", "Eternal cauldron of the Flame of Ruin");
 
-        // 12. Dragon Aerie: High Wyvern Needle Peak ([65, 14, 65])
-        const aerieNeedle = new THREE.Mesh(new THREE.ConeGeometry(12, 14, 8), this.cliffRockMat || this.wallMat);
+        // 12. Dragon Aerie: High Wyvern Needle Peak ([65, 14, 65]) - Scaled 3x Grand Peak
+        const aerieNeedle = new THREE.Mesh(new THREE.ConeGeometry(36, 24, 12), this.cliffRockMat || this.wallMat);
         aerieNeedle.position.set(65, 7.0, 65);
         this.scene.add(aerieNeedle);
         for (let i = 0; i < 3; i++) {
-            const egg = new THREE.Mesh(new THREE.SphereGeometry(1.2, 10, 8), new THREE.MeshStandardMaterial({ color: 0xddccaa, roughness: 0.4 }));
-            egg.position.set(63 + i * 1.8, 14.6, 62 + (i % 2) * 1.5);
+            const egg = new THREE.Mesh(new THREE.SphereGeometry(2.4, 10, 8), new THREE.MeshStandardMaterial({ color: 0xddccaa, roughness: 0.4 }));
+            egg.position.set(61 + i * 3.6, 15.6, 60 + (i % 2) * 3.0);
             egg.scale.set(0.85, 1.3, 0.85);
             this.scene.add(egg);
         }
         this.createStandingBrazier(65, 14, 58, 0xffd700, 5.0, 32);
         this.createFloorSoapstone(65, 14, 62, '#ffd700', "🐉 DRAGON AERIE", "Sky nests of the ancient guardian wyverns");
 
-        // 13. Altus Plateau / Leyndell: Golden Erdtree Promenade ([50, 8, -30])
-        const altusPlat = new THREE.Mesh(new THREE.BoxGeometry(24, 1.2, 26), new THREE.MeshStandardMaterial({ color: 0xaa9050, roughness: 0.3, metalness: 0.3 }));
+        // 13. Altus Plateau / Leyndell: Golden Erdtree Promenade ([50, 8, -30]) - Scaled 3x Grand Promenade
+        const altusPlat = new THREE.Mesh(new THREE.BoxGeometry(72, 1.2, 78), new THREE.MeshStandardMaterial({ color: 0xaa9050, roughness: 0.3, metalness: 0.3 }));
         altusPlat.position.set(50, 7.4, -30);
         this.scene.add(altusPlat);
-        const erdtreeBanner = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 3), new THREE.MeshStandardMaterial({ color: 0xffd700, emissive: 0x886600 }));
-        erdtreeBanner.position.set(50, 12, -22);
+        const erdtreeBanner = new THREE.Mesh(new THREE.BoxGeometry(0.5, 12, 6), new THREE.MeshStandardMaterial({ color: 0xffd700, emissive: 0x886600 }));
+        erdtreeBanner.position.set(50, 14, -22);
         this.scene.add(erdtreeBanner);
         this.createStandingBrazier(50, 8, -38, 0xffd700, 4.5, 32);
         this.createFloorSoapstone(50, 8, -34, '#ffd700', "👑 ALTUS PLATEAU", "Golden ramparts beneath the Erdtree");
 
-        // 14. Shrine of Amana: Sunken Water Altar ([-50, -4, -80])
-        const amanaWater = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshStandardMaterial({ color: 0x0a4048, transparent: true, opacity: 0.85, roughness: 0.1 }));
+        // 14. Shrine of Amana: Sunken Water Altar ([-50, -4, -80]) - Scaled 3x Grand Lake Sanctuary
+        const amanaWater = new THREE.Mesh(new THREE.PlaneGeometry(90, 90), new THREE.MeshStandardMaterial({ color: 0x0a4048, transparent: true, opacity: 0.85, roughness: 0.1 }));
         amanaWater.rotation.x = -Math.PI / 2;
         amanaWater.position.set(-50, -3.95, -80);
         this.scene.add(amanaWater);
-        const amanaStone = new THREE.Mesh(new THREE.BoxGeometry(20, 1.2, 22), this.stoneMat);
+        const amanaStone = new THREE.Mesh(new THREE.BoxGeometry(60, 1.2, 66), this.stoneMat);
         amanaStone.position.set(-50, -4.6, -80);
         this.scene.add(amanaStone);
         this.createStandingBrazier(-50, -4, -88, 0x00ffcc, 4.2, 28);
         this.createFloorSoapstone(-50, -4, -84, '#00ffcc', "🎶 SHRINE OF AMANA", "Submerged singing water sanctuary");
 
-        // 15. Cemetery of Ash: Untended Grave Ravine ([38, -2.5, -35])
-        const ashRavine = new THREE.Mesh(new THREE.BoxGeometry(22, 1.2, 22), this.stoneMat);
+        // 15. Cemetery of Ash: Untended Grave Ravine ([38, -2.5, -35]) - Scaled 3x Grand Ravine
+        const ashRavine = new THREE.Mesh(new THREE.BoxGeometry(66, 1.2, 66), this.stoneMat);
         ashRavine.position.set(38, -3.1, -35);
         this.scene.add(ashRavine);
         for (let i = 0; i < 6; i++) {
-            const stone = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.8, 0.4), this.wallMat);
-            stone.position.set(34 + (i % 3) * 3, -1.6, -38 + Math.floor(i / 3) * 6);
+            const stone = new THREE.Mesh(new THREE.BoxGeometry(1.2, 3.6, 0.8), this.wallMat);
+            stone.position.set(32 + (i % 3) * 6, -1.2, -42 + Math.floor(i / 3) * 12);
             stone.rotation.z = 0.15 * (i % 2 === 0 ? 1 : -1);
             this.scene.add(stone);
         }
