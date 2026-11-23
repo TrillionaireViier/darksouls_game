@@ -843,9 +843,42 @@ class DarkSoulsWorld {
             return -4.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-750, -28], z in [-480, 480]
-        if (x >= -750 && x <= -28 && z >= -480 && z <= 480) {
-            // 8 New Apex Outside Realm Elevations (Expanded 2x-2.5x Walkable Dias Bounds)
+        // 5b. Outside Realm & Extended Expeditions: x in [-880, -28], z in [-580, 580]
+        if (x >= -880 && x <= -28 && z >= -580 && z <= 580) {
+            // 8 Brand-New Outside Realm Apex Expeditions (V41 Expansion)
+            // 1. Haligtree Roots of Rotting Aeonia (outside_haligtree_aeonia_roots) (elev: -4.0m)
+            if (x >= -685 && x <= -595 && z >= -225 && z <= -135) {
+                return -4.0;
+            }
+            // 2. Enir-Ilim Divine Gate Staircase (outside_enir_ilim_divine_gate) (elev: +16.0m)
+            if (x >= -725 && x <= -635 && z >= -85 && z <= 5) {
+                return 16.0;
+            }
+            // 3. Iron Keep Polished Obsidian Altar (outside_iron_keep_alonne_dojo) (elev: +8.0m)
+            if (x >= -695 && x <= -605 && z >= 35 && z <= 125) {
+                return 8.0;
+            }
+            // 4. Old Chaos Throne of the Ivory King (outside_old_chaos_ivory_throne) (elev: -7.0m)
+            if (x >= -735 && x <= -645 && z >= 75 && z <= 165) {
+                return -7.0;
+            }
+            // 5. Dune of Filianore & Gael's Ashen Waste (outside_gael_ashen_waste) (elev: +2.0m)
+            if (x >= -765 && x <= -675 && z >= -265 && z <= -175) {
+                return 2.0;
+            }
+            // 6. Ringed City Abyssal Midir Chasm (outside_midir_abyssal_chasm) (elev: -10.0m)
+            if (x >= -775 && x <= -685 && z >= -25 && z <= 65) {
+                return -10.0;
+            }
+            // 7. Nightmare Corpse-River Cavern (outside_ludwig_nightmare_river) (elev: -3.0m)
+            if (x >= -715 && x <= -625 && z >= 195 && z <= 285) {
+                return -3.0;
+            }
+            // 8. Astral Clocktower Celestial Balcony (outside_clocktower_maria_balcony) (elev: +14.0m)
+            if (x >= -755 && x <= -665 && z >= -185 && z <= -95) {
+                return 14.0;
+            }
+            // 8 Previous Apex Outside Realm Elevations (Expanded 2x-2.5x Walkable Dias Bounds)
             // 1. Mohgwyn Blood Mausoleum & Dynastic Altar (outside_mohgwyn_blood_mausoleum) (elev: -6.0m)
             if (x >= -565 && x <= -475 && z >= 95 && z <= 185) {
                 return -6.0;
@@ -3334,13 +3367,320 @@ class DarkSoulsWorld {
 
         this.createPathBeacon(-620, 12.0, 160, 0x00bbff, "🌙 CARIAN ROYAL LUNAR SPIRE [ELEV +12.0m]", "ROYAL KNIGHT LORETTA • HOVERING SILVER MOON CORE • CARIAN PRECEPTORS", "#bae6fd");
 
-        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded to 750m)
-        // North mountain ridge: z = -480, x: -750 to -28
-        this.createWall(-389, 16, -480, 722, 36, 16);
-        // South mountain ridge: z = 480, x: -750 to -28
-        this.createWall(-389, 16, 480, 722, 36, 16);
-        // West boundary mountain: x = -750, z: -480 to 480
-        this.createWall(-750, 18, 0, 16, 40, 960);
+        // 8. BRAND-NEW BESPOKE 3D REALM EXPEDITIONS & LANDMARKS (V41 EXPANSION)
+
+        // A. HALIGTREE ROOTS OF ROTTING AEONIA (x = -640, z = -180, elev = -4.0m)
+        const aeoniaBasin = new THREE.Mesh(new THREE.CylinderGeometry(56, 62, 0.6, 32), this.cliffRockMat);
+        aeoniaBasin.position.set(-640, -4.3, -180);
+        aeoniaBasin.receiveShadow = true;
+        outsideGroup.add(aeoniaBasin);
+
+        const aeoniaRotPool = new THREE.Mesh(new THREE.CylinderGeometry(42, 42, 0.25, 24), new THREE.MeshStandardMaterial({
+            color: 0x881122,
+            emissive: 0xaa2233,
+            emissiveIntensity: 1.1,
+            roughness: 0.2
+        }));
+        aeoniaRotPool.position.set(-640, -3.95, -180);
+        outsideGroup.add(aeoniaRotPool);
+
+        // Giant Blooming Scarlet Aeonia Flower in Center
+        for (let pet = 0; pet < 8; pet++) {
+            const petAng = (pet / 8) * Math.PI * 2;
+            const petal = new THREE.Mesh(new THREE.BoxGeometry(4.5, 0.35, 12.0), new THREE.MeshStandardMaterial({
+                color: 0xd946ef,
+                emissive: 0x9d174d,
+                emissiveIntensity: 0.8,
+                roughness: 0.4
+            }));
+            petal.position.set(-640 + Math.cos(petAng) * 9.5, -3.2, -180 + Math.sin(petAng) * 9.5);
+            petal.rotation.y = petAng;
+            petal.rotation.x = 0.35;
+            outsideGroup.add(petal);
+        }
+        const stamenCore = new THREE.Mesh(new THREE.SphereGeometry(3.6, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0xf59e0b,
+            emissive: 0xd97706,
+            emissiveIntensity: 1.5
+        }));
+        stamenCore.position.set(-640, -2.5, -180);
+        outsideGroup.add(stamenCore);
+
+        // Petrified Root Arches
+        for (let ra = 0; ra < 3; ra++) {
+            const rootArch = new THREE.Mesh(new THREE.TorusGeometry(14.0, 0.8, 6, 16, Math.PI), this.cliffRockMat);
+            rootArch.position.set(-640, -4.0, -180);
+            rootArch.rotation.y = ra * (Math.PI / 3);
+            outsideGroup.add(rootArch);
+        }
+
+        const aeoniaLight = new THREE.PointLight(0xff2244, 4.6, 38);
+        aeoniaLight.position.set(-640, 0.5, -180);
+        outsideGroup.add(aeoniaLight);
+        this.createPathBeacon(-640, -4.0, -180, 0xff2244, "🌸 HALIGTREE ROOTS OF SCARLET AEONIA [ELEV -4.0m]", "MALENIA GODDESS OF ROT • BLOOMING SCARLET FLOWER • CLEANROT VALKYRIES", "#fecdd3");
+
+        // B. ENIR-ILIM DIVINE GATE STAIRCASE (x = -680, z = -40, elev = +16.0m)
+        const enirBase = new THREE.Mesh(new THREE.BoxGeometry(68, 32, 68), this.cliffRockMat);
+        enirBase.position.set(-680, 0, -40);
+        outsideGroup.add(enirBase);
+
+        const enirPlaza = new THREE.Mesh(new THREE.BoxGeometry(62, 0.5, 62), new THREE.MeshStandardMaterial({
+            color: 0xfef08a,
+            metalness: 0.85,
+            roughness: 0.25
+        }));
+        enirPlaza.position.set(-680, 16.1, -40);
+        enirPlaza.receiveShadow = true;
+        outsideGroup.add(enirPlaza);
+
+        // Dual Divine Gate of Divinity Spires
+        const leftTower = new THREE.Mesh(new THREE.BoxGeometry(4.5, 26, 4.5), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.2 }));
+        leftTower.position.set(-696, 29, -40);
+        outsideGroup.add(leftTower);
+
+        const rightTower = new THREE.Mesh(new THREE.BoxGeometry(4.5, 26, 4.5), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.2 }));
+        rightTower.position.set(-664, 29, -40);
+        outsideGroup.add(rightTower);
+
+        const gateArch = new THREE.Mesh(new THREE.BoxGeometry(36, 3.5, 4.5), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.2 }));
+        gateArch.position.set(-680, 40, -40);
+        outsideGroup.add(gateArch);
+
+        // Sacred Floating Golden Halo
+        const holyHalo = new THREE.Mesh(new THREE.TorusGeometry(8.5, 0.35, 12, 32), new THREE.MeshStandardMaterial({
+            color: 0xffd700,
+            emissive: 0xffaa00,
+            emissiveIntensity: 1.8
+        }));
+        holyHalo.position.set(-680, 32, -40);
+        outsideGroup.add(holyHalo);
+
+        const enirLight = new THREE.PointLight(0xffd700, 4.8, 42);
+        enirLight.position.set(-680, 22, -40);
+        outsideGroup.add(enirLight);
+        this.createPathBeacon(-680, 16.0, -40, 0xffd700, "👑 ENIR-ILIM DIVINE GATE STAIRCASE [ELEV +16.0m]", "PROMISED CONSORT RADAHN & MIQUELLA • DUAL GATE OF DIVINITY • LION DISCIPLES", "#fef08a");
+
+        // C. IRON KEEP POLISHED OBSIDIAN ALTAR (x = -650, z = 80, elev = +8.0m)
+        const alonnePlat = new THREE.Mesh(new THREE.BoxGeometry(64, 16, 64), this.cliffRockMat);
+        alonnePlat.position.set(-650, 0, 80);
+        outsideGroup.add(alonnePlat);
+
+        const mirrorObsidianFloor = new THREE.Mesh(new THREE.BoxGeometry(58, 0.4, 58), new THREE.MeshStandardMaterial({
+            color: 0x0a0a0f,
+            metalness: 0.95,
+            roughness: 0.08
+        }));
+        mirrorObsidianFloor.position.set(-650, 8.1, 80);
+        mirrorObsidianFloor.receiveShadow = true;
+        outsideGroup.add(mirrorObsidianFloor);
+
+        // 2 Scarlet Torii Gates
+        [-1, 1].forEach(side => {
+            const toriiZ = 80 + side * 18;
+            const toriiP1 = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 10, 8), new THREE.MeshStandardMaterial({ color: 0x991b1b, roughness: 0.5 }));
+            toriiP1.position.set(-662, 13, toriiZ);
+            outsideGroup.add(toriiP1);
+
+            const toriiP2 = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 10, 8), new THREE.MeshStandardMaterial({ color: 0x991b1b, roughness: 0.5 }));
+            toriiP2.position.set(-638, 13, toriiZ);
+            outsideGroup.add(toriiP2);
+
+            const toriiBeam = new THREE.Mesh(new THREE.BoxGeometry(28, 0.9, 1.2), new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.4 }));
+            toriiBeam.position.set(-650, 18, toriiZ);
+            outsideGroup.add(toriiBeam);
+        });
+
+        const alonneLight = new THREE.PointLight(0xff3300, 4.2, 36);
+        alonneLight.position.set(-650, 12, 80);
+        outsideGroup.add(alonneLight);
+        this.createPathBeacon(-650, 8.0, 80, 0xff3300, "🗡️ IRON KEEP ALONNE DUEL DOJO [ELEV +8.0m]", "SIR ALONNE SWORD SAINT • MIRROR-POLISHED OBSIDIAN • ALONNE SHADOW SAMURAI", "#fdba74");
+
+        // D. OLD CHAOS THRONE OF THE IVORY KING (x = -690, z = 120, elev = -7.0m)
+        const chaosPit = new THREE.Mesh(new THREE.CylinderGeometry(58, 64, 14, 28), this.cliffRockMat);
+        chaosPit.position.set(-690, -14, 120);
+        outsideGroup.add(chaosPit);
+
+        const lavaMoat = new THREE.Mesh(new THREE.TorusGeometry(32, 4.5, 8, 24), this.demonLavaMat || this.stoneMat);
+        lavaMoat.position.set(-690, -7.2, 120);
+        lavaMoat.rotation.x = Math.PI / 2;
+        outsideGroup.add(lavaMoat);
+
+        // Center Ivory Throne Plinth
+        const ivoryDais = new THREE.Mesh(new THREE.CylinderGeometry(20, 22, 1.0, 20), new THREE.MeshStandardMaterial({
+            color: 0xf1f5f9,
+            metalness: 0.7,
+            roughness: 0.3
+        }));
+        ivoryDais.position.set(-690, -6.6, 120);
+        ivoryDais.receiveShadow = true;
+        outsideGroup.add(ivoryDais);
+
+        // Ivory Throne Structure
+        const throne = new THREE.Mesh(new THREE.BoxGeometry(4.0, 7.0, 2.8), new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            metalness: 0.8,
+            roughness: 0.2
+        }));
+        throne.position.set(-690, -3.1, 114);
+        outsideGroup.add(throne);
+
+        // 4 Ice-Flame Crystalline Spires
+        for (let isp = 0; isp < 4; isp++) {
+            const ispAng = (isp / 4) * Math.PI * 2;
+            const iceSpire = new THREE.Mesh(new THREE.ConeGeometry(1.2, 11, 5), new THREE.MeshStandardMaterial({
+                color: 0x67e8f9,
+                emissive: 0x06b6d4,
+                emissiveIntensity: 1.2
+            }));
+            iceSpire.position.set(-690 + Math.cos(ispAng) * 16, -1.1, 120 + Math.sin(ispAng) * 16);
+            outsideGroup.add(iceSpire);
+        }
+
+        const chaosFireLight = new THREE.PointLight(0xff4500, 4.2, 34);
+        chaosFireLight.position.set(-690, -3.0, 120);
+        outsideGroup.add(chaosFireLight);
+        this.createPathBeacon(-690, -7.0, 120, 0x67e8f9, "🔥 OLD CHAOS THRONE OF THE IVORY KING [ELEV -7.0m]", "THE BURNT IVORY KING • FROZEN IVORY THRONE • CHARRED LOYCE KNIGHTS", "#a5f3fc");
+
+        // E. DUNE OF FILIANORE & GAEL'S ASHEN WASTE (x = -720, z = -220, elev = +2.0m)
+        const ashenDunes = new THREE.Mesh(new THREE.BoxGeometry(70, 4, 70), new THREE.MeshStandardMaterial({
+            color: 0x94a3b8,
+            roughness: 0.95,
+            metalness: 0.1
+        }));
+        ashenDunes.position.set(-720, 0, -220);
+        ashenDunes.receiveShadow = true;
+        outsideGroup.add(ashenDunes);
+
+        // Collapsed Half-Buried Gothic Spire
+        const tiltedSpire = new THREE.Mesh(new THREE.ConeGeometry(2.6, 18, 6), this.stoneMat);
+        tiltedSpire.position.set(-712, 6.0, -214);
+        tiltedSpire.rotation.z = 0.45;
+        tiltedSpire.rotation.x = -0.3;
+        outsideGroup.add(tiltedSpire);
+
+        const brokenArch = new THREE.Mesh(new THREE.TorusGeometry(7.0, 0.9, 4, 12, Math.PI), this.stoneMat);
+        brokenArch.position.set(-728, 2.0, -226);
+        brokenArch.rotation.y = 0.6;
+        outsideGroup.add(brokenArch);
+
+        const gaelLight = new THREE.PointLight(0xfca5a5, 3.8, 35);
+        gaelLight.position.set(-720, 5.0, -220);
+        outsideGroup.add(gaelLight);
+        this.createPathBeacon(-720, 2.0, -220, 0xe2e8f0, "⏳ ASYLUM OF GAEL: ASHEN DUNES [ELEV +2.0m]", "SLAVE KNIGHT GAEL • END OF TIME ASHEN SEA • RINGED EXECUTIONERS", "#f1f5f9");
+
+        // F. RINGED CITY ABYSSAL MIDIR CHASM (x = -730, z = 20, elev = -10.0m)
+        const midirChasm = new THREE.Mesh(new THREE.CylinderGeometry(54, 58, 20, 24), this.cliffRockMat);
+        midirChasm.position.set(-730, -20, 20);
+        outsideGroup.add(midirChasm);
+
+        const abyssFloor = new THREE.Mesh(new THREE.CylinderGeometry(48, 48, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x090514,
+            roughness: 0.3,
+            metalness: 0.9
+        }));
+        abyssFloor.position.set(-730, -10.1, 20);
+        abyssFloor.receiveShadow = true;
+        outsideGroup.add(abyssFloor);
+
+        // 6 Protruding Abyssal Humanity Crystals
+        for (let hc = 0; hc < 6; hc++) {
+            const hcAng = (hc / 6) * Math.PI * 2;
+            const humCrystal = new THREE.Mesh(new THREE.ConeGeometry(1.4, 9.0, 4), new THREE.MeshStandardMaterial({
+                color: 0x3b0764,
+                emissive: 0x581c87,
+                emissiveIntensity: 1.4
+            }));
+            humCrystal.position.set(-730 + Math.cos(hcAng) * 22, -6.0, 20 + Math.sin(hcAng) * 22);
+            humCrystal.rotation.z = Math.cos(hcAng) * 0.35;
+            outsideGroup.add(humCrystal);
+        }
+
+        const midirLight = new THREE.PointLight(0x9333ea, 4.8, 38);
+        midirLight.position.set(-730, -4.0, 20);
+        outsideGroup.add(midirLight);
+        this.createPathBeacon(-730, -10.0, 20, 0x9333ea, "🐉 RINGED CITY ABYSSAL MIDIR CHASM [ELEV -10.0m]", "DARKEATER MIDIR • PRIMORDIAL HUMANITY PIT • ABYSSAL DRAGON APOSTLES", "#d8b4fe");
+
+        // G. NIGHTMARE CORPSE-RIVER CAVERN (x = -670, z = 240, elev = -3.0m)
+        const riverBasin = new THREE.Mesh(new THREE.BoxGeometry(65, 6, 65), this.cliffRockMat);
+        riverBasin.position.set(-670, -6, 240);
+        outsideGroup.add(riverBasin);
+
+        // Crimson Blood Channel
+        const bloodRiver = new THREE.Mesh(new THREE.BoxGeometry(26, 0.3, 58), new THREE.MeshStandardMaterial({
+            color: 0x7f1d1d,
+            emissive: 0x450a0a,
+            emissiveIntensity: 0.6,
+            roughness: 0.15
+        }));
+        bloodRiver.position.set(-670, -2.9, 240);
+        outsideGroup.add(bloodRiver);
+
+        // Colossal Skeletal Ribcage Arches
+        [-16, 0, 16].forEach(offsetZ => {
+            const rib = new THREE.Mesh(new THREE.TorusGeometry(6.2, 0.5, 6, 12, Math.PI), this.dragonBoneMat || this.stoneMat);
+            rib.position.set(-670, -3.0, 240 + offsetZ);
+            outsideGroup.add(rib);
+        });
+
+        // Glowing Holy Moonlight Greatsword Crystals
+        const moonlightCluster = new THREE.Mesh(new THREE.ConeGeometry(0.9, 7.0, 5), new THREE.MeshStandardMaterial({
+            color: 0xa5f3fc,
+            emissive: 0x06b6d4,
+            emissiveIntensity: 1.8
+        }));
+        moonlightCluster.position.set(-658, 0.5, 240);
+        moonlightCluster.rotation.z = -0.4;
+        outsideGroup.add(moonlightCluster);
+
+        const ludwigLight = new THREE.PointLight(0x22d3ee, 4.5, 36);
+        ludwigLight.position.set(-670, 1.0, 240);
+        outsideGroup.add(ludwigLight);
+        this.createPathBeacon(-670, -3.0, 240, 0x22d3ee, "🌕 NIGHTMARE CORPSE-RIVER CAVERN [ELEV -3.0m]", "LUDWIG THE HOLY BLADE • MOONLIGHT CRYSTALS • GOOD BLOOD HUNTERS", "#a5f3fc");
+
+        // H. ASTRAL CLOCKTOWER CELESTIAL BALCONY (x = -710, z = -140, elev = +14.0m)
+        const clocktowerSpire = new THREE.Mesh(new THREE.CylinderGeometry(50, 62, 28, 24), this.cliffRockMat);
+        clocktowerSpire.position.set(-710, 0, -140);
+        outsideGroup.add(clocktowerSpire);
+
+        const clocktowerTerrace = new THREE.Mesh(new THREE.CylinderGeometry(44, 44, 0.4, 32), new THREE.MeshStandardMaterial({
+            color: 0x1e293b,
+            roughness: 0.3,
+            metalness: 0.8
+        }));
+        clocktowerTerrace.position.set(-710, 14.1, -140);
+        clocktowerTerrace.receiveShadow = true;
+        outsideGroup.add(clocktowerTerrace);
+
+        // Huge Vertical Astronomical Clock Dial
+        const dialRing = new THREE.Mesh(new THREE.TorusGeometry(12.0, 0.45, 8, 36), new THREE.MeshStandardMaterial({
+            color: 0xd4af37,
+            metalness: 0.9,
+            roughness: 0.2
+        }));
+        dialRing.position.set(-710, 26.0, -156);
+        outsideGroup.add(dialRing);
+
+        const dialCore = new THREE.Mesh(new THREE.CylinderGeometry(5.0, 5.0, 0.3, 16), new THREE.MeshStandardMaterial({
+            color: 0xd946ef,
+            emissive: 0xa21caf,
+            emissiveIntensity: 1.4
+        }));
+        dialCore.position.set(-710, 26.0, -156);
+        dialCore.rotation.x = Math.PI / 2;
+        outsideGroup.add(dialCore);
+
+        const clockLight = new THREE.PointLight(0xd946ef, 4.4, 38);
+        clockLight.position.set(-710, 20.0, -140);
+        outsideGroup.add(clockLight);
+        this.createPathBeacon(-710, 14.0, -140, 0xd946ef, "🕰️ ASTRAL CLOCKTOWER BALCONY [ELEV +14.0m]", "LADY MARIA OF THE ASTRAL CLOCKTOWER • CELESTIAL CLOCKWORK • CLOCKWORK MAIDENS", "#f0abfc");
+
+        // 8. Natural Mountain & Cliff Barriers Enclosing the Outside Realm (Expanded to 850m)
+        // North mountain ridge: z = -550, x: -850 to -28
+        this.createWall(-439, 18, -550, 822, 40, 18);
+        // South mountain ridge: z = 550, x: -850 to -28
+        this.createWall(-439, 18, 550, 822, 40, 18);
+        // West boundary mountain: x = -850, z: -550 to 550
+        this.createWall(-850, 20, 0, 18, 44, 1100);
 
         // Floating forest firefly particles
         const fireflyGeo = new THREE.BufferGeometry();

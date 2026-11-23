@@ -67,12 +67,28 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 228 Legendary Boss Roster
-Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 241 legendary bosses across all Soulsborne eras:
+### 🌲 Outside Realm Apex Bosses & 249 Legendary Boss Roster
+Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 249 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
 - **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Scorched Dragonbarrow
   - Titanic dual-headed ancient archdragon with golden scales, red lightning claws, and golden ruin breath.
+- **Malenia, Goddess of Rot (Маления, Богиня Гнили)** — Haligtree Roots of Rotting Aeonia
+  - Unalloyed gold prosthesis, winged valkyrie helm, 4.2m Hand of Malenia katana, glowing scarlet rot butterfly wings, and Waterfowl Dance.
+- **Promised Consort Radahn & Miquella (Обещанный Консорт Радан и Микелла)** — Enir-Ilim Divine Gate Staircase
+  - 3.8m tall champion in ornate lion plate armor, twin meteoric greatswords with golden light edges, and Miquella radiating holy light pillars.
+- **Sir Alonne, Sword Saint (Сэр Алонн, Святой Меча)** — Iron Keep Polished Obsidian Altar
+  - Jet-black lacquered samurai armor, golden crescent kabuto maedate, wielding the 3.8m Bewitched Alonne Katana with crimson bloodflame edge.
+- **The Burnt Ivory King (Сгоревший Король Слоновой Кости)** — Old Chaos Throne of the Ivory King
+  - Scorched ivory plate etched with molten magma veins, 7-spire crown, and the colossal 4.2m Ivory King Ultra Greatsword radiating crystal flame.
+- **Slave Knight Gael, End of Time (Рыцарь-раб Гаэль)** — Dune of Filianore & Gael's Ashen Waste
+  - Hunched colossal veteran in billowing red executioner cape, chipped Executioner Greatsword, and arm-mounted repeating arbalest.
+- **Darkeater Midir, Abyssal Archdragon (Мидир Пожиратель Тьмы)** — Ringed City Abyssal Midir Chasm
+  - 5m primordial archdragon in obsidian scales, 4 colossal stone wings, glowing abyssal purple eyes, humanity crystal clusters, and humanity breath.
+- **Ludwig, The Holy Blade (Людвиг Священный Клинок)** — Nightmare Corpse-River Cavern
+  - Grotesque chimera beast-knight wielding the 4.0m Holy Moonlight Greatsword radiating ethereal cyan starlight runes and arcane mist.
+- **Lady Maria of the Astral Clocktower (Леди Мария из Астральной Часовой Башни)** — Astral Clocktower Celestial Balcony
+  - Regal hunter frock coat, silver-trimmed tricorn hat, dual-wielding Rakuyo twin sabers trailing sanguine blood ribbons and flame arcs.
 - **Lichdragon Fortissax (Дракон-лич Фортиссакс)** — Forbidden Mistwood Ruins
   - Deathblight-corrupted 4-winged wyrm hurling dual red lightning spears and breathing death mist.
 - **Rennala, Queen of the Full Moon (Реннала Полнолунная)** — Carian Star Observatory
@@ -258,11 +274,21 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (511 Fast-Travel Locations & 61 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (527 Fast-Travel Locations & 69 Outside Zones)
 
 The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 61 bespoke Outside locations, 60 active mob patrols, and 14 apex Soulsborne lords:
 
-### 🌟 6 New Bespoke 3D Mob Archetypes
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V41 Expansion)
+1. **Cleanrot Valkyrie Knight**: Slender golden-vermilion plate armor with winged helmet crest, flowing scarlet cape, slender Cleanrot rapier and golden winged scythe.
+2. **Divine Beast Dancing Lion Disciple**: Ornate horned storm beast mask with swirling mane, festive silk robes, and dual lightning cleaver daggers.
+3. **Alonne Shadow Samurai**: Pitch-black lacquered kabuto with gold crescent maedate, sode shoulder armor, flowing dark sash, and long curved nodachi katana.
+4. **Charred Loyce Knight**: Burnt ivory full plate armor with glowing orange magma fissures, high crested helm, blazing flame spear, and kite shield.
+5. **Ringed Knight Executioner**: Black ashen plate with gaping hollow Dark Sign in chest radiating fiery embers, and paired barbed Ringed Greatswords.
+6. **Abyssal Dragon Apostle**: Obsidian draconic scales, curved dragon horns, articulated dragon tail, dragon seal, and red lightning spark staff.
+7. **Blood Cleric Hunter**: Charcoal leather longcoat with flowing skirts, tricorn hunter hat, face cowl, heavy silver Kirkhammer, and blood lantern.
+8. **Clockwork Automaton Maiden**: Fine porcelain face, articulated brass clockwork joints, revolving brass gear halo, and dual celestial chakram blades.
+
+### 🌟 Previous Bespoke 3D Mob Archetypes
 1. **Crucible Horned Sentinel**: Imposing primordial warrior in red-gold iridescent armor with spiraling bull horns, sprouting golden-red feathered wings, colossal Crucible Tree Spear, and tower shield.
 2. **Bloodhound Knight**: Feral low-slung predator with chased burnished steel plate, wolf-snout closed helm, glowing amber eye slits, and reverse-grip Bloodhound's Fang curved greatsword.
 3. **Frenzied Flame Acolyte**: Saffron-robed nomad monk whose head is consumed by a roaring, incandescent Frenzied Sun orb, carrying a scorched resonant fiddle staff with yellow embers.

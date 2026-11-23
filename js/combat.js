@@ -3870,6 +3870,126 @@ class DarkSoulsCombat {
                 radius: 4.8,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createDragonlordPlacidusaxDuo ? cf.createDragonlordPlacidusaxDuo(x, z) : cf.createSoulsborneBoss({ id: 'dragonlord_placidusax', theme: 'lightning', bossScale: 3.4 }, x, z)
+            },
+            {
+                id: 'outside_malenia_goddess_of_rot',
+                name: 'MALENIA, GODDESS OF ROT',
+                title: 'Outside Realm: Haligtree Roots &bull; Hand of Malenia Katana, Scarlet Aeonia Bloom & Waterfowl Dance',
+                unlockLocationId: 'outside_haligtree_aeonia_roots',
+                icon: '🌸',
+                theme: 'scarlet',
+                bossScale: 2.6,
+                maxHp: 62000,
+                damage: 1750,
+                souls: 5000000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createMaleniaGoddessOfRot ? cf.createMaleniaGoddessOfRot(x, z) : cf.createSoulsborneBoss({ id: 'malenia_goddess_of_rot', theme: 'scarlet', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'outside_promised_consort_radahn',
+                name: 'PROMISED CONSORT RADAHN & MIQUELLA',
+                title: 'Outside Realm: Enir-Ilim Gate &bull; Greatswords of Radahn, Golden Light Pillars & Divine Lion Flurry',
+                unlockLocationId: 'outside_enir_ilim_divine_gate',
+                icon: '👑',
+                theme: 'holy',
+                bossScale: 3.8,
+                maxHp: 68000,
+                damage: 1880,
+                souls: 6000000,
+                radius: 4.5,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createPromisedConsortRadahn ? cf.createPromisedConsortRadahn(x, z) : cf.createSoulsborneBoss({ id: 'promised_consort_radahn', theme: 'holy', bossScale: 3.8 }, x, z)
+            },
+            {
+                id: 'outside_sir_alonne',
+                name: 'SIR ALONNE, SWORD SAINT',
+                title: 'Outside Realm: Iron Keep &bull; Bewitched Alonne Katana, Shadow Blood Thrust & High-Speed Dashes',
+                unlockLocationId: 'outside_iron_keep_alonne_dojo',
+                icon: '🗡️',
+                theme: 'dark',
+                bossScale: 2.8,
+                maxHp: 50000,
+                damage: 1550,
+                souls: 4000000,
+                radius: 3.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSirAlonneSwordSaint ? cf.createSirAlonneSwordSaint(x, z) : cf.createSoulsborneBoss({ id: 'sir_alonne', theme: 'dark', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'outside_burnt_ivory_king',
+                name: 'THE BURNT IVORY KING',
+                title: 'Outside Realm: Old Chaos &bull; Radiant Ivory Ultra Greatsword, Chaos Flame Eruptions & Loyce Guard',
+                unlockLocationId: 'outside_old_chaos_ivory_throne',
+                icon: '🔥',
+                theme: 'fire',
+                bossScale: 3.6,
+                maxHp: 55000,
+                damage: 1620,
+                souls: 4200000,
+                radius: 4.0,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createBurntIvoryKing ? cf.createBurntIvoryKing(x, z) : cf.createSoulsborneBoss({ id: 'burnt_ivory_king', theme: 'fire', bossScale: 3.6 }, x, z)
+            },
+            {
+                id: 'outside_slave_knight_gael',
+                name: 'SLAVE KNIGHT GAEL, END OF TIME',
+                title: 'Outside Realm: Ashen Dunes &bull; Executioner Greatsword, Repeating Crossbow & Crimson Cape Barrage',
+                unlockLocationId: 'outside_gael_ashen_waste',
+                icon: '🩸',
+                theme: 'dark',
+                bossScale: 3.2,
+                maxHp: 64000,
+                damage: 1800,
+                souls: 5500000,
+                radius: 3.8,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createSlaveKnightGael ? cf.createSlaveKnightGael(x, z) : cf.createSoulsborneBoss({ id: 'slave_knight_gael', theme: 'dark', bossScale: 3.2 }, x, z)
+            },
+            {
+                id: 'outside_darkeater_midir',
+                name: 'DARKEATER MIDIR, ABYSSAL ARCHDRAGON',
+                title: 'Outside Realm: Ringed City Chasm &bull; Primordial Humanity Breath, Dark Violet Laser & Obsidian Claws',
+                unlockLocationId: 'outside_midir_abyssal_chasm',
+                icon: '🐉',
+                theme: 'dark',
+                bossScale: 4.5,
+                maxHp: 72000,
+                damage: 1950,
+                souls: 6500000,
+                radius: 5.5,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createDarkeaterMidir ? cf.createDarkeaterMidir(x, z) : cf.createSoulsborneBoss({ id: 'darkeater_midir', theme: 'dark', bossScale: 4.5 }, x, z)
+            },
+            {
+                id: 'outside_ludwig_holy_blade',
+                name: 'LUDWIG, THE HOLY BLADE',
+                title: 'Outside Realm: Nightmare River &bull; Holy Moonlight Greatsword, Arcane Beam Slash & Bestial Gallop',
+                unlockLocationId: 'outside_ludwig_nightmare_river',
+                icon: '🌕',
+                theme: 'magic',
+                bossScale: 3.8,
+                maxHp: 56000,
+                damage: 1680,
+                souls: 4400000,
+                radius: 4.2,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createLudwigHolyBlade ? cf.createLudwigHolyBlade(x, z) : cf.createSoulsborneBoss({ id: 'ludwig_holy_blade', theme: 'magic', bossScale: 3.8 }, x, z)
+            },
+            {
+                id: 'outside_lady_maria',
+                name: 'LADY MARIA OF THE ASTRAL CLOCKTOWER',
+                title: 'Outside Realm: Astral Clocktower &bull; Rakuyo Twin Sabers, Sanguine Blood Flame & Fire Trails',
+                unlockLocationId: 'outside_clocktower_maria_balcony',
+                icon: '🕰️',
+                theme: 'fire',
+                bossScale: 2.5,
+                maxHp: 52000,
+                damage: 1600,
+                souls: 4200000,
+                radius: 3.0,
+                spawnPos: { x: 0, z: 330 },
+                create: (cf, x, z) => cf.createLadyMariaClocktower ? cf.createLadyMariaClocktower(x, z) : cf.createSoulsborneBoss({ id: 'lady_maria', theme: 'fire', bossScale: 2.5 }, x, z)
             }
         ];
     }
@@ -4178,7 +4298,16 @@ class DarkSoulsCombat {
             [-570.0, -5.0, 220.0], [-578.0, -5.0, 228.0], [-562.0, -5.0, 212.0],   // Sunken City of Shulva (Sanctum Knight Automatons)
             [-540.0, 10.0, -220.0], [-548.0, 10.0, -228.0], [-532.0, 10.0, -212.0], // Brume Tower Ashen Foundry (Ashen Iron Warriors)
             [-600.0, 6.0, -120.0], [-608.0, 6.0, -128.0], [-592.0, 6.0, -112.0],   // Castle Sol Eclipse Ramparts (Banished Knights of the Eclipse)
-            [-620.0, 12.0, 160.0], [-628.0, 12.0, 168.0], [-612.0, 12.0, 152.0]    // Ranni's Lunar Spire (Carian Knight Preceptors)
+            [-620.0, 12.0, 160.0], [-628.0, 12.0, 168.0], [-612.0, 12.0, 152.0],   // Ranni's Lunar Spire (Carian Knight Preceptors)
+            // 8 Brand-New Outside Apex Expeditions Patrols (V41 Expansion):
+            [-640.0, -4.0, -180.0], [-648.0, -4.0, -188.0], [-632.0, -4.0, -172.0], // Haligtree Aeonia Roots (Cleanrot Valkyrie Knights)
+            [-680.0, 16.0, -40.0], [-688.0, 16.0, -48.0], [-672.0, 16.0, -32.0],   // Enir-Ilim Divine Gate (Divine Beast Disciples)
+            [-650.0, 8.0, 80.0], [-658.0, 8.0, 88.0], [-642.0, 8.0, 72.0],         // Iron Keep Alonne Dojo (Alonne Shadow Samurai)
+            [-690.0, -7.0, 120.0], [-698.0, -7.0, 128.0], [-682.0, -7.0, 112.0],   // Old Chaos Ivory Throne (Charred Loyce Knights)
+            [-720.0, 2.0, -220.0], [-728.0, 2.0, -228.0], [-712.0, 2.0, -212.0],   // Ashen Waste of Gael (Ringed Knight Executioners)
+            [-730.0, -10.0, 20.0], [-738.0, -10.0, 28.0], [-722.0, -10.0, 12.0],   // Midir Abyssal Chasm (Abyssal Dragon Apostles)
+            [-670.0, -3.0, 240.0], [-678.0, -3.0, 248.0], [-662.0, -3.0, 232.0],   // Nightmare Corpse-River (Church of Good Blood Cleric Hunters)
+            [-710.0, 14.0, -140.0], [-718.0, 14.0, -148.0], [-702.0, 14.0, -132.0] // Astral Clocktower Balcony (Clockwork Automaton Maidens)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -4194,7 +4323,10 @@ class DarkSoulsCombat {
                 'bloodhound_stalker', 'titanite_slag_golem', 'ghostflame_grave_wraith',
                 'sanguine_noble', 'blackflame_monk', 'mausoleum_knight',
                 'ashen_iron_warrior', 'banished_knight_eclipse', 'carian_knight_preceptor',
-                'sanctum_knight_automaton', 'mimic_tear_mercurial'
+                'sanctum_knight_automaton', 'mimic_tear_mercurial',
+                'cleanrot_valkyrie_knight', 'divine_beast_disciple', 'alonne_shadow_samurai',
+                'charred_loyce_knight', 'ringed_knight_executioner', 'abyssal_dragon_apostle',
+                'blood_cleric_hunter', 'clockwork_automaton_maiden'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

@@ -601,7 +601,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -720, -300, 692, 600, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -850, -350, 822, 700, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -618,6 +618,14 @@
                 this.drawZoneRect(ctx, -560, -240, 40, 40, "rgba(60, 25, 10, 0.65)", "#fb923c", "⚔️ BRUME TOWER SMELTER (+10m)");
                 this.drawZoneRect(ctx, -620, -140, 40, 40, "rgba(20, 45, 60, 0.65)", "#38bdf8", "❄️ CASTLE SOL ECLIPSE (+6m)");
                 this.drawZoneRect(ctx, -640, 140, 40, 40, "rgba(15, 30, 65, 0.65)", "#60a5fa", "🌙 CARIAN LUNAR SPIRE (+12m)");
+                this.drawZoneRect(ctx, -660, -200, 40, 40, "rgba(65, 10, 30, 0.65)", "#f43f5e", "🌸 HALIGTREE AEONIA ROOTS (-4m)");
+                this.drawZoneRect(ctx, -700, -60, 40, 40, "rgba(65, 55, 10, 0.65)", "#fde047", "👑 ENIR-ILIM DIVINE GATE (+16m)");
+                this.drawZoneRect(ctx, -670, 60, 40, 40, "rgba(60, 20, 10, 0.65)", "#ea580c", "🗡️ IRON KEEP ALONNE DOJO (+8m)");
+                this.drawZoneRect(ctx, -710, 100, 40, 40, "rgba(20, 50, 60, 0.65)", "#38bdf8", "🔥 OLD CHAOS IVORY THRONE (-7m)");
+                this.drawZoneRect(ctx, -740, -240, 40, 40, "rgba(45, 45, 50, 0.65)", "#cbd5e1", "⏳ ASYLUM OF GAEL ASHEN DUNES (+2m)");
+                this.drawZoneRect(ctx, -750, 0, 40, 40, "rgba(40, 10, 65, 0.65)", "#a855f7", "🐉 RINGED CITY MIDIR CHASM (-10m)");
+                this.drawZoneRect(ctx, -690, 220, 40, 40, "rgba(50, 10, 20, 0.65)", "#06b6d4", "🌕 NIGHTMARE CORPSE-RIVER (-3m)");
+                this.drawZoneRect(ctx, -730, -160, 40, 40, "rgba(55, 15, 60, 0.65)", "#e879f9", "🕰️ ASTRAL CLOCKTOWER BALCONY (+14m)");
             }
 
             // 3. Draw All World Pins

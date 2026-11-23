@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261123_V40_FPS_BOOST_AND_GRAND_LOCATIONS';
+            var TARGET_BUILD = '20261123_V41_OUTSIDE_REALM_APEX_LORDS_EXPANSION';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1750,8 +1750,8 @@
                 <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
                 <button class="btn-icon-bar" onclick="openNPCsModal()" title="330 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (330)</span></button>
-                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,062 3D Models: 340 Armors, 330 NPCs, 386 Mobs & 6 New Outside Apex Bosses" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,062)</span></button>
-                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="228 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (228)</span></button>
+                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,078 3D Models: 340 Armors, 330 NPCs, 394 Mobs & 14 Outside Apex Bosses" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,078)</span></button>
+                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="249 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (249)</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" title="50 Legendary Soulsborne Weapons & Arsenal" style="border-color: #d4af37; color: #ffd778; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);">⚔️ <span class="btn-label-text">WEAPONS (50)</span></button>
                 <button class="btn-icon-bar" onclick="openRingsModal()" title="30 Legendary Soulsborne Rings & Talismans (4 Equip Slots)" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">💍 <span class="btn-label-text">RINGS (30)</span></button>
@@ -1761,7 +1761,7 @@
                 <button class="btn-icon-bar" onclick="openSunkenLiturgyModal()" title="The Sunken Liturgy • Dark Fantasy Debt Realm & Lore [L]" style="border-color: #ffaa33; color: #ffe0b2; font-weight: 800; background: rgba(60, 35, 10, 0.85); box-shadow: 0 0 14px rgba(255, 170, 51, 0.5);">⚖️ <span class="btn-label-text">SUNKEN LITURGY [L]</span></button>
                 <button class="btn-icon-bar" onclick="openDevMapModal()" title="Open God-Mode Interactive Dev Map & Radar [M]" style="border-color: #00ffaa; color: #a5ffbe; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">DEV MAP [M]</span></button>
                 <button class="btn-icon-bar" onclick="if(window.game)window.game.travelToLocation('outside_fallen_spaceship_bazaar')" title="Visit Fallen Starship 30 Merchants Bazaar [U]" style="border-color: #00f5ff; color: #a5f3fc; font-weight: 800; background: rgba(0, 45, 65, 0.85); box-shadow: 0 0 12px rgba(0, 245, 255, 0.45);">🛸 <span class="btn-label-text">STARSHIP [U]</span></button>
-                <button class="btn-icon-bar" onclick="openLocationsModal()" title="500 Warriors' Dream & Soulsborne Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (500)</span></button>
+                <button class="btn-icon-bar" onclick="openLocationsModal()" title="527 Warriors' Dream & Soulsborne Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (527)</span></button>
                 <button class="btn-icon-bar" onclick="teleportOrHighlightPath('outside')" title="Outside Realm: Darkroot Woods, Primeval Archtree & Dragon Plateau [O]" style="border-color: #2ecc71; color: #a8ffb2; font-weight: 800; background: rgba(20, 50, 30, 0.75); box-shadow: 0 0 12px rgba(46, 204, 113, 0.45);">🌲 <span class="btn-label-text">OUTSIDE [O]</span></button>
                 <button class="btn-icon-bar" id="btn-touch-toggle" onclick="toggleVirtualControls()" title="Toggle On-Screen Virtual Joystick & Buttons" style="border-color: #ffd700; color: #ffe680; font-weight: 700;">🕹️ <span class="btn-label-text">CONTROLS PAD</span></button>
                 <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
@@ -4431,6 +4431,110 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('outside_dragonlord_placidusax_duo')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 242: Malenia, Goddess of Rot (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_malenia_goddess_of_rot">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">242. MALENIA, GODDESS OF ROT</div>
+                            <div class="boss-card-desc">Haligtree Roots &bull; Hand of Malenia Katana, Scarlet Aeonia Bloom & Waterfowl Dance</div>
+                            <div class="boss-card-stats">HP: 62,000 &bull; REWARD: 5,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_malenia_goddess_of_rot')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 243: Promised Consort Radahn & Miquella (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_promised_consort_radahn">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👑</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">243. PROMISED CONSORT RADAHN & MIQUELLA</div>
+                            <div class="boss-card-desc">Enir-Ilim Gate &bull; Greatswords of Radahn, Golden Light Pillars & Divine Lion Flurry</div>
+                            <div class="boss-card-stats">HP: 68,000 &bull; REWARD: 6,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_promised_consort_radahn')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 244: Sir Alonne, Sword Saint (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_sir_alonne">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">244. SIR ALONNE, SWORD SAINT</div>
+                            <div class="boss-card-desc">Iron Keep &bull; Bewitched Alonne Katana, Shadow Blood Thrust & High-Speed Dashes</div>
+                            <div class="boss-card-stats">HP: 50,000 &bull; REWARD: 4,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_sir_alonne')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 245: The Burnt Ivory King (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_burnt_ivory_king">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">245. THE BURNT IVORY KING</div>
+                            <div class="boss-card-desc">Old Chaos &bull; Radiant Ivory Ultra Greatsword, Chaos Flame Eruptions & Loyce Guard</div>
+                            <div class="boss-card-stats">HP: 55,000 &bull; REWARD: 4,200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_burnt_ivory_king')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 246: Slave Knight Gael, End of Time (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_slave_knight_gael">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🩸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">246. SLAVE KNIGHT GAEL, END OF TIME</div>
+                            <div class="boss-card-desc">Ashen Dunes &bull; Executioner Greatsword, Repeating Crossbow & Crimson Cape Barrage</div>
+                            <div class="boss-card-stats">HP: 64,000 &bull; REWARD: 5,500,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_slave_knight_gael')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 247: Darkeater Midir, Abyssal Archdragon (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_darkeater_midir">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">247. DARKEATER MIDIR, ABYSSAL ARCHDRAGON</div>
+                            <div class="boss-card-desc">Ringed City Chasm &bull; Primordial Humanity Breath, Dark Violet Laser & Obsidian Claws</div>
+                            <div class="boss-card-stats">HP: 72,000 &bull; REWARD: 6,500,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_darkeater_midir')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 248: Ludwig, The Holy Blade (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_ludwig_holy_blade">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌕</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">248. LUDWIG, THE HOLY BLADE</div>
+                            <div class="boss-card-desc">Nightmare River &bull; Holy Moonlight Greatsword, Arcane Beam Slash & Bestial Gallop</div>
+                            <div class="boss-card-stats">HP: 56,000 &bull; REWARD: 4,400,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_ludwig_holy_blade')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 249: Lady Maria of the Astral Clocktower (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_lady_maria">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🕰️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">249. LADY MARIA OF THE ASTRAL CLOCKTOWER</div>
+                            <div class="boss-card-desc">Astral Clocktower &bull; Rakuyo Twin Sabers, Sanguine Blood Flame & Fire Trails</div>
+                            <div class="boss-card-stats">HP: 52,000 &bull; REWARD: 4,200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_lady_maria')">CHALLENGE</button>
                 </div>
             </div>
 
