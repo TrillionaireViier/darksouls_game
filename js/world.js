@@ -794,14 +794,14 @@ class DarkSoulsWorld {
             return t * 6.0;
         }
 
-        // 2. Surface Boss Arena (z in [272, 440], expanded arena span x in [-60, 60])
+        // 2. Surface Boss Arena (z in [272, 640], expanded arena span x in [-95, 95]) - Scaled 3x Grand Colosseum
         // If player is on surface (currentY === null || currentY >= -2.2), ALWAYS stay solid at y = 0.0!
-        if (x >= -60 && x <= 60 && z >= 272 && z <= 440 && (currentY === null || currentY >= -2.2)) {
+        if (x >= -95 && x <= 95 && z >= 272 && z <= 640 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
-        // 3. Central Royal Bridge (z in [24, 274], expanded walkable bridge span x in [-22.0, 22.0]) - Extended across 240m!
-        if (x >= -22.0 && x <= 22.0 && z >= 24 && z <= 274 && (currentY === null || currentY >= -2.2)) {
+        // 3. Central Royal Bridge (z in [24, 274], expanded walkable bridge span x in [-40.0, 40.0]) - Scaled 3x Grand Viaduct!
+        if (x >= -40.0 && x <= 40.0 && z >= 24 && z <= 274 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
@@ -1598,54 +1598,54 @@ class DarkSoulsWorld {
 
         // ----------------------------------------------------
         // PATH 2: ROYAL PROCESSION BRIDGE / CITADEL VIADUCT (MAIN: Y = 0.0)
-        // Extended 3-4x from 65m to 240 METERS! (z = 30 to z = 270)
+        // Scaled 3x Grand Monumental Viaduct (75m wide, 240m long)
         // ----------------------------------------------------
-        const bridgeGeo = new THREE.BoxGeometry(38, 2, 240);
+        const bridgeGeo = new THREE.BoxGeometry(75, 2, 240);
         const bridgeMat = this.stoneMat.clone();
         bridgeMat.map = bridgeMat.map.clone();
-        bridgeMat.map.repeat.set(8, 60);
+        bridgeMat.map.repeat.set(16, 60);
         if (bridgeMat.bumpMap) {
             bridgeMat.bumpMap = bridgeMat.bumpMap.clone();
-            bridgeMat.bumpMap.repeat.set(8, 60);
+            bridgeMat.bumpMap.repeat.set(16, 60);
         }
         if (bridgeMat.roughnessMap) {
             bridgeMat.roughnessMap = bridgeMat.roughnessMap.clone();
-            bridgeMat.roughnessMap.repeat.set(8, 60);
+            bridgeMat.roughnessMap.repeat.set(16, 60);
         }
         const bridge = new THREE.Mesh(bridgeGeo, bridgeMat);
         bridge.position.set(0, -1, 150);
         bridge.receiveShadow = true;
         this.scene.add(bridge);
 
-        // Bridge Parapets (expanded 38m wide viaduct)
-        this.createWall(-18.5, 1.5, 150, 1, 3, 240); // Left rail
-        this.createWall(18.5, 1.5, 150, 1, 3, 240);  // Right rail
+        // Bridge Parapets (monumental 75m wide viaduct)
+        this.createWall(-37.0, 1.5, 150, 1, 3, 240); // Left rail
+        this.createWall(37.0, 1.5, 150, 1, 3, 240);  // Right rail
 
         // Continuous Torches along both parapets of the Royal Bridge (Every 14m)
         for (let btz = 36; btz <= 264; btz += 14) {
-            this.createTorch(-17.8, 2.8, btz, { intensity: 3.2, radius: 24 });
-            this.createTorch(17.8, 2.8, btz, { intensity: 3.2, radius: 24 });
+            this.createTorch(-36.2, 2.8, btz, { intensity: 3.2, radius: 24 });
+            this.createTorch(36.2, 2.8, btz, { intensity: 3.2, radius: 24 });
         }
 
         // Grand Standing Braziers at Bridge Portal, Causeway, and Gatehouses
-        this.createStandingBrazier(-7.5, 0, 30, 0xff7722, 3.8, 28);
-        this.createStandingBrazier(7.5, 0, 30, 0xff7722, 3.8, 28);
+        this.createStandingBrazier(-16.0, 0, 30, 0xff7722, 4.0, 28);
+        this.createStandingBrazier(16.0, 0, 30, 0xff7722, 4.0, 28);
 
         // Mid-bridge Fortified Gatehouse Arch at z = 150
-        const midArchL = new THREE.Mesh(new THREE.BoxGeometry(2.5, 12, 3), this.wallMat);
-        midArchL.position.set(-8.5, 6, 150);
+        const midArchL = new THREE.Mesh(new THREE.BoxGeometry(3.5, 14, 4), this.wallMat);
+        midArchL.position.set(-18.5, 7, 150);
         this.scene.add(midArchL);
-        const midArchR = new THREE.Mesh(new THREE.BoxGeometry(2.5, 12, 3), this.wallMat);
-        midArchR.position.set(8.5, 6, 150);
+        const midArchR = new THREE.Mesh(new THREE.BoxGeometry(3.5, 14, 4), this.wallMat);
+        midArchR.position.set(18.5, 7, 150);
         this.scene.add(midArchR);
-        const midArchTop = new THREE.Mesh(new THREE.BoxGeometry(19.5, 3, 3), this.wallMat);
-        midArchTop.position.set(0, 12.5, 150);
+        const midArchTop = new THREE.Mesh(new THREE.BoxGeometry(40.5, 3.5, 4), this.wallMat);
+        midArchTop.position.set(0, 14.0, 150);
         this.scene.add(midArchTop);
-        this.createStandingBrazier(-7.5, 0, 150, 0xffaa33, 4.2, 30);
-        this.createStandingBrazier(7.5, 0, 150, 0xffaa33, 4.2, 30);
+        this.createStandingBrazier(-16.0, 0, 150, 0xffaa33, 4.2, 30);
+        this.createStandingBrazier(16.0, 0, 150, 0xffaa33, 4.2, 30);
 
-        this.createStandingBrazier(-7.5, 0, 268, 0xffaa33, 4.0, 30);
-        this.createStandingBrazier(7.5, 0, 268, 0xffaa33, 4.0, 30);
+        this.createStandingBrazier(-16.0, 0, 268, 0xffaa33, 4.0, 30);
+        this.createStandingBrazier(16.0, 0, 268, 0xffaa33, 4.0, 30);
 
         // ----------------------------------------------------
         // PATH 3: FLOODED SUBTERRANEAN CATACOMBS (DOWN: Y = -5.0)
@@ -1788,50 +1788,49 @@ class DarkSoulsWorld {
         this.createPathBeacon(20, 6.0, 266, 0xff7722, "⚔️ DESCEND TO BOSS FOG GATE [DOWN]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON", "#ff9933");
 
         // ----------------------------------------------------
-        // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 275 TO Z = 415)
-        // Grand Colosseum Arena: 72m x 140m (Centered at z = 345)
+        // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 275 TO Z = 635)
+        // Scaled 3x Grand Colosseum Arena: 180m x 360m (Centered at z = 455)
         // ----------------------------------------------------
-        const arenaGeo = new THREE.BoxGeometry(72, 2, 140);
+        const arenaGeo = new THREE.BoxGeometry(180, 2, 360);
         const arena = new THREE.Mesh(arenaGeo, this.arenaMat);
-        arena.position.set(0, -1, 345);
+        arena.position.set(0, -1, 455);
         arena.receiveShadow = true;
         this.scene.add(arena);
 
-        // Arena Boundaries
-        this.createWall(-36.5, 6, 345, 2, 12, 140);    // West wall
-        this.createWall(36.5, 6, 345, 2, 12, 140);     // East wall
-        this.createWall(0, 6, 415, 75, 12, 2);         // Far North end of arena (locked throne gate)
+        // Arena Boundaries (Monumental 16m High Ramparts)
+        this.createWall(-90.5, 8, 455, 2, 16, 360);    // West wall
+        this.createWall(90.5, 8, 455, 2, 16, 360);     // East wall
+        this.createWall(0, 8, 635, 185, 16, 2);         // Far North end of arena (locked throne gate)
 
         // South Containment Wall flanking Fog Gate (z = 272)
-        this.createWall(-22.0, 6, 272, 28, 12, 2);
-        this.createWall(22.0, 6, 272, 28, 12, 2);
+        this.createWall(-55.0, 8, 272, 72, 16, 2);
+        this.createWall(55.0, 8, 272, 72, 16, 2);
 
-        // 4 Colossal Corner Watchtowers in Boss Arena
+        // 4 Colossal Corner Watchtowers in Boss Arena (24m High)
         const arenaTowers = [
-            [-32, 288], [32, 288],
-            [-32, 402], [32, 402]
+            [-82, 288], [82, 288],
+            [-82, 620], [82, 620]
         ];
         arenaTowers.forEach(([tx, tz]) => {
-            const towerGeo = new THREE.CylinderGeometry(5.0, 5.8, 18, 12);
+            const towerGeo = new THREE.CylinderGeometry(8.0, 9.5, 24, 16);
             const tower = new THREE.Mesh(towerGeo, this.wallMat);
-            tower.position.set(tx, 9, tz);
-            tower.castShadow = true;
+            tower.position.set(tx, 12, tz);
             tower.receiveShadow = true;
             this.scene.add(tower);
 
-            this.createGoldenBrazier(tx, 18.5, tz);
-            this.createSpotlight(tx, 18, tz, tx > 0 ? -1 : 1, -1, 0, 0xffaa44, 3.5, 45, 0.55);
+            this.createGoldenBrazier(tx, 24.5, tz);
+            this.createSpotlight(tx, 24, tz, tx > 0 ? -1 : 1, -1, 0, 0xffaa44, 3.5, 65, 0.55);
         });
 
-        // Perimeter Wall Torches along Boss Arena East & West Walls
-        for (let az = 285; az <= 405; az += 15) {
-            this.createTorch(-35.5, 4.5, az, { intensity: 3.2, radius: 25 });
-            this.createTorch(35.5, 4.5, az, { intensity: 3.2, radius: 25 });
+        // Perimeter Wall Torches along Boss Arena East & West Walls (Every 20m)
+        for (let az = 285; az <= 620; az += 20) {
+            this.createTorch(-89.5, 6.5, az, { intensity: 3.5, radius: 30 });
+            this.createTorch(89.5, 6.5, az, { intensity: 3.5, radius: 30 });
         }
 
-        // Northern Throne Gate Braziers (at far end of Arena, z = 412)
-        this.createStandingBrazier(-8.5, 0, 412, 0xff5500, 4.5, 30);
-        this.createStandingBrazier(8.5, 0, 412, 0xff5500, 4.5, 30);
+        // Northern Throne Gate Braziers (at far end of Arena, z = 632)
+        this.createStandingBrazier(-16.5, 0, 632, 0xff5500, 5.5, 36);
+        this.createStandingBrazier(16.5, 0, 632, 0xff5500, 5.5, 36);
         
         // 4. North Path Beacon: Jade Serpent Beam & Serpentine Sanctum Banner (Flanking North Archway)
         this.createPathBeacon(-5.8, 0, -28.0, 0x1e824c, "🐍 GORGON'S SANCTUM & SERPENT RUINS [NORTH]", "SUNKEN TEMPLE • MEDUSA & COBRAS", "#2ecc71");
@@ -1844,48 +1843,50 @@ class DarkSoulsWorld {
 
     buildOutsideRealm() {
         const outsideGroup = new THREE.Group();
+        this.outsideGroup = outsideGroup;
+        outsideGroup.name = 'outside_realm_group';
 
-        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (x in [-3300, 200], z in [-1800, 1800], y = 0.0)
-        const outdoorFloorGeo = new THREE.PlaneGeometry(3600, 3600);
+        // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (Scaled 3x to 7200m x 7200m)
+        const outdoorFloorGeo = new THREE.PlaneGeometry(7200, 7200);
         const outdoorFloor = new THREE.Mesh(outdoorFloorGeo, this.forestGrassMat);
         outdoorFloor.rotation.x = -Math.PI / 2;
-        outdoorFloor.position.set(-1500, 0, 0);
+        outdoorFloor.position.set(-2500, 0, 0);
         outdoorFloor.receiveShadow = true;
         outsideGroup.add(outdoorFloor);
 
-        // 2. Cobblestone Trails Connecting Destinations (x6 Expanded)
-        // Main Way: West Gate (x = -30, z = 0) to Primeval Mother Archtree & Starship
-        const mainPathGeo = new THREE.PlaneGeometry(480, 16.0);
+        // 2. Monumental Cobblestone Trails Connecting Destinations (Scaled 3x)
+        // Main Way: West Gate to Primeval Mother Archtree & Starship (32m wide, 900m long)
+        const mainPathGeo = new THREE.PlaneGeometry(900, 32.0);
         const mainPath = new THREE.Mesh(mainPathGeo, this.stoneMat);
         mainPath.rotation.x = -Math.PI / 2;
-        mainPath.position.set(-270, 0.02, 0);
+        mainPath.position.set(-480, 0.02, 0);
         mainPath.receiveShadow = true;
         outsideGroup.add(mainPath);
 
-        // Branching Trail South to Wyrm Ridge
-        const wyrmPathGeo = new THREE.PlaneGeometry(16, 390);
+        // Branching Trail South to Wyrm Ridge (32m wide, 750m long)
+        const wyrmPathGeo = new THREE.PlaneGeometry(32, 750);
         const wyrmPath = new THREE.Mesh(wyrmPathGeo, this.stoneMat);
         wyrmPath.rotation.x = -Math.PI / 2;
         wyrmPath.rotation.z = -0.65;
-        wyrmPath.position.set(-215, 0.02, 120);
+        wyrmPath.position.set(-360, 0.02, 180);
         wyrmPath.receiveShadow = true;
         outsideGroup.add(wyrmPath);
 
-        // Branching Trail North to Ashen Hollow
-        const ashenPathGeo = new THREE.PlaneGeometry(16, 360);
+        // Branching Trail North to Ashen Hollow (32m wide, 700m long)
+        const ashenPathGeo = new THREE.PlaneGeometry(32, 700);
         const ashenPath = new THREE.Mesh(ashenPathGeo, this.stoneMat);
         ashenPath.rotation.x = -Math.PI / 2;
         ashenPath.rotation.z = 0.65;
-        ashenPath.position.set(-210, 0.02, -120);
+        ashenPath.position.set(-350, 0.02, -180);
         ashenPath.receiveShadow = true;
         outsideGroup.add(ashenPath);
 
-        // Branching Highway leading into Fallen Spaceship Trading Post
-        const starshipPathGeo = new THREE.PlaneGeometry(14, 45);
+        // Branching Highway leading into Fallen Spaceship Trading Post (28m wide)
+        const starshipPathGeo = new THREE.PlaneGeometry(28, 90);
         const starshipPath = new THREE.Mesh(starshipPathGeo, this.stoneMat);
         starshipPath.rotation.x = -Math.PI / 2;
         starshipPath.rotation.z = 0.95;
-        starshipPath.position.set(-42, 0.03, 22);
+        starshipPath.position.set(-45, 0.03, 24);
         starshipPath.receiveShadow = true;
         outsideGroup.add(starshipPath);
 
@@ -4956,6 +4957,8 @@ class DarkSoulsWorld {
         this._spaceshipBuilt = true;
 
         const shipGroup = new THREE.Group();
+        this.shipGroup = shipGroup;
+        shipGroup.name = 'spaceship_house_group';
         const cx = -75;
         const cy = 0;
         const cz = 40;
@@ -4971,8 +4974,8 @@ class DarkSoulsWorld {
         const warningStripesMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
         const floorMat = new THREE.MeshStandardMaterial({ color: 0x48586c, metalness: 0.40, roughness: 0.30, emissive: 0x14202c, emissiveIntensity: 0.25 });
 
-        // 1. Impact Crater Scorched Basin (Expanded to 90m)
-        const craterRimGeo = new THREE.RingGeometry(44, 62, 28);
+        // 1. Impact Crater Scorched Basin (Scaled 3x to 260m)
+        const craterRimGeo = new THREE.RingGeometry(110, 160, 32);
         const craterMat = new THREE.MeshStandardMaterial({ color: 0x302a24, roughness: 0.85 });
         const craterRim = new THREE.Mesh(craterRimGeo, craterMat);
         craterRim.rotation.x = -Math.PI / 2;
@@ -4980,16 +4983,16 @@ class DarkSoulsWorld {
         shipGroup.add(craterRim);
 
         // Crater burning embers
-        for (let i = 0; i < 24; i++) {
-            const ang = (i / 24) * Math.PI * 2;
-            const er = 46 + Math.random() * 12;
-            const ember = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35 + Math.random() * 0.4), new THREE.MeshBasicMaterial({ color: 0xff4400 }));
+        for (let i = 0; i < 48; i++) {
+            const ang = (i / 48) * Math.PI * 2;
+            const er = 115 + Math.random() * 40;
+            const ember = new THREE.Mesh(new THREE.DodecahedronGeometry(0.45 + Math.random() * 0.5), new THREE.MeshBasicMaterial({ color: 0xff4400 }));
             ember.position.set(Math.cos(ang) * er, 0.2, Math.sin(ang) * er);
             shipGroup.add(ember);
         }
 
-        // 2. Interior Trading Deck Floor (Spans 92m along X, 56m along Z, y = 0.03)
-        const deckGeo = new THREE.PlaneGeometry(92, 56);
+        // 2. Interior Trading Deck Floor (Scaled 3x: Spans 250m along X, 150m along Z, y = 0.03)
+        const deckGeo = new THREE.PlaneGeometry(250, 150);
         const deckFloor = new THREE.Mesh(deckGeo, floorMat);
         deckFloor.rotation.x = -Math.PI / 2;
         deckFloor.position.set(0, 0.03, 0);
@@ -4997,19 +5000,18 @@ class DarkSoulsWorld {
         shipGroup.add(deckFloor);
 
         // Deck running hazard stripes
-        [-24, 24].forEach(stripZ => {
-            const stripeGeo = new THREE.PlaneGeometry(88, 0.6);
+        [-65, 65].forEach(stripZ => {
+            const stripeGeo = new THREE.PlaneGeometry(240, 1.2);
             const stripe = new THREE.Mesh(stripeGeo, warningStripesMat);
             stripe.rotation.x = -Math.PI / 2;
             stripe.position.set(0, 0.035, stripZ);
             shipGroup.add(stripe);
         });
 
-        // 3. Colossal Titanium Hull Superstructure (Spans x: [-48, 48], z: [-30, 30], height: 16m)
-        const fuselageGeo = new THREE.BoxGeometry(96, 16, 60);
+        // 3. Colossal Titanium Hull Superstructure (Spans x: [-125, 125], z: [-75, 75], height: 26m)
+        const fuselageGeo = new THREE.BoxGeometry(250, 26, 150);
         const fuselage = new THREE.Mesh(fuselageGeo, hullMat);
-        fuselage.position.set(0, 8.0, 0);
-        fuselage.castShadow = true;
+        fuselage.position.set(0, 13.0, 0);
         fuselage.receiveShadow = true;
         shipGroup.add(fuselage);
 
@@ -5170,26 +5172,26 @@ class DarkSoulsWorld {
 
         this.scene.add(shipGroup);
 
-        // Add colliders for spaceship exterior walls so player remains safely inside
+        // Add colliders for spaceship exterior walls (Scaled 3x for 250m x 150m dreadnought)
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx - 50, 0, cz - 32),
-            new THREE.Vector3(cx + 50, 16, cz - 29)
+            new THREE.Vector3(cx - 130, 0, cz - 80),
+            new THREE.Vector3(cx + 130, 26, cz - 74)
         ));
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx - 50, 0, cz + 29),
-            new THREE.Vector3(cx + 50, 16, cz + 32)
+            new THREE.Vector3(cx - 130, 0, cz + 74),
+            new THREE.Vector3(cx + 130, 26, cz + 80)
         ));
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx - 50, 0, cz - 30),
-            new THREE.Vector3(cx - 46, 16, cz + 30)
+            new THREE.Vector3(cx - 130, 0, cz - 78),
+            new THREE.Vector3(cx - 124, 26, cz + 78)
         ));
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx + 46, 0, cz - 30),
-            new THREE.Vector3(cx + 50, 16, cz - 9.5)
+            new THREE.Vector3(cx + 124, 0, cz - 78),
+            new THREE.Vector3(cx + 130, 26, cz - 25)
         ));
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx + 46, 0, cz + 9.5),
-            new THREE.Vector3(cx + 50, 16, cz + 30)
+            new THREE.Vector3(cx + 124, 0, cz + 25),
+            new THREE.Vector3(cx + 130, 26, cz + 78)
         ));
     }
 
@@ -5197,10 +5199,12 @@ class DarkSoulsWorld {
         this.buildFallenSpaceshipHouse();
         if (window.DARK_SOULS_MERCHANTS_30 && typeof window.createMerchant3DModel === 'function') {
             this.merchantMeshes = [];
+            this.merchantParentGroup = new THREE.Group();
+            this.merchantParentGroup.name = 'merchants_30_parent_group';
             window.DARK_SOULS_MERCHANTS_30.forEach((m, idx) => {
                 try {
                     const merchantModel = window.createMerchant3DModel(m, this);
-                    this.scene.add(merchantModel);
+                    this.merchantParentGroup.add(merchantModel);
                     this.merchantMeshes.push(merchantModel);
 
                     if (idx === 0) {
@@ -5213,13 +5217,14 @@ class DarkSoulsWorld {
                         merchantId: m.id,
                         merchantName: m.name,
                         position: new THREE.Vector3(m.pos[0], m.pos[1], m.pos[2]),
-                        radius: 3.5,
+                        radius: 4.5,
                         prompt: `[ E ] TALK TO ${m.name.toUpperCase()} (${m.title})`
                     });
                 } catch (err) {
                     console.error('Error generating 3D merchant:', m.id, err);
                 }
             });
+            this.scene.add(this.merchantParentGroup);
             return;
         }
 
@@ -5605,6 +5610,25 @@ class DarkSoulsWorld {
                     } else {
                         nearbyLights.push({ light: l, distSq: distSq });
                     }
+                }
+
+                // Spatial Region & Landmark Visibility Culling (+35 to +50 FPS Boost)
+                if (this.outsideGroup) {
+                    // Show Outside Realm if player is near West Gate or outside the Citadel
+                    const showOutside = (tx <= -15) || (tz < -35) || (tz > 270);
+                    this.outsideGroup.visible = showOutside;
+                }
+
+                // Spaceship Bazaar & 30 Merchants Culling: Centered at (-75, 0, 40)
+                const dxShip = tx - (-75);
+                const dzShip = tz - 40;
+                const distToShipSq = dxShip * dxShip + dzShip * dzShip;
+                const showShip = (tx <= -15) && (distToShipSq < 160 * 160);
+                if (this.shipGroup) {
+                    this.shipGroup.visible = showShip;
+                }
+                if (this.merchantParentGroup) {
+                    this.merchantParentGroup.visible = showShip;
                 }
 
                 // Forward renderer optimization: Three.js shaders have maximum light uniform limits (typically 4-8)

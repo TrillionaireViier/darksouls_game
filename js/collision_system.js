@@ -41,21 +41,21 @@ class CollisionSystem {
         const initialX = pos.x;
         const initialZ = pos.z;
 
-        // A. Royal Bridge Parapets (z in [22.0, 95.0])
-        if (pos.z >= 22.0 && pos.z <= 95.0 && Math.abs(pos.x) <= 8.5) {
+        // A. Royal Bridge Parapets (z in [22.0, 272.0]) - Monumental 75m wide viaduct
+        if (pos.z >= 22.0 && pos.z <= 272.0 && Math.abs(pos.x) <= 38.0) {
             if (y >= -1.0 && y <= 3.5) {
-                const minX = -6.45 + radius;
-                const maxX = 6.45 - radius;
+                const minX = -36.5 + radius;
+                const maxX = 36.5 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             }
         }
 
-        // B. Surface Boss Arena (z in [94.8, 168.0]) - Full 34m wide access (-16.8 to +16.8)
-        if (pos.z >= 94.8 && pos.z <= 168.0 && y >= -1.0 && y <= 4.0) {
-            const minX = -16.8 + radius;
-            const maxX = 16.8 - radius;
+        // B. Surface Boss Arena (z in [272.0, 635.0]) - Grand 180m x 360m Colosseum Arena
+        if (pos.z >= 272.0 && pos.z <= 635.0 && y >= -1.0 && y <= 6.0) {
+            const minX = -89.0 + radius;
+            const maxX = 89.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            pos.z = Math.min(164.0 - radius, pos.z);
+            pos.z = Math.min(630.0 - radius, pos.z);
         }
 
         // C. Flooded Catacombs Corridor (z in [22.0, 90.0], y < 1.0)

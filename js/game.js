@@ -80,8 +80,7 @@ class DarkSoulsGame {
         try {
             if (typeof DarkSoulsPostProcessing !== 'undefined') {
                 this.postProcessing = new DarkSoulsPostProcessing(this.renderer, this.scene, this.camera);
-                this.postProcessingEnabled = true;
-                this.renderer.toneMapping = THREE.NoToneMapping; // Composite shader handles ACES filmic & bloom
+                this.postProcessingEnabled = !this.performanceMode;
             } else {
                 this.postProcessing = null;
                 this.postProcessingEnabled = false;
@@ -91,6 +90,10 @@ class DarkSoulsGame {
             this.postProcessing = null;
             this.postProcessingEnabled = false;
         }
+        // Always guarantee clean, balanced ACES Filmic Tone Mapping with natural exposure
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.10;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
 
         // Player Entity
         this.playerMesh = this.charFactory.createPlayer();
@@ -1677,8 +1680,8 @@ class DarkSoulsGame {
         // Passive stamina recovery remains standard
         if (this.playerMesh && this.combat && !this.combat.isDead) {
             const p = this.playerMesh.position;
-            const distToBase = Math.sqrt(p.x * p.x + p.z * p.z);
-            if (distToBase < 6.5 && Math.abs(p.y) < 2.0) {
+            const distToBaseSq = p.x * p.x + p.z * p.z;
+            if (distToBaseSq < 42.25 && Math.abs(p.y) < 2.0) {
                 if (this.combat.stamina < this.combat.maxStamina) {
                     this.combat.stamina = Math.min(this.combat.maxStamina, this.combat.stamina + 40 * delta);
                 }
@@ -3046,6 +3049,9 @@ class DarkSoulsGame {
 
             for (let i = 0; i < this.world.colliders.length; i++) {
                 const box = this.world.colliders[i];
+                if (targetPos.x < box.min.x - 5 || targetPos.x > box.max.x + 5 || targetPos.z < box.min.z - 5 || targetPos.z > box.max.z + 5) {
+                    continue;
+                }
                 if (this._camRay.intersectBox(box, this._camHit)) {
                     const hitDist = targetPos.distanceTo(this._camHit);
                     if (hitDist < allowedDist) {
@@ -3178,9 +3184,19 @@ class DarkSoulsGame {
 
         let activePrompt = null;
         this._nearbyCompendiumEntity = null;
-        for (const item of this.world.interactables) {
+        const px = pPos.x;
+        const py = pPos.y;
+        const pz = pPos.z;
+        for (let i = 0; i < this.world.interactables.length; i++) {
+            const item = this.world.interactables[i];
             if (item.type === 'fog_gate' && this.world.fogTraversed) continue;
-            if (pPos.distanceTo(item.position) <= item.radius) {
+            const ipos = item.position;
+            const dx = px - ipos.x;
+            const dy = py - ipos.y;
+            const dz = pz - ipos.z;
+            const distSq = dx * dx + dy * dy + dz * dz;
+            const r = item.radius || 3.0;
+            if (distSq <= r * r) {
                 activePrompt = item.prompt;
                 break;
             }
@@ -3418,11 +3434,11 @@ class DarkSoulsGame {
     }
 
     warpToArena() {
-        // Warp player near the surface fog gate (z = 94)
-        this.playerMesh.position.set(0, 0, 98);
+        // Warp player near the grand colosseum fog gate (z = 276)
+        this.playerMesh.position.set(0, 0, 276);
         this.cameraYaw = 0;
         this.cameraPitch = 0.28;
-        this.showNotification("WARPED TO THE ARENA FOG GATE");
+        this.showNotification("WARPED TO THE GRAND BOSS COLOSSEUM");
     }
 
     warpToOutside() {
@@ -4642,8 +4658,7 @@ class DarkSoulsGame {
         }
         localStorage.setItem('darksouls_perf_mode', this.performanceMode ? 'true' : 'false');
 
-        const isMobileOrTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1200);
-        const pixelRatio = this.performanceMode ? 1.0 : (isMobileOrTouch ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25));
+        const pixelRatio = 1.0;
         this.renderer.setPixelRatio(pixelRatio);
         this.renderer.shadowMap.enabled = !this.performanceMode;
 
@@ -5327,8 +5342,7 @@ class DarkSoulsGame {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        const isMobileOrTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1200);
-        const pixelRatio = this.performanceMode ? 1.0 : (isMobileOrTouch ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25));
+        const pixelRatio = 1.0;
         this.renderer.setPixelRatio(pixelRatio);
         if (this.postProcessing) {
             this.postProcessing.setSize(window.innerWidth, window.innerHeight);
