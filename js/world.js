@@ -1854,20 +1854,20 @@ class DarkSoulsWorld {
             this.scene.add(stepMesh);
         }
 
-        // DRAMATIC ILLUMINATED PATH BEACONS & ROUTE PORTALS
-        // 1. In Central Courtyard Promenade (Safe, clear, fully accessible on surface flagstones at z = 18m)
-        this.createPathBeacon(-6.5, 0, 18, 0x00ffaa, "💀 UNDERGROUND CATACOMBS [DOWN]", "LEVEL -5m • FLOODED CRYPTS & SKELETONS", "#a5ffbe");
-        this.createPathBeacon(6.5, 0, 18, 0xffd700, "👑 HIGH CASTLE RAMPARTS [UP]", "LEVEL +6m • ARCHER WATCHTOWERS & BATTLEMENTS", "#fff3a8");
-        // Flanking Bridge Waypoint (at bridge entrance parapet, keeping central doorway completely clear)
-        this.createPathBeacon(-4.8, 0, 33, 0xff7722, "⚔️ ROYAL BRIDGE [WARP TO FOG GATE]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON (240m)", "#ff9933");
+        // DRAMATIC ILLUMINATED PATH BEACONS & GUIDANCE RUNES (NO UNWANTED PROMENADE TELEPORTATION)
+        // 1. In Central Courtyard Promenade (Safe, clear, informational guidance braziers & soapstones only)
+        this.createPathBeacon(-6.5, 0, 18, 0x00ffaa, "💀 UNDERGROUND CATACOMBS [DOWN]", "LEVEL -5m • FLOODED CRYPTS & SKELETONS", "#a5ffbe", true, false);
+        this.createPathBeacon(6.5, 0, 18, 0xffd700, "👑 HIGH CASTLE RAMPARTS [UP]", "LEVEL +6m • ARCHER WATCHTOWERS & BATTLEMENTS", "#fff3a8", true, false);
+        // Flanking Bridge Waypoint (pure informational guidance landmark - WALK ON FOOT)
+        this.createPathBeacon(-4.8, 0, 33, 0xff7722, "⚔️ ROYAL BRIDGE [VIADUCT AHEAD]", "LEVEL 0m • RUN ON FOOT ACROSS TO TAURUS DEMON (3600m)", "#ff9933", true, false);
 
-        // 2. Return Portals from Inside the Flooded Subterranean Catacombs
-        this.createPathBeacon(-20, -4.92, 32, 0xffd700, "☀️ SURFACE COURTYARD [UP]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700");
-        this.createPathBeacon(-20, -4.92, 146, 0xffd700, "☀️ SURFACE COURTYARD [UP]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700");
+        // 2. Return Landmarks from Inside the Flooded Subterranean Catacombs (Informational landmarks)
+        this.createPathBeacon(-20, -4.92, 32, 0xffd700, "☀️ SURFACE COURTYARD [UP]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700", true, false);
+        this.createPathBeacon(-20, -4.92, 146, 0xffd700, "☀️ SURFACE COURTYARD [UP]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700", true, false);
 
-        // 3. Return & Ascent Portals on High Castle Ramparts
-        this.createPathBeacon(20, 6.0, 32, 0xffd700, "☀️ SURFACE COURTYARD [DOWN]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700");
-        this.createPathBeacon(20, 6.0, 266, 0xff7722, "⚔️ DESCEND TO BOSS FOG GATE [DOWN]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON", "#ff9933");
+        // 3. Return & Ascent Landmarks on High Castle Ramparts
+        this.createPathBeacon(20, 6.0, 32, 0xffd700, "☀️ SURFACE COURTYARD [DOWN]", "LEVEL 0m • RETURN TO FIRELINK COURTYARD", "#ffd700", true, false);
+        this.createPathBeacon(20, 6.0, 266, 0xff7722, "⚔️ DESCEND TO BOSS FOG GATE [DOWN]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON", "#ff9933", true, false);
 
         // ----------------------------------------------------
         // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 4140 TO Z = 12540)
@@ -5082,7 +5082,7 @@ class DarkSoulsWorld {
         this.colliders.push(new THREE.Box3().setFromObject(mesh));
     }
 
-    createPathBeacon(x, y, z, colorHex, title, desc, titleColor, addSoapstone = true) {
+    createPathBeacon(x, y, z, colorHex, title, desc, titleColor, addSoapstone = true, enableTeleport = false) {
         const beaconGroup = new THREE.Group();
 
         // 1. Lordran Wrought-Iron Brazier & Ember Core
@@ -5124,35 +5124,37 @@ class DarkSoulsWorld {
             this.createFloorSoapstone(x, y, z + 2.5, titleColor || ('#' + colorHex.toString(16).padStart(6, '0')), title, desc);
         }
 
-        // 3. Interactive Teleport Portal
-        let targetPos = null;
-        let promptText = `[ E ] TELEPORT: ${title}`;
-        if (title.includes('CATACOMBS') || title.includes('SUNKEN') || title.includes('UNDERGROUND')) {
-            targetPos = new THREE.Vector3(-20, -4.92, 32);
-            promptText = `💀 [ E ] TELEPORT TO UNDERGROUND CATACOMBS (-5m)`;
-        } else if (title.includes('RAMPARTS') || title.includes('HIGH')) {
-            targetPos = new THREE.Vector3(20, 6.0, 32);
-            promptText = `👑 [ E ] TELEPORT TO HIGH RAMPARTS (+6m)`;
-        } else if (title.includes('SURFACE') || title.includes('COURTYARD')) {
-            targetPos = new THREE.Vector3(0, 0, 16);
-            promptText = `☀️ [ E ] RETURN TO SURFACE COURTYARD (0m)`;
-        } else if (title.includes('FOG') || title.includes('BOSS') || title.includes('WARP') || title.includes('DESCEND')) {
-            targetPos = new THREE.Vector3(0, 0, 4135);
-            promptText = `⚔️ [ E ] TELEPORT TO BOSS FOG GATE (3600m)`;
-        } else if (title.includes('BRIDGE') || title.includes('ROYAL')) {
-            targetPos = new THREE.Vector3(0, 0, 4135);
-            promptText = `⚔️ [ E ] TELEPORT TO ROYAL BRIDGE FOG GATE (0m)`;
-        }
+        // 3. Optional Interactive Teleport Portal (Disabled by default to avoid accidental warp)
+        if (enableTeleport) {
+            let targetPos = null;
+            let promptText = `[ E ] TELEPORT: ${title}`;
+            if (title.includes('CATACOMBS') || title.includes('SUNKEN') || title.includes('UNDERGROUND')) {
+                targetPos = new THREE.Vector3(-20, -4.92, 32);
+                promptText = `💀 [ E ] TELEPORT TO UNDERGROUND CATACOMBS (-5m)`;
+            } else if (title.includes('RAMPARTS') || title.includes('HIGH')) {
+                targetPos = new THREE.Vector3(20, 6.0, 32);
+                promptText = `👑 [ E ] TELEPORT TO HIGH RAMPARTS (+6m)`;
+            } else if (title.includes('SURFACE') || title.includes('COURTYARD')) {
+                targetPos = new THREE.Vector3(0, 0, 16);
+                promptText = `☀️ [ E ] RETURN TO SURFACE COURTYARD (0m)`;
+            } else if (title.includes('FOG') || title.includes('BOSS') || title.includes('WARP') || title.includes('DESCEND')) {
+                targetPos = new THREE.Vector3(0, 0, 4135);
+                promptText = `⚔️ [ E ] TELEPORT TO BOSS FOG GATE (3600m)`;
+            } else if (title.includes('BRIDGE') || title.includes('ROYAL')) {
+                targetPos = new THREE.Vector3(0, 0, 4135);
+                promptText = `⚔️ [ E ] TELEPORT TO ROYAL BRIDGE FOG GATE (0m)`;
+            }
 
-        if (targetPos) {
-            this.interactables.push({
-                type: 'route_portal',
-                position: new THREE.Vector3(x, y, z),
-                radius: 4.8,
-                prompt: promptText,
-                targetPos: targetPos,
-                label: title
-            });
+            if (targetPos) {
+                this.interactables.push({
+                    type: 'route_portal',
+                    position: new THREE.Vector3(x, y, z),
+                    radius: 2.2, // Tight radius: player must walk right up to it, never triggers from walkway
+                    prompt: promptText,
+                    targetPos: targetPos,
+                    label: title
+                });
+            }
         }
 
         this.particles.push({
@@ -6653,11 +6655,11 @@ class DarkSoulsWorld {
         this.scene.add(group);
         this.discoveredWaystoneMesh = group;
 
-        // Register interactable
+        // Register interactable (tight radius: 2.2m so players passing nearby are never accidentally intercepted)
         this.interactables.push({
             type: 'discovered_waystone',
             position: new THREE.Vector3(x, y, z),
-            radius: 12.0,
+            radius: 2.2,
             prompt: `[ E ] TRAVEL TO ${loc.name.toUpperCase()} [ENTER]`,
             targetLocationId: loc.id
         });

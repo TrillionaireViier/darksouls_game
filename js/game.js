@@ -782,7 +782,7 @@ class DarkSoulsGame {
             const d = pPos.distanceTo(item.position);
             if (d <= item.radius) {
                 if (item.type === 'base_heal_teleport' || item.type === 'bonfire' || item.type === 'return_waystone') {
-                    // Full Heal & Base Teleport Sanctuary
+                    // Full Heal & Bonfire Rest (Safe checkpoint - never forcefully popup travel modal)
                     this.combat.restAtBonfire();
                     this.combat.hp = this.combat.maxHp;
                     this.combat.stamina = this.combat.maxStamina;
@@ -801,11 +801,12 @@ class DarkSoulsGame {
                     if (this.world && this.world.spawnHitSparks && this.playerMesh) {
                         this.world.spawnHitSparks(this.playerMesh.position, true);
                     }
-                    this.showNotification("✨ SANCTUARY HEALED FULL HP & TELEPORT READY!");
-                    this.openLocationsModal();
+                    this.showNotification("🔥 BONFIRE RESTED: FULL HP & ESTUS RESTORED • SAFE CHECKPOINT");
                     return;
                 } else if (item.type === 'discovered_waystone') {
-                    this.travelToLocation(item.targetLocationId, true);
+                    if (d <= 2.5) {
+                        this.travelToLocation(item.targetLocationId, true);
+                    }
                     return;
                 } else if (item.type === 'torch_sconce') {
                     if (!item.isLit) {
@@ -823,6 +824,11 @@ class DarkSoulsGame {
                     this.openMerchantModal(item.merchantId);
                     return;
                 } else if (item.type === 'route_portal') {
+                    // Safety guard: NEVER teleport player if walking along the central courtyard promenade / viaduct
+                    if (Math.abs(pPos.x) <= 25 && pPos.z >= 0 && pPos.z <= 600) {
+                        this.showNotification("🚶 CENTRAL WALKWAY: PROCEED ON FOOT ACROSS THE ROYAL VIADUCT");
+                        return;
+                    }
                     this.teleportPlayer(item.targetPos.x, item.targetPos.y, item.targetPos.z, item.label);
                     return;
                 } else if (item.type === 'fog_gate' && !this.world.fogTraversed) {
@@ -3519,13 +3525,13 @@ class DarkSoulsGame {
             this.triggerLocationUnlockedBanner(targetLoc);
         }
 
-        // Spawn in-world physical golden waystone archway in arena
+        // Spawn in-world physical golden waystone archway in arena (placed safely on side plinth, keeping main corridor open)
         if (this.world && this.world.spawnDiscoveredWaystone && targetLoc) {
             const pPos = this.playerMesh ? this.playerMesh.position : { x: 0, y: 0, z: 0 };
             if (pPos.y <= -3.5) {
-                this.world.spawnDiscoveredWaystone(-20, -5.0, 125, targetLoc);
+                this.world.spawnDiscoveredWaystone(-35, -5.0, 125, targetLoc);
             } else {
-                this.world.spawnDiscoveredWaystone(0, 0, 154, targetLoc);
+                this.world.spawnDiscoveredWaystone(38, 0, 154, targetLoc);
             }
         }
 
@@ -4022,7 +4028,7 @@ class DarkSoulsGame {
                 const locs = window.DARK_SOULS_LOCATIONS || [];
                 const targetLoc = locs.find(l => l.id === (def ? def.unlockLocationId : 'undead_asylum'));
                 if (targetLoc && this.world && this.world.spawnDiscoveredWaystone) {
-                    this.world.spawnDiscoveredWaystone(0, 0, 154, targetLoc);
+                    this.world.spawnDiscoveredWaystone(38, 0, 154, targetLoc);
                 }
                 if (this.world && this.world.spawnArenaBonfire) {
                     this.world.spawnArenaBonfire(0, 0, 345);
