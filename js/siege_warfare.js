@@ -222,8 +222,8 @@ class SiegeWarfareSystem {
         const dmg = Math.round(this.trebuchet.counterweightKg * 1.85);
 
         // Screen shake
-        if (this.game.camera) {
-            this.game.triggerCameraShake(0.8, 14);
+        if (this.game && this.game.shakeCamera) {
+            this.game.shakeCamera(0.8, 0.25);
         }
 
         // Damage Boss or enemies
@@ -271,7 +271,7 @@ class SiegeWarfareSystem {
             const ramDamage = 220 + this.batteringRam.syncScore * 40;
             this.batteringRam.gateIntegrity = Math.max(0, this.batteringRam.gateIntegrity - ramDamage);
             if (this.game) {
-                this.game.triggerCameraShake(0.5, 9);
+                if (this.game.shakeCamera) this.game.shakeCamera(0.5, 0.18);
                 this.game.showNotification("⚡ PERFECT RAM HEAVE! -" + ramDamage + " GATE INTEGRITY! (Sync x" + this.batteringRam.syncScore + ")");
             }
         } else if (isGoodRhythm) {
@@ -493,7 +493,7 @@ class SiegeWarfareSystem {
 
         if (this.audio) this.audio.playBossSlam();
         if (this.game) {
-            this.game.triggerCameraShake(0.7, 12);
+            if (this.game.shakeCamera) this.game.shakeCamera(0.7, 0.22);
             this.game.showNotification("🏰 SIEGE TOWER DOCKED! Heavy Drawbridge dropped onto battlements!");
         }
     }
@@ -530,7 +530,7 @@ class SiegeWarfareSystem {
         // Apply temporary defense & stamina buffs to player combat
         if (this.game && this.game.combat) {
             this.game.combat.staminaRegenRate = 38 * (1.0 + this.warHorn.staminaRegenBonus);
-            this.game.triggerCameraShake(0.3, 6);
+            if (this.game.shakeCamera) this.game.shakeCamera(0.3, 0.15);
             this.game.showNotification("📯 WAR HORN SOUNDED! +45% Defense & +60% Stamina Regen for 30s!");
         }
 

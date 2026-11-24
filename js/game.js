@@ -3290,6 +3290,11 @@ class DarkSoulsGame {
         this.shakeDuration = duration;
     }
 
+    triggerCameraShake(intensity, frames) {
+        const dur = (frames && frames > 0) ? (frames / 60) : 0.3;
+        this.shakeCamera(intensity || 0.3, dur);
+    }
+
     flashDamageScreen() {
         if (!this.ui.damageFlash) return;
         this.ui.damageFlash.style.opacity = '0.75';
