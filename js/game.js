@@ -10,7 +10,7 @@ class DarkSoulsGame {
 
         // Three.js Core
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 12000);
+        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 35000);
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             powerPreference: 'high-performance'
@@ -100,8 +100,8 @@ class DarkSoulsGame {
         this.playerMesh.position.set(0, 0, 5); // Courtyard start near bonfire
         this.playerMesh.rotation.y = Math.PI; // Face forward into Lordran towards bonfire
         this.playerVelocity = new THREE.Vector3();
-        this.moveSpeed = 10.0;
-        this.sprintSpeed = 22.0;
+        this.moveSpeed = 15.0;
+        this.sprintSpeed = 35.0;
 
         // Player Local Warm Lantern Fill (Soft subtle aura around character)
         this.playerLantern = new THREE.PointLight(0xffecd0, 0.75, 22, 1.0);
@@ -3403,8 +3403,8 @@ class DarkSoulsGame {
     }
 
     warpToArena() {
-        // Warp player inside the 3x lengthened 2,800m colosseum arena past fog gate (z = 1385)
-        this.playerMesh.position.set(0, 0, 1385);
+        // Warp player inside the 3x lengthened 8,400m colosseum arena past fog gate (z = 4145)
+        this.playerMesh.position.set(0, 0, 4145);
         this.cameraYaw = 0;
         this.cameraPitch = 0.28;
         this.showNotification("WARPED TO THE GRAND BOSS COLOSSEUM");
@@ -5433,11 +5433,11 @@ window.DARK_SOULS_LOCATIONS = [
     { id: 'loc_blighted_mangrove', name: "Blighted Mangrove - Toxic Stilt Village", zone: "Blighted Mangrove", pos: [-550, -6.0, -200], elev: '-6m', danger: 'Tier IV (Severe)', boss: "Rot Mother & Mire Dwellers", desc: "Creaking wooden walkways elevated above a toxic green morass and hanging iron gibbets.", light: 0.70 },
     { id: 'loc_crystal_grotto_seath', name: "The Crystal Grotto of Seath - Prismatic Core", zone: "Crystal Grotto", pos: [-350, -8.0, 750], elev: '-8m', danger: 'Tier V (Legendary)', boss: "Seath's Primeval Crystal", desc: "Subterranean cavern bristling with towering glintstone prisms and shimmering celestial mist.", light: 1.05 },
     { id: 'loc_sun_palace_ruins', name: "Ruins of the Sunken Sun Palace - Solar Colonnade", zone: "Sun Palace", pos: [400, 3.0, -550], elev: '+3m', danger: 'Tier III (Advanced)', boss: "Solar Avatar of Gwyn", desc: "Shattered golden marble colonnades bathed in eternal daylight around an ancient solar dial.", light: 1.35 },
-    { id: 'loc_abyssal_rift_maw', name: "The Abyssal Rift - Void Maw of the Deep", zone: "The Abyssal Rift", pos: [0, -12.0, 4500], elev: '-12m', danger: 'Tier V (Legendary)', boss: "Primeval Dark Incarnation", desc: "Cosmic sunken crater beyond the throne gate where matter dissolves into dark humanity.", light: 0.35 },
+    { id: 'loc_abyssal_rift_maw', name: "The Abyssal Rift - Void Maw of the Deep", zone: "The Abyssal Rift", pos: [0, -12.0, 13500], elev: '-12m', danger: 'Tier V (Legendary)', boss: "Primeval Dark Incarnation", desc: "Cosmic sunken crater beyond the throne gate where matter dissolves into dark humanity.", light: 0.35 },
     { id: 'loc_grand_necropolis', name: "The Grand Necropolis of the First Lords - Avenue of Tombs", zone: "Grand Necropolis", pos: [-850, 0.0, 0], elev: '0m', danger: 'Tier IV (Severe)', boss: "Tomb Wardens of the First Pyre", desc: "Monumental avenue of stone mausoleums, towering granite obelisks, and rows of soul lanterns.", light: 0.90 },
 
     { id: 'ds1_undead_burg_outskirts', name: "Undead Burg Outskirts - Cliffside Dragon Chasm", zone: "Undead Burg Outskirts", pos: [-52, -2.0, 18], elev: '-2m', danger: 'Tier IV (Severe)', boss: "Hellkite Drake & Cliffside Sentinels", desc: "A vast windswept cliffside terrace outside the citadel fortress walls overlooking the bottomless mountain chasm.", light: 1.25 },
-    { id: 'royal_bridge_arena', name: 'Royal Bridge - Grand Citadel Arena (Hub)', zone: 'Royal Citadel', pos: [0, 0, 780], elev: '0m', danger: 'Sanctuary & War Arena (Hub)', boss: 'Arena Colosseum', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and the nexus bonfire.', light: 1.10 },
+    { id: 'royal_bridge_arena', name: 'Royal Bridge - Grand Citadel Arena (Hub)', zone: 'Royal Citadel', pos: [0, 0, 2340], elev: '0m', danger: 'Sanctuary & War Arena (Hub)', boss: 'Arena Colosseum', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and the nexus bonfire.', light: 1.10 },
     { id: 'firelink_shrine', name: 'Firelink Shrine - Ruined Bonfire', zone: 'Firelink Shrine', pos: [0, 0, 5], elev: '0m', danger: 'Sanctuary (Safe)', boss: 'None (Crestfallen Warrior)', desc: 'The historic nexus of Lordran where weary pilgrims gather around the warm embers of the bonfire.', light: 1.10 },
     { id: 'undead_parish_altar', name: 'Undead Parish - Sunlit Altar', zone: 'Undead Parish', pos: [4, 0, 40], elev: '0m', danger: 'Tier II (Moderate)', boss: 'Armored Fang Boar', desc: 'The shattered altar of the Warriors of Sunlight bathed in the golden radiance of the ancient sun.', light: 1.25 },
     { id: 'high_ramparts_watchtower', name: 'High Ramparts - Solar Overlook', zone: 'High Ramparts', pos: [24, 6.0, 35], elev: '+6m', danger: 'Tier II (Moderate)', boss: 'Knight Solaire', desc: 'The elevated eastern battlements where Knight Solaire gazes upon his incandescent sun.', light: 1.25 },
