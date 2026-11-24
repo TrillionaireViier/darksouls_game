@@ -99,6 +99,7 @@ class DarkSoulsGame {
         this.playerMesh = this.charFactory.createPlayer();
         this.playerMesh.position.set(0, 0, 5); // Courtyard start near bonfire
         this.playerMesh.rotation.y = Math.PI; // Face forward into Lordran towards bonfire
+        this.lastBonfirePos = new THREE.Vector3(0, 0, 5); // Safe Firelink Bonfire starting hub checkpoint
         this.playerVelocity = new THREE.Vector3();
         this.cheatSuperRun = (localStorage.getItem('ds_cheat_super_run') === 'true');
         this.moveSpeed = this.cheatSuperRun ? 45.0 : 15.0;
@@ -783,6 +784,7 @@ class DarkSoulsGame {
             if (d <= item.radius) {
                 if (item.type === 'base_heal_teleport' || item.type === 'bonfire' || item.type === 'return_waystone') {
                     // Full Heal & Bonfire Rest (Safe checkpoint - never forcefully popup travel modal)
+                    this.lastBonfirePos = this.playerMesh.position.clone();
                     this.combat.restAtBonfire();
                     this.combat.hp = this.combat.maxHp;
                     this.combat.stamina = this.combat.maxStamina;
@@ -3777,13 +3779,22 @@ class DarkSoulsGame {
         this.combat.stamina = this.combat.maxStamina;
         this.combat.estusFlasks = this.combat.maxEstus;
 
-        // Reset position to last rested bonfire / Arena Bonfire (0, 0, 134) avoiding the long 140m run from (0, 0, 5)
+        // Reset position to last rested bonfire / Firelink Hub (0, 0, 5) - NEVER spawn directly into the boss arena
         if (this.lastBonfirePos) {
             this.playerMesh.position.copy(this.lastBonfirePos);
-        } else if (this.world && this.world.arenaBonfireGroup) {
-            this.playerMesh.position.set(0, 0, 330);
         } else {
-            this.playerMesh.position.set(0, 0, 330);
+            this.playerMesh.position.set(0, 0, 5);
+        }
+
+        // Reset boss aggro so it does not attack across the world
+        if (this.combat && this.combat.boss) {
+            this.combat.boss.state = 'IDLE';
+            if (this.combat.boss.mesh && this.combat.boss.spawnPos) {
+                this.combat.boss.mesh.position.set(this.combat.boss.spawnPos.x, 0, this.combat.boss.spawnPos.z);
+            }
+        }
+        if (this.ui && this.ui.bossHud) {
+            this.ui.bossHud.style.display = 'none';
         }
 
         if (this.playerVelocity) this.playerVelocity.set(0, 0, 0);
