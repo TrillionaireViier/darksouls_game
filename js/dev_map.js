@@ -600,7 +600,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -850, -350, 822, 700, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -900, -420, 872, 840, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -625,6 +625,14 @@
                 this.drawZoneRect(ctx, -750, 0, 40, 40, "rgba(40, 10, 65, 0.65)", "#a855f7", "🐉 RINGED CITY MIDIR CHASM (-10m)");
                 this.drawZoneRect(ctx, -690, 220, 40, 40, "rgba(50, 10, 20, 0.65)", "#06b6d4", "🌕 NIGHTMARE CORPSE-RIVER (-3m)");
                 this.drawZoneRect(ctx, -730, -160, 40, 40, "rgba(55, 15, 60, 0.65)", "#e879f9", "🕰️ ASTRAL CLOCKTOWER BALCONY (+14m)");
+                this.drawZoneRect(ctx, -800, -120, 40, 40, "rgba(65, 15, 10, 0.65)", "#ef4444", "🌋 JAGGED PEAK TYRANT SUMMIT (+22m)");
+                this.drawZoneRect(ctx, -820, 160, 40, 40, "rgba(10, 40, 55, 0.65)", "#06b6d4", "🌊 FISHING HAMLET ORPHAN COAST (-8m)");
+                this.drawZoneRect(ctx, -840, -300, 40, 40, "rgba(60, 25, 10, 0.65)", "#f97316", "🔥 KILN OF FIRST FLAME DAIS (+4m)");
+                this.drawZoneRect(ctx, -780, -340, 40, 40, "rgba(45, 50, 55, 0.65)", "#94a3b8", "🪨 ASH LAKE PRIMEVAL HOLLOW (-12m)");
+                this.drawZoneRect(ctx, -860, -180, 40, 40, "rgba(45, 10, 60, 0.65)", "#a855f7", "🌌 ASTEL VOID GROTTO CLOISTER (-15m)");
+                this.drawZoneRect(ctx, -810, 260, 40, 40, "rgba(25, 40, 65, 0.65)", "#60a5fa", "👑 CAINHURST FROZEN SPIRE (+18m)");
+                this.drawZoneRect(ctx, -830, 60, 40, 40, "rgba(60, 40, 10, 0.65)", "#f59e0b", "🏯 FOUNTAINHEAD SACRED WATERWAY (+8m)");
+                this.drawZoneRect(ctx, -780, 360, 40, 40, "rgba(50, 45, 20, 0.65)", "#eab308", "🛡️ SEN'S SKYWARD IRON RAMPART (+14m)");
             }
 
             // 3. Draw All World Pins

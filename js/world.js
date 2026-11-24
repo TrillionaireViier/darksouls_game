@@ -848,8 +848,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-880, -28], z in [-580, 580]
-        if (x >= -880 && x <= -28 && z >= -580 && z <= 580) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-920, -28], z in [-580, 580]
+        if (x >= -920 && x <= -28 && z >= -580 && z <= 580) {
+            // 8 Brand-New Monumental Outside Realm Expeditions (V47 Expansion)
+            // 1. Jagged Peak Summit & Bayle's Dragonheart Roar (outside_jagged_peak_tyrant_summit) (elev: +22.0m)
+            if (x >= -825 && x <= -735 && z >= -145 && z <= -55) {
+                return 22.0;
+            }
+            // 2. Fishing Hamlet Coast of the Orphan (outside_fishing_hamlet_orphan_coast) (elev: -8.0m)
+            if (x >= -845 && x <= -755 && z >= 135 && z <= 225) {
+                return -8.0;
+            }
+            // 3. Kiln of the First Flame & Cinder Ash Dais (outside_kiln_soul_of_cinder_dais) (elev: +4.0m)
+            if (x >= -865 && x <= -775 && z >= -325 && z <= -235) {
+                return 4.0;
+            }
+            // 4. Ash Lake Primeval Stone Dragon Hollow (outside_ash_lake_everlasting_hollow) (elev: -12.0m)
+            if (x >= -805 && x <= -715 && z >= -365 && z <= -275) {
+                return -12.0;
+            }
+            // 5. Grand Cloister of the Lake of Rot & Astel Void Maw (outside_astel_naturalborn_void_cloister) (elev: -15.0m)
+            if (x >= -885 && x <= -795 && z >= -205 && z <= -115) {
+                return -15.0;
+            }
+            // 6. Cainhurst Frozen Royal Throne (outside_cainhurst_martyr_logarius_throne) (elev: +18.0m)
+            if (x >= -835 && x <= -745 && z >= 235 && z <= 325) {
+                return 18.0;
+            }
+            // 7. Fountainhead Sacred Palace Waterway (outside_true_corrupted_monk_palace) (elev: +8.0m)
+            if (x >= -855 && x <= -765 && z >= 35 && z <= 125) {
+                return 8.0;
+            }
+            // 8. Sen's Fortress Skyward Iron Golem Rampart (outside_sens_iron_golem_rampart) (elev: +14.0m)
+            if (x >= -805 && x <= -715 && z >= 335 && z <= 425) {
+                return 14.0;
+            }
             // 8 Brand-New Outside Realm Apex Expeditions (V41 Expansion)
             // 1. Haligtree Roots of Rotting Aeonia (outside_haligtree_aeonia_roots) (elev: -4.0m)
             if (x >= -685 && x <= -595 && z >= -225 && z <= -135) {
@@ -3718,6 +3751,9 @@ class DarkSoulsWorld {
         // Build 10 Brand-New Megaterritory Locations across the 8x Scaled Realm
         this.buildTenNewLocations(outsideGroup);
 
+        // Build 8 Brand-New Monumental Outside Realm Expeditions (V47 Expansion)
+        this.buildEightMonumentalOutsideExpeditions(outsideGroup);
+
         this.scene.add(outsideGroup);
     }
 
@@ -4081,6 +4117,326 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-865, 0.0, 0, 0xe2e8f0, 5.5, 38);
         this.createPathBeacon(-850, 0.0, 0, 0xe2e8f0, "⚰️ THE GRAND NECROPOLIS OF THE FIRST LORDS [ELEV 0m]", "MONUMENTAL MAUSOLEUMS • GRANITE OBELISK & FIRST PYRE TOMB WARDENS", "#f1f5f9");
         this.createFloorSoapstone(-850, 0.0, 15, "#e2e8f0", "⚰️ GRAND NECROPOLIS", "Here rest the legendary monarchs of the First Age of Fire");
+    }
+
+    buildEightMonumentalOutsideExpeditions(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW MONUMENTAL OUTSIDE REALM EXPEDITIONS (V47 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. JAGGED PEAK SUMMIT & BAYLE'S DRAGONHEART ROAR ([-780, 22.0, -100])
+        // --------------------------------------------------------------------
+        const baylePlat = new THREE.Mesh(new THREE.CylinderGeometry(56, 70, 44, 20), this.cliffRockMat);
+        baylePlat.position.set(-780, 0, -100);
+        outsideGroup.add(baylePlat);
+
+        const bayleCrater = new THREE.Mesh(new THREE.CylinderGeometry(42, 42, 0.5, 24), new THREE.MeshStandardMaterial({
+            color: 0x1c0606, roughness: 0.9, metalness: 0.2
+        }));
+        bayleCrater.position.set(-780, 22.1, -100);
+        bayleCrater.receiveShadow = true;
+        outsideGroup.add(bayleCrater);
+
+        // Boiling Jagged Magma Core Pool
+        const bayleMagma = new THREE.Mesh(new THREE.CylinderGeometry(24, 24, 0.3, 20), new THREE.MeshStandardMaterial({
+            color: 0xff2200, emissive: 0xdd1100, emissiveIntensity: 1.8, roughness: 0.1
+        }));
+        bayleMagma.position.set(-780, 22.25, -100);
+        outsideGroup.add(bayleMagma);
+
+        // 6 Jagged Basalt Dragon Horn Spires
+        for (let j = 0; j < 6; j++) {
+            const jang = (j / 6) * Math.PI * 2;
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(2.2, 16.0, 5), this.cliffRockMat);
+            spire.position.set(-780 + Math.cos(jang) * 32, 28.0, -100 + Math.sin(jang) * 32);
+            spire.rotation.z = Math.cos(jang) * 0.35;
+            spire.rotation.x = Math.sin(jang) * 0.35;
+            outsideGroup.add(spire);
+        }
+
+        const bayleLight = new THREE.PointLight(0xff3300, 5.2, 55.0);
+        bayleLight.position.set(-780, 26.0, -100);
+        outsideGroup.add(bayleLight);
+
+        this.createStandingBrazier(-765, 22.0, -100, 0xff3300, 5.5, 36);
+        this.createStandingBrazier(-795, 22.0, -100, 0xff3300, 5.5, 36);
+        this.createPathBeacon(-780, 22.0, -100, 0xff3300, "🌋 JAGGED PEAK SUMMIT & BAYLE'S ROAR [ELEV +22.0m]", "BAYLE THE DREAD TYRANT • CRACKED BASALT SPIRES & PRIMORDIAL SCARLET LIGHTNING", "#fca5a5");
+        this.createFloorSoapstone(-780, 22.0, -85, "#ff3300", "🌋 JAGGED PEAK SUMMIT", "Curse you, Bayle! The dread tyrant dragon of the fiery summit reigns");
+
+        // --------------------------------------------------------------------
+        // 2. FISHING HAMLET COAST OF THE ORPHAN ([-800, -8.0, 180])
+        // --------------------------------------------------------------------
+        const hamletPlat = new THREE.Mesh(new THREE.CylinderGeometry(60, 68, 16, 24), this.cliffRockMat);
+        hamletPlat.position.set(-800, -16, 180);
+        outsideGroup.add(hamletPlat);
+
+        // Submerged Shallow Turquoise Coastal Tide Pool
+        const tidePool = new THREE.Mesh(new THREE.CylinderGeometry(52, 52, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x0891b2, emissive: 0x0e7490, emissiveIntensity: 0.6, roughness: 0.1, transparent: true, opacity: 0.85
+        }));
+        tidePool.position.set(-800, -7.9, 180);
+        outsideGroup.add(tidePool);
+
+        // 5 Weathered Whale Bone Arch Totems
+        for (let w = 0; w < 5; w++) {
+            const wang = (w / 5) * Math.PI * 2;
+            const boneArch = new THREE.Mesh(new THREE.TorusGeometry(8.5, 0.7, 6, 16, Math.PI), this.dragonBoneMat || this.stoneMat);
+            boneArch.position.set(-800 + Math.cos(wang) * 26, -8.0, 180 + Math.sin(wang) * 26);
+            boneArch.rotation.y = wang;
+            outsideGroup.add(boneArch);
+        }
+
+        // Eldritch Sea Snail Altar Shell
+        const seaAltar = new THREE.Mesh(new THREE.DodecahedronGeometry(3.2), new THREE.MeshStandardMaterial({
+            color: 0x22d3ee, emissive: 0x0891b2, emissiveIntensity: 0.9, roughness: 0.3
+        }));
+        seaAltar.position.set(-800, -5.5, 180);
+        outsideGroup.add(seaAltar);
+
+        const orphanLight = new THREE.PointLight(0x06b6d4, 4.8, 48.0);
+        orphanLight.position.set(-800, -4.0, 180);
+        outsideGroup.add(orphanLight);
+
+        this.createStandingBrazier(-785, -8.0, 180, 0x06b6d4, 5.0, 32);
+        this.createStandingBrazier(-815, -8.0, 180, 0x06b6d4, 5.0, 32);
+        this.createPathBeacon(-800, -8.0, 180, 0x06b6d4, "🌊 FISHING HAMLET COAST OF THE ORPHAN [ELEV -8.0m]", "ORPHAN OF KOS • ASTRAL TIDE SHELF • DEEP SEA FISHMAN PRIESTS", "#a5f3fc");
+        this.createFloorSoapstone(-800, -8.0, 195, "#06b6d4", "🌊 FISHING HAMLET COAST", "Byrgenwerth... Byrgenwerth... Blasphemous murderers, blood-crazed fiends");
+
+        // --------------------------------------------------------------------
+        // 3. KILN OF THE FIRST FLAME & CINDER ASH DAIS ([-820, 4.0, -280])
+        // --------------------------------------------------------------------
+        const kilnPlat = new THREE.Mesh(new THREE.CylinderGeometry(58, 65, 8, 24), this.cliffRockMat);
+        kilnPlat.position.set(-820, 0, -280);
+        outsideGroup.add(kilnPlat);
+
+        const kilnAshFloor = new THREE.Mesh(new THREE.CylinderGeometry(52, 52, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x27272a, roughness: 0.95, metalness: 0.2
+        }));
+        kilnAshFloor.position.set(-820, 4.1, -280);
+        kilnAshFloor.receiveShadow = true;
+        outsideGroup.add(kilnAshFloor);
+
+        // Colossal Coiled Firelink Sword Monolith in Central Ash Pyre
+        const firelinkHilt = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 11.0, 8), new THREE.MeshStandardMaterial({
+            color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 1.8, metalness: 0.9, roughness: 0.2
+        }));
+        firelinkHilt.position.set(-820, 9.5, -280);
+        firelinkHilt.rotation.z = 0.25;
+        outsideGroup.add(firelinkHilt);
+
+        // 4 Slanted Black Monolith Slabs
+        for (let m = 0; m < 4; m++) {
+            const mang = (m / 4) * Math.PI * 2;
+            const slab = new THREE.Mesh(new THREE.BoxGeometry(4.0, 15.0, 1.8), this.darkSteelMat || this.stoneMat);
+            slab.position.set(-820 + Math.cos(mang) * 28, 9.0, -280 + Math.sin(mang) * 28);
+            slab.rotation.y = mang;
+            slab.rotation.x = 0.22;
+            outsideGroup.add(slab);
+        }
+
+        const cinderLight = new THREE.PointLight(0xff6600, 5.0, 52.0);
+        cinderLight.position.set(-820, 9.0, -280);
+        outsideGroup.add(cinderLight);
+
+        this.createStandingBrazier(-805, 4.0, -280, 0xff6600, 5.5, 36);
+        this.createStandingBrazier(-835, 4.0, -280, 0xff6600, 5.5, 36);
+        this.createPathBeacon(-820, 4.0, -280, 0xff6600, "🔥 KILN OF THE FIRST FLAME & CINDER DAIS [ELEV +4.0m]", "SOUL OF CINDER • COILED SWORD ASH PYRE • BLACK KNIGHT ANNIHILATORS", "#fed7aa");
+        this.createFloorSoapstone(-820, 4.0, -265, "#ff6600", "🔥 KILN OF THE FIRST FLAME", "The Fire fades and the Lords go without thrones");
+
+        // --------------------------------------------------------------------
+        // 4. ASH LAKE PRIMEVAL STONE DRAGON HOLLOW ([-760, -12.0, -320])
+        // --------------------------------------------------------------------
+        const ashLakePlat = new THREE.Mesh(new THREE.CylinderGeometry(62, 70, 24, 24), this.cliffRockMat);
+        ashLakePlat.position.set(-760, -24, -320);
+        outsideGroup.add(ashLakePlat);
+
+        const whiteSandFloor = new THREE.Mesh(new THREE.CylinderGeometry(55, 55, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0xe2e8f0, roughness: 0.95
+        }));
+        whiteSandFloor.position.set(-760, -11.9, -320);
+        whiteSandFloor.receiveShadow = true;
+        outsideGroup.add(whiteSandFloor);
+
+        // 3 Colossal Primeval Archtree Trunks (Surrounding the Dais)
+        [[-795, -345], [-725, -345], [-760, -285]].forEach(([atx, atz]) => {
+            const archtree = new THREE.Mesh(new THREE.CylinderGeometry(8.0, 10.0, 48.0, 16), this.cliffRockMat);
+            archtree.position.set(atx, 8.0, atz);
+            outsideGroup.add(archtree);
+        });
+
+        // Ancient Dragon Stone Effigy Altar
+        const dragonEffigy = new THREE.Mesh(new THREE.ConeGeometry(3.6, 9.0, 6), this.stoneMat);
+        dragonEffigy.position.set(-760, -8.0, -320);
+        outsideGroup.add(dragonEffigy);
+
+        const dragonLakeLight = new THREE.PointLight(0x94a3b8, 4.5, 48.0);
+        dragonLakeLight.position.set(-760, -7.0, -320);
+        outsideGroup.add(dragonLakeLight);
+
+        this.createStandingBrazier(-745, -12.0, -320, 0x94a3b8, 5.0, 32);
+        this.createStandingBrazier(-775, -12.0, -320, 0x94a3b8, 5.0, 32);
+        this.createPathBeacon(-760, -12.0, -320, 0x94a3b8, "🪨 ASH LAKE PRIMEVAL STONE DRAGON HOLLOW [ELEV -12.0m]", "EVERLASTING STONE DRAGON • PRIMEVAL ARCHTREE GROVE • STONE DISCIPLES", "#f1f5f9");
+        this.createFloorSoapstone(-760, -12.0, -305, "#94a3b8", "🪨 ASH LAKE HOLLOW", "Descendants of ancient dragons, untouched by death and disparity");
+
+        // --------------------------------------------------------------------
+        // 5. GRAND CLOISTER OF LAKE OF ROT & ASTEL VOID MAW ([-840, -15.0, -160])
+        // --------------------------------------------------------------------
+        const astelPlat = new THREE.Mesh(new THREE.CylinderGeometry(58, 68, 30, 24), this.cliffRockMat);
+        astelPlat.position.set(-840, -30, -160);
+        outsideGroup.add(astelPlat);
+
+        const voidGrottoFloor = new THREE.Mesh(new THREE.CylinderGeometry(52, 52, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x0b0717, roughness: 0.4, metalness: 0.8
+        }));
+        voidGrottoFloor.position.set(-840, -14.9, -160);
+        voidGrottoFloor.receiveShadow = true;
+        outsideGroup.add(voidGrottoFloor);
+
+        // Floating Purple Gravity Nebula Core
+        const nebulaCore = new THREE.Mesh(new THREE.SphereGeometry(4.8, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0x8b5cf6, emissive: 0x6d28d9, emissiveIntensity: 2.2, roughness: 0.1
+        }));
+        nebulaCore.position.set(-840, -8.0, -160);
+        outsideGroup.add(nebulaCore);
+
+        // Orbiting Cosmic Star Dust Ring
+        const starRing = new THREE.Mesh(new THREE.TorusGeometry(8.5, 0.25, 6, 24), new THREE.MeshStandardMaterial({
+            color: 0xc084fc, emissive: 0xa855f7, emissiveIntensity: 1.6
+        }));
+        starRing.position.set(-840, -8.0, -160);
+        starRing.rotation.x = 0.75;
+        outsideGroup.add(starRing);
+
+        const astelLight = new THREE.PointLight(0xa855f7, 5.2, 55.0);
+        astelLight.position.set(-840, -7.0, -160);
+        outsideGroup.add(astelLight);
+
+        this.createStandingBrazier(-825, -15.0, -160, 0xa855f7, 5.5, 34);
+        this.createStandingBrazier(-855, -15.0, -160, 0xa855f7, 5.5, 34);
+        this.createPathBeacon(-840, -15.0, -160, 0xa855f7, "🌌 GRAND CLOISTER & ASTEL VOID MAW [ELEV -15.0m]", "ASTEL NATURALBORN OF THE VOID • GRAVITY NEBULA CORE • KINDRED OF ROT PESTS", "#e9d5ff");
+        this.createFloorSoapstone(-840, -15.0, -145, "#a855f7", "🌌 VOID GROTTO CLOISTER", "A malformed star born in the flightless void that seized their stars");
+
+        // --------------------------------------------------------------------
+        // 6. CAINHURST FROZEN ROYAL THRONE ([-790, 18.0, 280])
+        // --------------------------------------------------------------------
+        const cainPlat = new THREE.Mesh(new THREE.CylinderGeometry(54, 66, 36, 24), this.cliffRockMat);
+        cainPlat.position.set(-790, 0, 280);
+        outsideGroup.add(cainPlat);
+
+        const snowTerrace = new THREE.Mesh(new THREE.CylinderGeometry(46, 46, 0.4, 24), new THREE.MeshStandardMaterial({
+            color: 0xf1f5f9, roughness: 0.75
+        }));
+        snowTerrace.position.set(-790, 18.1, 280);
+        snowTerrace.receiveShadow = true;
+        outsideGroup.add(snowTerrace);
+
+        // Grand Gothic Stone Throne of Martyr Logarius
+        const martyrThrone = new THREE.Mesh(new THREE.BoxGeometry(4.5, 7.0, 3.5), this.stoneMat);
+        martyrThrone.position.set(-790, 21.5, 298);
+        outsideGroup.add(martyrThrone);
+
+        // 8 Crown Flying Astral Swords Monoliths
+        for (let cs = 0; cs < 8; cs++) {
+            const csAng = (cs / 8) * Math.PI * 2;
+            const swordMon = new THREE.Mesh(new THREE.ConeGeometry(0.35, 6.0, 4), new THREE.MeshStandardMaterial({
+                color: 0x93c5fd, emissive: 0x3b82f6, emissiveIntensity: 1.2, metalness: 0.9, roughness: 0.2
+            }));
+            swordMon.position.set(-790 + Math.cos(csAng) * 22, 23.0, 280 + Math.sin(csAng) * 22);
+            swordMon.rotation.x = Math.PI;
+            outsideGroup.add(swordMon);
+        }
+
+        const cainLight = new THREE.PointLight(0x60a5fa, 4.6, 50.0);
+        cainLight.position.set(-790, 22.0, 280);
+        outsideGroup.add(cainLight);
+
+        this.createStandingBrazier(-775, 18.0, 280, 0x60a5fa, 5.0, 34);
+        this.createStandingBrazier(-805, 18.0, 280, 0x60a5fa, 5.0, 34);
+        this.createPathBeacon(-790, 18.0, 280, 0x60a5fa, "👑 CAINHURST FROZEN ROYAL THRONE [ELEV +18.0m]", "MARTYR LOGARIUS • PERMAFROST BATTLEMENTS • CAINHURST VILEBLOOD GUARDS", "#bfdbfe");
+        this.createFloorSoapstone(-790, 18.0, 265, "#60a5fa", "👑 CAINHURST ROYAL THRONE", "Acts of goodness are not always wise, and acts of evil are not always foolish");
+
+        // --------------------------------------------------------------------
+        // 7. FOUNTAINHEAD SACRED PALACE WATERWAY ([-810, 8.0, 80])
+        // --------------------------------------------------------------------
+        const palacePlat = new THREE.Mesh(new THREE.BoxGeometry(72, 16, 72), this.cliffRockMat);
+        palacePlat.position.set(-810, 0, 80);
+        outsideGroup.add(palacePlat);
+
+        // Reflective Vermilion Water Pool
+        const palaceWater = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({
+            color: 0x0284c7, roughness: 0.1, metalness: 0.3, transparent: true, opacity: 0.8
+        }));
+        palaceWater.rotation.x = -Math.PI / 2;
+        palaceWater.position.set(-810, 8.1, 80);
+        outsideGroup.add(palaceWater);
+
+        // Vermilion Japanese Torii Gate
+        const toriiBeamTop = new THREE.Mesh(new THREE.BoxGeometry(22.0, 1.4, 1.4), new THREE.MeshStandardMaterial({
+            color: 0xef4444, roughness: 0.6
+        }));
+        toriiBeamTop.position.set(-810, 17.5, 80);
+        outsideGroup.add(toriiBeamTop);
+
+        [-8, 8].forEach(tx => {
+            const toriiCol = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.9, 9.0, 12), new THREE.MeshStandardMaterial({
+                color: 0xef4444, roughness: 0.6
+            }));
+            toriiCol.position.set(-810 + tx, 13.0, 80);
+            outsideGroup.add(toriiCol);
+        });
+
+        const monkLight = new THREE.PointLight(0xf59e0b, 4.8, 52.0);
+        monkLight.position.set(-810, 14.0, 80);
+        outsideGroup.add(monkLight);
+
+        this.createStandingBrazier(-795, 8.0, 80, 0xf59e0b, 5.0, 35);
+        this.createStandingBrazier(-825, 8.0, 80, 0xf59e0b, 5.0, 35);
+        this.createPathBeacon(-810, 8.0, 80, 0xf59e0b, "🏯 FOUNTAINHEAD SACRED WATERWAY [ELEV +8.0m]", "TRUE CORRUPTED MONK • VERMILION TORII GATE • OKAMI PALACE NOBLES", "#fde68a");
+        this.createFloorSoapstone(-810, 8.0, 65, "#f59e0b", "🏯 FOUNTAINHEAD PALACE", "The sacred waters of eternal youth flow beneath ancient cherry blossoms");
+
+        // --------------------------------------------------------------------
+        // 8. SEN'S FORTRESS SKYWARD IRON GOLEM RAMPART ([-760, 14.0, 380])
+        // --------------------------------------------------------------------
+        const sensPlat = new THREE.Mesh(new THREE.BoxGeometry(70, 28, 70), this.cliffRockMat);
+        sensPlat.position.set(-760, 0, 380);
+        outsideGroup.add(sensPlat);
+
+        const ironFloor = new THREE.Mesh(new THREE.BoxGeometry(64, 0.4, 64), new THREE.MeshStandardMaterial({
+            color: 0x1f2937, metalness: 0.85, roughness: 0.35
+        }));
+        ironFloor.position.set(-760, 14.1, 380);
+        ironFloor.receiveShadow = true;
+        outsideGroup.add(ironFloor);
+
+        // Giant Swinging Pendulum Blade Monument
+        const bladeShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 14.0, 8), this.darkSteelMat || this.stoneMat);
+        bladeShaft.position.set(-760, 22.0, 380);
+        outsideGroup.add(bladeShaft);
+
+        const pendBlade = new THREE.Mesh(new THREE.BoxGeometry(0.2, 5.5, 3.2), new THREE.MeshStandardMaterial({
+            color: 0x94a3b8, metalness: 0.95, roughness: 0.15
+        }));
+        pendBlade.position.set(-760, 17.0, 380);
+        outsideGroup.add(pendBlade);
+
+        // 4 Fortified Iron Ball Chutes
+        for (let ch = 0; ch < 4; ch++) {
+            const chAng = (ch / 4) * Math.PI * 2;
+            const chute = new THREE.Mesh(new THREE.BoxGeometry(3.5, 2.5, 12.0), this.darkSteelMat || this.stoneMat);
+            chute.position.set(-760 + Math.cos(chAng) * 26, 15.5, 380 + Math.sin(chAng) * 26);
+            chute.rotation.y = chAng;
+            outsideGroup.add(chute);
+        }
+
+        const sensLight = new THREE.PointLight(0xeab308, 5.0, 52.0);
+        sensLight.position.set(-760, 19.0, 380);
+        outsideGroup.add(sensLight);
+
+        this.createStandingBrazier(-745, 14.0, 380, 0xeab308, 5.5, 36);
+        this.createStandingBrazier(-775, 14.0, 380, 0xeab308, 5.5, 36);
+        this.createPathBeacon(-760, 14.0, 380, 0xeab308, "🛡️ SEN'S SKYWARD IRON RAMPART [ELEV +14.0m]", "COLOSSAL IRON GOLEM & TARKUS • PENDULUM BLADE • LIGHTNING MANSERPENTS", "#fef08a");
+        this.createFloorSoapstone(-760, 14.0, 365, "#eab308", "🛡️ SEN'S IRON RAMPART", "The deadly house of traps tests those who would reach the City of Gods");
     }
 
     buildSerpentSanctum() {

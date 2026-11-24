@@ -67,8 +67,8 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 249 Legendary Boss Roster
-Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 249 legendary bosses across all Soulsborne eras:
+### 🌲 Outside Realm Apex Bosses & 257 Legendary Boss Roster
+Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 257 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
 - **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Scorched Dragonbarrow
@@ -274,11 +274,21 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (527 Fast-Travel Locations & 69 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (545 Fast-Travel Locations & 69 Outside Zones)
 
 The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 61 bespoke Outside locations, 60 active mob patrols, and 14 apex Soulsborne lords:
 
-### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V41 Expansion)
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V47 Expansion)
+1. **Dreadflame Dragon Harvester**: Magma rock scales, spiked dragon bone shoulder pads, barbed dragon harpoon spear with glowing magma tip, and obsidian dragon bone shield.
+2. **Deep Sea Barnacle Fishman Priest**: Hunched amphibious aborigine with bioluminescent cyan dangling angler-lure stalk, dorsal fin crests, and weathered whalebone trident.
+3. **Black Knight Greatsword Annihilator**: Midnight blackened iron plate armor with red magma fissures, flared horned crest helm, and colossal Zweihander ultra-greatsword.
+4. **Archdragon Stone Disciple**: Ancient ascetic dragon warrior with hardened slate scales, four stone winglets on back, curling dragon horns, and dual petrified dragon tooth clubs.
+5. **Kindred of Rot Pest**: Multilegged segmented centipede carapace with six articulated clawed arms, pest-thread spear lance with glowing golden filaments, and mandible pincers.
+6. **Cainhurst Vileblood Royal Guard**: Polished mirror-silver fluted plate armor with crimson velvet cape, high gothic standing collar, slender rapier, and parrying main gauche dagger.
+7. **Okami Divine Palace Noble**: Serpentine floating aristocrat in royal violet and white silk kimono robes, carved wooden noh mask, and ornate curved naginata with water mist ribbons.
+8. **Serpent Guard Lightning Manserpent**: Muscular emerald-scaled serpent brute with spreading flared cobra hood, yellow serpentine slitted eyes, and bronze curved scimitar with lightning spark core.
+
+### 🌟 Previous Bespoke 3D Mob Archetypes (V41 Expansion)
 1. **Cleanrot Valkyrie Knight**: Slender golden-vermilion plate armor with winged helmet crest, flowing scarlet cape, slender Cleanrot rapier and golden winged scythe.
 2. **Divine Beast Dancing Lion Disciple**: Ornate horned storm beast mask with swirling mane, festive silk robes, and dual lightning cleaver daggers.
 3. **Alonne Shadow Samurai**: Pitch-black lacquered kabuto with gold crescent maedate, sode shoulder armor, flowing dark sash, and long curved nodachi katana.

@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261124_V46_COLOSSAL_8X_10_NEW_LOCATIONS';
+            var TARGET_BUILD = '20261124_V47_OUTSIDE_EXPANSION_8_LOCS_8_BOSSES_8_MOBS';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1751,7 +1751,7 @@
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
                 <button class="btn-icon-bar" onclick="openNPCsModal()" title="330 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (330)</span></button>
                 <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,078 3D Models: 340 Armors, 330 NPCs, 394 Mobs & 14 Outside Apex Bosses" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,078)</span></button>
-                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="249 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (249)</span></button>
+                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="257 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (257)</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" title="50 Legendary Soulsborne Weapons & Arsenal" style="border-color: #d4af37; color: #ffd778; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);">⚔️ <span class="btn-label-text">WEAPONS (50)</span></button>
                 <button class="btn-icon-bar" onclick="openRingsModal()" title="30 Legendary Soulsborne Rings & Talismans (4 Equip Slots)" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">💍 <span class="btn-label-text">RINGS (30)</span></button>
@@ -1761,7 +1761,7 @@
                 <button class="btn-icon-bar" onclick="openSunkenLiturgyModal()" title="The Sunken Liturgy • Dark Fantasy Debt Realm & Lore [L]" style="border-color: #ffaa33; color: #ffe0b2; font-weight: 800; background: rgba(60, 35, 10, 0.85); box-shadow: 0 0 14px rgba(255, 170, 51, 0.5);">⚖️ <span class="btn-label-text">SUNKEN LITURGY [L]</span></button>
                 <button class="btn-icon-bar" onclick="openDevMapModal()" title="Open God-Mode Interactive Dev Map & Radar [M]" style="border-color: #00ffaa; color: #a5ffbe; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">DEV MAP [M]</span></button>
                 <button class="btn-icon-bar" onclick="if(window.game)window.game.travelToLocation('outside_fallen_spaceship_bazaar')" title="Visit Fallen Starship 30 Merchants Bazaar [U]" style="border-color: #00f5ff; color: #a5f3fc; font-weight: 800; background: rgba(0, 45, 65, 0.85); box-shadow: 0 0 12px rgba(0, 245, 255, 0.45);">🛸 <span class="btn-label-text">STARSHIP [U]</span></button>
-                <button class="btn-icon-bar" onclick="openLocationsModal()" title="527 Warriors' Dream & Soulsborne Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (527)</span></button>
+                <button class="btn-icon-bar" onclick="openLocationsModal()" title="545 Warriors' Dream & Soulsborne Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (545)</span></button>
                 <button class="btn-icon-bar" onclick="teleportOrHighlightPath('outside')" title="Outside Realm: Darkroot Woods, Primeval Archtree & Dragon Plateau [O]" style="border-color: #2ecc71; color: #a8ffb2; font-weight: 800; background: rgba(20, 50, 30, 0.75); box-shadow: 0 0 12px rgba(46, 204, 113, 0.45);">🌲 <span class="btn-label-text">OUTSIDE [O]</span></button>
                 <button class="btn-icon-bar" id="btn-touch-toggle" onclick="toggleVirtualControls()" title="Toggle On-Screen Virtual Joystick & Buttons" style="border-color: #ffd700; color: #ffe680; font-weight: 700;">🕹️ <span class="btn-label-text">CONTROLS PAD</span></button>
                 <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
@@ -2059,7 +2059,7 @@
     <div id="compendium-300-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box" style="max-width: 780px; width: 92%; max-height: 88vh; display: flex; flex-direction: column;">
             <div class="modal-header" style="color: #ffd700; font-size: 1.3rem; letter-spacing: 2px;">
-                🗿 1,050 3D MODELS COMPENDIUM & BESTIARY
+                🗿 1,066 3D MODELS COMPENDIUM & BESTIARY
             </div>
             <p style="font-size: 0.85rem; color: #b8a896; line-height: 1.4; text-align: center; margin: 0 0 10px 0;">
                 340 Iconic Armors, 330 Legendary NPCs, and 330 Ferocious Mobs from Dark Souls, Bloodborne, Sekiro & Elden Ring. Spawn, Equip, or Challenge directly in Lordran!
@@ -2110,7 +2110,7 @@
 
             <!-- Search and Filter Bar -->
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;">
-                <input type="text" id="compendium-search-input" placeholder="🔍 Search 1,050 models by name, lore, weapon, or realm..." 
+                <input type="text" id="compendium-search-input" placeholder="🔍 Search 1,066 models by name, lore, weapon, or realm..." 
                        oninput="onCompendiumSearchInput(this.value)" 
                        style="flex: 1; min-width: 200px; padding: 8px 12px; background: rgba(15, 12, 10, 0.9); border: 1px solid #7c6848; color: #fff; font-family: 'Cinzel', serif; font-size: 0.82rem; border-radius: 4px; outline: none;">
                 <button class="btn-fight-boss" onclick="if(window.compendiumInstance)window.compendiumInstance.clearSpawned()" style="border-color: #ff6666; color: #ff9999; font-size: 0.72rem; padding: 7px 10px;">🧹 CLEAR SPAWNED</button>
@@ -2118,7 +2118,7 @@
 
             <!-- Category Tabs -->
             <div style="display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px;">
-                <button class="btn-icon-bar compendium-tab-btn active" data-category="ALL" onclick="filterCompendiumCategory('ALL')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">ALL (1,050)</button>
+                <button class="btn-icon-bar compendium-tab-btn active" data-category="ALL" onclick="filterCompendiumCategory('ALL')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">ALL (1,066)</button>
                 <button class="btn-icon-bar compendium-tab-btn" data-category="ARMOR" onclick="filterCompendiumCategory('ARMOR')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">🛡️ ARMORS (340)</button>
                 <button class="btn-icon-bar compendium-tab-btn" data-category="NPC" onclick="filterCompendiumCategory('NPC')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #00ffaa; color: #a5ffbe;">🧙 NPCS (330)</button>
                 <button class="btn-icon-bar compendium-tab-btn" data-category="MOB" onclick="filterCompendiumCategory('MOB')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ff5555; color: #ffaaaa;">👹 MOBS (380)</button>
@@ -4535,6 +4535,110 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('outside_lady_maria')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 250: Bayle the Dread, Tyrant of Jagged Peak (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_bayle_the_dread_tyrant">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌋</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">250. BAYLE THE DREAD, TYRANT OF JAGGED PEAK</div>
+                            <div class="boss-card-desc">Jagged Peak Summit &bull; Shattered Basalt Wings, Magma Maw & Primordial Scarlet Lightning</div>
+                            <div class="boss-card-stats">HP: 65,000 &bull; REWARD: 5,500,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_bayle_the_dread_tyrant')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 251: Orphan of Kos, Child of Astral Ocean (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_orphan_of_kos">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌊</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">251. ORPHAN OF KOS, CHILD OF THE ASTRAL OCEAN</div>
+                            <div class="boss-card-desc">Fishing Hamlet Coast &bull; Petrified Placenta Greatblade & Cosmic Nightmare Wings</div>
+                            <div class="boss-card-stats">HP: 60,000 &bull; REWARD: 5,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_orphan_of_kos')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 252: Soul of Cinder, Avatar of First Lords (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_soul_of_cinder_avatar">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">252. SOUL OF CINDER, AVATAR OF THE FIRST LORDS</div>
+                            <div class="boss-card-desc">Kiln of the First Flame &bull; Coiled Firelink Sword, Sunken Darksign & Shifting Lord Stances</div>
+                            <div class="boss-card-stats">HP: 68,000 &bull; REWARD: 6,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_soul_of_cinder_avatar')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 253: The Everlasting Stone Dragon (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_everlasting_stone_dragon">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🪨</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">253. THE EVERLASTING STONE DRAGON</div>
+                            <div class="boss-card-desc">Ash Lake Primeval Hollow &bull; Indestructible Stone Scales, Four Archaic Wings & Dragon Eye</div>
+                            <div class="boss-card-stats">HP: 72,000 &bull; REWARD: 6,500,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_everlasting_stone_dragon')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 254: Astel, Naturalborn of the Void (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_astel_naturalborn_void">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌌</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">254. ASTEL, NATURALBORN OF THE VOID</div>
+                            <div class="boss-card-desc">Grand Cloister Void Maw &bull; Malformed Dragonfly Carapace, Star-Skull & Gravitational Waves</div>
+                            <div class="boss-card-stats">HP: 58,000 &bull; REWARD: 4,800,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_astel_naturalborn_void')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 255: Martyr Logarius, King of Executioners (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_martyr_logarius">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👑</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">255. MARTYR LOGARIUS, KING OF EXECUTIONERS</div>
+                            <div class="boss-card-desc">Cainhurst Frozen Throne &bull; Crown of Illusions, Blood Scythe & Flying Astral Daggers</div>
+                            <div class="boss-card-stats">HP: 55,000 &bull; REWARD: 4,500,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_martyr_logarius')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 256: True Corrupted Monk of Mount Kongo (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_true_corrupted_monk">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🏯</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">256. TRUE CORRUPTED MONK OF MOUNT KONGO</div>
+                            <div class="boss-card-desc">Fountainhead Sacred Waterway &bull; Giant Naginata Cleaves & Illusory Shadow Clones</div>
+                            <div class="boss-card-stats">HP: 64,000 &bull; REWARD: 5,200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_true_corrupted_monk')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 257: Colossal Iron Golem & Black Iron Tarkus (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_sens_iron_golem_colossus">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🛡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">257. COLOSSAL IRON GOLEM &amp; BLACK IRON TARKUS</div>
+                            <div class="boss-card-desc">Sen's Skyward Iron Rampart &bull; Wind Severing Core, Colossal Axe Stomp & Smelter Slag Armor</div>
+                            <div class="boss-card-stats">HP: 66,000 &bull; REWARD: 5,400,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_sens_iron_golem_colossus')">CHALLENGE</button>
                 </div>
             </div>
 

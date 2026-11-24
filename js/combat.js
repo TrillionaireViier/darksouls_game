@@ -3990,6 +3990,127 @@ class DarkSoulsCombat {
                 radius: 3.0,
                 spawnPos: { x: 0, z: 330 },
                 create: (cf, x, z) => cf.createLadyMariaClocktower ? cf.createLadyMariaClocktower(x, z) : cf.createSoulsborneBoss({ id: 'lady_maria', theme: 'fire', bossScale: 2.5 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V47 EXPANSION) ===
+            {
+                id: 'outside_bayle_the_dread_tyrant',
+                name: 'BAYLE THE DREAD, TYRANT OF JAGGED PEAK',
+                title: 'Outside Realm: Jagged Peak Summit &bull; Shattered Basalt Wings, Magma Claw Stumps & Primordial Scarlet Lightning',
+                unlockLocationId: 'outside_jagged_peak_tyrant_summit',
+                icon: '🌋',
+                theme: 'magma',
+                bossScale: 3.6,
+                maxHp: 65000,
+                damage: 1850,
+                souls: 5500000,
+                radius: 5.2,
+                spawnPos: { x: -780, z: -100 },
+                create: (cf, x, z) => cf.createBayleTheDreadTyrant ? cf.createBayleTheDreadTyrant(x, z) : cf.createSoulsborneBoss({ id: 'bayle_tyrant', theme: 'magma', bossScale: 3.6 }, x, z)
+            },
+            {
+                id: 'outside_orphan_of_kos',
+                name: 'ORPHAN OF KOS, CHILD OF THE ASTRAL OCEAN',
+                title: 'Outside Realm: Fishing Hamlet Coast &bull; Petrified Placenta Blade, Lightning Shrieks & Cosmic Nightmare Wings',
+                unlockLocationId: 'outside_fishing_hamlet_orphan_coast',
+                icon: '🌊',
+                theme: 'cosmic',
+                bossScale: 2.8,
+                maxHp: 60000,
+                damage: 1800,
+                souls: 5000000,
+                radius: 3.8,
+                spawnPos: { x: -800, z: 180 },
+                create: (cf, x, z) => cf.createOrphanOfKos ? cf.createOrphanOfKos(x, z) : cf.createSoulsborneBoss({ id: 'orphan_kos', theme: 'cosmic', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'outside_soul_of_cinder_avatar',
+                name: 'SOUL OF CINDER, AVATAR OF THE FIRST LORDS',
+                title: 'Outside Realm: Kiln of the First Flame &bull; Coiled Firelink Sword, Sunken Darksign Sun & Shifting Lord Stances',
+                unlockLocationId: 'outside_kiln_soul_of_cinder_dais',
+                icon: '🔥',
+                theme: 'fire',
+                bossScale: 2.9,
+                maxHp: 68000,
+                damage: 1900,
+                souls: 6000000,
+                radius: 3.6,
+                spawnPos: { x: -820, z: -280 },
+                create: (cf, x, z) => cf.createSoulOfCinderAvatar ? cf.createSoulOfCinderAvatar(x, z) : cf.createSoulsborneBoss({ id: 'soul_cinder', theme: 'fire', bossScale: 2.9 }, x, z)
+            },
+            {
+                id: 'outside_everlasting_stone_dragon',
+                name: 'THE EVERLASTING STONE DRAGON',
+                title: 'Outside Realm: Ash Lake Primeval Hollow &bull; Indestructible Stone Scales, Four Archaic Wings & Dragon Eye Breath',
+                unlockLocationId: 'outside_ash_lake_everlasting_hollow',
+                icon: '🪨',
+                theme: 'stone',
+                bossScale: 3.8,
+                maxHp: 72000,
+                damage: 1950,
+                souls: 6500000,
+                radius: 5.4,
+                spawnPos: { x: -760, z: -320 },
+                create: (cf, x, z) => cf.createEverlastingStoneDragon ? cf.createEverlastingStoneDragon(x, z) : cf.createSoulsborneBoss({ id: 'stone_dragon', theme: 'stone', bossScale: 3.8 }, x, z)
+            },
+            {
+                id: 'outside_astel_naturalborn_void',
+                name: 'ASTEL, NATURALBORN OF THE VOID',
+                title: 'Outside Realm: Void Grotto Cloister &bull; Malformed Cosmic Dragonfly, Celestial Skull & Nebular Wave Tail',
+                unlockLocationId: 'outside_astel_naturalborn_void_cloister',
+                icon: '🌌',
+                theme: 'gravity',
+                bossScale: 3.5,
+                maxHp: 58000,
+                damage: 1750,
+                souls: 4800000,
+                radius: 4.8,
+                spawnPos: { x: -840, z: -160 },
+                create: (cf, x, z) => cf.createAstelNaturalbornVoid ? cf.createAstelNaturalbornVoid(x, z) : cf.createSoulsborneBoss({ id: 'astel_void', theme: 'gravity', bossScale: 3.5 }, x, z)
+            },
+            {
+                id: 'outside_martyr_logarius',
+                name: 'MARTYR LOGARIUS, KING OF EXECUTIONERS',
+                title: 'Outside Realm: Cainhurst Frozen Spire &bull; Crown of Illusions, Blood Scythe, Flying Astral Daggers & Skull Skulls',
+                unlockLocationId: 'outside_cainhurst_martyr_logarius_throne',
+                icon: '👑',
+                theme: 'frost',
+                bossScale: 2.6,
+                maxHp: 55000,
+                damage: 1700,
+                souls: 4500000,
+                radius: 3.2,
+                spawnPos: { x: -790, z: 280 },
+                create: (cf, x, z) => cf.createMartyrLogarius ? cf.createMartyrLogarius(x, z) : cf.createSoulsborneBoss({ id: 'martyr_logarius', theme: 'frost', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'outside_true_corrupted_monk',
+                name: 'TRUE CORRUPTED MONK OF MOUNT KONGO',
+                title: 'Outside Realm: Vermilion Bridge &bull; Giant Naginata Cleaves, Illusory Shadow Clones & Centipede Immortality',
+                unlockLocationId: 'outside_true_corrupted_monk_palace',
+                icon: '🏯',
+                theme: 'vermilion',
+                bossScale: 3.0,
+                maxHp: 64000,
+                damage: 1820,
+                souls: 5200000,
+                radius: 3.8,
+                spawnPos: { x: -810, z: 80 },
+                create: (cf, x, z) => cf.createTrueCorruptedMonk ? cf.createTrueCorruptedMonk(x, z) : cf.createSoulsborneBoss({ id: 'corrupted_monk', theme: 'vermilion', bossScale: 3.0 }, x, z)
+            },
+            {
+                id: 'outside_sens_iron_golem_colossus',
+                name: 'COLOSSAL IRON GOLEM & BLACK IRON TARKUS',
+                title: 'Outside Realm: Skyward Iron Rampart &bull; Wind Severing Core, Colossal Axe Stomp & Smelter Slag Armor',
+                unlockLocationId: 'outside_sens_iron_golem_rampart',
+                icon: '🛡️',
+                theme: 'iron',
+                bossScale: 3.4,
+                maxHp: 66000,
+                damage: 1880,
+                souls: 5400000,
+                radius: 4.5,
+                spawnPos: { x: -760, z: 380 },
+                create: (cf, x, z) => cf.createSensIronGolemColossus ? cf.createSensIronGolemColossus(x, z) : cf.createSoulsborneBoss({ id: 'sens_golem', theme: 'iron', bossScale: 3.4 }, x, z)
             }
         ];
     }
@@ -4307,7 +4428,16 @@ class DarkSoulsCombat {
             [-720.0, 2.0, -220.0], [-728.0, 2.0, -228.0], [-712.0, 2.0, -212.0],   // Ashen Waste of Gael (Ringed Knight Executioners)
             [-730.0, -10.0, 20.0], [-738.0, -10.0, 28.0], [-722.0, -10.0, 12.0],   // Midir Abyssal Chasm (Abyssal Dragon Apostles)
             [-670.0, -3.0, 240.0], [-678.0, -3.0, 248.0], [-662.0, -3.0, 232.0],   // Nightmare Corpse-River (Church of Good Blood Cleric Hunters)
-            [-710.0, 14.0, -140.0], [-718.0, 14.0, -148.0], [-702.0, 14.0, -132.0] // Astral Clocktower Balcony (Clockwork Automaton Maidens)
+            [-710.0, 14.0, -140.0], [-718.0, 14.0, -148.0], [-702.0, 14.0, -132.0], // Astral Clocktower Balcony (Clockwork Automaton Maidens)
+            // 8 Brand-New Outside Apex Expeditions Patrols (V47 Expansion):
+            [-780.0, 22.0, -100.0], [-788.0, 22.0, -108.0], [-772.0, 22.0, -92.0], // Jagged Peak Summit (Dreadflame Harvesters)
+            [-800.0, -8.0, 180.0], [-808.0, -8.0, 188.0], [-792.0, -8.0, 172.0],   // Fishing Hamlet Coast (Deep Sea Fishman Priests)
+            [-820.0, 4.0, -280.0], [-828.0, 4.0, -288.0], [-812.0, 4.0, -272.0],   // Kiln of First Flame (Black Knight Annihilators)
+            [-760.0, -12.0, -320.0], [-768.0, -12.0, -328.0], [-752.0, -12.0, -312.0], // Ash Lake Hollow (Archdragon Stone Disciples)
+            [-840.0, -15.0, -160.0], [-848.0, -15.0, -168.0], [-832.0, -15.0, -152.0], // Astel Void Cloister (Kindred of Rot Pests)
+            [-790.0, 18.0, 280.0], [-798.0, 18.0, 288.0], [-782.0, 18.0, 272.0],   // Cainhurst Frozen Throne (Cainhurst Vileblood Guards)
+            [-810.0, 8.0, 80.0], [-818.0, 8.0, 88.0], [-802.0, 8.0, 72.0],         // Fountainhead Waterway (Okami Palace Nobles)
+            [-760.0, 14.0, 380.0], [-768.0, 14.0, 388.0], [-752.0, 14.0, 372.0]    // Sen's Iron Rampart (Lightning Manserpents)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -4326,7 +4456,7 @@ class DarkSoulsCombat {
                 'sanctum_knight_automaton', 'mimic_tear_mercurial',
                 'cleanrot_valkyrie_knight', 'divine_beast_disciple', 'alonne_shadow_samurai',
                 'charred_loyce_knight', 'ringed_knight_executioner', 'abyssal_dragon_apostle',
-                'blood_cleric_hunter', 'clockwork_automaton_maiden'
+                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');
