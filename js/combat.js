@@ -4116,6 +4116,127 @@ class DarkSoulsCombat {
                 radius: 4.5,
                 spawnPos: { x: -760, z: 380 },
                 create: (cf, x, z) => cf.createSensIronGolemColossus ? cf.createSensIronGolemColossus(x, z) : cf.createSoulsborneBoss({ id: 'sens_golem', theme: 'iron', bossScale: 3.4 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V55 EXPANSION) ===
+            {
+                id: 'outside_sister_friede_blackflame',
+                name: 'SISTER FRIEDE, BLACKFLAME SCYTHE MATRON',
+                title: 'Outside Realm: Ariandel Chapel &bull; Dual Frost & Blackflame Scythes, Ariandel Lordvessel Cauldron',
+                unlockLocationId: 'outside_ariandel_chapel_blackflame',
+                icon: '❄️',
+                theme: 'frost',
+                bossScale: 2.7,
+                maxHp: 66000,
+                damage: 1860,
+                souls: 5600000,
+                radius: 3.6,
+                spawnPos: { x: -920, z: -260 },
+                create: (cf, x, z) => cf.createSisterFriedeBlackflame ? cf.createSisterFriedeBlackflame(x, z) : cf.createSoulsborneBoss({ id: 'sister_friede_blackflame', theme: 'frost', bossScale: 2.7 }, x, z)
+            },
+            {
+                id: 'outside_nameless_king_storm_sovereign',
+                name: 'THE NAMELESS KING, SOVEREIGN OF THE STORM',
+                title: 'Outside Realm: Archdragon Peak Colosseum &bull; Storm Sovereign Mane, Dragonslayer Swordspear & Golden Sunlight Lightning',
+                unlockLocationId: 'outside_archdragon_storm_colosseum_nameless',
+                icon: '⚡',
+                theme: 'lightning',
+                bossScale: 3.4,
+                maxHp: 75000,
+                damage: 1980,
+                souls: 7000000,
+                radius: 5.0,
+                spawnPos: { x: -940, z: -80 },
+                create: (cf, x, z) => cf.createNamelessKingStormSovereign ? cf.createNamelessKingStormSovereign(x, z) : cf.createSoulsborneBoss({ id: 'nameless_king_sovereign', theme: 'lightning', bossScale: 3.4 }, x, z)
+            },
+            {
+                id: 'outside_isshin_ashina_sword_saint',
+                name: 'ISSHIN, THE SWORD SAINT OF ASHINA',
+                title: 'Outside Realm: Ashina Silvergrass Field &bull; Dragon Flash Nodachi, Tomoe Lightning Cross-Spear & Semi-Auto Flintlock Flurry',
+                unlockLocationId: 'outside_ashina_silvergrass_field_isshin',
+                icon: '🌾',
+                theme: 'vermilion',
+                bossScale: 2.9,
+                maxHp: 70000,
+                damage: 1920,
+                souls: 6400000,
+                radius: 3.8,
+                spawnPos: { x: -930, z: 120 },
+                create: (cf, x, z) => cf.createIsshinAshinaSwordSaint ? cf.createIsshinAshinaSwordSaint(x, z) : cf.createSoulsborneBoss({ id: 'isshin_ashina_saint', theme: 'vermilion', bossScale: 2.9 }, x, z)
+            },
+            {
+                id: 'outside_gehrman_first_hunter_flowerbed',
+                name: 'GEHRMAN, THE FIRST HUNTER & FLORA',
+                title: 'Outside Realm: Hunter\'s Dream Lunar Flowerbed &bull; Transforming Burial Blade, Silver Blunderbuss & Blood Moon Descent',
+                unlockLocationId: 'outside_hunters_dream_lunar_flowerbed',
+                icon: '🌙',
+                theme: 'blood',
+                bossScale: 2.6,
+                maxHp: 62000,
+                damage: 1820,
+                souls: 5200000,
+                radius: 3.4,
+                spawnPos: { x: -960, z: 260 },
+                create: (cf, x, z) => cf.createGehrmanFirstHunter ? cf.createGehrmanFirstHunter(x, z) : cf.createSoulsborneBoss({ id: 'gehrman_first_hunter', theme: 'blood', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'outside_radagon_golden_order_dais',
+                name: 'RADAGON OF THE GOLDEN ORDER & ELDEN BEAST',
+                title: 'Outside Realm: Inside the Erdtree &bull; Hammer of Radagon, Fractured Golden Order Runes & Nebular Cosmic Blade',
+                unlockLocationId: 'outside_erdtree_throne_radagon_elden_beast',
+                icon: '✨',
+                theme: 'holy',
+                bossScale: 3.2,
+                maxHp: 78000,
+                damage: 2050,
+                souls: 7500000,
+                radius: 4.6,
+                spawnPos: { x: -980, z: -180 },
+                create: (cf, x, z) => cf.createRadagonGoldenOrder ? cf.createRadagonGoldenOrder(x, z) : cf.createSoulsborneBoss({ id: 'radagon_golden_order', theme: 'holy', bossScale: 3.2 }, x, z)
+            },
+            {
+                id: 'outside_godfrey_first_elden_lord',
+                name: 'GODFREY, FIRST ELDEN LORD & HOARAH LOUX',
+                title: 'Outside Realm: Leyndell Bedchamber Terrace &bull; Earthshaker Golden Greataxe, Serosh Regent Beast & Savage Grapple',
+                unlockLocationId: 'outside_leyndell_terrace_godfrey_hoarah_loux',
+                icon: '🦁',
+                theme: 'earth',
+                bossScale: 3.3,
+                maxHp: 74000,
+                damage: 1960,
+                souls: 6800000,
+                radius: 4.8,
+                spawnPos: { x: -990, z: 360 },
+                create: (cf, x, z) => cf.createGodfreyFirstEldenLord ? cf.createGodfreyFirstEldenLord(x, z) : cf.createSoulsborneBoss({ id: 'godfrey_first_lord', theme: 'earth', bossScale: 3.3 }, x, z)
+            },
+            {
+                id: 'outside_rellana_twin_moon_knight',
+                name: 'RELLANA, TWIN MOON KNIGHT OF CARIAN ROYALTY',
+                title: 'Outside Realm: Castle Ensis Moongazing Dais &bull; Paired Flame & Magic Greatswords, Orbiting Twin Moons & Glintblade Phalanx',
+                unlockLocationId: 'outside_castle_ensis_twin_moon_dais',
+                icon: '🌓',
+                theme: 'magic',
+                bossScale: 2.8,
+                maxHp: 64000,
+                damage: 1840,
+                souls: 5400000,
+                radius: 3.8,
+                spawnPos: { x: -1010, z: -380 },
+                create: (cf, x, z) => cf.createRellanaTwinMoonKnight ? cf.createRellanaTwinMoonKnight(x, z) : cf.createSoulsborneBoss({ id: 'rellana_twin_moon', theme: 'magic', bossScale: 2.8 }, x, z)
+            },
+            {
+                id: 'outside_scadutree_avatar_sunflower',
+                name: 'THE SCADUTREE AVATAR, BLIGHTED GOLDEN SUNFLOWER',
+                title: 'Outside Realm: Scadutree Briar Basin &bull; Triple Thorny Vine Stems, Golden Beam Burst & Miquella Lily Weep',
+                unlockLocationId: 'outside_scadutree_avatar_sunflower_basin',
+                icon: '🌻',
+                theme: 'holy',
+                bossScale: 3.6,
+                maxHp: 76000,
+                damage: 1940,
+                souls: 6900000,
+                radius: 5.2,
+                spawnPos: { x: -1020, z: 480 },
+                create: (cf, x, z) => cf.createScadutreeAvatarSunflower ? cf.createScadutreeAvatarSunflower(x, z) : cf.createSoulsborneBoss({ id: 'scadutree_avatar', theme: 'holy', bossScale: 3.6 }, x, z)
             }
         ];
     }
@@ -4446,7 +4567,16 @@ class DarkSoulsCombat {
             [-840.0, -15.0, -160.0], [-848.0, -15.0, -168.0], [-832.0, -15.0, -152.0], // Astel Void Cloister (Kindred of Rot Pests)
             [-790.0, 18.0, 280.0], [-798.0, 18.0, 288.0], [-782.0, 18.0, 272.0],   // Cainhurst Frozen Throne (Cainhurst Vileblood Guards)
             [-810.0, 8.0, 80.0], [-818.0, 8.0, 88.0], [-802.0, 8.0, 72.0],         // Fountainhead Waterway (Okami Palace Nobles)
-            [-760.0, 14.0, 380.0], [-768.0, 14.0, 388.0], [-752.0, 14.0, 372.0]    // Sen's Iron Rampart (Lightning Manserpents)
+            [-760.0, 14.0, 380.0], [-768.0, 14.0, 388.0], [-752.0, 14.0, 372.0],   // Sen's Iron Rampart (Lightning Manserpents)
+            // 8 Brand-New Outside Apex Expeditions Patrols (V55 Expansion):
+            [-920.0, 10.0, -260.0], [-928.0, 10.0, -268.0], [-912.0, 10.0, -252.0], // Ariandel Chapel (Corvian Rapier Knights)
+            [-940.0, 24.0, -80.0], [-948.0, 24.0, -88.0], [-932.0, 24.0, -72.0],   // Archdragon Storm Colosseum (Dragonkin Lightning Halberdiers)
+            [-930.0, 6.0, 120.0], [-938.0, 6.0, 128.0], [-922.0, 6.0, 112.0],     // Ashina Silvergrass Field (Ashina Red-Guard Arquebusiers)
+            [-960.0, -2.0, 260.0], [-968.0, -2.0, 268.0], [-952.0, -2.0, 252.0],   // Hunter's Dream Lunar Flowerbed (Church Doctor Executioners)
+            [-980.0, 16.0, -180.0], [-988.0, 16.0, -188.0], [-972.0, 16.0, -172.0], // Erdtree Throne of Radagon (Leyndell Tree Sentinels)
+            [-990.0, 12.0, 360.0], [-998.0, 12.0, 368.0], [-982.0, 12.0, 352.0],   // Leyndell Bedchamber Terrace (Badlands Blood Berserkers)
+            [-1010.0, 8.0, -380.0], [-1018.0, 8.0, -388.0], [-1002.0, 8.0, -372.0], // Castle Ensis Moongazing Dais (Fire Knight Queeligns)
+            [-1020.0, -10.0, 480.0], [-1028.0, -10.0, 488.0], [-1012.0, -10.0, 472.0] // Scadutree Briar Basin (Hornsent Inquisitors)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -4465,7 +4595,7 @@ class DarkSoulsCombat {
                 'sanctum_knight_automaton', 'mimic_tear_mercurial',
                 'cleanrot_valkyrie_knight', 'divine_beast_disciple', 'alonne_shadow_samurai',
                 'charred_loyce_knight', 'ringed_knight_executioner', 'abyssal_dragon_apostle',
-                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent'
+                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent', 'corvian_rapier_knight', 'dragonkin_lightning_halberdier', 'ashina_redguard_arquebusier', 'church_doctor_executioner', 'leyndell_tree_sentinel_patrol', 'badlands_blood_berserker', 'fire_knight_queelign_duelist', 'hornsent_inquisitor_priest'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

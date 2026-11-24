@@ -600,7 +600,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -900, -420, 872, 840, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -1080, -480, 1052, 980, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -633,6 +633,14 @@
                 this.drawZoneRect(ctx, -810, 260, 40, 40, "rgba(25, 40, 65, 0.65)", "#60a5fa", "👑 CAINHURST FROZEN SPIRE (+18m)");
                 this.drawZoneRect(ctx, -830, 60, 40, 40, "rgba(60, 40, 10, 0.65)", "#f59e0b", "🏯 FOUNTAINHEAD SACRED WATERWAY (+8m)");
                 this.drawZoneRect(ctx, -780, 360, 40, 40, "rgba(50, 45, 20, 0.65)", "#eab308", "🛡️ SEN'S SKYWARD IRON RAMPART (+14m)");
+                this.drawZoneRect(ctx, -940, -280, 40, 40, "rgba(20, 35, 55, 0.65)", "#38bdf8", "❄️ ARIANDEL CHAPEL OF FRIEDE (+10m)");
+                this.drawZoneRect(ctx, -960, -100, 40, 40, "rgba(65, 50, 15, 0.65)", "#fbbf24", "⚡ ARCHDRAGON STORM COLOSSEUM (+24m)");
+                this.drawZoneRect(ctx, -950, 100, 40, 40, "rgba(45, 45, 60, 0.65)", "#e2e8f0", "🌾 ASHINA SILVERGRASS FIELD (+6m)");
+                this.drawZoneRect(ctx, -980, 240, 40, 40, "rgba(50, 20, 45, 0.65)", "#f472b6", "🌙 HUNTER'S DREAM LUNAR FLOWERBED (-2m)");
+                this.drawZoneRect(ctx, -1000, -200, 40, 40, "rgba(70, 55, 10, 0.65)", "#facc15", "✨ ERDTREE THRONE OF RADAGON (+16m)");
+                this.drawZoneRect(ctx, -1010, 340, 40, 40, "rgba(60, 40, 20, 0.65)", "#f97316", "🦁 LEYNDELL GODFREY TERRACE (+12m)");
+                this.drawZoneRect(ctx, -1030, -400, 40, 40, "rgba(25, 30, 70, 0.65)", "#60a5fa", "🌓 CASTLE ENSIS TWIN MOON DAIS (+8m)");
+                this.drawZoneRect(ctx, -1040, 460, 40, 40, "rgba(40, 35, 15, 0.65)", "#eab308", "🌻 SCADUTREE AVATAR BASIN (-10m)");
             }
 
             // 3. Draw All World Pins

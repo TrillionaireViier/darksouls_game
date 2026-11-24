@@ -849,8 +849,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-920, -28], z in [-580, 580]
-        if (x >= -920 && x <= -28 && z >= -580 && z <= 580) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-1080, -28], z in [-620, 620]
+        if (x >= -1080 && x <= -28 && z >= -620 && z <= 620) {
+            // 8 Brand-New Legendary Outside Realm Expeditions (V55 Expansion)
+            // 1. Painted World Chapel of Sister Friede (outside_ariandel_chapel_blackflame) (elev: +10.0m)
+            if (x >= -965 && x <= -875 && z >= -305 && z <= -215) {
+                return 10.0;
+            }
+            // 2. Archdragon Peak Storm Sovereign Colosseum (outside_archdragon_storm_colosseum_nameless) (elev: +24.0m)
+            if (x >= -985 && x <= -895 && z >= -125 && z <= -35) {
+                return 24.0;
+            }
+            // 3. Ashina Silvergrass Battlefield Under Thunder (outside_ashina_silvergrass_field_isshin) (elev: +6.0m)
+            if (x >= -975 && x <= -885 && z >= 75 && z <= 165) {
+                return 6.0;
+            }
+            // 4. Hunter's Dream Radiant Lunar Flowerbed (outside_hunters_dream_lunar_flowerbed) (elev: -2.0m)
+            if (x >= -1005 && x <= -915 && z >= 215 && z <= 305) {
+                return -2.0;
+            }
+            // 5. Inside the Erdtree Throne of Radagon (outside_erdtree_throne_radagon_elden_beast) (elev: +16.0m)
+            if (x >= -1025 && x <= -935 && z >= -225 && z <= -135) {
+                return 16.0;
+            }
+            // 6. Leyndell Royal Bedchamber Terrace (outside_leyndell_terrace_godfrey_hoarah_loux) (elev: +12.0m)
+            if (x >= -1035 && x <= -945 && z >= 315 && z <= 405) {
+                return 12.0;
+            }
+            // 7. Castle Ensis Moongazing Dais (outside_castle_ensis_twin_moon_dais) (elev: +8.0m)
+            if (x >= -1055 && x <= -965 && z >= -425 && z <= -335) {
+                return 8.0;
+            }
+            // 8. Shadow Realm Scadutree Base (outside_scadutree_avatar_sunflower_basin) (elev: -10.0m)
+            if (x >= -1065 && x <= -975 && z >= 435 && z <= 525) {
+                return -10.0;
+            }
             // 8 Brand-New Monumental Outside Realm Expeditions (V47 Expansion)
             // 1. Jagged Peak Summit & Bayle's Dragonheart Roar (outside_jagged_peak_tyrant_summit) (elev: +22.0m)
             if (x >= -825 && x <= -735 && z >= -145 && z <= -55) {
@@ -3607,6 +3640,9 @@ class DarkSoulsWorld {
         // Build 8 Brand-New Monumental Outside Realm Expeditions (V47 Expansion)
         this.buildEightMonumentalOutsideExpeditions(outsideGroup);
 
+        // Build 8 Brand-New Legendary Outside Realm Expeditions (V55 Expansion)
+        this.buildEightLegendaryOutsideExpeditions(outsideGroup);
+
         this.scene.add(outsideGroup);
     }
 
@@ -4290,6 +4326,388 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-775, 14.0, 380, 0xeab308, 5.5, 36);
         this.createPathBeacon(-760, 14.0, 380, 0xeab308, "🛡️ SEN'S SKYWARD IRON RAMPART [ELEV +14.0m]", "COLOSSAL IRON GOLEM & TARKUS • PENDULUM BLADE • LIGHTNING MANSERPENTS", "#fef08a");
         this.createFloorSoapstone(-760, 14.0, 365, "#eab308", "🛡️ SEN'S IRON RAMPART", "The deadly house of traps tests those who would reach the City of Gods");
+    }
+
+    buildEightLegendaryOutsideExpeditions(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW LEGENDARY OUTSIDE REALM EXPEDITIONS (V55 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. PAINTED WORLD CHAPEL OF SISTER FRIEDE & BLACKFLAME BELFRY ([-920, 10.0, -260])
+        // --------------------------------------------------------------------
+        const friedeBase = new THREE.Mesh(new THREE.CylinderGeometry(52, 64, 20, 18), this.cliffRockMat);
+        friedeBase.position.set(-920, 0, -260);
+        outsideGroup.add(friedeBase);
+
+        // Snow-frosted stone chapel foundation
+        const friedeFloor = new THREE.Mesh(new THREE.BoxGeometry(64, 1.2, 54), new THREE.MeshStandardMaterial({
+            color: 0x94a3b8, roughness: 0.9, metalness: 0.1
+        }));
+        friedeFloor.position.set(-920, 10.1, -260);
+        friedeFloor.receiveShadow = true;
+        outsideGroup.add(friedeFloor);
+
+        // Vaulted Chapel Rafters & Timber Trusses
+        for (let r = -20; r <= 20; r += 10) {
+            const beamMat = new THREE.MeshStandardMaterial({ color: 0x2b1d14, roughness: 0.85 });
+            const leftPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.9, 12, 6), beamMat);
+            leftPillar.position.set(-946, 16.0, -260 + r);
+            outsideGroup.add(leftPillar);
+            const rightPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.9, 12, 6), beamMat);
+            rightPillar.position.set(-894, 16.0, -260 + r);
+            outsideGroup.add(rightPillar);
+
+            const archBeam = new THREE.Mesh(new THREE.BoxGeometry(54, 0.8, 1.2), beamMat);
+            archBeam.position.set(-920, 22.0, -260 + r);
+            outsideGroup.add(archBeam);
+        }
+
+        // Giant Silver-Bronze Belfry Bell of Ariandel
+        const belfryBell = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 4.6, 6.2, 12), new THREE.MeshStandardMaterial({
+            color: 0x64748b, roughness: 0.35, metalness: 0.85
+        }));
+        belfryBell.position.set(-920, 17.5, -276);
+        outsideGroup.add(belfryBell);
+
+        // Grand Lordvessel of Ariandel (Frost & Blackflame Embers)
+        const lordvessel = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 2.2, 3.2, 16), new THREE.MeshStandardMaterial({
+            color: 0x1e1b4b, roughness: 0.4, metalness: 0.7
+        }));
+        lordvessel.position.set(-920, 11.6, -260);
+        outsideGroup.add(lordvessel);
+
+        const friedeColdLight = new THREE.PointLight(0x38bdf8, 4.5, 45.0);
+        friedeColdLight.position.set(-920, 14.5, -260);
+        outsideGroup.add(friedeColdLight);
+
+        this.createStandingBrazier(-906, 10.0, -260, 0x38bdf8, 4.5, 32);
+        this.createStandingBrazier(-934, 10.0, -260, 0x1e1b4b, 4.5, 32);
+        this.createPathBeacon(-920, 10.0, -260, 0x38bdf8, "❄️ PAINTED WORLD CHAPEL OF FRIEDE [ELEV +10.0m]", "SISTER FRIEDE & FATHER ARIANDEL • BLACKFLAME BELFRY • CORVIAN KNIGHTS", "#e0f2fe");
+        this.createFloorSoapstone(-920, 10.0, -248, "#38bdf8", "❄️ CHAPEL OF ARIANDEL", "Leave us be, Ashen One. Return whence thou cam'st.");
+
+        // --------------------------------------------------------------------
+        // 2. ARCHDRAGON PEAK STORM SOVEREIGN COLOSSEUM ([-940, 24.0, -80])
+        // --------------------------------------------------------------------
+        const stormBase = new THREE.Mesh(new THREE.CylinderGeometry(58, 76, 48, 20), this.cliffRockMat);
+        stormBase.position.set(-940, 0, -80);
+        outsideGroup.add(stormBase);
+
+        const stormArena = new THREE.Mesh(new THREE.CylinderGeometry(46, 46, 1.2, 24), new THREE.MeshStandardMaterial({
+            color: 0x475569, roughness: 0.8, metalness: 0.25
+        }));
+        stormArena.position.set(-940, 24.1, -80);
+        stormArena.receiveShadow = true;
+        outsideGroup.add(stormArena);
+
+        // 8 Weathered Dragon-Scale Lightning Rod Spires
+        for (let sp = 0; sp < 8; sp++) {
+            const spAng = (sp / 8) * Math.PI * 2;
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(2.4, 18.0, 6), new THREE.MeshStandardMaterial({
+                color: 0x334155, roughness: 0.7, metalness: 0.4
+            }));
+            spire.position.set(-940 + Math.cos(spAng) * 38, 33.0, -80 + Math.sin(spAng) * 38);
+            outsideGroup.add(spire);
+
+            const rodTop = new THREE.Mesh(new THREE.SphereGeometry(0.8, 8, 8), new THREE.MeshStandardMaterial({
+                color: 0xfbbf24, emissive: 0xd97706, emissiveIntensity: 2.2
+            }));
+            rodTop.position.set(-940 + Math.cos(spAng) * 38, 42.0, -80 + Math.sin(spAng) * 38);
+            outsideGroup.add(rodTop);
+        }
+
+        // Colossal Great Belfry Dragon Bell
+        const stormBell = new THREE.Mesh(new THREE.CylinderGeometry(3.0, 5.5, 7.5, 14), new THREE.MeshStandardMaterial({
+            color: 0xd97706, roughness: 0.3, metalness: 0.85
+        }));
+        stormBell.position.set(-940, 31.0, -112);
+        outsideGroup.add(stormBell);
+
+        const stormLight = new THREE.PointLight(0xfbbf24, 6.0, 60.0);
+        stormLight.position.set(-940, 28.0, -80);
+        outsideGroup.add(stormLight);
+
+        this.createStandingBrazier(-924, 24.0, -80, 0xfbbf24, 6.0, 38);
+        this.createStandingBrazier(-956, 24.0, -80, 0xfbbf24, 6.0, 38);
+        this.createPathBeacon(-940, 24.0, -80, 0xfbbf24, "⚡ ARCHDRAGON STORM COLOSSEUM [ELEV +24.0m]", "THE NAMELESS KING & KING OF STORMS • SUNLIGHT LIGHTNING • DRAGONKIN GUARDS", "#fef3c7");
+        this.createFloorSoapstone(-940, 24.0, -68, "#fbbf24", "⚡ STORM COLOSSEUM", "Touch not the bell. The ancient dragon god of war broods amidst storm clouds.");
+
+        // --------------------------------------------------------------------
+        // 3. ASHINA SILVERGRASS BATTLEFIELD UNDER THUNDER ([-930, 6.0, 120])
+        // --------------------------------------------------------------------
+        const ashinaBase = new THREE.Mesh(new THREE.CylinderGeometry(54, 66, 12, 18), this.cliffRockMat);
+        ashinaBase.position.set(-930, 0, 120);
+        outsideGroup.add(ashinaBase);
+
+        const ashinaSoil = new THREE.Mesh(new THREE.CylinderGeometry(44, 44, 1.0, 22), new THREE.MeshStandardMaterial({
+            color: 0x1e293b, roughness: 0.95, metalness: 0.05
+        }));
+        ashinaSoil.position.set(-930, 6.1, 120);
+        ashinaSoil.receiveShadow = true;
+        outsideGroup.add(ashinaSoil);
+
+        // Dense Pampas Silvergrass Clumps
+        const grassMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.9 });
+        for (let g = 0; g < 40; g++) {
+            const gx = -930 + (Math.sin(g * 3.7) * 32);
+            const gz = 120 + (Math.cos(g * 2.3) * 32);
+            const stalk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.25, 3.2, 5), grassMat);
+            stalk.position.set(gx, 7.6, gz);
+            stalk.rotation.z = Math.sin(g) * 0.2;
+            stalk.rotation.x = Math.cos(g) * 0.2;
+            outsideGroup.add(stalk);
+        }
+
+        // Grand Vermilion Torii Gate Arch
+        const toriiMat = new THREE.MeshStandardMaterial({ color: 0x991b1b, roughness: 0.65 });
+        const leftTorii = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.9, 14, 8), toriiMat);
+        leftTorii.position.set(-942, 13.0, 142);
+        outsideGroup.add(leftTorii);
+        const rightTorii = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.9, 14, 8), toriiMat);
+        rightTorii.position.set(-918, 13.0, 142);
+        outsideGroup.add(rightTorii);
+
+        const toriiCross = new THREE.Mesh(new THREE.BoxGeometry(32, 1.4, 2.2), toriiMat);
+        toriiCross.position.set(-930, 19.5, 142);
+        outsideGroup.add(toriiCross);
+
+        const ashinaLight = new THREE.PointLight(0xe2e8f0, 4.5, 48.0);
+        ashinaLight.position.set(-930, 10.0, 120);
+        outsideGroup.add(ashinaLight);
+
+        this.createStandingBrazier(-915, 6.0, 120, 0x991b1b, 4.5, 34);
+        this.createStandingBrazier(-945, 6.0, 120, 0x991b1b, 4.5, 34);
+        this.createPathBeacon(-930, 6.0, 120, 0xe2e8f0, "🌾 ASHINA SILVERGRASS FIELD [ELEV +6.0m]", "SWORD SAINT ISSHIN • TOMOE LIGHTNING • ASHINA RED-GUARD ARQUEBUSIERS", "#f8fafc");
+        this.createFloorSoapstone(-930, 6.0, 106, "#e2e8f0", "🌾 SILVERGRASS FIELD", "Hesitation is defeat. Face the Sword Saint of Ashina.");
+
+        // --------------------------------------------------------------------
+        // 4. HUNTER'S DREAM RADIANT LUNAR FLOWERBED ([-960, -2.0, 260])
+        // --------------------------------------------------------------------
+        const dreamPlat = new THREE.Mesh(new THREE.CylinderGeometry(52, 60, 8, 18), this.cliffRockMat);
+        dreamPlat.position.set(-960, -6.0, 260);
+        outsideGroup.add(dreamPlat);
+
+        const flowerBed = new THREE.Mesh(new THREE.CylinderGeometry(42, 42, 0.8, 22), new THREE.MeshStandardMaterial({
+            color: 0x0f172a, roughness: 0.9
+        }));
+        flowerBed.position.set(-960, -1.9, 260);
+        flowerBed.receiveShadow = true;
+        outsideGroup.add(flowerBed);
+
+        // Luminous White Dream Flower Sprigs
+        const whiteFlowerMat = new THREE.MeshStandardMaterial({
+            color: 0xffffff, emissive: 0xe0e7ff, emissiveIntensity: 0.85, roughness: 0.3
+        });
+        for (let fl = 0; fl < 36; fl++) {
+            const fx = -960 + Math.sin(fl * 4.3) * 30;
+            const fz = 260 + Math.cos(fl * 2.7) * 30;
+            const flower = new THREE.Mesh(new THREE.SphereGeometry(0.4, 6, 6), whiteFlowerMat);
+            flower.position.set(fx, -1.5, fz);
+            outsideGroup.add(flower);
+        }
+
+        // Twisted Weeping Ancient Dream Tree
+        const dreamTreeTrunk = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 2.6, 16, 8), new THREE.MeshStandardMaterial({
+            color: 0x27272a, roughness: 0.95
+        }));
+        dreamTreeTrunk.position.set(-960, 6.0, 282);
+        outsideGroup.add(dreamTreeTrunk);
+
+        const dreamTreeFoliage = new THREE.Mesh(new THREE.DodecahedronGeometry(8.5), new THREE.MeshStandardMaterial({
+            color: 0x4c0519, roughness: 0.8, emissive: 0x881337, emissiveIntensity: 0.4
+        }));
+        dreamTreeFoliage.position.set(-960, 16.0, 282);
+        outsideGroup.add(dreamTreeFoliage);
+
+        const dreamMoonLight = new THREE.PointLight(0xf472b6, 4.0, 44.0);
+        dreamMoonLight.position.set(-960, 5.0, 260);
+        outsideGroup.add(dreamMoonLight);
+
+        this.createStandingBrazier(-945, -2.0, 260, 0xf472b6, 4.0, 30);
+        this.createStandingBrazier(-975, -2.0, 260, 0xf472b6, 4.0, 30);
+        this.createPathBeacon(-960, -2.0, 260, 0xf472b6, "🌙 HUNTER'S DREAM LUNAR FLOWERBED [ELEV -2.0m]", "GEHRMAN FIRST HUNTER & MOON PRESENCE • BURIAL BLADE • CHURCH DOCTORS", "#fce7f3");
+        this.createFloorSoapstone(-960, -2.0, 246, "#f472b6", "🌙 LUNAR FLOWERBED", "Dear Hunter, the night will soon end. Accept your fate or defy the dream.");
+
+        // --------------------------------------------------------------------
+        // 5. INSIDE THE ERDTREE THRONE OF RADAGON & ELDEN BEAST ([-980, 16.0, -180])
+        // --------------------------------------------------------------------
+        const erdtreeBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 70, 32, 20), this.cliffRockMat);
+        erdtreeBase.position.set(-980, 0, -180);
+        outsideGroup.add(erdtreeBase);
+
+        // Golden Crystalline Throne Floor
+        const goldenGlassFloor = new THREE.Mesh(new THREE.CylinderGeometry(46, 46, 1.2, 24), new THREE.MeshStandardMaterial({
+            color: 0xfacc15, emissive: 0xca8a04, emissiveIntensity: 0.9, roughness: 0.15, metalness: 0.85
+        }));
+        goldenGlassFloor.position.set(-980, 16.1, -180);
+        goldenGlassFloor.receiveShadow = true;
+        outsideGroup.add(goldenGlassFloor);
+
+        // Concentric Golden Elden Ring Rune Arc
+        const eldenRuneMat = new THREE.MeshBasicMaterial({ color: 0xffe066, side: THREE.DoubleSide });
+        const runeRing = new THREE.Mesh(new THREE.RingGeometry(14, 18, 32), eldenRuneMat);
+        runeRing.rotation.x = -Math.PI / 2;
+        runeRing.position.set(-980, 16.25, -180);
+        outsideGroup.add(runeRing);
+
+        // 4 Golden Spectral Erdtree Spires
+        for (let tr = 0; tr < 4; tr++) {
+            const trAng = (tr / 4) * Math.PI * 2;
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 4.8, 36, 8), new THREE.MeshStandardMaterial({
+                color: 0xca8a04, emissive: 0xa16207, emissiveIntensity: 1.1, roughness: 0.4
+            }));
+            trunk.position.set(-980 + Math.cos(trAng) * 34, 34.0, -180 + Math.sin(trAng) * 34);
+            outsideGroup.add(trunk);
+        }
+
+        const erdtreeLight = new THREE.PointLight(0xfacc15, 6.5, 64.0);
+        erdtreeLight.position.set(-980, 22.0, -180);
+        outsideGroup.add(erdtreeLight);
+
+        this.createStandingBrazier(-962, 16.0, -180, 0xfacc15, 6.0, 38);
+        this.createStandingBrazier(-998, 16.0, -180, 0xfacc15, 6.0, 38);
+        this.createPathBeacon(-980, 16.0, -180, 0xfacc15, "✨ INSIDE THE ERDTREE: RADAGON THRONE [ELEV +16.0m]", "RADAGON OF THE GOLDEN ORDER & ELDEN BEAST • HAMMER OF RADAGON • TREE SENTINELS", "#fef08a");
+        this.createFloorSoapstone(-980, 16.0, -168, "#facc15", "✨ ELDEN THRONE", "Thou who would claim the title of Elden Lord: face the shattered god.");
+
+        // --------------------------------------------------------------------
+        // 6. LEYNDELL ROYAL BEDCHAMBER TERRACE ([-990, 12.0, 360])
+        // --------------------------------------------------------------------
+        const godfreyBase = new THREE.Mesh(new THREE.CylinderGeometry(54, 68, 24, 18), this.cliffRockMat);
+        godfreyBase.position.set(-990, 0, 360);
+        outsideGroup.add(godfreyBase);
+
+        const marbleTerrace = new THREE.Mesh(new THREE.BoxGeometry(60, 1.2, 50), new THREE.MeshStandardMaterial({
+            color: 0xd97706, roughness: 0.6, metalness: 0.4
+        }));
+        marbleTerrace.position.set(-990, 12.1, 360);
+        marbleTerrace.receiveShadow = true;
+        outsideGroup.add(marbleTerrace);
+
+        // Lion Crested Royal Throne of the First Lord
+        const throneBack = new THREE.Mesh(new THREE.BoxGeometry(7.0, 12.0, 2.5), new THREE.MeshStandardMaterial({
+            color: 0x78350f, roughness: 0.7, metalness: 0.3
+        }));
+        throneBack.position.set(-990, 18.0, 380);
+        outsideGroup.add(throneBack);
+
+        const lionRelief = new THREE.Mesh(new THREE.SphereGeometry(2.4, 12, 12), new THREE.MeshStandardMaterial({
+            color: 0xf59e0b, emissive: 0xb45309, emissiveIntensity: 1.2
+        }));
+        lionRelief.position.set(-990, 22.0, 378);
+        outsideGroup.add(lionRelief);
+
+        // Royal Balustrades along Front & Sides
+        for (let col = -24; col <= 24; col += 6) {
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.6, 3.6, 8), new THREE.MeshStandardMaterial({
+                color: 0xb45309, roughness: 0.5
+            }));
+            pillar.position.set(-990 + col, 14.0, 336);
+            outsideGroup.add(pillar);
+        }
+
+        const godfreyLight = new THREE.PointLight(0xf97316, 5.0, 52.0);
+        godfreyLight.position.set(-990, 17.0, 360);
+        outsideGroup.add(godfreyLight);
+
+        this.createStandingBrazier(-972, 12.0, 360, 0xf97316, 5.0, 34);
+        this.createStandingBrazier(-1008, 12.0, 360, 0xf97316, 5.0, 34);
+        this.createPathBeacon(-990, 12.0, 360, 0xf97316, "🦁 LEYNDELL BEDCHAMBER TERRACE [ELEV +12.0m]", "GODFREY FIRST ELDEN LORD & HOARAH LOUX • SEROSH • BADLANDS BERSERKERS", "#ffedd5");
+        this.createFloorSoapstone(-990, 12.0, 346, "#f97316", "🦁 ROYAL TERRACE", "Long march yielded to this sanctuary. Brave Tarnished, thy strength befits a crown.");
+
+        // --------------------------------------------------------------------
+        // 7. CASTLE ENSIS MOONGAZING DAIS ([-1010, 8.0, -380])
+        // --------------------------------------------------------------------
+        const ensisBase = new THREE.Mesh(new THREE.CylinderGeometry(52, 66, 16, 18), this.cliffRockMat);
+        ensisBase.position.set(-1010, 0, -380);
+        outsideGroup.add(ensisBase);
+
+        const ensisFloor = new THREE.Mesh(new THREE.CylinderGeometry(42, 42, 1.0, 24), new THREE.MeshStandardMaterial({
+            color: 0x1e3a8a, roughness: 0.4, metalness: 0.6
+        }));
+        ensisFloor.position.set(-1010, 8.1, -380);
+        ensisFloor.receiveShadow = true;
+        outsideGroup.add(ensisFloor);
+
+        // Twin Moon Floating Orbs (Cold Azure Moon & Blazing Scarlet Flame Moon)
+        const azureMoon = new THREE.Mesh(new THREE.SphereGeometry(3.2, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0x60a5fa, emissive: 0x3b82f6, emissiveIntensity: 2.2, roughness: 0.2
+        }));
+        azureMoon.position.set(-1018, 18.0, -380);
+        outsideGroup.add(azureMoon);
+
+        const flameMoon = new THREE.Mesh(new THREE.SphereGeometry(3.2, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 2.2, roughness: 0.2
+        }));
+        flameMoon.position.set(-1002, 18.0, -380);
+        outsideGroup.add(flameMoon);
+
+        // Carian Glintstone Obelisks
+        for (let ob = 0; ob < 6; ob++) {
+            const obAng = (ob / 6) * Math.PI * 2;
+            const obelisk = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 1.2, 10.0, 6), new THREE.MeshStandardMaterial({
+                color: 0x1d4ed8, roughness: 0.3, metalness: 0.7
+            }));
+            obelisk.position.set(-1010 + Math.cos(obAng) * 32, 13.0, -380 + Math.sin(obAng) * 32);
+            outsideGroup.add(obelisk);
+        }
+
+        const ensisLight = new THREE.PointLight(0x60a5fa, 4.8, 50.0);
+        ensisLight.position.set(-1010, 14.0, -380);
+        outsideGroup.add(ensisLight);
+
+        this.createStandingBrazier(-995, 8.0, -380, 0x60a5fa, 5.0, 32);
+        this.createStandingBrazier(-1025, 8.0, -380, 0xf97316, 5.0, 32);
+        this.createPathBeacon(-1010, 8.0, -380, 0x60a5fa, "🌓 CASTLE ENSIS TWIN MOON DAIS [ELEV +8.0m]", "RELLANA TWIN MOON KNIGHT • TWIN MOON BLADES • FIRE KNIGHT QUEELIGNS", "#dbeafe");
+        this.createFloorSoapstone(-1010, 8.0, -368, "#60a5fa", "🌓 TWIN MOON DAIS", "Where Carian sorcery embraced Messmer's golden flame.");
+
+        // --------------------------------------------------------------------
+        // 8. SHADOW REALM SCADUTREE BASE & SUNFLOWER BASIN ([-1020, -10.0, 480])
+        // --------------------------------------------------------------------
+        const scaduBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 68, 14, 20), this.cliffRockMat);
+        scaduBase.position.set(-1020, -17.0, 480);
+        outsideGroup.add(scaduBase);
+
+        // Sunken Briar Basin & Shallow Golden Miasma Water
+        const scaduBasin = new THREE.Mesh(new THREE.CylinderGeometry(46, 46, 0.8, 22), new THREE.MeshStandardMaterial({
+            color: 0x1c1917, roughness: 0.95
+        }));
+        scaduBasin.position.set(-1020, -9.9, 480);
+        scaduBasin.receiveShadow = true;
+        outsideGroup.add(scaduBasin);
+
+        // Golden Liquid Pool in Center
+        const scaduPool = new THREE.Mesh(new THREE.CylinderGeometry(24, 24, 0.2, 20), new THREE.MeshStandardMaterial({
+            color: 0xeab308, emissive: 0xca8a04, emissiveIntensity: 1.4, roughness: 0.1
+        }));
+        scaduPool.position.set(-1020, -9.75, 480);
+        outsideGroup.add(scaduPool);
+
+        // 6 Colossal Thorny Scadutree Briar Arches
+        for (let ba = 0; ba < 6; ba++) {
+            const bAng = (ba / 6) * Math.PI * 2;
+            const briar = new THREE.Mesh(new THREE.TorusGeometry(8.0, 0.9, 8, 16, Math.PI), new THREE.MeshStandardMaterial({
+                color: 0x292524, roughness: 0.9
+            }));
+            briar.position.set(-1020 + Math.cos(bAng) * 32, -4.0, 480 + Math.sin(bAng) * 32);
+            briar.rotation.y = bAng;
+            outsideGroup.add(briar);
+        }
+
+        // Giant Golden Blighted Sunflower Model Statue in Basin
+        const flowerCenter = new THREE.Mesh(new THREE.SphereGeometry(3.5, 14, 14), new THREE.MeshStandardMaterial({
+            color: 0xca8a04, emissive: 0xa16207, emissiveIntensity: 1.8, roughness: 0.3
+        }));
+        flowerCenter.position.set(-1020, -2.0, 480);
+        outsideGroup.add(flowerCenter);
+
+        const scaduLight = new THREE.PointLight(0xeab308, 5.0, 50.0);
+        scaduLight.position.set(-1020, 2.0, 480);
+        outsideGroup.add(scaduLight);
+
+        this.createStandingBrazier(-1004, -10.0, 480, 0xeab308, 5.0, 32);
+        this.createStandingBrazier(-1036, -10.0, 480, 0xeab308, 5.0, 32);
+        this.createPathBeacon(-1020, -10.0, 480, 0xeab308, "🌻 SCADUTREE AVATAR BASIN [ELEV -10.0m]", "SCADUTREE AVATAR • BLIGHTED GOLDEN SUNFLOWER • HORNSENT INQUISITORS", "#fef9c3");
+        this.createFloorSoapstone(-1020, -10.0, 466, "#eab308", "🌻 SUNFLOWER BASIN", "The Scadutree wept golden tears for the neglected saint.");
     }
 
     buildSerpentSanctum() {

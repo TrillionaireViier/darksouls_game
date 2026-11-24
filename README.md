@@ -67,7 +67,7 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 257 Legendary Boss Roster
+### 🌲 Outside Realm Apex Bosses & 265 Legendary Boss Roster
 Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 257 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
@@ -274,11 +274,21 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (545 Fast-Travel Locations & 69 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (553 Fast-Travel Locations & 77 Outside Zones)
 
 The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 61 bespoke Outside locations, 60 active mob patrols, and 14 apex Soulsborne lords:
 
-### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V47 Expansion)
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V55 Expansion)
+1. **Corvian Rapier Knight Stalker**: Feathery raven wings on hunched avian body, crow beak plague mask with glowing crimson eyes, slender barbed rapier and crow-quill offhand dagger.
+2. **Dragonkin Lightning Halberdier**: Slate-grey dragon scales, crested bronze dragon horned helm, curved tail, and twin-bladed lightning halberd with crackling yellow electric sparks.
+3. **Ashina Red-Guard Arquebusier & Naginata Guard**: Vermilion-lacquered samurai armor, conical jingasa battle hat, dual-barrel matchlock gun with bayonet spear, and Ashina clan war banner.
+4. **Church Doctor Grim Executioner**: High black gothic church frock coat, white porcelain mask, spiked wooden cross-staff with hanging lantern, and brass cruciform bell.
+5. **Leyndell Sacred Tree Sentinel Patrol**: Heavy fluted gold plate armor with lion-head helm, massive golden tree-sentinel greatshield, and giant golden halberd with holy radiance.
+6. **Badlands Blood-Rage Berserker**: Muscular bare torso with crimson war paint, horned beast skull headdress, and twin jagged blood cleavers with frenzy embers.
+7. **Fire Knight Queelign Duelist**: Slender silver and scarlet armor draped in crimson silk sash, spiral pointed helm with visor slit, and flame-bladed greatsword with fire coils.
+8. **Hornsent Inquisitor Greatsword Priest**: Curving ram-horn wooden mask, spiral gold prayer robes, and dual golden crescent sickles with fluttering holy paper talismans.
+
+### 🌟 Previous Bespoke 3D Mob Archetypes (V47 Expansion)
 1. **Dreadflame Dragon Harvester**: Magma rock scales, spiked dragon bone shoulder pads, barbed dragon harpoon spear with glowing magma tip, and obsidian dragon bone shield.
 2. **Deep Sea Barnacle Fishman Priest**: Hunched amphibious aborigine with bioluminescent cyan dangling angler-lure stalk, dorsal fin crests, and weathered whalebone trident.
 3. **Black Knight Greatsword Annihilator**: Midnight blackened iron plate armor with red magma fissures, flared horned crest helm, and colossal Zweihander ultra-greatsword.
