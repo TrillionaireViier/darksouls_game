@@ -71,6 +71,8 @@ class DarkSoulsCombat {
         this.cheatMobsAttack1Hp = (localStorage.getItem('ds_cheat_mobs_1hp_dmg') === 'true');
         this.cheatOneHpMobs = (localStorage.getItem('ds_cheat_1hp_mobs') === 'true');
         this.cheatGodMode = (localStorage.getItem('ds_cheat_godmode') === 'true');
+        this.cheatInfinitePoise = (localStorage.getItem('ds_cheat_infinite_poise') === 'true');
+        this.playerDamageMultiplier = parseFloat(localStorage.getItem('ds_player_damage_mult')) || 1.0;
         this.isGodMode = this.cheatGodMode;
 
         // Physical Ballistic Arrows & Articulated Ragdolls Engine
@@ -4898,7 +4900,13 @@ class DarkSoulsCombat {
         // Plunging: 3x damage if falling vertical speed exceeds 8 m/s
         const isMaxVelocity = Math.abs(fallSpeed) > 8.0;
         const speedMult = isMaxVelocity ? 3.0 : 1.5;
-        const damage = Math.round(wpn.heavyDmg * speedMult);
+        let damage = Math.round(wpn.heavyDmg * speedMult);
+        if (this.playerDamageMultiplier && this.playerDamageMultiplier > 1.0) {
+            damage = Math.round(damage * this.playerDamageMultiplier);
+        }
+        if (this.cheatOneHpMobs || (this.playerDamageMultiplier && this.playerDamageMultiplier >= 9999)) {
+            damage = 999999;
+        }
 
         this.audio.playPlungingSlam();
         this.world.spawnPlungingShockwave(pPos);
@@ -5245,8 +5253,11 @@ class DarkSoulsCombat {
             totalDmg += this.game.blacksmith.getWeaponDamageBonus(this.currentWeaponId);
         }
 
-        // 1-Hit Kill Mobs Cheat
-        if (this.cheatOneHpMobs || this.qaOneHpMobs || (window.qaSuite && window.qaSuite.qaOneHpMobsActive)) {
+        // Player Damage Multiplier & 1-Hit Kill Mobs Cheat
+        if (this.playerDamageMultiplier && this.playerDamageMultiplier > 1.0) {
+            totalDmg = Math.round(totalDmg * this.playerDamageMultiplier);
+        }
+        if (this.cheatOneHpMobs || this.qaOneHpMobs || (window.qaSuite && window.qaSuite.qaOneHpMobsActive) || (this.playerDamageMultiplier && this.playerDamageMultiplier >= 9999)) {
             totalDmg = 999999;
         }
 
@@ -6105,6 +6116,11 @@ equipWeapon(weaponId) {
 
         if (this.hp <= 0) {
             this.killPlayer();
+        } else if (this.cheatInfinitePoise || this.cheatGodMode || this.isGodMode || this.cheatMobsAttack1Hp) {
+            // Anti-Stun / Infinite Poise cheat active: player NEVER suffers poise break or stagger!
+            this.isStaggered = false;
+            this.staggerTime = 0;
+            this.poise = this.maxPoise || 100;
         } else if (this.poise <= 0) {
             // Poise broken: rare player stun strictly 0.20s max, reduces down to 0.08s with level scaling
             this.poise = 0;
@@ -6451,6 +6467,21 @@ equipWeapon(weaponId) {
         if (this.boss && this.cheatMobsAttack1Hp) {
             this.boss.damage = 1;
         }
+    }
+
+    setCheatInfinitePoise(enable) {
+        this.cheatInfinitePoise = !!enable;
+        localStorage.setItem('ds_cheat_infinite_poise', this.cheatInfinitePoise ? 'true' : 'false');
+        if (this.cheatInfinitePoise) {
+            this.isStaggered = false;
+            this.staggerTime = 0;
+            this.poise = this.maxPoise || 100;
+        }
+    }
+
+    setPlayerDamageMultiplier(mult) {
+        this.playerDamageMultiplier = Math.max(1.0, parseFloat(mult) || 1.0);
+        localStorage.setItem('ds_player_damage_mult', this.playerDamageMultiplier.toString());
     }
 
     setCheatOneHpMobs(enable) {

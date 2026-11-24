@@ -102,8 +102,14 @@ class DarkSoulsGame {
         this.lastBonfirePos = new THREE.Vector3(0, 0, 5); // Safe Firelink Bonfire starting hub checkpoint
         this.playerVelocity = new THREE.Vector3();
         this.cheatSuperRun = (localStorage.getItem('ds_cheat_super_run') === 'true');
-        this.moveSpeed = this.cheatSuperRun ? 45.0 : 15.0;
-        this.sprintSpeed = this.cheatSuperRun ? 120.0 : 35.0;
+        const savedSprintSpeed = parseFloat(localStorage.getItem('ds_player_sprint_speed'));
+        if (savedSprintSpeed && !isNaN(savedSprintSpeed)) {
+            this.sprintSpeed = Math.max(15.0, Math.min(250.0, savedSprintSpeed));
+            this.moveSpeed = this.sprintSpeed * 0.40;
+        } else {
+            this.moveSpeed = this.cheatSuperRun ? 45.0 : 15.0;
+            this.sprintSpeed = this.cheatSuperRun ? 120.0 : 35.0;
+        }
 
         // Player Local Warm Lantern Fill (Soft subtle aura around character)
         this.playerLantern = new THREE.PointLight(0xffecd0, 0.75, 22, 1.0);
@@ -138,8 +144,17 @@ class DarkSoulsGame {
         this.charFactory.setPlayerTorchVisible(this.playerMesh, false);
 
         // Camera Parameters
-        this.cameraDistance = 4.2;
-        this.cameraPitch = 0.28;
+        const savedCamDist = parseFloat(localStorage.getItem('ds_camera_distance'));
+        this.cameraDistance = (savedCamDist && !isNaN(savedCamDist)) ? Math.max(2.0, Math.min(25.0, savedCamDist)) : 4.2;
+
+        const savedCamPitch = parseFloat(localStorage.getItem('ds_camera_pitch'));
+        this.cameraPitch = (savedCamPitch !== null && !isNaN(savedCamPitch)) ? Math.max(-0.25, Math.min(1.0, savedCamPitch)) : 0.22;
+
+        const savedCamFov = parseFloat(localStorage.getItem('ds_camera_fov'));
+        if (savedCamFov && !isNaN(savedCamFov) && this.camera) {
+            this.camera.fov = Math.max(45, Math.min(120, savedCamFov));
+            this.camera.updateProjectionMatrix();
+        }
         this.cameraYaw = 0;
         this.cameraTarget = new THREE.Vector3();
         this.shakeIntensity = 0;
@@ -3638,13 +3653,103 @@ class DarkSoulsGame {
     }
 
     applyMovementSpeeds() {
-        if (this.cheatSuperRun) {
+        const savedSprintSpeed = parseFloat(localStorage.getItem('ds_player_sprint_speed'));
+        if (savedSprintSpeed && !isNaN(savedSprintSpeed)) {
+            this.sprintSpeed = savedSprintSpeed;
+            this.moveSpeed = savedSprintSpeed * 0.40;
+        } else if (this.cheatSuperRun) {
             this.moveSpeed = 45.0;
             this.sprintSpeed = 120.0;
         } else {
             this.moveSpeed = 15.0;
             this.sprintSpeed = 35.0;
         }
+    }
+
+    setPlayerRunSpeed(speed) {
+        const val = Math.max(15.0, Math.min(250.0, parseFloat(speed) || 35.0));
+        this.sprintSpeed = val;
+        this.moveSpeed = val * 0.40;
+        this.cheatSuperRun = (val >= 100.0);
+        localStorage.setItem('ds_player_sprint_speed', val.toFixed(1));
+        localStorage.setItem('ds_cheat_super_run', this.cheatSuperRun ? 'true' : 'false');
+        this.updateEscapeMenuUI();
+        this.showNotification(`🏃 RUN SPEED SET TO ${val.toFixed(0)} m/s`);
+    }
+
+    setCameraDistance(dist) {
+        const val = Math.max(2.0, Math.min(25.0, parseFloat(dist) || 4.2));
+        this.cameraDistance = val;
+        localStorage.setItem('ds_camera_distance', val.toFixed(1));
+        this.updateEscapeMenuUI();
+        this.showNotification(`📷 CAMERA DISTANCE: ${val.toFixed(1)}m`);
+    }
+
+    setCameraFov(fov) {
+        const val = Math.max(45, Math.min(120, parseFloat(fov) || 65));
+        if (this.camera) {
+            this.camera.fov = val;
+            this.camera.updateProjectionMatrix();
+        }
+        localStorage.setItem('ds_camera_fov', val.toFixed(0));
+        this.updateEscapeMenuUI();
+        this.showNotification(`📷 CAMERA FOV: ${val.toFixed(0)}°`);
+    }
+
+    setCameraPitch(pitch) {
+        const val = Math.max(-0.25, Math.min(1.0, parseFloat(pitch) || 0.22));
+        this.cameraPitch = val;
+        localStorage.setItem('ds_camera_pitch', val.toFixed(2));
+        this.updateEscapeMenuUI();
+    }
+
+    toggleCheatInfinitePoise() {
+        if (!this.combat) return;
+        const nextState = !this.combat.cheatInfinitePoise;
+        this.combat.setCheatInfinitePoise(nextState);
+        this.updateEscapeMenuUI();
+        this.showNotification(nextState ? "🛡️ CHEAT: INFINITE POISE (NO STAGGER) [ACTIVE]" : "🛡️ CHEAT: INFINITE POISE [DISABLED]");
+        if (this.audio && this.audio.playParry) this.audio.playParry();
+    }
+
+    setPlayerDamageMultiplier(mult) {
+        if (!this.combat) return;
+        const val = parseFloat(mult) || 1.0;
+        this.combat.setPlayerDamageMultiplier(val);
+        this.updateEscapeMenuUI();
+        this.showNotification(`⚔️ PLAYER DAMAGE MULTIPLIER: ${val}x`);
+        if (this.audio && this.audio.playHit) this.audio.playHit(true);
+    }
+
+    setAtmosphere(preset) {
+        if (!this.scene) return;
+        if (preset === 'daylight') {
+            this.scene.background = new THREE.Color(0xdde8f2);
+            if (this.scene.fog) this.scene.fog.color = new THREE.Color(0xdde8f2);
+            if (this.world && this.world.ambientLight) { this.world.ambientLight.color.setHex(0xffffff); this.world.ambientLight.intensity = 0.85; }
+            if (this.world && this.world.fillSunlight) { this.world.fillSunlight.color.setHex(0xfff5e6); this.world.fillSunlight.intensity = 1.2; }
+            this.showNotification("☀️ ATMOSPHERE: RADIANT DAYLIGHT");
+        } else if (preset === 'sunset') {
+            this.scene.background = new THREE.Color(0xff8844);
+            if (this.scene.fog) this.scene.fog.color = new THREE.Color(0xcc6633);
+            if (this.world && this.world.ambientLight) { this.world.ambientLight.color.setHex(0xff9944); this.world.ambientLight.intensity = 0.65; }
+            if (this.world && this.world.fillSunlight) { this.world.fillSunlight.color.setHex(0xff7722); this.world.fillSunlight.intensity = 1.1; }
+            this.showNotification("🌅 ATMOSPHERE: GOLDEN SUNSET");
+        } else if (preset === 'eclipse') {
+            this.scene.background = new THREE.Color(0x2d1832);
+            if (this.scene.fog) this.scene.fog.color = new THREE.Color(0x351a3d);
+            if (this.world && this.world.ambientLight) { this.world.ambientLight.color.setHex(0xd080ff); this.world.ambientLight.intensity = 0.55; }
+            if (this.world && this.world.fillSunlight) { this.world.fillSunlight.color.setHex(0xbb44ee); this.world.fillSunlight.intensity = 0.8; }
+            this.showNotification("🌑 ATMOSPHERE: DARK SUN ECLIPSE");
+        } else if (preset === 'astral') {
+            this.scene.background = new THREE.Color(0x0a1020);
+            if (this.scene.fog) this.scene.fog.color = new THREE.Color(0x0e1830);
+            if (this.world && this.world.ambientLight) { this.world.ambientLight.color.setHex(0x5599ff); this.world.ambientLight.intensity = 0.50; }
+            if (this.world && this.world.fillSunlight) { this.world.fillSunlight.color.setHex(0x44eeff); this.world.fillSunlight.intensity = 0.9; }
+            this.showNotification("🌌 ATMOSPHERE: ASTRAL MIDNIGHT");
+        }
+        localStorage.setItem('ds_atmosphere_preset', preset);
+        this.updateEscapeMenuUI();
     }
 
     toggleCheatMobsAttack1Hp() {
@@ -4303,6 +4408,46 @@ class DarkSoulsGame {
             badgeGod.style.background = isGod ? 'rgba(168,85,247,0.35)' : 'rgba(255,50,50,0.25)';
             badgeGod.style.color = isGod ? '#e9d5ff' : '#ff8888';
             badgeGod.style.borderColor = isGod ? '#a855f7' : '#ff4444';
+        }
+
+        // Infinite Poise badge
+        const isPoise = !!this.combat.cheatInfinitePoise;
+        const badgePoise = document.getElementById('cheat-badge-infinite-poise');
+        if (badgePoise) {
+            badgePoise.textContent = isPoise ? 'ACTIVE (NO STUN)' : 'OFF';
+            badgePoise.style.background = isPoise ? 'rgba(76,175,80,0.35)' : 'rgba(255,50,50,0.25)';
+            badgePoise.style.color = isPoise ? '#a5d6a7' : '#ff8888';
+            badgePoise.style.borderColor = isPoise ? '#4caf50' : '#ff4444';
+        }
+
+        // Run Speed Slider & Value
+        const runSlider = document.getElementById('cheat-slider-run-speed');
+        const runVal = document.getElementById('cheat-val-run-speed');
+        if (runSlider) runSlider.value = Math.round(this.sprintSpeed || 35);
+        if (runVal) runVal.textContent = `${Math.round(this.sprintSpeed || 35)} m/s`;
+
+        // Camera Sliders & Values
+        const camDistSlider = document.getElementById('cam-slider-dist');
+        const camDistVal = document.getElementById('cam-val-dist');
+        if (camDistSlider) camDistSlider.value = (this.cameraDistance || 4.2).toFixed(1);
+        if (camDistVal) camDistVal.textContent = `${(this.cameraDistance || 4.2).toFixed(1)}m`;
+
+        const camFovSlider = document.getElementById('cam-slider-fov');
+        const camFovVal = document.getElementById('cam-val-fov');
+        const curFov = (this.camera && this.camera.fov) ? this.camera.fov : 65;
+        if (camFovSlider) camFovSlider.value = Math.round(curFov);
+        if (camFovVal) camFovVal.textContent = `${Math.round(curFov)}°`;
+
+        const camPitchSlider = document.getElementById('cam-slider-pitch');
+        const camPitchVal = document.getElementById('cam-val-pitch');
+        if (camPitchSlider) camPitchSlider.value = (this.cameraPitch !== undefined ? this.cameraPitch : 0.22).toFixed(2);
+        if (camPitchVal) camPitchVal.textContent = (this.cameraPitch !== undefined ? this.cameraPitch : 0.22).toFixed(2);
+
+        // Damage Multiplier Badge
+        const dmgMultBadge = document.getElementById('cheat-badge-dmg-mult');
+        if (dmgMultBadge) {
+            const mult = this.combat.playerDamageMultiplier || 1.0;
+            dmgMultBadge.textContent = mult >= 9999 ? '9999x (1-HIT)' : `${mult}x`;
         }
 
         // 1. Update Character Stats Overview Card

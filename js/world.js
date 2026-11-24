@@ -1064,8 +1064,8 @@ class DarkSoulsWorld {
             }
         }
 
-        // Fallen Starship Interior Deck & Ramp (x in [-250, -18], z in [-60, 140]) - Colossal Starship Deck
-        if (x >= -250 && x <= -18 && z >= -60 && z <= 140) {
+        // Fallen Starship Interior Deck & Ramp (x in [-115, -35], z in [14, 66]) - Dedicated Bazaar Deck
+        if (x >= -115 && x <= -35 && z >= 14 && z <= 66) {
             return 0.0;
         }
 
@@ -5552,8 +5552,8 @@ class DarkSoulsWorld {
         const warningStripesMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
         const floorMat = new THREE.MeshStandardMaterial({ color: 0x48586c, metalness: 0.40, roughness: 0.30, emissive: 0x14202c, emissiveIntensity: 0.25 });
 
-        // 1. Impact Crater Scorched Basin (Scaled 3x to 260m)
-        const craterRimGeo = new THREE.RingGeometry(110, 160, 32);
+        // 1. Impact Crater Scorched Basin (Bazaar perimeter)
+        const craterRimGeo = new THREE.RingGeometry(44, 62, 32);
         const craterMat = new THREE.MeshStandardMaterial({ color: 0x302a24, roughness: 0.85 });
         const craterRim = new THREE.Mesh(craterRimGeo, craterMat);
         craterRim.rotation.x = -Math.PI / 2;
@@ -5561,16 +5561,16 @@ class DarkSoulsWorld {
         shipGroup.add(craterRim);
 
         // Crater burning embers
-        for (let i = 0; i < 48; i++) {
-            const ang = (i / 48) * Math.PI * 2;
-            const er = 115 + Math.random() * 40;
-            const ember = new THREE.Mesh(new THREE.DodecahedronGeometry(0.45 + Math.random() * 0.5), new THREE.MeshBasicMaterial({ color: 0xff4400 }));
+        for (let i = 0; i < 28; i++) {
+            const ang = (i / 28) * Math.PI * 2;
+            const er = 46 + Math.random() * 14;
+            const ember = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35 + Math.random() * 0.3), new THREE.MeshBasicMaterial({ color: 0xff4400 }));
             ember.position.set(Math.cos(ang) * er, 0.2, Math.sin(ang) * er);
             shipGroup.add(ember);
         }
 
-        // 2. Interior Trading Deck Floor (Scaled 3x: Spans 250m along X, 150m along Z, y = 0.03)
-        const deckGeo = new THREE.PlaneGeometry(250, 150);
+        // 2. Interior Trading Deck Floor (Spans 76m along X, 48m along Z, y = 0.03)
+        const deckGeo = new THREE.PlaneGeometry(76, 48);
         const deckFloor = new THREE.Mesh(deckGeo, floorMat);
         deckFloor.rotation.x = -Math.PI / 2;
         deckFloor.position.set(0, 0.03, 0);
@@ -5578,121 +5578,121 @@ class DarkSoulsWorld {
         shipGroup.add(deckFloor);
 
         // Deck running hazard stripes
-        [-65, 65].forEach(stripZ => {
-            const stripeGeo = new THREE.PlaneGeometry(240, 1.2);
+        [-22, 22].forEach(stripZ => {
+            const stripeGeo = new THREE.PlaneGeometry(72, 1.0);
             const stripe = new THREE.Mesh(stripeGeo, warningStripesMat);
             stripe.rotation.x = -Math.PI / 2;
             stripe.position.set(0, 0.035, stripZ);
             shipGroup.add(stripe);
         });
 
-        // 3. Colossal Titanium Hull Superstructure (Spans x: [-125, 125], z: [-75, 75], height: 26m)
-        const fuselageGeo = new THREE.BoxGeometry(250, 26, 150);
+        // 3. Titanium Hull Superstructure (Spans x: [-36, 36], z: [-23, 23], height: 16m)
+        const fuselageGeo = new THREE.BoxGeometry(74, 16, 46);
         const fuselage = new THREE.Mesh(fuselageGeo, hullMat);
-        fuselage.position.set(0, 13.0, 0);
+        fuselage.position.set(0, 8.0, 0);
         fuselage.receiveShadow = true;
         shipGroup.add(fuselage);
 
-        // Angled Armor Plating on Hull Exterior (Heavy Beveled Shoulders)
-        [-30, 30].forEach(sideZ => {
-            const wedgeGeo = new THREE.CylinderGeometry(4, 28, 96, 4, 1, false, Math.PI * 0.25, Math.PI * 0.5);
+        // Angled Armor Plating on Hull Exterior (Beveled Shoulders)
+        [-22, 22].forEach(sideZ => {
+            const wedgeGeo = new THREE.CylinderGeometry(2, 12, 48, 4, 1, false, Math.PI * 0.25, Math.PI * 0.5);
             const wedge = new THREE.Mesh(wedgeGeo, armorPlatesMat);
             wedge.rotation.z = Math.PI / 2;
-            wedge.position.set(0, 8.0, sideZ);
+            wedge.position.set(0, 7.0, sideZ);
             shipGroup.add(wedge);
         });
 
-        // Swept Combat Wings (Angled forward/down into the dirt)
-        [-42, 42].forEach(wingZ => {
-            const wingGeo = new THREE.BoxGeometry(42, 1.8, 18);
+        // Swept Combat Wings (Streamlined and neatly bounded outside courtyard)
+        [-22, 22].forEach(wingZ => {
+            const wingGeo = new THREE.BoxGeometry(18, 1.4, 8);
             const wing = new THREE.Mesh(wingGeo, armorPlatesMat);
-            wing.position.set(-6, 4.0, wingZ);
+            wing.position.set(-8, 3.5, wingZ);
             wing.rotation.x = (wingZ > 0 ? 0.25 : -0.25);
             wing.rotation.y = (wingZ > 0 ? -0.15 : 0.15);
             shipGroup.add(wing);
 
             // Wing Solar Panels
-            const solarGeo = new THREE.PlaneGeometry(36, 12);
+            const solarGeo = new THREE.PlaneGeometry(16, 6);
             const solarMat = new THREE.MeshStandardMaterial({ color: 0x0a1428, metalness: 0.9, roughness: 0.1 });
             const solar = new THREE.Mesh(solarGeo, solarMat);
             solar.rotation.x = (wingZ > 0 ? -Math.PI / 2 + 0.25 : -Math.PI / 2 - 0.25);
-            solar.position.set(-6, 5.0, wingZ);
+            solar.position.set(-8, 4.3, wingZ);
             shipGroup.add(solar);
         });
 
         // 4. Twin Colossal Hyperdrive Thruster Engines (Rear West End: x = -35)
-        [-12, 12].forEach(engZ => {
-            const engNacelle = new THREE.Mesh(new THREE.CylinderGeometry(5.2, 5.8, 16, 16), armorPlatesMat);
+        [-10, 10].forEach(engZ => {
+            const engNacelle = new THREE.Mesh(new THREE.CylinderGeometry(3.6, 4.2, 10, 16), armorPlatesMat);
             engNacelle.rotation.z = Math.PI / 2;
-            engNacelle.position.set(-36, 6.5, engZ);
+            engNacelle.position.set(-36, 5.5, engZ);
             shipGroup.add(engNacelle);
 
-            const exhaustRim = new THREE.Mesh(new THREE.TorusGeometry(5.4, 0.6, 8, 20), goldTrimMat);
+            const exhaustRim = new THREE.Mesh(new THREE.TorusGeometry(3.8, 0.45, 8, 20), goldTrimMat);
             exhaustRim.rotation.y = Math.PI / 2;
-            exhaustRim.position.set(-44, 6.5, engZ);
+            exhaustRim.position.set(-41, 5.5, engZ);
             shipGroup.add(exhaustRim);
 
-            const plasmaCore = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 1.2, 16), engineGlowMat);
+            const plasmaCore = new THREE.Mesh(new THREE.CylinderGeometry(3.0, 3.0, 1.0, 16), engineGlowMat);
             plasmaCore.rotation.z = Math.PI / 2;
-            plasmaCore.position.set(-43.5, 6.5, engZ);
+            plasmaCore.position.set(-40.5, 5.5, engZ);
             shipGroup.add(plasmaCore);
 
-            const engLight = new THREE.PointLight(0x00f0ff, 3.5, 25);
-            engLight.position.set(-46, 6.5, engZ);
+            const engLight = new THREE.PointLight(0x00f0ff, 2.8, 20);
+            engLight.position.set(-42, 5.5, engZ);
             shipGroup.add(engLight);
         });
 
         // 5. Forward Cockpit Observation Canopy Dome (East End: x = 32)
-        const canopyGeo = new THREE.SphereGeometry(9, 16, 16, 0, Math.PI, 0, Math.PI * 0.5);
+        const canopyGeo = new THREE.SphereGeometry(6.5, 16, 16, 0, Math.PI, 0, Math.PI * 0.5);
         const canopy = new THREE.Mesh(canopyGeo, canopyGlassMat);
         canopy.rotation.z = -Math.PI / 2;
-        canopy.position.set(32, 4.0, 0);
+        canopy.position.set(32, 3.5, 0);
         shipGroup.add(canopy);
 
-        // 6. Lowered Hydraulic Steel Cargo Ramp (Entrance at x = 34 to 48, z = [-8, 8])
-        const rampGeo = new THREE.BoxGeometry(16, 0.4, 14);
+        // 6. Lowered Hydraulic Steel Cargo Ramp (Entrance at x = 33 to 42, z = [-6, 6])
+        const rampGeo = new THREE.BoxGeometry(10, 0.35, 10);
         const ramp = new THREE.Mesh(rampGeo, hullMat);
-        ramp.position.set(39, 0.2, 0);
+        ramp.position.set(36, 0.2, 0);
         ramp.rotation.z = -0.04;
         ramp.receiveShadow = true;
         shipGroup.add(ramp);
 
         // Runway Guidance Lights along Cargo Ramp
-        for (let r = 0; r < 5; r++) {
-            const rx = 33 + r * 3.5;
-            [-6.5, 6.5].forEach(rz => {
-                const guideLight = new THREE.Mesh(new THREE.SphereGeometry(0.18, 8, 8), engineGlowMat);
-                guideLight.position.set(rx, 0.45, rz);
+        for (let r = 0; r < 4; r++) {
+            const rx = 32 + r * 2.8;
+            [-4.5, 4.5].forEach(rz => {
+                const guideLight = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), engineGlowMat);
+                guideLight.position.set(rx, 0.38, rz);
                 shipGroup.add(guideLight);
             });
         }
 
         // 7. Holographic Neon Outpost Archway Sign
-        const signBeamGeo = new THREE.BoxGeometry(1.2, 1.2, 16);
+        const signBeamGeo = new THREE.BoxGeometry(1.0, 1.0, 12);
         const signBeam = new THREE.Mesh(signBeamGeo, armorPlatesMat);
-        signBeam.position.set(34, 7.5, 0);
+        signBeam.position.set(32, 6.5, 0);
         shipGroup.add(signBeam);
 
-        const holoSignGeo = new THREE.PlaneGeometry(14, 2.2);
+        const holoSignGeo = new THREE.PlaneGeometry(10, 1.8);
         const holoSignMat = new THREE.MeshBasicMaterial({ color: 0x00f5ff, side: THREE.DoubleSide });
         const holoSign = new THREE.Mesh(holoSignGeo, holoSignMat);
         holoSign.rotation.y = Math.PI / 2;
-        holoSign.position.set(34.2, 8.8, 0);
+        holoSign.position.set(32.2, 7.6, 0);
         shipGroup.add(holoSign);
 
-        const holoLight = new THREE.PointLight(0x00f5ff, 4.0, 22);
-        holoLight.position.set(35, 8.5, 0);
+        const holoLight = new THREE.PointLight(0x00f5ff, 3.2, 18);
+        holoLight.position.set(33, 7.4, 0);
         shipGroup.add(holoLight);
 
         // 8. Five Vaulted Interior Bulkhead Ribs spanning overhead (x: [-24, -12, 0, 12, 24])
         [-24, -12, 0, 12, 24].forEach(ribX => {
-            const ribArchGeo = new THREE.TorusGeometry(18, 0.75, 8, 24, Math.PI);
+            const ribArchGeo = new THREE.TorusGeometry(14, 0.6, 8, 24, Math.PI);
             const ribArch = new THREE.Mesh(ribArchGeo, armorPlatesMat);
             ribArch.rotation.y = Math.PI / 2;
             ribArch.position.set(ribX, 0, 0);
             shipGroup.add(ribArch);
 
-            const tubeGeo = new THREE.TorusGeometry(17.6, 0.18, 6, 24, Math.PI);
+            const tubeGeo = new THREE.TorusGeometry(13.6, 0.15, 6, 24, Math.PI);
             const tube = new THREE.Mesh(tubeGeo, engineGlowMat);
             tube.rotation.y = Math.PI / 2;
             tube.position.set(ribX, 0, 0);
@@ -5700,76 +5700,76 @@ class DarkSoulsWorld {
         });
 
         // 9. Central Antimatter Warp Core (Atrium Center: x = 0, z = 0, y = 3.5)
-        const coreBase = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.8, 1.4, 12), armorPlatesMat);
-        coreBase.position.set(0, 0.7, 0);
+        const coreBase = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 3.0, 1.2, 12), armorPlatesMat);
+        coreBase.position.set(0, 0.6, 0);
         shipGroup.add(coreBase);
 
-        const coreSphere = new THREE.Mesh(new THREE.SphereGeometry(1.8, 16, 16), coreMat);
-        coreSphere.position.set(0, 3.8, 0);
+        const coreSphere = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 16), coreMat);
+        coreSphere.position.set(0, 3.2, 0);
         shipGroup.add(coreSphere);
 
-        const ringGeo = new THREE.TorusGeometry(2.6, 0.22, 8, 20);
+        const ringGeo = new THREE.TorusGeometry(2.0, 0.18, 8, 20);
         const ring1 = new THREE.Mesh(ringGeo, goldTrimMat);
-        ring1.position.set(0, 3.8, 0);
+        ring1.position.set(0, 3.2, 0);
         ring1.rotation.x = Math.PI / 3;
         shipGroup.add(ring1);
 
         const ring2 = new THREE.Mesh(ringGeo, goldTrimMat);
-        ring2.position.set(0, 3.8, 0);
+        ring2.position.set(0, 3.2, 0);
         ring2.rotation.y = Math.PI / 3;
         shipGroup.add(ring2);
 
-        const coreGlow = new THREE.PointLight(0x00ffff, 4.5, 30);
-        coreGlow.position.set(0, 4.5, 0);
+        const coreGlow = new THREE.PointLight(0x00ffff, 3.5, 24);
+        coreGlow.position.set(0, 3.8, 0);
         shipGroup.add(coreGlow);
 
-        const bayLightN = new THREE.PointLight(0xa5f3fc, 2.5, 26);
-        bayLightN.position.set(-10, 6.0, -10);
+        const bayLightN = new THREE.PointLight(0xa5f3fc, 2.2, 22);
+        bayLightN.position.set(-10, 5.0, -8);
         shipGroup.add(bayLightN);
 
-        const bayLightS = new THREE.PointLight(0xa5f3fc, 2.5, 26);
-        bayLightS.position.set(-10, 6.0, 10);
+        const bayLightS = new THREE.PointLight(0xa5f3fc, 2.2, 22);
+        bayLightS.position.set(-10, 5.0, 8);
         shipGroup.add(bayLightS);
 
         // Radiant Interior Market Illumination across all merchant stalls (including Quelana)
-        const marketLightE = new THREE.PointLight(0xfff5e6, 3.8, 35);
-        marketLightE.position.set(12, 7.5, 0);
+        const marketLightE = new THREE.PointLight(0xfff5e6, 3.2, 28);
+        marketLightE.position.set(10, 6.0, 0);
         shipGroup.add(marketLightE);
 
-        const marketLightW = new THREE.PointLight(0xfff5e6, 3.8, 35);
-        marketLightW.position.set(-22, 7.5, 0);
+        const marketLightW = new THREE.PointLight(0xfff5e6, 3.2, 28);
+        marketLightW.position.set(-18, 6.0, 0);
         shipGroup.add(marketLightW);
 
-        const marketLightNW = new THREE.PointLight(0xfff5e6, 3.5, 30);
-        marketLightNW.position.set(-22, 7.5, -12);
+        const marketLightNW = new THREE.PointLight(0xfff5e6, 3.0, 24);
+        marketLightNW.position.set(-18, 6.0, -10);
         shipGroup.add(marketLightNW);
 
-        const marketLightSW = new THREE.PointLight(0xfff5e6, 3.8, 32); // Illuminates Quelana of Izalith
-        marketLightSW.position.set(-22, 7.5, 12);
+        const marketLightSW = new THREE.PointLight(0xfff5e6, 3.2, 26); // Illuminates Quelana of Izalith
+        marketLightSW.position.set(-18, 6.0, 10);
         shipGroup.add(marketLightSW);
 
         this.scene.add(shipGroup);
 
-        // Add colliders for spaceship exterior walls (Scaled 3x for 250m x 150m dreadnought)
+        // Add colliders for spaceship exterior walls so player remains safely inside
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx - 130, 0, cz - 80),
-            new THREE.Vector3(cx + 130, 26, cz - 74)
+            new THREE.Vector3(cx - 38, 0, cz - 25),
+            new THREE.Vector3(cx + 38, 16, cz - 22)
         ));
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx - 130, 0, cz + 74),
-            new THREE.Vector3(cx + 130, 26, cz + 80)
+            new THREE.Vector3(cx - 38, 0, cz + 22),
+            new THREE.Vector3(cx + 38, 16, cz + 25)
         ));
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx - 130, 0, cz - 78),
-            new THREE.Vector3(cx - 124, 26, cz + 78)
+            new THREE.Vector3(cx - 38, 0, cz - 24),
+            new THREE.Vector3(cx - 34, 16, cz + 24)
         ));
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx + 124, 0, cz - 78),
-            new THREE.Vector3(cx + 130, 26, cz - 25)
+            new THREE.Vector3(cx + 34, 0, cz - 24),
+            new THREE.Vector3(cx + 38, 16, cz - 7)
         ));
         this.colliders.push(new THREE.Box3(
-            new THREE.Vector3(cx + 124, 0, cz + 25),
-            new THREE.Vector3(cx + 130, 26, cz + 78)
+            new THREE.Vector3(cx + 34, 0, cz + 7),
+            new THREE.Vector3(cx + 38, 16, cz + 24)
         ));
     }
 

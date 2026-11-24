@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE';
+            var TARGET_BUILD = '20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -7287,46 +7287,149 @@
             <div id="esc-cheats-panel" style="background: linear-gradient(145deg, rgba(38, 12, 22, 0.96), rgba(20, 10, 16, 0.96)); border: 2px solid #ff3366; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; box-shadow: 0 4px 18px rgba(0,0,0,0.7), 0 0 16px rgba(255,51,102,0.35);">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,51,102,0.4); padding-bottom: 8px; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
                     <span style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 800; color: #ff99bb; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
-                        ⚡ CHEATS & GOD-MODE CONTROLS
+                        ⚡ CHEATS, RUN SPEED &amp; CAMERA CONTROLS
                     </span>
                     <span style="font-size: 0.72rem; color: #ffd276; font-weight: 700; background: rgba(255,51,102,0.2); border: 1px solid rgba(255,51,102,0.5); padding: 2px 8px; border-radius: 9999px;">
                         [ESC] MENU &bull; HOTKEYS: [Z] SUPER RUN &bull; [H] FULL HEAL
                     </span>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px;">
+                
+                <!-- Quick Cheats Buttons Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 14px;">
                     <!-- Cheat 1: Mobs Attack 1 HP -->
-                    <button id="cheat-btn-mobs-1hp-dmg" class="btn-icon-bar" onclick="toggleCheatMobsAttack1Hp()" style="justify-content: space-between; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #ffaa33; color: #ffe0b2; background: rgba(50, 25, 10, 0.85); box-shadow: 0 0 10px rgba(255,170,51,0.3);">
+                    <button id="cheat-btn-mobs-1hp-dmg" class="btn-icon-bar" onclick="toggleCheatMobsAttack1Hp()" style="justify-content: space-between; padding: 9px 12px; font-weight: 800; font-size: 0.80rem; border-color: #ffaa33; color: #ffe0b2; background: rgba(50, 25, 10, 0.85); box-shadow: 0 0 10px rgba(255,170,51,0.3);">
                         <span>🛡️ MOBS ATTACK 1 HP</span>
-                        <span id="cheat-badge-mobs-1hp-dmg" style="padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
+                        <span id="cheat-badge-mobs-1hp-dmg" style="padding: 2px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
                     </button>
 
-                    <!-- Cheat 2: Super Run Speed -->
-                    <button id="cheat-btn-super-run" class="btn-icon-bar" onclick="toggleCheatSuperRun()" style="justify-content: space-between; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #00f5ff; color: #e0ffff; background: rgba(10, 40, 55, 0.85); box-shadow: 0 0 10px rgba(0,245,255,0.3);">
-                        <span>⚡ SUPER RUN (120 m/s) [Z]</span>
-                        <span id="cheat-badge-super-run" style="padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
+                    <!-- Cheat 2: Super Run Speed Toggle -->
+                    <button id="cheat-btn-super-run" class="btn-icon-bar" onclick="toggleCheatSuperRun()" style="justify-content: space-between; padding: 9px 12px; font-weight: 800; font-size: 0.80rem; border-color: #00f5ff; color: #e0ffff; background: rgba(10, 40, 55, 0.85); box-shadow: 0 0 10px rgba(0,245,255,0.3);">
+                        <span>⚡ SUPER RUN (120 m/s)</span>
+                        <span id="cheat-badge-super-run" style="padding: 2px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
                     </button>
 
                     <!-- Cheat 3: 1-Hit Kill Mobs -->
-                    <button id="cheat-btn-1hp-mobs" class="btn-icon-bar" onclick="toggleCheatOneHpMobs()" style="justify-content: space-between; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #ffd700; color: #fff3a8; background: rgba(50, 40, 10, 0.85); box-shadow: 0 0 10px rgba(255,215,0,0.3);">
+                    <button id="cheat-btn-1hp-mobs" class="btn-icon-bar" onclick="toggleCheatOneHpMobs()" style="justify-content: space-between; padding: 9px 12px; font-weight: 800; font-size: 0.80rem; border-color: #ffd700; color: #fff3a8; background: rgba(50, 40, 10, 0.85); box-shadow: 0 0 10px rgba(255,215,0,0.3);">
                         <span>⚔️ 1-HIT KILL MOBS</span>
-                        <span id="cheat-badge-1hp-mobs" style="padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
+                        <span id="cheat-badge-1hp-mobs" style="padding: 2px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
                     </button>
 
                     <!-- Cheat 4: Invincibility / God Mode -->
-                    <button id="cheat-btn-godmode" class="btn-icon-bar" onclick="toggleCheatGodMode()" style="justify-content: space-between; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #a855f7; color: #f3e8ff; background: rgba(40, 15, 55, 0.85); box-shadow: 0 0 10px rgba(168,85,247,0.3);">
+                    <button id="cheat-btn-godmode" class="btn-icon-bar" onclick="toggleCheatGodMode()" style="justify-content: space-between; padding: 9px 12px; font-weight: 800; font-size: 0.80rem; border-color: #a855f7; color: #f3e8ff; background: rgba(40, 15, 55, 0.85); box-shadow: 0 0 10px rgba(168,85,247,0.3);">
                         <span>👑 GOD MODE (INVINCIBLE)</span>
-                        <span id="cheat-badge-godmode" style="padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
+                        <span id="cheat-badge-godmode" style="padding: 2px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
                     </button>
 
-                    <!-- Action 5: Instant Revive & Full Heal -->
-                    <button class="btn-icon-bar" onclick="cheatInstantHealRevive()" style="justify-content: center; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #4caf50; color: #c8e6c9; background: rgba(20, 45, 20, 0.85); box-shadow: 0 0 10px rgba(76,175,80,0.3);">
-                        💖 FULL HEAL & REVIVE [H]
+                    <!-- Cheat 5: No Stagger / Infinite Poise -->
+                    <button id="cheat-btn-infinite-poise" class="btn-icon-bar" onclick="toggleCheatInfinitePoise()" style="justify-content: space-between; padding: 9px 12px; font-weight: 800; font-size: 0.80rem; border-color: #3b82f6; color: #bfdbfe; background: rgba(15, 30, 60, 0.85); box-shadow: 0 0 10px rgba(59,130,246,0.3);">
+                        <span>🛡️ NO STAGGER / POISE</span>
+                        <span id="cheat-badge-infinite-poise" style="padding: 2px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
                     </button>
 
-                    <!-- Action 6: Disperse Nearby Enemies -->
-                    <button class="btn-icon-bar" onclick="cheatDisperseNearbyMobs()" style="justify-content: center; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #ff5555; color: #ffcdd2; background: rgba(45, 15, 15, 0.85); box-shadow: 0 0 10px rgba(255,85,85,0.3);">
+                    <!-- Action 6: Instant Revive & Full Heal -->
+                    <button class="btn-icon-bar" onclick="cheatInstantHealRevive()" style="justify-content: center; padding: 9px 12px; font-weight: 800; font-size: 0.80rem; border-color: #4caf50; color: #c8e6c9; background: rgba(20, 45, 20, 0.85); box-shadow: 0 0 10px rgba(76,175,80,0.3);">
+                        💖 FULL HEAL &amp; REVIVE [H]
+                    </button>
+
+                    <!-- Action 7: Disperse Nearby Enemies -->
+                    <button class="btn-icon-bar" onclick="cheatDisperseNearbyMobs()" style="justify-content: center; padding: 9px 12px; font-weight: 800; font-size: 0.80rem; border-color: #ff5555; color: #ffcdd2; background: rgba(45, 15, 15, 0.85); box-shadow: 0 0 10px rgba(255,85,85,0.3);">
                         🧹 DISPERSE NEARBY MOBS
                     </button>
+                </div>
+
+                <!-- 🏃 SECTION 1: RUN SPEED CONTROLLER & PRESETS -->
+                <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(0,245,255,0.3); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 800; color: #80d8ff;">
+                            🏃 RUN &amp; SPRINT SPEED:
+                        </span>
+                        <span id="cheat-val-run-speed" style="font-weight: 900; font-size: 0.95rem; color: #00f5ff; font-family: monospace;">
+                            35 m/s
+                        </span>
+                    </div>
+                    <input type="range" id="cheat-slider-run-speed" min="15" max="180" step="1" value="35" oninput="onRunSpeedSlider(this.value)" style="width: 100%; accent-color: #00f5ff; cursor: pointer; margin-bottom: 8px;">
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <button class="btn-icon-bar" onclick="setRunSpeedPreset(15)" style="padding: 4px 8px; font-size: 0.72rem; border-color: #88ccff; color: #cce6ff;">Walk: 15 m/s</button>
+                        <button class="btn-icon-bar" onclick="setRunSpeedPreset(35)" style="padding: 4px 8px; font-size: 0.72rem; border-color: #88ccff; color: #cce6ff;">Sprint: 35 m/s</button>
+                        <button class="btn-icon-bar" onclick="setRunSpeedPreset(65)" style="padding: 4px 8px; font-size: 0.72rem; border-color: #ffd700; color: #fff3a8;">Fast: 65 m/s</button>
+                        <button class="btn-icon-bar" onclick="setRunSpeedPreset(120)" style="padding: 4px 8px; font-size: 0.72rem; border-color: #00f5ff; color: #80d8ff;">Super: 120 m/s</button>
+                        <button class="btn-icon-bar" onclick="setRunSpeedPreset(180)" style="padding: 4px 8px; font-size: 0.72rem; border-color: #ff3366; color: #ff99bb;">Sonic: 180 m/s</button>
+                    </div>
+                </div>
+
+                <!-- 📷 SECTION 2: CAMERA (CAM) CONTROLLER & PRESETS -->
+                <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,215,0,0.35); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 800; color: #ffd778;">
+                            📷 CAMERA (CAM) VIEW &amp; FOV CONTROLLER:
+                        </span>
+                        <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                            <button class="btn-icon-bar" onclick="setCameraPreset(3.0, 70, 0.26)" style="padding: 3px 6px; font-size: 0.68rem; border-color: #ffd778; color: #ffe6aa;">Action: 3m</button>
+                            <button class="btn-icon-bar" onclick="setCameraPreset(4.2, 65, 0.22)" style="padding: 3px 6px; font-size: 0.68rem; border-color: #ffd778; color: #ffe6aa;">Default: 4.2m</button>
+                            <button class="btn-icon-bar" onclick="setCameraPreset(7.5, 75, 0.28)" style="padding: 3px 6px; font-size: 0.68rem; border-color: #ffd778; color: #ffe6aa;">Tactical: 7.5m</button>
+                            <button class="btn-icon-bar" onclick="setCameraPreset(12.0, 85, 0.35)" style="padding: 3px 6px; font-size: 0.68rem; border-color: #ffd778; color: #ffe6aa;">Wide: 12m</button>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                        <!-- Distance -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #c4b5a0; margin-bottom: 3px;">
+                                <span>Camera Distance:</span>
+                                <span id="cam-val-dist" style="font-weight: 800; color: #ffd700;">4.2m</span>
+                            </div>
+                            <input type="range" id="cam-slider-dist" min="2.5" max="15.0" step="0.1" value="4.2" oninput="onCameraDistanceSlider(this.value)" style="width: 100%; accent-color: #ffd700; cursor: pointer;">
+                        </div>
+                        <!-- FOV -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #c4b5a0; margin-bottom: 3px;">
+                                <span>Field of View (FOV):</span>
+                                <span id="cam-val-fov" style="font-weight: 800; color: #ffd700;">65°</span>
+                            </div>
+                            <input type="range" id="cam-slider-fov" min="50" max="110" step="1" value="65" oninput="onCameraFovSlider(this.value)" style="width: 100%; accent-color: #ffd700; cursor: pointer;">
+                        </div>
+                        <!-- Pitch / Height -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #c4b5a0; margin-bottom: 3px;">
+                                <span>Camera Height / Pitch:</span>
+                                <span id="cam-val-pitch" style="font-weight: 800; color: #ffd700;">0.22</span>
+                            </div>
+                            <input type="range" id="cam-slider-pitch" min="-0.10" max="0.80" step="0.02" value="0.22" oninput="onCameraPitchSlider(this.value)" style="width: 100%; accent-color: #ffd700; cursor: pointer;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⚔️ SECTION 3: ELEMENTS TO CHANGE (DAMAGE MULTIPLIER & ATMOSPHERE) -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px;">
+                    <!-- Damage Multiplier -->
+                    <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,85,85,0.3); border-radius: 8px; padding: 8px 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-family: 'Cinzel', serif; font-size: 0.78rem; font-weight: 800; color: #ff8888;">
+                                ⚔️ DAMAGE MULTIPLIER:
+                            </span>
+                            <span id="cheat-badge-dmg-mult" style="font-size: 0.74rem; font-weight: 900; color: #ffd276;">1x</span>
+                        </div>
+                        <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                            <button class="btn-icon-bar" onclick="setDamageMultiplier(1)" style="padding: 3px 6px; font-size: 0.68rem; border-color: #88ccff; color: #cce6ff;">1x Norm</button>
+                            <button class="btn-icon-bar" onclick="setDamageMultiplier(2)" style="padding: 3px 6px; font-size: 0.68rem; border-color: #ffd700; color: #fff3a8;">2x Hero</button>
+                            <button class="btn-icon-bar" onclick="setDamageMultiplier(5)" style="padding: 3px 6px; font-size: 0.68rem; border-color: #ff9944; color: #fed7aa;">5x Legend</button>
+                            <button class="btn-icon-bar" onclick="setDamageMultiplier(9999)" style="padding: 3px 6px; font-size: 0.68rem; border-color: #ff3366; color: #ff99bb;">9999x Kill</button>
+                        </div>
+                    </div>
+
+                    <!-- Atmosphere / Environment Sky Changer -->
+                    <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 8px 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-family: 'Cinzel', serif; font-size: 0.78rem; font-weight: 800; color: #d8b4fe;">
+                                🌌 ELEMENTS / SKY THEME:
+                            </span>
+                        </div>
+                        <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                            <button class="btn-icon-bar" onclick="setAtmosphereTheme('daylight')" style="padding: 3px 6px; font-size: 0.68rem; border-color: #88ccff; color: #cce6ff;">☀️ Daylight</button>
+                            <button class="btn-icon-bar" onclick="setAtmosphereTheme('sunset')" style="padding: 3px 6px; font-size: 0.68rem; border-color: #ffaa33; color: #ffe0b2;">🌅 Sunset</button>
+                            <button class="btn-icon-bar" onclick="setAtmosphereTheme('eclipse')" style="padding: 3px 6px; font-size: 0.68rem; border-color: #c084fc; color: #e9d5ff;">🌑 Eclipse</button>
+                            <button class="btn-icon-bar" onclick="setAtmosphereTheme('astral')" style="padding: 3px 6px; font-size: 0.68rem; border-color: #00f5ff; color: #a5f3fc;">🌌 Astral</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -7580,6 +7683,57 @@
         }
         function cheatDisperseNearbyMobs() {
             if (window.game) window.game.cheatDisperseNearbyMobs();
+        }
+        function toggleCheatInfinitePoise() {
+            if (window.game) window.game.toggleCheatInfinitePoise();
+        }
+        function onRunSpeedSlider(val) {
+            const v = parseFloat(val);
+            const disp = document.getElementById('cheat-val-run-speed');
+            if (disp) disp.textContent = `${Math.round(v)} m/s`;
+            if (window.game) window.game.setPlayerRunSpeed(v);
+        }
+        function setRunSpeedPreset(val) {
+            const slider = document.getElementById('cheat-slider-run-speed');
+            if (slider) slider.value = val;
+            onRunSpeedSlider(val);
+        }
+        function onCameraDistanceSlider(val) {
+            const v = parseFloat(val);
+            const disp = document.getElementById('cam-val-dist');
+            if (disp) disp.textContent = `${v.toFixed(1)}m`;
+            if (window.game) window.game.setCameraDistance(v);
+        }
+        function onCameraFovSlider(val) {
+            const v = parseFloat(val);
+            const disp = document.getElementById('cam-val-fov');
+            if (disp) disp.textContent = `${Math.round(v)}°`;
+            if (window.game) window.game.setCameraFov(v);
+        }
+        function onCameraPitchSlider(val) {
+            const v = parseFloat(val);
+            const disp = document.getElementById('cam-val-pitch');
+            if (disp) disp.textContent = v.toFixed(2);
+            if (window.game) window.game.setCameraPitch(v);
+        }
+        function setCameraPreset(dist, fov, pitch) {
+            const sDist = document.getElementById('cam-slider-dist');
+            if (sDist) sDist.value = dist;
+            onCameraDistanceSlider(dist);
+
+            const sFov = document.getElementById('cam-slider-fov');
+            if (sFov) sFov.value = fov;
+            onCameraFovSlider(fov);
+
+            const sPitch = document.getElementById('cam-slider-pitch');
+            if (sPitch) sPitch.value = pitch;
+            onCameraPitchSlider(pitch);
+        }
+        function setDamageMultiplier(mult) {
+            if (window.game) window.game.setPlayerDamageMultiplier(mult);
+        }
+        function setAtmosphereTheme(preset) {
+            if (window.game) window.game.setAtmosphere(preset);
         }
 
         function openBossSelectModal() {
@@ -8464,26 +8618,26 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/audio.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/lore_items.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/merchants_30.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/world.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/character.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/siege_warfare.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/heraldry_nobility.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/apothecary_crafting.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/collision_system.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/qa_bot_tester.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/combat.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/postprocessing.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/qa_suite.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/blacksmith_forge.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/inventory_system.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/compendium_300_models.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/death_quotes_300.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/game.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
-    <script src="js/dev_map.js?v=20261124_V53_CLEAN_COURTYARD_SOLID_ARCHITECTURE"></script>
+    <script src="js/three.min.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/audio.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/lore_items.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/merchants_30.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/world.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/character.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/siege_warfare.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/heraldry_nobility.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/apothecary_crafting.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/collision_system.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/qa_bot_tester.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/combat.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/postprocessing.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/qa_suite.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/blacksmith_forge.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/inventory_system.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/compendium_300_models.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/death_quotes_300.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/game.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
+    <script src="js/dev_map.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
     <script>
         // Automatic Game Initialization Failsafe
         (function() {
