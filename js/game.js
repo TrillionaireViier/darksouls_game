@@ -100,8 +100,9 @@ class DarkSoulsGame {
         this.playerMesh.position.set(0, 0, 5); // Courtyard start near bonfire
         this.playerMesh.rotation.y = Math.PI; // Face forward into Lordran towards bonfire
         this.playerVelocity = new THREE.Vector3();
-        this.moveSpeed = 15.0;
-        this.sprintSpeed = 35.0;
+        this.cheatSuperRun = (localStorage.getItem('ds_cheat_super_run') === 'true');
+        this.moveSpeed = this.cheatSuperRun ? 45.0 : 15.0;
+        this.sprintSpeed = this.cheatSuperRun ? 120.0 : 35.0;
 
         // Player Local Warm Lantern Fill (Soft subtle aura around character)
         this.playerLantern = new THREE.PointLight(0xffecd0, 0.75, 22, 1.0);
@@ -333,6 +334,12 @@ class DarkSoulsGame {
                 } else {
                     this.openLocationsModal();
                 }
+            }
+            if (e.code === 'KeyZ' || e.key === 'z' || e.key === 'Z' || e.key === 'я' || e.key === 'Я') {
+                this.toggleCheatSuperRun();
+            }
+            if (e.code === 'KeyH' || e.key === 'h' || e.key === 'H' || e.key === 'р' || e.key === 'Р') {
+                this.cheatInstantHealRevive();
             }
             if (e.code === 'KeyU' || e.key === 'u' || e.key === 'U' || e.key === 'г' || e.key === 'Г') {
                 this.unstuckPlayer();
@@ -3622,7 +3629,88 @@ class DarkSoulsGame {
         if (modal) modal.style.display = 'none';
     }
 
+    applyMovementSpeeds() {
+        if (this.cheatSuperRun) {
+            this.moveSpeed = 45.0;
+            this.sprintSpeed = 120.0;
+        } else {
+            this.moveSpeed = 15.0;
+            this.sprintSpeed = 35.0;
+        }
+    }
+
+    toggleCheatMobsAttack1Hp() {
+        if (!this.combat) return;
+        const nextState = !this.combat.cheatMobsAttack1Hp;
+        this.combat.setCheatMobsAttack1Hp(nextState);
+        this.updateEscapeMenuUI();
+        this.showNotification(nextState ? "🛡️ CHEAT: MOBS ATTACK 1 HP [ACTIVATED]" : "🛡️ CHEAT: MOBS ATTACK 1 HP [DISABLED]");
+        if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+    }
+
+    toggleCheatSuperRun() {
+        this.cheatSuperRun = !this.cheatSuperRun;
+        localStorage.setItem('ds_cheat_super_run', this.cheatSuperRun ? 'true' : 'false');
+        this.applyMovementSpeeds();
+        this.updateEscapeMenuUI();
+        this.showNotification(this.cheatSuperRun ? "⚡ CHEAT: SUPER RUN SPEED (120 m/s) [ACTIVATED]" : "⚡ CHEAT: SUPER RUN SPEED [NORMAL]");
+        if (this.audio && this.audio.playRoll) this.audio.playRoll();
+    }
+
+    toggleCheatOneHpMobs() {
+        if (!this.combat) return;
+        const nextState = !this.combat.cheatOneHpMobs;
+        this.combat.setCheatOneHpMobs(nextState);
+        this.updateEscapeMenuUI();
+        this.showNotification(nextState ? "⚔️ CHEAT: 1-HIT KILL MOBS [ACTIVATED]" : "⚔️ CHEAT: 1-HIT KILL MOBS [DISABLED]");
+        if (this.audio && this.audio.playParry) this.audio.playParry();
+    }
+
+    toggleCheatGodMode() {
+        if (!this.combat) return;
+        const nextState = !(this.combat.cheatGodMode || this.combat.isGodMode);
+        this.combat.setCheatGodMode(nextState);
+        this.updateEscapeMenuUI();
+        this.showNotification(nextState ? "👑 CHEAT: GOD MODE (INVINCIBLE) [ACTIVATED]" : "👑 CHEAT: GOD MODE [DISABLED]");
+        if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+    }
+
+    cheatInstantHealRevive() {
+        if (!this.combat) return;
+        this.combat.instantHealRevive();
+        this.updateEscapeMenuUI();
+        this.showNotification("💖 RESTORED FULL HEALTH (1200/1200) & REVIVED!");
+        if (this.audio && this.audio.playEstusDrink) this.audio.playEstusDrink();
+    }
+
+    cheatDisperseNearbyMobs() {
+        if (!this.combat) return;
+        const count = this.combat.disperseNearbyMobs(50);
+        this.showNotification(`🧹 DISPERSED ${count} NEARBY HOSTILE MOBS 55m AWAY!`);
+        if (this.audio && this.audio.playBonfireIgnite) this.audio.playBonfireIgnite();
+    }
+
+    focusCheats() {
+        const panel = document.getElementById('esc-cheats-panel');
+        if (panel) {
+            panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            panel.style.boxShadow = '0 0 25px rgba(255, 51, 102, 0.9)';
+            setTimeout(() => {
+                panel.style.boxShadow = '0 4px 18px rgba(0,0,0,0.7), 0 0 16px rgba(255,51,102,0.35)';
+            }, 1200);
+        }
+    }
+
     handleEscapeKey() {
+        // Auto-Revive if player died or is trapped at 0 HP
+        if (this.combat && (this.combat.isDead || this.combat.hp <= 0)) {
+            this.combat.instantHealRevive();
+            this.showNotification("💖 AUTO-REVIVED WITH FULL HEALTH [1200/1200]!");
+        }
+
+        // Ensure movement speeds match active cheat status
+        this.applyMovementSpeeds();
+
         // 1. If any modal overlay is open, close all open modals and resume battle
         const openModals = Array.from(document.querySelectorAll('.modal-overlay')).filter(m => {
             return m.style.display === 'flex' || m.style.display === 'block';
@@ -3667,7 +3755,7 @@ class DarkSoulsGame {
             setTimeout(() => bar.classList.remove('header-actions-glow'), 1200);
         }
 
-        this.showNotification("⚜️ WARRIORS' DREAM COMMAND MENU • [ESC] RESUME");
+        this.showNotification("⚜️ WARRIORS' DREAM CHEATS & COMMAND MENU • [ESC] RESUME");
     }
 
     respawnPlayer() {
@@ -4162,6 +4250,43 @@ class DarkSoulsGame {
 
     updateEscapeMenuUI() {
         if (!this.combat) return;
+
+        // 0. Update Cheat Badges in Escape Menu
+        const isMobs1HpDmg = !!this.combat.cheatMobsAttack1Hp;
+        const badgeMobsDmg = document.getElementById('cheat-badge-mobs-1hp-dmg');
+        if (badgeMobsDmg) {
+            badgeMobsDmg.textContent = isMobs1HpDmg ? 'ACTIVE (1 HP)' : 'OFF';
+            badgeMobsDmg.style.background = isMobs1HpDmg ? 'rgba(76,175,80,0.35)' : 'rgba(255,50,50,0.25)';
+            badgeMobsDmg.style.color = isMobs1HpDmg ? '#a5d6a7' : '#ff8888';
+            badgeMobsDmg.style.borderColor = isMobs1HpDmg ? '#4caf50' : '#ff4444';
+        }
+
+        const isSuperRun = !!this.cheatSuperRun;
+        const badgeSuperRun = document.getElementById('cheat-badge-super-run');
+        if (badgeSuperRun) {
+            badgeSuperRun.textContent = isSuperRun ? 'ACTIVE (120 m/s)' : 'OFF';
+            badgeSuperRun.style.background = isSuperRun ? 'rgba(0,229,255,0.35)' : 'rgba(255,50,50,0.25)';
+            badgeSuperRun.style.color = isSuperRun ? '#80d8ff' : '#ff8888';
+            badgeSuperRun.style.borderColor = isSuperRun ? '#00e5ff' : '#ff4444';
+        }
+
+        const is1HpMobs = !!this.combat.cheatOneHpMobs;
+        const badge1HpMobs = document.getElementById('cheat-badge-1hp-mobs');
+        if (badge1HpMobs) {
+            badge1HpMobs.textContent = is1HpMobs ? 'ACTIVE (1-HIT)' : 'OFF';
+            badge1HpMobs.style.background = is1HpMobs ? 'rgba(255,215,0,0.35)' : 'rgba(255,50,50,0.25)';
+            badge1HpMobs.style.color = is1HpMobs ? '#fff3a8' : '#ff8888';
+            badge1HpMobs.style.borderColor = is1HpMobs ? '#ffd700' : '#ff4444';
+        }
+
+        const isGod = !!(this.combat.cheatGodMode || this.combat.isGodMode);
+        const badgeGod = document.getElementById('cheat-badge-godmode');
+        if (badgeGod) {
+            badgeGod.textContent = isGod ? 'ACTIVE (INVINCIBLE)' : 'OFF';
+            badgeGod.style.background = isGod ? 'rgba(168,85,247,0.35)' : 'rgba(255,50,50,0.25)';
+            badgeGod.style.color = isGod ? '#e9d5ff' : '#ff8888';
+            badgeGod.style.borderColor = isGod ? '#a855f7' : '#ff4444';
+        }
 
         // 1. Update Character Stats Overview Card
         const elLevel = document.getElementById('esc-stat-level');

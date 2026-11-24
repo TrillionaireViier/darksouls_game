@@ -68,7 +68,10 @@ class DarkSoulsCombat {
         this.currentBossType = 'asylum';
         this.defeatedBosses = [];
         this.adminModeUnlocked = (localStorage.getItem('darksouls_admin_mode') === 'true');
-        this.isGodMode = false;
+        this.cheatMobsAttack1Hp = (localStorage.getItem('ds_cheat_mobs_1hp_dmg') === 'true');
+        this.cheatOneHpMobs = (localStorage.getItem('ds_cheat_1hp_mobs') === 'true');
+        this.cheatGodMode = (localStorage.getItem('ds_cheat_godmode') === 'true');
+        this.isGodMode = this.cheatGodMode;
 
         // Physical Ballistic Arrows & Articulated Ragdolls Engine
         this.arrows = [];
@@ -5242,6 +5245,11 @@ class DarkSoulsCombat {
             totalDmg += this.game.blacksmith.getWeaponDamageBonus(this.currentWeaponId);
         }
 
+        // 1-Hit Kill Mobs Cheat
+        if (this.cheatOneHpMobs || this.qaOneHpMobs || (window.qaSuite && window.qaSuite.qaOneHpMobsActive)) {
+            totalDmg = 999999;
+        }
+
         // 1. Check Hollow Soldiers
         for (const e of this.enemies) {
             if (e.isDead) continue;
@@ -6008,14 +6016,14 @@ equipWeapon(weaponId) {
     }
 
     damagePlayer(damage, attackerPos) {
-        if (this.isDead || this.isInvincible || this.isGodMode) return;
+        if (this.isDead || this.isInvincible || this.isGodMode || this.cheatGodMode) return;
         // Blacksmith Armor Tempering Reduction (System 301-330)
         if (this.game && this.game.blacksmith) {
             damage = Math.max(1, Math.round(damage * this.game.blacksmith.getArmorDamageReduction()));
         }
 
-        // QA Test Mode Hook: Clamp incoming damage to 1 HP
-        if (this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive)) {
+        // Cheats & QA Test Mode Hook: Clamp incoming damage to 1 HP
+        if (this.cheatMobsAttack1Hp || this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive)) {
             damage = 1;
         }
 
@@ -6427,6 +6435,99 @@ equipWeapon(weaponId) {
         }
     }
 
+    setCheatMobsAttack1Hp(enable) {
+        this.cheatMobsAttack1Hp = !!enable;
+        this.qaOneHpDamage = this.cheatMobsAttack1Hp;
+        localStorage.setItem('ds_cheat_mobs_1hp_dmg', this.cheatMobsAttack1Hp ? 'true' : 'false');
+        for (let i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i]) {
+                if (this.cheatMobsAttack1Hp) {
+                    this.enemies[i].damage = 1;
+                } else if (this.enemies[i].baseDamage) {
+                    this.enemies[i].damage = this.enemies[i].baseDamage;
+                }
+            }
+        }
+        if (this.boss && this.cheatMobsAttack1Hp) {
+            this.boss.damage = 1;
+        }
+    }
+
+    setCheatOneHpMobs(enable) {
+        this.cheatOneHpMobs = !!enable;
+        this.qaOneHpMobs = this.cheatOneHpMobs;
+        localStorage.setItem('ds_cheat_1hp_mobs', this.cheatOneHpMobs ? 'true' : 'false');
+        if (this.cheatOneHpMobs) {
+            for (let i = 0; i < this.enemies.length; i++) {
+                if (this.enemies[i] && !this.enemies[i].isDead) {
+                    this.enemies[i].hp = 1;
+                    this.enemies[i].maxHp = 1;
+                }
+            }
+            if (this.boss && !this.boss.isDead) {
+                this.boss.hp = 1;
+            }
+        }
+    }
+
+    setCheatGodMode(enable) {
+        this.cheatGodMode = !!enable;
+        this.isGodMode = this.cheatGodMode;
+        localStorage.setItem('ds_cheat_godmode', this.cheatGodMode ? 'true' : 'false');
+        if (this.cheatGodMode) {
+            this.instantHealRevive();
+        }
+    }
+
+    instantHealRevive() {
+        this.isDead = false;
+        this.hp = this.maxHp;
+        this.stamina = this.maxStamina;
+        this.estusFlasks = this.maxEstus;
+        this.poise = this.maxPoise;
+        this.isPoisoned = false;
+        this.isStaggered = false;
+        if (document.body) document.body.classList.remove('player-is-dead');
+        if (this.game && this.game.ui && this.game.ui.deathScreen) {
+            this.game.ui.deathScreen.classList.remove('active');
+            this.game.ui.deathScreen.style.display = 'none';
+        }
+    }
+
+    disperseNearbyMobs(radius = 50) {
+        if (!this.game || !this.game.playerMesh) return 0;
+        const pPos = this.game.playerMesh.position;
+        let count = 0;
+        for (let i = 0; i < this.enemies.length; i++) {
+            const e = this.enemies[i];
+            if (e && !e.isDead && e.mesh) {
+                const dist = e.mesh.position.distanceTo(pPos);
+                if (dist < radius) {
+                    const pushDir = new THREE.Vector3().subVectors(e.mesh.position, pPos).normalize();
+                    if (pushDir.lengthSq() < 0.001) pushDir.set(Math.random() - 0.5, 0, Math.random() - 0.5).normalize();
+                    e.mesh.position.addScaledVector(pushDir, 55.0);
+                    e.state = 'PATROL';
+                    e.stateTimer = 0;
+                    e.cooldown = 4.0;
+                    e.target = null;
+                    count++;
+                }
+            }
+        }
+        if (this.boss && !this.boss.isDead && this.boss.mesh) {
+            const dist = this.boss.mesh.position.distanceTo(pPos);
+            if (dist < radius) {
+                this.boss.state = 'IDLE';
+                this.boss.cooldown = 3.0;
+                count++;
+            }
+        }
+        if (this.world && this.world.spawnHitSparks) {
+            this.world.spawnHitSparks(pPos, true);
+        }
+        return count;
+    }
+
     levelUpStat(stat) {
         const cost = this.level * 250;
         if (this.souls < cost) {
@@ -6485,13 +6586,17 @@ equipWeapon(weaponId) {
             this._warcryBuffTimer -= delta;
         }
 
-        if (this.isDead) return;
-
-        // Admin God Mode: ensure infinite HP and stamina
-        if (this.isGodMode) {
+        // God Mode / Cheats: ensure player stays alive, full HP and full stamina
+        if (this.isGodMode || this.cheatGodMode) {
+            this.isDead = false;
             this.hp = this.maxHp;
             this.stamina = this.maxStamina;
+            if (document.body && document.body.classList.contains('player-is-dead')) {
+                document.body.classList.remove('player-is-dead');
+            }
         }
+
+        if (this.isDead) return;
 
         // Torch Fire Burn DoT Processing on Enemies & Boss (Zero-allocation)
         for (let i = 0; i < this.enemies.length; i++) {

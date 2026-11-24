@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM';
+            var TARGET_BUILD = '20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -790,6 +790,10 @@
             justify-content: center;
             align-items: center;
             z-index: 200;
+            pointer-events: none;
+        }
+
+        .cinematic-banner.active {
             pointer-events: auto;
         }
 
@@ -871,11 +875,16 @@
             border-bottom: 2px solid #5a4224;
             text-align: center;
             opacity: 0;
+            display: none;
             transform: scaleY(0);
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        #bonfire-banner.active .banner-strip {
+        .cinematic-banner.active .banner-strip,
+        #bonfire-banner.active .banner-strip,
+        #victory-banner.active .banner-strip,
+        #location-unlocked-banner.active .banner-strip {
+            display: block;
             opacity: 1;
             transform: scaleY(1);
         }
@@ -1744,6 +1753,8 @@
                 <button class="btn-download" id="header-download-btn" onclick="openDownloadModal()">
                     <span>📦</span> <span class="btn-label-text">DOWNLOAD</span>
                 </button>
+                <!-- CHEATS & GOD-MODE SUITE -->
+                <button class="btn-icon-bar" onclick="openQuickMenuModal(); if(window.game&&window.game.focusCheats)window.game.focusCheats();" title="Warriors' Dream Cheats: Mobs Attack 1 HP, Super Run 120m/s, Invincibility, Instant Heal" style="border-color: #ff3366; color: #ff99bb; font-weight: 800; background: rgba(55, 12, 25, 0.85); box-shadow: 0 0 14px rgba(255, 51, 102, 0.55);">⚡ <span class="btn-label-text">CHEATS</span></button>
                 <!-- EMERGENCY RESCUE TO SUNLIT COURTYARD -->
                 <button class="btn-icon-bar" onclick="if(window.game)window.game.teleportPlayer(0,0,5,'Sunlit Courtyard Bonfire')" title="Escape to Brilliant Sunlit Starting Courtyard [0]" style="border-color: #ffd700; color: #fff7b8; font-weight: 800; background: rgba(70, 50, 10, 0.85); box-shadow: 0 0 14px rgba(255, 215, 0, 0.6);">☀️ <span class="btn-label-text">DAYLIGHT COURTYARD</span></button>
                 <button class="btn-icon-bar" onclick="openQASuiteModal()" title="Open Automated QA Test Suite, 1-HP Sandbox & Watchdog" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.7); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🛠️ <span class="btn-label-text">QA SUITE</span></button>
@@ -1776,6 +1787,7 @@
                 <button class="btn-icon-bar header-desktop-only" id="audio-toggle-btn" onclick="toggleAudio()">🔊 <span class="btn-label-text">SOUND: ON</span></button>
                 <button class="btn-icon-bar header-desktop-only" onclick="toggleFullscreen()">⛶</button>
                 <!-- REVOLUTIONARY QUICK MENU FOR TABLET & MOBILE -->
+                <button class="btn-icon-bar header-mobile-menu-btn" onclick="openQuickMenuModal(); if(window.game&&window.game.focusCheats)window.game.focusCheats();" style="border-color: #ff3366; color: #ff99bb; font-weight: 900; background: rgba(50, 10, 25, 0.8); box-shadow: 0 0 12px rgba(255, 51, 102, 0.5);">⚡ <span class="btn-label-text">CHEATS</span></button>
                 <button class="btn-icon-bar header-mobile-menu-btn" onclick="openQuickMenuModal()" style="border-color: #ffd700; color: #ffe680; font-weight: 900; background: rgba(45, 30, 10, 0.7); box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);">☰ <span class="btn-label-text">MENU</span></button>
             </div>
             <button class="btn-scroll-nav btn-scroll-next" id="header-scroll-right" onclick="scrollHeaderActions(240)" title="Scroll pill buttons right (or roll mouse wheel)">›</button>
@@ -7271,6 +7283,53 @@
                 Complete tactical control: Real-time character telemetry, multi-slot save archives, 570 mobs codex, 508 locations fast-travel & all system controls. [ESC] to resume battle.
             </p>
 
+            <!-- ⚡ WARRIORS' DREAM CHEATS & GOD-MODE SUITE ⚡ -->
+            <div id="esc-cheats-panel" style="background: linear-gradient(145deg, rgba(38, 12, 22, 0.96), rgba(20, 10, 16, 0.96)); border: 2px solid #ff3366; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; box-shadow: 0 4px 18px rgba(0,0,0,0.7), 0 0 16px rgba(255,51,102,0.35);">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,51,102,0.4); padding-bottom: 8px; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
+                    <span style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 800; color: #ff99bb; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
+                        ⚡ CHEATS & GOD-MODE CONTROLS
+                    </span>
+                    <span style="font-size: 0.72rem; color: #ffd276; font-weight: 700; background: rgba(255,51,102,0.2); border: 1px solid rgba(255,51,102,0.5); padding: 2px 8px; border-radius: 9999px;">
+                        [ESC] MENU &bull; HOTKEYS: [Z] SUPER RUN &bull; [H] FULL HEAL
+                    </span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px;">
+                    <!-- Cheat 1: Mobs Attack 1 HP -->
+                    <button id="cheat-btn-mobs-1hp-dmg" class="btn-icon-bar" onclick="toggleCheatMobsAttack1Hp()" style="justify-content: space-between; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #ffaa33; color: #ffe0b2; background: rgba(50, 25, 10, 0.85); box-shadow: 0 0 10px rgba(255,170,51,0.3);">
+                        <span>🛡️ MOBS ATTACK 1 HP</span>
+                        <span id="cheat-badge-mobs-1hp-dmg" style="padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
+                    </button>
+
+                    <!-- Cheat 2: Super Run Speed -->
+                    <button id="cheat-btn-super-run" class="btn-icon-bar" onclick="toggleCheatSuperRun()" style="justify-content: space-between; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #00f5ff; color: #e0ffff; background: rgba(10, 40, 55, 0.85); box-shadow: 0 0 10px rgba(0,245,255,0.3);">
+                        <span>⚡ SUPER RUN (120 m/s) [Z]</span>
+                        <span id="cheat-badge-super-run" style="padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
+                    </button>
+
+                    <!-- Cheat 3: 1-Hit Kill Mobs -->
+                    <button id="cheat-btn-1hp-mobs" class="btn-icon-bar" onclick="toggleCheatOneHpMobs()" style="justify-content: space-between; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #ffd700; color: #fff3a8; background: rgba(50, 40, 10, 0.85); box-shadow: 0 0 10px rgba(255,215,0,0.3);">
+                        <span>⚔️ 1-HIT KILL MOBS</span>
+                        <span id="cheat-badge-1hp-mobs" style="padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
+                    </button>
+
+                    <!-- Cheat 4: Invincibility / God Mode -->
+                    <button id="cheat-btn-godmode" class="btn-icon-bar" onclick="toggleCheatGodMode()" style="justify-content: space-between; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #a855f7; color: #f3e8ff; background: rgba(40, 15, 55, 0.85); box-shadow: 0 0 10px rgba(168,85,247,0.3);">
+                        <span>👑 GOD MODE (INVINCIBLE)</span>
+                        <span id="cheat-badge-godmode" style="padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 900; background: rgba(255,50,50,0.25); color: #ff8888; border: 1px solid #ff4444;">OFF</span>
+                    </button>
+
+                    <!-- Action 5: Instant Revive & Full Heal -->
+                    <button class="btn-icon-bar" onclick="cheatInstantHealRevive()" style="justify-content: center; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #4caf50; color: #c8e6c9; background: rgba(20, 45, 20, 0.85); box-shadow: 0 0 10px rgba(76,175,80,0.3);">
+                        💖 FULL HEAL & REVIVE [H]
+                    </button>
+
+                    <!-- Action 6: Disperse Nearby Enemies -->
+                    <button class="btn-icon-bar" onclick="cheatDisperseNearbyMobs()" style="justify-content: center; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; border-color: #ff5555; color: #ffcdd2; background: rgba(45, 15, 15, 0.85); box-shadow: 0 0 10px rgba(255,85,85,0.3);">
+                        🧹 DISPERSE NEARBY MOBS
+                    </button>
+                </div>
+            </div>
+
             <!-- 1. LIVE CHARACTER OVERVIEW & EXPEDITION STATUS CARD -->
             <div style="background: linear-gradient(145deg, rgba(30, 22, 14, 0.95), rgba(16, 12, 10, 0.95)); border: 1.5px solid #d4af37; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.6), 0 0 12px rgba(212,175,55,0.25);">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 8px; margin-bottom: 10px;">
@@ -7501,6 +7560,26 @@
             if (modal) modal.style.display = 'none';
             const hud = document.getElementById('live-coords-hud');
             if (hud) hud.style.display = 'none';
+        }
+
+        // Cheats & God-Mode Handlers
+        function toggleCheatMobsAttack1Hp() {
+            if (window.game) window.game.toggleCheatMobsAttack1Hp();
+        }
+        function toggleCheatSuperRun() {
+            if (window.game) window.game.toggleCheatSuperRun();
+        }
+        function toggleCheatOneHpMobs() {
+            if (window.game) window.game.toggleCheatOneHpMobs();
+        }
+        function toggleCheatGodMode() {
+            if (window.game) window.game.toggleCheatGodMode();
+        }
+        function cheatInstantHealRevive() {
+            if (window.game) window.game.cheatInstantHealRevive();
+        }
+        function cheatDisperseNearbyMobs() {
+            if (window.game) window.game.cheatDisperseNearbyMobs();
         }
 
         function openBossSelectModal() {
@@ -8385,26 +8464,26 @@
     </script>
 
     <!-- Game Scripts (with version cache-busting) -->
-    <script src="js/three.min.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/audio.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/lore_items.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/merchants_30.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/world.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/character.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/siege_warfare.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/heraldry_nobility.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/apothecary_crafting.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/collision_system.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/qa_bot_tester.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/combat.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/postprocessing.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/qa_suite.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/blacksmith_forge.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/inventory_system.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/compendium_300_models.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/death_quotes_300.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/game.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
-    <script src="js/dev_map.js?v=20261124_V49_COLOSSAL_3X_LONGER_REALM_19KM"></script>
+    <script src="js/three.min.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/audio.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/lore_items.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/merchants_30.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/world.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/character.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/siege_warfare.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/heraldry_nobility.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/apothecary_crafting.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/collision_system.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/qa_bot_tester.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/combat.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/postprocessing.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/qa_suite.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/blacksmith_forge.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/inventory_system.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/compendium_300_models.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/death_quotes_300.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/game.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
+    <script src="js/dev_map.js?v=20261124_V50_CHEATS_MOBS_1HP_SUPER_RUN_ESC"></script>
     <script>
         // Automatic Game Initialization Failsafe
         (function() {
