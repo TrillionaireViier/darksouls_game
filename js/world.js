@@ -813,11 +813,12 @@ class DarkSoulsWorld {
         }
 
         // Flooded Subterranean Catacombs Corridor (z in [22, 268], x in [-28.0, -12.0])
-        if (x >= -28.0 && x <= -12.0 && z > 22 && z <= 268 && (currentY === null || currentY < 0.5)) {
+        // ONLY applies if player is actually subterranean (currentY !== null && currentY < -2.0)
+        if (x >= -28.0 && x <= -12.0 && z > 22 && z <= 268 && (currentY !== null && currentY < -2.0)) {
             return -4.92;
         }
         // Crypt Exit Ascent Ramp back to surface before Fog Gate (z in [268, 274], x in [-28.0, -12.0])
-        if (x >= -28.0 && x <= -12.0 && z > 268 && z <= 274 && (currentY === null || currentY < 0.5)) {
+        if (x >= -28.0 && x <= -12.0 && z > 268 && z <= 274 && (currentY !== null && currentY < -2.0)) {
             const t = (z - 268) / 6;
             return -4.92 + t * 4.92;
         }
@@ -1770,12 +1771,12 @@ class DarkSoulsWorld {
         waterPlane.receiveShadow = true;
         this.scene.add(waterPlane);
 
-        // Crypt Side Fortress Walls - Elevated to 14m height so no open void is visible above
-        this.createWall(-25.2, 1.5, 146, 1.5, 14.0, 252);
-        this.createWall(-14.8, 1.5, 146, 1.5, 14.0, 252);
+        // Crypt Side Fortress Walls - Subterranean only (y = -2.5, h = 5.0) so it stays underground beneath surface courtyard floor
+        this.createWall(-25.2, -2.5, 146, 1.5, 5.0, 252);
+        this.createWall(-14.8, -2.5, 146, 1.5, 5.0, 252);
 
-        // Crypt End-Cap Enclosure Wall (seals exit before boss fog gate at z=271.5)
-        this.createWall(-20, 1.5, 271.5, 12.0, 14.0, 1.5);
+        // Crypt End-Cap Enclosure Wall (seals exit before boss fog gate underground at z=271.5)
+        this.createWall(-20, -2.5, 271.5, 12.0, 5.0, 1.5);
 
         // Sunken Catacombs Grand Colonnade Vaulted Arches every 12m (Open to the sunlit azure sky!)
         for (let caz = 24; caz <= 268; caz += 12) {

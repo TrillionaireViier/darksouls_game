@@ -335,7 +335,7 @@ class DarkSoulsGame {
                 }
             }
             if (e.code === 'KeyU' || e.key === 'u' || e.key === 'U' || e.key === 'г' || e.key === 'Г') {
-                this.travelToLocation('outside_fallen_spaceship_bazaar');
+                this.unstuckPlayer();
             }
             if (e.code === 'KeyE' || e.key === 'e' || e.key === 'E' || e.key === 'у' || e.key === 'У') this.handleInteraction();
             if (e.code === 'KeyG' || e.key === 'g' || e.key === 'G' || e.key === 'п' || e.key === 'П') {
@@ -2923,57 +2923,17 @@ class DarkSoulsGame {
             }
         }
 
-        // 4. Architectural Bounds & Railing Collision Enforcements:
-        // A. Royal Bridge Parapets (z in [22, 95.0])
-        if (pPos.z >= 22 && pPos.z <= 95.0 && Math.abs(pPos.x) <= 8.5) {
-            if (pPos.y >= -1.0 && pPos.y <= 3.5) {
-                pPos.x = Math.max(-6.45, Math.min(6.45, pPos.x));
-            }
-        }
-
-        // B. Surface Boss Arena (z in [94.8, 168.0]) - Full width access (-16.2 to +16.2) without floor/chasm clipping
-        if (pPos.z >= 94.8 && pPos.z <= 168.0 && pPos.y >= -1.0 && pPos.y <= 4.0) {
-            pPos.x = Math.max(-16.2, Math.min(16.2, pPos.x));
-            pPos.z = Math.max(96.0, Math.min(163.5, pPos.z));
-        }
-
-        // C. Flooded Catacombs Corridor (z in [22, 90], y < 1.0)
-        if (pPos.z >= 22 && pPos.z <= 90 && pPos.y < 1.0) {
-            pPos.x = Math.max(-23.4, Math.min(-16.6, pPos.x));
-        }
-
-        // D. Deep Catacombs Crypt & Mausoleum (z in [90, 150], x in [-34, -7], y < -4.0)
-        if (pPos.z >= 90 && pPos.z <= 150 && pPos.y < -4.0) {
-            pPos.x = Math.max(-33.0, Math.min(-7.5, pPos.x));
-            pPos.z = Math.min(148.0, pPos.z);
-        }
-
-        // E. High Ramparts Walkway (z in [22, 95], y > 4.5)
-        if (pPos.z >= 22 && pPos.z <= 95 && pPos.y > 4.5) {
-            pPos.x = Math.max(16.5, Math.min(23.5, pPos.x));
-            pPos.z = Math.min(94.5, pPos.z);
-        }
-
-        // F. Courtyard Starting Arena (z in [-30, 28], x in [-30, 30])
-        if (pPos.z >= -30.0 && pPos.z < 28 && pPos.y > -2.0) {
-            pPos.x = Math.max(-28.0, Math.min(28.0, pPos.x));
-            if (pPos.x < -9.5 || pPos.x > 9.5) {
-                pPos.z = Math.max(-28.0, pPos.z);
-            }
-        }
-
-        // G. Serpent Sanctuary & Gorgon Temple (z in [-115, -30], x in [-38, 38])
-        if (pPos.z < -30.0) {
-            if (pPos.z >= -70.0) {
-                pPos.x = Math.max(-31.0, Math.min(31.0, pPos.x));
-            } else {
-                pPos.x = Math.max(-37.0, Math.min(37.0, pPos.x));
-                pPos.z = Math.max(-113.0, pPos.z);
-            }
-        }
-
+        // 4. Centralized Architectural Bounds & Strict Zone Boundary Enforcement
         if (this.collisionSystem) {
             this.collisionSystem.enforceBoundaries(pPos, playerRadius, pPos.y);
+        }
+
+        // Automatic anti-stuck watchdog: instantly rescue player if pinched against legacy wall coordinates
+        if (Math.abs(pPos.x - (-16.0)) < 1.2 && pPos.z >= 115.0 && pPos.z <= 135.0) {
+            pPos.x = 0.0;
+            pPos.y = (this.world ? this.world.getGroundHeight(0.0, pPos.z, 0.0) : 0.0);
+            this.playerVelocity.set(0, 0, 0);
+            if (this.showNotification) this.showNotification("✨ RESCUED FROM WALL PINCH (UNSTUCK TO CENTRAL AVENUE)");
         }
 
         // 5. Abyss Fall Protection (fatal fall into chasm respawns at bonfire)
@@ -3424,6 +3384,15 @@ class DarkSoulsGame {
             this.warpToArena();
         }
         return boss;
+    }
+
+    unstuckPlayer() {
+        if (!this.playerMesh) return;
+        const curZ = this.playerMesh.position.z;
+        this.playerMesh.position.x = 0;
+        this.playerMesh.position.y = (this.world ? this.world.getGroundHeight(0, curZ, 0) : 0);
+        this.playerVelocity.set(0, 0, 0);
+        this.showNotification("✨ PLAYER UNSTUCK: TELEPORTED TO CENTRAL AXIS (0, 0, " + Math.round(curZ) + ")");
     }
 
     warpToCatacombs() {
@@ -5351,6 +5320,8 @@ class DarkSoulsGame {
 }
 
 // Global window helper functions
+window.unstuck = () => { if (window.game) window.game.unstuckPlayer(); };
+window.unstuckPlayer = () => { if (window.game) window.game.unstuckPlayer(); };
 window.openSkinsModal = () => { if (window.game) window.game.openSkinsModal(); };
 window.closeSkinsModal = () => { if (window.game) window.game.closeSkinsModal(); };
 window.chooseSkin = (skinId) => { if (window.game) window.game.selectSkin(skinId); };

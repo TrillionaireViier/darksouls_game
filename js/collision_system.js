@@ -58,19 +58,12 @@ class CollisionSystem {
             pos.z = Math.min(4170.0 - radius, pos.z);
         }
 
-        // C. Flooded Catacombs Corridor (z in [22.0, 90.0], y < 1.0)
-        if (pos.z >= 22.0 && pos.z <= 90.0 && y < 1.0) {
-            const minX = -23.4 + radius;
-            const maxX = -16.6 - radius;
+        // C. Flooded Catacombs Corridor (z in [22.0, 270.0], y < -2.0 - strictly subterranean only)
+        if (pos.z >= 22.0 && pos.z <= 270.0 && y < -2.0) {
+            const minX = -24.0 + radius;
+            const maxX = -15.8 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-        }
-
-        // D. Deep Catacombs Crypt & Mausoleum (z in [90.0, 150.0], x in [-34, -7], y < -4.0)
-        if (pos.z >= 90.0 && pos.z <= 150.0 && y < -4.0) {
-            const minX = -33.0 + radius;
-            const maxX = -7.5 - radius;
-            pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            pos.z = Math.min(148.0 - radius, pos.z);
+            pos.z = Math.min(270.0 - radius, pos.z);
         }
 
         // E. High Ramparts Walkway (z in [22.0, 95.0], y > 2.0)
