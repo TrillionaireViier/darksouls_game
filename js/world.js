@@ -851,8 +851,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-1280, -28], z in [-680, 680]
-        if (x >= -1280 && x <= -28 && z >= -680 && z <= 680) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-1480, -28], z in [-780, 780]
+        if (x >= -1480 && x <= -28 && z >= -780 && z <= 780) {
+            // 8 Brand-New Cataclysmic Outside Realm Expeditions (V60 Expansion)
+            // 1. Leyndell Erdtree Sanctuary & Throne of Omens (outside_leyndell_throne_of_omens) (elev: +20.0m)
+            if (x >= -1345 && x <= -1255 && z >= -245 && z <= -155) {
+                return 20.0;
+            }
+            // 2. Usui Misty Forest Hall of Illusions (outside_usui_forest_hall_of_illusions) (elev: +10.0m)
+            if (x >= -1365 && x <= -1275 && z >= -125 && z <= -35) {
+                return 10.0;
+            }
+            // 3. Ainsel River Basin of Nokstella & Frozen Waterfall (outside_ainsel_river_nokstella_dragonkin) (elev: -14.0m)
+            if (x >= -1385 && x <= -1295 && z >= 35 && z <= 125) {
+                return -14.0;
+            }
+            // 4. Oolacile Township Ruined Colosseum of the Dark (outside_oolacile_abyssal_colosseum) (elev: +5.0m)
+            if (x >= -1405 && x <= -1315 && z >= 155 && z <= 245) {
+                return 5.0;
+            }
+            // 5. Upper Cathedral Ward Altar of Despair & Cosmic Lumenflower Terrace (outside_upper_cathedral_altar_of_despair) (elev: -16.0m)
+            if (x >= -1425 && x <= -1335 && z >= -365 && z <= -275) {
+                return -16.0;
+            }
+            // 6. Ashina Castle Great Gatefield & Fortress Palisade (outside_ashina_gate_battlefield) (elev: +8.0m)
+            if (x >= -1445 && x <= -1355 && z >= 275 && z <= 365) {
+                return 8.0;
+            }
+            // 7. Jagged Peak Dragon's Pit & Ancient Red Lightning Crags (outside_dragons_pit_ancient_sanctuary) (elev: +16.0m)
+            if (x >= -1465 && x <= -1375 && z >= -185 && z <= -95) {
+                return 16.0;
+            }
+            // 8. Volcano Manor Sunken Magma Lake & Chamber of the Blasphemous Serpent (outside_volcano_manor_magma_chamber) (elev: -12.0m)
+            if (x >= -1485 && x <= -1395 && z >= 395 && z <= 485) {
+                return -12.0;
+            }
             // 8 Brand-New Mythic Outside Realm Expeditions (V57 Expansion)
             // 1. Farron Keep Mausoleum & Perimeter of the Abyss (outside_farron_keep_abyss_mausoleum) (elev: +8.0m)
             if (x >= -1145 && x <= -1055 && z >= -285 && z <= -195) {
@@ -3699,6 +3732,9 @@ class DarkSoulsWorld {
         // Build 8 Brand-New Mythic Outside Realm Expeditions (V57 Expansion)
         this.buildEightMythicOutsideExpeditions(outsideGroup);
 
+        // Build 8 Brand-New Cataclysmic Outside Realm Expeditions (V60 Expansion)
+        this.buildEightCataclysmicOutsideExpeditions(outsideGroup);
+
         this.scene.add(outsideGroup);
     }
 
@@ -5129,6 +5165,350 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-1236, -6.0, 540, 0xf43f5e, 5.0, 32);
         this.createPathBeacon(-1220, -6.0, 540, 0xf43f5e, "🌸 RAUH SCARLET ROT PAVILION [ELEV -6.0m]", "ROMINA SAINT OF THE BUD • CENTIPEDE CARAPACE • RAUH HORNED WARRIORS", "#ffe4e6");
         this.createFloorSoapstone(-1220, -6.0, 528, "#f43f5e", "🌸 RAUH SCARLET ROT PAVILION", "Within the bud she nurtured the rotting flame. A butterfly woven from ancient despair.");
+    }
+
+    buildEightCataclysmicOutsideExpeditions(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW CATACLYSMIC OUTSIDE REALM EXPEDITIONS (V60 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. LEYNDELL ERDTREE SANCTUARY & THRONE OF OMENS ([-1300, 20.0, -200])
+        // --------------------------------------------------------------------
+        const omenBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 70, 24, 18), this.cliffRockMat);
+        omenBase.position.set(-1300, 8.0, -200);
+        outsideGroup.add(omenBase);
+
+        const omenFloor = new THREE.Mesh(new THREE.BoxGeometry(64, 1.2, 54), new THREE.MeshStandardMaterial({
+            color: 0xca8a04, roughness: 0.7, metalness: 0.2
+        }));
+        omenFloor.position.set(-1300, 20.1, -200);
+        omenFloor.receiveShadow = true;
+        outsideGroup.add(omenFloor);
+
+        // 4 Monumental Golden Erdtree Fluted Colonnades
+        const goldColumnMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.5, metalness: 0.3 });
+        [[-22, -18], [22, -18], [-22, 18], [22, 18]].forEach(([cx, cz]) => {
+            const col = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.2, 18, 12), goldColumnMat);
+            col.position.set(-1300 + cx, 29.0, -200 + cz);
+            outsideGroup.add(col);
+
+            const crownLight = new THREE.PointLight(0xfbbf24, 3.5, 30.0);
+            crownLight.position.set(-1300 + cx, 38.0, -200 + cz);
+            outsideGroup.add(crownLight);
+        });
+
+        // Golden Throne of the Omen King
+        const throneMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.8 });
+        const throne = new THREE.Mesh(new THREE.BoxGeometry(7, 8, 4), throneMat);
+        throne.position.set(-1300, 24.0, -220);
+        outsideGroup.add(throne);
+
+        // Omen Blood Basin
+        const basin = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 3.5, 1.5, 14), new THREE.MeshStandardMaterial({
+            color: 0xf59e0b, emissive: 0xd97706, emissiveIntensity: 2.2
+        }));
+        basin.position.set(-1300, 20.8, -195);
+        outsideGroup.add(basin);
+
+        const omenLight = new THREE.PointLight(0xfbbf24, 6.5, 56.0);
+        omenLight.position.set(-1300, 27.0, -200);
+        outsideGroup.add(omenLight);
+
+        this.createStandingBrazier(-1284, 20.0, -200, 0xfbbf24, 6.0, 36);
+        this.createStandingBrazier(-1316, 20.0, -200, 0xf59e0b, 6.0, 36);
+        this.createPathBeacon(-1300, 20.0, -200, 0xfbbf24, "👑 LEYNDELL THRONE OF OMENS [ELEV +20.0m]", "MORGOTT THE OMEN KING • CURSED-BLOOD BLADE • LEYNDELL PERFUMER PAGES", "#fef3c7");
+        this.createFloorSoapstone(-1300, 20.0, -188, "#fbbf24", "👑 THRONE OF OMENS", "Graceless though he was, he loved the Erdtree till the end. None shall pass.");
+
+        // --------------------------------------------------------------------
+        // 2. USUI MISTY FOREST HALL OF ILLUSIONS ([-1320, 10.0, -80])
+        // --------------------------------------------------------------------
+        const usuiBase = new THREE.Mesh(new THREE.CylinderGeometry(54, 68, 16, 18), this.cliffRockMat);
+        usuiBase.position.set(-1320, 2.0, -80);
+        outsideGroup.add(usuiBase);
+
+        const usuiFloor = new THREE.Mesh(new THREE.BoxGeometry(60, 1.2, 54), new THREE.MeshStandardMaterial({
+            color: 0x475569, roughness: 0.9, metalness: 0.1
+        }));
+        usuiFloor.position.set(-1320, 10.1, -80);
+        usuiFloor.receiveShadow = true;
+        outsideGroup.add(usuiFloor);
+
+        // Weathered Japanese Pagoda Cedar Timbers & Gossamer Wire Webs
+        const woodMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.85 });
+        const wireMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, emissive: 0xa855f7, emissiveIntensity: 2.2 });
+        for (let bx = -22; bx <= 22; bx += 11) {
+            const beam = new THREE.Mesh(new THREE.BoxGeometry(0.8, 12, 0.8), woodMat);
+            beam.position.set(-1320 + bx, 16.0, -80 - 22);
+            outsideGroup.add(beam);
+
+            // Overhead horizontal crossbeam
+            const cross = new THREE.Mesh(new THREE.BoxGeometry(11, 0.6, 0.6), woodMat);
+            cross.position.set(-1320 + bx, 22.0, -80);
+            outsideGroup.add(cross);
+
+            // Glowing illusion wire strands
+            const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 34, 4), wireMat);
+            wire.position.set(-1320 + bx, 18.0, -80);
+            wire.rotation.x = 0.5;
+            outsideGroup.add(wire);
+        }
+
+        // Swarm of 8 Glowing Illusion Butterflies
+        const sakuraMat = new THREE.MeshStandardMaterial({ color: 0xf472b6, emissive: 0xec4899, emissiveIntensity: 2.5 });
+        for (let sb = 0; sb < 8; sb++) {
+            const sAng = (sb / 8) * Math.PI * 2;
+            const bfly = new THREE.Mesh(new THREE.SphereGeometry(0.35, 6, 6), sakuraMat);
+            bfly.position.set(-1320 + Math.cos(sAng) * 14, 13.0 + Math.sin(sb) * 1.6, -80 + Math.sin(sAng) * 14);
+            outsideGroup.add(bfly);
+        }
+
+        const usuiLight = new THREE.PointLight(0xa855f7, 5.5, 52.0);
+        usuiLight.position.set(-1320, 16.0, -80);
+        outsideGroup.add(usuiLight);
+
+        this.createStandingBrazier(-1304, 10.0, -80, 0xa855f7, 5.5, 34);
+        this.createStandingBrazier(-1336, 10.0, -80, 0xec4899, 5.5, 34);
+        this.createPathBeacon(-1320, 10.0, -80, 0xa855f7, "🦋 USUI MISTY HALL OF ILLUSIONS [ELEV +10.0m]", "LADY BUTTERFLY • KUNAI WIRES & PHANTOMS • SENPOU STRAWHAT ASSASSINS", "#fae8ff");
+        this.createFloorSoapstone(-1320, 10.0, -68, "#a855f7", "🦋 HALL OF ILLUSIONS", "You were still just a puppy. Let the phantom butterflies dance on your grave.");
+
+        // --------------------------------------------------------------------
+        // 3. AINSEL RIVER BASIN OF NOKSTELLA & FROZEN WATERFALL ([-1340, -14.0, 80])
+        // --------------------------------------------------------------------
+        const ainselBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 70, 16, 18), this.cliffRockMat);
+        ainselBase.position.set(-1340, -22.0, 80);
+        outsideGroup.add(ainselBase);
+
+        const ainselFloor = new THREE.Mesh(new THREE.BoxGeometry(62, 1.2, 56), new THREE.MeshStandardMaterial({
+            color: 0x0f172a, roughness: 0.4, metalness: 0.3
+        }));
+        ainselFloor.position.set(-1340, -13.9, 80);
+        ainselFloor.receiveShadow = true;
+        outsideGroup.add(ainselFloor);
+
+        // Giant Bioluminescent Oyster Mushrooms
+        const shroomMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.2 });
+        [[-20, -18], [-24, 16], [22, -16], [24, 18]].forEach(([mx, mz]) => {
+            const stalk = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.4, 7, 8), new THREE.MeshStandardMaterial({ color: 0x1e293b }));
+            stalk.position.set(-1340 + mx, -10.5, 80 + mz);
+            outsideGroup.add(stalk);
+
+            const cap = new THREE.Mesh(new THREE.SphereGeometry(3.6, 10, 6, 0, Math.PI * 2, 0, Math.PI * 0.45), shroomMat);
+            cap.position.set(-1340 + mx, -7.0, 80 + mz);
+            outsideGroup.add(cap);
+        });
+
+        // Colossal Frozen Blue Lightning Glacier Backdrop
+        const iceMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, roughness: 0.15, metalness: 0.4, transparent: true, opacity: 0.85 });
+        const iceWall = new THREE.Mesh(new THREE.BoxGeometry(50, 24, 3), iceMat);
+        iceWall.position.set(-1340, -2.0, 80 + 26);
+        outsideGroup.add(iceWall);
+
+        const ainselLight = new THREE.PointLight(0x38bdf8, 6.0, 55.0);
+        ainselLight.position.set(-1340, -6.0, 80);
+        outsideGroup.add(ainselLight);
+
+        this.createStandingBrazier(-1324, -14.0, 80, 0x38bdf8, 5.5, 34);
+        this.createStandingBrazier(-1356, -14.0, 80, 0x0284c7, 5.5, 34);
+        this.createPathBeacon(-1340, -14.0, 80, 0x38bdf8, "⚡ NOKSTELLA AINSEL BASIN [ELEV -14.0m]", "DRAGONKIN SOLDIER OF NOKSTELLA • FROZEN LIGHTNING • CLAYMAN PRIESTS", "#e0f2fe");
+        this.createFloorSoapstone(-1340, -14.0, 68, "#38bdf8", "⚡ AINSEL BASIN", "Born underground, they never saw the true sky. Yet their ice lightning shatters dragons.");
+
+        // --------------------------------------------------------------------
+        // 4. OOLACILE TOWNSHIP RUINED COLOSSEUM OF THE DARK ([-1360, 5.0, 200])
+        // --------------------------------------------------------------------
+        const oolacileBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 70, 16, 18), this.cliffRockMat);
+        oolacileBase.position.set(-1360, -3.0, 200);
+        outsideGroup.add(oolacileBase);
+
+        const oolacileFloor = new THREE.Mesh(new THREE.BoxGeometry(64, 1.2, 56), new THREE.MeshStandardMaterial({
+            color: 0x1e1b4b, roughness: 0.9, metalness: 0.1
+        }));
+        oolacileFloor.position.set(-1360, 5.1, 200);
+        oolacileFloor.receiveShadow = true;
+        outsideGroup.add(oolacileFloor);
+
+        // Crumbling Gothic Colosseum Arches & Abyssal Corruption
+        const archMat = new THREE.MeshStandardMaterial({ color: 0x312e81, roughness: 0.85 });
+        for (let oa = 0; oa < 8; oa++) {
+            const oAng = (oa / 8) * Math.PI * 2;
+            const arch = new THREE.Mesh(new THREE.TorusGeometry(3.8, 0.6, 6, 10, Math.PI), archMat);
+            arch.position.set(-1360 + Math.cos(oAng) * 25, 9.0, 200 + Math.sin(oAng) * 25);
+            arch.rotation.y = oAng;
+            outsideGroup.add(arch);
+        }
+
+        // Swirling Dark Humanity Pool in Center
+        const humanityPool = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 0.3, 18), new THREE.MeshStandardMaterial({
+            color: 0x09090b, emissive: 0x581c87, emissiveIntensity: 2.8, roughness: 0.1
+        }));
+        humanityPool.position.set(-1360, 5.3, 200);
+        outsideGroup.add(humanityPool);
+
+        const oolacileLight = new THREE.PointLight(0x7c3aed, 6.0, 54.0);
+        oolacileLight.position.set(-1360, 11.0, 200);
+        outsideGroup.add(oolacileLight);
+
+        this.createStandingBrazier(-1344, 5.0, 200, 0x7c3aed, 6.0, 36);
+        this.createStandingBrazier(-1376, 5.0, 200, 0x4c1d95, 6.0, 36);
+        this.createPathBeacon(-1360, 5.0, 200, 0x7c3aed, "⚔️ OOLACILE ABYSSAL COLOSSEUM [ELEV +5.0m]", "KNIGHT ARTORIAS THE ABYSSWALKER • WOLF GREATSWORD • BLOATHEAD SORCERERS", "#f3e8ff");
+        this.createFloorSoapstone(-1360, 5.0, 188, "#7c3aed", "⚔️ OOLACILE COLOSSEUM", "Whatever thou art, stay away. The Dark... it spreads. Forgive me, Sif...");
+
+        // --------------------------------------------------------------------
+        // 5. UPPER CATHEDRAL WARD ALTAR OF DESPAIR ([-1380, -16.0, -320])
+        // --------------------------------------------------------------------
+        const ebrietasBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 72, 18, 18), this.cliffRockMat);
+        ebrietasBase.position.set(-1380, -25.0, -320);
+        outsideGroup.add(ebrietasBase);
+
+        const ebrietasFloor = new THREE.Mesh(new THREE.BoxGeometry(62, 1.2, 56), new THREE.MeshStandardMaterial({
+            color: 0x0f172a, roughness: 0.35, metalness: 0.4
+        }));
+        ebrietasFloor.position.set(-1380, -15.9, -320);
+        ebrietasFloor.receiveShadow = true;
+        outsideGroup.add(ebrietasFloor);
+
+        // Ring of 8 Glowing Cosmic Lumenflower Buds
+        const lumenMat = new THREE.MeshStandardMaterial({ color: 0x60a5fa, emissive: 0x2563eb, emissiveIntensity: 2.6 });
+        for (let lf = 0; lf < 8; lf++) {
+            const lAng = (lf / 8) * Math.PI * 2;
+            const lStalk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.3, 5.5, 6), new THREE.MeshStandardMaterial({ color: 0x1e3a8a }));
+            lStalk.position.set(-1380 + Math.cos(lAng) * 22, -13.0, -320 + Math.sin(lAng) * 22);
+            outsideGroup.add(lStalk);
+
+            const lBud = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), lumenMat);
+            lBud.position.set(-1380 + Math.cos(lAng) * 22, -10.0, -320 + Math.sin(lAng) * 22);
+            outsideGroup.add(lBud);
+        }
+
+        // Petrified Altar of Rom in Rear
+        const romAltar = new THREE.Mesh(new THREE.BoxGeometry(8, 4, 6), new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.9 }));
+        romAltar.position.set(-1380, -14.0, -320 - 22);
+        outsideGroup.add(romAltar);
+
+        const ebrietasLight = new THREE.PointLight(0x60a5fa, 6.5, 54.0);
+        ebrietasLight.position.set(-1380, -9.0, -320);
+        outsideGroup.add(ebrietasLight);
+
+        this.createStandingBrazier(-1364, -16.0, -320, 0x60a5fa, 6.0, 34);
+        this.createStandingBrazier(-1396, -16.0, -320, 0x3b82f6, 6.0, 34);
+        this.createPathBeacon(-1380, -16.0, -320, 0x60a5fa, "🌌 ALTAR OF DESPAIR [ELEV -16.0m]", "EBRIETAS DAUGHTER OF THE COSMOS • A CALL BEYOND • CELESTIAL EMISSARIES", "#dbeafe");
+        this.createFloorSoapstone(-1380, -16.0, -308, "#60a5fa", "🌌 ALTAR OF DESPAIR", "The cosmos, of course! Left behind by the Great Ones, she weeps tears of stars.");
+
+        // --------------------------------------------------------------------
+        // 6. ASHINA CASTLE GREAT GATEFIELD & FORTRESS PALISADE ([-1400, 8.0, 320])
+        // --------------------------------------------------------------------
+        const gyoubuBase = new THREE.Mesh(new THREE.CylinderGeometry(58, 72, 16, 18), this.cliffRockMat);
+        gyoubuBase.position.set(-1400, 0, 320);
+        outsideGroup.add(gyoubuBase);
+
+        const gyoubuFloor = new THREE.Mesh(new THREE.BoxGeometry(66, 1.2, 58), new THREE.MeshStandardMaterial({
+            color: 0x292524, roughness: 0.95
+        }));
+        gyoubuFloor.position.set(-1400, 8.1, 320);
+        gyoubuFloor.receiveShadow = true;
+        outsideGroup.add(gyoubuFloor);
+
+        // Fortified Timber Gatehouse Tower in Rear
+        const timberMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.9 });
+        const gatehouse = new THREE.Mesh(new THREE.BoxGeometry(28, 14, 8), timberMat);
+        gatehouse.position.set(-1400, 15.0, 320 + 24);
+        outsideGroup.add(gatehouse);
+
+        // Spiked Log Barricades
+        for (let sp = -24; sp <= 24; sp += 6) {
+            const log = new THREE.Mesh(new THREE.ConeGeometry(0.45, 5, 5), timberMat);
+            log.position.set(-1400 + sp, 10.0, 320 - 24);
+            log.rotation.x = -0.4;
+            outsideGroup.add(log);
+        }
+
+        const gyoubuLight = new THREE.PointLight(0xf97316, 6.0, 52.0);
+        gyoubuLight.position.set(-1400, 14.0, 320);
+        outsideGroup.add(gyoubuLight);
+
+        this.createStandingBrazier(-1384, 8.0, 320, 0xf97316, 6.0, 34);
+        this.createStandingBrazier(-1416, 8.0, 320, 0xea580c, 6.0, 34);
+        this.createPathBeacon(-1400, 8.0, 320, 0xf97316, "🏯 ASHINA CASTLE GATEFIELD [ELEV +8.0m]", "GYOUBU MASATAKA ONIWA • ONIKAGE WARHORSE • ASHINA ASHIGARU RIFLEMEN", "#ffedd5");
+        this.createFloorSoapstone(-1400, 8.0, 308, "#f97316", "🏯 ASHINA GATEFIELD", "MY NAME IS GYOUBU MASATAKA ONIWA! As long as I breathe, you shall not pass the castle gate!");
+
+        // --------------------------------------------------------------------
+        // 7. JAGGED PEAK DRAGON'S PIT & ANCIENT RED LIGHTNING CRAGS ([-1420, 16.0, -140])
+        // --------------------------------------------------------------------
+        const florissaxBase = new THREE.Mesh(new THREE.CylinderGeometry(54, 70, 20, 18), this.cliffRockMat);
+        florissaxBase.position.set(-1420, 6.0, -140);
+        outsideGroup.add(florissaxBase);
+
+        const florissaxFloor = new THREE.Mesh(new THREE.BoxGeometry(60, 1.2, 54), new THREE.MeshStandardMaterial({
+            color: 0x18181b, roughness: 0.95
+        }));
+        florissaxFloor.position.set(-1420, 16.1, -140);
+        florissaxFloor.receiveShadow = true;
+        outsideGroup.add(florissaxFloor);
+
+        // Jagged Obsidian Dragon Spikes Ringing Peak
+        const obsidianMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.6, metalness: 0.5 });
+        const redLightningMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xb91c1c, emissiveIntensity: 2.8 });
+        for (let os = 0; os < 8; os++) {
+            const oAng = (os / 8) * Math.PI * 2;
+            const spike = new THREE.Mesh(new THREE.ConeGeometry(1.6, 12, 5), obsidianMat);
+            spike.position.set(-1420 + Math.cos(oAng) * 24, 21.0, -140 + Math.sin(oAng) * 24);
+            spike.rotation.z = Math.cos(oAng) * 0.3;
+            spike.rotation.x = Math.sin(oAng) * 0.3;
+            outsideGroup.add(spike);
+
+            // Red lightning tendril
+            const redBolt = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.08, 14, 4), redLightningMat);
+            redBolt.position.set(-1420 + Math.cos(oAng) * 24, 22.0, -140 + Math.sin(oAng) * 24);
+            outsideGroup.add(redBolt);
+        }
+
+        const florissaxLight = new THREE.PointLight(0xef4444, 6.5, 54.0);
+        florissaxLight.position.set(-1420, 22.0, -140);
+        outsideGroup.add(florissaxLight);
+
+        this.createStandingBrazier(-1404, 16.0, -140, 0xef4444, 6.0, 36);
+        this.createStandingBrazier(-1436, 16.0, -140, 0xdc2626, 6.0, 36);
+        this.createPathBeacon(-1420, 16.0, -140, 0xef4444, "⚡ DRAGON'S PIT CRAGS [ELEV +16.0m]", "ANCIENT DRAGON FLORISSAX • FLOWERSTONE GAVEL • DRAGON CULT LAPIS KNIGHTS", "#fee2e2");
+        this.createFloorSoapstone(-1420, 16.0, -128, "#ef4444", "⚡ DRAGON'S PIT", "Drink the dragon's blood, brandish red lightning. Bayle shall bleed for his betrayal.");
+
+        // --------------------------------------------------------------------
+        // 8. VOLCANO MANOR SUNKEN MAGMA LAKE & BLASPHEMOUS CHAMBER ([-1440, -12.0, 440])
+        // --------------------------------------------------------------------
+        const rykardBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 72, 16, 18), this.cliffRockMat);
+        rykardBase.position.set(-1440, -20.0, 440);
+        outsideGroup.add(rykardBase);
+
+        const rykardFloor = new THREE.Mesh(new THREE.BoxGeometry(64, 1.2, 58), new THREE.MeshStandardMaterial({
+            color: 0x18181b, roughness: 0.95
+        }));
+        rykardFloor.position.set(-1440, -11.9, 440);
+        rykardFloor.receiveShadow = true;
+        outsideGroup.add(rykardFloor);
+
+        // Boiling Magma Ring in Center
+        const magmaLake = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 0.4, 20), new THREE.MeshStandardMaterial({
+            color: 0xe11d48, emissive: 0xbe123c, emissiveIntensity: 3.2, roughness: 0.2
+        }));
+        magmaLake.position.set(-1440, -11.7, 440);
+        outsideGroup.add(magmaLake);
+
+        // Hexagonal Basalt Columns Jutting from Lava
+        const basaltMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
+        for (let hc = 0; hc < 6; hc++) {
+            const hAng = (hc / 6) * Math.PI * 2;
+            const column = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.8, 6, 6), basaltMat);
+            column.position.set(-1440 + Math.cos(hAng) * 12, -9.0, 440 + Math.sin(hAng) * 12);
+            outsideGroup.add(column);
+        }
+
+        const rykardLight = new THREE.PointLight(0xe11d48, 7.5, 60.0);
+        rykardLight.position.set(-1440, -5.0, 440);
+        outsideGroup.add(rykardLight);
+
+        this.createStandingBrazier(-1424, -12.0, 440, 0xe11d48, 6.5, 36);
+        this.createStandingBrazier(-1456, -12.0, 440, 0xf43f5e, 6.5, 36);
+        this.createPathBeacon(-1440, -12.0, 440, 0xe11d48, "🌋 VOLCANO MANOR MAGMA CHAMBER [ELEV -12.0m]", "RYKARD LORD OF BLASPHEMY • BLASPHEMOUS BLADE • MAN-SERPENT MAGMA SORCERERS", "#ffe4e6");
+        this.createFloorSoapstone(-1440, -12.0, 428, "#e11d48", "🌋 MAGMA CHAMBER", "TOGETHAAA AS FAMILYYY WE WILL DEVOUR THE VERY GODS! Serpent hunter blade required.");
     }
 
     buildSerpentSanctum() {

@@ -600,7 +600,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -1280, -560, 1252, 1140, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -1480, -640, 1452, 1300, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -649,6 +649,14 @@
                 this.drawZoneRect(ctx, -1200, 400, 40, 40, "rgba(20, 30, 65, 0.65)", "#60a5fa", "🌕 RAYA LUCARIA LIBRARY (+14m)");
                 this.drawZoneRect(ctx, -1220, -200, 40, 40, "rgba(70, 10, 10, 0.65)", "#dc2626", "👹 ASHINA GATES IN FLAMES (+4m)");
                 this.drawZoneRect(ctx, -1240, 520, 40, 40, "rgba(65, 15, 35, 0.65)", "#f43f5e", "🌸 RAUH SCARLET ROT PAVILION (-6m)");
+                this.drawZoneRect(ctx, -1300, -200, 40, 40, "rgba(70, 50, 10, 0.65)", "#fbbf24", "👑 LEYNDELL THRONE OF OMENS (+20m)");
+                this.drawZoneRect(ctx, -1320, -80, 40, 40, "rgba(60, 20, 65, 0.65)", "#a855f7", "🦋 USUI HALL OF ILLUSIONS (+10m)");
+                this.drawZoneRect(ctx, -1340, 80, 40, 40, "rgba(15, 45, 70, 0.65)", "#38bdf8", "⚡ NOKSTELLA AINSEL BASIN (-14m)");
+                this.drawZoneRect(ctx, -1360, 200, 40, 40, "rgba(50, 20, 70, 0.65)", "#7c3aed", "⚔️ OOLACILE COLOSSEUM (+5m)");
+                this.drawZoneRect(ctx, -1380, -320, 40, 40, "rgba(25, 45, 80, 0.65)", "#60a5fa", "🌌 ALTAR OF DESPAIR (-16m)");
+                this.drawZoneRect(ctx, -1400, 320, 40, 40, "rgba(65, 30, 10, 0.65)", "#f97316", "🏯 ASHINA CASTLE GATEFIELD (+8m)");
+                this.drawZoneRect(ctx, -1420, -140, 40, 40, "rgba(70, 15, 15, 0.65)", "#ef4444", "⚡ DRAGON'S PIT CRAGS (+16m)");
+                this.drawZoneRect(ctx, -1440, 440, 40, 40, "rgba(75, 10, 25, 0.65)", "#e11d48", "🌋 VOLCANO MANOR MAGMA CHAMBER (-12m)");
             }
 
             // 3. Draw All World Pins

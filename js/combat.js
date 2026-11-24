@@ -4358,6 +4358,127 @@ class DarkSoulsCombat {
                 radius: 5.0,
                 spawnPos: { x: -1220, z: 540 },
                 create: (cf, x, z) => cf.createRominaSaintOfBud ? cf.createRominaSaintOfBud(x, z) : cf.createSoulsborneBoss({ id: 'romina_saint_bud', theme: 'rot', bossScale: 3.6 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V60 EXPANSION) ===
+            {
+                id: 'outside_morgott_omen_king_throne',
+                name: 'MORGOTT, THE OMEN KING & MARGIT THE FELL OMEN',
+                title: 'Outside Realm: Leyndell Erdtree Sanctuary &bull; Cursed-Blood Greatsword, Golden Incantation Daggers & Omen Horns',
+                unlockLocationId: 'outside_leyndell_throne_of_omens',
+                icon: '👑',
+                theme: 'holy',
+                bossScale: 3.2,
+                maxHp: 84000,
+                damage: 2120,
+                souls: 8200000,
+                radius: 4.8,
+                spawnPos: { x: -1300, z: -200 },
+                create: (cf, x, z) => cf.createMorgottOmenKing ? cf.createMorgottOmenKing(x, z) : cf.createSoulsborneBoss({ id: 'morgott_omen_king_throne', theme: 'holy', bossScale: 3.2 }, x, z)
+            },
+            {
+                id: 'outside_lady_butterfly_mist_hall',
+                name: 'LADY BUTTERFLY, MIST ILLUSIONIST OF MT. SENPOU',
+                title: 'Outside Realm: Usui Forest Pagoda &bull; Razor Wire Acrobatics, Phantom Sakura Butterflies & Kunai Flurry',
+                unlockLocationId: 'outside_usui_forest_hall_of_illusions',
+                icon: '🦋',
+                theme: 'magic',
+                bossScale: 2.6,
+                maxHp: 75000,
+                damage: 1980,
+                souls: 7200000,
+                radius: 3.6,
+                spawnPos: { x: -1320, z: -80 },
+                create: (cf, x, z) => cf.createLadyButterflyIllusionist ? cf.createLadyButterflyIllusionist(x, z) : cf.createSoulsborneBoss({ id: 'lady_butterfly_mist_hall', theme: 'magic', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'outside_nokstella_dragonkin_soldier',
+                name: 'DRAGONKIN SOLDIER OF NOKSTELLA, FROZEN LIGHTNING BEHEMOTH',
+                title: 'Outside Realm: Ainsel River Basin &bull; Pale Ice-Lightning Spear, Crawling Dragon Fists & Skeletal Ribcage',
+                unlockLocationId: 'outside_ainsel_river_nokstella_dragonkin',
+                icon: '⚡',
+                theme: 'lightning',
+                bossScale: 4.2,
+                maxHp: 88000,
+                damage: 2200,
+                souls: 8600000,
+                radius: 5.6,
+                spawnPos: { x: -1340, z: 80 },
+                create: (cf, x, z) => cf.createDragonkinSoldierNokstella ? cf.createDragonkinSoldierNokstella(x, z) : cf.createSoulsborneBoss({ id: 'dragonkin_nokstella', theme: 'lightning', bossScale: 4.2 }, x, z)
+            },
+            {
+                id: 'outside_oolacile_abysswalker_artorias',
+                name: 'KNIGHT ARTORIAS THE ABYSSWALKER, WOLF KNIGHT OF GWYN',
+                title: 'Outside Realm: Oolacile Colosseum &bull; Greatsword of Artorias, Somersault Flip Cleave & Abyssal Corruption',
+                unlockLocationId: 'outside_oolacile_abyssal_colosseum',
+                icon: '⚔️',
+                theme: 'dark',
+                bossScale: 3.0,
+                maxHp: 86000,
+                damage: 2180,
+                souls: 8400000,
+                radius: 4.2,
+                spawnPos: { x: -1360, z: 200 },
+                create: (cf, x, z) => cf.createKnightArtoriasAbysswalker ? cf.createKnightArtoriasAbysswalker(x, z) : cf.createSoulsborneBoss({ id: 'artorias_abysswalker', theme: 'dark', bossScale: 3.0 }, x, z)
+            },
+            {
+                id: 'outside_ebrietas_altar_of_despair',
+                name: 'EBRIETAS, DAUGHTER OF THE COSMOS & STAR CHILD',
+                title: 'Outside Realm: Upper Cathedral Altar &bull; A Call Beyond Star Lasers, Cosmic Angel Wings & Bifurcated Head Tube',
+                unlockLocationId: 'outside_upper_cathedral_altar_of_despair',
+                icon: '🌌',
+                theme: 'cosmic',
+                bossScale: 3.8,
+                maxHp: 90000,
+                damage: 2250,
+                souls: 8800000,
+                radius: 5.4,
+                spawnPos: { x: -1380, z: -320 },
+                create: (cf, x, z) => cf.createEbrietasDaughterCosmos ? cf.createEbrietasDaughterCosmos(x, z) : cf.createSoulsborneBoss({ id: 'ebrietas_altar_despair', theme: 'cosmic', bossScale: 3.8 }, x, z)
+            },
+            {
+                id: 'outside_ashina_gate_general_gyoubu',
+                name: 'GYOUBU MASATAKA ONIWA, CASTLE GATE GENERAL ON ONIKAGE',
+                title: 'Outside Realm: Ashina Gatefield &bull; Whirling Cross-Spear Rope, Charging Warhorse Gallop & Demon Horn Kabuto',
+                unlockLocationId: 'outside_ashina_gate_battlefield',
+                icon: '🏯',
+                theme: 'fire',
+                bossScale: 3.6,
+                maxHp: 82000,
+                damage: 2100,
+                souls: 7900000,
+                radius: 5.0,
+                spawnPos: { x: -1400, z: 320 },
+                create: (cf, x, z) => cf.createGyoubuOniwaGeneral ? cf.createGyoubuOniwaGeneral(x, z) : cf.createSoulsborneBoss({ id: 'gyoubu_oniwa_general', theme: 'fire', bossScale: 3.6 }, x, z)
+            },
+            {
+                id: 'outside_dragons_pit_florissax_priestess',
+                name: 'ANCIENT DRAGON FLORISSAX & DRAGON PRIESTESS OF COMMUNION',
+                title: 'Outside Realm: Dragon\'s Pit Crags &bull; Flowerstone Gavel Hammer, Ancient Red Dragonbolt & Dragon Heart Roar',
+                unlockLocationId: 'outside_dragons_pit_ancient_sanctuary',
+                icon: '⚡',
+                theme: 'lightning',
+                bossScale: 3.2,
+                maxHp: 85000,
+                damage: 2160,
+                souls: 8300000,
+                radius: 4.6,
+                spawnPos: { x: -1420, z: -140 },
+                create: (cf, x, z) => cf.createAncientDragonFlorissaxPriestess ? cf.createAncientDragonFlorissaxPriestess(x, z) : cf.createSoulsborneBoss({ id: 'florissax_dragon_priestess', theme: 'lightning', bossScale: 3.2 }, x, z)
+            },
+            {
+                id: 'outside_volcano_manor_rykard_blasphemy',
+                name: 'RYKARD, LORD OF BLASPHEMY & GOD-DEVOURING SERPENT',
+                title: 'Outside Realm: Volcano Manor Magma Lake &bull; Serrated Blasphemous Blade, Writhing Demonic Arms & Screaming Skulls',
+                unlockLocationId: 'outside_volcano_manor_magma_chamber',
+                icon: '🌋',
+                theme: 'flame',
+                bossScale: 4.5,
+                maxHp: 96000,
+                damage: 2300,
+                souls: 9500000,
+                radius: 6.2,
+                spawnPos: { x: -1440, z: 440 },
+                create: (cf, x, z) => cf.createRykardLordOfBlasphemy ? cf.createRykardLordOfBlasphemy(x, z) : cf.createSoulsborneBoss({ id: 'rykard_god_devouring_serpent', theme: 'flame', bossScale: 4.5 }, x, z)
             }
         ];
     }
@@ -4697,7 +4818,16 @@ class DarkSoulsCombat {
             [-980.0, 16.0, -180.0], [-988.0, 16.0, -188.0], [-972.0, 16.0, -172.0], // Erdtree Throne of Radagon (Leyndell Tree Sentinels)
             [-990.0, 12.0, 360.0], [-998.0, 12.0, 368.0], [-982.0, 12.0, 352.0],   // Leyndell Bedchamber Terrace (Badlands Blood Berserkers)
             [-1010.0, 8.0, -380.0], [-1018.0, 8.0, -388.0], [-1002.0, 8.0, -372.0], // Castle Ensis Moongazing Dais (Fire Knight Queeligns)
-            [-1020.0, -10.0, 480.0], [-1028.0, -10.0, 488.0], [-1012.0, -10.0, 472.0] // Scadutree Briar Basin (Hornsent Inquisitors)
+            [-1020.0, -10.0, 480.0], [-1028.0, -10.0, 488.0], [-1012.0, -10.0, 472.0], // Scadutree Briar Basin (Hornsent Inquisitors)
+            // 8 Brand-New Outside Apex Expeditions Patrols (V60 Expansion):
+            [-1300.0, 20.0, -200.0], [-1308.0, 20.0, -208.0], [-1292.0, 20.0, -192.0], // Leyndell Throne of Omens (Leyndell Perfumer Pages)
+            [-1320.0, 10.0, -80.0], [-1328.0, 10.0, -88.0], [-1312.0, 10.0, -72.0],   // Usui Misty Hall of Illusions (Senpou Straw-Hat Assassins)
+            [-1340.0, -14.0, 80.0], [-1348.0, -14.0, 88.0], [-1332.0, -14.0, 72.0],   // Ainsel River Basin (Clayman Priests of Uhl)
+            [-1360.0, 5.0, 200.0], [-1368.0, 5.0, 208.0], [-1352.0, 5.0, 192.0],     // Oolacile Abyssal Colosseum (Bloathead Sorcerers)
+            [-1380.0, -16.0, -320.0], [-1388.0, -16.0, -328.0], [-1372.0, -16.0, -312.0], // Altar of Despair (Luminescent Celestial Emissaries)
+            [-1400.0, 8.0, 320.0], [-1408.0, 8.0, 328.0], [-1392.0, 8.0, 312.0],     // Ashina Castle Gatefield (Ashina Ashigaru Riflemen)
+            [-1420.0, 16.0, -140.0], [-1428.0, 16.0, -148.0], [-1412.0, 16.0, -132.0], // Dragon's Pit Crags (Dragon Cult Lapis Knights)
+            [-1440.0, -12.0, 440.0], [-1448.0, -12.0, 448.0], [-1432.0, -12.0, 432.0]  // Volcano Manor Magma Chamber (Man-Serpent Magma Sorcerers)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -4716,7 +4846,7 @@ class DarkSoulsCombat {
                 'sanctum_knight_automaton', 'mimic_tear_mercurial',
                 'cleanrot_valkyrie_knight', 'divine_beast_disciple', 'alonne_shadow_samurai',
                 'charred_loyce_knight', 'ringed_knight_executioner', 'abyssal_dragon_apostle',
-                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent', 'corvian_rapier_knight', 'dragonkin_lightning_halberdier', 'ashina_redguard_arquebusier', 'church_doctor_executioner', 'leyndell_tree_sentinel_patrol', 'badlands_blood_berserker', 'fire_knight_queelign_duelist', 'hornsent_inquisitor_priest'
+                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent', 'corvian_rapier_knight', 'dragonkin_lightning_halberdier', 'ashina_redguard_arquebusier', 'church_doctor_executioner', 'leyndell_tree_sentinel_patrol', 'badlands_blood_berserker', 'fire_knight_queelign_duelist', 'hornsent_inquisitor_priest', 'leyndell_perfumer_page', 'senpou_strawhat_assassin', 'clayman_priest_uhl', 'oolacile_bloathead_sorcerer', 'luminescent_celestial_emissary', 'ashina_ashigaru_rifleman', 'dragon_cult_lapis_knight', 'manserpent_magma_sorcerer'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

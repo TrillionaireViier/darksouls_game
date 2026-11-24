@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (561 Fast-Travel Locations & 85 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (569 Fast-Travel Locations & 93 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 69 bespoke Outside locations, 68 active mob patrols, and 30 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 77 bespoke Outside locations, 76 active mob patrols, and 38 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V60 Expansion)
+1. **Leyndell Perfumer Page (Repeating Crossbow & Spark Aromatic)**: Slender white silk tunic with gold embroidered collar, traveler's tricorn hood, repeating mechanical triple-shot crossbow with bronze crank, and perfume flask with floating golden spark aromatic mist.
+2. **Senpou Temple Straw-Hat Assassin (Spinning Twin Naginata)**: Wide conical woven bamboo straw hat (jingasa) concealing glowing red assassin eyes, saffron monk robes with rope sash, agile crouching stance, and double-ended spinning naginata polearm.
+3. **Clayman Priest of the Uhl Dynast (Bubble Catalyst Harpoon)**: Bulbous earthenware terracotta clay body with carved ancient dynastic spiral glyphs, terracotta skull with horizontal slit visor, harpoon spear with glowing azure bubble tip, and 3 orbiting iridescent starlight bubbles.
+4. **Oolacile Bloathead Sorcerer (Dark Bead Hex Catalyst)**: Grotesque swollen globular bloathead covered in a cluster of 6 glowing red abyssal eyes, tattered indigo robes of ancient Oolacile, and twisted wooden catalyst branch staff topped with a crackling Dark Bead orb.
+5. **Luminescent Celestial Emissary (Cosmic Stardust Dart)**: Translucent cyan-grey elongated humanoid body, swollen cerebral bulbous alien head with pulsating glowing veins, waving forehead tentacle antennae, and an orbiting halo of 4 miniature octahedron starlight crystals.
+6. **Ashina Ashigaru Matchlock Rifleman & Halberdier**: Black-lacquered conical jingasa helmet with gold Ashina crest, red lacquered chest cuirass over grey kosode, heavy wooden matchlock rifle (tanegashima) with bronze barrel, and Ashina blue clan sashimono banner on back frame.
+7. **Dragon Cult Lapis Knight (Dragonbolt Spear & Crest Shield)**: Deep lapis-blue fluted knight plate armor, winged dragon helmet with red plume, heavy Dragonbolt Spear crackling with red ancient dragon lightning, and teardrop lapis shield embossed with the four-winged dragon crest.
+8. **Man-Serpent Magma Sorcerer (Molten Lava Flail & Staff)**: Coiled serpentine lower tail in golden-amber scales, slender hooded serpent torso with flared cobra hood, magma sorcery staff ending in a caged boiling lava sphere, and spiked molten iron flail.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V60 Expansion)
+1. **Morgott, the Omen King & Margit the Fell Omen (Leyndell Erdtree Sanctuary)**: Majestic omen titan crowned in twisting horns, draped in tattered royal mantles, wielding the curved amber Cursed-Blood Greatsword and floating ethereal golden incantation daggers (+20.0m elevation).
+2. **Lady Butterfly, Mist Illusionist of Mt. Senpou (Usui Misty Forest Hall of Illusions)**: Aged shinobi matriarch in dark plum silk kosode and gold sash, white topknot bun, dual razor-sharp kunai blades with glowing violet illusion wires, and orbiting sakura phantom butterflies (+10.0m elevation).
+3. **Dragonkin Soldier of Nokstella, Frozen Lightning Behemoth (Ainsel River Basin)**: Titanic pale cyan draconic giant crawling on knuckles and knees, exposed skeletal dragon ribs, horned skull, and colossal pale-blue frost-lightning spear crackling with electric ice (-14.0m elevation).
+4. **Knight Artorias the Abysswalker, Wolf Knight of Gwyn (Oolacile Ruined Colosseum)**: Weathered silver-blue fluted plate corroded by abyssal mire, pointed helm with trailing shredded blue plume, limp broken left arm, and 3.8m Greatsword of Artorias dripping black humanity sludge (+5.0m elevation).
+5. **Ebrietas, Daughter of the Cosmos & Star Child (Upper Cathedral Altar of Despair)**: Pearlescent slug-mollusk lower body, vertically bifurcated head tube lined with weeping cosmic star eyes, quad fluttering celestial angel wings, and A Call Beyond starlight lasers (-16.0m elevation).
+6. **Gyoubu Masataka Oniwa, Castle Gate General (Ashina Castle Gatefield)**: Mounted on armored heavy black warhorse Onikage, full black-lacquered samurai armor, kabuto helmet crowned with giant curved wooden demon horns, and 5-meter cross-spear (Jumonji Yari) (+8.0m elevation).
+7. **Ancient Dragon Florissax & Dragon Priestess of Communion (Jagged Peak Dragon's Pit)**: Slender priestess draped in ancient shimmering crimson-gold scales, quad stone dragon horn crown, Flowerstone Gavel hammer crackling with red dragonbolt, and Heart of the Ancient Dragon (+16.0m elevation).
+8. **Rykard, Lord of Blasphemy & God-Devouring Serpent (Volcano Manor Magma Lake)**: Colossal coiled red-black serpent with molten magma belly, grotesque human face of Lord Rykard embedded on the neck under golden crown, wielding the serrated Blasphemous Blade with writhing red arms (-12.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V57 Expansion)
 1. **Beastman of Farum Azula (Dragonscale Cleaver)**: Hunchbacked draconic-lupine predator in slate-grey scales with dorsal spine plates, snarling beast jaws, glowing crimson eyes, and heavy chipped stone cleaver.
