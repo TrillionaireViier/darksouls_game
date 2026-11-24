@@ -702,7 +702,7 @@ class DarkSoulsWorld {
         this.scene.background = new THREE.Color(0x566d84);
 
         // 2. Clear Natural Atmospheric Depth Fog (Balanced distance silhouettes for 12,000m realm)
-        this.scene.fog = new THREE.FogExp2(0x5e758c, 0.00005);
+        this.scene.fog = new THREE.FogExp2(0x5e758c, 0.000018);
 
         // 3. Balanced Ambient Light (Clear visibility across all architecture without washing out)
         this.ambientLight = new THREE.AmbientLight(0x4c5e72, 0.60);
@@ -796,14 +796,14 @@ class DarkSoulsWorld {
             return t * 6.0;
         }
 
-        // 2. Surface Boss Arena (z in [4140, 12600], expanded arena span x in [-380, 380]) - 3x Lengthened 720m x 8,400m Colosseum
+        // 2. Surface Boss Arena (z in [12420, 37800], 2,160m wide x 25,200m long Colosseum) - 3X BIGGER MAP!
         // If player is on surface (currentY === null || currentY >= -2.2), ALWAYS stay solid at y = 0.0!
-        if (x >= -380 && x <= 380 && z >= 4140 && z <= 12600 && (currentY === null || currentY >= -2.2)) {
+        if (x >= -1140 && x <= 1140 && z >= 12420 && z <= 37800 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
-        // 3. Central Royal Bridge (z in [535, 4150], expanded walkable bridge span x in [-95.0, 95.0]) - 3x Lengthened 3,600m Imperial Viaduct!
-        if (x >= -95.0 && x <= 95.0 && z >= 535 && z <= 4150 && (currentY === null || currentY >= -2.2)) {
+        // 3. Central Royal Bridge (z in [1605, 12450], 570m wide x 10,800m long Imperial Viaduct) - 3X BIGGER MAP!
+        if (x >= -285.0 && x <= 285.0 && z >= 1605 && z <= 12450 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
@@ -825,24 +825,24 @@ class DarkSoulsWorld {
             return -4.92 + t * 4.92;
         }
 
-        // 5. Serpent Sanctuary & Temple of the Gorgon (z in [-6840, -2250], x in [-160, 160]) - 3x Lengthened 4,500m Sunken Temple
-        if (x >= -40 && x <= 40 && z >= -2430 && z <= -2250) {
-            const t = Math.max(0, Math.min(1.0, (-2250 - z) / 180.0));
+        // 5. Serpent Sanctuary & Temple of the Gorgon (z in [-20520, -6750], x in [-480, 480]) - 3X BIGGER MAP!
+        if (x >= -120 && x <= 120 && z >= -7290 && z <= -6750) {
+            const t = Math.max(0, Math.min(1.0, (-6750 - z) / 540.0));
             return -t * 3.5;
         }
-        if (x >= -130 && x <= 130 && z >= -4050 && z < -2430) {
+        if (x >= -390 && x <= 390 && z >= -12150 && z < -7290) {
             return -3.5;
         }
-        if (z >= -4275 && z < -4050) {
-            if (x >= -40 && x <= 40) {
-                const t = (-4050 - z) / 225.0;
+        if (z >= -12825 && z < -12150) {
+            if (x >= -120 && x <= 120) {
+                const t = (-12150 - z) / 675.0;
                 return -3.5 - t * 2.5;
             }
-            if (Math.abs(x) <= 130) {
+            if (Math.abs(x) <= 390) {
                 return -3.5;
             }
         }
-        if (x >= -160 && x <= 160 && z >= -6840 && z < -4275) {
+        if (x >= -480 && x <= 480 && z >= -20520 && z < -12825) {
             return -6.0;
         }
 
@@ -1206,10 +1206,21 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 8. Citadel & Outside Realm Perimeter Failsafe: Never fall into void within explored grounds
-        if ((x >= -55 && x <= 55 && z >= -35 && z <= 440) || (x >= -1590 && x <= -28 && z >= -850 && z <= 850)) {
+        // 8. Citadel & Outside Realm Perimeter Failsafe (3X BIGGER MAP: 48km breadth)
+        // Firelink & Courtyard floor (z in [-6750, 1620], x in [-1350, 1350])
+        if (x >= -1350 && x <= 1350 && z >= -6750 && z <= 1620) {
             if (currentY === null || currentY >= -1.8) {
-                return (x <= -130 && x >= -185 && z >= 15 && z <= 80) ? 2.0 : 0.0;
+                return 0.0;
+            }
+            return -4.92;
+        }
+        // Outside Realm Vast Expanses (x in [-48000, -28], z in [-25000, 25000])
+        if (x >= -48000 && x <= -28 && z >= -25000 && z <= 25000) {
+            // Check scaled local coordinates against outside terrain elevations
+            const ox = x / 3.0;
+            const oz = z / 3.0;
+            if (currentY === null || currentY >= -1.8) {
+                return (ox <= -130 && ox >= -185 && oz >= 15 && oz <= 80) ? 2.0 : 0.0;
             }
             return -4.92;
         }
@@ -1766,19 +1777,19 @@ class DarkSoulsWorld {
         this.createPathBeacon(20, 6.0, 266, 0xff7722, "⚔️ DESCEND TO BOSS FOG GATE [DOWN]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON", "#ff9933", true, false);
 
         // ----------------------------------------------------
-        // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 4140 TO Z = 12540)
-        // 3x Lengthened 720m x 8,400m Colossal Imperial Colosseum Arena (Centered at z = 8340)
+        // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 12420 TO Z = 37620)
+        // 3X BIGGER: 2,160m Wide x 25,200m Long Imperial Colosseum Arena (Centered at z = 25020)
         // ----------------------------------------------------
-        const arenaGeo = new THREE.BoxGeometry(720, 2, 8400);
+        const arenaGeo = new THREE.BoxGeometry(2160, 2, 25200);
         const arena = new THREE.Mesh(arenaGeo, this.arenaMat);
-        arena.position.set(0, -1, 8340);
+        arena.position.set(0, -1, 25020);
         arena.receiveShadow = true;
         this.scene.add(arena);
 
-        // Arena Boundaries (Monumental 20m High Ramparts)
-        this.createWall(-360.5, 10, 8340, 3, 20, 8400);    // West wall
-        this.createWall(360.5, 10, 8340, 3, 20, 8400);     // East wall
-        this.createWall(0, 10, 12540, 725, 20, 3);          // Far North end of arena (locked throne gate)
+        // Arena Boundaries (Monumental 30m High Ramparts)
+        this.createWall(-1081.5, 15, 25020, 6, 30, 25200);   // West wall
+        this.createWall(1081.5, 15, 25020, 6, 30, 25200);    // East wall
+        this.createWall(0, 15, 37620, 2170, 30, 6);          // Far North end of arena (locked throne gate)
 
         // South Containment Wall flanking Fog Gate (z = 4140)
         this.createWall(-225.0, 10, 4140, 270, 20, 3);
@@ -1826,6 +1837,7 @@ class DarkSoulsWorld {
         const outsideGroup = new THREE.Group();
         this.outsideGroup = outsideGroup;
         outsideGroup.name = 'outside_realm_group';
+        outsideGroup.scale.set(3.0, 1.0, 3.0); // 3X EXPANDED MEGALITHIC REALM
 
         // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (Scaled 8x to 16,000m x 16,000m)
         const outdoorFloorGeo = new THREE.PlaneGeometry(16000, 16000);

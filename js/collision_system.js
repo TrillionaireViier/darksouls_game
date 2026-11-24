@@ -41,21 +41,21 @@ class CollisionSystem {
         const initialX = pos.x;
         const initialZ = pos.z;
 
-        // A. Royal Bridge Parapets (z in [535.0, 4145.0]) - 3x Lengthened 3,600m Imperial Viaduct
-        if (pos.z >= 535.0 && pos.z <= 4145.0 && Math.abs(pos.x) <= 92.0) {
+        // A. Royal Bridge Parapets (z in [1605.0, 12405.0], 570m Wide x 10,800m Long Viaduct) - 3X BIGGER MAP!
+        if (pos.z >= 1605.0 && pos.z <= 12405.0 && Math.abs(pos.x) <= 280.0) {
             if (y >= -1.0 && y <= 4.0) {
-                const minX = -88.0 + radius;
-                const maxX = 88.0 - radius;
+                const minX = -276.0 + radius;
+                const maxX = 276.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             }
         }
 
-        // B. Surface Boss Arena (z in [4140.0, 12540.0]) - 3x Lengthened 720m x 8,400m Colosseum Arena
-        if (pos.z >= 4140.0 && pos.z <= 12540.0 && y >= -1.0 && y <= 8.0) {
-            const minX = -355.0 + radius;
-            const maxX = 355.0 - radius;
+        // B. Surface Boss Arena (z in [12420.0, 37620.0], 2,160m Wide x 25,200m Long Colosseum Arena) - 3X BIGGER MAP!
+        if (pos.z >= 12420.0 && pos.z <= 37620.0 && y >= -1.0 && y <= 15.0) {
+            const minX = -1070.0 + radius;
+            const maxX = 1070.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            pos.z = Math.min(12530.0 - radius, pos.z);
+            pos.z = Math.min(37600.0 - radius, pos.z);
         }
 
         // C. Flooded Catacombs Corridor (z in [22.0, 270.0], y < -2.0 - strictly subterranean only)
@@ -74,30 +74,30 @@ class CollisionSystem {
             pos.z = Math.min(94.5 - radius, pos.z);
         }
 
-        // F. Courtyard Starting Arena (z in [-2250.0, 540.0], x in [-450.0, 450.0]) - 3x Lengthened 900m x 2,790m Imperial Acropolis
-        if (pos.z >= -2250.0 && pos.z < 540.0 && pos.x >= -450.0 && y > -2.0) {
-            const inWestGate = (pos.z >= -32.0 && pos.z <= 32.0);
-            const minX = inWestGate ? -8000.0 : (-445.0 + radius);
-            const maxX = 445.0 - radius;
+        // F. Courtyard Starting Arena (z in [-6750.0, 1620.0], x in [-1350.0, 1350.0]) - 3X BIGGER MAP!
+        if (pos.z >= -6750.0 && pos.z < 1620.0 && pos.x >= -1350.0 && y > -2.0) {
+            const inWestGate = (pos.z >= -96.0 && pos.z <= 96.0);
+            const minX = inWestGate ? -50000.0 : (-1345.0 + radius);
+            const maxX = 1345.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            if (pos.x >= -445.0 && (pos.x < -40.0 || pos.x > 40.0)) {
-                pos.z = Math.max(-2240.0 + radius, pos.z);
+            if (pos.x >= -1345.0 && (pos.x < -120.0 || pos.x > 120.0)) {
+                pos.z = Math.max(-6740.0 + radius, pos.z);
             }
         }
 
-        // G. Serpent Sanctuary & Gorgon Temple (z in [-6750.0, -2250.0], x in [-150.0, 150.0]) - 3x Lengthened 4,500m Sunken Temple
-        if (pos.z < -2250.0 && pos.z >= -6750.0) {
-            if (pos.z >= -4050.0) {
-                // Sunken Serpent Courtyard (1,620m long, 240m wide)
-                const minX = -115.0 + radius;
-                const maxX = 115.0 - radius;
+        // G. Serpent Sanctuary & Gorgon Temple (z in [-20250.0, -6750.0], x in [-450.0, 450.0]) - 3X BIGGER MAP!
+        if (pos.z < -6750.0 && pos.z >= -20250.0) {
+            if (pos.z >= -12150.0) {
+                // Sunken Serpent Courtyard (4,860m long, 720m wide)
+                const minX = -350.0 + radius;
+                const maxX = 350.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             } else {
-                // Gorgon Inner Sanctum (2,475m long, 300m wide)
-                const minX = -145.0 + radius;
-                const maxX = 145.0 - radius;
+                // Gorgon Inner Sanctum (8,100m long, 900m wide)
+                const minX = -440.0 + radius;
+                const maxX = 440.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
-                pos.z = Math.max(-6740.0 + radius, pos.z);
+                pos.z = Math.max(-20240.0 + radius, pos.z);
             }
         }
 
