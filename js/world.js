@@ -772,9 +772,11 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-3.6, 0, 0, 0xff7722, 3.8, 26);
         this.createStandingBrazier(3.6, 0, 0, 0xff7722, 3.8, 26);
 
-        // Interactive unlit torches near courtyard gate (ignitable with [E] for +50 Souls)
-        this.createTorch(-6.5, 2.5, 25, { interactive: true, isLit: false });
-        this.createTorch(6.5, 2.5, 25, { interactive: true, isLit: false });
+        // Interactive unlit torches near promenade gateway (mounted on carved stone pillars so they never float)
+        this.createPillar(-6.5, 25, 4.0);
+        this.createPillar(6.5, 25, 4.0);
+        this.createTorch(-6.0, 2.5, 25, { interactive: true, isLit: false });
+        this.createTorch(6.0, 2.5, 25, { interactive: true, isLit: false });
     }
 
     getGroundHeight(x, z, currentY = null) {
@@ -1424,12 +1426,17 @@ class DarkSoulsWorld {
         handrailR.receiveShadow = true;
         this.scene.add(handrailR);
 
-        // Solid stair side skirt filling under steps
+        // Solid stair side skirt filling under steps on both sides
         const skirtGeo = new THREE.BoxGeometry(0.3, 3.5, 18.5);
         const skirtL = new THREE.Mesh(skirtGeo, this.wallMat);
         skirtL.position.set(15.8, 1.6, 13.5);
         skirtL.rotation.x = Math.atan2(6.0, 18.0);
         this.scene.add(skirtL);
+
+        const skirtR = new THREE.Mesh(skirtGeo, this.wallMat);
+        skirtR.position.set(24.2, 1.6, 13.5);
+        skirtR.rotation.x = Math.atan2(6.0, 18.0);
+        this.scene.add(skirtR);
 
         this.colliders.push(new THREE.Box3().setFromCenterAndSize(
             new THREE.Vector3(15.75, 3.5, 13.5),
@@ -1605,8 +1612,9 @@ class DarkSoulsWorld {
         archTop.position.set(-20, 7.5, 4);
         this.scene.add(archTop);
 
-        this.createWall(-24.6, 0.5, 13, 0.8, 6.0, 18);
-        this.createWall(-15.4, 0.5, 13, 0.8, 6.0, 18);
+        // Solid side containment walls spanning from deep bedrock (y=-5.0) to parapet top (y=4.0)
+        this.createWall(-24.6, -0.5, 13, 0.8, 9.0, 18);
+        this.createWall(-15.4, -0.5, 13, 0.8, 9.0, 18);
 
         const tunnelCeil = new THREE.Mesh(new THREE.BoxGeometry(10.0, 0.8, 18.5), this.stoneMat);
         tunnelCeil.position.set(-20, 3.8, 13);

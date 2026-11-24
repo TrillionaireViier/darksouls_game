@@ -871,11 +871,14 @@
             width: 100%;
             padding: 24px 0;
             background: rgba(5, 4, 3, 0.85);
-            border-top: 2px solid #5a4224;
-            border-bottom: 2px solid #5a4224;
+            border-top: 2px solid transparent;
+            border-bottom: 2px solid transparent;
             text-align: center;
             opacity: 0;
             display: none;
+            visibility: hidden;
+            pointer-events: none;
+            overflow: hidden;
             transform: scaleY(0);
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -885,7 +888,10 @@
         #victory-banner.active .banner-strip,
         #location-unlocked-banner.active .banner-strip {
             display: block;
+            visibility: visible;
             opacity: 1;
+            border-top: 2px solid #5a4224;
+            border-bottom: 2px solid #5a4224;
             transform: scaleY(1);
         }
 
