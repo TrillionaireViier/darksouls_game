@@ -4386,10 +4386,10 @@ class DarkSoulsCombat {
         this.currentBossType = def.id;
 
         const posX = (x !== null) ? x : (def.spawnPos ? def.spawnPos.x : 0);
-        let posZ = (z !== null) ? z : (def.spawnPos ? def.spawnPos.z : 25000);
-        // Automatically translate legacy arena spawns into the 3X BIGGER 25,200m Colosseum Arena (z: 12420 to 37620)
-        if (posZ === 330 || posZ === 2200 || posZ === 6500 || posZ === 8340) {
-            posZ = 25000;
+        let posZ = (z !== null) ? z : (def.spawnPos ? def.spawnPos.z : 75000);
+        // Automatically translate legacy arena spawns into the TITAN X9 75,600m Colosseum Arena (z: 37260 to 112860)
+        if (posZ === 330 || posZ === 2200 || posZ === 6500 || posZ === 8340 || posZ === 25000) {
+            posZ = 75000;
         }
 
         const bossMesh = def.create(this.charFactory, posX, posZ);

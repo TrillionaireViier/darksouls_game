@@ -702,7 +702,7 @@ class DarkSoulsWorld {
         this.scene.background = new THREE.Color(0x566d84);
 
         // 2. Clear Natural Atmospheric Depth Fog (Balanced distance silhouettes for 12,000m realm)
-        this.scene.fog = new THREE.FogExp2(0x5e758c, 0.000018);
+        this.scene.fog = new THREE.FogExp2(0x5e758c, 0.000006);
 
         // 3. Balanced Ambient Light (Clear visibility across all architecture without washing out)
         this.ambientLight = new THREE.AmbientLight(0x4c5e72, 0.60);
@@ -796,14 +796,14 @@ class DarkSoulsWorld {
             return t * 6.0;
         }
 
-        // 2. Surface Boss Arena (z in [12420, 37800], 2,160m wide x 25,200m long Colosseum) - 3X BIGGER MAP!
+        // 2. Surface Boss Arena (z in [37260, 113400], 6,480m wide x 75,600m long Colosseum) - TITAN X9 EXPANSION!
         // If player is on surface (currentY === null || currentY >= -2.2), ALWAYS stay solid at y = 0.0!
-        if (x >= -1140 && x <= 1140 && z >= 12420 && z <= 37800 && (currentY === null || currentY >= -2.2)) {
+        if (x >= -3420 && x <= 3420 && z >= 37260 && z <= 113400 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
-        // 3. Central Royal Bridge (z in [1605, 12450], 570m wide x 10,800m long Imperial Viaduct) - 3X BIGGER MAP!
-        if (x >= -285.0 && x <= 285.0 && z >= 1605 && z <= 12450 && (currentY === null || currentY >= -2.2)) {
+        // 3. Central Royal Bridge (z in [4815, 37350], 1,710m wide x 32,400m long Imperial Viaduct) - TITAN X9 EXPANSION!
+        if (x >= -855.0 && x <= 855.0 && z >= 4815 && z <= 37350 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
@@ -825,24 +825,24 @@ class DarkSoulsWorld {
             return -4.92 + t * 4.92;
         }
 
-        // 5. Serpent Sanctuary & Temple of the Gorgon (z in [-20520, -6750], x in [-480, 480]) - 3X BIGGER MAP!
-        if (x >= -120 && x <= 120 && z >= -7290 && z <= -6750) {
-            const t = Math.max(0, Math.min(1.0, (-6750 - z) / 540.0));
+        // 5. Serpent Sanctuary & Temple of the Gorgon (z in [-61560, -20250], x in [-1440, 1440]) - TITAN X9 EXPANSION!
+        if (x >= -360 && x <= 360 && z >= -21870 && z <= -20250) {
+            const t = Math.max(0, Math.min(1.0, (-20250 - z) / 1620.0));
             return -t * 3.5;
         }
-        if (x >= -390 && x <= 390 && z >= -12150 && z < -7290) {
+        if (x >= -1170 && x <= 1170 && z >= -36450 && z < -21870) {
             return -3.5;
         }
-        if (z >= -12825 && z < -12150) {
-            if (x >= -120 && x <= 120) {
-                const t = (-12150 - z) / 675.0;
+        if (z >= -38475 && z < -36450) {
+            if (x >= -360 && x <= 360) {
+                const t = (-36450 - z) / 2025.0;
                 return -3.5 - t * 2.5;
             }
-            if (Math.abs(x) <= 390) {
+            if (Math.abs(x) <= 1170) {
                 return -3.5;
             }
         }
-        if (x >= -480 && x <= 480 && z >= -20520 && z < -12825) {
+        if (x >= -1440 && x <= 1440 && z >= -61560 && z < -38475) {
             return -6.0;
         }
 
@@ -1206,19 +1206,19 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 8. Citadel & Outside Realm Perimeter Failsafe (3X BIGGER MAP: 48km breadth)
-        // Firelink & Courtyard floor (z in [-6750, 1620], x in [-1350, 1350])
-        if (x >= -1350 && x <= 1350 && z >= -6750 && z <= 1620) {
+        // 8. Citadel & Outside Realm Perimeter Failsafe (TITAN X9 EXPANSION: 144km breadth)
+        // Firelink & Courtyard floor (z in [-20250, 4860], x in [-4050, 4050])
+        if (x >= -4050 && x <= 4050 && z >= -20250 && z <= 4860) {
             if (currentY === null || currentY >= -1.8) {
                 return 0.0;
             }
             return -4.92;
         }
-        // Outside Realm Vast Expanses (x in [-48000, -28], z in [-25000, 25000])
-        if (x >= -48000 && x <= -28 && z >= -25000 && z <= 25000) {
-            // Check scaled local coordinates against outside terrain elevations
-            const ox = x / 3.0;
-            const oz = z / 3.0;
+        // Outside Realm Vast Expanses (x in [-144000, -28], z in [-75000, 75000])
+        if (x >= -144000 && x <= -28 && z >= -75000 && z <= 75000) {
+            // Check scaled local coordinates against outside terrain elevations (9.0x scale)
+            const ox = x / 9.0;
+            const oz = z / 9.0;
             if (currentY === null || currentY >= -1.8) {
                 return (ox <= -130 && ox >= -185 && oz >= 15 && oz <= 80) ? 2.0 : 0.0;
             }
@@ -1777,19 +1777,19 @@ class DarkSoulsWorld {
         this.createPathBeacon(20, 6.0, 266, 0xff7722, "⚔️ DESCEND TO BOSS FOG GATE [DOWN]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON", "#ff9933", true, false);
 
         // ----------------------------------------------------
-        // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 12420 TO Z = 37620)
-        // 3X BIGGER: 2,160m Wide x 25,200m Long Imperial Colosseum Arena (Centered at z = 25020)
+        // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 37260 TO Z = 112860)
+        // TITAN X9 EXPANSION: 6,480m Wide x 75,600m Long Imperial Colosseum Arena (Centered at z = 75060)
         // ----------------------------------------------------
-        const arenaGeo = new THREE.BoxGeometry(2160, 2, 25200);
+        const arenaGeo = new THREE.BoxGeometry(6480, 4, 75600);
         const arena = new THREE.Mesh(arenaGeo, this.arenaMat);
-        arena.position.set(0, -1, 25020);
+        arena.position.set(0, -2, 75060);
         arena.receiveShadow = true;
         this.scene.add(arena);
 
-        // Arena Boundaries (Monumental 30m High Ramparts)
-        this.createWall(-1081.5, 15, 25020, 6, 30, 25200);   // West wall
-        this.createWall(1081.5, 15, 25020, 6, 30, 25200);    // East wall
-        this.createWall(0, 15, 37620, 2170, 30, 6);          // Far North end of arena (locked throne gate)
+        // Arena Boundaries (Monumental 45m High Ramparts)
+        this.createWall(-3241.5, 22.5, 75060, 12, 45, 75600);   // West wall
+        this.createWall(3241.5, 22.5, 75060, 12, 45, 75600);    // East wall
+        this.createWall(0, 22.5, 112860, 6500, 45, 12);         // Far North end of arena (locked throne gate)
 
         // South Containment Wall flanking Fog Gate (z = 4140)
         this.createWall(-225.0, 10, 4140, 270, 20, 3);
@@ -1837,7 +1837,7 @@ class DarkSoulsWorld {
         const outsideGroup = new THREE.Group();
         this.outsideGroup = outsideGroup;
         outsideGroup.name = 'outside_realm_group';
-        outsideGroup.scale.set(3.0, 1.0, 3.0); // 3X EXPANDED MEGALITHIC REALM
+        outsideGroup.scale.set(9.0, 1.0, 9.0); // TITAN X9 EXPANSION: 144km MEGALITHIC REALM
 
         // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (Scaled 8x to 16,000m x 16,000m)
         const outdoorFloorGeo = new THREE.PlaneGeometry(16000, 16000);

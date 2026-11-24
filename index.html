@@ -9,7 +9,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261124_V58_MAP_3X_BIGGER_EXPANSION';
+            var TARGET_BUILD = '20261124_V59_TITAN_MAP_X9_EXPANSION';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -7561,7 +7561,7 @@
                             35 m/s
                         </span>
                     </div>
-                    <input type="range" id="cheat-slider-run-speed" min="15" max="180" step="1" value="35" oninput="onRunSpeedSlider(this.value)" style="width: 100%; accent-color: #00f5ff; cursor: pointer; margin-bottom: 8px;">
+                    <input type="range" id="cheat-slider-run-speed" min="15" max="350" step="1" value="45" oninput="onRunSpeedSlider(this.value)" style="width: 100%; accent-color: #00f5ff; cursor: pointer; margin-bottom: 8px;">
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                         <button class="btn-icon-bar" onclick="setRunSpeedPreset(15)" style="padding: 4px 8px; font-size: 0.72rem; border-color: #88ccff; color: #cce6ff;">Walk: 15 m/s</button>
                         <button class="btn-icon-bar" onclick="setRunSpeedPreset(35)" style="padding: 4px 8px; font-size: 0.72rem; border-color: #88ccff; color: #cce6ff;">Sprint: 35 m/s</button>

@@ -15,7 +15,7 @@
             this.isOpen = false;
             
             // Map view transformation - Tactical zoom for 8x Megalithic Realm
-            this.scale = 0.25; // pixels per meter
+            this.scale = 0.08; // pixels per meter
             this.offsetX = 0;
             this.offsetZ = 0;
             this.isDragging = false;
@@ -150,7 +150,7 @@
 
         zoom(factor, clientX, clientY) {
             const oldScale = this.scale;
-            this.scale = Math.max(0.02, Math.min(8.0, this.scale * factor));
+            this.scale = Math.max(0.005, Math.min(8.0, this.scale * factor));
             
             if (this.canvas && clientX !== undefined && clientY !== undefined) {
                 const rect = this.canvas.getBoundingClientRect();
@@ -225,7 +225,7 @@
         }
 
         resetView() {
-            this.scale = 0.25;
+            this.scale = 0.08;
             this.offsetX = 0;
             this.offsetZ = 0;
             this.render();
