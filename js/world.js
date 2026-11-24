@@ -794,14 +794,14 @@ class DarkSoulsWorld {
             return t * 6.0;
         }
 
-        // 2. Surface Boss Arena (z in [272, 700], expanded arena span x in [-125, 125]) - Scaled Colossal Colosseum (240m x 420m)
+        // 2. Surface Boss Arena (z in [272, 760], expanded arena span x in [-160, 160]) - Scaled 300m x 480m Colossal Colosseum
         // If player is on surface (currentY === null || currentY >= -2.2), ALWAYS stay solid at y = 0.0!
-        if (x >= -125 && x <= 125 && z >= 272 && z <= 700 && (currentY === null || currentY >= -2.2)) {
+        if (x >= -160 && x <= 160 && z >= 272 && z <= 760 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
-        // 3. Central Royal Bridge (z in [24, 274], expanded walkable bridge span x in [-45.0, 45.0]) - Scaled 85m Imperial Viaduct!
-        if (x >= -45.0 && x <= 45.0 && z >= 24 && z <= 274 && (currentY === null || currentY >= -2.2)) {
+        // 3. Central Royal Bridge (z in [24, 274], expanded walkable bridge span x in [-48.0, 48.0]) - Scaled 90m Imperial Viaduct!
+        if (x >= -48.0 && x <= 48.0 && z >= 24 && z <= 274 && (currentY === null || currentY >= -2.2)) {
             return 0.0;
         }
 
@@ -822,29 +822,29 @@ class DarkSoulsWorld {
             return -4.92 + t * 4.92;
         }
 
-        // 5. Serpent Sanctuary & Temple of the Gorgon (z in [-138, -30], x in [-65, 65]) - Colossal Temple
-        if (x >= -18 && x <= 18 && z >= -36.5 && z <= -29.5) {
-            const t = Math.max(0, Math.min(1.0, (-30 - z) / 6.0));
+        // 5. Serpent Sanctuary & Temple of the Gorgon (z in [-245, -90], x in [-75, 75]) - Monumental Sunken Temple
+        if (x >= -22 && x <= 22 && z >= -96.5 && z <= -89.5) {
+            const t = Math.max(0, Math.min(1.0, (-90 - z) / 6.0));
             return -t * 2.5;
         }
-        if (x >= -55 && x <= 55 && z >= -76 && z < -36.5) {
+        if (x >= -65 && x <= 65 && z >= -162 && z < -96.5) {
             return -2.5;
         }
-        if (z >= -84 && z < -76) {
-            if (x >= -20 && x <= 20) {
-                const t = (-76 - z) / 8.0;
+        if (z >= -172 && z < -162) {
+            if (x >= -22 && x <= 22) {
+                const t = (-162 - z) / 10.0;
                 return -2.5 - t * 1.5;
             }
-            if (Math.abs(x) <= 55) {
+            if (Math.abs(x) <= 65) {
                 return -2.5;
             }
         }
-        if (x >= -65 && x <= 65 && z >= -138 && z < -84) {
+        if (x >= -75 && x <= 75 && z >= -245 && z < -172) {
             return -4.0;
         }
 
-        // Undead Burg Outskirts: Cliff Chasm & Mountain Plateau (x in [-225, -100], z in [-35, 75])
-        if (x >= -225 && x <= -100 && z >= -35 && z <= 75 && (currentY === null || currentY < 0.5)) {
+        // Undead Burg Outskirts: Cliff Chasm & Mountain Plateau (x in [-310, -140], z in [-50, 90])
+        if (x >= -310 && x <= -140 && z >= -50 && z <= 90 && (currentY === null || currentY < 0.5)) {
             return -2.0;
         }
 
@@ -1023,15 +1023,15 @@ class DarkSoulsWorld {
             return 0.0;
         }
 
-        // 6. Main Courtyard Starting Arena (z in [-60, 35], x in [-115, 115] - Monumental 200m Imperial Acropolis)
-        if (x >= -115 && x <= 115 && z >= -60 && z <= 35) {
+        // 6. Main Courtyard Starting Arena (z in [-95, 35], x in [-160, 160] - Colossal 300m x 130m Imperial Acropolis)
+        if (x >= -160 && x <= 160 && z >= -95 && z <= 35) {
             if (!inStairTrench && (currentY === null || currentY >= -1.5)) {
                 return 0.0;
             }
         }
 
-        // Fallen Starship Interior Deck & Ramp (x in [-180, -18], z in [-40, 100]) - 3x Expanded Deck
-        if (x >= -180 && x <= -18 && z >= -40 && z <= 100) {
+        // Fallen Starship Interior Deck & Ramp (x in [-250, -18], z in [-60, 140]) - Colossal Starship Deck
+        if (x >= -250 && x <= -18 && z >= -60 && z <= 140) {
             return 0.0;
         }
 
@@ -1042,17 +1042,17 @@ class DarkSoulsWorld {
             }
         }
 
-        // 7. Dynamic Fast-Travel Lordran Realm Ground Height (Nearest location dais clamping within 160m radius for 3x expanded locations)
+        // 7. Dynamic Fast-Travel Lordran Realm Ground Height (Nearest location dais clamping within 250m radius for colossal expanded locations)
         if (window.DARK_SOULS_LOCATIONS) {
             let closestLoc = null;
-            let minDistSq = 160 * 160;
+            let minDistSq = 250 * 250;
             for (let i = 0; i < window.DARK_SOULS_LOCATIONS.length; i++) {
                 const loc = window.DARK_SOULS_LOCATIONS[i];
                 const dx = x - loc.pos[0];
                 const dz = z - loc.pos[2];
                 const d2 = dx * dx + dz * dz;
                 if (d2 < minDistSq) {
-                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 18.0) {
+                    if (currentY === null || Math.abs(currentY - loc.pos[1]) < 22.0) {
                         minDistSq = d2;
                         closestLoc = loc;
                     }
@@ -1095,12 +1095,12 @@ class DarkSoulsWorld {
     }
 
     buildEnvironment() {
-        // 1. Courtyard Floor (Starting area) - Monumental 200m Imperial Acropolis Plaza (220m x 90m)
-        // North Courtyard Floor Slab (z in [-56, 4], x in [-110, 110])
-        const northCourtyardGeo = new THREE.PlaneGeometry(220, 60);
+        // 1. Courtyard Floor (Starting area) - Colossal 300m x 120m Imperial Acropolis Plaza
+        // North Courtyard Floor Slab (z in [-90, 4], x in [-150, 150]) - 300m x 94m Vast Courtyard
+        const northCourtyardGeo = new THREE.PlaneGeometry(300, 94);
         const northCourtyard = new THREE.Mesh(northCourtyardGeo, this.stoneMat);
         northCourtyard.rotation.x = -Math.PI / 2;
-        northCourtyard.position.set(0, 0, -26);
+        northCourtyard.position.set(0, 0, -43);
         northCourtyard.receiveShadow = true;
         this.scene.add(northCourtyard);
 
@@ -1112,171 +1112,171 @@ class DarkSoulsWorld {
         centerCourtyard.receiveShadow = true;
         this.scene.add(centerCourtyard);
 
-        // Far West Battlement Floor Slab (z in [4, 30], x in [-100, -45])
-        const westCourtyardGeo = new THREE.PlaneGeometry(55, 26);
+        // Far West Battlement Floor Slab (z in [4, 30], x in [-150, -45]) - 105m wide west wing
+        const westCourtyardGeo = new THREE.PlaneGeometry(105, 26);
         const westCourtyard = new THREE.Mesh(westCourtyardGeo, this.stoneMat);
         westCourtyard.rotation.x = -Math.PI / 2;
-        westCourtyard.position.set(-72.5, 0, 17);
+        westCourtyard.position.set(-97.5, 0, 17);
         westCourtyard.receiveShadow = true;
         this.scene.add(westCourtyard);
 
-        // Far East Battlement Floor Slab (z in [4, 30], x in [45, 100])
-        const eastCourtyardGeo = new THREE.PlaneGeometry(55, 26);
+        // Far East Battlement Floor Slab (z in [4, 30], x in [45, 150]) - 105m wide east wing
+        const eastCourtyardGeo = new THREE.PlaneGeometry(105, 26);
         const eastCourtyard = new THREE.Mesh(eastCourtyardGeo, this.stoneMat);
         eastCourtyard.rotation.x = -Math.PI / 2;
-        eastCourtyard.position.set(72.5, 0, 17);
+        eastCourtyard.position.set(97.5, 0, 17);
         eastCourtyard.receiveShadow = true;
         this.scene.add(eastCourtyard);
 
-        // Protective Gothic Stone Balustrades flanking Center Promenade (at x = -42.5 and x = 42.5, matching 85m bridge)
-        this.createWall(-42.5, 1.2, 17.0, 0.6, 2.4, 26); // West Promenade Balustrade
-        this.createWall(42.5, 1.2, 17.0, 0.6, 2.4, 26);  // East Promenade Balustrade
+        // Protective Gothic Stone Balustrades flanking Center Promenade (at x = -45.0 and x = 45.0, matching 90m bridge)
+        this.createWall(-45.0, 1.2, 17.0, 0.6, 2.4, 26); // West Promenade Balustrade
+        this.createWall(45.0, 1.2, 17.0, 0.6, 2.4, 26);  // East Promenade Balustrade
 
         // Outer balustrades along West and East battlements
-        this.createWall(-100.0, 1.2, 17.0, 0.6, 2.4, 26); // West Outer Balustrade
-        this.createWall(100.0, 1.2, 17.0, 0.6, 2.4, 26);  // East Outer Balustrade
+        this.createWall(-150.0, 1.2, 17.0, 0.6, 2.4, 26); // West Outer Balustrade
+        this.createWall(150.0, 1.2, 17.0, 0.6, 2.4, 26);  // East Outer Balustrade
 
         // Corner abutments connecting promenade to Bridge portal (sealing gap at z=30)
-        this.createWall(-71.25, 1.5, 30.0, 57.5, 3.0, 1.2);
-        this.createWall(71.25, 1.5, 30.0, 57.5, 3.0, 1.2);
+        this.createWall(-97.5, 1.5, 30.0, 105.0, 3.0, 1.2);
+        this.createWall(97.5, 1.5, 30.0, 105.0, 3.0, 1.2);
 
-        // Outer Courtyard Fortress Walls (North Gate open at x in [-18, 18] for Serpent Sanctuary)
-        this.createWall(-59.0, 5, -30, 82, 10, 2); // West segment of North wall (x: -100 to -18)
-        this.createWall(59.0, 5, -30, 82, 10, 2);  // East segment of North wall (x: 18 to 100)
-        this.createWall(0, 9.5, -30, 36, 3, 2);    // Overhead monumental arch lintel above doorway
+        // Outer Courtyard Fortress Walls (North Gate open at x in [-22, 22] for Serpent Sanctuary, z = -90)
+        this.createWall(-86.0, 5, -90, 128, 10, 2); // West segment of North wall (x: -150 to -22)
+        this.createWall(86.0, 5, -90, 128, 10, 2);  // East segment of North wall (x: 22 to 150)
+        this.createWall(0, 9.5, -90, 44, 3, 2);     // Overhead monumental arch lintel above doorway
 
-        // Outer West Fortress Wall (Gate Arch open at z in [-14, 14] leading to OUTSIDE REALM)
-        this.createWall(-100, 5, -22.0, 2, 10, 16); // North segment of West wall (z: -30 to -14)
-        this.createWall(-100, 5, 22.0, 2, 10, 16);  // South segment of West wall (z: 14 to 30)
-        this.createWall(-100, 9.5, 0, 2, 3, 28);    // Overhead monumental arch lintel above West Gate
-        this.createPillar(-100, -14, 9);
-        this.createPillar(-100, 14, 9);
-        this.createTorch(-99.2, 5.0, -13.8, { intensity: 3.5, color: 0x2ecc71 });
-        this.createTorch(-99.2, 5.0, 13.8, { intensity: 3.5, color: 0x2ecc71 });
+        // Outer West Fortress Wall (at x = -150, Gate Arch open at z in [-16, 16] leading to OUTSIDE REALM)
+        this.createWall(-150, 5, -53.0, 2, 10, 74); // North segment of West wall (z: -90 to -16)
+        this.createWall(-150, 5, 23.0, 2, 10, 14);  // South segment of West wall (z: 16 to 30)
+        this.createWall(-150, 9.5, 0, 2, 3, 32);    // Overhead monumental arch lintel above West Gate
+        this.createPillar(-150, -16, 10);
+        this.createPillar(-150, 16, 10);
+        this.createTorch(-149.2, 5.0, -15.8, { intensity: 4.0, color: 0x2ecc71 });
+        this.createTorch(-149.2, 5.0, 15.8, { intensity: 4.0, color: 0x2ecc71 });
 
         // Flanking West Gate Waystone Brazier placed beside North pillar
-        this.createPathBeacon(-99.0, 0, -12.5, 0x2ecc71, "🌲 OUTSIDE REALM: DARKROOT WOODS & CLIFFS [WEST]", "ANCIENT ARCHTREES • DRAGON CLIFFS • WYRMS & BASILISKS", "#a8ffb2", false);
+        this.createPathBeacon(-149.0, 0, -14.5, 0x2ecc71, "🌲 OUTSIDE REALM: DARKROOT WOODS & CLIFFS [WEST]", "ANCIENT ARCHTREES • DRAGON CLIFFS • WYRMS & BASILISKS", "#a8ffb2", false);
 
         // Cobblestone flagstone threshold paving connecting Firelink to Darkroot
-        const gatePaving = new THREE.Mesh(new THREE.PlaneGeometry(36, 24), this.cobbleMat || this.stoneMat);
+        const gatePaving = new THREE.Mesh(new THREE.PlaneGeometry(48, 32), this.cobbleMat || this.stoneMat);
         gatePaving.rotation.x = -Math.PI / 2;
-        gatePaving.position.set(-100, 0.015, 0);
+        gatePaving.position.set(-150, 0.015, 0);
         gatePaving.receiveShadow = true;
         this.scene.add(gatePaving);
 
         // West Gate In-World Portal to Outside Darkroot Bonfire
         this.interactables.push({
             type: 'route_portal',
-            position: new THREE.Vector3(-97, 0, 0),
-            radius: 6.0,
+            position: new THREE.Vector3(-147, 0, 0),
+            radius: 6.5,
             prompt: '🌲 [ E ] WAYSTONE: WARP TO OUTSIDE DARKROOT EXPEDITION',
-            targetPos: new THREE.Vector3(-140, 0, 0),
+            targetPos: new THREE.Vector3(-190, 0, 0),
             label: 'DARKROOT OUTSIDE REALM'
         });
 
-        this.createWall(100, 5, 0, 2, 10, 60);    // East wall (at x = 100)
+        this.createWall(150, 5, -30, 2, 10, 120);    // East wall (at x = 150, spans z: -90 to 30)
 
-        // South Wall Openings (Central Bridge opening matches 85m viaduct at x=[-42.5, 42.5])
-        this.createWall(-71.25, 5, 30, 57.5, 10, 2);
-        this.createWall(71.25, 5, 30, 57.5, 10, 2);
+        // South Wall Openings (Central Bridge opening matches 90m viaduct at x=[-45, 45])
+        this.createWall(-97.5, 5, 30, 105, 10, 2);
+        this.createWall(97.5, 5, 30, 105, 10, 2);
 
-        // Gothic pillars in courtyard (Monumental imperial spread)
+        // Gothic pillars in courtyard (Monumental imperial spread across 300m plaza)
         const pillarCoords = [
-            [-36, -16], [36, -16],
-            [-36, 14], [36, 14],
-            [-72, -8], [72, -8],
-            [-72, 20], [72, 20]
+            [-50, -45], [50, -45],
+            [-50, 14], [50, 14],
+            [-110, -30], [110, -30],
+            [-110, 15], [110, 15]
         ];
         pillarCoords.forEach(([px, pz]) => {
-            this.createPillar(px, pz, 10);
+            this.createPillar(px, pz, 11);
         });
 
         
         // ----------------------------------------------------
         // OUTSIDE LOCATION: UNDEAD BURG OUTSKIRTS - CLIFFSIDE DRAGON CHASM
-        // Position: X in [-220, -100], Z in [-35, 70], Elevation: Y = -2.0m
+        // Position: X in [-310, -150], Z in [-50, 90], Elevation: Y = -2.0m
         // ----------------------------------------------------
-        // 1. Gateway Breach in West Fortress Wall (Archway at x=-100, z=18)
+        // 1. Gateway Breach in West Fortress Wall (Archway at x=-150, z=18)
         const breachArchL = new THREE.Mesh(new THREE.BoxGeometry(2.4, 7.5, 1.6), this.wallMat);
-        breachArchL.position.set(-100, 3.75, 12);
+        breachArchL.position.set(-150, 3.75, 12);
         this.scene.add(breachArchL);
         const breachArchR = new THREE.Mesh(new THREE.BoxGeometry(2.4, 7.5, 1.6), this.wallMat);
-        breachArchR.position.set(-100, 3.75, 24);
+        breachArchR.position.set(-150, 3.75, 24);
         this.scene.add(breachArchR);
         const breachArchTop = new THREE.Mesh(new THREE.BoxGeometry(2.6, 2.0, 14), this.wallMat);
-        breachArchTop.position.set(-100, 8.5, 18);
+        breachArchTop.position.set(-150, 8.5, 18);
         this.scene.add(breachArchTop);
 
-        // 2. Suspension Mountain Bridge over bottomless gorge (x: -100 to -125, z: 12 to 24)
-        const bridgeSlab = new THREE.Mesh(new THREE.BoxGeometry(25, 0.8, 12.0), this.stoneMat);
-        bridgeSlab.position.set(-112.5, -1.0, 18);
-        bridgeSlab.rotation.z = Math.atan2(2.0, 25.0);
+        // 2. Suspension Mountain Bridge over bottomless gorge (x: -150 to -180, z: 10 to 26)
+        const bridgeSlab = new THREE.Mesh(new THREE.BoxGeometry(30, 0.8, 16.0), this.stoneMat);
+        bridgeSlab.position.set(-165.0, -1.0, 18);
+        bridgeSlab.rotation.z = Math.atan2(2.0, 30.0);
         bridgeSlab.receiveShadow = true;
         this.scene.add(bridgeSlab);
 
         // Bridge balustrades & chains
-        const chainGeom = new THREE.CylinderGeometry(0.06, 0.06, 25.5, 8);
+        const chainGeom = new THREE.CylinderGeometry(0.08, 0.08, 30.5, 8);
         const chainL = new THREE.Mesh(chainGeom, this.darkSteelMat);
-        chainL.position.set(-112.5, 0.5, 12.2);
-        chainL.rotation.z = Math.PI / 2 - Math.atan2(2.0, 25.0);
+        chainL.position.set(-165.0, 0.5, 10.2);
+        chainL.rotation.z = Math.PI / 2 - Math.atan2(2.0, 30.0);
         this.scene.add(chainL);
         const chainR = new THREE.Mesh(chainGeom, this.darkSteelMat);
-        chainR.position.set(-112.5, 0.5, 23.8);
-        chainR.rotation.z = Math.PI / 2 - Math.atan2(2.0, 25.0);
+        chainR.position.set(-165.0, 0.5, 25.8);
+        chainR.rotation.z = Math.PI / 2 - Math.atan2(2.0, 30.0);
         this.scene.add(chainR);
 
-        // 3. Vast Mountain Cliffside Plateau Slab (x: -220 to -125, z: -35 to 70, y=-2.0)
-        const plateauGeo = new THREE.BoxGeometry(95, 1.5, 105);
+        // 3. Vast Mountain Cliffside Plateau Slab (x: -310 to -180, z: -50 to 90, y=-2.0) - 130m x 140m
+        const plateauGeo = new THREE.BoxGeometry(130, 1.5, 140);
         const plateauMat = this.stoneMat.clone();
         const plateauMesh = new THREE.Mesh(plateauGeo, plateauMat);
-        plateauMesh.position.set(-172.5, -2.75, 17.5);
+        plateauMesh.position.set(-245.0, -2.75, 20.0);
         plateauMesh.receiveShadow = true;
         this.scene.add(plateauMesh);
 
         // 4. Perimeter Jagged Cliffs & Ancient Battlements along edge
         const cliffPosts = [
-            [-218, -30], [-218, 0], [-218, 25], [-218, 50], [-218, 68],
-            [-170, -32], [-130, -32],
-            [-170, 68], [-130, 68]
+            [-308, -40], [-308, 0], [-308, 30], [-308, 60], [-308, 88],
+            [-245, -48], [-185, -48],
+            [-245, 88], [-185, 88]
         ];
         cliffPosts.forEach(([cx, cz]) => {
-            const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(3.5, 1), this.wallMat);
+            const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(4.5, 1), this.wallMat);
             rock.position.set(cx, -1.2, cz);
-            rock.scale.set(1.4, 2.5, 1.4);
+            rock.scale.set(1.5, 3.0, 1.5);
             rock.castShadow = true;
             this.scene.add(rock);
         });
 
         // 5. Standing Braziers & Torches at Outskirts Cliff
-        this.createStandingBrazier(-145, -2.0, 0, 0xff5511, 4.5, 32);
-        this.createStandingBrazier(-145, -2.0, 36, 0xff5511, 4.5, 32);
-        this.createStandingBrazier(-210, -2.0, 18, 0xff7722, 5.0, 36);
+        this.createStandingBrazier(-195, -2.0, 0, 0xff5511, 5.0, 36);
+        this.createStandingBrazier(-195, -2.0, 36, 0xff5511, 5.0, 36);
+        this.createStandingBrazier(-290, -2.0, 20, 0xff7722, 5.5, 40);
 
         // 6. Colossal Ancient Dragon Skull Relic at cliff edge
-        const dragonSkull = new THREE.Mesh(new THREE.ConeGeometry(4.5, 9.0, 5), this.boneMat || this.stoneMat);
-        dragonSkull.position.set(-205, -0.2, 18);
+        const dragonSkull = new THREE.Mesh(new THREE.ConeGeometry(6.0, 12.0, 5), this.boneMat || this.stoneMat);
+        dragonSkull.position.set(-285, 0.0, 20);
         dragonSkull.rotation.z = Math.PI / 2 - 0.2;
         dragonSkull.rotation.y = -Math.PI / 2;
         dragonSkull.castShadow = true;
         this.scene.add(dragonSkull);
 
-        // 7. Primal Outskirts Bonfire at (-160, -2.0, 18)
-        this.createFloorSoapstone(-160, -2.0, 15, '#ff7722', "⛰️ UNDEAD BURG OUTSKIRTS", "Windswept dragon chasm beyond the fortress wall");
+        // 7. Primal Outskirts Bonfire at (-220, -2.0, 20)
+        this.createFloorSoapstone(-220, -2.0, 16, '#ff7722', "⛰️ UNDEAD BURG OUTSKIRTS", "Windswept dragon chasm beyond the fortress wall");
 
         // Interactive Portals between Courtyard & Outskirts
         this.interactables.push({
             type: 'route_portal',
-            position: new THREE.Vector3(-97, 0, 18),
-            radius: 5.5,
+            position: new THREE.Vector3(-147, 0, 18),
+            radius: 6.0,
             prompt: '⛰️ [ E ] PASS TO BURG OUTSKIRTS (CLIFF CHASM: -2m)',
-            targetPos: new THREE.Vector3(-145, -2.0, 18),
+            targetPos: new THREE.Vector3(-195, -2.0, 18),
             label: 'UNDEAD BURG OUTSKIRTS'
         });
 
         this.interactables.push({
             type: 'route_portal',
-            position: new THREE.Vector3(-135, -2.0, 18),
-            radius: 5.5,
+            position: new THREE.Vector3(-185, -2.0, 18),
+            radius: 6.0,
             prompt: '☀️ [ E ] RETURN TO FIRELINK COURTYARD (0m)',
             targetPos: new THREE.Vector3(0, 0, 0),
             label: 'FIRELINK COURTYARD'
@@ -1597,54 +1597,54 @@ class DarkSoulsWorld {
 
         // ----------------------------------------------------
         // PATH 2: ROYAL PROCESSION BRIDGE / CITADEL VIADUCT (MAIN: Y = 0.0)
-        // Scaled Monumental 85m Wide Imperial Viaduct (85m wide, 240m long)
+        // Scaled Monumental 90m Wide Imperial Viaduct (90m wide, 240m long)
         // ----------------------------------------------------
-        const bridgeGeo = new THREE.BoxGeometry(85, 2, 240);
+        const bridgeGeo = new THREE.BoxGeometry(90, 2, 240);
         const bridgeMat = this.stoneMat.clone();
         bridgeMat.map = bridgeMat.map.clone();
-        bridgeMat.map.repeat.set(18, 60);
+        bridgeMat.map.repeat.set(20, 60);
         if (bridgeMat.bumpMap) {
             bridgeMat.bumpMap = bridgeMat.bumpMap.clone();
-            bridgeMat.bumpMap.repeat.set(18, 60);
+            bridgeMat.bumpMap.repeat.set(20, 60);
         }
         if (bridgeMat.roughnessMap) {
             bridgeMat.roughnessMap = bridgeMat.roughnessMap.clone();
-            bridgeMat.roughnessMap.repeat.set(18, 60);
+            bridgeMat.roughnessMap.repeat.set(20, 60);
         }
         const bridge = new THREE.Mesh(bridgeGeo, bridgeMat);
         bridge.position.set(0, -1, 150);
         bridge.receiveShadow = true;
         this.scene.add(bridge);
 
-        // Bridge Parapets (monumental 85m wide viaduct)
-        this.createWall(-42.0, 1.5, 150, 1, 3, 240); // Left rail
-        this.createWall(42.0, 1.5, 150, 1, 3, 240);  // Right rail
+        // Bridge Parapets (monumental 90m wide viaduct)
+        this.createWall(-44.5, 1.5, 150, 1, 3, 240); // Left rail
+        this.createWall(44.5, 1.5, 150, 1, 3, 240);  // Right rail
 
         // Continuous Torches along both parapets of the Royal Bridge (Every 14m)
         for (let btz = 36; btz <= 264; btz += 14) {
-            this.createTorch(-41.2, 2.8, btz, { intensity: 3.2, radius: 24 });
-            this.createTorch(41.2, 2.8, btz, { intensity: 3.2, radius: 24 });
+            this.createTorch(-43.8, 2.8, btz, { intensity: 3.5, radius: 26 });
+            this.createTorch(43.8, 2.8, btz, { intensity: 3.5, radius: 26 });
         }
 
         // Grand Standing Braziers at Bridge Portal, Causeway, and Gatehouses
-        this.createStandingBrazier(-39.0, 0, 30, 0xff7722, 4.5, 30);
-        this.createStandingBrazier(39.0, 0, 30, 0xff7722, 4.5, 30);
+        this.createStandingBrazier(-42.0, 0, 30, 0xff7722, 5.0, 32);
+        this.createStandingBrazier(42.0, 0, 30, 0xff7722, 5.0, 32);
 
-        // Mid-bridge Fortified Gatehouse Arch at z = 150 (Completely spans the 85m wide imperial causeway)
+        // Mid-bridge Fortified Gatehouse Arch at z = 150 (Completely spans the 90m wide imperial causeway)
         const midArchL = new THREE.Mesh(new THREE.BoxGeometry(3.5, 14, 4), this.wallMat);
-        midArchL.position.set(-41.5, 7, 150);
+        midArchL.position.set(-44.0, 7, 150);
         this.scene.add(midArchL);
         const midArchR = new THREE.Mesh(new THREE.BoxGeometry(3.5, 14, 4), this.wallMat);
-        midArchR.position.set(41.5, 7, 150);
+        midArchR.position.set(44.0, 7, 150);
         this.scene.add(midArchR);
-        const midArchTop = new THREE.Mesh(new THREE.BoxGeometry(87.0, 3.5, 4), this.wallMat);
+        const midArchTop = new THREE.Mesh(new THREE.BoxGeometry(92.0, 3.5, 4), this.wallMat);
         midArchTop.position.set(0, 14.0, 150);
         this.scene.add(midArchTop);
-        this.createStandingBrazier(-39.0, 0, 150, 0xffaa33, 4.5, 32);
-        this.createStandingBrazier(39.0, 0, 150, 0xffaa33, 4.5, 32);
+        this.createStandingBrazier(-42.0, 0, 150, 0xffaa33, 5.0, 34);
+        this.createStandingBrazier(42.0, 0, 150, 0xffaa33, 5.0, 34);
 
-        this.createStandingBrazier(-39.0, 0, 268, 0xffaa33, 4.5, 32);
-        this.createStandingBrazier(39.0, 0, 268, 0xffaa33, 4.5, 32);
+        this.createStandingBrazier(-42.0, 0, 268, 0xffaa33, 5.0, 34);
+        this.createStandingBrazier(42.0, 0, 268, 0xffaa33, 5.0, 34);
 
         // ----------------------------------------------------
         // PATH 3: FLOODED SUBTERRANEAN CATACOMBS (DOWN: Y = -5.0)
@@ -1787,52 +1787,52 @@ class DarkSoulsWorld {
         this.createPathBeacon(20, 6.0, 266, 0xff7722, "⚔️ DESCEND TO BOSS FOG GATE [DOWN]", "LEVEL 0m • DIRECT PASSAGE TO TAURUS DEMON", "#ff9933");
 
         // ----------------------------------------------------
-        // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 275 TO Z = 695)
-        // Scaled Colossal Imperial Colosseum Arena: 240m x 420m (Centered at z = 485)
+        // 3. BOSS ARENA (BEYOND FOG GATE AT Z = 275 TO Z = 755)
+        // Scaled Colossal Imperial Colosseum Arena: 300m x 480m (Centered at z = 515)
         // ----------------------------------------------------
-        const arenaGeo = new THREE.BoxGeometry(240, 2, 420);
+        const arenaGeo = new THREE.BoxGeometry(300, 2, 480);
         const arena = new THREE.Mesh(arenaGeo, this.arenaMat);
-        arena.position.set(0, -1, 485);
+        arena.position.set(0, -1, 515);
         arena.receiveShadow = true;
         this.scene.add(arena);
 
         // Arena Boundaries (Monumental 16m High Ramparts)
-        this.createWall(-120.5, 8, 485, 2, 16, 420);    // West wall
-        this.createWall(120.5, 8, 485, 2, 16, 420);     // East wall
-        this.createWall(0, 8, 695, 245, 16, 2);         // Far North end of arena (locked throne gate)
+        this.createWall(-150.5, 8, 515, 2, 16, 480);    // West wall
+        this.createWall(150.5, 8, 515, 2, 16, 480);     // East wall
+        this.createWall(0, 8, 755, 305, 16, 2);         // Far North end of arena (locked throne gate)
 
         // South Containment Wall flanking Fog Gate (z = 272)
-        this.createWall(-82.5, 8, 272, 75, 16, 2);
-        this.createWall(82.5, 8, 272, 75, 16, 2);
+        this.createWall(-102.5, 8, 272, 105, 16, 2);
+        this.createWall(102.5, 8, 272, 105, 16, 2);
 
-        // 4 Colossal Corner Watchtowers in Boss Arena (24m High)
+        // 4 Colossal Corner Watchtowers in Boss Arena (26m High)
         const arenaTowers = [
-            [-112, 288], [112, 288],
-            [-112, 680], [112, 680]
+            [-140, 288], [140, 288],
+            [-140, 740], [140, 740]
         ];
         arenaTowers.forEach(([tx, tz]) => {
-            const towerGeo = new THREE.CylinderGeometry(9.0, 11.0, 26, 16);
+            const towerGeo = new THREE.CylinderGeometry(10.0, 12.5, 28, 16);
             const tower = new THREE.Mesh(towerGeo, this.wallMat);
-            tower.position.set(tx, 13, tz);
+            tower.position.set(tx, 14, tz);
             tower.receiveShadow = true;
             this.scene.add(tower);
 
-            this.createGoldenBrazier(tx, 26.5, tz);
-            this.createSpotlight(tx, 26, tz, tx > 0 ? -1 : 1, -1, 0, 0xffaa44, 4.0, 75, 0.55);
+            this.createGoldenBrazier(tx, 28.5, tz);
+            this.createSpotlight(tx, 28, tz, tx > 0 ? -1 : 1, -1, 0, 0xffaa44, 4.5, 85, 0.55);
         });
 
         // Perimeter Wall Torches along Boss Arena East & West Walls (Every 20m)
-        for (let az = 285; az <= 680; az += 20) {
-            this.createTorch(-119.5, 6.5, az, { intensity: 3.5, radius: 30 });
-            this.createTorch(119.5, 6.5, az, { intensity: 3.5, radius: 30 });
+        for (let az = 285; az <= 740; az += 20) {
+            this.createTorch(-149.5, 6.5, az, { intensity: 3.8, radius: 32 });
+            this.createTorch(149.5, 6.5, az, { intensity: 3.8, radius: 32 });
         }
 
-        // Northern Throne Gate Braziers (at far end of Arena, z = 692)
-        this.createStandingBrazier(-24.0, 0, 692, 0xff5500, 6.0, 40);
-        this.createStandingBrazier(24.0, 0, 692, 0xff5500, 6.0, 40);
+        // Northern Throne Gate Braziers (at far end of Arena, z = 752)
+        this.createStandingBrazier(-32.0, 0, 752, 0xff5500, 6.5, 45);
+        this.createStandingBrazier(32.0, 0, 752, 0xff5500, 6.5, 45);
         
-        // 4. North Path Beacon: Jade Serpent Beam & Serpentine Sanctum Banner (Flanking North Archway)
-        this.createPathBeacon(-5.8, 0, -28.0, 0x1e824c, "🐍 GORGON'S SANCTUM & SERPENT RUINS [NORTH]", "SUNKEN TEMPLE • MEDUSA & COBRAS", "#2ecc71");
+        // 4. North Path Beacon: Jade Serpent Beam & Serpentine Sanctum Banner (Flanking North Archway at z = -88)
+        this.createPathBeacon(-8.5, 0, -88.0, 0x1e824c, "🐍 GORGON'S SANCTUM & SERPENT RUINS [NORTH]", "SUNKEN TEMPLE • MEDUSA & COBRAS", "#2ecc71");
 
         // Build Massive Serpentine Sanctum, Outside Realm & Atmospheric Map Details
         this.buildSerpentSanctum();
@@ -3707,74 +3707,74 @@ class DarkSoulsWorld {
     buildSerpentSanctum() {
         const sanctumGroup = new THREE.Group();
 
-        // 1. Grand Serpent Gate Arch & Twin 6-Meter Colossal Cobra Statues (z = -30, x in [-12, 12])
-        this.createColossalCobraStatue(-8.5, 0, -31, Math.PI / 4);
-        this.createColossalCobraStatue(8.5, 0, -31, -Math.PI / 4);
+        // 1. Grand Serpent Gate Arch & Twin 6-Meter Colossal Cobra Statues (z = -90, x in [-18, 18])
+        this.createColossalCobraStatue(-18.0, 0, -91, Math.PI / 4);
+        this.createColossalCobraStatue(18.0, 0, -91, -Math.PI / 4);
 
         // Archway Columns flanking doorway
-        this.createPillar(-6.5, -30, 9);
-        this.createPillar(6.5, -30, 9);
+        this.createPillar(-14.0, -90, 9);
+        this.createPillar(14.0, -90, 9);
 
         // Wall sconces with atmospheric serpentine flames
-        this.createTorch(-6.5, 4.5, -29, { intensity: 1.6, radius: 12, color: 0x1e824c });
-        this.createTorch(6.5, 4.5, -29, { intensity: 1.6, radius: 12, color: 0x1e824c });
+        this.createTorch(-14.0, 4.5, -89, { intensity: 1.6, radius: 12, color: 0x1e824c });
+        this.createTorch(14.0, 4.5, -89, { intensity: 1.6, radius: 12, color: 0x1e824c });
 
-        // 2. Descending Stone Staircase (z: -30 to -36, x: -16 to 16, y: 0 to -2.5)
-        const stairSteps = 12;
+        // 2. Descending Stone Staircase (z: -90 to -98, x: -24 to 24, y: 0 to -2.5)
+        const stairSteps = 14;
         for (let s = 0; s < stairSteps; s++) {
-            const sz = -30 - (s / stairSteps) * 6.0;
+            const sz = -90 - (s / stairSteps) * 8.0;
             const sy = - (s / stairSteps) * 2.5;
-            const step = new THREE.Mesh(new THREE.BoxGeometry(32, 0.28, 0.6), this.serpentStoneMat);
+            const step = new THREE.Mesh(new THREE.BoxGeometry(48, 0.28, 0.65), this.serpentStoneMat);
             step.position.set(0, sy, sz);
             step.receiveShadow = true;
             sanctumGroup.add(step);
         }
 
         // Side balustrades for entrance stairs
-        this.createWall(-16.5, 0, -33, 1.2, 4.0, 7);
-        this.createWall(16.5, 0, -33, 1.2, 4.0, 7);
+        this.createWall(-24.5, 0, -94, 1.2, 4.0, 9);
+        this.createWall(24.5, 0, -94, 1.2, 4.0, 9);
 
-        // 3. Sunken Serpent Courtyard Floor Slab (z: -36 to -76, x: -52 to 52, y = -2.5) - Monumental 104m Plaza
-        const courtyardFloorGeo = new THREE.PlaneGeometry(104, 44);
+        // 3. Sunken Serpent Courtyard Floor Slab (z: -98 to -162, x: -60 to 60, y = -2.5) - Monumental 120m Plaza
+        const courtyardFloorGeo = new THREE.PlaneGeometry(120, 64);
         const courtyardFloor = new THREE.Mesh(courtyardFloorGeo, this.serpentStoneMat);
         courtyardFloor.rotation.x = -Math.PI / 2;
-        courtyardFloor.position.set(0, -2.5, -55);
+        courtyardFloor.position.set(0, -2.5, -130);
         courtyardFloor.receiveShadow = true;
         sanctumGroup.add(courtyardFloor);
 
         // Perimeter Walls for Sunken Courtyard (Anchored y: -5.0 to 12.0, seamless corner seals)
-        this.createWall(-52, 3.5, -55, 4, 16, 44); // West Wall
-        this.createWall(52, 3.5, -55, 4, 16, 44);  // East Wall
+        this.createWall(-60, 3.5, -130, 4, 16, 64); // West Wall
+        this.createWall(60, 3.5, -130, 4, 16, 64);  // East Wall
         // South retaining wall segments around stairs
-        this.createWall(-34, 3.5, -35, 34, 16, 4);
-        this.createWall(34, 3.5, -35, 34, 16, 4);
+        this.createWall(-42, 3.5, -97, 36, 16, 4);
+        this.createWall(42, 3.5, -97, 36, 16, 4);
 
         // 4. Toxic Swamp / Poison Marsh Pool at Center of Sunken Courtyard
-        const poolGeo = new THREE.CylinderGeometry(14, 14, 0.2, 20);
+        const poolGeo = new THREE.CylinderGeometry(18, 18, 0.2, 20);
         const poolMesh = new THREE.Mesh(poolGeo, this.poisonWaterMat);
-        poolMesh.position.set(0, -2.42, -55);
+        poolMesh.position.set(0, -2.42, -130);
         sanctumGroup.add(poolMesh);
 
         // Poisonous light aura
         const poisonLight = new THREE.PointLight(0x10ff66, 3.5, 28);
-        poisonLight.position.set(0, -1.8, -55);
+        poisonLight.position.set(0, -1.8, -130);
         sanctumGroup.add(poisonLight);
 
         // 5. Four Stone Serpent Braziers with Emerald Flames in Sunken Courtyard
-        [[-36, -44], [36, -44], [-36, -64], [36, -64]].forEach(([bx, bz]) => {
+        [[-42, -114], [42, -114], [-42, -146], [42, -146]].forEach(([bx, bz]) => {
             this.createStandingBrazier(bx, -2.5, bz, 0x10ff66, 4.2, 28);
         });
 
         // 6. Eight Petrified Warriors Frozen in Dynamic Combat Poses
         const petrifiedCoords = [
-            [-16, -44, 0, 0],    // Shield raised
-            [18, -48, 1.2, 1],  // Screaming reaching up
-            [-24, -58, -0.8, 2],// Kneeling with broken sword
-            [24, -60, 2.4, 3],  // Mid-slash frozen
-            [-12, -66, 0.4, 0],  // Shield defense
-            [14, -66, -1.4, 1],  // Screaming
-            [-30, -52, 1.8, 2], // Kneeling
-            [30, -54, -2.2, 3]  // Mid-slash
+            [-20, -114, 0, 0],    // Shield raised
+            [22, -118, 1.2, 1],  // Screaming reaching up
+            [-30, -130, -0.8, 2],// Kneeling with broken sword
+            [30, -132, 2.4, 3],  // Mid-slash frozen
+            [-16, -144, 0.4, 0],  // Shield defense
+            [18, -144, -1.4, 1],  // Screaming
+            [-36, -124, 1.8, 2], // Kneeling
+            [36, -126, -2.2, 3]  // Mid-slash
         ];
         petrifiedCoords.forEach(([px, pz, pang, ppose]) => {
             if (this.scene && window.game && window.game.characters) {
@@ -3786,107 +3786,107 @@ class DarkSoulsWorld {
             }
         });
 
-        // 7. Descending Stairs to Inner Sanctum (z: -76 to -84, x: -18 to 18, y: -2.5 to -4.0)
-        for (let s = 0; s < 12; s++) {
-            const sz = -76 - (s / 12) * 8.0;
-            const sy = -2.5 - (s / 12) * 1.5;
-            const step = new THREE.Mesh(new THREE.BoxGeometry(36, 0.26, 0.7), this.serpentStoneMat);
+        // 7. Descending Stairs to Inner Sanctum (z: -162 to -172, x: -24 to 24, y: -2.5 to -4.0)
+        for (let s = 0; s < 14; s++) {
+            const sz = -162 - (s / 14) * 10.0;
+            const sy = -2.5 - (s / 14) * 1.5;
+            const step = new THREE.Mesh(new THREE.BoxGeometry(48, 0.26, 0.75), this.serpentStoneMat);
             step.position.set(0, sy, sz);
             step.receiveShadow = true;
             sanctumGroup.add(step);
         }
         // Seamless Flanking Enclosing Walls beside inner stairs
-        this.createWall(-36, 4.0, -80, 24, 18, 8);
-        this.createWall(36, 4.0, -80, 24, 18, 8);
-        this.createWall(-52, 4.0, -80, 4, 18, 12);
-        this.createWall(52, 4.0, -80, 4, 18, 12);
+        this.createWall(-42, 4.0, -167, 36, 18, 10);
+        this.createWall(42, 4.0, -167, 36, 18, 10);
+        this.createWall(-60, 4.0, -167, 4, 18, 12);
+        this.createWall(60, 4.0, -167, 4, 18, 12);
 
-        // 8. Gorgon's Inner Sanctum Floor Slab (z: -84 to -134, x: -60 to 60, y = -4.0) - Colossal 120m Sanctum
-        const innerFloorGeo = new THREE.PlaneGeometry(120, 50);
+        // 8. Gorgon's Inner Sanctum Floor Slab (z: -172 to -240, x: -70 to 70, y = -4.0) - Colossal 140m Sanctum
+        const innerFloorGeo = new THREE.PlaneGeometry(140, 68);
         const innerFloor = new THREE.Mesh(innerFloorGeo, this.serpentStoneMat);
         innerFloor.rotation.x = -Math.PI / 2;
-        innerFloor.position.set(0, -4.0, -109.0);
+        innerFloor.position.set(0, -4.0, -206.0);
         innerFloor.receiveShadow = true;
         sanctumGroup.add(innerFloor);
 
-        // Monumental Vaulted High Ceiling for Gorgon's Inner Sanctum (y = 16.0m, completely clear above camera)
-        const sanctumCeiling = new THREE.Mesh(new THREE.BoxGeometry(130, 2.0, 60), this.serpentStoneMat);
-        sanctumCeiling.position.set(0, 16.0, -109.0);
+        // Monumental Vaulted High Ceiling for Gorgon's Inner Sanctum (y = 18.0m, completely clear above camera)
+        const sanctumCeiling = new THREE.Mesh(new THREE.BoxGeometry(150, 2.0, 78), this.serpentStoneMat);
+        sanctumCeiling.position.set(0, 18.0, -206.0);
         sanctumCeiling.receiveShadow = true;
         sanctumGroup.add(sanctumCeiling);
 
-        // Monumental Serpentine Temple Portal Arch over stairs at z = -76
-        const portalArchitrave = new THREE.Mesh(new THREE.BoxGeometry(40, 2.4, 3.2), this.serpentStoneMat);
-        portalArchitrave.position.set(0, 10.5, -76);
+        // Monumental Serpentine Temple Portal Arch over stairs at z = -162
+        const portalArchitrave = new THREE.Mesh(new THREE.BoxGeometry(48, 2.4, 3.2), this.serpentStoneMat);
+        portalArchitrave.position.set(0, 10.5, -162);
         portalArchitrave.receiveShadow = true;
         sanctumGroup.add(portalArchitrave);
 
-        const portalCornice = new THREE.Mesh(new THREE.BoxGeometry(42, 0.6, 3.6), this.serpentJadeMat);
-        portalCornice.position.set(0, 11.8, -76);
+        const portalCornice = new THREE.Mesh(new THREE.BoxGeometry(50, 0.6, 3.6), this.serpentJadeMat);
+        portalCornice.position.set(0, 11.8, -162);
         sanctumGroup.add(portalCornice);
 
-        // Flanking Portal Entrance Columns supporting the high entablature at x = -19.5 and 19.5
-        this.createSerpentPillar(-19.5, -76, -2.5, 14.5);
-        this.createSerpentPillar(19.5, -76, -2.5, 14.5);
+        // Flanking Portal Entrance Columns supporting the high entablature at x = -24 and 24
+        this.createSerpentPillar(-24.0, -162, -2.5, 14.5);
+        this.createSerpentPillar(24.0, -162, -2.5, 14.5);
 
         // Side Architrave wings extending outwards to the perimeter walls
-        const portalWingL = new THREE.Mesh(new THREE.BoxGeometry(34, 2.4, 3.2), this.serpentStoneMat);
-        portalWingL.position.set(-35.0, 10.5, -76);
+        const portalWingL = new THREE.Mesh(new THREE.BoxGeometry(46, 2.4, 3.2), this.serpentStoneMat);
+        portalWingL.position.set(-47.0, 10.5, -162);
         sanctumGroup.add(portalWingL);
 
-        const portalWingR = new THREE.Mesh(new THREE.BoxGeometry(34, 2.4, 3.2), this.serpentStoneMat);
-        portalWingR.position.set(35.0, 10.5, -76);
+        const portalWingR = new THREE.Mesh(new THREE.BoxGeometry(46, 2.4, 3.2), this.serpentStoneMat);
+        portalWingR.position.set(47.0, 10.5, -162);
         sanctumGroup.add(portalWingR);
 
-        // Perimeter Enclosing Walls for Inner Sanctum (Anchored y: -6.0 to 16.0, 4m thick, no gaps)
-        this.createWall(-60, 4.0, -109.0, 4, 22, 52); // West Wall
-        this.createWall(60, 4.0, -109.0, 4, 22, 52);  // East Wall
-        this.createWall(0, 4.0, -135, 124, 22, 4);    // Far North Wall
+        // Perimeter Enclosing Walls for Inner Sanctum (Anchored y: -6.0 to 18.0, 4m thick, no gaps)
+        this.createWall(-70, 4.0, -206.0, 4, 24, 70); // West Wall
+        this.createWall(70, 4.0, -206.0, 4, 24, 70);  // East Wall
+        this.createWall(0, 4.0, -241.0, 144, 24, 4);    // Far North Wall
 
         // 9. Colonnade of Medusa (8 Colossal Columns wrapped in Stone Snakes)
         const colonnadeCoords = [
-            [-28, -94], [28, -94],
-            [-40, -108], [40, -108],
-            [-28, -122], [28, -122],
-            [-14, -128], [14, -128]
+            [-34, -182], [34, -182],
+            [-48, -202], [48, -202],
+            [-34, -222], [34, -222],
+            [-18, -232], [18, -232]
         ];
         colonnadeCoords.forEach(([cx, cz]) => {
-            this.createSerpentPillar(cx, cz, -4.0, 12);
+            this.createSerpentPillar(cx, cz, -4.0, 14);
         });
 
-        // 10. The Great Altar of the Gorgon (z = -126, x = 0, y = -4.0)
-        const altarDais = new THREE.Mesh(new THREE.BoxGeometry(18, 1.2, 10), this.serpentJadeMat);
-        altarDais.position.set(0, -3.4, -126);
+        // 10. The Great Altar of the Gorgon (z = -230, x = 0, y = -4.0)
+        const altarDais = new THREE.Mesh(new THREE.BoxGeometry(24, 1.2, 12), this.serpentJadeMat);
+        altarDais.position.set(0, -3.4, -230);
         altarDais.receiveShadow = true;
         sanctumGroup.add(altarDais);
 
         // Giant Carved Gorgon Relief Head above Altar
-        const reliefHead = new THREE.Mesh(new THREE.BoxGeometry(6.0, 7.0, 1.4), this.serpentStoneMat);
-        reliefHead.position.set(0, 1.0, -132.8);
+        const reliefHead = new THREE.Mesh(new THREE.BoxGeometry(7.0, 8.0, 1.4), this.serpentStoneMat);
+        reliefHead.position.set(0, 1.0, -238.8);
         sanctumGroup.add(reliefHead);
 
         // Glowing Emerald Eyes on Wall Relief (Subtle serpentine glow)
         const leftReliefEye = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 8), new THREE.MeshStandardMaterial({ color: 0x1e824c, emissive: 0x1e824c, emissiveIntensity: 0.8 }));
-        leftReliefEye.position.set(-1.4, 2.0, -132.0);
+        leftReliefEye.position.set(-1.6, 2.0, -238.0);
         sanctumGroup.add(leftReliefEye);
         const rightReliefEye = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 8), new THREE.MeshStandardMaterial({ color: 0x1e824c, emissive: 0x1e824c, emissiveIntensity: 0.8 }));
-        rightReliefEye.position.set(1.4, 2.0, -132.0);
+        rightReliefEye.position.set(1.6, 2.0, -238.0);
         sanctumGroup.add(rightReliefEye);
 
         const altarGlow = new THREE.PointLight(0x1e824c, 3.0, 24);
-        altarGlow.position.set(0, 2.0, -126);
+        altarGlow.position.set(0, 2.0, -230);
         sanctumGroup.add(altarGlow);
 
         // Sacrificial Basin with Glowing Venom
-        const basin = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 1.8, 1.2, 12), this.serpentJadeMat);
-        basin.position.set(0, -2.4, -122);
+        const basin = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.0, 1.2, 12), this.serpentJadeMat);
+        basin.position.set(0, -2.4, -225);
         sanctumGroup.add(basin);
-        const basinLiquid = new THREE.Mesh(new THREE.CylinderGeometry(2.1, 2.1, 0.1, 12), this.poisonWaterMat);
-        basinLiquid.position.set(0, -1.8, -122);
+        const basinLiquid = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 0.1, 12), this.poisonWaterMat);
+        basinLiquid.position.set(0, -1.8, -225);
         sanctumGroup.add(basinLiquid);
 
-        // 11. Emerald Serpent Bonfire (z = -92, x = 0, y = -4.0)
-        this.createSerpentBonfire(0, -4.0, -92);
+        // 11. Emerald Serpent Bonfire (z = -180, x = 0, y = -4.0)
+        this.createSerpentBonfire(0, -4.0, -180);
 
         this.scene.add(sanctumGroup);
     }
