@@ -851,8 +851,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-1080, -28], z in [-620, 620]
-        if (x >= -1080 && x <= -28 && z >= -620 && z <= 620) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-1280, -28], z in [-680, 680]
+        if (x >= -1280 && x <= -28 && z >= -680 && z <= 680) {
+            // 8 Brand-New Mythic Outside Realm Expeditions (V57 Expansion)
+            // 1. Farron Keep Mausoleum & Perimeter of the Abyss (outside_farron_keep_abyss_mausoleum) (elev: +8.0m)
+            if (x >= -1145 && x <= -1055 && z >= -285 && z <= -195) {
+                return 8.0;
+            }
+            // 2. Crumbling Farum Azula Dragon Temple Sanctum (outside_farum_azula_destined_death_sanctum) (elev: +28.0m)
+            if (x >= -1165 && x <= -1075 && z >= -125 && z <= -35) {
+                return 28.0;
+            }
+            // 3. Irithyll Boreal Valley Grand Pontiff Cathedral (outside_irithyll_cathedral_pontiff_dais) (elev: +18.0m)
+            if (x >= -1155 && x <= -1065 && z >= 95 && z <= 185) {
+                return 18.0;
+            }
+            // 4. Yharnam Grand Cathedral High Altar of Blood (outside_cathedral_ward_vicar_altar) (elev: +12.0m)
+            if (x >= -1185 && x <= -1095 && z >= 235 && z <= 325) {
+                return 12.0;
+            }
+            // 5. Hirata Estate Blazing Audience Chamber (outside_hirata_estate_flaming_chamber_owl) (elev: +6.0m)
+            if (x >= -1205 && x <= -1115 && z >= -405 && z <= -315) {
+                return 6.0;
+            }
+            // 6. Raya Lucaria Grand Library & Full Moon Chamber (outside_raya_lucaria_grand_library_renalla) (elev: +14.0m)
+            if (x >= -1225 && x <= -1135 && z >= 375 && z <= 465) {
+                return 14.0;
+            }
+            // 7. Ashina Castle Gates Flaming Battlefield (outside_ashina_castle_gates_demon_of_hatred) (elev: +4.0m)
+            if (x >= -1245 && x <= -1155 && z >= -225 && z <= -135) {
+                return 4.0;
+            }
+            // 8. Ancient Ruins of Rauh Scarlet Rot Pavilion (outside_rauh_ruins_romina_scarlet_bud) (elev: -6.0m)
+            if (x >= -1265 && x <= -1175 && z >= 495 && z <= 585) {
+                return -6.0;
+            }
             // 8 Brand-New Legendary Outside Realm Expeditions (V55 Expansion)
             // 1. Painted World Chapel of Sister Friede (outside_ariandel_chapel_blackflame) (elev: +10.0m)
             if (x >= -965 && x <= -875 && z >= -305 && z <= -215) {
@@ -3651,6 +3684,9 @@ class DarkSoulsWorld {
         // Build 8 Brand-New Legendary Outside Realm Expeditions (V55 Expansion)
         this.buildEightLegendaryOutsideExpeditions(outsideGroup);
 
+        // Build 8 Brand-New Mythic Outside Realm Expeditions (V57 Expansion)
+        this.buildEightMythicOutsideExpeditions(outsideGroup);
+
         this.scene.add(outsideGroup);
     }
 
@@ -4716,6 +4752,371 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-1036, -10.0, 480, 0xeab308, 5.0, 32);
         this.createPathBeacon(-1020, -10.0, 480, 0xeab308, "🌻 SCADUTREE AVATAR BASIN [ELEV -10.0m]", "SCADUTREE AVATAR • BLIGHTED GOLDEN SUNFLOWER • HORNSENT INQUISITORS", "#fef9c3");
         this.createFloorSoapstone(-1020, -10.0, 466, "#eab308", "🌻 SUNFLOWER BASIN", "The Scadutree wept golden tears for the neglected saint.");
+    }
+
+    buildEightMythicOutsideExpeditions(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW MYTHIC OUTSIDE REALM EXPEDITIONS (V57 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. FARRON KEEP MAUSOLEUM & PERIMETER OF THE ABYSS ([-1100, 8.0, -240])
+        // --------------------------------------------------------------------
+        const farronBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 70, 16, 18), this.cliffRockMat);
+        farronBase.position.set(-1100, 0, -240);
+        outsideGroup.add(farronBase);
+
+        const farronFloor = new THREE.Mesh(new THREE.BoxGeometry(64, 1.2, 54), new THREE.MeshStandardMaterial({
+            color: 0x334155, roughness: 0.9, metalness: 0.1
+        }));
+        farronFloor.position.set(-1100, 8.1, -240);
+        farronFloor.receiveShadow = true;
+        outsideGroup.add(farronFloor);
+
+        // 4 Ancient Stone Sarcophagi & Wolf Crest Banners
+        [-16, 16].forEach(sx => {
+            [-14, 14].forEach(sz => {
+                const sarc = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1.8, 8.5), new THREE.MeshStandardMaterial({
+                    color: 0x1e293b, roughness: 0.8
+                }));
+                sarc.position.set(-1100 + sx, 9.0, -240 + sz);
+                outsideGroup.add(sarc);
+            });
+        });
+
+        // 8 Vertical Wolf Knight Swords thrust into stone
+        const swordMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.9, roughness: 0.2 });
+        for (let sw = 0; sw < 8; sw++) {
+            const swAng = (sw / 8) * Math.PI * 2;
+            const sword = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.12, 3.2, 5), swordMat);
+            sword.position.set(-1100 + Math.cos(swAng) * 22, 9.6, -240 + Math.sin(swAng) * 22);
+            sword.rotation.z = 0.15 * Math.sin(sw);
+            outsideGroup.add(sword);
+        }
+
+        // Wolf Blood Basin Cauldron in Center
+        const wolfCauldron = new THREE.Mesh(new THREE.CylinderGeometry(3.6, 2.0, 2.8, 16), new THREE.MeshStandardMaterial({
+            color: 0x1e1b4b, roughness: 0.4, metalness: 0.7
+        }));
+        wolfCauldron.position.set(-1100, 9.5, -240);
+        outsideGroup.add(wolfCauldron);
+
+        const farronLight = new THREE.PointLight(0xf97316, 5.0, 48.0);
+        farronLight.position.set(-1100, 12.0, -240);
+        outsideGroup.add(farronLight);
+
+        this.createStandingBrazier(-1084, 8.0, -240, 0xf97316, 5.0, 32);
+        this.createStandingBrazier(-1116, 8.0, -240, 0xef4444, 5.0, 32);
+        this.createPathBeacon(-1100, 8.0, -240, 0xf97316, "🔥 FARRON KEEP MAUSOLEUM [ELEV +8.0m]", "ABYSS WATCHERS LEGION • WOLF BLOOD CAULDRON • FARRON GHRU LEAPERS", "#ffedd5");
+        this.createFloorSoapstone(-1100, 8.0, -228, "#f97316", "🔥 FARRON KEEP MAUSOLEUM", "The blood of the wolf binds the legion to eternal struggle against the deep.");
+
+        // --------------------------------------------------------------------
+        // 2. CRUMBLING FARUM AZULA DRAGON TEMPLE SANCTUM ([-1120, 28.0, -80])
+        // --------------------------------------------------------------------
+        const azulaBase = new THREE.Mesh(new THREE.CylinderGeometry(58, 76, 56, 20), this.cliffRockMat);
+        azulaBase.position.set(-1120, 0, -80);
+        outsideGroup.add(azulaBase);
+
+        const azulaFloor = new THREE.Mesh(new THREE.CylinderGeometry(46, 46, 1.4, 24), new THREE.MeshStandardMaterial({
+            color: 0x475569, roughness: 0.75, metalness: 0.3
+        }));
+        azulaFloor.position.set(-1120, 28.1, -80);
+        azulaFloor.receiveShadow = true;
+        outsideGroup.add(azulaFloor);
+
+        // Floating Shattered Temple Island Blocks & Arch Fragments
+        for (let fa = 0; fa < 6; fa++) {
+            const fAng = (fa / 6) * Math.PI * 2;
+            const floatBlock = new THREE.Mesh(new THREE.BoxGeometry(6.5, 3.2, 5.5), new THREE.MeshStandardMaterial({
+                color: 0x334155, roughness: 0.8
+            }));
+            floatBlock.position.set(-1120 + Math.cos(fAng) * 38, 36.0 + Math.sin(fa) * 3, -80 + Math.sin(fAng) * 38);
+            floatBlock.rotation.set(0.2 * fa, 0.4 * fa, 0.1 * fa);
+            outsideGroup.add(floatBlock);
+        }
+
+        // Destined Death Crimson Rune Core in Altar
+        const destinedDeathCore = new THREE.Mesh(new THREE.OctahedronGeometry(2.4, 1), new THREE.MeshStandardMaterial({
+            color: 0xef4444, emissive: 0xb91c1c, emissiveIntensity: 2.6, roughness: 0.2
+        }));
+        destinedDeathCore.position.set(-1120, 32.5, -80);
+        outsideGroup.add(destinedDeathCore);
+
+        const azulaLight = new THREE.PointLight(0xef4444, 6.0, 56.0);
+        azulaLight.position.set(-1120, 32.0, -80);
+        outsideGroup.add(azulaLight);
+
+        this.createStandingBrazier(-1104, 28.0, -80, 0xef4444, 6.0, 36);
+        this.createStandingBrazier(-1136, 28.0, -80, 0xef4444, 6.0, 36);
+        this.createPathBeacon(-1120, 28.0, -80, 0xef4444, "🗡️ FARUM AZULA TEMPLE SANCTUM [ELEV +28.0m]", "MALIKETH THE BLACK BLADE & GURRANQ • DESTINED DEATH • AZULA BEASTMEN", "#fee2e2");
+        this.createFloorSoapstone(-1120, 28.0, -68, "#ef4444", "🗡️ FARUM AZULA SANCTUM", "Witless Tarnished, why covet Destined Death? To kill what?");
+
+        // --------------------------------------------------------------------
+        // 3. IRITHYLL BOREAL VALLEY GRAND PONTIFF CATHEDRAL ([-1110, 18.0, 140])
+        // --------------------------------------------------------------------
+        const pontiffBase = new THREE.Mesh(new THREE.CylinderGeometry(54, 68, 36, 18), this.cliffRockMat);
+        pontiffBase.position.set(-1110, 0, 140);
+        outsideGroup.add(pontiffBase);
+
+        const pontiffFloor = new THREE.Mesh(new THREE.BoxGeometry(62, 1.2, 52), new THREE.MeshStandardMaterial({
+            color: 0x64748b, roughness: 0.35, metalness: 0.45
+        }));
+        pontiffFloor.position.set(-1110, 18.1, 140);
+        pontiffFloor.receiveShadow = true;
+        outsideGroup.add(pontiffFloor);
+
+        // Fluted Silver Colonnades along Flanks
+        const silverPillarMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.7, roughness: 0.3 });
+        for (let col = -18; col <= 18; col += 9) {
+            const leftCol = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.0, 14, 8), silverPillarMat);
+            leftCol.position.set(-1136, 25.0, 140 + col);
+            outsideGroup.add(leftCol);
+
+            const rightCol = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.0, 14, 8), silverPillarMat);
+            rightCol.position.set(-1084, 25.0, 140 + col);
+            outsideGroup.add(rightCol);
+        }
+
+        // Grand Gothic Stained Glass Portal Backdrop
+        const glassArch = new THREE.Mesh(new THREE.BoxGeometry(40, 16, 1.2), new THREE.MeshStandardMaterial({
+            color: 0x1d4ed8, emissive: 0x1e40af, emissiveIntensity: 1.5, roughness: 0.1
+        }));
+        glassArch.position.set(-1110, 26.0, 164);
+        outsideGroup.add(glassArch);
+
+        const pontiffColdLight = new THREE.PointLight(0x38bdf8, 5.0, 48.0);
+        pontiffColdLight.position.set(-1110, 22.0, 140);
+        outsideGroup.add(pontiffColdLight);
+
+        this.createStandingBrazier(-1094, 18.0, 140, 0x38bdf8, 5.0, 32);
+        this.createStandingBrazier(-1126, 18.0, 140, 0xf97316, 5.0, 32);
+        this.createPathBeacon(-1110, 18.0, 140, 0x38bdf8, "⚔️ IRITHYLL PONTIFICAL DAIS [ELEV +18.0m]", "PONTIFF SULYVAHN • PROFANED FLAME & JUDGEMENT • IRITHYLL FIRE WITCHES", "#e0f2fe");
+        this.createFloorSoapstone(-1110, 18.0, 128, "#38bdf8", "⚔️ IRITHYLL PONTIFICAL DAIS", "The tyrant took the old gods captive and fed them to the devourer of gods.");
+
+        // --------------------------------------------------------------------
+        // 4. YHARNAM GRAND CATHEDRAL HIGH ALTAR OF BLOOD ([-1140, 12.0, 280])
+        // --------------------------------------------------------------------
+        const vicarBase = new THREE.Mesh(new THREE.CylinderGeometry(54, 66, 24, 18), this.cliffRockMat);
+        vicarBase.position.set(-1140, 0, 280);
+        outsideGroup.add(vicarBase);
+
+        const vicarFloor = new THREE.Mesh(new THREE.BoxGeometry(60, 1.2, 50), new THREE.MeshStandardMaterial({
+            color: 0x475569, roughness: 0.8, metalness: 0.2
+        }));
+        vicarFloor.position.set(-1140, 12.1, 280);
+        vicarFloor.receiveShadow = true;
+        outsideGroup.add(vicarFloor);
+
+        // Gothic Altar Table Draped in Torn Velvet
+        const vicarAltar = new THREE.Mesh(new THREE.BoxGeometry(10, 3.2, 4.5), new THREE.MeshStandardMaterial({
+            color: 0x7f1d1d, roughness: 0.7
+        }));
+        vicarAltar.position.set(-1140, 13.8, 300);
+        outsideGroup.add(vicarAltar);
+
+        // Mammoth Holy Crucifix Stele behind Altar
+        const crossVert = new THREE.Mesh(new THREE.BoxGeometry(1.2, 14, 0.8), new THREE.MeshStandardMaterial({
+            color: 0xd97706, roughness: 0.5, metalness: 0.4
+        }));
+        crossVert.position.set(-1140, 20.0, 303);
+        outsideGroup.add(crossVert);
+
+        const crossHoriz = new THREE.Mesh(new THREE.BoxGeometry(7.5, 1.2, 0.8), new THREE.MeshStandardMaterial({
+            color: 0xd97706, roughness: 0.5, metalness: 0.4
+        }));
+        crossHoriz.position.set(-1140, 23.5, 303);
+        outsideGroup.add(crossHoriz);
+
+        const vicarLight = new THREE.PointLight(0xfef08a, 5.5, 50.0);
+        vicarLight.position.set(-1140, 17.0, 280);
+        outsideGroup.add(vicarLight);
+
+        this.createStandingBrazier(-1124, 12.0, 280, 0xfef08a, 5.0, 32);
+        this.createStandingBrazier(-1156, 12.0, 280, 0xef4444, 5.0, 32);
+        this.createPathBeacon(-1140, 12.0, 280, 0xfef08a, "🐺 GRAND CATHEDRAL HIGH ALTAR [ELEV +12.0m]", "VICAR AMELIA WHITE FUR BEAST • GOLDEN PRAYER TALISMAN • TALL CHURCH SERVANTS", "#fef9c3");
+        this.createFloorSoapstone(-1140, 12.0, 268, "#fef08a", "🐺 GRAND CATHEDRAL HIGH ALTAR", "Remain wary of the frailty of men. Their wills are weak, minds young.");
+
+        // --------------------------------------------------------------------
+        // 5. HIRATA ESTATE BLAZING AUDIENCE CHAMBER ([-1160, 6.0, -360])
+        // --------------------------------------------------------------------
+        const hirataBase = new THREE.Mesh(new THREE.CylinderGeometry(52, 64, 12, 18), this.cliffRockMat);
+        hirataBase.position.set(-1160, 0, -360);
+        outsideGroup.add(hirataBase);
+
+        const hirataFloor = new THREE.Mesh(new THREE.BoxGeometry(58, 1.0, 48), new THREE.MeshStandardMaterial({
+            color: 0x292524, roughness: 0.95
+        }));
+        hirataFloor.position.set(-1160, 6.1, -360);
+        hirataFloor.receiveShadow = true;
+        outsideGroup.add(hirataFloor);
+
+        // Blazing Japanese Timber Rafters & Fiery Beams
+        const burntWoodMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.9 });
+        for (let jb = -16; jb <= 16; jb += 8) {
+            const pillarL = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.7, 10, 6), burntWoodMat);
+            pillarL.position.set(-1182, 11.0, -360 + jb);
+            outsideGroup.add(pillarL);
+
+            const pillarR = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.7, 10, 6), burntWoodMat);
+            pillarR.position.set(-1138, 11.0, -360 + jb);
+            outsideGroup.add(pillarR);
+
+            const beamCross = new THREE.Mesh(new THREE.BoxGeometry(46, 0.7, 0.9), burntWoodMat);
+            beamCross.position.set(-1160, 16.0, -360 + jb);
+            outsideGroup.add(beamCross);
+        }
+
+        // Spirit Owl Perch Arch
+        const owlPerch = new THREE.Mesh(new THREE.TorusGeometry(5.0, 0.6, 6, 12, Math.PI), new THREE.MeshStandardMaterial({
+            color: 0x0284c7, emissive: 0x0369a1, emissiveIntensity: 1.8
+        }));
+        owlPerch.position.set(-1160, 12.0, -380);
+        outsideGroup.add(owlPerch);
+
+        const hirataLight = new THREE.PointLight(0xf97316, 6.0, 52.0);
+        hirataLight.position.set(-1160, 11.0, -360);
+        outsideGroup.add(hirataLight);
+
+        this.createStandingBrazier(-1144, 6.0, -360, 0xf97316, 5.5, 34);
+        this.createStandingBrazier(-1176, 6.0, -360, 0xf97316, 5.5, 34);
+        this.createPathBeacon(-1160, 6.0, -360, 0xf97316, "🦉 HIRATA BLAZING AUDIENCE CHAMBER [ELEV +6.0m]", "OWL (FATHER) GREAT SHINOBI • PHANTOM BLUE OWL • HIRATA BANDIT ASSASSINS", "#ffedd5");
+        this.createFloorSoapstone(-1160, 6.0, -348, "#f97316", "🦉 HIRATA BLAZING AUDIENCE CHAMBER", "Defeat of a father by his son's hand. That is the rule of the shinobi.");
+
+        // --------------------------------------------------------------------
+        // 6. RAYA LUCARIA GRAND LIBRARY & FULL MOON CHAMBER ([-1180, 14.0, 420])
+        // --------------------------------------------------------------------
+        const rayaBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 70, 28, 20), this.cliffRockMat);
+        rayaBase.position.set(-1180, 0, 420);
+        outsideGroup.add(rayaBase);
+
+        const rayaFloor = new THREE.Mesh(new THREE.CylinderGeometry(44, 44, 1.2, 24), new THREE.MeshStandardMaterial({
+            color: 0x1e3a8a, roughness: 0.35, metalness: 0.55
+        }));
+        rayaFloor.position.set(-1180, 14.1, 420);
+        rayaFloor.receiveShadow = true;
+        outsideGroup.add(rayaFloor);
+
+        // 8 Giant Curved Bookcase Monoliths
+        const bookMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.85 });
+        for (let bk = 0; bk < 8; bk++) {
+            const bkAng = (bk / 8) * Math.PI * 2;
+            const bookcase = new THREE.Mesh(new THREE.BoxGeometry(6.5, 12.0, 1.8), bookMat);
+            bookcase.position.set(-1180 + Math.cos(bkAng) * 36, 20.0, 420 + Math.sin(bkAng) * 36);
+            bookcase.rotation.y = -bkAng + Math.PI / 2;
+            outsideGroup.add(bookcase);
+        }
+
+        // Amber Egg Golden Cradle in Center
+        const amberEgg = new THREE.Mesh(new THREE.SphereGeometry(2.4, 14, 14), new THREE.MeshStandardMaterial({
+            color: 0xf59e0b, emissive: 0xd97706, emissiveIntensity: 2.2, roughness: 0.2
+        }));
+        amberEgg.scale.set(1.0, 1.4, 1.0);
+        amberEgg.position.set(-1180, 17.0, 420);
+        outsideGroup.add(amberEgg);
+
+        // Floating Full Moon Core overhead
+        const fullMoonSphere = new THREE.Mesh(new THREE.SphereGeometry(4.2, 16, 16), new THREE.MeshStandardMaterial({
+            color: 0xdbeafe, emissive: 0x93c5fd, emissiveIntensity: 2.5, roughness: 0.1
+        }));
+        fullMoonSphere.position.set(-1180, 27.0, 420);
+        outsideGroup.add(fullMoonSphere);
+
+        const rayaLight = new THREE.PointLight(0x60a5fa, 5.5, 56.0);
+        rayaLight.position.set(-1180, 20.0, 420);
+        outsideGroup.add(rayaLight);
+
+        this.createStandingBrazier(-1164, 14.0, 420, 0x60a5fa, 5.0, 32);
+        this.createStandingBrazier(-1196, 14.0, 420, 0xf59e0b, 5.0, 32);
+        this.createPathBeacon(-1180, 14.0, 420, 0x60a5fa, "🌕 RAYA LUCARIA FULL MOON LIBRARY [ELEV +14.0m]", "RENNALA QUEEN OF THE FULL MOON • AMBER EGG CRADLE • CARIAN GLINTSTONE SORCERERS", "#dbeafe");
+        this.createFloorSoapstone(-1180, 14.0, 408, "#60a5fa", "🌕 RAYA LUCARIA FULL MOON LIBRARY", "Hush, little culver. Thou art born anew under the soft light of the full moon.");
+
+        // --------------------------------------------------------------------
+        // 7. ASHINA CASTLE GATES FLAMING BATTLEFIELD ([-1200, 4.0, -180])
+        // --------------------------------------------------------------------
+        const demonBase = new THREE.Mesh(new THREE.CylinderGeometry(56, 70, 8, 20), this.cliffRockMat);
+        demonBase.position.set(-1200, 0, -180);
+        outsideGroup.add(demonBase);
+
+        const demonFloor = new THREE.Mesh(new THREE.BoxGeometry(64, 1.0, 56), new THREE.MeshStandardMaterial({
+            color: 0x1c1917, roughness: 0.95
+        }));
+        demonFloor.position.set(-1200, 4.1, -180);
+        demonFloor.receiveShadow = true;
+        outsideGroup.add(demonFloor);
+
+        // Scorched Wooden Gate Palisades & Shattered Watchtower
+        const charredWoodMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
+        for (let pw = -24; pw <= 24; pw += 4) {
+            const stake = new THREE.Mesh(new THREE.ConeGeometry(0.35, 4.2, 5), charredWoodMat);
+            stake.position.set(-1200 + pw, 6.0, -154);
+            stake.rotation.x = -0.3;
+            outsideGroup.add(stake);
+        }
+
+        // Karmic Flame Fissure Core in Earth
+        const flameCore = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 0.8, 1.2, 12), new THREE.MeshStandardMaterial({
+            color: 0xdc2626, emissive: 0xb91c1c, emissiveIntensity: 3.0
+        }));
+        flameCore.position.set(-1200, 4.4, -180);
+        outsideGroup.add(flameCore);
+
+        const demonLight = new THREE.PointLight(0xdc2626, 6.5, 54.0);
+        demonLight.position.set(-1200, 9.0, -180);
+        outsideGroup.add(demonLight);
+
+        this.createStandingBrazier(-1184, 4.0, -180, 0xdc2626, 6.0, 34);
+        this.createStandingBrazier(-1216, 4.0, -180, 0xf97316, 6.0, 34);
+        this.createPathBeacon(-1200, 4.0, -180, 0xdc2626, "👹 ASHINA CASTLE GATES IN FLAMES [ELEV +4.0m]", "THE DEMON OF HATRED KARMIC TITAN • FLAME WHIP ARM • ASHINA MINISTRY NINJAS", "#fee2e2");
+        this.createFloorSoapstone(-1200, 4.0, -168, "#dc2626", "👹 ASHINA CASTLE GATES IN FLAMES", "The flames of hatred cannot be doused by water. Only the severance of karma remains.");
+
+        // --------------------------------------------------------------------
+        // 8. SHADOW REALM ANCIENT RUINS OF RAUH SCARLET ROT PAVILION ([-1220, -6.0, 540])
+        // --------------------------------------------------------------------
+        const rauhBase = new THREE.Mesh(new THREE.CylinderGeometry(54, 66, 12, 18), this.cliffRockMat);
+        rauhBase.position.set(-1220, -12.0, 540);
+        outsideGroup.add(rauhBase);
+
+        const rauhFloor = new THREE.Mesh(new THREE.BoxGeometry(60, 1.0, 52), new THREE.MeshStandardMaterial({
+            color: 0x3f3f46, roughness: 0.85
+        }));
+        rauhFloor.position.set(-1220, -5.9, 540);
+        rauhFloor.receiveShadow = true;
+        outsideGroup.add(rauhFloor);
+
+        // Ancient Weathered Rauh Aqueduct Archways
+        const aqueductMat = new THREE.MeshStandardMaterial({ color: 0x52525b, roughness: 0.8 });
+        for (let aq = -18; aq <= 18; aq += 9) {
+            const arch = new THREE.Mesh(new THREE.TorusGeometry(4.5, 0.8, 6, 12, Math.PI), aqueductMat);
+            arch.position.set(-1220 + aq, -1.0, 560);
+            outsideGroup.add(arch);
+        }
+
+        // Scarlet Rot Pool in Center
+        const rotPool = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 0.25, 20), new THREE.MeshStandardMaterial({
+            color: 0xf43f5e, emissive: 0xe11d48, emissiveIntensity: 1.8, roughness: 0.2
+        }));
+        rotPool.position.set(-1220, -5.7, 540);
+        outsideGroup.add(rotPool);
+
+        // 8 Floating Scarlet Rot Butterflies
+        const butterflyMat = new THREE.MeshStandardMaterial({
+            color: 0xfb7185, emissive: 0xf43f5e, emissiveIntensity: 2.5
+        });
+        for (let bf = 0; bf < 8; bf++) {
+            const bfAng = (bf / 8) * Math.PI * 2;
+            const wingCluster = new THREE.Mesh(new THREE.SphereGeometry(0.35, 6, 6), butterflyMat);
+            wingCluster.position.set(-1220 + Math.cos(bfAng) * 12, -2.0 + Math.sin(bf) * 1.5, 540 + Math.sin(bfAng) * 12);
+            outsideGroup.add(wingCluster);
+        }
+
+        const rauhLight = new THREE.PointLight(0xf43f5e, 5.5, 50.0);
+        rauhLight.position.set(-1220, 2.0, 540);
+        outsideGroup.add(rauhLight);
+
+        this.createStandingBrazier(-1204, -6.0, 540, 0xf43f5e, 5.0, 32);
+        this.createStandingBrazier(-1236, -6.0, 540, 0xf43f5e, 5.0, 32);
+        this.createPathBeacon(-1220, -6.0, 540, 0xf43f5e, "🌸 RAUH SCARLET ROT PAVILION [ELEV -6.0m]", "ROMINA SAINT OF THE BUD • CENTIPEDE CARAPACE • RAUH HORNED WARRIORS", "#ffe4e6");
+        this.createFloorSoapstone(-1220, -6.0, 528, "#f43f5e", "🌸 RAUH SCARLET ROT PAVILION", "Within the bud she nurtured the rotting flame. A butterfly woven from ancient despair.");
     }
 
     buildSerpentSanctum() {

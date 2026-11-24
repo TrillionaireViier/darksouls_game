@@ -600,7 +600,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -1080, -480, 1052, 980, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -1280, -560, 1252, 1140, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -641,6 +641,14 @@
                 this.drawZoneRect(ctx, -1010, 340, 40, 40, "rgba(60, 40, 20, 0.65)", "#f97316", "🦁 LEYNDELL GODFREY TERRACE (+12m)");
                 this.drawZoneRect(ctx, -1030, -400, 40, 40, "rgba(25, 30, 70, 0.65)", "#60a5fa", "🌓 CASTLE ENSIS TWIN MOON DAIS (+8m)");
                 this.drawZoneRect(ctx, -1040, 460, 40, 40, "rgba(40, 35, 15, 0.65)", "#eab308", "🌻 SCADUTREE AVATAR BASIN (-10m)");
+                this.drawZoneRect(ctx, -1120, -260, 40, 40, "rgba(50, 25, 10, 0.65)", "#f97316", "🔥 FARRON KEEP MAUSOLEUM (+8m)");
+                this.drawZoneRect(ctx, -1140, -100, 40, 40, "rgba(65, 15, 15, 0.65)", "#ef4444", "🗡️ FARUM AZULA SANCTUM (+28m)");
+                this.drawZoneRect(ctx, -1130, 120, 40, 40, "rgba(20, 35, 60, 0.65)", "#38bdf8", "⚔️ IRITHYLL PONTIFICAL DAIS (+18m)");
+                this.drawZoneRect(ctx, -1160, 260, 40, 40, "rgba(70, 60, 15, 0.65)", "#fef08a", "🐺 GRAND CATHEDRAL ALTAR (+12m)");
+                this.drawZoneRect(ctx, -1180, -380, 40, 40, "rgba(55, 30, 10, 0.65)", "#f97316", "🦉 HIRATA BLAZING CHAMBER (+6m)");
+                this.drawZoneRect(ctx, -1200, 400, 40, 40, "rgba(20, 30, 65, 0.65)", "#60a5fa", "🌕 RAYA LUCARIA LIBRARY (+14m)");
+                this.drawZoneRect(ctx, -1220, -200, 40, 40, "rgba(70, 10, 10, 0.65)", "#dc2626", "👹 ASHINA GATES IN FLAMES (+4m)");
+                this.drawZoneRect(ctx, -1240, 520, 40, 40, "rgba(65, 15, 35, 0.65)", "#f43f5e", "🌸 RAUH SCARLET ROT PAVILION (-6m)");
             }
 
             // 3. Draw All World Pins

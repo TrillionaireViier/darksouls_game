@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (553 Fast-Travel Locations & 77 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (561 Fast-Travel Locations & 85 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 61 bespoke Outside locations, 60 active mob patrols, and 14 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 69 bespoke Outside locations, 68 active mob patrols, and 30 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V57 Expansion)
+1. **Beastman of Farum Azula (Dragonscale Cleaver)**: Hunchbacked draconic-lupine predator in slate-grey scales with dorsal spine plates, snarling beast jaws, glowing crimson eyes, and heavy chipped stone cleaver.
+2. **Farron Ghru Elder & Leaper**: Gnarled woodland ghru body with mossy bark skin, quad branching horned skull headdress, and rotten poison-dripping tree staff with caustic green spore mist.
+3. **Irithyll Pontiff Fire Witch**: Slender elongated silver-white silk robes, fluted silver gargoyle-horned headdress, and 2.7m gargoyle flame staff crowned with roaring orange-amber fire.
+4. **Cathedral Ward Tall Church Servant**: Tall slender gothic black cassock, wide-brimmed church hat, heavy carved wooden executioner cross-staff, and hanging pale ghostfire lantern.
+5. **Hirata Estate Shinobi Bandit Torchbearer**: Weathered straw rain cape, conical straw jingasa hat with black face wrap, curved bandit katana, and crackling wooden pitch torch.
+6. **Raya Lucaria Glintstone Sorcerer**: Midnight-blue academy robes, Karolos twin-faced stone scholar crown with embedded azure glintstone crystal, and crystal staff.
+7. **Ashina Interior Ministry Lone Shadow Ninja**: Sleek purple-black shinobi garb, cowled assassin hood, iron greaves for spinning poison heel kicks, and reverse-grip ninjato blade.
+8. **Rauh Horned Divine Beast Warrior**: Verdigris bronze plate armor, spiraling divine beast horns on bronze mask, and dual curved divine wind claymores with teal storm vortex light.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V57 Expansion)
+1. **The Abyss Watchers, Bloodhounds of Farron (Farron Keep Mausoleum)**: Pointed steel helm with wolf crest, dark leather surcoat, 3.2m Wolf Knight Ultra Greatsword, reverse-grip flame dagger, and embered red abyss eyes (+8.0m elevation).
+2. **Maliketh, the Black Blade & Gurranq (Farum Azula Dragon Temple Sanctum)**: Colossal lupine beast in gold-chased obsidian armor with silver mane, wielding the 4.8m Destined Death Black Blade crackling with crimson-black runes (+28.0m elevation).
+3. **Pontiff Sulyvahn, Tyrant of the Boreal Valley (Irithyll Grand Cathedral)**: Liturgical papal mitre and gold silk robes, dark phantom wings, dual-wielding the Profaned Greatsword of Fire and Greatsword of Judgement (+18.0m elevation).
+4. **Vicar Amelia, White Fur Beast of Prayer (Yharnam Cathedral High Altar)**: Colossal white lupine beast with elongated claw arms, mammoth stag antlers draped in white lace bandages, and radiant gold prayer bell (+12.0m elevation).
+5. **Owl (Father), Great Shinobi of the Mists (Hirata Blazing Audience Chamber)**: Master shinobi warlord in feathered owl mantle with flowing grey topknot, colossal 3.8m nodachi, and spectral blue spirit owl perched on shoulder (+6.0m elevation).
+6. **Rennala, Queen of the Full Moon (Raya Lucaria Grand Library)**: Indigo astral robes and crescent moon crown, holding the glowing golden Amber Egg, surrounded by an orbiting silver full moon sphere (+14.0m elevation).
+7. **The Demon of Hatred, Karmic Fire Titan (Ashina Castle Gates in Flames)**: Titanic hunched fire beast with cracked magma hide, single curving bull horn, chest furnace, and sweeping 5-meter fire whip left arm (+4.0m elevation).
+8. **Romina, Saint of the Bud & Scarlet Centipede (Ancient Ruins of Rauh Scarlet Rot Pavilion)**: Articulated 12-legged centipede lower body fused with slender saint in rotted robes, double-bladed Scarlet Rot Glaive, and pink rot butterfly halo (-6.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V55 Expansion)
 1. **Corvian Rapier Knight Stalker**: Feathery raven wings on hunched avian body, crow beak plague mask with glowing crimson eyes, slender barbed rapier and crow-quill offhand dagger.
