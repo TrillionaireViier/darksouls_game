@@ -34,28 +34,28 @@ class CollisionSystem {
 
     // ------------------------------------------------------------------------
     // 1. STRICT ZONE BOUNDARY ENFORCEMENT
-    // Enforces min/max X and Z boundaries based on zone geometry and elevation
+    // Enforces min/max X and Z boundaries based on zone geometry and elevation (8X Megalithic Realm)
     // ------------------------------------------------------------------------
     enforceBoundaries(pos, radius = 0.45, currentY = null) {
         const y = (currentY !== null) ? currentY : pos.y;
         const initialX = pos.x;
         const initialZ = pos.z;
 
-        // A. Royal Bridge Parapets (z in [22.0, 272.0]) - Monumental 90m wide Imperial Viaduct
-        if (pos.z >= 22.0 && pos.z <= 272.0 && Math.abs(pos.x) <= 46.0) {
-            if (y >= -1.0 && y <= 3.5) {
-                const minX = -44.0 + radius;
-                const maxX = 44.0 - radius;
+        // A. Royal Bridge Parapets (z in [58.0, 465.0]) - Monumental 180m wide Imperial Viaduct
+        if (pos.z >= 58.0 && pos.z <= 465.0 && Math.abs(pos.x) <= 92.0) {
+            if (y >= -1.0 && y <= 4.0) {
+                const minX = -88.0 + radius;
+                const maxX = 88.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             }
         }
 
-        // B. Surface Boss Arena (z in [272.0, 755.0]) - Grand 300m x 480m Colosseum Arena
-        if (pos.z >= 272.0 && pos.z <= 755.0 && y >= -1.0 && y <= 6.0) {
-            const minX = -148.5 + radius;
-            const maxX = 148.5 - radius;
+        // B. Surface Boss Arena (z in [465.0, 1400.0]) - Scaled 8x Colossal 720m x 935m Colosseum Arena
+        if (pos.z >= 465.0 && pos.z <= 1400.0 && y >= -1.0 && y <= 8.0) {
+            const minX = -355.0 + radius;
+            const maxX = 355.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            pos.z = Math.min(748.0 - radius, pos.z);
+            pos.z = Math.min(1390.0 - radius, pos.z);
         }
 
         // C. Flooded Catacombs Corridor (z in [22.0, 90.0], y < 1.0)
@@ -81,30 +81,30 @@ class CollisionSystem {
             pos.z = Math.min(94.5 - radius, pos.z);
         }
 
-        // F. Courtyard Starting Arena (z in [-90.0, 28.0], x in [-150.0, 150.0]) - Colossal 300m x 120m Imperial Acropolis
-        if (pos.z >= -90.0 && pos.z < 28.0 && pos.x >= -150.0 && y > -2.0) {
-            const inWestGate = (pos.z >= -16.0 && pos.z <= 16.0);
-            const minX = inWestGate ? -2000.0 : (-148.0 + radius);
-            const maxX = 148.0 - radius;
+        // F. Courtyard Starting Arena (z in [-250.0, 60.0], x in [-450.0, 450.0]) - Monumental 900m x 310m Imperial Acropolis
+        if (pos.z >= -250.0 && pos.z < 60.0 && pos.x >= -450.0 && y > -2.0) {
+            const inWestGate = (pos.z >= -32.0 && pos.z <= 32.0);
+            const minX = inWestGate ? -8000.0 : (-445.0 + radius);
+            const maxX = 445.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            if (pos.x >= -148.0 && (pos.x < -18.0 || pos.x > 18.0)) {
-                pos.z = Math.max(-88.0 + radius, pos.z);
+            if (pos.x >= -445.0 && (pos.x < -40.0 || pos.x > 40.0)) {
+                pos.z = Math.max(-245.0 + radius, pos.z);
             }
         }
 
-        // G. Serpent Sanctuary & Gorgon Temple (z in [-240.0, -90.0], x in [-75.0, 75.0]) - Monumental Sunken Temple
-        if (pos.z < -90.0) {
-            if (pos.z >= -162.0) {
-                // Sunken Serpent Courtyard (120m wide)
-                const minX = -58.0 + radius;
-                const maxX = 58.0 - radius;
+        // G. Serpent Sanctuary & Gorgon Temple (z in [-750.0, -250.0], x in [-150.0, 150.0]) - Monumental Sunken Temple
+        if (pos.z < -250.0 && pos.z >= -750.0) {
+            if (pos.z >= -450.0) {
+                // Sunken Serpent Courtyard (240m wide)
+                const minX = -115.0 + radius;
+                const maxX = 115.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             } else {
-                // Gorgon Inner Sanctum (140m wide)
-                const minX = -68.0 + radius;
-                const maxX = 68.0 - radius;
+                // Gorgon Inner Sanctum (300m wide)
+                const minX = -145.0 + radius;
+                const maxX = 145.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
-                pos.z = Math.max(-234.0 + radius, pos.z);
+                pos.z = Math.max(-740.0 + radius, pos.z);
             }
         }
 

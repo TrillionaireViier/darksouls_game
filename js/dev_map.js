@@ -14,8 +14,8 @@
             this.ctx = null;
             this.isOpen = false;
             
-            // Map view transformation - 2x larger default tactical zoom
-            this.scale = 2.8; // pixels per meter (expanded scale)
+            // Map view transformation - Tactical zoom for 8x Megalithic Realm
+            this.scale = 0.9; // pixels per meter
             this.offsetX = 0;
             this.offsetZ = 0;
             this.isDragging = false;
@@ -38,8 +38,7 @@
             this.cursorWorldPos = { x: 0, z: 0 };
             
             // World boundaries for auto-framing
-            // X: [-40, 40], Z: [-40, 180]
-            this.worldCenter = { x: 0, z: 150 };
+            this.worldCenter = { x: 0, z: 200 };
             
             this.initDOM();
             this.bindEvents();
@@ -226,7 +225,7 @@
         }
 
         resetView() {
-            this.scale = 2.8;
+            this.scale = 0.9;
             this.offsetX = 0;
             this.offsetZ = 0;
             this.render();

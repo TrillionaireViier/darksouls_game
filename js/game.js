@@ -100,8 +100,8 @@ class DarkSoulsGame {
         this.playerMesh.position.set(0, 0, 5); // Courtyard start near bonfire
         this.playerMesh.rotation.y = Math.PI; // Face forward into Lordran towards bonfire
         this.playerVelocity = new THREE.Vector3();
-        this.moveSpeed = 4.8;
-        this.sprintSpeed = 7.2;
+        this.moveSpeed = 7.5;
+        this.sprintSpeed = 16.0;
 
         // Player Local Warm Lantern Fill (Soft subtle aura around character)
         this.playerLantern = new THREE.PointLight(0xffecd0, 0.75, 22, 1.0);
@@ -5452,6 +5452,18 @@ window.buyMerchantRing = (ringId, cost) => {
 
 // 300+ Authentic Lordran, Drangleic, Lothric, Boletaria, Yharnam, Ashina & Lands Between Fast-Travel Locations
 window.DARK_SOULS_LOCATIONS = [
+
+    // --- 10 BRAND-NEW MEGATERRITORY LOCATIONS (8X REALM EXPANSION) ---
+    { id: 'loc_val_weeping_drakes', name: "Valley of the Weeping Drakes - Dragon Bone Gorge", zone: "Weeping Drakes", pos: [-650, -4.0, 350], elev: '-4m', danger: 'Tier V (Legendary)', boss: "Ancient Wyvern Matriarch", desc: "A mist-shrouded canyon filled with colossal dragon ribcages and nesting drakes.", light: 1.10 },
+    { id: 'loc_sunken_cathedral', name: "Sunken Cathedral of Archbishops - Flooded Nave", zone: "Sunken Cathedral", pos: [550, -3.0, 500], elev: '-3m', danger: 'Tier IV (Severe)', boss: "Drowned Patriarchs", desc: "Soaring gothic cathedral nave submerged beneath sacred turquoise lake waters.", light: 1.15 },
+    { id: 'loc_cinder_caldera', name: "Cinder Peak - Obsidian Caldera Forge", zone: "Cinder Peak", pos: [-750, 10.0, -400], elev: '+10m', danger: 'Tier V (Legendary)', boss: "Obsidian Smelter Wyrm", desc: "Blistering volcanic crater overlooking boiling magma channels and black basalt columns.", light: 1.25 },
+    { id: 'loc_frozen_astral_giants', name: "Frozen Glade of Astral Giants - Star Monoliths", zone: "Astral Glade", pos: [650, 6.0, -350], elev: '+6m', danger: 'Tier IV (Severe)', boss: "Boreal Golem King", desc: "Permafrost clearing ringed by colossal sapphire crystals pulsating with celestial starlight.", light: 1.20 },
+    { id: 'loc_iron_legion_bastion', name: "High Iron Fortress - Bastion of the Lost Legion", zone: "Iron Bastion", pos: [700, 14.0, 250], elev: '+14m', danger: 'Tier V (Legendary)', boss: "Legion Commander Vane", desc: "Multi-tiered iron fortress armed with giant siege ballistas and waving crimson war standards.", light: 1.20 },
+    { id: 'loc_blighted_mangrove', name: "Blighted Mangrove - Toxic Stilt Village", zone: "Blighted Mangrove", pos: [-550, -6.0, -200], elev: '-6m', danger: 'Tier IV (Severe)', boss: "Rot Mother & Mire Dwellers", desc: "Creaking wooden walkways elevated above a toxic green morass and hanging iron gibbets.", light: 0.70 },
+    { id: 'loc_crystal_grotto_seath', name: "The Crystal Grotto of Seath - Prismatic Core", zone: "Crystal Grotto", pos: [-350, -8.0, 750], elev: '-8m', danger: 'Tier V (Legendary)', boss: "Seath's Primeval Crystal", desc: "Subterranean cavern bristling with towering glintstone prisms and shimmering celestial mist.", light: 1.05 },
+    { id: 'loc_sun_palace_ruins', name: "Ruins of the Sunken Sun Palace - Solar Colonnade", zone: "Sun Palace", pos: [400, 3.0, -550], elev: '+3m', danger: 'Tier III (Advanced)', boss: "Solar Avatar of Gwyn", desc: "Shattered golden marble colonnades bathed in eternal daylight around an ancient solar dial.", light: 1.35 },
+    { id: 'loc_abyssal_rift_maw', name: "The Abyssal Rift - Void Maw of the Deep", zone: "The Abyssal Rift", pos: [0, -12.0, 1650], elev: '-12m', danger: 'Tier V (Legendary)', boss: "Primeval Dark Incarnation", desc: "Cosmic sunken crater beyond the throne gate where matter dissolves into dark humanity.", light: 0.35 },
+    { id: 'loc_grand_necropolis', name: "The Grand Necropolis of the First Lords - Avenue of Tombs", zone: "Grand Necropolis", pos: [-850, 0.0, 0], elev: '0m', danger: 'Tier IV (Severe)', boss: "Tomb Wardens of the First Pyre", desc: "Monumental avenue of stone mausoleums, towering granite obelisks, and rows of soul lanterns.", light: 0.90 },
 
     { id: 'ds1_undead_burg_outskirts', name: "Undead Burg Outskirts - Cliffside Dragon Chasm", zone: "Undead Burg Outskirts", pos: [-52, -2.0, 18], elev: '-2m', danger: 'Tier IV (Severe)', boss: "Hellkite Drake & Cliffside Sentinels", desc: "A vast windswept cliffside terrace outside the citadel fortress walls overlooking the bottomless mountain chasm.", light: 1.25 },
     { id: 'royal_bridge_arena', name: 'Royal Bridge - Grand Citadel Arena (Hub)', zone: 'Royal Citadel', pos: [0, 0, 330], elev: '0m', danger: 'Sanctuary & War Arena (Hub)', boss: 'Arena Colosseum', desc: 'The high rampart causeway spanning the northern chasm, flanked by watchtowers and the nexus bonfire.', light: 1.10 },
