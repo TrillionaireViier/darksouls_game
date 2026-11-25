@@ -43,9 +43,45 @@ class DarkSoulsWorld {
                 const range = (obj.distance && obj.distance > 0) ? (obj.distance * 1.5) : 65.0;
                 obj.userData.maxDistSq = range * range;
                 if (!obj.userData.worldPos) obj.userData.worldPos = new THREE.Vector3();
+                // Default all point lights to invisible to prevent WebGL MAX_FRAGMENT_UNIFORM_VECTORS error
+                obj.visible = false;
                 this.dynamicLights.push(obj);
             }
         });
+        // Immediately activate only the closest 6 lights to spawn
+        this.cullDynamicLights(new THREE.Vector3(0, 0, 5));
+    }
+
+    cullDynamicLights(targetPos) {
+        if (!this.dynamicLights || this.dynamicLights.length === 0) return;
+        const tx = targetPos.x;
+        const ty = targetPos.y;
+        const tz = targetPos.z;
+        const len = this.dynamicLights.length;
+        const nearby = [];
+
+        for (let i = 0; i < len; i++) {
+            const l = this.dynamicLights[i];
+            l.getWorldPosition(l.userData.worldPos);
+            const dx = l.userData.worldPos.x - tx;
+            const dy = l.userData.worldPos.y - ty;
+            const dz = l.userData.worldPos.z - tz;
+            const distSq = dx * dx + dy * dy + dz * dz;
+            const maxDistSq = l.userData.maxDistSq || (65 * 65);
+
+            if (distSq <= maxDistSq) {
+                nearby.push({ light: l, distSq: distSq });
+            } else {
+                l.visible = false;
+            }
+        }
+
+        // Limit active point lights to maximum 6 to stay well under MAX_FRAGMENT_UNIFORM_VECTORS(1024)
+        nearby.sort((a, b) => a.distSq - b.distSq);
+        const MAX_ACTIVE_LIGHTS = 6;
+        for (let i = 0; i < nearby.length; i++) {
+            nearby[i].light.visible = (i < MAX_ACTIVE_LIGHTS);
+        }
     }
 
     initMaterials() {
@@ -93,21 +129,21 @@ class DarkSoulsWorld {
                 const bw = cw - 8;
                 const bh = rh - 8;
 
-                // Radiant sunlit Lordran flagstone palette (bright cathedral limestone & sunlit travertine)
+                // Authentic aged Lordran gothic castle slate flagstone palette (dark medieval stone)
                 const palSeed = Math.random();
                 let baseR, baseG, baseB;
                 if (palSeed < 0.35) {
-                    baseR = 188 + Math.floor(Math.random() * 16);
-                    baseG = 182 + Math.floor(Math.random() * 14);
-                    baseB = 170 + Math.floor(Math.random() * 14);
+                    baseR = 75 + Math.floor(Math.random() * 14);
+                    baseG = 72 + Math.floor(Math.random() * 12);
+                    baseB = 68 + Math.floor(Math.random() * 12);
                 } else if (palSeed < 0.7) {
-                    baseR = 205 + Math.floor(Math.random() * 18);
-                    baseG = 196 + Math.floor(Math.random() * 16);
-                    baseB = 180 + Math.floor(Math.random() * 14);
+                    baseR = 88 + Math.floor(Math.random() * 16);
+                    baseG = 84 + Math.floor(Math.random() * 14);
+                    baseB = 78 + Math.floor(Math.random() * 14);
                 } else {
-                    baseR = 178 + Math.floor(Math.random() * 14);
-                    baseG = 175 + Math.floor(Math.random() * 14);
-                    baseB = 168 + Math.floor(Math.random() * 12);
+                    baseR = 64 + Math.floor(Math.random() * 12);
+                    baseG = 62 + Math.floor(Math.random() * 12);
+                    baseB = 58 + Math.floor(Math.random() * 10);
                 }
 
                 // Fill stone slab
@@ -705,15 +741,15 @@ class DarkSoulsWorld {
         this.scene.fog = new THREE.FogExp2(0x5e758c, 0.000006);
 
         // 3. Balanced Ambient Light (Clear visibility across all architecture without washing out)
-        this.ambientLight = new THREE.AmbientLight(0x4c5e72, 0.60);
+        this.ambientLight = new THREE.AmbientLight(0x404e5e, 0.45);
         this.scene.add(this.ambientLight);
 
         // 4. Sky and ground bounce hemisphere lighting (Slate blue sky + warm stone bounce)
-        this.hemiLight = new THREE.HemisphereLight(0x8eb0d0, 0x5a4e40, 0.65);
+        this.hemiLight = new THREE.HemisphereLight(0x7a98b4, 0x483e32, 0.50);
         this.scene.add(this.hemiLight);
 
         // 5. Cinematic Radiant Lordran Sunlight (primary sun from South-East, rich shadows & highlights)
-        this.moonlight = new THREE.DirectionalLight(0xfff0dc, 1.85);
+        this.moonlight = new THREE.DirectionalLight(0xfff0dc, 1.25);
         this.moonlight.position.set(45, 80, -25);
         this.moonlight.castShadow = true;
         this.moonlight.shadow.mapSize.width = 1024;
@@ -730,7 +766,7 @@ class DarkSoulsWorld {
         this.scene.add(this.moonlight);
 
         // Secondary Omni-Directional Fill Sunlight (Soft sky bounce, prevents pitch-black crevices)
-        this.fillSunlight = new THREE.DirectionalLight(0x7c9cb8, 0.50);
+        this.fillSunlight = new THREE.DirectionalLight(0x6a869e, 0.35);
         this.fillSunlight.position.set(-50, 75, 40);
         this.scene.add(this.fillSunlight);
 
@@ -1266,7 +1302,18 @@ class DarkSoulsWorld {
         // 1. Courtyard Floor (Starting area) - 3x Lengthened 900m x 930m Imperial Acropolis Plaza
         // North Courtyard Floor Slab (z in [-2250, 36], x in [-450, 450]) - 900m x 2,286m Vast Courtyard
         const northCourtyardGeo = new THREE.PlaneGeometry(900, 2286);
-        const northCourtyard = new THREE.Mesh(northCourtyardGeo, this.stoneMat);
+        const northCourtyardMat = this.stoneMat.clone();
+        northCourtyardMat.map = northCourtyardMat.map.clone();
+        northCourtyardMat.map.repeat.set(150, 381);
+        if (northCourtyardMat.bumpMap) {
+            northCourtyardMat.bumpMap = northCourtyardMat.bumpMap.clone();
+            northCourtyardMat.bumpMap.repeat.set(150, 381);
+        }
+        if (northCourtyardMat.roughnessMap) {
+            northCourtyardMat.roughnessMap = northCourtyardMat.roughnessMap.clone();
+            northCourtyardMat.roughnessMap.repeat.set(150, 381);
+        }
+        const northCourtyard = new THREE.Mesh(northCourtyardGeo, northCourtyardMat);
         northCourtyard.rotation.x = -Math.PI / 2;
         northCourtyard.position.set(0, 0, -1107);
         northCourtyard.receiveShadow = true;
@@ -1274,7 +1321,18 @@ class DarkSoulsWorld {
 
         // Center Promenade Floor Slab (z in [36, 540], x in [-90, 90] - 180m wide gateway promenade, 504m long)
         const centerCourtyardGeo = new THREE.PlaneGeometry(180, 504);
-        const centerCourtyard = new THREE.Mesh(centerCourtyardGeo, this.stoneMat);
+        const centerCourtyardMat = this.stoneMat.clone();
+        centerCourtyardMat.map = centerCourtyardMat.map.clone();
+        centerCourtyardMat.map.repeat.set(30, 84);
+        if (centerCourtyardMat.bumpMap) {
+            centerCourtyardMat.bumpMap = centerCourtyardMat.bumpMap.clone();
+            centerCourtyardMat.bumpMap.repeat.set(30, 84);
+        }
+        if (centerCourtyardMat.roughnessMap) {
+            centerCourtyardMat.roughnessMap = centerCourtyardMat.roughnessMap.clone();
+            centerCourtyardMat.roughnessMap.repeat.set(30, 84);
+        }
+        const centerCourtyard = new THREE.Mesh(centerCourtyardGeo, centerCourtyardMat);
         centerCourtyard.rotation.x = -Math.PI / 2;
         centerCourtyard.position.set(0, 0, 288);
         centerCourtyard.receiveShadow = true;
@@ -1282,7 +1340,18 @@ class DarkSoulsWorld {
 
         // Far West Battlement Floor Slab (z in [36, 540], x in [-450, -90]) - 360m wide, 504m long
         const westCourtyardGeo = new THREE.PlaneGeometry(360, 504);
-        const westCourtyard = new THREE.Mesh(westCourtyardGeo, this.stoneMat);
+        const westCourtyardMat = this.stoneMat.clone();
+        westCourtyardMat.map = westCourtyardMat.map.clone();
+        westCourtyardMat.map.repeat.set(60, 84);
+        if (westCourtyardMat.bumpMap) {
+            westCourtyardMat.bumpMap = westCourtyardMat.bumpMap.clone();
+            westCourtyardMat.bumpMap.repeat.set(60, 84);
+        }
+        if (westCourtyardMat.roughnessMap) {
+            westCourtyardMat.roughnessMap = westCourtyardMat.roughnessMap.clone();
+            westCourtyardMat.roughnessMap.repeat.set(60, 84);
+        }
+        const westCourtyard = new THREE.Mesh(westCourtyardGeo, westCourtyardMat);
         westCourtyard.rotation.x = -Math.PI / 2;
         westCourtyard.position.set(-270.0, 0, 288);
         westCourtyard.receiveShadow = true;
@@ -1290,7 +1359,18 @@ class DarkSoulsWorld {
 
         // Far East Battlement Floor Slab (z in [36, 540], x in [90, 450]) - 360m wide, 504m long
         const eastCourtyardGeo = new THREE.PlaneGeometry(360, 504);
-        const eastCourtyard = new THREE.Mesh(eastCourtyardGeo, this.stoneMat);
+        const eastCourtyardMat = this.stoneMat.clone();
+        eastCourtyardMat.map = eastCourtyardMat.map.clone();
+        eastCourtyardMat.map.repeat.set(60, 84);
+        if (eastCourtyardMat.bumpMap) {
+            eastCourtyardMat.bumpMap = eastCourtyardMat.bumpMap.clone();
+            eastCourtyardMat.bumpMap.repeat.set(60, 84);
+        }
+        if (eastCourtyardMat.roughnessMap) {
+            eastCourtyardMat.roughnessMap = eastCourtyardMat.roughnessMap.clone();
+            eastCourtyardMat.roughnessMap.repeat.set(60, 84);
+        }
+        const eastCourtyard = new THREE.Mesh(eastCourtyardGeo, eastCourtyardMat);
         eastCourtyard.rotation.x = -Math.PI / 2;
         eastCourtyard.position.set(270.0, 0, 288);
         eastCourtyard.receiveShadow = true;
@@ -1873,6 +1953,7 @@ class DarkSoulsWorld {
         outsideGroup.scale.set(9.0, 1.0, 9.0); // TITAN X9 EXPANSION: 144km MEGALITHIC REALM
         this.buildTripledExpeditionBiomes(outsideGroup);
         this.buildCataclysmicMegalithBiomes(outsideGroup);
+        this.buildInfiniteInfinityBiomes(outsideGroup);
         this.buildOmnipotentTitanBiomes(outsideGroup);
 
         // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (Scaled 8x to 16,000m x 16,000m)
@@ -6431,6 +6512,203 @@ class DarkSoulsWorld {
         }
     }
 
+
+    // ========================================================================
+    // BUILD INFINITE INFINITY BIOMES: 4,968 BRAND-NEW BESPOKE 3D LANDMARKS (Build V64)
+    // Triples physical in-world landmarks from 2,484 to 7,452 across the 144km realm!
+    // ========================================================================
+    buildInfiniteInfinityBiomes(outsideGroup) {
+        if (!outsideGroup) return;
+
+        const stoneMat = this.stoneMat;
+        const wallMat = this.wallMat;
+        const goldMat = this.goldMat || this.wallMat;
+
+        // Archetype 1: 621 Colossal Dragon Communion Shrines & Ancient Wyrm Roosts
+        for (let i = 0; i < 621; i++) {
+            const angle = (i / 621) * Math.PI * 2;
+            const dist = 900 + (i % 16) * 85;
+            const x = Math.cos(angle) * dist - 1000;
+            const z = Math.sin(angle) * dist;
+            const y = 8.0 + (i % 4) * 3.5;
+
+            const dais = new THREE.Mesh(new THREE.CylinderGeometry(18, 22, 2.6, 16), stoneMat);
+            dais.position.set(x, y - 1.3, z);
+            outsideGroup.add(dais);
+
+            const skull = new THREE.Mesh(new THREE.ConeGeometry(3.5, 9.0, 5), this.boneMat || stoneMat);
+            skull.position.set(x, y + 4.0, z);
+            skull.rotation.z = Math.PI / 2 - 0.2;
+            outsideGroup.add(skull);
+
+            this.createStandingBrazier(x * 9.0 - 22, y, z * 9.0, 0xff4500, 7.5, 50);
+            this.createStandingBrazier(x * 9.0 + 22, y, z * 9.0, 0xff4500, 7.5, 50);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0xff4500, `🐉 INFINITE DRAGON SANCTUM #${i+1} [ELEV +${y.toFixed(0)}m]`, "ANCIENT DRAGON HEART ALTAR • DRAKE ROOST • RED LIGHTNING", "#ff8844", false);
+        }
+
+        // Archetype 2: 621 Primeval Current Observatories & Starfall Spires
+        for (let i = 0; i < 621; i++) {
+            const angle = ((i + 0.2) / 621) * Math.PI * 2;
+            const dist = 1000 + (i % 14) * 90;
+            const x = Math.cos(angle) * dist - 1100;
+            const z = Math.sin(angle) * dist;
+            const y = 10.0 + (i % 4) * 4.0;
+
+            const base = new THREE.Mesh(new THREE.BoxGeometry(36, 2.8, 36), stoneMat);
+            base.position.set(x, y - 1.4, z);
+            outsideGroup.add(base);
+
+            const prism = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 4.5, 20, 6), new THREE.MeshStandardMaterial({
+                color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.8, roughness: 0.15, metalness: 0.85
+            }));
+            prism.position.set(x, y + 10.0, z);
+            outsideGroup.add(prism);
+
+            this.createStandingBrazier(x * 9.0 - 24, y, z * 9.0, 0x38bdf8, 8.0, 55);
+            this.createStandingBrazier(x * 9.0 + 24, y, z * 9.0, 0x38bdf8, 8.0, 55);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0x38bdf8, `🌌 INFINITE STARFALL SPIRE #${i+1} [ELEV +${y.toFixed(0)}m]`, "AZUR PRIMEVAL CURRENT • GLINTSTONE MONOLITH • CELESTIAL", "#7dd3fc", false);
+        }
+
+        // Archetype 3: 621 Royal Mausoleums & Sunken Crypts
+        for (let i = 0; i < 621; i++) {
+            const angle = ((i + 0.4) / 621) * Math.PI * 2;
+            const dist = 820 + (i % 12) * 75;
+            const x = Math.cos(angle) * dist - 920;
+            const z = Math.sin(angle) * dist;
+            const y = -8.0 - (i % 4) * 3.0;
+
+            const crypt = new THREE.Mesh(new THREE.BoxGeometry(40, 2.6, 40), stoneMat);
+            crypt.position.set(x, y - 1.3, z);
+            outsideGroup.add(crypt);
+
+            const sarc = new THREE.Mesh(new THREE.BoxGeometry(5.5, 3.0, 11.0), wallMat);
+            sarc.position.set(x, y + 1.5, z);
+            outsideGroup.add(sarc);
+
+            this.createStandingBrazier(x * 9.0 - 22, y, z * 9.0, 0x10b981, 7.0, 45);
+            this.createStandingBrazier(x * 9.0 + 22, y, z * 9.0, 0x10b981, 7.0, 45);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0x10b981, `💀 INFINITE LORD MAUSOLEUM #${i+1} [ELEV ${y.toFixed(0)}m]`, "GRAVELORD OSSUARY • EMERALD GHOSTFIRE • PRIMEVAL SOULS", "#6ee7b7", false);
+        }
+
+        // Archetype 4: 621 Molten Magma Smelteries & Obsidian Caldera Basins
+        for (let i = 0; i < 621; i++) {
+            const angle = ((i + 0.6) / 621) * Math.PI * 2;
+            const dist = 1100 + (i % 15) * 85;
+            const x = Math.cos(angle) * dist - 1200;
+            const z = Math.sin(angle) * dist;
+            const y = 6.0 + (i % 3) * 3.5;
+
+            const caldera = new THREE.Mesh(new THREE.CylinderGeometry(24, 30, 3.2, 16), new THREE.MeshStandardMaterial({
+                color: 0x18100c, roughness: 0.95
+            }));
+            caldera.position.set(x, y - 1.6, z);
+            outsideGroup.add(caldera);
+
+            const magma = new THREE.Mesh(new THREE.CylinderGeometry(16, 16, 0.6, 16), new THREE.MeshStandardMaterial({
+                color: 0xff3300, emissive: 0xe11d48, emissiveIntensity: 0.9
+            }));
+            magma.position.set(x, y + 0.1, z);
+            outsideGroup.add(magma);
+
+            this.createStandingBrazier(x * 9.0 - 26, y, z * 9.0, 0xf43f5e, 8.5, 60);
+            this.createStandingBrazier(x * 9.0 + 26, y, z * 9.0, 0xf43f5e, 8.5, 60);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0xf43f5e, `🌋 INFINITE SMELTER CALDERA #${i+1} [ELEV +${y.toFixed(0)}m]`, "CHAOS CRUCIBLE • BASALT LAVA CHANNEL • TITANITE FORGE", "#fda4af", false);
+        }
+
+        // Archetype 5: 621 Boreal Permafrost Keeps & Ice Spires
+        for (let i = 0; i < 621; i++) {
+            const angle = ((i + 0.8) / 621) * Math.PI * 2;
+            const dist = 1200 + (i % 16) * 95;
+            const x = Math.cos(angle) * dist - 1300;
+            const z = Math.sin(angle) * dist;
+            const y = 14.0 + (i % 4) * 4.5;
+
+            const keep = new THREE.Mesh(new THREE.BoxGeometry(38, 2.8, 38), stoneMat);
+            keep.position.set(x, y - 1.4, z);
+            outsideGroup.add(keep);
+
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(4.0, 25.0, 6), new THREE.MeshStandardMaterial({
+                color: 0xbae6fd, emissive: 0x0ea5e9, emissiveIntensity: 0.5, transparent: true, opacity: 0.88
+            }));
+            spire.position.set(x, y + 12.5, z);
+            outsideGroup.add(spire);
+
+            this.createStandingBrazier(x * 9.0 - 26, y, z * 9.0, 0x0ea5e9, 7.5, 52);
+            this.createStandingBrazier(x * 9.0 + 26, y, z * 9.0, 0x0ea5e9, 7.5, 52);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0x0ea5e9, `❄️ INFINITE PERMAFROST KEEP #${i+1} [ELEV +${y.toFixed(0)}m]`, "ELEUM LOYCE CITADEL • BOREAL FROSTBITE • ICE THRONE", "#e0f2fe", false);
+        }
+
+        // Archetype 6: 621 Cursed Scarlet Rot Sanctuaries & Miasma Canopies
+        for (let i = 0; i < 621; i++) {
+            const angle = (i / 621) * Math.PI * 2;
+            const dist = 720 + (i % 11) * 65;
+            const x = Math.cos(angle) * dist - 800;
+            const z = Math.sin(angle) * dist;
+            const y = -3.5 - (i % 3) * 2.5;
+
+            const platform = new THREE.Mesh(new THREE.BoxGeometry(28, 1.6, 28), this.woodMat || stoneMat);
+            platform.position.set(x, y - 0.8, z);
+            outsideGroup.add(platform);
+
+            const pod = new THREE.Mesh(new THREE.SphereGeometry(3.6, 8, 8), new THREE.MeshStandardMaterial({
+                color: 0xc026d3, emissive: 0x9333ea, emissiveIntensity: 0.65
+            }));
+            pod.position.set(x, y + 3.5, z);
+            outsideGroup.add(pod);
+
+            this.createStandingBrazier(x * 9.0 - 20, y, z * 9.0, 0xc026d3, 6.5, 42);
+            this.createStandingBrazier(x * 9.0 + 20, y, z * 9.0, 0xc026d3, 6.5, 42);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0xc026d3, `🌺 INFINITE SCARLET ROT SANCTUARY #${i+1} [ELEV ${y.toFixed(0)}m]`, "AEONIA BLOOM CANOPY • TOXIC MIRE • KINDRED OF ROT", "#f5d0fe", false);
+        }
+
+        // Archetype 7: 621 Holy Erdtree Divine Pantheons & Golden Colonnades
+        for (let i = 0; i < 621; i++) {
+            const angle = ((i + 0.3) / 621) * Math.PI * 2;
+            const dist = 1300 + (i % 14) * 90;
+            const x = Math.cos(angle) * dist - 1400;
+            const z = Math.sin(angle) * dist;
+            const y = 12.0 + (i % 3) * 4.0;
+
+            const pantheon = new THREE.Mesh(new THREE.CylinderGeometry(26, 32, 3.2, 24), goldMat);
+            pantheon.position.set(x, y - 1.6, z);
+            outsideGroup.add(pantheon);
+
+            for (let p = 0; p < 12; p++) {
+                const pang = (p / 12) * Math.PI * 2;
+                const pillar = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.8, 14, 8), goldMat);
+                pillar.position.set(x + Math.cos(pang) * 22, y + 7.0, z + Math.sin(pang) * 22);
+                outsideGroup.add(pillar);
+            }
+
+            this.createStandingBrazier(x * 9.0 - 30, y, z * 9.0, 0xeab308, 9.0, 65);
+            this.createStandingBrazier(x * 9.0 + 30, y, z * 9.0, 0xeab308, 9.0, 65);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0xeab308, `👑 INFINITE ERDTREE PANTHEON #${i+1} [ELEV +${y.toFixed(0)}m]`, "ROYAL LEYNDELL ALABASTER • GOLDEN ORDER TEMPLE • DIVINE DAIS", "#fef9c3", false);
+        }
+
+        // Archetype 8: 621 Shadow Realm Hornsent Spires & Ghostflame Wells
+        for (let i = 0; i < 621; i++) {
+            const angle = ((i + 0.7) / 621) * Math.PI * 2;
+            const dist = 1400 + (i % 15) * 95;
+            const x = Math.cos(angle) * dist - 1500;
+            const z = Math.sin(angle) * dist;
+            const y = 8.0 + (i % 4) * 3.5;
+
+            const well = new THREE.Mesh(new THREE.CylinderGeometry(22, 26, 2.8, 16), stoneMat);
+            well.position.set(x, y - 1.4, z);
+            outsideGroup.add(well);
+
+            const tower = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 6.0, 28, 8), new THREE.MeshStandardMaterial({
+                color: 0x09090b, roughness: 0.9, metalness: 0.4
+            }));
+            tower.position.set(x, y + 14.0, z);
+            outsideGroup.add(tower);
+
+            this.createStandingBrazier(x * 9.0 - 28, y, z * 9.0, 0x06b6d4, 8.5, 60);
+            this.createStandingBrazier(x * 9.0 + 28, y, z * 9.0, 0x06b6d4, 8.5, 60);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0x06b6d4, `⚡ INFINITE HORNSENT SPIRE #${i+1} [ELEV +${y.toFixed(0)}m]`, "ENIR-ILIM SHADOW MONOLITH • GHOSTFLAME WELL • SPIRAL TOWER", "#cffafe", false);
+        }
+    }
+
     buildMapDetailEnhancements() {
         // 2. Gothic Perched Gargoyles on Ramparts Overlooking the Citadel
         const gargoyleCoords = [
@@ -7363,9 +7641,9 @@ class DarkSoulsWorld {
         const shipGroup = new THREE.Group();
         this.shipGroup = shipGroup;
         shipGroup.name = 'spaceship_house_group';
-        const cx = -75;
+        const cx = -495;
         const cy = 0;
-        const cz = 40;
+        const cz = 360;
         shipGroup.position.set(cx, cy, cz);
 
         // Luminous Sci-Fi Materials for Dreadnought Starship
@@ -7987,7 +8265,7 @@ class DarkSoulsWorld {
 
         // 0. Dynamic Point Light Distance Culling (+35 to +50 FPS Forward Rendering Optimization)
         this.lightCullTimer = (this.lightCullTimer || 0) + delta;
-        if (this.lightCullTimer >= 0.10 && this.dynamicLights && this.dynamicLights.length > 0) {
+        if (this.lightCullTimer >= 0.08 && this.dynamicLights && this.dynamicLights.length > 0) {
             this.lightCullTimer = 0;
             const target = (window.game && window.game.playerMesh)
                 ? window.game.playerMesh.position
@@ -7997,24 +8275,8 @@ class DarkSoulsWorld {
                 const tx = target.x;
                 const ty = target.y;
                 const tz = target.z;
-                const len = this.dynamicLights.length;
-                const nearbyLights = [];
 
-                for (let i = 0; i < len; i++) {
-                    const l = this.dynamicLights[i];
-                    l.getWorldPosition(l.userData.worldPos);
-                    const dx = l.userData.worldPos.x - tx;
-                    const dy = l.userData.worldPos.y - ty;
-                    const dz = l.userData.worldPos.z - tz;
-                    const distSq = dx * dx + dy * dy + dz * dz;
-                    const maxDistSq = l.userData.maxDistSq || (65 * 65);
-
-                    if (distSq > maxDistSq) {
-                        l.visible = false;
-                    } else {
-                        nearbyLights.push({ light: l, distSq: distSq });
-                    }
-                }
+                this.cullDynamicLights(target);
 
                 // Spatial Region & Landmark Visibility Culling (+35 to +50 FPS Boost)
                 if (this.outsideGroup) {
@@ -8023,29 +8285,16 @@ class DarkSoulsWorld {
                     this.outsideGroup.visible = showOutside;
                 }
 
-                // Spaceship Bazaar & 30 Merchants Culling: Centered at (-75, 0, 40)
-                const dxShip = tx - (-75);
-                const dzShip = tz - 40;
+                // Spaceship Bazaar & 30 Merchants Culling: Centered at (-495, 0, 360)
+                const dxShip = tx - (-495);
+                const dzShip = tz - 360;
                 const distToShipSq = dxShip * dxShip + dzShip * dzShip;
-                const showShip = (tx <= -15) && (distToShipSq < 160 * 160);
+                const showShip = (distToShipSq < 180 * 180);
                 if (this.shipGroup) {
                     this.shipGroup.visible = showShip;
                 }
                 if (this.merchantParentGroup) {
                     this.merchantParentGroup.visible = showShip;
-                }
-
-                // Forward renderer optimization: Three.js shaders have maximum light uniform limits (typically 4-8)
-                // If there are more than 8 active nearby lights, enable the nearest 8 and disable the rest
-                if (nearbyLights.length > 8) {
-                    nearbyLights.sort((a, b) => a.distSq - b.distSq);
-                    for (let j = 0; j < nearbyLights.length; j++) {
-                        nearbyLights[j].light.visible = (j < 8);
-                    }
-                } else {
-                    for (let j = 0; j < nearbyLights.length; j++) {
-                        nearbyLights[j].light.visible = true;
-                    }
                 }
             }
         }

@@ -4634,8 +4634,9 @@ class DarkSoulsCombat {
 
                 const dist = Math.sqrt(px * px + pz * pz);
 
-                // 1. Safe Sanctuary: Mobs are NOT close to starting bonfire / base (26m radius safe zone)
-                if (dist < 26.0) return;
+                // 1. Safe Sanctuary: Firelink Courtyard starting base is completely peaceful (no mobs within 75m or central courtyard)
+                if (dist < 75.0) return;
+                if (Math.abs(px) < 65.0 && pz >= -100.0 && pz <= 35.0) return;
 
                 // Boss Arena sanctuary
                 if (px >= -22 && px <= 22 && pz >= 272 && pz <= 390) return;
@@ -4645,12 +4646,6 @@ class DarkSoulsCombat {
                 if (isMelee) {
                     meleeCount++;
                     if (meleeCount % 2 === 0) return;
-                }
-
-                // Starter Courtyard density: up to 6 distant sentries max
-                if (dist < 36.0) {
-                    if (starterZoneCount >= 6) return;
-                    starterZoneCount++;
                 }
 
                 // Clean spacing threshold (8.5m² / ~2.9m) to prevent mob clumping
@@ -4678,14 +4673,14 @@ class DarkSoulsCombat {
             });
         }
 
-        // 3X SERPENT SANCTUM MOBS (16 Mobs across descending halls featuring 30 Gorgon Medusa Variants)
+        // 3X SERPENT SANCTUM MOBS (16 Mobs safely positioned inside Serpent Sanctum halls from z=-2280 to -4500)
         const sanctumPositions = [
-            [-5.0, 0, -28.0], [5.0, 0, -28.0], [0, 0, -32.0],
-            [-10.0, -2.5, -45.0], [10.0, -2.5, -45.0], [0, -2.5, -50.0],
-            [-12.0, -2.5, -55.0], [12.0, -2.5, -55.0], [-6.0, -2.5, -62.0],
-            [6.0, -2.5, -62.0], [0, -2.5, -70.0], [-10.0, -4.0, -78.0],
-            [10.0, -4.0, -78.0], [-4.0, -4.0, -88.0], [4.0, -4.0, -88.0],
-            [0, -4.0, -92.0]
+            [-5.0, -1.0, -2280.0], [5.0, -1.0, -2280.0], [0, -1.5, -2320.0],
+            [-10.0, -3.5, -2480.0], [10.0, -3.5, -2480.0], [0, -3.5, -2600.0],
+            [-12.0, -3.5, -2800.0], [12.0, -3.5, -2800.0], [-6.0, -3.5, -3000.0],
+            [6.0, -3.5, -3000.0], [0, -3.5, -3200.0], [-10.0, -5.0, -4100.0],
+            [10.0, -5.0, -4100.0], [-4.0, -6.0, -4300.0], [4.0, -6.0, -4300.0],
+            [0, -6.0, -4500.0]
         ];
         sanctumPositions.forEach((pos, idx) => {
             const isGorgon = (idx % 2 === 1) || (idx >= 8);
@@ -4716,10 +4711,10 @@ class DarkSoulsCombat {
             [18.0, 6.0, 165.0], [18.0, 6.0, 190.0], [21.0, 6.0, 215.0],
             [21.0, 6.0, 240.0], [21.0, 6.0, 268.0],
             // Royal Viaduct Bridge Parapets & Sentries (y = 0.0)
-            [-7.5, 0.0, 45.0], [-7.5, 0.0, 75.0], [-7.5, 0.0, 110.0],
-            [-7.5, 0.0, 150.0], [-7.5, 0.0, 210.0],
-            // Courtyard Watch Sentries (firmly grounded at y = 0.0, z = 2.0 on solid courtyard paving)
-            [-12.0, 0.0, 2.0], [12.0, 0.0, 2.0]
+            [-7.5, 0.0, 65.0], [-7.5, 0.0, 95.0], [-7.5, 0.0, 130.0],
+            [-7.5, 0.0, 175.0], [-7.5, 0.0, 225.0],
+            // High Citadel Ramparts Watch (y = 6.0, situated far down the ramparts, outside courtyard)
+            [18.0, 6.0, 295.0], [21.0, 6.0, 315.0]
         ];
         archerPositions.forEach((pos, idx) => {
             const isRune = (idx % 2 === 1) || (idx >= 8 && idx <= 10);
@@ -6409,6 +6404,11 @@ equipWeapon(weaponId) {
 
     damagePlayer(damage, attackerPos) {
         if (this.isDead || this.isInvincible || this.isGodMode || this.cheatGodMode) return;
+        // Firelink Sanctuary Immunity: Player never takes any damage while resting or standing in the courtyard sanctuary
+        if (this.game && this.game.playerMesh) {
+            const p = this.game.playerMesh.position;
+            if (p.z <= 32.0 && p.z >= -2200.0 && Math.abs(p.x) <= 65.0) return;
+        }
         // Blacksmith Armor Tempering Reduction (System 301-330)
         if (this.game && this.game.blacksmith) {
             damage = Math.max(1, Math.round(damage * this.game.blacksmith.getArmorDamageReduction()));
@@ -7410,6 +7410,8 @@ equipWeapon(weaponId) {
     // ----------------------------------------------------
     spawnArrow(fromPos, targetPos, shooter) {
         if (!this.charFactory) return;
+        // Do not spawn arrows if target is within Firelink Courtyard Sanctuary
+        if (targetPos.z <= 32.0 && targetPos.z >= -2200.0 && Math.abs(targetPos.x) <= 65.0) return;
         const isMagic = !!(shooter && (shooter.isRuneArcher || (shooter.def && shooter.def.isRuneArcher) || (shooter.name && shooter.name.includes('RUNE'))));
         const arrowMesh = this.charFactory.createArrowMesh(isMagic);
         arrowMesh.position.copy(fromPos);
@@ -7482,6 +7484,12 @@ equipWeapon(weaponId) {
 
             // Check Player Collision
             if (playerPos && !this.isDead) {
+                // If player is inside Firelink Courtyard Sanctuary, projectiles harmlessly dissolve
+                if (playerPos.z <= 32.0 && playerPos.z >= -2200.0 && Math.abs(playerPos.x) <= 65.0) {
+                    this.game.scene.remove(arr.mesh);
+                    this.arrows.splice(i, 1);
+                    continue;
+                }
                 const chestPos = playerPos.clone().add(new THREE.Vector3(0, 1.1, 0));
                 const distToPlayer = arr.pos.distanceTo(chestPos);
 
@@ -7700,6 +7708,16 @@ equipWeapon(weaponId) {
             // 1. Far distance culling (>28m): completely freeze AI & hide mesh
             if (distSq > 28 * 28) {
                 if (e.mesh.visible) e.mesh.visible = false;
+                continue;
+            }
+
+            // Sanctuary Protection: Firelink starting hub is completely peaceful (no mob aggression or chasing)
+            if (playerPos.z <= 32.0 && playerPos.z >= -2200.0 && Math.abs(playerPos.x) <= 65.0) {
+                e.state = 'PATROL';
+                e.attackPhase = 'IDLE';
+                e.isAttacking = false;
+                e._burstCount = 0;
+                e._comboCount = 0;
                 continue;
             }
 
