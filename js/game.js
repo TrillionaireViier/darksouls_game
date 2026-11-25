@@ -51153,6 +51153,44 @@ window.DARK_SOULS_LOCATIONS = [
     { id: "loc_inf_45198_sunken_serpent_abyss_gorgon_cataco", name: "Sunken Serpent Abyss & Gorgon Catacombs - Primordial Venom Pools (Infinite Sector 314)", zone: "Sunken Serpent Abyss & Gorgon Catacombs", pos: [-561.2, -6.0, -29478.7], elev: "-6.0m", danger: "Tier VIII (Cataclysmic Godhead)", boss: "Starscourge Radahn", desc: "An infinite territory in Sunken Serpent Abyss & Gorgon Catacombs, holding ancient titan architecture, hidden fast-travel braziers, and mythical encounters.", light: 1.01 },
 ];
 
+// 5X COLOSSAL LOCATIONS EXPANSION: Multiply total fast-travel realms 5x across the 5x world
+(function expandLocations5x() {
+    const locs = window.DARK_SOULS_LOCATIONS;
+    if (!locs || locs._expanded5x) return;
+    locs._expanded5x = true;
+    const baseCount = locs.length;
+    const sectorTags = ['Outer Abyssal Rim', 'Astral Titan Expanse', 'Primordial Horizon', 'Eternal Eclipse Reach'];
+    const sectorOffsets = [
+        [1, 1, 1.85],
+        [-1, 1, 2.35],
+        [1, -1, 2.95],
+        [-1, -1, 3.65]
+    ];
+    for (let s = 0; s < 4; s++) {
+        const [sx, sz, mult] = sectorOffsets[s];
+        const tag = sectorTags[s];
+        for (let i = 0; i < baseCount; i++) {
+            const b = locs[i];
+            const bx = (Math.abs(b.pos[0]) > 100 ? b.pos[0] * 5.0 : b.pos[0] + sx * 12000);
+            const bz = (Math.abs(b.pos[2]) > 300 ? b.pos[2] * 5.0 : b.pos[2] + sz * 12000);
+            const nx = Math.round((bx + sx * ((i % 17) * 850 + 4500) * mult) * 10) / 10;
+            const nz = Math.round((bz + sz * ((i % 19) * 850 + 4500) * mult) * 10) / 10;
+            locs.push({
+                id: `loc_5x_s${s + 1}_${i}_${b.id.slice(0, 22)}`,
+                name: `${b.name} • [${tag}]`,
+                zone: b.zone,
+                pos: [nx, b.pos[1], nz],
+                elev: b.elev,
+                danger: b.danger,
+                boss: b.boss,
+                desc: b.desc,
+                light: b.light,
+                _scaled5x: true
+            });
+        }
+    }
+})();
+
 // Locations & Save Slot Global Window Helpers
 window.openLocationsModal = () => { if (window.game) window.game.openLocationsModal(); };
 window.closeLocationsModal = () => { if (window.game) window.game.closeLocationsModal(); };
