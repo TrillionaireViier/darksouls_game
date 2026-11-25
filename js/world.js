@@ -1873,6 +1873,7 @@ class DarkSoulsWorld {
         outsideGroup.scale.set(9.0, 1.0, 9.0); // TITAN X9 EXPANSION: 144km MEGALITHIC REALM
         this.buildTripledExpeditionBiomes(outsideGroup);
         this.buildCataclysmicMegalithBiomes(outsideGroup);
+        this.buildOmnipotentTitanBiomes(outsideGroup);
 
         // 1. Vast Forest Turf & Extended Outside Realm Ground Slab (Scaled 8x to 16,000m x 16,000m)
         const outdoorFloorGeo = new THREE.PlaneGeometry(16000, 16000);
@@ -6230,6 +6231,203 @@ class DarkSoulsWorld {
             this.createStandingBrazier(x * 9.0 - 26, y, z * 9.0, 0x06b6d4, 8.0, 55);
             this.createStandingBrazier(x * 9.0 + 26, y, z * 9.0, 0x06b6d4, 8.0, 55);
             this.createPathBeacon(x * 9.0, y, z * 9.0, 0x06b6d4, `⚡ HORNSENT SPIRAL SPIRE #${i+1} [ELEV +${y.toFixed(0)}m]`, "ENIR-ILIM SHADOW MONOLITH • GHOSTFLAME WELL • SPIRAL TOWER", "#cffafe", false);
+        }
+    }
+
+
+    // ========================================================================
+    // BUILD OMNIPOTENT TITAN BIOMES: 1,656 BRAND-NEW BESPOKE 3D LANDMARKS (Build V63)
+    // Triples physical in-world landmarks from 828 to 2,484 across the 144km realm!
+    // ========================================================================
+    buildOmnipotentTitanBiomes(outsideGroup) {
+        if (!outsideGroup) return;
+
+        const stoneMat = this.stoneMat;
+        const wallMat = this.wallMat;
+        const goldMat = this.goldMat || this.wallMat;
+
+        // Archetype 1: 210 Colossal Dragon Communion Shrines & Ancient Wyrm Roosts
+        for (let i = 0; i < 210; i++) {
+            const angle = (i / 210) * Math.PI * 2;
+            const dist = 750 + (i % 12) * 75;
+            const x = Math.cos(angle) * dist - 850;
+            const z = Math.sin(angle) * dist;
+            const y = 8.0 + (i % 4) * 3.5;
+
+            const dais = new THREE.Mesh(new THREE.CylinderGeometry(18, 22, 2.6, 16), stoneMat);
+            dais.position.set(x, y - 1.3, z);
+            outsideGroup.add(dais);
+
+            const skull = new THREE.Mesh(new THREE.ConeGeometry(3.5, 9.0, 5), this.boneMat || stoneMat);
+            skull.position.set(x, y + 4.0, z);
+            skull.rotation.z = Math.PI / 2 - 0.2;
+            outsideGroup.add(skull);
+
+            this.createStandingBrazier(x * 9.0 - 22, y, z * 9.0, 0xff4500, 7.5, 50);
+            this.createStandingBrazier(x * 9.0 + 22, y, z * 9.0, 0xff4500, 7.5, 50);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0xff4500, `🐉 OMNIPOTENT DRAGON ROOST #${i+1} [ELEV +${y.toFixed(0)}m]`, "TITAN DRACONIC ALTAR • WYRM NEST • RED LIGHTNING", "#ff8844", false);
+        }
+
+        // Archetype 2: 210 Primeval Current Observatories & Starfall Spires
+        for (let i = 0; i < 210; i++) {
+            const angle = ((i + 0.25) / 210) * Math.PI * 2;
+            const dist = 850 + (i % 10) * 80;
+            const x = Math.cos(angle) * dist - 950;
+            const z = Math.sin(angle) * dist;
+            const y = 10.0 + (i % 4) * 4.0;
+
+            const base = new THREE.Mesh(new THREE.BoxGeometry(36, 2.8, 36), stoneMat);
+            base.position.set(x, y - 1.4, z);
+            outsideGroup.add(base);
+
+            const prism = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 4.5, 20, 6), new THREE.MeshStandardMaterial({
+                color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.8, roughness: 0.15, metalness: 0.85
+            }));
+            prism.position.set(x, y + 10.0, z);
+            outsideGroup.add(prism);
+
+            this.createStandingBrazier(x * 9.0 - 24, y, z * 9.0, 0x38bdf8, 8.0, 55);
+            this.createStandingBrazier(x * 9.0 + 24, y, z * 9.0, 0x38bdf8, 8.0, 55);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0x38bdf8, `🌌 OMNIPOTENT STARFALL SPIRE #${i+1} [ELEV +${y.toFixed(0)}m]`, "AZUR PRIMEVAL CURRENT • GLINTSTONE MONOLITH • CELESTIAL", "#7dd3fc", false);
+        }
+
+        // Archetype 3: 210 Royal Mausoleums & Sunken Crypts
+        for (let i = 0; i < 210; i++) {
+            const angle = ((i + 0.5) / 210) * Math.PI * 2;
+            const dist = 680 + (i % 8) * 65;
+            const x = Math.cos(angle) * dist - 780;
+            const z = Math.sin(angle) * dist;
+            const y = -8.0 - (i % 4) * 3.0;
+
+            const crypt = new THREE.Mesh(new THREE.BoxGeometry(40, 2.6, 40), stoneMat);
+            crypt.position.set(x, y - 1.3, z);
+            outsideGroup.add(crypt);
+
+            const sarc = new THREE.Mesh(new THREE.BoxGeometry(5.5, 3.0, 11.0), wallMat);
+            sarc.position.set(x, y + 1.5, z);
+            outsideGroup.add(sarc);
+
+            this.createStandingBrazier(x * 9.0 - 22, y, z * 9.0, 0x10b981, 7.0, 45);
+            this.createStandingBrazier(x * 9.0 + 22, y, z * 9.0, 0x10b981, 7.0, 45);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0x10b981, `💀 OMNIPOTENT LORD MAUSOLEUM #${i+1} [ELEV ${y.toFixed(0)}m]`, "GRAVELORD OSSUARY • EMERALD GHOSTFIRE • PRIMEVAL SOULS", "#6ee7b7", false);
+        }
+
+        // Archetype 4: 210 Molten Magma Smelteries & Obsidian Caldera Basins
+        for (let i = 0; i < 210; i++) {
+            const angle = ((i + 0.75) / 210) * Math.PI * 2;
+            const dist = 920 + (i % 9) * 75;
+            const x = Math.cos(angle) * dist - 1020;
+            const z = Math.sin(angle) * dist;
+            const y = 6.0 + (i % 3) * 3.5;
+
+            const caldera = new THREE.Mesh(new THREE.CylinderGeometry(24, 30, 3.2, 16), new THREE.MeshStandardMaterial({
+                color: 0x18100c, roughness: 0.95
+            }));
+            caldera.position.set(x, y - 1.6, z);
+            outsideGroup.add(caldera);
+
+            const magma = new THREE.Mesh(new THREE.CylinderGeometry(16, 16, 0.6, 16), new THREE.MeshStandardMaterial({
+                color: 0xff3300, emissive: 0xe11d48, emissiveIntensity: 0.9
+            }));
+            magma.position.set(x, y + 0.1, z);
+            outsideGroup.add(magma);
+
+            this.createStandingBrazier(x * 9.0 - 26, y, z * 9.0, 0xf43f5e, 8.5, 60);
+            this.createStandingBrazier(x * 9.0 + 26, y, z * 9.0, 0xf43f5e, 8.5, 60);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0xf43f5e, `🌋 OMNIPOTENT SMELTER CALDERA #${i+1} [ELEV +${y.toFixed(0)}m]`, "CHAOS CRUCIBLE • BASALT LAVA CHANNEL • TITANITE FORGE", "#fda4af", false);
+        }
+
+        // Archetype 5: 210 Boreal Permafrost Keeps & Ice Spires
+        for (let i = 0; i < 210; i++) {
+            const angle = (i / 210) * Math.PI * 2;
+            const dist = 1000 + (i % 10) * 85;
+            const x = Math.cos(angle) * dist - 1100;
+            const z = Math.sin(angle) * dist;
+            const y = 14.0 + (i % 4) * 4.5;
+
+            const keep = new THREE.Mesh(new THREE.BoxGeometry(38, 2.8, 38), stoneMat);
+            keep.position.set(x, y - 1.4, z);
+            outsideGroup.add(keep);
+
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(4.0, 25.0, 6), new THREE.MeshStandardMaterial({
+                color: 0xbae6fd, emissive: 0x0ea5e9, emissiveIntensity: 0.5, transparent: true, opacity: 0.88
+            }));
+            spire.position.set(x, y + 12.5, z);
+            outsideGroup.add(spire);
+
+            this.createStandingBrazier(x * 9.0 - 26, y, z * 9.0, 0x0ea5e9, 7.5, 52);
+            this.createStandingBrazier(x * 9.0 + 26, y, z * 9.0, 0x0ea5e9, 7.5, 52);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0x0ea5e9, `❄️ OMNIPOTENT PERMAFROST KEEP #${i+1} [ELEV +${y.toFixed(0)}m]`, "ELEUM LOYCE CITADEL • BOREAL FROSTBITE • ICE THRONE", "#e0f2fe", false);
+        }
+
+        // Archetype 6: 210 Cursed Scarlet Rot Sanctuaries & Miasma Canopies
+        for (let i = 0; i < 210; i++) {
+            const angle = ((i + 0.35) / 210) * Math.PI * 2;
+            const dist = 580 + (i % 7) * 55;
+            const x = Math.cos(angle) * dist - 660;
+            const z = Math.sin(angle) * dist;
+            const y = -3.5 - (i % 3) * 2.5;
+
+            const platform = new THREE.Mesh(new THREE.BoxGeometry(28, 1.6, 28), this.woodMat || stoneMat);
+            platform.position.set(x, y - 0.8, z);
+            outsideGroup.add(platform);
+
+            const pod = new THREE.Mesh(new THREE.SphereGeometry(3.6, 8, 8), new THREE.MeshStandardMaterial({
+                color: 0xc026d3, emissive: 0x9333ea, emissiveIntensity: 0.65
+            }));
+            pod.position.set(x, y + 3.5, z);
+            outsideGroup.add(pod);
+
+            this.createStandingBrazier(x * 9.0 - 20, y, z * 9.0, 0xc026d3, 6.5, 42);
+            this.createStandingBrazier(x * 9.0 + 20, y, z * 9.0, 0xc026d3, 6.5, 42);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0xc026d3, `🌺 OMNIPOTENT SCARLET ROT SANCTUARY #${i+1} [ELEV ${y.toFixed(0)}m]`, "AEONIA BLOOM CANOPY • TOXIC MIRE • KINDRED OF ROT", "#f5d0fe", false);
+        }
+
+        // Archetype 7: 198 Holy Erdtree Divine Pantheons & Golden Colonnades
+        for (let i = 0; i < 198; i++) {
+            const angle = (i / 198) * Math.PI * 2;
+            const dist = 1080 + (i % 8) * 80;
+            const x = Math.cos(angle) * dist - 1180;
+            const z = Math.sin(angle) * dist;
+            const y = 12.0 + (i % 3) * 4.0;
+
+            const pantheon = new THREE.Mesh(new THREE.CylinderGeometry(26, 32, 3.2, 24), goldMat);
+            pantheon.position.set(x, y - 1.6, z);
+            outsideGroup.add(pantheon);
+
+            for (let p = 0; p < 12; p++) {
+                const pang = (p / 12) * Math.PI * 2;
+                const pillar = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.8, 14, 8), goldMat);
+                pillar.position.set(x + Math.cos(pang) * 22, y + 7.0, z + Math.sin(pang) * 22);
+                outsideGroup.add(pillar);
+            }
+
+            this.createStandingBrazier(x * 9.0 - 30, y, z * 9.0, 0xeab308, 9.0, 65);
+            this.createStandingBrazier(x * 9.0 + 30, y, z * 9.0, 0xeab308, 9.0, 65);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0xeab308, `👑 OMNIPOTENT ERDTREE PANTHEON #${i+1} [ELEV +${y.toFixed(0)}m]`, "ROYAL LEYNDELL ALABASTER • GOLDEN ORDER TEMPLE • DIVINE DAIS", "#fef9c3", false);
+        }
+
+        // Archetype 8: 198 Shadow Realm Hornsent Spires & Ghostflame Wells
+        for (let i = 0; i < 198; i++) {
+            const angle = ((i + 0.45) / 198) * Math.PI * 2;
+            const dist = 1150 + (i % 8) * 90;
+            const x = Math.cos(angle) * dist - 1260;
+            const z = Math.sin(angle) * dist;
+            const y = 8.0 + (i % 4) * 3.5;
+
+            const well = new THREE.Mesh(new THREE.CylinderGeometry(22, 26, 2.8, 16), stoneMat);
+            well.position.set(x, y - 1.4, z);
+            outsideGroup.add(well);
+
+            const tower = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 6.0, 28, 8), new THREE.MeshStandardMaterial({
+                color: 0x09090b, roughness: 0.9, metalness: 0.4
+            }));
+            tower.position.set(x, y + 14.0, z);
+            outsideGroup.add(tower);
+
+            this.createStandingBrazier(x * 9.0 - 28, y, z * 9.0, 0x06b6d4, 8.5, 60);
+            this.createStandingBrazier(x * 9.0 + 28, y, z * 9.0, 0x06b6d4, 8.5, 60);
+            this.createPathBeacon(x * 9.0, y, z * 9.0, 0x06b6d4, `⚡ OMNIPOTENT HORNSENT SPIRE #${i+1} [ELEV +${y.toFixed(0)}m]`, "ENIR-ILIM SHADOW MONOLITH • GHOSTFLAME WELL • SPIRAL TOWER", "#cffafe", false);
         }
     }
 
