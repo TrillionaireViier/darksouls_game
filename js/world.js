@@ -1278,10 +1278,11 @@ class DarkSoulsWorld {
         // 8. Citadel & Outside Realm Perimeter Failsafe (TITAN X9 EXPANSION: 144km breadth)
         // Firelink & Courtyard floor (z in [-20250, 4860], x in [-4050, 4050])
         if (x >= -4050 && x <= 4050 && z >= -20250 && z <= 4860) {
-            if (currentY === null || currentY >= -1.8) {
-                return 0.0;
+            // Only the subterranean West Catacombs trench drops to -4.92m; the courtyard is solidly grounded at 0.0m
+            if (x >= -25.5 && x <= -14.5 && z >= 22.0 && z <= 270.0 && (currentY !== null && currentY < -2.0)) {
+                return -4.92;
             }
-            return -4.92;
+            return 0.0;
         }
         // Outside Realm Vast Expanses (x in [-144000, -28], z in [-75000, 75000])
         if (x >= -144000 && x <= -28 && z >= -75000 && z <= 75000) {

@@ -7263,8 +7263,10 @@ equipWeapon(weaponId) {
             this.staggerTime = 0;
             this.poise = this.maxPoise || 100;
         } else if (this.poise <= 0) {
-            // Poise broken: rare player stun strictly 0.20s max, reduces down to 0.08s with level scaling
-            this.poise = 0;
+            // Poise broken: brief player stagger (0.20s max, down to 0.08s with level scaling)
+            // Immediately restore 45% poise buffer to prevent consecutive mob attacks from causing an infinite stunlock loop
+            this.poise = Math.round(this.maxPoise * 0.45);
+            this.poiseRegenDelay = 0.5;
             this.isStaggered = true;
             const playerStunDuration = Math.max(0.08, 0.20 - Math.min(0.12, (this.level - 1) * 0.005));
             this.staggerTime = playerStunDuration;
@@ -7942,11 +7944,11 @@ equipWeapon(weaponId) {
             this.stamina = Math.min(this.maxStamina, this.stamina + rate * delta);
         }
 
-        // 1b. Poise Regeneration (15 pts/sec after 3s delay)
+        // 1b. Poise Regeneration (rapid 45 pts/sec recovery after delay)
         if (this.poiseRegenDelay > 0) {
             this.poiseRegenDelay -= delta;
         } else if (this.poise < this.maxPoise) {
-            this.poise = Math.min(this.maxPoise, this.poise + 15 * delta);
+            this.poise = Math.min(this.maxPoise, this.poise + 45 * delta);
         }
 
         // 2. Roll Timer & Invincibility Frames (strictly 12 frames = 0.20s)

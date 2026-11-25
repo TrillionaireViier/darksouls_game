@@ -60,18 +60,18 @@ class CollisionSystem {
 
         // C. Flooded Catacombs Corridor (z in [22.0, 270.0], y < -2.0 - strictly subterranean only)
         if (pos.z >= 22.0 && pos.z <= 270.0 && y < -2.0) {
-            const minX = -24.0 + radius;
-            const maxX = -15.8 - radius;
+            const minX = -24.4 + radius;
+            const maxX = -15.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
             pos.z = Math.min(270.0 - radius, pos.z);
         }
 
-        // E. High Ramparts Walkway (z in [22.0, 95.0], y > 2.0)
-        if (pos.z >= 22.0 && pos.z <= 95.0 && y > 2.0) {
+        // E. High Ramparts Walkway (z in [22.0, 270.0], y > 2.0)
+        if (pos.z >= 22.0 && pos.z <= 270.0 && y > 2.0) {
             const minX = 14.8 + radius;
             const maxX = 25.2 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            pos.z = Math.min(94.5 - radius, pos.z);
+            pos.z = Math.min(270.0 - radius, pos.z);
         }
 
         // F. Courtyard Starting Arena (z in [-20250.0, 4860.0], x in [-4050.0, 4050.0]) - TITAN X9 EXPANSION!

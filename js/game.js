@@ -1955,12 +1955,18 @@ class DarkSoulsGame {
 
         // 3. TERRAIN ELEVATION & GRAVITY
         const pPos = this.playerMesh.position;
-        // ABYSS RESCUE: Prevent falling into infinite void
-        if (pPos.y < -12.0) {
-            this.teleportPlayer(0, 0, 0, "🔥 FIRELINK BONFIRE (RESCUED FROM ABYSS)");
+        const targetGroundY = this.world.getGroundHeight(pPos.x, pPos.z, pPos.y);
+
+        // ABYSS RESCUE: Only trigger if the player has genuinely fallen into the void below the world bedrock
+        // (Allows deep subterranean exploration at Ash Lake, Astel Void, and Catacombs down to -30m)
+        if (pPos.y < targetGroundY - 25.0 || pPos.y < -95.0) {
+            const respawnX = (this.lastBonfirePos && Math.abs(this.lastBonfirePos.x) < 4000) ? this.lastBonfirePos.x : 0;
+            const respawnY = (this.lastBonfirePos && Math.abs(this.lastBonfirePos.x) < 4000) ? this.lastBonfirePos.y : 0;
+            const respawnZ = (this.lastBonfirePos && Math.abs(this.lastBonfirePos.x) < 4000) ? this.lastBonfirePos.z : 5;
+            this.teleportPlayer(respawnX, respawnY, respawnZ, "🔥 FIRELINK BONFIRE (RESCUED FROM ABYSS)");
             return;
         }
-        const targetGroundY = this.world.getGroundHeight(pPos.x, pPos.z, pPos.y);
+
         const heightDiff = pPos.y - targetGroundY;
 
         if (heightDiff > 0.16 || this.playerVelocity.y < -0.2) {
@@ -3900,7 +3906,13 @@ class DarkSoulsGame {
 
         // Reset position to last rested bonfire / Firelink Hub (0, 0, 5) - NEVER spawn directly into the boss arena
         if (this.lastBonfirePos) {
-            this.playerMesh.position.copy(this.lastBonfirePos);
+            // Safety check: if lastBonfirePos is inside Taurus Demon arena (pz: 270 to 420) or an active boss arena, safely respawn at Firelink Courtyard (0, 0, 5)
+            const isInsideBossArena = (Math.abs(this.lastBonfirePos.x) <= 30 && this.lastBonfirePos.z >= 265 && this.lastBonfirePos.z <= 420);
+            if (isInsideBossArena) {
+                this.playerMesh.position.set(0, 0, 5);
+            } else {
+                this.playerMesh.position.copy(this.lastBonfirePos);
+            }
         } else {
             this.playerMesh.position.set(0, 0, 5);
         }
@@ -5738,8 +5750,11 @@ class DarkSoulsGame {
                 this.applyLocationBiome(loc);
                 this.showLocationBanner(loc);
 
-                // Save last active bonfire checkpoint
-                this.lastBonfirePos = this.playerMesh.position.clone();
+                // Save last active bonfire checkpoint ONLY if it is a safe territory, not an active boss colosseum
+                const isBossLair = !!(loc.bossId || loc.category === 'legendary' || loc.category === 'boss' || (loc.pos && Math.abs(loc.pos[0]) <= 30 && loc.pos[2] >= 265 && loc.pos[2] <= 420));
+                if (!isBossLair) {
+                    this.lastBonfirePos = this.playerMesh.position.clone();
+                }
 
                 // Spawn return waystone behind player if traveling outside hub
                 const isHub = (locationId === 'royal_bridge_arena' || locationId === 'undead_burg_courtyard' || locationId === 'undead_burg');
