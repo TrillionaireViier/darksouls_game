@@ -606,7 +606,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -2020, -780, 1992, 1560, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -2280, -820, 2252, 1640, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -681,6 +681,15 @@
                 this.drawZoneRect(ctx, -1915, 60, 40, 40, "rgba(70, 50, 15, 0.65)", "#f59e0b", "☀️ ANOR LONDO ROYAL CATHEDRAL (+22m)");
                 this.drawZoneRect(ctx, -1945, -200, 40, 40, "rgba(30, 25, 60, 0.65)", "#6366f1", "🦅 LOST BASTILLE IRON RAMPART (+18m)");
                 this.drawZoneRect(ctx, -1975, 420, 40, 40, "rgba(65, 45, 10, 0.65)", "#eab308", "🌪️ STORMVEIL GRAFTED COURTYARD (+12m)");
+                // 8 Brand-New Outside Realm Expeditions (V74 Expansion)
+                this.drawZoneRect(ctx, -2005, -260, 40, 40, "rgba(80, 40, 10, 0.65)", "#f59e0b", "☀️ KILN OF FIRST FLAME (+30m)");
+                this.drawZoneRect(ctx, -2035, 120, 40, 40, "rgba(25, 10, 40, 0.65)", "#8b5cf6", "🌑 CHASM OF THE ABYSS (-22m)");
+                this.drawZoneRect(ctx, -2065, -120, 40, 40, "rgba(10, 50, 70, 0.65)", "#38bdf8", "💎 CRYSTAL CAVE SEATH (+14m)");
+                this.drawZoneRect(ctx, -2095, 280, 40, 40, "rgba(35, 35, 45, 0.65)", "#64748b", "🪦 UNTENDED GRAVES GUNDYR (-12m)");
+                this.drawZoneRect(ctx, -2125, -380, 40, 40, "rgba(65, 50, 15, 0.65)", "#d97706", "🔔 UNDEAD CRYPT VELSTADT (-16m)");
+                this.drawZoneRect(ctx, -2155, 40, 40, 40, "rgba(70, 20, 20, 0.65)", "#ef4444", "🕰️ ASTRAL CLOCKTOWER (+20m)");
+                this.drawZoneRect(ctx, -2185, -220, 40, 40, "rgba(50, 20, 10, 0.65)", "#ea580c", "🐉 CALAMITY PEAK KALAMEET (+26m)");
+                this.drawZoneRect(ctx, -2215, 390, 40, 40, "rgba(60, 15, 25, 0.65)", "#dc2626", "⚡ DEEPROOT FORTISSAX (-8m)");
             }
 
             // 3. Draw All World Pins

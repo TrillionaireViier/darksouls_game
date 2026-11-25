@@ -67,8 +67,8 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 297 Legendary Boss Roster
-Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 265 legendary bosses across all Soulsborne eras:
+### 🌲 Outside Realm Apex Bosses & 305 Legendary Boss Roster
+Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 273 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
 - **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Scorched Dragonbarrow
@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (585 Fast-Travel Locations & 109 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (593 Fast-Travel Locations & 117 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 1,750 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 93 bespoke Outside locations, 92 active mob patrols, and 54 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 2,300 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 101 bespoke Outside locations, 100 active mob patrols, and 62 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V74 Expansion)
+1. **Black Knight Cinder Executioner (Charred Plate & Flaming Greatsword)**: Charred obsidian fluted armor radiating molten orange embers between plates, wielding a 3.4m Black Knight Greatsword with flaming overhead cleaves and a heavy iron kite shield.
+2. **Oolacile Bloathead Sorcerer (Bulbous Head & Abyss Dark Bead Catalyst)**: Deformed bloated head studded with glowing purple eye blisters, wielding a gnarled Oolacile wood catalyst firing shotgun bursts of primeval Dark Beads and homing dark souls.
+3. **Crystal Golem Prism Crusher (Faceted Cyan Crystal Spires & Fists)**: Monolithic translucent cyan crystalline golem with pointed shoulder spires and an inner prism chest core, pounding the ground with crystal shockwaves.
+4. **Grave Warden Kukri Assassin (Hooded Cowl & Dual Serrated Twinblades)**: Agile assassin wrapped in crimson-stained bandages and ragged skirts, executing spinning acrobatic bleed flurries with dual curved Warden Twinblades.
+5. **Undead Crypt Syan Knight (Gilded Royal Plate, Blue Cape & Syan Halberd)**: Regal royal knight in shining gold armor and flowing azure cape, wielding a long Syan Halberd and tower heater shield with disciplined thrust combinations.
+6. **Clocktower Enlarged Head Patient (Swollen Bandaged Head & Metal IV Pole)**: Erratic asylum patient with an enormous swollen head wrapped in gauze bandages, aggressively swinging a heavy steel IV pole stand weapon and glass medicine bottles.
+7. **Calamity Dragon Acolyte (Black Dragon Scale Mail & Calamity Sickle)**: Dragon-cult warrior draped in obsidian dragon scales and horned bone headdress, harvesting foes with a curved obsidian dragon sickle and orange calamity embers.
+8. **Crucible Knight Siluria (Tree Crown Helm, Holy Wings & Spiraling Tree Spear)**: Primordial red-gold plate champion with spiraling tree branch headdress, golden feathered wings, and the drill-pointed Siluria's Tree spear.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V74 Expansion)
+1. **Lord Gwyn, Ascended God of Sunlight & First Lord of Cinder (Kiln of the First Flame)**: Revered patriarch of Lordran crowned in radiating golden sunlight rays with flowing white beard, brandishing the 4.2m Greatsword of Blazing Sunlight and hurling golden Sunlight Spears (+30.0m elevation).
+2. **Manus, Ascended Father of the Primeval Abyss (Chasm of the Abyss)**: Gargantuan abyssal beast with a colossal 4.5m mutated razor-clawed arm, black abyss fur, 14 glowing red eyes, and a Primeval Catalyst casting catastrophic Dark Bead waves and Humanity rain (-22.0m elevation).
+3. **Seath the Scaleless, Blind Dragon of Primordial Moonlight (Crystal Cave)**: Monumental albino wyrm with six fluttering crystalline angel wings, smooth scale-less skin, four tentacle tails, and sweeping Moonlight Crystal breath geysers (+14.0m elevation).
+4. **Champion Gundyr, The Unbroken Vanguard (Untended Graves)**: Untended Graves gladiator in scarred dark iron plate with glowing red eyes, executing ferocious charge tackles, spinning halberd combos, and acrobatic dropkicks (-12.0m elevation).
+5. **Velstadt, The Royal Aegis & Dark Chime Sentinel (Undead Crypt)**: Towering champion in fluted bronze-gold bell armor and midnight velvet cape, wielding the 4.5m Sacred Chime Greathammer ringing resonant dark chime waves and hex blasts (-16.0m elevation).
+6. **Lady Maria of the Astral Clocktower (Astral Clocktower)**: Elegant Victorian hunter matriarch dual-wielding the split Rakuyo sabre and dagger, slashing with soaring arcs of incandescent bloodflame before a colossal astronomical clock dial (+20.0m elevation).
+7. **Black Dragon Kalameet, Bringer of Calamity (Oolacile Calamity Crater)**: Prehistoric four-legged obsidian dragon with massive bat wings and glowing orange Calamity Eye on forehead, unleashing telekinetic gravity levitation and black calamity flame (+26.0m elevation).
+8. **Lichdragon Fortissax, Deathblight Lightning Sovereign (Deeproot Depths)**: Four-winged ancient dragon scarred by Deathblight golden decay, dual-wielding two crackling 5.8m Red Lightning Spears crashing down with sonic thunder (-8.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V73 Expansion)
 1. **Lothric Winged Knight (Angelic Halberd & Golden Feather Wings)**: Bulky knight in golden rounded plate armor with magnificent arching feathered wings on the back, wielding a dual-bladed angelic halberd to perform spinning whirlwind attacks.

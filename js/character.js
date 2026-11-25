@@ -3927,6 +3927,23 @@ class DarkSoulsCharacters {
             return this.createRuinSentinelAutomaton(x, z, angle, y, mobDef);
         } else if (type.includes('blade_warhawk') || type.includes('stormveil_warhawk') || type.includes('warhawk')) {
             return this.createStormveilBladeWarhawk(x, z, angle, y, mobDef);
+        // === 8 BRAND-NEW BESPOKE 3D MOB DISPATCHES (V74 EXPANSION) ===
+        } else if (type.includes('black_knight_cinder') || type.includes('cinder_black_knight')) {
+            return this.createBlackKnightCinderExecutioner(x, z, angle, y, mobDef);
+        } else if (type.includes('oolacile_bloathead') || type.includes('bloathead_sorcerer')) {
+            return this.createOolacileBloatheadSorcerer(x, z, angle, y, mobDef);
+        } else if (type.includes('crystal_golem_prism') || type.includes('prism_crusher')) {
+            return this.createCrystalGolemPrismCrusher(x, z, angle, y, mobDef);
+        } else if (type.includes('grave_warden_kukri') || type.includes('warden_assassin')) {
+            return this.createGraveWardenKukriAssassin(x, z, angle, y, mobDef);
+        } else if (type.includes('undead_crypt_syan') || type.includes('syan_knight')) {
+            return this.createUndeadCryptSyanKnight(x, z, angle, y, mobDef);
+        } else if (type.includes('clocktower_patient') || type.includes('enlarged_head_patient')) {
+            return this.createClocktowerPatientMob(x, z, angle, y, mobDef);
+        } else if (type.includes('calamity_dragon_acolyte') || type.includes('calamity_acolyte')) {
+            return this.createCalamityDragonAcolyte(x, z, angle, y, mobDef);
+        } else if (type.includes('crucible_knight_siluria') || type.includes('knight_siluria')) {
+            return this.createCrucibleKnightSiluria(x, z, angle, y, mobDef);
         }
 
         const root = new THREE.Group();
@@ -27816,6 +27833,1022 @@ class DarkSoulsCharacters {
 
         root.scale.set(4.6, 4.6, 4.6);
         root.userData = { bodyGroup, auraLight: godrickAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // ========================================================================
+    // 8 BRAND-NEW BESPOKE 3D MOB MODELS (V74 EXPANSION)
+    // ========================================================================
+
+    // 1. BLACK KNIGHT CINDER EXECUTIONER (Charred Plate & Flaming Greatsword)
+    createBlackKnightCinderExecutioner(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.05;
+        root.add(bodyGroup);
+
+        const charredPlateMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.45, metalness: 0.85 });
+        const cinderJointMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 2.5 });
+        const bladeSteelMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.3, metalness: 0.9 });
+
+        // Heavy Fluted Charred Cuirass
+        const cuirass = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.25, 0.65), charredPlateMat);
+        bodyGroup.add(cuirass);
+
+        // Glowing Cinder Rib Fissures
+        for (let r = 0; r < 3; r++) {
+            const rib = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.08, 0.67), cinderJointMat);
+            rib.position.set(0, 0.25 - r * 0.22, 0);
+            bodyGroup.add(rib);
+        }
+
+        // Horned Black Knight Barbute Helm
+        const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.32, 0.6, 8), charredPlateMat);
+        helm.position.set(0, 0.95, 0);
+        bodyGroup.add(helm);
+
+        // Swept-Back Horn Crests
+        for (let hSide of [-1, 1]) {
+            const horn = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.7, 6), charredPlateMat);
+            horn.position.set(hSide * 0.35, 1.15, -0.15);
+            horn.rotation.z = -hSide * 0.45;
+            horn.rotation.x = -0.35;
+            bodyGroup.add(horn);
+        }
+
+        // 3.4m Black Knight Greatsword in Right Hand
+        const sword = new THREE.Mesh(new THREE.BoxGeometry(0.12, 3.4, 0.45), bladeSteelMat);
+        sword.position.set(0.65, 0.5, 0.35);
+        sword.rotation.x = 0.2;
+        bodyGroup.add(sword);
+
+        const flameEdge = new THREE.Mesh(new THREE.BoxGeometry(0.14, 3.2, 0.08), cinderJointMat);
+        flameEdge.position.set(0.65, 0.5, 0.58);
+        flameEdge.rotation.x = 0.2;
+        bodyGroup.add(flameEdge);
+
+        // Charcoal Kite Shield in Left Hand
+        const shield = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.4, 0.8), charredPlateMat);
+        shield.position.set(-0.65, 0.2, 0.25);
+        bodyGroup.add(shield);
+
+        // Armored Legs
+        for (let l of [-0.28, 0.28]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.14, 0.95, 8), charredPlateMat);
+            leg.position.set(l, -0.95, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.45, 1.45, 1.45);
+        root.userData = { bodyGroup, isMob: true, mobDef };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 2. OOLACILE BLOATHEAD SORCERER (Bulbous Head & Abyss Dark Bead Catalyst)
+    createOolacileBloatheadSorcerer(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.0;
+        root.add(bodyGroup);
+
+        const fleshRagsMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.9 });
+        const bloatHeadMat = new THREE.MeshStandardMaterial({ color: 0xa16207, roughness: 0.85 });
+        const darkEyeMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, emissive: 0x7e22ce, emissiveIntensity: 2.8 });
+        const woodCatalystMat = new THREE.MeshStandardMaterial({ color: 0x292524, roughness: 0.8 });
+
+        // Shriveled Torso in Tattered Rags
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 1.1, 8), fleshRagsMat);
+        bodyGroup.add(torso);
+
+        // Enormous Bulbous Bloathead
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.72, 10, 10), bloatHeadMat);
+        head.scale.set(1.15, 1.35, 1.1);
+        head.position.set(0, 1.15, 0.1);
+        bodyGroup.add(head);
+
+        // Dozens of Glowing Purple Blister Eyes
+        for (let e = 0; e < 8; e++) {
+            const eAngle = (e / 8) * Math.PI * 2;
+            const eye = new THREE.Mesh(new THREE.SphereGeometry(0.12, 6, 6), darkEyeMat);
+            eye.position.set(Math.cos(eAngle) * 0.65, 1.15 + (e % 3) * 0.18, Math.sin(eAngle) * 0.55 + 0.1);
+            bodyGroup.add(eye);
+        }
+
+        // Twisted Branch Catalyst in Right Hand
+        const catalyst = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 2.2, 6), woodCatalystMat);
+        catalyst.position.set(0.55, 0.35, 0.35);
+        catalyst.rotation.x = 0.25;
+        bodyGroup.add(catalyst);
+
+        // Orbiting Humanity Dark Bead
+        const darkOrb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), darkEyeMat);
+        darkOrb.position.set(0.55, 1.5, 0.55);
+        bodyGroup.add(darkOrb);
+
+        // Spindly Legs
+        for (let l of [-0.22, 0.22]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.9, 6), fleshRagsMat);
+            leg.position.set(l, -0.9, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.3, 1.3, 1.3);
+        root.userData = { bodyGroup, isMob: true, mobDef };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 3. CRYSTAL GOLEM PRISM CRUSHER (Faceted Cyan Crystal Spires & Fists)
+    createCrystalGolemPrismCrusher(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.1;
+        root.add(bodyGroup);
+
+        const cyanCrystalMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.2, roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.88 });
+        const corePrismMat = new THREE.MeshStandardMaterial({ color: 0xe0f2fe, emissive: 0x38bdf8, emissiveIntensity: 3.5 });
+
+        // Faceted Crystal Torso
+        const torso = new THREE.Mesh(new THREE.DodecahedronGeometry(0.85), cyanCrystalMat);
+        torso.scale.set(1.2, 1.1, 0.9);
+        bodyGroup.add(torso);
+
+        // Glowing Cyan Core Prism in Chest
+        const core = new THREE.Mesh(new THREE.OctahedronGeometry(0.4), corePrismMat);
+        core.position.set(0, 0.1, 0.6);
+        bodyGroup.add(core);
+
+        // Faceted Crystal Head
+        const head = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.85, 5), cyanCrystalMat);
+        head.position.set(0, 1.05, 0);
+        bodyGroup.add(head);
+
+        // Shoulder Crystal Spire Formations
+        for (let s of [-1, 1]) {
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(0.25, 1.1, 5), cyanCrystalMat);
+            spire.position.set(s * 0.95, 0.8, -0.15);
+            spire.rotation.z = -s * 0.45;
+            bodyGroup.add(spire);
+        }
+
+        // Heavy Crystalline Arms with Boulder Fists
+        for (let a of [-1, 1]) {
+            const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.35, 1.3, 6), cyanCrystalMat);
+            arm.position.set(a * 0.95, 0, 0.2);
+            arm.rotation.z = -a * 0.25;
+            bodyGroup.add(arm);
+
+            const fist = new THREE.Mesh(new THREE.DodecahedronGeometry(0.45), cyanCrystalMat);
+            fist.position.set(a * 1.15, -0.65, 0.35);
+            bodyGroup.add(fist);
+        }
+
+        // Faceted Crystal Legs
+        for (let l of [-0.35, 0.35]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.95, 6), cyanCrystalMat);
+            leg.position.set(l, -0.95, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.5, 1.5, 1.5);
+        root.userData = { bodyGroup, isMob: true, mobDef };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 4. GRAVE WARDEN KUKRI ASSASSIN (Hooded Robes & Dual Serrated Twinblades)
+    createGraveWardenKukriAssassin(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.0;
+        root.add(bodyGroup);
+
+        const crimsonRobeMat = new THREE.MeshStandardMaterial({ color: 0x881337, roughness: 0.75 });
+        const steelBladeMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.25, metalness: 0.9 });
+        const bleedGlowMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x991b1b, emissiveIntensity: 2.2 });
+
+        // Slender Robed Torso
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.48, 1.1, 8), crimsonRobeMat);
+        bodyGroup.add(torso);
+
+        // Deep Hooded Assassin Cowl
+        const hood = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), crimsonRobeMat);
+        hood.position.set(0, 0.85, 0.05);
+        bodyGroup.add(hood);
+
+        // Dual Serrated Curved Warden Twinblades (Kukris)
+        for (let s of [-1, 1]) {
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.4, 0.22), steelBladeMat);
+            blade.position.set(s * 0.65, 0.2, 0.35);
+            blade.rotation.x = 0.4;
+            blade.rotation.z = s * 0.35;
+            bodyGroup.add(blade);
+
+            const bleedEdge = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.3, 0.05), bleedGlowMat);
+            bleedEdge.position.set(s * 0.65, 0.2, 0.46);
+            bleedEdge.rotation.x = 0.4;
+            bleedEdge.rotation.z = s * 0.35;
+            bodyGroup.add(bleedEdge);
+        }
+
+        // Bandaged Agile Legs
+        for (let l of [-0.22, 0.22]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.95, 6), crimsonRobeMat);
+            leg.position.set(l, -0.95, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.35, 1.35, 1.35);
+        root.userData = { bodyGroup, isMob: true, mobDef };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 5. UNDEAD CRYPT SYAN KNIGHT (Gilded Royal Plate, Blue Cape & Syan Halberd)
+    createUndeadCryptSyanKnight(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.05;
+        root.add(bodyGroup);
+
+        const goldPlateMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.3, metalness: 0.85 });
+        const royalBlueMat = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.6 });
+        const steelSpearMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.2, metalness: 0.9 });
+
+        // Royal Cuirass
+        const cuirass = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.2, 0.55), goldPlateMat);
+        bodyGroup.add(cuirass);
+
+        // Fluted Closed Knight Helm with Feather Crest
+        const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.3, 0.55, 8), goldPlateMat);
+        helm.position.set(0, 0.95, 0);
+        bodyGroup.add(helm);
+
+        const plume = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.5, 6), royalBlueMat);
+        plume.position.set(0, 1.3, -0.1);
+        plume.rotation.x = -0.3;
+        bodyGroup.add(plume);
+
+        // Flowing Royal Blue Cape
+        const cape = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.5, 0.06), royalBlueMat);
+        cape.position.set(0, 0.1, -0.32);
+        cape.rotation.x = 0.1;
+        bodyGroup.add(cape);
+
+        // Syan Halberd in Right Hand
+        const halberd = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 3.2, 8), goldPlateMat);
+        halberd.position.set(0.65, 0.45, 0.25);
+        halberd.rotation.x = 0.2;
+        bodyGroup.add(halberd);
+
+        const spearTip = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.8, 6), steelSpearMat);
+        spearTip.position.set(0.65, 1.95, 0.55);
+        spearTip.rotation.x = 0.2;
+        bodyGroup.add(spearTip);
+
+        // Gilded Heater Shield in Left Hand
+        const shield = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.25, 0.65), goldPlateMat);
+        shield.position.set(-0.6, 0.2, 0.2);
+        bodyGroup.add(shield);
+
+        // Armored Legs
+        for (let l of [-0.25, 0.25]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.13, 0.95, 8), goldPlateMat);
+            leg.position.set(l, -0.95, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.4, 1.4, 1.4);
+        root.userData = { bodyGroup, isMob: true, mobDef };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 6. CLOCKTOWER PATIENT MOB (Enlarged Bandaged Head & Metal IV Pole Stand)
+    createClocktowerPatientMob(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.0;
+        root.add(bodyGroup);
+
+        const patientSmockMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d8, roughness: 0.9 });
+        const bandageHeadMat = new THREE.MeshStandardMaterial({ color: 0xfef08a, roughness: 0.85 });
+        const poleSteelMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.3, metalness: 0.8 });
+        const fluidFlaskMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 1.8, transparent: true, opacity: 0.8 });
+
+        // Slouched Shuffling Torso in Hospital Smock
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 1.05, 8), patientSmockMat);
+        torso.rotation.x = 0.15;
+        bodyGroup.add(torso);
+
+        // Enormous Swollen Bandaged Head
+        const bigHead = new THREE.Mesh(new THREE.SphereGeometry(0.82, 10, 10), bandageHeadMat);
+        bigHead.scale.set(1.2, 1.35, 1.25);
+        bigHead.position.set(0, 1.25, 0.2);
+        bodyGroup.add(bigHead);
+
+        // Heavy Metal IV Pole Stand Weapon in Right Hand
+        const ivPole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.8, 6), poleSteelMat);
+        ivPole.position.set(0.55, 0.3, 0.35);
+        ivPole.rotation.x = 0.2;
+        bodyGroup.add(ivPole);
+
+        // Hanging Fluid Flask
+        const flask = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.35, 8), fluidFlaskMat);
+        flask.position.set(0.55, 1.5, 0.55);
+        bodyGroup.add(flask);
+
+        // Shuffling Legs
+        for (let l of [-0.22, 0.22]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.9, 6), patientSmockMat);
+            leg.position.set(l, -0.9, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.3, 1.3, 1.3);
+        root.userData = { bodyGroup, isMob: true, mobDef };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 7. CALAMITY DRAGON ACOLYTE (Black Dragon Scale Mail & Calamity Sickle)
+    createCalamityDragonAcolyte(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.0;
+        root.add(bodyGroup);
+
+        const dragonScaleMat = new THREE.MeshStandardMaterial({ color: 0x292524, roughness: 0.5, metalness: 0.7 });
+        const calamityOrangeMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 2.8 });
+        const obsidianSickleMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.25, metalness: 0.9 });
+
+        // Dragon Scale Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.75, 1.15, 0.5), dragonScaleMat);
+        bodyGroup.add(torso);
+
+        // Horned Dragon Headdress with Calamity Eye
+        const head = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.7, 6), dragonScaleMat);
+        head.position.set(0, 0.95, 0.1);
+        head.rotation.x = -0.3;
+        bodyGroup.add(head);
+
+        const calEye = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 6), calamityOrangeMat);
+        calEye.position.set(0, 1.05, 0.25);
+        bodyGroup.add(calEye);
+
+        // Articulated Dragon Tail on Lower Back
+        const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.05, 1.5, 6), dragonScaleMat);
+        tail.position.set(0, -0.35, -0.65);
+        tail.rotation.x = -0.7;
+        bodyGroup.add(tail);
+
+        // Curved Obsidian Dragon Sickle in Right Hand
+        const sickle = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.08, 6, 12, Math.PI), obsidianSickleMat);
+        sickle.position.set(0.65, 0.35, 0.35);
+        sickle.rotation.y = Math.PI / 2;
+        bodyGroup.add(sickle);
+
+        // Scaled Legs
+        for (let l of [-0.24, 0.24]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.12, 0.9, 6), dragonScaleMat);
+            leg.position.set(l, -0.9, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.35, 1.35, 1.35);
+        root.userData = { bodyGroup, isMob: true, mobDef };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 8. CRUCIBLE KNIGHT SILURIA (Tree Crown Helm, Holy Wings & Spiraling Tree Spear)
+    createCrucibleKnightSiluria(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.1;
+        root.add(bodyGroup);
+
+        const redGoldMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.35, metalness: 0.8 });
+        const holyGoldMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xca8a04, emissiveIntensity: 2.2 });
+        const treeCrownMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.3, metalness: 0.85 });
+
+        // Heavy Red-Gold Cuirass
+        const cuirass = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.25, 0.6), redGoldMat);
+        bodyGroup.add(cuirass);
+
+        // Siluria Tree Branch Crown Helm
+        const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.32, 0.55, 8), redGoldMat);
+        helm.position.set(0, 0.95, 0);
+        bodyGroup.add(helm);
+
+        // Branching Tree Horns
+        for (let bSide of [-1, 1]) {
+            const branch = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.8, 6), treeCrownMat);
+            branch.position.set(bSide * 0.35, 1.35, 0);
+            branch.rotation.z = -bSide * 0.5;
+            bodyGroup.add(branch);
+        }
+
+        // Feathered Crucible Wings on Back
+        for (let wSide of [-1, 1]) {
+            const wing = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.4, 0.6), holyGoldMat);
+            wing.position.set(wSide * 0.55, 0.35, -0.45);
+            wing.rotation.y = wSide * 0.4;
+            wing.rotation.z = wSide * 0.3;
+            bodyGroup.add(wing);
+        }
+
+        // Spiraling Siluria's Tree Spear with Drill Tip
+        const spearShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 3.6, 8), redGoldMat);
+        spearShaft.position.set(0.65, 0.5, 0.3);
+        spearShaft.rotation.x = 0.2;
+        bodyGroup.add(spearShaft);
+
+        const drillTip = new THREE.Mesh(new THREE.ConeGeometry(0.25, 1.2, 8), holyGoldMat);
+        drillTip.position.set(0.65, 2.2, 0.65);
+        drillTip.rotation.x = 0.2;
+        bodyGroup.add(drillTip);
+
+        // Heavy Crucible Greatshield in Left Hand
+        const shield = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.45, 0.75), redGoldMat);
+        shield.position.set(-0.65, 0.25, 0.25);
+        bodyGroup.add(shield);
+
+        // Armored Legs
+        for (let l of [-0.28, 0.28]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.15, 0.95, 8), redGoldMat);
+            leg.position.set(l, -0.95, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.45, 1.45, 1.45);
+        root.userData = { bodyGroup, isMob: true, mobDef };
+        this.scene.add(root);
+        return root;
+    }
+
+    // ========================================================================
+    // 8 BRAND-NEW APEX OUTSIDE BOSS 3D MODELS (V74 EXPANSION)
+    // ========================================================================
+
+    // 1. LORD GWYN, ASCENDED GOD OF SUNLIGHT & FIRST LORD OF CINDER
+    createLordGwynSunlightGod(x, z) {
+        const root = new THREE.Group();
+        const y = this.world ? this.world.getGroundHeight(x, z) : 30.0;
+        root.position.set(x, y, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.3;
+        root.add(bodyGroup);
+
+        const gwynRobeMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.85 });
+        const sunlightGoldMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.3, metalness: 0.85 });
+        const flameBladeMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xea580c, emissiveIntensity: 3.5 });
+        const whiteHairMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.9 });
+
+        // Regal Torso in Gray Robes & Gold Vambraces
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(1.4, 2.0, 0.9), gwynRobeMat);
+        bodyGroup.add(torso);
+
+        // Flowing White Beard & Hair
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.48, 8, 8), gwynRobeMat);
+        head.position.set(0, 1.45, 0);
+        bodyGroup.add(head);
+
+        const beard = new THREE.Mesh(new THREE.ConeGeometry(0.38, 1.1, 8), whiteHairMat);
+        beard.position.set(0, 1.0, 0.35);
+        beard.rotation.x = -0.2;
+        bodyGroup.add(beard);
+
+        // Radiating Spiked Crown of Sunlight
+        for (let s = 0; s < 8; s++) {
+            const sAngle = (s / 8) * Math.PI * 2;
+            const spike = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.8, 6), sunlightGoldMat);
+            spike.position.set(Math.cos(sAngle) * 0.42, 1.85, Math.sin(sAngle) * 0.42);
+            spike.rotation.z = -Math.cos(sAngle) * 0.4;
+            spike.rotation.x = Math.sin(sAngle) * 0.4;
+            bodyGroup.add(spike);
+        }
+
+        // 4.2m Greatsword of Blazing Sunlight in Right Hand
+        const sword = new THREE.Mesh(new THREE.BoxGeometry(0.18, 4.2, 0.65), flameBladeMat);
+        sword.position.set(1.35, 0.8, 0.45);
+        sword.rotation.x = 0.25;
+        bodyGroup.add(sword);
+
+        // Golden Sunlight Spear in Left Hand
+        const sunSpear = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 3.8, 8), sunlightGoldMat);
+        sunSpear.position.set(-1.25, 0.6, 0.3);
+        sunSpear.rotation.x = -0.2;
+        bodyGroup.add(sunSpear);
+
+        // Robed Lower Body
+        const robeLower = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.95, 1.6, 8), gwynRobeMat);
+        robeLower.position.set(0, -1.0, 0);
+        bodyGroup.add(robeLower);
+
+        const gwynAura = new THREE.PointLight(0xf59e0b, 8.0, 65.0);
+        gwynAura.position.set(0, 1.5, 0);
+        bodyGroup.add(gwynAura);
+
+        root.scale.set(4.4, 4.4, 4.4);
+        root.userData = { bodyGroup, auraLight: gwynAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 2. MANUS, ASCENDED FATHER OF THE PRIMEVAL ABYSS
+    createManusFatherOfAbyssAscended(x, z) {
+        const root = new THREE.Group();
+        const y = this.world ? this.world.getGroundHeight(x, z) : -22.0;
+        root.position.set(x, y, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.4;
+        root.add(bodyGroup);
+
+        const abyssFurMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.95 });
+        const darkCrimsonMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xb91c1c, emissiveIntensity: 3.0 });
+        const voidCatalystMat = new THREE.MeshStandardMaterial({ color: 0x581c87, emissive: 0x3b0764, emissiveIntensity: 2.5 });
+
+        // Hulking Monstrous Beast Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.6, 2.0), abyssFurMat);
+        bodyGroup.add(torso);
+
+        // Horrific Horned Head with 14 Crimson Eyes
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.85, 8, 8), abyssFurMat);
+        head.position.set(0, 1.8, 0.6);
+        bodyGroup.add(head);
+
+        // Massive Curved Beast Horns
+        for (let hSide of [-1, 1]) {
+            const horn = new THREE.Mesh(new THREE.ConeGeometry(0.35, 2.2, 6), abyssFurMat);
+            horn.position.set(hSide * 0.9, 2.6, 0.4);
+            horn.rotation.z = -hSide * 0.6;
+            horn.rotation.x = -0.4;
+            bodyGroup.add(horn);
+        }
+
+        // Multiple Glowing Crimson Eyes
+        for (let e = 0; e < 10; e++) {
+            const ex = (e % 5 - 2) * 0.22;
+            const ey = 1.8 + Math.floor(e / 5) * 0.25;
+            const eye = new THREE.Mesh(new THREE.SphereGeometry(0.12, 6, 6), darkCrimsonMat);
+            eye.position.set(ex, ey, 1.4);
+            bodyGroup.add(eye);
+        }
+
+        // Gargantuan Mutated Left Claw Arm (4.5m long)
+        const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.95, 3.8, 8), abyssFurMat);
+        leftArm.position.set(-2.2, 0.4, 1.0);
+        leftArm.rotation.z = 0.55;
+        leftArm.rotation.x = 0.3;
+        bodyGroup.add(leftArm);
+
+        // 4 Razor Claws on Hand
+        for (let c = 0; c < 4; c++) {
+            const claw = new THREE.Mesh(new THREE.ConeGeometry(0.2, 1.4, 6), abyssFurMat);
+            claw.position.set(-3.2 + c * 0.4, -1.2, 1.8);
+            claw.rotation.x = Math.PI / 3;
+            bodyGroup.add(claw);
+        }
+
+        // Right Arm Holding Primeval Catalyst
+        const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 2.4, 8), abyssFurMat);
+        rightArm.position.set(1.8, 0.6, 0.4);
+        rightArm.rotation.z = -0.3;
+        bodyGroup.add(rightArm);
+
+        const catalyst = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.22, 4.8, 8), voidCatalystMat);
+        catalyst.position.set(2.4, 0.8, 0.8);
+        catalyst.rotation.x = 0.25;
+        bodyGroup.add(catalyst);
+
+        // Powerful Squat Legs
+        for (let l of [-0.85, 0.85]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.75, 1.8, 8), abyssFurMat);
+            leg.position.set(l, -1.4, 0);
+            bodyGroup.add(leg);
+        }
+
+        const manusAura = new THREE.PointLight(0xa855f7, 8.0, 60.0);
+        manusAura.position.set(0, 1.5, 0);
+        bodyGroup.add(manusAura);
+
+        root.scale.set(4.8, 4.8, 4.8);
+        root.userData = { bodyGroup, auraLight: manusAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 3. SEATH THE SCALELESS, BLIND DRAGON OF PRIMORDIAL MOONLIGHT
+    createSeathPrimordialMoonlight(x, z) {
+        const root = new THREE.Group();
+        const y = this.world ? this.world.getGroundHeight(x, z) : 14.0;
+        root.position.set(x, y, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.4;
+        root.add(bodyGroup);
+
+        const albinoFleshMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.35, metalness: 0.1 });
+        const crystalWingMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.2, transparent: true, opacity: 0.78 });
+        const moonlightBreathMat = new THREE.MeshStandardMaterial({ color: 0xe0f2fe, emissive: 0x38bdf8, emissiveIntensity: 3.5 });
+
+        // Monumental Scaleless Albino Body
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.4, 3.2, 10), albinoFleshMat);
+        body.rotation.x = Math.PI / 4;
+        bodyGroup.add(body);
+
+        // Horned Blind Dragon Head
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 1.2, 2.6, 8), albinoFleshMat);
+        neck.position.set(0, 1.8, 1.2);
+        neck.rotation.x = -Math.PI / 5;
+        bodyGroup.add(neck);
+
+        const dHead = new THREE.Mesh(new THREE.ConeGeometry(0.95, 2.4, 6), albinoFleshMat);
+        dHead.position.set(0, 2.8, 2.2);
+        dHead.rotation.x = Math.PI / 3;
+        bodyGroup.add(dHead);
+
+        // Moonlight Breath Geyser Core in Mouth
+        const breathCore = new THREE.Mesh(new THREE.DodecahedronGeometry(0.65), moonlightBreathMat);
+        breathCore.position.set(0, 3.3, 3.0);
+        bodyGroup.add(breathCore);
+
+        // Six Translucent Crystalline Angel Wings
+        for (let w = 0; w < 3; w++) {
+            for (let side of [-1, 1]) {
+                const wing = new THREE.Mesh(new THREE.BoxGeometry(0.15, 3.5 - w * 0.4, 2.0 - w * 0.2), crystalWingMat);
+                wing.position.set(side * (1.8 + w * 0.6), 1.2 + w * 0.8, -0.4 - w * 0.6);
+                wing.rotation.y = side * (0.4 + w * 0.2);
+                wing.rotation.z = side * (0.35 + w * 0.15);
+                bodyGroup.add(wing);
+            }
+        }
+
+        // Four Undulating Serpentine Tentacle Tails
+        for (let t = 0; t < 4; t++) {
+            const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.15, 4.5, 6), albinoFleshMat);
+            tail.position.set((t - 1.5) * 1.1, -1.0, -2.4);
+            tail.rotation.x = -Math.PI / 3;
+            tail.rotation.y = (t - 1.5) * 0.25;
+            bodyGroup.add(tail);
+        }
+
+        const seathAura = new THREE.PointLight(0x38bdf8, 8.5, 65.0);
+        seathAura.position.set(0, 2.0, 0);
+        bodyGroup.add(seathAura);
+
+        root.scale.set(5.0, 5.0, 5.0);
+        root.userData = { bodyGroup, auraLight: seathAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 4. CHAMPION GUNDYR, THE UNBROKEN IRON VANGUARD
+    createChampionGundyrUnbroken(x, z) {
+        const root = new THREE.Group();
+        const y = this.world ? this.world.getGroundHeight(x, z) : -12.0;
+        root.position.set(x, y, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.35;
+        root.add(bodyGroup);
+
+        const ironGladiatorMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.85 });
+        const redCombatEyeMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xdc2626, emissiveIntensity: 3.2 });
+        const halberdSteelMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.25, metalness: 0.9 });
+
+        // Scarred Iron Torso with Ribbed Gorget
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.2, 1.0), ironGladiatorMat);
+        bodyGroup.add(torso);
+
+        // Closed Horned Barbute Helm with Glowing Red Combat Eyes
+        const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.52, 0.9, 8), ironGladiatorMat);
+        helm.position.set(0, 1.6, 0.1);
+        bodyGroup.add(helm);
+
+        const eyeVisor = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.12, 0.2), redCombatEyeMat);
+        eyeVisor.position.set(0, 1.6, 0.55);
+        bodyGroup.add(eyeVisor);
+
+        // Massive 4.2m Gundyr Halberd in Hands
+        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 4.4, 8), halberdSteelMat);
+        pole.position.set(1.4, 0.7, 0.5);
+        pole.rotation.x = 0.3;
+        bodyGroup.add(pole);
+
+        const axeBlades = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.6, 1.0), halberdSteelMat);
+        axeBlades.position.set(1.4, 2.5, 0.9);
+        axeBlades.rotation.x = 0.3;
+        bodyGroup.add(axeBlades);
+
+        // Muscular Iron Gauntlets & Pauldrons
+        for (let pSide of [-1, 1]) {
+            const pauldron = new THREE.Mesh(new THREE.SphereGeometry(0.55, 8, 8), ironGladiatorMat);
+            pauldron.position.set(pSide * 1.15, 1.1, 0);
+            bodyGroup.add(pauldron);
+        }
+
+        // Heavy Greaved Legs
+        for (let l of [-0.48, 0.48]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.28, 1.6, 8), ironGladiatorMat);
+            leg.position.set(l, -1.3, 0);
+            bodyGroup.add(leg);
+        }
+
+        const gundyrAura = new THREE.PointLight(0x64748b, 7.5, 55.0);
+        gundyrAura.position.set(0, 1.6, 0);
+        bodyGroup.add(gundyrAura);
+
+        root.scale.set(4.5, 4.5, 4.5);
+        root.userData = { bodyGroup, auraLight: gundyrAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 5. VELSTADT, THE ROYAL AEGIS & DARK CHIME SENTINEL
+    createVelstadtRoyalAegis(x, z) {
+        const root = new THREE.Group();
+        const y = this.world ? this.world.getGroundHeight(x, z) : -16.0;
+        root.position.set(x, y, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.35;
+        root.add(bodyGroup);
+
+        const aegisGoldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.3, metalness: 0.85 });
+        const darkVelvetMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.85 });
+        const chimeGlowMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x1d4ed8, emissiveIntensity: 2.4 });
+
+        // Monumental Golden Cuirass
+        const cuirass = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.1, 0.95), aegisGoldMat);
+        bodyGroup.add(cuirass);
+
+        // Fluted Bell-Slit Helmet
+        const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.48, 0.85, 8), aegisGoldMat);
+        helm.position.set(0, 1.55, 0.05);
+        bodyGroup.add(helm);
+
+        // Long Dark Velvet Royal Cape
+        const cape = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.6, 0.1), darkVelvetMat);
+        cape.position.set(0, 0.2, -0.55);
+        cape.rotation.x = 0.1;
+        bodyGroup.add(cape);
+
+        // Colossal 4.5m Sacred Chime Greathammer
+        const hammerShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 4.5, 8), aegisGoldMat);
+        hammerShaft.position.set(1.4, 0.8, 0.5);
+        hammerShaft.rotation.x = 0.25;
+        bodyGroup.add(hammerShaft);
+
+        // Cathedral Bell Hammer Head
+        const bellHead = new THREE.Mesh(new THREE.ConeGeometry(0.75, 1.8, 8), aegisGoldMat);
+        bellHead.position.set(1.4, 2.6, 0.9);
+        bellHead.rotation.x = Math.PI + 0.25;
+        bodyGroup.add(bellHead);
+
+        const chimeRing = new THREE.Mesh(new THREE.TorusGeometry(0.65, 0.12, 6, 16), chimeGlowMat);
+        chimeRing.position.set(1.4, 2.6, 0.9);
+        bodyGroup.add(chimeRing);
+
+        // Heavy Gilded Greaves
+        for (let l of [-0.45, 0.45]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.26, 1.5, 8), aegisGoldMat);
+            leg.position.set(l, -1.25, 0);
+            bodyGroup.add(leg);
+        }
+
+        const velstadtAura = new THREE.PointLight(0xd97706, 7.5, 60.0);
+        velstadtAura.position.set(0, 1.5, 0);
+        bodyGroup.add(velstadtAura);
+
+        root.scale.set(4.4, 4.4, 4.4);
+        root.userData = { bodyGroup, auraLight: velstadtAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 6. LADY MARIA OF THE ASTRAL CLOCKTOWER (ASCENDED BLOODFLAME)
+    createLadyMariaBloodflameClocktower(x, z) {
+        const root = new THREE.Group();
+        const y = this.world ? this.world.getGroundHeight(x, z) : 20.0;
+        root.position.set(x, y, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.25;
+        root.add(bodyGroup);
+
+        const hunterCoatMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.75 });
+        const bloodBladeMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xb91c1c, emissiveIntensity: 3.2 });
+        const astralBrassMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, roughness: 0.3, metalness: 0.85 });
+
+        // Slender Victorian Hunter Longcoat
+        const coat = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.9, 2.0, 8), hunterCoatMat);
+        bodyGroup.add(coat);
+
+        // Tricorn Hunter Hat with White Plume
+        const hat = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.45, 0.35, 3), hunterCoatMat);
+        hat.position.set(0, 1.5, 0);
+        bodyGroup.add(hat);
+
+        // Astral Clock Dial Halo behind shoulders
+        const clockHalo = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.08, 6, 24), astralBrassMat);
+        clockHalo.position.set(0, 0.8, -0.45);
+        bodyGroup.add(clockHalo);
+
+        // Dual-Wielded Rakuyo: Curved Sabre & Dagger with Bloodflame Trails
+        const sabre = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.8, 0.28), bloodBladeMat);
+        sabre.position.set(1.1, 0.4, 0.45);
+        sabre.rotation.x = 0.35;
+        bodyGroup.add(sabre);
+
+        const dagger = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.6, 0.2), bloodBladeMat);
+        dagger.position.set(-1.0, 0.2, 0.35);
+        dagger.rotation.x = -0.25;
+        bodyGroup.add(dagger);
+
+        // Sleek Hunter Boots
+        for (let l of [-0.32, 0.32]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.16, 1.4, 8), hunterCoatMat);
+            leg.position.set(l, -1.2, 0);
+            bodyGroup.add(leg);
+        }
+
+        const mariaAura = new THREE.PointLight(0xef4444, 8.0, 60.0);
+        mariaAura.position.set(0, 1.4, 0);
+        bodyGroup.add(mariaAura);
+
+        root.scale.set(4.0, 4.0, 4.0);
+        root.userData = { bodyGroup, auraLight: mariaAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 7. BLACK DRAGON KALAMEET, BRINGER OF THE CALAMITY EYE
+    createBlackDragonKalameetCalamity(x, z) {
+        const root = new THREE.Group();
+        const y = this.world ? this.world.getGroundHeight(x, z) : 26.0;
+        root.position.set(x, y, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.5;
+        root.add(bodyGroup);
+
+        const obsidianScaleMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.4, metalness: 0.85 });
+        const calamityOrangeMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 3.5 });
+
+        // Prehistoric Quad Dragon Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.0, 4.2), obsidianScaleMat);
+        bodyGroup.add(torso);
+
+        // Sinister Dragon Neck & Horned Head
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.2, 2.6, 8), obsidianScaleMat);
+        neck.position.set(0, 1.6, 2.2);
+        neck.rotation.x = -Math.PI / 4;
+        bodyGroup.add(neck);
+
+        const head = new THREE.Mesh(new THREE.ConeGeometry(0.9, 2.4, 6), obsidianScaleMat);
+        head.position.set(0, 2.6, 3.4);
+        head.rotation.x = Math.PI / 3;
+        bodyGroup.add(head);
+
+        // Glowing Fiery Orange Calamity Eye on Forehead
+        const calEye = new THREE.Mesh(new THREE.SphereGeometry(0.38, 8, 8), calamityOrangeMat);
+        calEye.position.set(0, 3.1, 3.2);
+        bodyGroup.add(calEye);
+
+        // Vast Bat-Like Obsidian Wings
+        for (let wSide of [-1, 1]) {
+            const wing = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.15, 2.8), obsidianScaleMat);
+            wing.position.set(wSide * 3.4, 1.8, -0.4);
+            wing.rotation.z = -wSide * 0.35;
+            bodyGroup.add(wing);
+        }
+
+        // Segmented Dragon Tail
+        const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.15, 4.8, 6), obsidianScaleMat);
+        tail.position.set(0, -0.2, -3.2);
+        tail.rotation.x = -Math.PI / 5;
+        bodyGroup.add(tail);
+
+        // Four Heavy Dragon Legs
+        for (let lx of [-1.1, 1.1]) {
+            for (let lz of [-1.2, 1.2]) {
+                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 1.8, 8), obsidianScaleMat);
+                leg.position.set(lx, -1.3, lz);
+                bodyGroup.add(leg);
+            }
+        }
+
+        const kalameetAura = new THREE.PointLight(0xea580c, 8.5, 65.0);
+        kalameetAura.position.set(0, 1.8, 0);
+        bodyGroup.add(kalameetAura);
+
+        root.scale.set(5.2, 5.2, 5.2);
+        root.userData = { bodyGroup, auraLight: kalameetAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 8. LICHDRAGON FORTISSAX & DEATHBLIGHT LIGHTNING SOVEREIGN
+    createLichdragonFortissaxDeathblight(x, z) {
+        const root = new THREE.Group();
+        const y = this.world ? this.world.getGroundHeight(x, z) : -8.0;
+        root.position.set(x, y, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.6;
+        root.add(bodyGroup);
+
+        const decayGoldMat = new THREE.MeshStandardMaterial({ color: 0x713f12, roughness: 0.5, metalness: 0.7 });
+        const deathblightThornMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.9 });
+        const redLightningMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xdc2626, emissiveIntensity: 3.5 });
+
+        // Ancient Four-Winged Dragon Torso with Deathblight Thorns
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.2, 4.4), decayGoldMat);
+        bodyGroup.add(torso);
+
+        // Black Deathblight Spines along Back
+        for (let sp = 0; sp < 6; sp++) {
+            const spine = new THREE.Mesh(new THREE.ConeGeometry(0.25, 1.4, 5), deathblightThornMat);
+            spine.position.set(0, 1.5, 1.5 - sp * 0.7);
+            spine.rotation.x = -0.3;
+            bodyGroup.add(spine);
+        }
+
+        // Dragon Head & Neck
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 1.3, 2.8, 8), decayGoldMat);
+        neck.position.set(0, 1.8, 2.4);
+        neck.rotation.x = -Math.PI / 4;
+        bodyGroup.add(neck);
+
+        const head = new THREE.Mesh(new THREE.ConeGeometry(1.0, 2.5, 6), decayGoldMat);
+        head.position.set(0, 2.8, 3.6);
+        head.rotation.x = Math.PI / 3;
+        bodyGroup.add(head);
+
+        // Quad Ancient Wings
+        for (let w = 0; w < 2; w++) {
+            for (let wSide of [-1, 1]) {
+                const wing = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.18, 2.6), decayGoldMat);
+                wing.position.set(wSide * (3.2 + w * 0.5), 1.6 + w * 0.6, -0.3 - w * 1.2);
+                wing.rotation.z = -wSide * (0.35 + w * 0.1);
+                bodyGroup.add(wing);
+            }
+        }
+
+        // Dual Crackling 5.8m Red Lightning Spears
+        for (let sSide of [-1, 1]) {
+            const spear = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 5.8, 8), redLightningMat);
+            spear.position.set(sSide * 2.2, 1.2, 1.5);
+            spear.rotation.x = 0.35;
+            spear.rotation.z = sSide * 0.35;
+            bodyGroup.add(spear);
+        }
+
+        // Four Heavy Dragon Legs
+        for (let lx of [-1.2, 1.2]) {
+            for (let lz of [-1.2, 1.2]) {
+                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.6, 1.8, 8), decayGoldMat);
+                leg.position.set(lx, -1.3, lz);
+                bodyGroup.add(leg);
+            }
+        }
+
+        const fortissaxAura = new THREE.PointLight(0xdc2626, 8.5, 65.0);
+        fortissaxAura.position.set(0, 2.0, 0);
+        bodyGroup.add(fortissaxAura);
+
+        root.scale.set(5.4, 5.4, 5.4);
+        root.userData = { bodyGroup, auraLight: fortissaxAura };
         this.scene.add(root);
         return root;
     }

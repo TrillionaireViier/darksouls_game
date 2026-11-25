@@ -1047,8 +1047,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-2050, -28], z in [-950, 950]
-        if (x >= -2050 && x <= -28 && z >= -950 && z <= 950) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-2300, -28], z in [-1050, 1050]
+        if (x >= -2300 && x <= -28 && z >= -1050 && z <= 1050) {
+            // 8 Brand-New Ascended Outside Realm Expeditions (V74 Expansion)
+            // 1. Kiln of the First Flame & Ash Cinder Caldera (outside_kiln_of_the_first_flame_gwyn) (elev: +30.0m)
+            if (x >= -2050 && x <= -1960 && z >= -305 && z <= -215) {
+                return 30.0;
+            }
+            // 2. Chasm of the Abyss & Primeval Humanity Pit (outside_chasm_of_abyss_manus) (elev: -22.0m)
+            if (x >= -2080 && x <= -1990 && z >= 75 && z <= 165) {
+                return -22.0;
+            }
+            // 3. Crystal Cave & Primordial Archive Glade (outside_crystal_cave_primordial_seath) (elev: +14.0m)
+            if (x >= -2110 && x <= -2020 && z >= -165 && z <= -75) {
+                return 14.0;
+            }
+            // 4. Untended Graves & Pitch-Black Dark Firelink Altar (outside_untended_graves_champion_gundyr) (elev: -12.0m)
+            if (x >= -2140 && x <= -2050 && z >= 235 && z <= 325) {
+                return -12.0;
+            }
+            // 5. Undead Crypt & Throne Guarding Colonnade (outside_undead_crypt_royal_aegis_velstadt) (elev: -16.0m)
+            if (x >= -2170 && x <= -2080 && z >= -425 && z <= -335) {
+                return -16.0;
+            }
+            // 6. Astral Clocktower & Lumarium Garden (outside_astronomy_clocktower_lady_maria) (elev: +20.0m)
+            if (x >= -2200 && x <= -2110 && z >= -5 && z <= 85) {
+                return 20.0;
+            }
+            // 7. Oolacile Calamity Crater & Black Dragon Cliff (outside_ancient_dragon_peak_kalameet) (elev: +26.0m)
+            if (x >= -2230 && x <= -2140 && z >= -265 && z <= -175) {
+                return 26.0;
+            }
+            // 8. Deeproot Depths & Deathbed Dream of Fortissax (outside_deeproot_depths_lichdragon_fortissax) (elev: -8.0m)
+            if (x >= -2260 && x <= -2170 && z >= 345 && z <= 435) {
+                return -8.0;
+            }
             // 8 Brand-New Ascended Outside Realm Expeditions (V73 Expansion)
             // 1. Lothric Castle Throne Room of Twin Princes (outside_lothric_throne_twin_princes) (elev: +24.0m)
             if (x >= -1810 && x <= -1720 && z >= -285 && z <= -195) {
@@ -4053,6 +4086,9 @@ class DarkSoulsWorld {
         // Build 8 Brand-New Ascended Outside Realm Expeditions (V73 Expansion)
         this.buildEightAscendedOutsideExpeditionsV73(outsideGroup);
 
+        // Build 8 Brand-New Ascended Outside Realm Expeditions (V74 Expansion)
+        this.buildEightAscendedOutsideExpeditionsV74(outsideGroup);
+
         this.scene.add(outsideGroup);
     }
 
@@ -6565,6 +6601,371 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-1995, 12.0, 420, 0xeab308, 5.5, 35);
         this.createPathBeacon(-1975, 12.0, 420, 0xeab308, "🌪️ STORMVEIL CASTLE GRAFTED COURTYARD [ELEV +12.0m]", "GODRICK THE GRAFTED LORD OF STORMVEIL • GRAFTED DRAGON & TORNADO AXES • BLADE WARHAWKS", "#fef08a");
         this.createFloorSoapstone(-1975, 12.0, 404, "#eab308", "🌪️ GRAFTED COURTYARD", "I command thee, KNEEL! Witness the true power of the Golden Lineage!");
+    }
+
+    buildEightAscendedOutsideExpeditionsV74(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V74 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. KILN OF THE FIRST FLAME & ASH CINDER CALDERA
+        // Center: (-2005, 30.0, -260) | Elev: +30.0m | Theme: Ash Spirals, Charred Kiln & Lord Gwyn
+        // --------------------------------------------------------------------
+        const whiteAshMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.95 });
+        const charredStoneMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.85, metalness: 0.2 });
+        const cinderGlowMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 2.8 });
+        const sunlightGoldMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.3, metalness: 0.8 });
+
+        // Ash Mound Caldera Dais
+        const kilnFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 34, 4.0, 24), whiteAshMat);
+        kilnFloor.position.set(-2005, 28.0, -260);
+        outsideGroup.add(kilnFloor);
+
+        // Charred Obsidian Megalith Pillars
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2005 + Math.cos(angle) * 23;
+            const pz = -260 + Math.sin(angle) * 23;
+            const pillar = new THREE.Mesh(new THREE.BoxGeometry(2.5, 18.0, 2.5), charredStoneMat);
+            pillar.position.set(px, 37.0, pz);
+            pillar.rotation.y = angle + 0.3;
+            outsideGroup.add(pillar);
+        }
+
+        // Colossal Central First Flame Kiln Bonfire
+        const kilnBase = new THREE.Mesh(new THREE.CylinderGeometry(4.0, 5.5, 2.5, 16), charredStoneMat);
+        kilnBase.position.set(-2005, 31.25, -260);
+        outsideGroup.add(kilnBase);
+
+        const flameCore = new THREE.Mesh(new THREE.ConeGeometry(2.8, 7.5, 12), cinderGlowMat);
+        flameCore.position.set(-2005, 36.0, -260);
+        outsideGroup.add(flameCore);
+
+        // Coiled Sword of Gwyn
+        const coiledSword = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.25, 6.0, 8), sunlightGoldMat);
+        coiledSword.position.set(-2005, 34.0, -260);
+        coiledSword.rotation.z = 0.15;
+        outsideGroup.add(coiledSword);
+
+        const gwynLight = new THREE.PointLight(0xf59e0b, 7.5, 65.0);
+        gwynLight.position.set(-2005, 35.0, -260);
+        outsideGroup.add(gwynLight);
+
+        this.createStandingBrazier(-1985, 30.0, -260, 0xf59e0b, 6.0, 38);
+        this.createStandingBrazier(-2025, 30.0, -260, 0xf59e0b, 6.0, 38);
+        this.createPathBeacon(-2005, 30.0, -260, 0xf59e0b, "☀️ KILN OF THE FIRST FLAME & ASH CALDERA [ELEV +30.0m]", "LORD GWYN FIRST LORD OF CINDER • BLAZING SUNLIGHT GREATSWORD & SUNLIGHT SPEARS • BLACK KNIGHTS", "#fef08a");
+        this.createFloorSoapstone(-2005, 30.0, -244, "#f59e0b", "☀️ KILN OF FIRST FLAME", "Here lies the First Flame. Deliver Lord Gwyn from the ashes and choose the fate of the world.");
+
+        // --------------------------------------------------------------------
+        // 2. CHASM OF THE ABYSS & PRIMEVAL HUMANITY PIT
+        // Center: (-2035, -22.0, 120) | Elev: -22.0m | Theme: Void Mire, Black Humanity & Manus
+        // --------------------------------------------------------------------
+        const abyssSlateMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.95 });
+        const humanityVoidMat = new THREE.MeshStandardMaterial({ color: 0x581c87, emissive: 0x3b0764, emissiveIntensity: 2.5, transparent: true, opacity: 0.85 });
+        const primevalClawMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.6, metalness: 0.4 });
+
+        // Sunken Cavern Abyss Floor
+        const abyssFloor = new THREE.Mesh(new THREE.BoxGeometry(58, 3.0, 58), abyssSlateMat);
+        abyssFloor.position.set(-2035, -23.5, 120);
+        outsideGroup.add(abyssFloor);
+
+        // Hanging Primordial Stalactites
+        for (let s of [-20, -10, 0, 10, 20]) {
+            for (let sz of [-18, 18]) {
+                const stala = new THREE.Mesh(new THREE.ConeGeometry(1.6, 12.0, 6), abyssSlateMat);
+                stala.position.set(-2035 + s, -10.0, 120 + sz);
+                stala.rotation.x = Math.PI;
+                outsideGroup.add(stala);
+            }
+        }
+
+        // Swirling Floating Humanity Phantoms
+        for (let h = 0; h < 6; h++) {
+            const hAngle = (h / 6) * Math.PI * 2;
+            const hx = -2035 + Math.cos(hAngle) * 16;
+            const hz = 120 + Math.sin(hAngle) * 16;
+            const phantom = new THREE.Mesh(new THREE.SphereGeometry(1.4, 8, 8), humanityVoidMat);
+            phantom.position.set(hx, -18.0 + (h % 3) * 2.0, hz);
+            outsideGroup.add(phantom);
+        }
+
+        // Manus Primeval Monolith Totem
+        const manusTotem = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 3.2, 10.0, 8), primevalClawMat);
+        manusTotem.position.set(-2035, -17.0, 138);
+        outsideGroup.add(manusTotem);
+
+        const manusLight = new THREE.PointLight(0xa855f7, 7.0, 55.0);
+        manusLight.position.set(-2035, -18.0, 120);
+        outsideGroup.add(manusLight);
+
+        this.createStandingBrazier(-2015, -22.0, 120, 0xa855f7, 5.5, 35);
+        this.createStandingBrazier(-2055, -22.0, 120, 0xa855f7, 5.5, 35);
+        this.createPathBeacon(-2035, -22.0, 120, 0xa855f7, "🌑 CHASM OF THE ABYSS & PRIMEVAL PIT [ELEV -22.0m]", "MANUS FATHER OF THE ABYSS • PRIMEVAL CATALYST DARK BEADS & COLOSSAL CLAW • BLOATHEAD SORCERERS", "#f3e8ff");
+        this.createFloorSoapstone(-2035, -22.0, 104, "#a855f7", "🌑 CHASM OF THE ABYSS", "The primal dark stirs in frenzy. Raise the Silver Pendant to deflect the dark rain of humanity!");
+
+        // --------------------------------------------------------------------
+        // 3. CRYSTAL CAVE & PRIMORDIAL ARCHIVE GLADE
+        // Center: (-2065, 14.0, -120) | Elev: +14.0m | Theme: Cyan Crystal Spires, Moonlight & Seath
+        // --------------------------------------------------------------------
+        const cyanCrystalMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.2, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.85 });
+        const iceRockMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 });
+        const moonlightRelicMat = new THREE.MeshStandardMaterial({ color: 0xe0f2fe, emissive: 0x38bdf8, emissiveIntensity: 3.5 });
+
+        // Glaciated Crystal Cavern Platform
+        const crystalPlat = new THREE.Mesh(new THREE.BoxGeometry(54, 3.0, 54), iceRockMat);
+        crystalPlat.position.set(-2065, 12.5, -120);
+        outsideGroup.add(crystalPlat);
+
+        // Giant Cyan Crystal Spires
+        for (let sp = 0; sp < 10; sp++) {
+            const spAngle = (sp / 10) * Math.PI * 2;
+            const spx = -2065 + Math.cos(spAngle) * 20;
+            const spz = -120 + Math.sin(spAngle) * 20;
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(1.8, 14.0 + (sp % 4) * 3, 5), cyanCrystalMat);
+            spire.position.set(spx, 19.0, spz);
+            spire.rotation.z = Math.cos(spAngle) * 0.2;
+            spire.rotation.x = Math.sin(spAngle) * 0.2;
+            outsideGroup.add(spire);
+        }
+
+        // Primordial Invulnerability Crystal Core on Altar
+        const altar = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.8, 3.0, 8), iceRockMat);
+        altar.position.set(-2065, 15.5, -120);
+        outsideGroup.add(altar);
+
+        const primCrystal = new THREE.Mesh(new THREE.OctahedronGeometry(2.2), moonlightRelicMat);
+        primCrystal.position.set(-2065, 18.5, -120);
+        outsideGroup.add(primCrystal);
+
+        const seathLight = new THREE.PointLight(0x38bdf8, 7.5, 60.0);
+        seathLight.position.set(-2065, 18.0, -120);
+        outsideGroup.add(seathLight);
+
+        this.createStandingBrazier(-2045, 14.0, -120, 0x38bdf8, 6.0, 35);
+        this.createStandingBrazier(-2085, 14.0, -120, 0x38bdf8, 6.0, 35);
+        this.createPathBeacon(-2065, 14.0, -120, 0x38bdf8, "💎 CRYSTAL CAVE & PRIMORDIAL GLADE [ELEV +14.0m]", "SEATH THE SCALELESS BLIND DRAGON • MOONLIGHT CRYSTAL GEYSERS & PRIMORDIAL CORE • CRYSTAL GOLEMS", "#e0f2fe");
+        this.createFloorSoapstone(-2065, 14.0, -104, "#38bdf8", "💎 CRYSTAL CAVE", "Shatter the Primordial Crystal behind him to break the scale-less dragon's curse of immortality!");
+
+        // --------------------------------------------------------------------
+        // 4. UNTENDED GRAVES & DARK FIRELINK ALTAR
+        // Center: (-2095, -12.0, 280) | Elev: -12.0m | Theme: Extinguished Bonfire, Shrouded Tombs & Gundyr
+        // --------------------------------------------------------------------
+        const pitchGraveMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 });
+        const darkIronMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.7 });
+        const coiledAshenMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.85 });
+
+        // Sunken Dark Graveyard Arena
+        const graveFloor = new THREE.Mesh(new THREE.BoxGeometry(56, 3.0, 56), pitchGraveMat);
+        graveFloor.position.set(-2095, -13.5, 280);
+        outsideGroup.add(graveFloor);
+
+        // Dilapidated Shrine Arches
+        for (let ax of [-18, 18]) {
+            const arch = new THREE.Mesh(new THREE.TorusGeometry(8.0, 1.2, 6, 16, Math.PI), pitchGraveMat);
+            arch.position.set(-2095 + ax, -7.0, 280);
+            arch.rotation.y = Math.PI / 2;
+            outsideGroup.add(arch);
+        }
+
+        // Leaning Dark Headstones
+        for (let hx of [-22, -12, 12, 22]) {
+            for (let hz of [260, 300]) {
+                const headstone = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2.5, 0.4), pitchGraveMat);
+                headstone.position.set(-2095 + hx, -10.5, hz);
+                headstone.rotation.y = (hx + hz) * 0.1;
+                headstone.rotation.z = 0.12;
+                outsideGroup.add(headstone);
+            }
+        }
+
+        // Extinguished Ash Coiled Sword
+        const coiledSwordDark = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.18, 4.5, 8), coiledAshenMat);
+        coiledSwordDark.position.set(-2095, -9.5, 280);
+        coiledSwordDark.rotation.z = -0.2;
+        outsideGroup.add(coiledSwordDark);
+
+        const gundyrLight = new THREE.PointLight(0x64748b, 6.0, 50.0);
+        gundyrLight.position.set(-2095, -8.0, 280);
+        outsideGroup.add(gundyrLight);
+
+        this.createStandingBrazier(-2075, -12.0, 280, 0x64748b, 5.0, 32);
+        this.createStandingBrazier(-2115, -12.0, 280, 0x64748b, 5.0, 32);
+        this.createPathBeacon(-2095, -12.0, 280, 0x64748b, "🪦 UNTENDED GRAVES & DARK FIRELINK [ELEV -12.0m]", "CHAMPION GUNDYR UNBROKEN VANGUARD • IRON HALBERD SHOULDER TACKLE & DROPKICKS • GRAVE WARDENS", "#cbd5e1");
+        this.createFloorSoapstone(-2095, -12.0, 264, "#64748b", "🪦 UNTENDED GRAVES", "He never met his Firekeeper. Prepare for unmatched martial prowess and relentless counter-attacks.");
+
+        // --------------------------------------------------------------------
+        // 5. UNDEAD CRYPT & THRONE GUARDING COLONNADE
+        // Center: (-2125, -16.0, -380) | Elev: -16.0m | Theme: Dark Crypt Basalt, Sacred Chimes & Velstadt
+        // --------------------------------------------------------------------
+        const cryptBasaltMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
+        const cryptGoldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.35, metalness: 0.75 });
+        const darkSpiritMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x1d4ed8, emissiveIntensity: 2.0 });
+
+        // Royal Crypt Stone Floor
+        const cryptFloor = new THREE.Mesh(new THREE.BoxGeometry(56, 3.0, 56), cryptBasaltMat);
+        cryptFloor.position.set(-2125, -17.5, -380);
+        outsideGroup.add(cryptFloor);
+
+        // Flanking Crypt Pillars with Resonant Bell Capitals
+        for (let px of [-18, 18]) {
+            for (let pz of [-395, -380, -365]) {
+                const cPillar = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.4, 14.0, 8), cryptBasaltMat);
+                cPillar.position.set(-2125 + px, -10.0, pz);
+                outsideGroup.add(cPillar);
+
+                const bell = new THREE.Mesh(new THREE.ConeGeometry(1.6, 2.2, 8), cryptGoldMat);
+                bell.position.set(-2125 + px, -4.0, pz);
+                bell.rotation.x = Math.PI;
+                outsideGroup.add(bell);
+            }
+        }
+
+        // Royal Sarcophagus Dais
+        const sarco = new THREE.Mesh(new THREE.BoxGeometry(6.0, 2.4, 10.0), cryptBasaltMat);
+        sarco.position.set(-2125, -14.8, -380);
+        outsideGroup.add(sarco);
+
+        const sarcoGold = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.4, 8.8), cryptGoldMat);
+        sarcoGold.position.set(-2125, -13.4, -380);
+        outsideGroup.add(sarcoGold);
+
+        const velstadtLight = new THREE.PointLight(0xd97706, 6.5, 55.0);
+        velstadtLight.position.set(-2125, -12.0, -380);
+        outsideGroup.add(velstadtLight);
+
+        this.createStandingBrazier(-2105, -16.0, -380, 0x3b82f6, 5.5, 35);
+        this.createStandingBrazier(-2145, -16.0, -380, 0x3b82f6, 5.5, 35);
+        this.createPathBeacon(-2125, -16.0, -380, 0xd97706, "🔔 UNDEAD CRYPT & ROYAL COLONNADE [ELEV -16.0m]", "VELSTADT THE ROYAL AEGIS • SACRED CHIME GREATHAMMER RESONANT BELL WAVES • SYAN KNIGHTS", "#fed7aa");
+        this.createFloorSoapstone(-2125, -16.0, -364, "#d97706", "🔔 UNDEAD CRYPT", "Do not produce light. The hammer tolls for thee, resonant with ancient dark magic.");
+
+        // --------------------------------------------------------------------
+        // 6. ASTRAL CLOCKTOWER & LUMARIUM GARDEN
+        // Center: (-2155, 20.0, 40) | Elev: +20.0m | Theme: Astronomical Clock, Lumenflowers & Lady Maria
+        // --------------------------------------------------------------------
+        const clockBrassMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, roughness: 0.3, metalness: 0.85 });
+        const gothicWoodMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.8 });
+        const bloodGlowMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xb91c1c, emissiveIntensity: 2.5 });
+        const lumenflowerMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, emissive: 0x93c5fd, emissiveIntensity: 1.5 });
+
+        // Polished Clocktower Parquet Platform
+        const clockFloor = new THREE.Mesh(new THREE.BoxGeometry(54, 3.0, 54), gothicWoodMat);
+        clockFloor.position.set(-2155, 18.5, 40);
+        outsideGroup.add(clockFloor);
+
+        // Colossal Brass Astronomical Clock Face at Back
+        const clockDial = new THREE.Mesh(new THREE.CylinderGeometry(14.0, 14.0, 0.8, 32), clockBrassMat);
+        clockDial.position.set(-2180, 28.0, 40);
+        clockDial.rotation.z = Math.PI / 2;
+        outsideGroup.add(clockDial);
+
+        const clockHands = new THREE.Mesh(new THREE.BoxGeometry(0.3, 11.0, 0.8), bloodGlowMat);
+        clockHands.position.set(-2179, 28.0, 40);
+        outsideGroup.add(clockHands);
+
+        // Bed of Radiant White Lumenflowers
+        for (let lf = 0; lf < 12; lf++) {
+            const lfx = -2155 + (lf % 4 - 1.5) * 8.0;
+            const lfz = 40 + (Math.floor(lf / 4) - 1) * 8.0;
+            const flower = new THREE.Mesh(new THREE.SphereGeometry(0.8, 6, 6), lumenflowerMat);
+            flower.position.set(lfx, 20.8, lfz);
+            outsideGroup.add(flower);
+        }
+
+        const mariaLight = new THREE.PointLight(0xef4444, 7.0, 55.0);
+        mariaLight.position.set(-2155, 24.0, 40);
+        outsideGroup.add(mariaLight);
+
+        this.createStandingBrazier(-2135, 20.0, 40, 0xef4444, 5.5, 35);
+        this.createStandingBrazier(-2175, 20.0, 40, 0xef4444, 5.5, 35);
+        this.createPathBeacon(-2155, 20.0, 40, 0xef4444, "🕰️ ASTRAL CLOCKTOWER & LUMARIUM [ELEV +20.0m]", "LADY MARIA OF THE ASTRAL CLOCKTOWER • RAKUYO TWIN BLADES BLOODFLAME SLASHES • RESEARCH PATIENTS", "#fecaca");
+        this.createFloorSoapstone(-2155, 20.0, 24, "#ef4444", "🕰️ ASTRAL CLOCKTOWER", "A corpse should be left well alone. Prepare for soaring arcs of blazing blood and flame.");
+
+        // --------------------------------------------------------------------
+        // 7. OOLACILE CALAMITY CRATER & BLACK DRAGON CLIFF
+        // Center: (-2185, 26.0, -220) | Elev: +26.0m | Theme: Calamity Eye, Magma Fissures & Kalameet
+        // --------------------------------------------------------------------
+        const calamityBasaltMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.9 });
+        const calamityEyeMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 3.2 });
+        const dragonObsidianMat = new THREE.MeshStandardMaterial({ color: 0x292524, roughness: 0.35, metalness: 0.85 });
+
+        // Cliff Ravine Arena Floor
+        const cliffFloor = new THREE.Mesh(new THREE.BoxGeometry(56, 3.5, 56), calamityBasaltMat);
+        cliffFloor.position.set(-2185, 24.25, -220);
+        outsideGroup.add(cliffFloor);
+
+        // Calamity Eye Central Sigil
+        const eyeRing = new THREE.Mesh(new THREE.TorusGeometry(7.0, 0.6, 8, 24), calamityEyeMat);
+        eyeRing.position.set(-2185, 26.1, -220);
+        eyeRing.rotation.x = Math.PI / 2;
+        outsideGroup.add(eyeRing);
+
+        const eyePupil = new THREE.Mesh(new THREE.SphereGeometry(2.0, 10, 10), calamityEyeMat);
+        eyePupil.scale.set(1.5, 0.4, 0.8);
+        eyePupil.position.set(-2185, 26.2, -220);
+        outsideGroup.add(eyePupil);
+
+        // Flanking Obsidian Dragon Statues
+        for (let ds of [-20, 20]) {
+            const dStatue = new THREE.Mesh(new THREE.ConeGeometry(2.5, 12.0, 6), dragonObsidianMat);
+            dStatue.position.set(-2185 + ds, 32.0, -220);
+            outsideGroup.add(dStatue);
+        }
+
+        const kalameetLight = new THREE.PointLight(0xea580c, 7.5, 60.0);
+        kalameetLight.position.set(-2185, 30.0, -220);
+        outsideGroup.add(kalameetLight);
+
+        this.createStandingBrazier(-2165, 26.0, -220, 0xea580c, 6.0, 35);
+        this.createStandingBrazier(-2205, 26.0, -220, 0xea580c, 6.0, 35);
+        this.createPathBeacon(-2185, 26.0, -220, 0xea580c, "🐉 OOLACILE CALAMITY CRATER & CLIFF [ELEV +26.0m]", "BLACK DRAGON KALAMEET • CALAMITY EYE LEVITATION BURST & BLACK FLAME • DRAGON ACOLYTES", "#fed7aa");
+        this.createFloorSoapstone(-2185, 26.0, -204, "#ea580c", "🐉 CALAMITY CLIFF", "Even mighty Anor Londo dared not provoke Kalameet. Beware the orange eye of double damage!");
+
+        // --------------------------------------------------------------------
+        // 8. DEEPROOT DEPTHS & DEATHBED DREAM OF FORTISSAX
+        // Center: (-2215, -8.0, 390) | Elev: -8.0m | Theme: Petrified Roots, Red Lightning & Fortissax
+        // --------------------------------------------------------------------
+        const rootPetrifiedMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.95 });
+        const deathblightBrierMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, roughness: 0.5, metalness: 0.5 });
+        const redLightningMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xdc2626, emissiveIntensity: 3.5 });
+
+        // Deep Cavern Root Platform
+        const rootFloor = new THREE.Mesh(new THREE.BoxGeometry(58, 3.0, 58), rootPetrifiedMat);
+        rootFloor.position.set(-2215, -9.5, 390);
+        outsideGroup.add(rootFloor);
+
+        // Giant Gnarled Arching Roots overhead
+        for (let r = 0; r < 4; r++) {
+            const rootArch = new THREE.Mesh(new THREE.TorusGeometry(14.0 + r * 3, 1.8, 6, 20, Math.PI), rootPetrifiedMat);
+            rootArch.position.set(-2215, -2.0, 390);
+            rootArch.rotation.y = (r / 4) * Math.PI;
+            outsideGroup.add(rootArch);
+        }
+
+        // Deathblight Golden Thorns
+        for (let tb of [-18, -6, 6, 18]) {
+            const thorn = new THREE.Mesh(new THREE.ConeGeometry(0.8, 6.0, 5), deathblightBrierMat);
+            thorn.position.set(-2215 + tb, -5.0, 372);
+            thorn.rotation.x = -0.3;
+            outsideGroup.add(thorn);
+        }
+
+        // Crackling Red Lightning Spear Monuments
+        for (let rl of [-12, 12]) {
+            const spear = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 9.0, 6), redLightningMat);
+            spear.position.set(-2215 + rl, -3.5, 408);
+            spear.rotation.z = (rl > 0 ? -0.25 : 0.25);
+            outsideGroup.add(spear);
+        }
+
+        const fortissaxLight = new THREE.PointLight(0xdc2626, 7.5, 60.0);
+        fortissaxLight.position.set(-2215, -3.0, 390);
+        outsideGroup.add(fortissaxLight);
+
+        this.createStandingBrazier(-2195, -8.0, 390, 0xdc2626, 6.0, 35);
+        this.createStandingBrazier(-2235, -8.0, 390, 0xdc2626, 6.0, 35);
+        this.createPathBeacon(-2215, -8.0, 390, 0xdc2626, "⚡ DEEPROOT DEPTHS & DEATHBED DREAM [ELEV -8.0m]", "LICHDRAGON FORTISSAX • DEATHBLIGHT LIGHTNING SPEARS & DRAGON WINGS • CRUCIBLE KNIGHT SILURIA", "#fecaca");
+        this.createFloorSoapstone(-2215, -8.0, 374, "#dc2626", "⚡ DEEPROOT DEPTHS", "Corrupted by Godwyn's slumbering death, the Lichdragon channels twin bolts of crimson lightning.");
     }
 
     buildSerpentSanctum() {

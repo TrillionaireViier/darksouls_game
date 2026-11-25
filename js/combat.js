@@ -5450,6 +5450,127 @@ class DarkSoulsCombat {
                 radius: 6.8,
                 spawnPos: { x: -1975, z: 420 },
                 create: (cf, x, z) => cf.createGodrickTheGrafted ? cf.createGodrickTheGrafted(x, z) : cf.createSoulsborneBoss({ id: 'godrick_the_grafted', theme: 'flame', bossScale: 4.6 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V74 EXPANSION) ===
+            {
+                id: 'outside_lord_gwyn_sunlight_god',
+                name: 'LORD GWYN, ASCENDED GOD OF SUNLIGHT',
+                title: 'Outside Realm: Kiln of the First Flame &bull; Greatsword of Blazing Sunlight, Sunlight Spears & Cinder Explosion',
+                unlockLocationId: 'outside_kiln_of_the_first_flame_gwyn',
+                icon: '☀️',
+                theme: 'holy',
+                bossScale: 4.4,
+                maxHp: 135000,
+                damage: 2750,
+                souls: 15000000,
+                radius: 6.5,
+                spawnPos: { x: -2005, z: -260 },
+                create: (cf, x, z) => cf.createLordGwynSunlightGod ? cf.createLordGwynSunlightGod(x, z) : cf.createSoulsborneBoss({ id: 'lord_gwyn', theme: 'holy', bossScale: 4.4 }, x, z)
+            },
+            {
+                id: 'outside_manus_father_of_abyss_ascended',
+                name: 'MANUS, ASCENDED FATHER OF THE PRIMEVAL ABYSS',
+                title: 'Outside Realm: Chasm of the Abyss &bull; Primeval Catalyst Dark Beads, Mutated Claw Slam & Humanity Rain',
+                unlockLocationId: 'outside_chasm_of_abyss_manus',
+                icon: '🌑',
+                theme: 'dark',
+                bossScale: 4.8,
+                maxHp: 142000,
+                damage: 2820,
+                souls: 16000000,
+                radius: 7.2,
+                spawnPos: { x: -2035, z: 120 },
+                create: (cf, x, z) => cf.createManusFatherOfAbyssAscended ? cf.createManusFatherOfAbyssAscended(x, z) : cf.createSoulsborneBoss({ id: 'manus', theme: 'dark', bossScale: 4.8 }, x, z)
+            },
+            {
+                id: 'outside_seath_primordial_moonlight',
+                name: 'SEATH THE SCALELESS, BLIND MOONLIGHT DRAGON',
+                title: 'Outside Realm: Crystal Cave &bull; Moonlight Crystal Geysers, Primordial Crystal Core & Tentacle Sweep',
+                unlockLocationId: 'outside_crystal_cave_primordial_seath',
+                icon: '💎',
+                theme: 'magic',
+                bossScale: 5.0,
+                maxHp: 130000,
+                damage: 2680,
+                souls: 14500000,
+                radius: 7.5,
+                spawnPos: { x: -2065, z: -120 },
+                create: (cf, x, z) => cf.createSeathPrimordialMoonlight ? cf.createSeathPrimordialMoonlight(x, z) : cf.createSoulsborneBoss({ id: 'seath', theme: 'magic', bossScale: 5.0 }, x, z)
+            },
+            {
+                id: 'outside_champion_gundyr_unbroken',
+                name: 'CHAMPION GUNDYR, THE UNBROKEN VANGUARD',
+                title: 'Outside Realm: Untended Graves &bull; Iron Halberd Flurry, Shoulder Tackle Charge & Flying Roundhouse Kicks',
+                unlockLocationId: 'outside_untended_graves_champion_gundyr',
+                icon: '🪦',
+                theme: 'dark',
+                bossScale: 4.5,
+                maxHp: 138000,
+                damage: 2780,
+                souls: 15500000,
+                radius: 6.8,
+                spawnPos: { x: -2095, z: 280 },
+                create: (cf, x, z) => cf.createChampionGundyrUnbroken ? cf.createChampionGundyrUnbroken(x, z) : cf.createSoulsborneBoss({ id: 'champion_gundyr', theme: 'dark', bossScale: 4.5 }, x, z)
+            },
+            {
+                id: 'outside_velstadt_royal_aegis',
+                name: 'VELSTADT, THE ROYAL AEGIS & CHIME SENTINEL',
+                title: 'Outside Realm: Undead Crypt &bull; Sacred Chime Greathammer, Resonant Dark Chime Shockwaves & Dark Hex Blast',
+                unlockLocationId: 'outside_undead_crypt_royal_aegis_velstadt',
+                icon: '🔔',
+                theme: 'holy',
+                bossScale: 4.4,
+                maxHp: 132000,
+                damage: 2720,
+                souls: 14800000,
+                radius: 6.5,
+                spawnPos: { x: -2125, z: -380 },
+                create: (cf, x, z) => cf.createVelstadtRoyalAegis ? cf.createVelstadtRoyalAegis(x, z) : cf.createSoulsborneBoss({ id: 'velstadt', theme: 'holy', bossScale: 4.4 }, x, z)
+            },
+            {
+                id: 'outside_lady_maria_bloodflame_clocktower',
+                name: 'LADY MARIA OF THE ASTRAL CLOCKTOWER',
+                title: 'Outside Realm: Astral Clocktower &bull; Rakuyo Dual Sabres, Soaring Bloodflame Trails & Visceral Parry',
+                unlockLocationId: 'outside_astronomy_clocktower_lady_maria',
+                icon: '🕰️',
+                theme: 'fire',
+                bossScale: 4.0,
+                maxHp: 134000,
+                damage: 2800,
+                souls: 15200000,
+                radius: 6.0,
+                spawnPos: { x: -2155, z: 40 },
+                create: (cf, x, z) => cf.createLadyMariaBloodflameClocktower ? cf.createLadyMariaBloodflameClocktower(x, z) : cf.createSoulsborneBoss({ id: 'lady_maria', theme: 'fire', bossScale: 4.0 }, x, z)
+            },
+            {
+                id: 'outside_black_dragon_kalameet_calamity',
+                name: 'BLACK DRAGON KALAMEET, BRINGER OF CALAMITY',
+                title: 'Outside Realm: Oolacile Calamity Crater &bull; Calamity Eye Telekinesis, Black Calamity Fire Breath & Wing Dive',
+                unlockLocationId: 'outside_ancient_dragon_peak_kalameet',
+                icon: '🐉',
+                theme: 'dragon',
+                bossScale: 5.2,
+                maxHp: 145000,
+                damage: 2880,
+                souls: 16500000,
+                radius: 7.8,
+                spawnPos: { x: -2185, z: -220 },
+                create: (cf, x, z) => cf.createBlackDragonKalameetCalamity ? cf.createBlackDragonKalameetCalamity(x, z) : cf.createSoulsborneBoss({ id: 'kalameet', theme: 'dragon', bossScale: 5.2 }, x, z)
+            },
+            {
+                id: 'outside_lichdragon_fortissax_deathblight',
+                name: 'LICHDRAGON FORTISSAX, DEATHBLIGHT LIGHTNING',
+                title: 'Outside Realm: Deeproot Depths &bull; Twin Red Lightning Spears, Deathblight Golden Miasma & Aerial Dive',
+                unlockLocationId: 'outside_deeproot_depths_lichdragon_fortissax',
+                icon: '⚡',
+                theme: 'lightning',
+                bossScale: 5.4,
+                maxHp: 148000,
+                damage: 2920,
+                souls: 17000000,
+                radius: 8.0,
+                spawnPos: { x: -2215, z: 390 },
+                create: (cf, x, z) => cf.createLichdragonFortissaxDeathblight ? cf.createLichdragonFortissaxDeathblight(x, z) : cf.createSoulsborneBoss({ id: 'fortissax', theme: 'lightning', bossScale: 5.4 }, x, z)
             }
         ];
     }
@@ -5802,7 +5923,25 @@ class DarkSoulsCombat {
             [-1620.0, 12.0, -320.0], [-1628.0, 12.0, -312.0], [-1612.0, 12.0, -328.0], // Anor Londo Dark Sun (Giant Royal Sentinels)
             [-1645.0, -8.0, 340.0], [-1653.0, -8.0, 348.0], [-1637.0, -8.0, 332.0],   // Shaded Castle Briar Moat (Briar Duelist Gladiators)
             [-1670.0, 20.0, -160.0], [-1678.0, 20.0, -152.0], [-1662.0, 20.0, -168.0], // Bell Demon Sanctum (Senpou Taro Troopers)
-            [-1695.0, -18.0, 460.0], [-1703.0, -18.0, 468.0], [-1687.0, -18.0, 452.0]  // Nokstella Stargazer Basin (Silver Tear Mimic Slimes)
+            [-1695.0, -18.0, 460.0], [-1703.0, -18.0, 468.0], [-1687.0, -18.0, 452.0], // Nokstella Stargazer Basin (Silver Tear Mimic Slimes)
+            // 8 Brand-New Outside Ascended Expeditions Patrols (V73 Expansion):
+            [-1765.0, 24.0, -240.0], [-1773.0, 24.0, -248.0], [-1757.0, 24.0, -232.0], // Lothric Throne (Winged Knights)
+            [-1795.0, 16.0, 140.0], [-1803.0, 16.0, 148.0], [-1787.0, 16.0, 132.0],   // Ariamis Sanctuary (Corvian Crow Demons)
+            [-1825.0, 28.0, -100.0], [-1833.0, 28.0, -108.0], [-1817.0, 28.0, -92.0], // Ashina Dojo (Nightjar Ninjas)
+            [-1855.0, -10.0, 300.0], [-1863.0, -10.0, 308.0], [-1847.0, -10.0, 292.0], // Caelid Dunes (Redmane Flame Chariots)
+            [-1885.0, -6.0, -360.0], [-1893.0, -6.0, -368.0], [-1877.0, -6.0, -352.0], // Oedon Graveyard (Central Yharnam Huntsmen)
+            [-1915.0, 22.0, 60.0], [-1923.0, 22.0, 68.0], [-1907.0, 22.0, 52.0],       // Anor Londo Cathedral (Silver Knight Archers)
+            [-1945.0, 18.0, -200.0], [-1953.0, 18.0, -208.0], [-1937.0, 18.0, -192.0], // Lost Bastille (Ruin Sentinels)
+            [-1975.0, 12.0, 420.0], [-1983.0, 12.0, 428.0], [-1967.0, 12.0, 412.0],   // Stormveil Courtyard (Blade Warhawks)
+            // 8 Brand-New Outside Ascended Expeditions Patrols (V74 Expansion):
+            [-2005.0, 30.0, -260.0], [-2013.0, 30.0, -268.0], [-1997.0, 30.0, -252.0], // Kiln of First Flame (Black Knight Cinder Executioners)
+            [-2035.0, -22.0, 120.0], [-2043.0, -22.0, 128.0], [-2027.0, -22.0, 112.0], // Chasm of the Abyss (Oolacile Bloathead Sorcerers)
+            [-2065.0, 14.0, -120.0], [-2073.0, 14.0, -128.0], [-2057.0, 14.0, -112.0], // Crystal Cave (Crystal Golem Prism Crushers)
+            [-2095.0, -12.0, 280.0], [-2103.0, -12.0, 288.0], [-2087.0, -12.0, 272.0], // Untended Graves (Grave Warden Kukri Assassins)
+            [-2125.0, -16.0, -380.0], [-2133.0, -16.0, -388.0], [-2117.0, -16.0, -372.0], // Undead Crypt (Syan Knights)
+            [-2155.0, 20.0, 40.0], [-2163.0, 20.0, 48.0], [-2147.0, 20.0, 32.0],       // Astral Clocktower (Patient Mobs)
+            [-2185.0, 26.0, -220.0], [-2193.0, 26.0, -228.0], [-2177.0, 26.0, -212.0], // Calamity Crater (Calamity Dragon Acolytes)
+            [-2215.0, -8.0, 390.0], [-2223.0, -8.0, 398.0], [-2207.0, -8.0, 382.0]    // Deeproot Depths (Crucible Knight Siluria)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -5821,7 +5960,11 @@ class DarkSoulsCombat {
                 'sanctum_knight_automaton', 'mimic_tear_mercurial',
                 'cleanrot_valkyrie_knight', 'divine_beast_disciple', 'alonne_shadow_samurai',
                 'charred_loyce_knight', 'ringed_knight_executioner', 'abyssal_dragon_apostle',
-                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent', 'corvian_rapier_knight', 'dragonkin_lightning_halberdier', 'ashina_redguard_arquebusier', 'church_doctor_executioner', 'leyndell_tree_sentinel_patrol', 'badlands_blood_berserker', 'fire_knight_queelign_duelist', 'hornsent_inquisitor_priest', 'leyndell_perfumer_page', 'senpou_strawhat_assassin', 'clayman_priest_uhl', 'oolacile_bloathead_sorcerer', 'luminescent_celestial_emissary', 'ashina_ashigaru_rifleman', 'dragon_cult_lapis_knight', 'manserpent_magma_sorcerer', 'fountainhead_okami_warrior', 'cainhurst_bloodlicker_gargoyle', 'carian_marionette_soldier', 'deep_evangelist_preacher', 'anor_londo_giant_sentinel', 'briar_duelist_gladiator', 'senpou_taro_trooper', 'silver_tear_mimic_slime'
+                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent', 'corvian_rapier_knight', 'dragonkin_lightning_halberdier', 'ashina_redguard_arquebusier', 'church_doctor_executioner', 'leyndell_tree_sentinel_patrol', 'badlands_blood_berserker', 'fire_knight_queelign_duelist', 'hornsent_inquisitor_priest', 'leyndell_perfumer_page', 'senpou_strawhat_assassin', 'clayman_priest_uhl', 'oolacile_bloathead_sorcerer', 'luminescent_celestial_emissary', 'ashina_ashigaru_rifleman', 'dragon_cult_lapis_knight', 'manserpent_magma_sorcerer', 'fountainhead_okami_warrior', 'cainhurst_bloodlicker_gargoyle', 'carian_marionette_soldier', 'deep_evangelist_preacher', 'anor_londo_giant_sentinel', 'briar_duelist_gladiator', 'senpou_taro_trooper', 'silver_tear_mimic_slime',
+                'winged_knight', 'crow_demon', 'nightjar_ninja', 'flame_chariot',
+                'yharnam_huntsman', 'silver_knight_greatbow', 'ruin_sentinel', 'blade_warhawk',
+                'black_knight_cinder', 'oolacile_bloathead', 'crystal_golem_prism', 'grave_warden_kukri',
+                'undead_crypt_syan', 'clocktower_patient', 'calamity_dragon_acolyte', 'crucible_knight_siluria'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');
