@@ -1,6 +1,7 @@
-// Copyright Dark Souls Game Project. All Rights Reserved. UE 4.22 - 4.24
+// Copyright Dark Souls Game Project. All Rights Reserved. UE 4.27
 
 #include "DarkSoulsCharacter.h"
+#include "DarkSoulsGameMode.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -11,14 +12,18 @@ ADarkSoulsCharacter::ADarkSoulsCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	MaxHealth = 1000.0f;
+	MaxHealth = 1200.0f;
 	CurrentHealth = MaxHealth;
 	MaxStamina = 160.0f;
 	CurrentStamina = MaxStamina;
 	StaminaRegenRate = 45.0f;
+	MaxPoise = 100.0f;
+	CurrentPoise = MaxPoise;
+	PoiseRegenRate = 45.0f;
 	Souls = 0;
 	EstusFlasks = 5;
 	MaxEstusFlasks = 5;
+	ActiveCovenant = ESacredCovenant::None;
 
 	CombatState = EPlayerCombatState::Idle;
 	bIsInvulnerable = false;
@@ -28,9 +33,9 @@ ADarkSoulsCharacter::ADarkSoulsCharacter()
 
 	StateTimer = 0.0f;
 	StaminaDelayTimer = 0.0f;
+	PoiseDelayTimer = 0.0f;
 	AttackComboCount = 0;
 
-	// Camera setup
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 400.0f;
@@ -57,12 +62,14 @@ void ADarkSoulsCharacter::BeginPlay()
 	OnStaminaChanged.Broadcast(CurrentStamina, MaxStamina);
 	OnSoulsChanged.Broadcast(Souls);
 	OnEstusChanged.Broadcast(EstusFlasks);
-	OnNotification.Broadcast(TEXT("YOU HAVE ENTERED LORDRAN"));
+	OnNotification.Broadcast(TEXT("YOU HAVE ENTERED LORDRAN (5X REALM)"));
 }
 
 void ADarkSoulsCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (CombatState == EPlayerCombatState::Dead) return;
 
 	// Stamina regeneration
 	if (StaminaDelayTimer > 0.0f)
@@ -76,15 +83,21 @@ void ADarkSoulsCharacter::Tick(float DeltaTime)
 		OnStaminaChanged.Broadcast(CurrentStamina, MaxStamina);
 	}
 
+	// Anti-stunlock poise regeneration
+	if (PoiseDelayTimer > 0.0f)
+	{
+		PoiseDelayTimer -= DeltaTime;
+	}
+	else if (CurrentPoise < MaxPoise)
+	{
+		CurrentPoise = FMath::Min(MaxPoise, CurrentPoise + PoiseRegenRate * DeltaTime);
+	}
+
 	// Dodge Roll state machine with i-frames
 	if (CombatState == EPlayerCombatState::Rolling)
 	{
 		StateTimer += DeltaTime;
-
-		// Dark Souls i-frames window: 0.08s to 0.40s
 		bIsInvulnerable = (StateTimer >= 0.08f && StateTimer <= 0.40f);
-
-		// Roll movement momentum
 		float RollProgress = FMath::Clamp(StateTimer / 0.58f, 0.0f, 1.0f);
 		float Speed = FMath::Lerp(850.0f, 120.0f, RollProgress);
 		AddMovementInput(RollDirection, Speed * DeltaTime);
@@ -96,7 +109,7 @@ void ADarkSoulsCharacter::Tick(float DeltaTime)
 			StateTimer = 0.0f;
 		}
 	}
-	else if (CombatState == EPlayerCombatState::Attacking)
+	else if (CombatState == EPlayerCombatState::Attacking || CombatState == EPlayerCombatState::Staggered)
 	{
 		StateTimer += DeltaTime;
 		if (StateTimer >= 0.45f)
@@ -117,7 +130,6 @@ void ADarkSoulsCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	// Lock-on camera tracking
 	if (LockedTarget)
 	{
 		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockedTarget->GetActorLocation());
@@ -125,6 +137,27 @@ void ADarkSoulsCharacter::Tick(float DeltaTime)
 		if (Controller)
 		{
 			Controller->SetControlRotation(FMath::RInterpTo(Controller->GetControlRotation(), TargetRotation, DeltaTime, 8.0f));
+		}
+	}
+
+	CheckAbyssRescue();
+}
+
+void ADarkSoulsCharacter::CheckAbyssRescue()
+{
+	FVector Loc = GetActorLocation();
+	float GroundZ = 0.0f;
+	if (ADarkSoulsGameMode* GM = Cast<ADarkSoulsGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+	{
+		GroundZ = GM->GetGroundHeightAtLocation(Loc.X, Loc.Y, Loc.Z);
+	}
+	// Subterranean-safe abyss check (25m = 2500 Unreal units below ground, or -95m = -9500 units)
+	if (Loc.Z < GroundZ - 2500.0f || Loc.Z < -9500.0f)
+	{
+		if (ADarkSoulsGameMode* GM = Cast<ADarkSoulsGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+		{
+			GM->RespawnPlayerSafely();
+			OnNotification.Broadcast(TEXT("RESCUED FROM ABYSS"));
 		}
 	}
 }
@@ -252,7 +285,7 @@ void ADarkSoulsCharacter::DrinkEstus()
 	if (EstusFlasks <= 0 || CombatState != EPlayerCombatState::Idle) return;
 
 	EstusFlasks--;
-	CurrentHealth = FMath::Clamp(CurrentHealth + 450.0f, 0.0f, MaxHealth);
+	CurrentHealth = FMath::Clamp(CurrentHealth + 520.0f, 0.0f, MaxHealth);
 	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
 	OnEstusChanged.Broadcast(EstusFlasks);
 	OnNotification.Broadcast(TEXT("ESTUS RECOVERED HEALTH"));
@@ -267,10 +300,9 @@ void ADarkSoulsCharacter::ToggleLockOn()
 	}
 	else
 	{
-		// Find closest enemy actor within 20m
 		TArray<AActor*> FoundEnemies;
 		UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("Enemy"), FoundEnemies);
-		float ClosestDist = 2000.0f; // 20m
+		float ClosestDist = 2000.0f;
 		AActor* BestTarget = nullptr;
 
 		for (AActor* Enemy : FoundEnemies)
@@ -310,7 +342,11 @@ void ADarkSoulsCharacter::TakeDamageFromEnemy(float DamageAmount, FVector HitDir
 		return;
 	}
 
-	CurrentHealth = FMath::Clamp(CurrentHealth - DamageAmount, 0.0f, MaxHealth);
+	float DefMult = (ActiveCovenant == ESacredCovenant::ForestHunters) ? 0.88f :
+	                (ActiveCovenant == ESacredCovenant::GravelordServant ? 0.85f : 1.0f);
+	float FinalDamage = DamageAmount * DefMult;
+
+	CurrentHealth = FMath::Clamp(CurrentHealth - FinalDamage, 0.0f, MaxHealth);
 	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
 
 	if (CurrentHealth <= 0.0f)
@@ -318,17 +354,39 @@ void ADarkSoulsCharacter::TakeDamageFromEnemy(float DamageAmount, FVector HitDir
 		CombatState = EPlayerCombatState::Dead;
 		OnNotification.Broadcast(TEXT("YOU DIED"));
 	}
+	else
+	{
+		float PoiseDmg = FMath::Max(20.0f, FinalDamage * 0.25f);
+		CurrentPoise -= PoiseDmg;
+		PoiseDelayTimer = 0.5f;
+		if (CurrentPoise <= 0.0f)
+		{
+			// 45% instant poise buffer prevents infinite chain stunlock
+			CurrentPoise = FMath::RoundToFloat(MaxPoise * 0.45f);
+			CombatState = EPlayerCombatState::Staggered;
+			StateTimer = 0.0f;
+			OnNotification.Broadcast(TEXT("POISE BROKEN! STUNNED"));
+		}
+	}
+}
+
+void ADarkSoulsCharacter::JoinCovenant(ESacredCovenant NewCovenant)
+{
+	ActiveCovenant = NewCovenant;
+	OnNotification.Broadcast(TEXT("COVENANT PACT SEALED"));
 }
 
 void ADarkSoulsCharacter::RestAtBonfire()
 {
+	CombatState = EPlayerCombatState::Idle;
 	CurrentHealth = MaxHealth;
 	CurrentStamina = MaxStamina;
+	CurrentPoise = MaxPoise;
 	EstusFlasks = MaxEstusFlasks;
 	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
 	OnStaminaChanged.Broadcast(CurrentStamina, MaxStamina);
 	OnEstusChanged.Broadcast(EstusFlasks);
-	OnNotification.Broadcast(TEXT("BONFIRE REST &bull; HP & ESTUS RESTORED"));
+	OnNotification.Broadcast(TEXT("BONFIRE RESTED • HP & ESTUS RESTORED"));
 }
 
 void ADarkSoulsCharacter::AddSouls(int32 Amount)

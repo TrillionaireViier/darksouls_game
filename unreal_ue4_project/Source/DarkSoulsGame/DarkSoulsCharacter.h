@@ -1,4 +1,4 @@
-// Copyright Dark Souls Game Project. All Rights Reserved. UE 4.22 - 4.24
+// Copyright Dark Souls Game Project. All Rights Reserved. UE 4.27
 
 #pragma once
 
@@ -20,6 +20,18 @@ enum class EPlayerCombatState : uint8
 	Dead
 };
 
+UENUM(BlueprintType)
+enum class ESacredCovenant : uint8
+{
+	None,
+	WarriorsOfSunlight,
+	Darkwraiths,
+	ForestHunters,
+	BladeOfTheDarkmoon,
+	GravelordServant,
+	ChaosServant
+};
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerHealthChanged, float, CurrentHealth, float, MaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerStaminaChanged, float, CurrentStamina, float, MaxStamina);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSoulsChanged, int32, Souls);
@@ -38,7 +50,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Camera & Spring Arm
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* CameraBoom;
 
@@ -61,6 +72,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark Souls Stats")
 	float StaminaRegenRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark Souls Stats")
+	float MaxPoise;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dark Souls Stats")
+	float CurrentPoise;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark Souls Stats")
+	float PoiseRegenRate;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dark Souls Stats")
 	int32 Souls;
 
@@ -69,6 +89,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark Souls Stats")
 	int32 MaxEstusFlasks;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark Souls Covenants")
+	ESacredCovenant ActiveCovenant;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dark Souls Combat")
 	EPlayerCombatState CombatState;
@@ -82,11 +105,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dark Souls Combat")
 	bool bIsParryActive;
 
-	// Lock-on Target
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dark Souls Target")
 	AActor* LockedTarget;
 
-	// Delegates
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnPlayerHealthChanged OnHealthChanged;
 
@@ -102,7 +123,6 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnPlayerNotification OnNotification;
 
-	// Actions
 	UFUNCTION(BlueprintCallable, Category = "Dark Souls Combat")
 	void PerformLightAttack();
 
@@ -130,6 +150,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Dark Souls Combat")
 	void TakeDamageFromEnemy(float DamageAmount, FVector HitDirection);
 
+	UFUNCTION(BlueprintCallable, Category = "Dark Souls Covenants")
+	void JoinCovenant(ESacredCovenant NewCovenant);
+
 	UFUNCTION(BlueprintCallable, Category = "Dark Souls Bonfire")
 	void RestAtBonfire();
 
@@ -139,11 +162,11 @@ public:
 private:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
-	void TurnAtRate(float Rate);
-	void LookUpAtRate(float Rate);
+	void CheckAbyssRescue();
 
 	FVector RollDirection;
 	float StateTimer;
 	float StaminaDelayTimer;
+	float PoiseDelayTimer;
 	int32 AttackComboCount;
 };

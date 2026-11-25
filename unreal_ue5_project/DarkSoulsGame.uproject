@@ -1,0 +1,33 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.8",
+	"Category": "Games",
+	"Description": "Dark Souls: Warriors' Dream for Unreal Engine 5.8 featuring Lumen Lite 60 FPS, Nanite, World Partition 5x Colossal Map (226,085+ spatial locations), Enhanced Input, Poise recovery, 6 Covenants, and 5 Bosses.",
+	"Modules": [
+		{
+			"Name": "DarkSoulsGame",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Core",
+				"CoreUObject",
+				"Engine",
+				"EnhancedInput",
+				"UMG"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "EnhancedInput",
+			"Enabled": true
+		}
+	],
+	"TargetPlatforms": [
+		"Windows",
+		"Linux",
+		"Mac",
+		"Android",
+		"IOS"
+	]
+}

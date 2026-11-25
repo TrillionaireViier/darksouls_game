@@ -1,38 +1,21 @@
-# Dark Souls Game — Unreal Engine 4 Project (UE 4.22 – UE 4.24)
+# Dark Souls Game — Unreal Engine 4.27 Project (Build V72)
 
-Complete 3D Dark Souls Action RPG project configured for **Unreal Engine 4.22, 4.23, and 4.24**.
+Complete 3D Dark Souls Action RPG project upgraded to **Unreal Engine 4.27** (the final LTS release of UE4).
 
-## ✨ Features
+## ✨ Build V72 Features
+- **60 FPS Smoothed Frame Rate & Streaming (`DefaultEngine.ini`)**:
+  - Locked `60–120 FPS` smoothed range, optimized HLOD, and 2 GB streaming pool.
+- **5x Colossal Map & 226,085 Spatial Locations (`ADarkSoulsGameMode`)**:
+  - Procedurally indexes `226,085` fast-travel sectors across a `5x` expanded Lordran realm (`720km` breadth) using an O(1) `TMap<FIntVector, TArray<int32>>` spatial hash grid.
 - **Player Character (`ADarkSoulsCharacter`)**:
-  - Full Dark Souls stamina-based combat (HP, Stamina, Souls, Estus Flasks).
-  - **Dodge Roll with authentic i-frames (invulnerability window: 0.08s – 0.40s)**.
-  - Light attack 3-hit combo & Heavy attack with stamina costs.
-  - Shield blocking with stamina damage mitigation & Shield parrying with riposte stagger.
-  - Target lock-on camera system.
-  - Bonfire resting (HP/Estus refill, respawn logic).
+  - `1200` HP, `160` Stamina, `100` Poise with **45% Anti-Stunlock Recovery** (`0.5s` delay, `45/s` regen).
+  - **6 Sacred Covenants (`ESacredCovenant`)** with combat defense multipliers.
+  - Subterranean-safe Abyss Rescue (`Z < GroundZ - 2500cm || Z < -9500cm`) and Boss Respawn Safety (`RespawnPlayerSafely()`).
+  - Dodge Roll i-frames (`0.08s – 0.40s`), light/heavy combos, block, parry, lock-on, and Estus Flasks.
 - **5 Lordran Bosses (`ADarkSoulsBoss`)**:
-  - **Taurus Demon** (2400 HP, giant greataxe slam, shockwave).
-  - **Bell Gargoyle** (2100 HP, fire breath, halberd thrust, glide).
-  - **Capra Demon** (1900 HP, dual machete jump smash, frenzy).
-  - **Great Grey Wolf Sif** (2800 HP, 360° greatsword spin, sword leap).
-  - **Gwyn, Lord of Cinder** (3400 HP, flaming sword combo, sunlight spear).
-- **Dark Souls GameMode & HUD**:
-  - Health & Stamina bars, Souls counter, Boss Health bar, "YOU DIED", and "VICTORY ACHIEVED" overlays.
+  - Taurus Demon, Bell Gargoyle, Capra Demon, Great Grey Wolf Sif, and Gwyn, Lord of Cinder.
 
-## 🚀 How to Open in Unreal Engine 4 (4.22 – 4.24)
-
-1. **Prerequisites**:
-   - Unreal Engine **4.22.x**, **4.23.x**, or **4.24.x** installed via Epic Games Launcher.
-   - Visual Studio 2017 or 2019 (with "Game development with C++") on Windows, or Xcode on macOS.
-
-2. **Generate Project Files**:
-   - Right-click `DarkSoulsGame.uproject` -> **Generate Visual Studio project files** (or run `UnrealVersionSelector`).
-
-3. **Compile and Launch**:
-   - Open `DarkSoulsGame.sln` in Visual Studio (or `.xcworkspace` in Xcode).
-   - Set build configuration to `Development Editor` and platform `Win64` (or `Mac`).
-   - Press **F5** or Build -> Build Solution.
-   - Alternatively, double-click `DarkSoulsGame.uproject` to let Unreal Editor compile the C++ modules directly.
-
-4. **Default Map**:
-   - Open `/Game/Maps/LordranArena` and press **Play (Alt+P)**!
+## 🚀 How to Open in Unreal Engine 4.27
+1. Install **Unreal Engine 4.27.2** in Epic Games Launcher.
+2. Right-click `DarkSoulsGame.uproject` -> **Generate Visual Studio project files** (Windows) or **Generate Xcode project** (macOS).
+3. Build `Development Editor` and open `/Game/Maps/LordranArena`.

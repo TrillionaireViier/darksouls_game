@@ -34,7 +34,7 @@ namespace DarkSouls
         private void Start()
         {
             currentHealth = maxHealth;
-            targetPlayer = FindObjectOfType<DarkSoulsPlayer>();
+            targetPlayer = FindFirstObjectByType<DarkSoulsPlayer>();
         }
 
         private void Update()

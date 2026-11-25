@@ -35,7 +35,7 @@ namespace DarkSouls
         {
             spawnPosition = transform.position;
             currentHealth = maxHealth;
-            targetPlayer = FindObjectOfType<DarkSoulsPlayer>();
+            targetPlayer = FindFirstObjectByType<DarkSoulsPlayer>();
         }
 
         private void Update()

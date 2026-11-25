@@ -21,11 +21,14 @@ namespace DarkSouls
     public class DarkSoulsPlayer : MonoBehaviour
     {
         [Header("Attributes")]
-        public float maxHealth = 1000f;
-        public float currentHealth = 1000f;
+        public float maxHealth = 1200f;
+        public float currentHealth = 1200f;
         public float maxStamina = 100f;
         public float currentStamina = 100f;
         public float staminaRegenRate = 38f;
+        public float maxPoise = 100f;
+        public float currentPoise = 100f;
+        public float poiseRegenRate = 45f;
         public int estusFlasks = 5;
         public int maxEstusFlasks = 5;
         public int souls = 0;
@@ -52,9 +55,12 @@ namespace DarkSouls
         private Vector3 rollDirection = Vector3.forward;
         private float verticalVelocity = 0f;
         private float staminaDelay = 0f;
+        private float poiseDelay = 0f;
         private float stateTimer = 0f;
         private float cameraPitch = 0f;
         private int attackCombo = 0;
+        private WorldChunkStreamer worldStreamer;
+        private CovenantSystem covenantSystem;
 
         // Events
         public event Action<float, float> OnHealthChanged;
@@ -75,6 +81,9 @@ namespace DarkSouls
             Cursor.visible = false;
             currentHealth = maxHealth;
             currentStamina = maxStamina;
+            currentPoise = maxPoise;
+            worldStreamer = FindFirstObjectByType<WorldChunkStreamer>();
+            covenantSystem = FindFirstObjectByType<CovenantSystem>();
 
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
             OnStaminaChanged?.Invoke(currentStamina, maxStamina);
@@ -88,6 +97,8 @@ namespace DarkSouls
 
             HandleMouseOrbit();
             HandleStamina(Time.deltaTime);
+            HandlePoise(Time.deltaTime);
+            CheckAbyssRescue();
 
             switch (State)
             {
@@ -141,6 +152,35 @@ namespace DarkSouls
                 float rate = (State == PlayerState.Block) ? staminaRegenRate * 0.4f : staminaRegenRate;
                 currentStamina = Mathf.Min(maxStamina, currentStamina + rate * dt);
                 OnStaminaChanged?.Invoke(currentStamina, maxStamina);
+            }
+        }
+
+        private void HandlePoise(float dt)
+        {
+            if (poiseDelay > 0f)
+            {
+                poiseDelay -= dt;
+            }
+            else if (currentPoise < maxPoise)
+            {
+                currentPoise = Mathf.Min(maxPoise, currentPoise + poiseRegenRate * dt);
+            }
+        }
+
+        private void CheckAbyssRescue()
+        {
+            Vector3 p = transform.position;
+            float groundY = (worldStreamer != null) ? worldStreamer.GetGroundHeight(p.x, p.z, p.y) : 0f;
+            if (p.y < groundY - 25f || p.y < -95f)
+            {
+                Vector3 safePos = DarkSoulsGameManager.Instance != null
+                    ? DarkSoulsGameManager.Instance.lastSafeBonfirePosition
+                    : new Vector3(0f, 0f, 5f);
+                controller.enabled = false;
+                transform.position = safePos + Vector3.up * 0.5f;
+                controller.enabled = true;
+                verticalVelocity = 0f;
+                OnNotification?.Invoke("RESCUED FROM ABYSS");
             }
         }
 
@@ -385,8 +425,10 @@ namespace DarkSouls
                 }
             }
 
-            // Direct Hit
-            currentHealth = Mathf.Max(0f, currentHealth - amount);
+            // Direct Hit with Covenant Defense & Anti-Stunlock Poise Recovery
+            float defMult = covenantSystem != null ? covenantSystem.GetDefenseBonusMultiplier() : 1f;
+            float finalDamage = amount * defMult;
+            currentHealth = Mathf.Max(0f, currentHealth - finalDamage);
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
             if (currentHealth <= 0f)
@@ -395,8 +437,17 @@ namespace DarkSouls
             }
             else
             {
-                State = PlayerState.Stagger;
-                stateTimer = 0.4f;
+                float poiseDmg = Mathf.Max(20f, finalDamage * 0.25f);
+                currentPoise -= poiseDmg;
+                poiseDelay = 0.5f;
+                if (currentPoise <= 0f)
+                {
+                    // Immediately restore 45% poise buffer to prevent infinite chain stunlock
+                    currentPoise = Mathf.Round(maxPoise * 0.45f);
+                    State = PlayerState.Stagger;
+                    stateTimer = 0.4f;
+                    OnNotification?.Invoke("POISE BROKEN! STUNNED");
+                }
             }
         }
 
@@ -408,9 +459,15 @@ namespace DarkSouls
 
         public void RestAtBonfire(Vector3 bonfirePosition)
         {
+            State = PlayerState.Idle;
             currentHealth = maxHealth;
             currentStamina = maxStamina;
+            currentPoise = maxPoise;
             estusFlasks = maxEstusFlasks;
+            if (DarkSoulsGameManager.Instance != null)
+            {
+                DarkSoulsGameManager.Instance.SetSafeCheckpoint(bonfirePosition, false);
+            }
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
             OnStaminaChanged?.Invoke(currentStamina, maxStamina);
             OnEstusChanged?.Invoke(estusFlasks, maxEstusFlasks);

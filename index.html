@@ -10,7 +10,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261125_V71_5X_LOCATIONS_226K';
+            var TARGET_BUILD = '20261125_V72_UNITY6_UE427_UE58';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -8665,34 +8665,39 @@
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
-                <!-- 1. Unreal Engine 4 (UE 4.22–4.24) Project -->
+                <!-- 1. Unreal Engine 5.8 (Latest UE5) Project -->
+                <a href="/darksouls_unreal_ue5_project.zip" download="darksouls_unreal_ue5_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #0b2c3d 0%, #061621 100%); border-color: #00d4ff; color: #b8f2ff; box-shadow: 0 0 18px rgba(0, 212, 255, 0.5);">
+                    <span>🌌</span> DOWNLOAD UNREAL ENGINE 5.8 (LATEST UE5) PROJECT (.ZIP)
+                </a>
+
+                <!-- 2. Unreal Engine 4.27 (Latest UE4) Project -->
                 <a href="/darksouls_unreal_ue4_project.zip" download="darksouls_unreal_ue4_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #102638 0%, #07131d 100%); border-color: #0099ff; color: #80d4ff; box-shadow: 0 0 16px rgba(0, 153, 255, 0.45);">
-                    <span>🔥</span> DOWNLOAD UNREAL ENGINE 4 (UE 4.22–4.24) PROJECT (.ZIP)
+                    <span>🔥</span> DOWNLOAD UNREAL ENGINE 4.27 (LATEST UE4) PROJECT (.ZIP)
                 </a>
 
-                <!-- 2. Unity 3D Project -->
+                <!-- 3. Unity 6.3 LTS (6000.3 Latest) Project -->
                 <a href="/darksouls_unity_project.zip" download="darksouls_unity_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #2a1f2f 0%, #17101a 100%); border-color: #aa55cc; color: #e9bfff; box-shadow: 0 0 15px rgba(170, 85, 204, 0.35);">
-                    <span>⚡</span> DOWNLOAD UNITY 3D PROJECT (.ZIP)
+                    <span>⚡</span> DOWNLOAD UNITY 6.3 LTS (6000.3 LATEST) PROJECT (.ZIP)
                 </a>
 
-                <!-- 3. Standalone Web & Desktop Build -->
+                <!-- 4. Standalone Web & Desktop Build -->
                 <a href="/darksouls_game_standalone.zip" download="darksouls_game_standalone.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px;">
                     <span>📦</span> DOWNLOAD STANDALONE BUILD (.ZIP)
                 </a>
 
-                <!-- 4. Godot 4.x Project -->
+                <!-- 5. Godot 4.x Project -->
                 <a href="/darksouls_godot_project.zip" download="darksouls_godot_project.zip" class="btn-download" style="text-align: center; justify-content: center; padding: 13px; background: linear-gradient(180deg, #1b2638 0%, #0d1520 100%); border-color: #478cbf; color: #9fd3ff; box-shadow: 0 0 15px rgba(71, 140, 191, 0.35);">
                     <span>🎮</span> DOWNLOAD GODOT 4.X PROJECT (.ZIP)
                 </a>
 
-                <!-- 5. GitHub Repository -->
+                <!-- 6. GitHub Repository -->
                 <a href="https://github.com/TrillionaireViier/darksouls_game" target="_blank" class="btn-icon-bar" style="text-align: center; padding: 11px;">
                     <span>🐙</span> VIEW GITHUB REPOSITORY & ALL SOURCE CODE
                 </a>
             </div>
 
             <div style="font-size: 0.8rem; color: #7a6e62; text-align: center; margin-top: 8px;">
-                Compatible with Unreal Engine 4.22–4.24, Unity 2020–2023, Godot 4 &bull; Full C++ & C# source code included!
+                Compatible with Unreal Engine 5.8, Unreal Engine 4.27, Unity 6.3 LTS (6000.3), Godot 4 &bull; Full C++ & C# source code included!
             </div>
 
             <button class="btn-modal-close" onclick="closeDownloadModal()">CLOSE</button>
@@ -10089,25 +10094,25 @@
 
     <!-- Game Scripts (with version cache-busting) -->
     <script src="js/three.min.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
-    <script src="js/audio.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/lore_items.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/merchants_30.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/world.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/character.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/siege_warfare.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/heraldry_nobility.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/apothecary_crafting.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/collision_system.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/qa_bot_tester.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/combat.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/postprocessing.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/qa_suite.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/blacksmith_forge.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/inventory_system.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/compendium_300_models.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/death_quotes_300.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/game.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
-    <script src="js/dev_map.js?v=20261125_V71_5X_LOCATIONS_226K"></script>
+    <script src="js/audio.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/lore_items.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/merchants_30.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/world.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/character.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/siege_warfare.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/heraldry_nobility.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/apothecary_crafting.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/collision_system.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/qa_bot_tester.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/combat.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/postprocessing.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/qa_suite.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/blacksmith_forge.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/inventory_system.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/compendium_300_models.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/death_quotes_300.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/game.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
+    <script src="js/dev_map.js?v=20261125_V72_UNITY6_UE427_UE58"></script>
     <script>
         // Automatic Game Initialization Failsafe
         (function() {
