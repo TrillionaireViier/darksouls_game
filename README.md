@@ -67,8 +67,8 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 289 Legendary Boss Roster
-Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 257 legendary bosses across all Soulsborne eras:
+### 🌲 Outside Realm Apex Bosses & 297 Legendary Boss Roster
+Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 265 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
 - **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Scorched Dragonbarrow
@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (577 Fast-Travel Locations & 101 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (585 Fast-Travel Locations & 109 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 1,750 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 85 bespoke Outside locations, 84 active mob patrols, and 46 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 1,750 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 93 bespoke Outside locations, 92 active mob patrols, and 54 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V73 Expansion)
+1. **Lothric Winged Knight (Angelic Halberd & Golden Feather Wings)**: Bulky knight in golden rounded plate armor with magnificent arching feathered wings on the back, wielding a dual-bladed angelic halberd to perform spinning whirlwind attacks.
+2. **Ariamis Corvian Crow Demon (Razor Talons & Raven Wings)**: Hunched corvian fiend with razor steel talons, sharp curved beak mask, and tattered jet-black feathered wings diving from snowy parapets.
+3. **Ashina Nightjar Ninja Scout (Tengu Mask & Shuriken Wheel)**: Agile crouched shinobi wearing a tengu straw mask and raven mantle, hurling massive spinning shuriken blade wheels and dropping firecrackers.
+4. **Redmane Flame Chariot (Iron Beast Face & Furnace Mouth)**: Heavy cast-iron juggernaut chariot with spiked crushing wheels and an open furnace mouth roaring with blazing flame torrents.
+5. **Central Yharnam Huntsman Mob (Top Hat, Pitchfork & Torch)**: Crazed Victorian townsman in top hat and tattered overcoat, aggressively thrusting a three-pronged pitchfork and swinging a blazing pitch torch.
+6. **Silver Knight Dragonslayer Greatbow Archer (Polished Plate & Greatbow)**: Regal knight in shining silver plate armor drawing a colossal Dragonslayer Greatbow that fires thunderbolt harpoons with massive poise damage.
+7. **Ruin Sentinel Automaton (Brass Plate & Poleaxe Halberd)**: Slender bronze-brass automaton knight with cylindrical slit helm, executing acrobatic poleaxe spins and circular buckler strikes.
+8. **Stormveil Blade Warhawk (Talon Scythes & Gunpowder Keg)**: Predatory storm hawk with razor steel curved scythes strapped to its talons and an explosive red gunpowder keg on its chest.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V73 Expansion)
+1. **Twin Princes: Lorian & Lothric (Lothric Castle Throne Room)**: Crippled elder prince Lorian wielding the scorched Greatsword of Lorian with holy light teleportation, while younger prince Lothric clings to his back firing homing soul spears atop the royal dais (+24.0m elevation).
+2. **Crossbreed Priscilla & Blizzard of Ariamis (Painted World Snowy Sanctuary)**: Towering white-robed dragon maiden wielding the frost-gleaming Lifehunt Scythe, disappearing into blizzard mist leaving snow footprints (+16.0m elevation).
+3. **Genichiro Ashina, Way of Tomoe (Ashina Castle Upper Dojo)**: Stripped-down samurai warlord channeling the crimson Mortal Blade, rapid Floating Passage sword flurries, and leaping Lightning of Tomoe thunderbolts (+28.0m elevation).
+4. **General Radahn, Conqueror of the Stars (Caelid Wailing Dunes)**: Colossal golden-armored champion wielding twin Starscourge Greatswords, riding faithful steed Leonard, summoning gravitational meteors (-10.0m elevation).
+5. **Father Gascoigne, The Beast Hunter (Oedon Tomb Graveyard)**: Victorian hunter in duster coat and broad-brimmed hat swinging the extended Hunter Axe and blunderbuss, transforming into a ferocious lycanthrope beast (-6.0m elevation).
+6. **Dragonslayer Ornstein & Executioner Smough (Anor Londo Royal Cathedral)**: Legendary golden duo: swift Dragonslayer Ornstein darting with lightning spear lunges, and colossal Executioner Smough crushing with his gargantuan golden war hammer (+22.0m elevation).
+7. **The Pursuer, Cursebearer of the Bastille (Lost Bastille Iron Rampart)**: Hovering phantom knight in dark corroded steel plate with crimson demonic eyes, levitating on ghostly mist and delivering impaling curse thrusts (+18.0m elevation).
+8. **Godrick the Grafted & Lord of Stormveil (Stormveil Grafted Courtyard)**: Multi-armed golden lord wielding three tempest axes, grafting a decapitated dragon head onto his left arm to spew sweeping inferno waves (+12.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V69 Expansion)
 1. **Fountainhead Okami Warrior (Lightning Kemari & Katana)**: Slender porcelain-masked warrior in blue silk kimono and flowing wisteria purple sash, volleying crackling lightning kemari balls and delivering swift silver katana slashes.

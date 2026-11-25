@@ -1047,8 +1047,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-1750, -28], z in [-850, 850]
-        if (x >= -1750 && x <= -28 && z >= -850 && z <= 850) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-2050, -28], z in [-950, 950]
+        if (x >= -2050 && x <= -28 && z >= -950 && z <= 950) {
+            // 8 Brand-New Ascended Outside Realm Expeditions (V73 Expansion)
+            // 1. Lothric Castle Throne Room of Twin Princes (outside_lothric_throne_twin_princes) (elev: +24.0m)
+            if (x >= -1810 && x <= -1720 && z >= -285 && z <= -195) {
+                return 24.0;
+            }
+            // 2. Painted World of Ariamis Snowy Sanctuary (outside_ariamis_snowy_sanctuary_priscilla) (elev: +16.0m)
+            if (x >= -1840 && x <= -1750 && z >= 95 && z <= 185) {
+                return 16.0;
+            }
+            // 3. Ashina Castle Upper Tower Dojo & Thunder Terrace (outside_ashina_dojo_lightning_terrace) (elev: +28.0m)
+            if (x >= -1870 && x <= -1780 && z >= -145 && z <= -55) {
+                return 28.0;
+            }
+            // 4. Caelid Wailing Dunes & Starscourge Shore (outside_caelid_wailing_dunes_radahn) (elev: -10.0m)
+            if (x >= -1900 && x <= -1810 && z >= 255 && z <= 345) {
+                return -10.0;
+            }
+            // 5. Oedon Tomb Graveyard & Hunter's Sepulcher (outside_oedon_tomb_graveyard_gascoigne) (elev: -6.0m)
+            if (x >= -1930 && x <= -1840 && z >= -405 && z <= -315) {
+                return -6.0;
+            }
+            // 6. Anor Londo Royal Cathedral Grand Hall (outside_anor_londo_ornstein_smough_hall) (elev: +22.0m)
+            if (x >= -1960 && x <= -1870 && z >= 15 && z <= 105) {
+                return 22.0;
+            }
+            // 7. Lost Bastille Iron Rampart & Crow Nest Roost (outside_lost_bastille_pursuer_rampart) (elev: +18.0m)
+            if (x >= -1990 && x <= -1900 && z >= -245 && z <= -155) {
+                return 18.0;
+            }
+            // 8. Stormveil Castle Grafted Courtyard (outside_stormveil_grafted_courtyard) (elev: +12.0m)
+            if (x >= -2020 && x <= -1930 && z >= 375 && z <= 465) {
+                return 12.0;
+            }
             // 8 Brand-New Ascended Outside Realm Expeditions (V69 Expansion)
             // 1. Fountainhead Palace Vermilion Waterway & Sacred Sanctuary (outside_fountainhead_vermilion_sanctuary) (elev: +18.0m)
             if (x >= -1565 && x <= -1475 && z >= -265 && z <= -175) {
@@ -4017,6 +4050,9 @@ class DarkSoulsWorld {
         // Build 8 Brand-New Ascended Outside Realm Expeditions (V69 Expansion)
         this.buildEightAscendedOutsideExpeditions(outsideGroup);
 
+        // Build 8 Brand-New Ascended Outside Realm Expeditions (V73 Expansion)
+        this.buildEightAscendedOutsideExpeditionsV73(outsideGroup);
+
         this.scene.add(outsideGroup);
     }
 
@@ -6138,6 +6174,397 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-1712, -18.0, 460, 0x6366f1, 5.5, 32);
         this.createPathBeacon(-1695, -18.0, 460, 0xa855f7, "🌌 NOKSTELLA STARGAZER BASIN [ELEV -18.0m]", "ASTEL STARS OF DARKNESS • VOID METEORITE TAIL • SILVER TEAR MIMICS", "#ede9fe");
         this.createFloorSoapstone(-1695, -18.0, 448, "#a855f7", "🌌 STARGAZER BASIN", "A malformed star born in the flightless void. Gravitational collapse awaits all who tread here.");
+    }
+
+    buildEightAscendedOutsideExpeditionsV73(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V73 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. LOTHRIC CASTLE THRONE ROOM OF TWIN PRINCES
+        // Center: (-1765, 24.0, -240) | Elev: +24.0m | Theme: Royal Gilded Dais, Twin Thrones & Feathers
+        // --------------------------------------------------------------------
+        const lothricGoldMat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, roughness: 0.3, metalness: 0.8 });
+        const royalVelvetMat = new THREE.MeshStandardMaterial({ color: 0x991b1b, roughness: 0.6 });
+        const marbleWhiteMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.35 });
+        const scorchedIronMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.7, metalness: 0.4 });
+
+        // Royal Throne Dais Floor
+        const lothricFloor = new THREE.Mesh(new THREE.BoxGeometry(64, 2.5, 64), marbleWhiteMat);
+        lothricFloor.position.set(-1765, 22.75, -240);
+        lothricFloor.receiveShadow = true;
+        outsideGroup.add(lothricFloor);
+
+        // Crimson & Gold Velvet Runner
+        const lothricCarpet = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 56), royalVelvetMat);
+        lothricCarpet.position.set(-1765, 24.05, -240);
+        outsideGroup.add(lothricCarpet);
+
+        // Fluted Marble Pillars with Gold Capitals
+        for (let px of [-26, 26]) {
+            for (let pz of [-22, 0, 22]) {
+                const pillar = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.6, 22, 16), marbleWhiteMat);
+                pillar.position.set(-1765 + px, 35.0, -240 + pz);
+                outsideGroup.add(pillar);
+
+                const cap = new THREE.Mesh(new THREE.BoxGeometry(3.6, 1.2, 3.6), lothricGoldMat);
+                cap.position.set(-1765 + px, 46.0, -240 + pz);
+                outsideGroup.add(cap);
+            }
+        }
+
+        // Twin Colossal Thrones: Lorian's Scorched Iron Throne & Lothric's Gilded Chair
+        const lorianThrone = new THREE.Mesh(new THREE.BoxGeometry(5.2, 7.5, 3.6), scorchedIronMat);
+        lorianThrone.position.set(-1769, 27.5, -264);
+        outsideGroup.add(lorianThrone);
+
+        const lothricThrone = new THREE.Mesh(new THREE.BoxGeometry(3.6, 6.2, 2.8), lothricGoldMat);
+        lothricThrone.position.set(-1761, 27.0, -264);
+        outsideGroup.add(lothricThrone);
+
+        const lothricAura = new THREE.PointLight(0xfbbf24, 6.5, 55.0);
+        lothricAura.position.set(-1765, 29.0, -240);
+        outsideGroup.add(lothricAura);
+
+        this.createStandingBrazier(-1745, 24.0, -240, 0xfbbf24, 5.0, 35);
+        this.createStandingBrazier(-1785, 24.0, -240, 0xfbbf24, 5.0, 35);
+        this.createPathBeacon(-1765, 24.0, -240, 0xfbbf24, "👑 LOTHRIC THRONE ROOM OF TWIN PRINCES [ELEV +24.0m]", "TWIN PRINCES LORIAN & LOTHRIC • HOLY LIGHT TELEPORT & SOUL ARROWS • WINGED KNIGHTS", "#fef08a");
+        this.createFloorSoapstone(-1765, 24.0, -225, "#fbbf24", "👑 LOTHRIC THRONE ROOM", "This spot marks our grave, but you may rest here too, if you would like.");
+
+        // --------------------------------------------------------------------
+        // 2. PAINTED WORLD OF ARIAMIS SNOWY SANCTUARY
+        // Center: (-1795, 16.0, 140) | Elev: +16.0m | Theme: Hoarfrost Parapet, Blizzard Wind & Priscilla
+        // --------------------------------------------------------------------
+        const snowParapetMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.8 });
+        const iceBlueMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.15, metalness: 0.6, transparent: true, opacity: 0.85 });
+        const ropeWoodMat = new THREE.MeshStandardMaterial({ color: 0x57534e, roughness: 0.7 });
+
+        // Circular Snow Platform
+        const snowTower = new THREE.Mesh(new THREE.CylinderGeometry(32, 34, 4.0, 24), snowParapetMat);
+        snowTower.position.set(-1795, 14.0, 140);
+        snowTower.receiveShadow = true;
+        outsideGroup.add(snowTower);
+
+        // Perimeter Crenellations & Gargoyles
+        for (let g = 0; g < 12; g++) {
+            const gang = (g / 12) * Math.PI * 2;
+            const gx = -1795 + Math.cos(gang) * 31;
+            const gz = 140 + Math.sin(gang) * 31;
+            const battlement = new THREE.Mesh(new THREE.BoxGeometry(3.0, 2.2, 1.8), snowParapetMat);
+            battlement.position.set(gx, 17.1, gz);
+            battlement.rotation.y = gang;
+            outsideGroup.add(battlement);
+        }
+
+        // Giant Rope Bridge Anchor Posts
+        for (let rw of [-8, 8]) {
+            const ropePost = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.0, 9.0, 8), ropeWoodMat);
+            ropePost.position.set(-1795 + rw, 20.0, 170);
+            outsideGroup.add(ropePost);
+        }
+
+        // Swirling Frost Crystals
+        for (let fc = 0; fc < 8; fc++) {
+            const fang = (fc / 8) * Math.PI * 2;
+            const fMesh = new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 0), iceBlueMat);
+            fMesh.position.set(-1795 + Math.cos(fang) * 18, 19.5 + Math.sin(fc) * 2.0, 140 + Math.sin(fang) * 18);
+            outsideGroup.add(fMesh);
+        }
+
+        const priscillaLight = new THREE.PointLight(0x38bdf8, 6.0, 50.0);
+        priscillaLight.position.set(-1795, 20.0, 140);
+        outsideGroup.add(priscillaLight);
+
+        this.createStandingBrazier(-1780, 16.0, 140, 0x38bdf8, 5.0, 35);
+        this.createStandingBrazier(-1810, 16.0, 140, 0x38bdf8, 5.0, 35);
+        this.createPathBeacon(-1795, 16.0, 140, 0x38bdf8, "❄️ PAINTED WORLD OF ARIAMIS SNOWY SANCTUARY [ELEV +16.0m]", "CROSSBREED PRISCILLA • LIFEHUNT SCYTHE & BLIZZARD MIST • CORVIAN CROW DEMONS", "#bae6fd");
+        this.createFloorSoapstone(-1795, 16.0, 126, "#38bdf8", "❄️ ARIAMIS SNOW SANCTUARY", "This land is peaceful, its inhabitants kind. But trespassers shall reap the cold harvest of the Lifehunt Scythe.");
+
+        // --------------------------------------------------------------------
+        // 3. ASHINA CASTLE UPPER TOWER DOJO & THUNDER TERRACE
+        // Center: (-1825, 28.0, -100) | Elev: +28.0m | Theme: Japanese Tenshu Roof, Lightning Rods & Tomoe
+        // --------------------------------------------------------------------
+        const cedarRoofMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5 });
+        const tatamiFloorMat = new THREE.MeshStandardMaterial({ color: 0xa16207, roughness: 0.7 });
+        const shojiWhiteMat = new THREE.MeshStandardMaterial({ color: 0xfef3c7, roughness: 0.4 });
+        const copperRodMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.3, metalness: 0.8 });
+
+        // Dojo Platform
+        const dojoPlat = new THREE.Mesh(new THREE.BoxGeometry(50, 3.0, 50), tatamiFloorMat);
+        dojoPlat.position.set(-1825, 26.5, -100);
+        outsideGroup.add(dojoPlat);
+
+        // Curved Overhanging Pagoda Eaves
+        const pagodaEaves = new THREE.Mesh(new THREE.ConeGeometry(38, 7.5, 4), cedarRoofMat);
+        pagodaEaves.position.set(-1825, 38.0, -100);
+        pagodaEaves.rotation.y = Math.PI / 4;
+        outsideGroup.add(pagodaEaves);
+
+        // Shoji Screen Partitions
+        for (let s of [-18, 18]) {
+            const shoji = new THREE.Mesh(new THREE.BoxGeometry(0.4, 7.0, 32), shojiWhiteMat);
+            shoji.position.set(-1825 + s, 31.5, -100);
+            outsideGroup.add(shoji);
+        }
+
+        // Quad Lightning Conductor Rods with Golden Arcs
+        for (let lrx of [-22, 22]) {
+            for (let lrz of [-22, 22]) {
+                const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.4, 14.0, 8), copperRodMat);
+                rod.position.set(-1825 + lrx, 34.0, -100 + lrz);
+                outsideGroup.add(rod);
+
+                const spark = new THREE.Mesh(new THREE.DodecahedronGeometry(0.7), new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 3.5 }));
+                spark.position.set(-1825 + lrx, 41.5, -100 + lrz);
+                outsideGroup.add(spark);
+            }
+        }
+
+        const genichiroAura = new THREE.PointLight(0xfacc15, 6.5, 55.0);
+        genichiroAura.position.set(-1825, 32.0, -100);
+        outsideGroup.add(genichiroAura);
+
+        this.createStandingBrazier(-1810, 28.0, -100, 0xfacc15, 5.5, 35);
+        this.createStandingBrazier(-1840, 28.0, -100, 0xfacc15, 5.5, 35);
+        this.createPathBeacon(-1825, 28.0, -100, 0xfacc15, "⚡ ASHINA CASTLE UPPER DOJO & THUNDER TERRACE [ELEV +28.0m]", "GENICHIRO ASHINA WAY OF TOMOE • MORTAL BLADE & LIGHTNING OF TOMOE • NIGHTJAR NINJAS", "#fef08a");
+        this.createFloorSoapstone(-1825, 28.0, -85, "#facc15", "⚡ ASHINA UPPER DOJO", "For the sake of Ashina, I will shed my humanity. Behold the Lightning of Tomoe!");
+
+        // --------------------------------------------------------------------
+        // 4. CAELID WAILING DUNES & STARSCOURGE SHORE
+        // Center: (-1855, -10.0, 300) | Elev: -10.0m | Theme: Red Sand Basin, Gravity Meteorite & Radahn
+        // --------------------------------------------------------------------
+        const rustSandMat = new THREE.MeshStandardMaterial({ color: 0x7f1d1d, roughness: 0.9 });
+        const gravityAmethystMat = new THREE.MeshStandardMaterial({ color: 0x9333ea, emissive: 0x7e22ce, emissiveIntensity: 2.5, roughness: 0.2 });
+        const charredWoodMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.8 });
+
+        // Red Sand Dune Basin
+        const duneBasin = new THREE.Mesh(new THREE.CylinderGeometry(54, 58, 2.0, 32), rustSandMat);
+        duneBasin.position.set(-1855, -11.0, 300);
+        outsideGroup.add(duneBasin);
+
+        // Center Cosmic Meteorite Crater
+        const craterRim = new THREE.Mesh(new THREE.TorusGeometry(14.0, 3.2, 8, 24), rustSandMat);
+        craterRim.position.set(-1855, -9.8, 300);
+        craterRim.rotation.x = Math.PI / 2;
+        outsideGroup.add(craterRim);
+
+        // Floating Purple Gravity Amethyst Monoliths
+        for (let m = 0; m < 5; m++) {
+            const mang = (m / 5) * Math.PI * 2;
+            const mono = new THREE.Mesh(new THREE.BoxGeometry(2.4, 7.0, 2.4), gravityAmethystMat);
+            mono.position.set(-1855 + Math.cos(mang) * 11, -5.0 + Math.sin(m) * 1.5, 300 + Math.sin(mang) * 11);
+            mono.rotation.set(0.3, mang, 0.2);
+            outsideGroup.add(mono);
+        }
+
+        // Redmane War Barricades & Speared Flags
+        for (let b = 0; b < 6; b++) {
+            const bang = (b / 6) * Math.PI * 2;
+            const bar = new THREE.Mesh(new THREE.BoxGeometry(1.2, 5.0, 6.0), charredWoodMat);
+            bar.position.set(-1855 + Math.cos(bang) * 36, -8.0, 300 + Math.sin(bang) * 36);
+            bar.rotation.y = bang;
+            outsideGroup.add(bar);
+        }
+
+        const radahnLight = new THREE.PointLight(0x9333ea, 7.0, 60.0);
+        radahnLight.position.set(-1855, -4.0, 300);
+        outsideGroup.add(radahnLight);
+
+        this.createStandingBrazier(-1835, -10.0, 300, 0xef4444, 6.0, 38);
+        this.createStandingBrazier(-1875, -10.0, 300, 0x9333ea, 6.0, 38);
+        this.createPathBeacon(-1855, -10.0, 300, 0x9333ea, "🌌 CAELID WAILING DUNES & STARSCOURGE SHORE [ELEV -10.0m]", "GENERAL RADAHN CONQUEROR OF THE STARS • COLLAPSING STARS & METEOR CRASH • FLAME CHARIOTS", "#e9d5ff");
+        this.createFloorSoapstone(-1855, -10.0, 285, "#9333ea", "🌌 WAILING DUNES", "A celebration of war! The Redmane Festival has begun! Radahn holds the stars in thrall.");
+
+        // --------------------------------------------------------------------
+        // 5. OEDON TOMB GRAVEYARD & HUNTER'S SEPULCHER
+        // Center: (-1885, -6.0, -360) | Elev: -6.0m | Theme: Victorian Cobbles, Tombstones & Father Gascoigne
+        // --------------------------------------------------------------------
+        const mossCobbleMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8 });
+        const tombstoneMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.75 });
+        const wroughtIronMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4, metalness: 0.7 });
+
+        // Cemetery Cobblestone Floor
+        const cemFloor = new THREE.Mesh(new THREE.BoxGeometry(54, 2.0, 54), mossCobbleMat);
+        cemFloor.position.set(-1885, -7.0, -360);
+        outsideGroup.add(cemFloor);
+
+        // Crumbling Gothic Gazebo Mausoleum
+        for (let col = 0; col < 6; col++) {
+            const cang = (col / 6) * Math.PI * 2;
+            const cPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.6, 7.5, 8), tombstoneMat);
+            cPillar.position.set(-1885 + Math.cos(cang) * 9.0, -2.5, -360 + Math.sin(cang) * 9.0);
+            outsideGroup.add(cPillar);
+        }
+        const gazeboDome = new THREE.Mesh(new THREE.SphereGeometry(9.5, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), tombstoneMat);
+        gazeboDome.position.set(-1885, 1.2, -360);
+        outsideGroup.add(gazeboDome);
+
+        // Dozens of Crooked Tombstone Slabs
+        for (let ts = 0; ts < 16; ts++) {
+            const tang = (ts / 16) * Math.PI * 2;
+            const dist = 14 + (ts % 3) * 6;
+            const tstone = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2.8, 0.45), tombstoneMat);
+            tstone.position.set(-1885 + Math.cos(tang) * dist, -4.6, -360 + Math.sin(tang) * dist);
+            tstone.rotation.y = tang + (ts % 2 ? 0.2 : -0.2);
+            tstone.rotation.z = (ts % 2 ? 0.15 : -0.15);
+            outsideGroup.add(tstone);
+        }
+
+        // Victorian Wrought Iron Gas Lamps
+        for (let vl of [-18, 18]) {
+            const vPost = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.25, 6.0, 8), wroughtIronMat);
+            vPost.position.set(-1885 + vl, -3.0, -360);
+            outsideGroup.add(vPost);
+
+            const vLamp = new THREE.Mesh(new THREE.OctahedronGeometry(0.65), new THREE.MeshStandardMaterial({ color: 0xd97706, emissive: 0xb45309, emissiveIntensity: 2.5 }));
+            vLamp.position.set(-1885 + vl, 0.2, -360);
+            outsideGroup.add(vLamp);
+        }
+
+        const gascoigneLight = new THREE.PointLight(0xd97706, 5.5, 48.0);
+        gascoigneLight.position.set(-1885, -1.0, -360);
+        outsideGroup.add(gascoigneLight);
+
+        this.createStandingBrazier(-1868, -6.0, -360, 0xd97706, 5.0, 32);
+        this.createStandingBrazier(-1902, -6.0, -360, 0xd97706, 5.0, 32);
+        this.createPathBeacon(-1885, -6.0, -360, 0xd97706, "🪦 OEDON TOMB GRAVEYARD & HUNTER'S SEPULCHER [ELEV -6.0m]", "FATHER GASCOIGNE THE BEAST HUNTER • HUNTER AXE & BEAST FORM • YHARNAM HUNTSMEN", "#fed7aa");
+        this.createFloorSoapstone(-1885, -6.0, -345, "#d97706", "🪦 TOMB OF OEDON", "Beasts all over the shop... You'll be one of them, sooner or later...");
+
+        // --------------------------------------------------------------------
+        // 6. ANOR LONDO ROYAL CATHEDRAL GRAND HALL
+        // Center: (-1915, 22.0, 60) | Elev: +22.0m | Theme: High Gothic Arches, Stained Glass & Ornstein / Smough
+        // --------------------------------------------------------------------
+        const cathedralWhiteMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.3 });
+        const cathedralGoldMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.25, metalness: 0.85 });
+        const stainedGlassMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x1d4ed8, emissiveIntensity: 2.0, transparent: true, opacity: 0.8 });
+
+        // Cathedral Nave Floor
+        const cathNave = new THREE.Mesh(new THREE.BoxGeometry(68, 3.0, 36), cathedralWhiteMat);
+        cathNave.position.set(-1915, 20.5, 60);
+        cathNave.receiveShadow = true;
+        outsideGroup.add(cathNave);
+
+        // High Vaulted Gothic Arches
+        for (let ax = -26; ax <= 26; ax += 13) {
+            const arch = new THREE.Mesh(new THREE.TorusGeometry(12.0, 1.2, 8, 20, Math.PI), cathedralWhiteMat);
+            arch.position.set(-1915 + ax, 32.0, 60);
+            arch.rotation.y = Math.PI / 2;
+            outsideGroup.add(arch);
+        }
+
+        // Stained Glass Rosette Window at Apse
+        const rosette = new THREE.Mesh(new THREE.CylinderGeometry(7.0, 7.0, 0.4, 24), stainedGlassMat);
+        rosette.position.set(-1948, 32.0, 60);
+        rosette.rotation.z = Math.PI / 2;
+        outsideGroup.add(rosette);
+
+        // Golden Statues of Gwyn & Gwynevere Dais
+        for (let st of [-8, 8]) {
+            const statue = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.6, 9.0, 8), cathedralGoldMat);
+            statue.position.set(-1940, 26.5, 60 + st);
+            outsideGroup.add(statue);
+        }
+
+        const onSAura = new THREE.PointLight(0xf59e0b, 7.0, 60.0);
+        onSAura.position.set(-1915, 28.0, 60);
+        outsideGroup.add(onSAura);
+
+        this.createStandingBrazier(-1895, 22.0, 60, 0xf59e0b, 5.5, 35);
+        this.createStandingBrazier(-1935, 22.0, 60, 0xf59e0b, 5.5, 35);
+        this.createPathBeacon(-1915, 22.0, 60, 0xf59e0b, "☀️ ANOR LONDO ROYAL CATHEDRAL GRAND HALL [ELEV +22.0m]", "DRAGONSLAYER ORNSTEIN & EXECUTIONER SMOUGH • LIGHTNING SPEAR & GOLDEN HAMMER • SILVER KNIGHTS", "#fde68a");
+        this.createFloorSoapstone(-1915, 22.0, 75, "#f59e0b", "☀️ ROYAL CATHEDRAL", "The sun god's finest knights stand vigil. Beware the swift spear and the crushing hammer!");
+
+        // --------------------------------------------------------------------
+        // 7. LOST BASTILLE IRON RAMPART & CROW NEST ROOST
+        // Center: (-1945, 18.0, -200) | Elev: +18.0m | Theme: Iron Bastion, Cursed Fog & The Pursuer
+        // --------------------------------------------------------------------
+        const basaltBastionMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.85 });
+        const curseSteelMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.4, metalness: 0.8 });
+        const nestTwigMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.9 });
+
+        // Bastille Rampart Platform
+        const bastPlat = new THREE.Mesh(new THREE.BoxGeometry(50, 3.5, 50), basaltBastionMat);
+        bastPlat.position.set(-1945, 16.25, -200);
+        outsideGroup.add(bastPlat);
+
+        // Rusted Iron Gibbets & Hanging Cages
+        for (let g of [-18, 18]) {
+            const gibbetArm = new THREE.Mesh(new THREE.BoxGeometry(0.5, 8.0, 0.5), curseSteelMat);
+            gibbetArm.position.set(-1945 + g, 22.0, -200);
+            outsideGroup.add(gibbetArm);
+
+            const cage = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 2.5, 8, 1, true), curseSteelMat);
+            cage.position.set(-1945 + g, 22.5, -200);
+            outsideGroup.add(cage);
+        }
+
+        // Colossal Crow Nest Landing Platform
+        const crowNest = new THREE.Mesh(new THREE.TorusGeometry(8.5, 2.2, 8, 20), nestTwigMat);
+        crowNest.position.set(-1945, 18.5, -218);
+        crowNest.rotation.x = Math.PI / 2;
+        outsideGroup.add(crowNest);
+
+        // Rusted Siege Ballistas
+        for (let b of [-12, 12]) {
+            const ballista = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.4, 4.0), curseSteelMat);
+            ballista.position.set(-1945 + b, 19.0, -182);
+            outsideGroup.add(ballista);
+        }
+
+        const pursuerLight = new THREE.PointLight(0x6366f1, 6.0, 50.0);
+        pursuerLight.position.set(-1945, 22.0, -200);
+        outsideGroup.add(pursuerLight);
+
+        this.createStandingBrazier(-1928, 18.0, -200, 0x6366f1, 5.0, 35);
+        this.createStandingBrazier(-1962, 18.0, -200, 0x6366f1, 5.0, 35);
+        this.createPathBeacon(-1945, 18.0, -200, 0x6366f1, "🦅 LOST BASTILLE IRON RAMPART & CROW ROOST [ELEV +18.0m]", "THE PURSUER CURSEBEARER OF BASTILLE • ULTRA GREATSWORD & CURSE SWARMS • RUIN SENTINELS", "#c7d2fe");
+        this.createFloorSoapstone(-1945, 18.0, -186, "#6366f1", "🦅 BASTILLE RAMPARTS", "Borne upon the wings of an omen crow, the Pursuer never yields. Dodge the red thrust!");
+
+        // --------------------------------------------------------------------
+        // 8. STORMVEIL CASTLE SECLUDED CELL & GRAFTED COURTYARD
+        // Center: (-1975, 12.0, 420) | Elev: +12.0m | Theme: Storm Briars, Decapitated Dragon & Godrick
+        // --------------------------------------------------------------------
+        const stormStoneMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.7 });
+        const graftedDragonMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, roughness: 0.35, metalness: 0.6 });
+        const stormVortexMat = new THREE.MeshStandardMaterial({ color: 0xeab308, emissive: 0xca8a04, emissiveIntensity: 2.2, transparent: true, opacity: 0.75 });
+
+        // Grafted Courtyard Flagstone Floor
+        const stormFloor = new THREE.Mesh(new THREE.BoxGeometry(56, 2.5, 56), stormStoneMat);
+        stormFloor.position.set(-1975, 10.75, 420);
+        outsideGroup.add(stormFloor);
+
+        // Decapitated Colossal Dragon Head Monument
+        const dragonHead = new THREE.Mesh(new THREE.ConeGeometry(4.5, 10.0, 6), graftedDragonMat);
+        dragonHead.position.set(-1975, 16.0, 440);
+        dragonHead.rotation.x = -Math.PI / 3;
+        outsideGroup.add(dragonHead);
+
+        // Quad Ruined Cloister Columns
+        for (let cx of [-22, 22]) {
+            for (let cz of [400, 440]) {
+                const cCol = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.4, 12, 10), stormStoneMat);
+                cCol.position.set(-1975 + cx, 16.5, cz);
+                outsideGroup.add(cCol);
+            }
+        }
+
+        // Swirling Golden Stormwind Vortex Rings
+        for (let vr = 0; vr < 3; vr++) {
+            const vRing = new THREE.Mesh(new THREE.TorusGeometry(8.0 + vr * 4.0, 0.45, 6, 24), stormVortexMat);
+            vRing.position.set(-1975, 14.0 + vr * 2.5, 420);
+            vRing.rotation.x = Math.PI / 2 + vr * 0.1;
+            outsideGroup.add(vRing);
+        }
+
+        const godrickLight = new THREE.PointLight(0xeab308, 6.5, 55.0);
+        godrickLight.position.set(-1975, 17.0, 420);
+        outsideGroup.add(godrickLight);
+
+        this.createStandingBrazier(-1955, 12.0, 420, 0xeab308, 5.5, 35);
+        this.createStandingBrazier(-1995, 12.0, 420, 0xeab308, 5.5, 35);
+        this.createPathBeacon(-1975, 12.0, 420, 0xeab308, "🌪️ STORMVEIL CASTLE GRAFTED COURTYARD [ELEV +12.0m]", "GODRICK THE GRAFTED LORD OF STORMVEIL • GRAFTED DRAGON & TORNADO AXES • BLADE WARHAWKS", "#fef08a");
+        this.createFloorSoapstone(-1975, 12.0, 404, "#eab308", "🌪️ GRAFTED COURTYARD", "I command thee, KNEEL! Witness the true power of the Golden Lineage!");
     }
 
     buildSerpentSanctum() {
