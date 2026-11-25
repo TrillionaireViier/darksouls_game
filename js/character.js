@@ -3891,8 +3891,25 @@ class DarkSoulsCharacters {
             return this.createAshinaAshigaruRifleman(x, z, angle, y, mobDef);
         } else if (type.includes('dragon_cult_lapis') || type.includes('lapis_knight') || type.includes('dragonbolt_knight')) {
             return this.createDragonCultLapisKnight(x, z, angle, y, mobDef);
-        } else if (type.includes('manserpent_magma') || type.includes('magma_sorcerer') || type.includes('serpent_magma_flail')) {
+        } else if (type.includes('man_serpent_magma') || type.includes('magma_sorcerer') || type.includes('serpent_sorcerer')) {
             return this.createManSerpentMagmaSorcerer(x, z, angle, y, mobDef);
+        // === 8 BRAND-NEW BESPOKE 3D MOB DISPATCHES (V69 EXPANSION) ===
+        } else if (type.includes('fountainhead_okami') || type.includes('okami_warrior') || type.includes('okami')) {
+            return this.createFountainheadOkamiWarrior(x, z, angle, y, mobDef);
+        } else if (type.includes('cainhurst_bloodlicker') || type.includes('bloodlicker') || type.includes('flea_beast')) {
+            return this.createCainhurstBloodlickerGargoyle(x, z, angle, y, mobDef);
+        } else if (type.includes('carian_marionette') || type.includes('marionette_soldier') || type.includes('aviator_puppet')) {
+            return this.createCarianMarionetteAviator(x, z, angle, y, mobDef);
+        } else if (type.includes('deep_evangelist') || type.includes('evangelist_preacher') || type.includes('evangelist')) {
+            return this.createDeepEvangelistPreacher(x, z, angle, y, mobDef);
+        } else if (type.includes('giant_sentinel') || type.includes('anor_londo_sentinel') || type.includes('royal_sentinel')) {
+            return this.createGiantRoyalSentinelAnorLondo(x, z, angle, y, mobDef);
+        } else if (type.includes('briar_duelist') || type.includes('maleigh_duelist') || type.includes('gladiator_briar')) {
+            return this.createBriarDuelistGladiator(x, z, angle, y, mobDef);
+        } else if (type.includes('senpou_taro') || type.includes('taro_trooper') || type.includes('taro_brute')) {
+            return this.createSenpouTaroTrooper(x, z, angle, y, mobDef);
+        } else if (type.includes('silver_tear') || type.includes('mimic_slime') || type.includes('silver_slime')) {
+            return this.createSilverTearMimicSlime(x, z, angle, y, mobDef);
         }
 
         const root = new THREE.Group();
@@ -25834,6 +25851,940 @@ class DarkSoulsCharacters {
 
         root.scale.set(4.5, 4.5, 4.5);
         root.userData = { bodyGroup, neck, face, auraLight: rykardAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // ========================================================================
+    // 8 BRAND-NEW BESPOKE 3D MOB MODELS (V69 EXPANSION)
+    // ========================================================================
+
+    // 1. FOUNTAINHEAD OKAMI WARRIOR (Lightning Kemari & Katana)
+    createFountainheadOkamiWarrior(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.95;
+        root.add(bodyGroup);
+
+        const silkMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.5 });
+        const sashMat = new THREE.MeshStandardMaterial({ color: 0xc084fc, roughness: 0.6 });
+        const porcelainMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2 });
+        const steelMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.3, metalness: 0.8 });
+        const lightningMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 2.5 });
+
+        // Slender Robed Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.8, 0.32), silkMat);
+        bodyGroup.add(torso);
+
+        // Flowing Purple Wisteria Sash
+        const sash = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.2, 0.38), sashMat);
+        sash.position.set(0, -0.15, 0);
+        bodyGroup.add(sash);
+
+        // Elongated Neck & Porcelain Mask Head
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 0.35, 6), porcelainMat);
+        neck.position.set(0, 0.52, 0);
+        bodyGroup.add(neck);
+
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), porcelainMat);
+        head.position.set(0, 0.72, 0);
+        bodyGroup.add(head);
+
+        // Slender Silver Katana
+        const katana = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.8, 0.12), steelMat);
+        katana.position.set(0.42, 0.15, 0.3);
+        katana.rotation.x = 0.6;
+        bodyGroup.add(katana);
+
+        // Orbiting Lightning Kemari Ball
+        const kemari = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 8), lightningMat);
+        kemari.position.set(-0.45, 0.45, 0.35);
+        bodyGroup.add(kemari);
+
+        // Legs
+        for (let legSide of [-0.15, 0.15]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.85, 6), silkMat);
+            leg.position.set(legSide, -0.75, 0);
+            bodyGroup.add(leg);
+        }
+
+        const mobLight = new THREE.PointLight(0xfacc15, 2.0, 12.0);
+        mobLight.position.set(0, 0.8, 0);
+        bodyGroup.add(mobLight);
+
+        root.userData = { bodyGroup, kemari, auraLight: mobLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 2. CAINHURST CASTLE GARGOYLE BLOODLICKER (Flea Beast)
+    createCainhurstBloodlickerGargoyle(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.85;
+        root.add(bodyGroup);
+
+        const bloodMat = new THREE.MeshStandardMaterial({ color: 0x991b1b, emissive: 0x450a0a, emissiveIntensity: 1.8, roughness: 0.3 });
+        const boneMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7, metalness: 0.3 });
+        const wingMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.8, transparent: true, opacity: 0.85 });
+
+        // Swollen Blood-Engorged Abdomen
+        const abdomen = new THREE.Mesh(new THREE.SphereGeometry(0.65, 10, 10), bloodMat);
+        abdomen.position.set(0, 0.25, -0.45);
+        abdomen.scale.set(1.0, 1.25, 1.4);
+        bodyGroup.add(abdomen);
+
+        // Skeletal Thorax
+        const thorax = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.45, 0.6), boneMat);
+        thorax.position.set(0, 0.2, 0.25);
+        bodyGroup.add(thorax);
+
+        // Proboscis Feeding Needle
+        const proboscis = new THREE.Mesh(new THREE.ConeGeometry(0.06, 1.2, 6), bloodMat);
+        proboscis.position.set(0, 0.15, 0.95);
+        proboscis.rotation.x = Math.PI / 2;
+        bodyGroup.add(proboscis);
+
+        // Quad Spindly Legs
+        for (let side of [-1, 1]) {
+            for (let l = 0; l < 2; l++) {
+                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 1.2, 5), boneMat);
+                leg.position.set(side * 0.45, -0.25, -0.2 + l * 0.5);
+                leg.rotation.z = side * 0.4;
+                bodyGroup.add(leg);
+            }
+        }
+
+        // Leathery Wings
+        for (let wSide of [-1, 1]) {
+            const wing = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.04, 0.5), wingMat);
+            wing.position.set(wSide * 0.55, 0.55, -0.1);
+            wing.rotation.z = wSide * 0.35;
+            bodyGroup.add(wing);
+        }
+
+        const mobLight = new THREE.PointLight(0xe11d48, 2.2, 14.0);
+        mobLight.position.set(0, 0.4, 0);
+        bodyGroup.add(mobLight);
+
+        root.userData = { bodyGroup, abdomen, auraLight: mobLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 3. CARIAN MARIONETTE AVIATOR (Quad-Arm Clockwork Puppet)
+    createCarianMarionetteAviator(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.9;
+        root.add(bodyGroup);
+
+        const brassMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.35, metalness: 0.85 });
+        const coreMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.2 });
+        const steelMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.4, metalness: 0.8 });
+
+        // Brass Clockwork Torso
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 0.75, 8), brassMat);
+        bodyGroup.add(torso);
+
+        // Glowing Glintstone Energy Core
+        const core = new THREE.Mesh(new THREE.SphereGeometry(0.12, 6, 6), coreMat);
+        core.position.set(0, 0.05, 0.16);
+        bodyGroup.add(core);
+
+        // Revolving Bird-Beak Head
+        const head = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.45, 6), brassMat);
+        head.position.set(0, 0.55, 0.05);
+        head.rotation.x = 0.3;
+        bodyGroup.add(head);
+
+        // Quad Articulated Arms (4 Arms!)
+        for (let armIdx = 0; armIdx < 4; armIdx++) {
+            const side = (armIdx % 2 === 0) ? -1 : 1;
+            const height = (armIdx < 2) ? 0.25 : -0.05;
+            const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.7, 5), brassMat);
+            arm.position.set(side * 0.38, height, 0.15);
+            arm.rotation.z = side * 0.5;
+            bodyGroup.add(arm);
+
+            if (armIdx < 2) {
+                // Dual Curved Short Swords
+                const sword = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.9, 0.12), steelMat);
+                sword.position.set(side * 0.55, height - 0.2, 0.35);
+                sword.rotation.x = 0.5;
+                bodyGroup.add(sword);
+            } else {
+                // Dual Miniature Shortbows
+                const bow = new THREE.Mesh(new THREE.TorusGeometry(0.25, 0.03, 4, 8, Math.PI), brassMat);
+                bow.position.set(side * 0.55, height - 0.1, 0.3);
+                bow.rotation.y = side * Math.PI / 4;
+                bodyGroup.add(bow);
+            }
+        }
+
+        // Spindly Brass Legs
+        for (let legSide of [-0.14, 0.14]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.8, 6), brassMat);
+            leg.position.set(legSide, -0.7, 0);
+            bodyGroup.add(leg);
+        }
+
+        const mobLight = new THREE.PointLight(0x38bdf8, 2.0, 12.0);
+        mobLight.position.set(0, 0.5, 0);
+        bodyGroup.add(mobLight);
+
+        root.userData = { bodyGroup, core, auraLight: mobLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 4. DEEP EVANGELIST PREACHER (Spiked Mace & Wimple Robes)
+    createDeepEvangelistPreacher(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.05;
+        root.add(bodyGroup);
+
+        const wimpleMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.7 });
+        const robeMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.85 });
+        const woodMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.7 });
+        const ironMat = new THREE.MeshStandardMaterial({ color: 0x71717a, roughness: 0.4, metalness: 0.7 });
+        const hexMat = new THREE.MeshStandardMaterial({ color: 0x7c3aed, emissive: 0x4c1d95, emissiveIntensity: 2.2 });
+
+        // Bulky Robed Torso
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.55, 1.1, 10), robeMat);
+        bodyGroup.add(torso);
+
+        // Broad White Clerical Wimple Cowl
+        const wimple = new THREE.Mesh(new THREE.ConeGeometry(0.65, 0.65, 8), wimpleMat);
+        wimple.position.set(0, 0.75, -0.05);
+        bodyGroup.add(wimple);
+
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 8, 8), wimpleMat);
+        head.position.set(0, 0.65, 0.1);
+        bodyGroup.add(head);
+
+        // Colossal Spiked Two-Handed Mace (Spiked Bat)
+        const maceShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 2.4, 6), woodMat);
+        maceShaft.position.set(0.48, 0.25, 0.4);
+        maceShaft.rotation.x = 0.45;
+        bodyGroup.add(maceShaft);
+
+        const maceHead = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.16, 0.75, 8), ironMat);
+        maceHead.position.set(0.48, 0.9, 0.75);
+        maceHead.rotation.x = 0.45;
+        bodyGroup.add(maceHead);
+
+        // Deep Soul Hex Tome
+        const tome = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.35, 0.08), hexMat);
+        tome.position.set(-0.35, 0.15, 0.25);
+        bodyGroup.add(tome);
+
+        // Robe Lower Skirt
+        const skirt = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.7, 0.85, 10), robeMat);
+        skirt.position.set(0, -0.75, 0);
+        bodyGroup.add(skirt);
+
+        const mobLight = new THREE.PointLight(0x7c3aed, 2.2, 14.0);
+        mobLight.position.set(0, 0.8, 0);
+        bodyGroup.add(mobLight);
+
+        root.userData = { bodyGroup, auraLight: mobLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 5. GIANT ROYAL SENTINEL OF ANOR LONDO (Brass Halberd & Tower Shield)
+    createGiantRoyalSentinelAnorLondo(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.6;
+        root.add(bodyGroup);
+
+        const brassMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.35, metalness: 0.85 });
+        const steelMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.4, metalness: 0.8 });
+        const goldGlow = new THREE.MeshStandardMaterial({ color: 0xfef08a, emissive: 0xfbbf24, emissiveIntensity: 2.0 });
+
+        // Massive Brass Cuirass
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.25, 0.65), brassMat);
+        bodyGroup.add(torso);
+
+        // Domed Plumed Helmet
+        const helm = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.36, 0.55, 8), brassMat);
+        helm.position.set(0, 0.9, 0);
+        bodyGroup.add(helm);
+
+        const plume = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.45, 0.6), goldGlow);
+        plume.position.set(0, 1.25, 0.1);
+        bodyGroup.add(plume);
+
+        // Giant Brass Tower Shield
+        const shield = new THREE.Mesh(new THREE.BoxGeometry(0.18, 2.6, 1.15), brassMat);
+        shield.position.set(-0.75, 0.1, 0.45);
+        bodyGroup.add(shield);
+
+        // Colossal Ceremonial Halberd
+        const halberdShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 4.2, 6), brassMat);
+        halberdShaft.position.set(0.75, 0.4, 0.35);
+        bodyGroup.add(halberdShaft);
+
+        const halberdBlade = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.9, 0.55), steelMat);
+        halberdBlade.position.set(0.75, 2.1, 0.45);
+        bodyGroup.add(halberdBlade);
+
+        // Heavy Armored Legs
+        for (let legSide of [-0.28, 0.28]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.15, 1.4, 6), brassMat);
+            leg.position.set(legSide, -1.2, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.4, 1.4, 1.4);
+        const mobLight = new THREE.PointLight(0xfbbf24, 2.8, 18.0);
+        mobLight.position.set(0, 1.5, 0);
+        bodyGroup.add(mobLight);
+
+        root.userData = { bodyGroup, auraLight: mobLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 6. BRIAR DUELIST GLADIATOR (Barbed Battleaxe & Chain)
+    createBriarDuelistGladiator(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.95;
+        root.add(bodyGroup);
+
+        const fleshMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.75 });
+        const briarMat = new THREE.MeshStandardMaterial({ color: 0x7f1d1d, roughness: 0.65, metalness: 0.4 });
+        const ironMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.4, metalness: 0.8 });
+
+        // Muscular Bare Gladiator Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.85, 0.4), fleshMat);
+        bodyGroup.add(torso);
+
+        // Coiled Barbed Briar Wire around Torso
+        for (let b = 0; b < 3; b++) {
+            const wire = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.04, 4, 10), briarMat);
+            wire.position.set(0, -0.2 + b * 0.2, 0);
+            wire.rotation.x = Math.PI / 2;
+            bodyGroup.add(wire);
+        }
+
+        // Horned Gladiator Helmet
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 8, 8), ironMat);
+        head.position.set(0, 0.65, 0);
+        bodyGroup.add(head);
+
+        for (let hSide of [-1, 1]) {
+            const horn = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.5, 5), ironMat);
+            horn.position.set(hSide * 0.26, 0.85, 0);
+            horn.rotation.z = -hSide * 0.6;
+            bodyGroup.add(horn);
+        }
+
+        // Heavy Barbed Battleaxe
+        const axeShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.2, 5), briarMat);
+        axeShaft.position.set(0.48, 0.25, 0.35);
+        axeShaft.rotation.x = 0.4;
+        bodyGroup.add(axeShaft);
+
+        const axeBlade = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.75, 0.45), ironMat);
+        axeBlade.position.set(0.48, 0.85, 0.55);
+        bodyGroup.add(axeBlade);
+
+        // Spiked Buckler Shield
+        const buckler = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.06, 8), ironMat);
+        buckler.position.set(-0.45, 0.15, 0.3);
+        buckler.rotation.x = Math.PI / 2;
+        bodyGroup.add(buckler);
+
+        // Studded Leather Legs
+        for (let legSide of [-0.18, 0.18]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.08, 0.85, 6), briarMat);
+            leg.position.set(legSide, -0.75, 0);
+            bodyGroup.add(leg);
+        }
+
+        const mobLight = new THREE.PointLight(0xdc2626, 2.0, 12.0);
+        mobLight.position.set(0, 0.6, 0);
+        bodyGroup.add(mobLight);
+
+        root.userData = { bodyGroup, auraLight: mobLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 7. SENPOU TARO TROOPER (Giant Mallet Brute)
+    createSenpouTaroTrooper(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.25;
+        root.add(bodyGroup);
+
+        const smockMat = new THREE.MeshStandardMaterial({ color: 0x78716c, roughness: 0.8 });
+        const fleshMat = new THREE.MeshStandardMaterial({ color: 0xd6d3d1, roughness: 0.7 });
+        const woodMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.65 });
+        const beadMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.4 });
+
+        // Giant Ogresque Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.2, 0.75), smockMat);
+        bodyGroup.add(torso);
+
+        // Shaved Head with Giant Prayer Beads
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 8, 8), fleshMat);
+        head.position.set(0, 0.85, 0.1);
+        bodyGroup.add(head);
+
+        const beadNecklace = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.08, 6, 12), beadMat);
+        beadNecklace.position.set(0, 0.62, 0.1);
+        beadNecklace.rotation.x = Math.PI / 2;
+        bodyGroup.add(beadNecklace);
+
+        // Colossal Tree-Trunk War Mallet
+        const malletHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.8, 6), woodMat);
+        malletHandle.position.set(0.65, 0.4, 0.5);
+        malletHandle.rotation.x = 0.5;
+        bodyGroup.add(malletHandle);
+
+        const malletHead = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 1.1, 8), woodMat);
+        malletHead.position.set(0.65, 1.3, 0.95);
+        malletHead.rotation.z = Math.PI / 2;
+        bodyGroup.add(malletHead);
+
+        // Massive Pillar Legs
+        for (let legSide of [-0.3, 0.3]) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.18, 1.0, 6), smockMat);
+            leg.position.set(legSide, -0.95, 0);
+            bodyGroup.add(leg);
+        }
+
+        root.scale.set(1.35, 1.35, 1.35);
+        const mobLight = new THREE.PointLight(0xf97316, 2.2, 14.0);
+        mobLight.position.set(0, 1.0, 0);
+        bodyGroup.add(mobLight);
+
+        root.userData = { bodyGroup, auraLight: mobLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 8. SILVER TEAR MIMIC SLIME (Formless Chrome Shifter)
+    createSilverTearMimicSlime(x, z, angle = 0, y = 0, mobDef = null) {
+        const root = new THREE.Group();
+        root.position.set(x, y, z);
+        root.rotation.y = angle;
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 0.5;
+        root.add(bodyGroup);
+
+        const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.05, metalness: 0.95 });
+        const coreMat = new THREE.MeshStandardMaterial({ color: 0x60a5fa, emissive: 0x3b82f6, emissiveIntensity: 2.0 });
+
+        // Liquid Mercury Metallic Dome Body
+        const dome = new THREE.Mesh(new THREE.SphereGeometry(0.75, 12, 10), chromeMat);
+        dome.scale.set(1.3, 0.7, 1.3);
+        bodyGroup.add(dome);
+
+        // Floating Chrome Pseudopods & Spikes
+        for (let p = 0; p < 5; p++) {
+            const pang = (p / 5) * Math.PI * 2;
+            const px = Math.cos(pang) * 0.75;
+            const pz = Math.sin(pang) * 0.75;
+            const spike = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.65, 6), chromeMat);
+            spike.position.set(px, 0.2, pz);
+            spike.rotation.x = Math.sin(pang) * 0.6;
+            spike.rotation.z = -Math.cos(pang) * 0.6;
+            bodyGroup.add(spike);
+        }
+
+        // Inner Starlight Silver Tear Core
+        const core = new THREE.Mesh(new THREE.SphereGeometry(0.28, 8, 8), coreMat);
+        core.position.set(0, 0.25, 0);
+        bodyGroup.add(core);
+
+        const mobLight = new THREE.PointLight(0x60a5fa, 2.5, 15.0);
+        mobLight.position.set(0, 0.5, 0);
+        bodyGroup.add(mobLight);
+
+        root.userData = { bodyGroup, dome, core, auraLight: mobLight };
+        this.scene.add(root);
+        return root;
+    }
+
+    // ========================================================================
+    // 8 BRAND-NEW BESPOKE 3D APEX BOSS MODELS (V69 EXPANSION)
+    // ========================================================================
+
+    // 1. DIVINE DRAGON OF FOUNTAINHEAD & GRACIOUS TEARS (Boss 282)
+    createDivineDragonFountainhead(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 2.4;
+        root.add(bodyGroup);
+
+        const dragonMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3, metalness: 0.2 });
+        const hornWoodMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.6 });
+        const stormJadeMat = new THREE.MeshStandardMaterial({ color: 0x34d399, emissive: 0x059669, emissiveIntensity: 2.8 });
+
+        // Coiled Celestial Serpentine Body
+        for (let c = 0; c < 4; c++) {
+            const coil = new THREE.Mesh(new THREE.TorusGeometry(1.2 + c * 0.3, 0.35 - c * 0.04, 8, 16, Math.PI * 1.4), dragonMat);
+            coil.rotation.x = Math.PI / 2;
+            coil.position.set(0, -0.5 - c * 0.3, 0);
+            bodyGroup.add(coil);
+        }
+
+        // Upright Serpentine Neck & Majestic Crest
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 1.0, 2.2, 10), dragonMat);
+        neck.rotation.x = 0.2;
+        bodyGroup.add(neck);
+
+        // Dragon Head with Branching Tree Horns
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.7, 1.4), dragonMat);
+        head.position.set(0, 1.1, 0.75);
+        neck.add(head);
+
+        for (let hSide of [-1, 1]) {
+            const branchHorn = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.16, 2.2, 6), hornWoodMat);
+            branchHorn.position.set(hSide * 0.45, 0.8, -0.2);
+            branchHorn.rotation.z = hSide * 0.45;
+            branchHorn.rotation.x = -0.3;
+            head.add(branchHorn);
+        }
+
+        // Titanic Seven-Branched Sword (Nanatsusaya)
+        const swordBlade = new THREE.Mesh(new THREE.BoxGeometry(0.08, 5.5, 0.4), stormJadeMat);
+        swordBlade.position.set(1.8, 0.8, 0.8);
+        swordBlade.rotation.x = 0.3;
+        bodyGroup.add(swordBlade);
+
+        for (let br = 0; br < 6; br++) {
+            const bSide = (br % 2 === 0) ? -1 : 1;
+            const branch = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.6, 0.2), stormJadeMat);
+            branch.position.set(1.8 + bSide * 0.35, -0.6 + br * 0.5, 0.8);
+            branch.rotation.z = bSide * 0.6;
+            bodyGroup.add(branch);
+        }
+
+        const dragonAura = new THREE.PointLight(0x34d399, 7.5, 60.0);
+        dragonAura.position.set(0, 2.8, 0.8);
+        bodyGroup.add(dragonAura);
+
+        root.scale.set(4.8, 4.8, 4.8);
+        root.userData = { bodyGroup, neck, head, auraLight: dragonAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 2. LADY MARIA OF THE ASTRAL CLOCKTOWER (Boss 283)
+    createLadyMariaAstralClocktower(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.05;
+        root.add(bodyGroup);
+
+        const coatMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+        const faceMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 });
+        const bloodFlameMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, emissive: 0xff0044, emissiveIntensity: 3.2 });
+        const goldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.4, metalness: 0.8 });
+
+        // Slender Hunter Longcoat
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.95, 0.35), coatMat);
+        bodyGroup.add(torso);
+
+        // Wide-Brimmed Tri-Corner Hat & Feathers
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 8, 8), faceMat);
+        head.position.set(0, 0.68, 0);
+        bodyGroup.add(head);
+
+        const tricorn = new THREE.Mesh(new THREE.ConeGeometry(0.55, 0.22, 3), coatMat);
+        tricorn.position.set(0, 0.85, 0);
+        tricorn.rotation.y = Math.PI / 6;
+        bodyGroup.add(tricorn);
+
+        // Dual Rakuyo Trick Blades with Bloodflame Glow
+        for (let s = -1; s <= 1; s += 2) {
+            const rakuyo = new THREE.Mesh(new THREE.BoxGeometry(0.04, 2.6, 0.18), bloodFlameMat);
+            rakuyo.position.set(s * 0.65, 0.2, 0.4);
+            rakuyo.rotation.x = 0.55;
+            rakuyo.rotation.z = -s * 0.35;
+            bodyGroup.add(rakuyo);
+        }
+
+        // Longcoat Coattails
+        const coatTail = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.95, 0.12), coatMat);
+        coatTail.position.set(0, -0.65, -0.15);
+        bodyGroup.add(coatTail);
+
+        const mariaAura = new THREE.PointLight(0xe11d48, 5.0, 45.0);
+        mariaAura.position.set(0, 1.2, 0.4);
+        bodyGroup.add(mariaAura);
+
+        root.scale.set(2.3, 2.3, 2.3);
+        root.userData = { bodyGroup, auraLight: mariaAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 3. GLINTSTONE DRAGON ADULA OF MANUS CELES (Boss 284)
+    createGlintstoneDragonAdula(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 2.2;
+        root.add(bodyGroup);
+
+        const scalesMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.4, metalness: 0.3 });
+        const crystalMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.8, roughness: 0.1 });
+
+        // Colossal Dragon Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.8, 3.4), scalesMat);
+        bodyGroup.add(torso);
+
+        // Dragon Head with Jagged Crystal Horns
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 1.1, 2.4, 8), scalesMat);
+        neck.position.set(0, 0.9, 1.6);
+        neck.rotation.x = 0.4;
+        bodyGroup.add(neck);
+
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.85, 1.6), scalesMat);
+        head.position.set(0, 1.4, 2.4);
+        bodyGroup.add(head);
+
+        for (let hSide of [-1, 1]) {
+            const crystalHorn = new THREE.Mesh(new THREE.ConeGeometry(0.22, 1.8, 5), crystalMat);
+            crystalHorn.position.set(hSide * 0.5, 0.8, -0.2);
+            crystalHorn.rotation.x = -0.4;
+            head.add(crystalHorn);
+        }
+
+        // Carian Moonlight Greatsword in Draconic Jaws
+        const carianBlade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 5.8, 0.75), crystalMat);
+        carianBlade.position.set(0, 1.2, 3.8);
+        carianBlade.rotation.x = Math.PI / 2.5;
+        bodyGroup.add(carianBlade);
+
+        // Quad Wings
+        for (let side of [-1, 1]) {
+            const wing = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.08, 2.2), scalesMat);
+            wing.position.set(side * 2.8, 1.2, 0);
+            wing.rotation.z = side * 0.35;
+            bodyGroup.add(wing);
+        }
+
+        const adulaAura = new THREE.PointLight(0x38bdf8, 8.0, 65.0);
+        adulaAura.position.set(0, 2.5, 2.0);
+        bodyGroup.add(adulaAura);
+
+        root.scale.set(5.0, 5.0, 5.0);
+        root.userData = { bodyGroup, neck, head, auraLight: adulaAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 4. ALDRICH, DEVOURER OF GODS & SAINT OF THE DEEP (Boss 285)
+    createAldrichDevourerOfGods(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.8;
+        root.add(bodyGroup);
+
+        const sludgeMat = new THREE.MeshStandardMaterial({ color: 0x18181b, emissive: 0x3b0764, emissiveIntensity: 1.6, roughness: 0.9 });
+        const goldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.3, metalness: 0.85 });
+        const scytheMat = new THREE.MeshStandardMaterial({ color: 0x581c87, emissive: 0x7c3aed, emissiveIntensity: 2.2 });
+
+        // Undulating Abyssal Sludge Tail
+        for (let s = 0; s < 4; s++) {
+            const blob = new THREE.Mesh(new THREE.SphereGeometry(1.2 - s * 0.15, 8, 8), sludgeMat);
+            blob.position.set(0, -0.6 - s * 0.3, -s * 0.8);
+            blob.scale.set(1.4, 0.7, 1.4);
+            bodyGroup.add(blob);
+        }
+
+        // Robed Upper Torso of Gwyndolin
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.75, 1.2, 0.45), goldMat);
+        torso.position.set(0, 0.6, 0.2);
+        bodyGroup.add(torso);
+
+        // Golden Darkmoon Longbow
+        const bow = new THREE.Mesh(new THREE.TorusGeometry(1.4, 0.08, 6, 16, Math.PI), goldMat);
+        bow.position.set(-0.85, 0.8, 0.6);
+        bow.rotation.y = Math.PI / 4;
+        bodyGroup.add(bow);
+
+        // Lifehunt Scythe
+        const scytheHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 4.2, 6), sludgeMat);
+        scytheHandle.position.set(0.85, 0.6, 0.6);
+        scytheHandle.rotation.x = 0.4;
+        bodyGroup.add(scytheHandle);
+
+        const scytheBlade = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.4, 0.85), scytheMat);
+        scytheBlade.position.set(0.85, 2.4, 1.1);
+        scytheBlade.rotation.z = -0.35;
+        bodyGroup.add(scytheBlade);
+
+        const aldrichAura = new THREE.PointLight(0x7c3aed, 6.5, 55.0);
+        aldrichAura.position.set(0, 1.8, 0.4);
+        bodyGroup.add(aldrichAura);
+
+        root.scale.set(3.8, 3.8, 3.8);
+        root.userData = { bodyGroup, auraLight: aldrichAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 5. DARK SUN GWYNDOLIN & SHADOWS OF ANOR LONDO (Boss 286)
+    createDarkSunGwyndolin(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.2;
+        root.add(bodyGroup);
+
+        const silkMat = new THREE.MeshStandardMaterial({ color: 0xfef08a, roughness: 0.4 });
+        const snakeMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+        const sunGoldMat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, emissive: 0xd97706, emissiveIntensity: 2.2, metalness: 0.8 });
+
+        // Royal Silk Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.95, 0.35), silkMat);
+        bodyGroup.add(torso);
+
+        // Cluster of Writhing Lower Serpents
+        for (let sn = 0; sn < 6; sn++) {
+            const sang = (sn / 6) * Math.PI * 2;
+            const snake = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.12, 1.4, 6), snakeMat);
+            snake.position.set(Math.cos(sang) * 0.35, -0.85, Math.sin(sang) * 0.35);
+            snake.rotation.x = Math.sin(sang) * 0.3;
+            bodyGroup.add(snake);
+        }
+
+        // Radiant Sun-Crown Halo Mask
+        const halo = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.06, 6, 16), sunGoldMat);
+        halo.position.set(0, 0.75, 0);
+        bodyGroup.add(halo);
+
+        for (let ray = 0; ray < 8; ray++) {
+            const rang = (ray / 8) * Math.PI * 2;
+            const spike = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.35, 4), sunGoldMat);
+            spike.position.set(Math.cos(rang) * 0.65, 0.75 + Math.sin(rang) * 0.65, 0);
+            spike.rotation.z = -rang;
+            bodyGroup.add(spike);
+        }
+
+        // Golden Moonlight Longbow
+        const bow = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.06, 4, 12, Math.PI), sunGoldMat);
+        bow.position.set(0.65, 0.3, 0.4);
+        bow.rotation.y = Math.PI / 4;
+        bodyGroup.add(bow);
+
+        const gwynAura = new THREE.PointLight(0xfbbf24, 5.5, 48.0);
+        gwynAura.position.set(0, 1.2, 0.3);
+        bodyGroup.add(gwynAura);
+
+        root.scale.set(2.6, 2.6, 2.6);
+        root.userData = { bodyGroup, auraLight: gwynAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 6. ELEMER OF THE BRIAR & BELL BEARING HUNTER (Boss 287)
+    createElemerOfTheBriar(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.15;
+        root.add(bodyGroup);
+
+        const rustedArmorMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.65, metalness: 0.5 });
+        const briarWireMat = new THREE.MeshStandardMaterial({ color: 0x7f1d1d, roughness: 0.7, metalness: 0.4 });
+        const maraisBladeMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, emissive: 0x991b1b, emissiveIntensity: 2.8 });
+
+        // Heavy Rusted Briar Cuirass
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.75, 1.05, 0.5), rustedArmorMat);
+        bodyGroup.add(torso);
+
+        // Horned Iron Executioner Helmet
+        const helm = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.45, 0.4), rustedArmorMat);
+        helm.position.set(0, 0.75, 0);
+        bodyGroup.add(helm);
+
+        // Coiled Briar Rings wrapped on torso
+        for (let b = 0; b < 4; b++) {
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.05, 4, 12), briarWireMat);
+            ring.position.set(0, -0.3 + b * 0.22, 0);
+            ring.rotation.x = Math.PI / 2;
+            bodyGroup.add(ring);
+        }
+
+        // Briar Greatshield
+        const shield = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.8, 0.85), rustedArmorMat);
+        shield.position.set(-0.65, 0.2, 0.3);
+        bodyGroup.add(shield);
+
+        // Floating Telekinetic Marais Executioner Sword (Corkscrew Hover)
+        const maraisSword = new THREE.Mesh(new THREE.BoxGeometry(0.06, 3.4, 0.32), maraisBladeMat);
+        maraisSword.position.set(1.1, 0.5, 0.8);
+        maraisSword.rotation.x = 0.5;
+        maraisSword.rotation.z = -0.3;
+        bodyGroup.add(maraisSword);
+
+        const elemerAura = new THREE.PointLight(0xdc2626, 5.5, 46.0);
+        elemerAura.position.set(0, 1.2, 0.4);
+        bodyGroup.add(elemerAura);
+
+        root.scale.set(2.5, 2.5, 2.5);
+        root.userData = { bodyGroup, maraisSword, auraLight: elemerAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 7. CORRUPTED MONK, ILLUSION & TRUE NAGINATA GUARDIAN (Boss 288)
+    createCorruptedMonkPriestess(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 1.45;
+        root.add(bodyGroup);
+
+        const robeMat = new THREE.MeshStandardMaterial({ color: 0x7e22ce, roughness: 0.6 });
+        const maskMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 });
+        const naginataMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.3, metalness: 0.85 });
+        const mistMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, emissive: 0x9333ea, emissiveIntensity: 2.2 });
+
+        // Flowing Voluminous Priestess Robes
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.85, 1.4, 10), robeMat);
+        bodyGroup.add(torso);
+
+        // Smiling Noh Mask Head
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.32, 8, 8), maskMat);
+        head.position.set(0, 0.95, 0.1);
+        bodyGroup.add(head);
+
+        // Colossal 5.2m Jumonji Naginata Polearm
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 4.6, 6), robeMat);
+        shaft.position.set(0.85, 0.6, 0.6);
+        shaft.rotation.x = 0.45;
+        bodyGroup.add(shaft);
+
+        const naginataBlade = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.4, 0.28), naginataMat);
+        naginataBlade.position.set(0.85, 2.6, 1.4);
+        naginataBlade.rotation.x = 0.45;
+        bodyGroup.add(naginataBlade);
+
+        // Whirling Illusion Sakura Petals
+        for (let p = 0; p < 4; p++) {
+            const pang = (p / 4) * Math.PI * 2;
+            const petal = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.2, 0.3), mistMat);
+            petal.position.set(Math.cos(pang) * 1.2, 0.8, Math.sin(pang) * 1.2);
+            bodyGroup.add(petal);
+        }
+
+        const monkAura = new THREE.PointLight(0xa855f7, 6.0, 52.0);
+        monkAura.position.set(0, 1.6, 0.5);
+        bodyGroup.add(monkAura);
+
+        root.scale.set(3.2, 3.2, 3.2);
+        root.userData = { bodyGroup, auraLight: monkAura };
+        this.scene.add(root);
+        return root;
+    }
+
+    // 8. ASTEL, STARS OF DARKNESS & NATURALBORN ABYSS (Boss 289)
+    createAstelStarsOfDarkness(x, z) {
+        const root = new THREE.Group();
+        root.position.set(x, 0, z);
+
+        const bodyGroup = new THREE.Group();
+        bodyGroup.position.y = 2.1;
+        root.add(bodyGroup);
+
+        const carapaceMat = new THREE.MeshStandardMaterial({ color: 0x312e81, emissive: 0x4338ca, emissiveIntensity: 1.8, roughness: 0.3 });
+        const starSkullMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d8, roughness: 0.4 });
+        const gravityMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, emissive: 0x7c3aed, emissiveIntensity: 3.0 });
+
+        // Cosmic Human Skull with Twin Galaxy Eyes
+        const skull = new THREE.Mesh(new THREE.SphereGeometry(0.85, 10, 10), starSkullMat);
+        skull.position.set(0, 0.8, 1.2);
+        bodyGroup.add(skull);
+
+        for (let eyeSide of [-0.35, 0.35]) {
+            const eye = new THREE.Mesh(new THREE.SphereGeometry(0.18, 6, 6), gravityMat);
+            eye.position.set(eyeSide, 0.9, 1.85);
+            bodyGroup.add(eye);
+        }
+
+        // Crushing Mandible Pincers
+        for (let pSide of [-1, 1]) {
+            const pincer = new THREE.Mesh(new THREE.ConeGeometry(0.15, 1.4, 5), carapaceMat);
+            pincer.position.set(pSide * 0.75, 0.4, 1.7);
+            pincer.rotation.x = Math.PI / 2;
+            pincer.rotation.z = pSide * 0.45;
+            bodyGroup.add(pincer);
+        }
+
+        // Segmented Cosmic Dragonfly Carapace
+        for (let seg = 0; seg < 6; seg++) {
+            const segment = new THREE.Mesh(new THREE.SphereGeometry(0.75 - seg * 0.08, 8, 8), carapaceMat);
+            segment.position.set(0, 0.4 - seg * 0.2, -seg * 0.9);
+            segment.scale.set(1.2, 0.7, 1.2);
+            bodyGroup.add(segment);
+        }
+
+        // Quad Celestial Gossamer Wings
+        for (let wSide of [-1, 1]) {
+            for (let w = 0; w < 2; w++) {
+                const wing = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 1.2), gravityMat);
+                wing.position.set(wSide * 2.2, 0.9 + w * 0.3, -0.4 - w * 0.6);
+                wing.rotation.z = wSide * 0.3;
+                bodyGroup.add(wing);
+            }
+        }
+
+        // Cosmic Gravity Tail with Meteorite Orb
+        const meteorite = new THREE.Mesh(new THREE.DodecahedronGeometry(0.85, 0), gravityMat);
+        meteorite.position.set(0, 0.2, -5.8);
+        bodyGroup.add(meteorite);
+
+        const astelAura = new THREE.PointLight(0xa855f7, 7.5, 60.0);
+        astelAura.position.set(0, 1.5, 0);
+        bodyGroup.add(astelAura);
+
+        root.scale.set(4.6, 4.6, 4.6);
+        root.userData = { bodyGroup, meteorite, auraLight: astelAura };
         this.scene.add(root);
         return root;
     }

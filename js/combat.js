@@ -5208,6 +5208,127 @@ class DarkSoulsCombat {
                 radius: 6.2,
                 spawnPos: { x: -1440, z: 440 },
                 create: (cf, x, z) => cf.createRykardLordOfBlasphemy ? cf.createRykardLordOfBlasphemy(x, z) : cf.createSoulsborneBoss({ id: 'rykard_god_devouring_serpent', theme: 'flame', bossScale: 4.5 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V69 EXPANSION) ===
+            {
+                id: 'outside_fountainhead_divine_dragon',
+                name: 'DIVINE DRAGON OF FOUNTAINHEAD & GRACIOUS TEARS',
+                title: 'Outside Realm: Sacred Fountainhead Palace &bull; Seven-Branched Sword Nanatsusaya, Emerald Lightning & Windstorms',
+                unlockLocationId: 'outside_fountainhead_vermilion_sanctuary',
+                icon: '🐉',
+                theme: 'lightning',
+                bossScale: 4.8,
+                maxHp: 102000,
+                damage: 2350,
+                souls: 10500000,
+                radius: 6.8,
+                spawnPos: { x: -1520, z: -220 },
+                create: (cf, x, z) => cf.createDivineDragonFountainhead ? cf.createDivineDragonFountainhead(x, z) : cf.createSoulsborneBoss({ id: 'divine_dragon', theme: 'lightning', bossScale: 4.8 }, x, z)
+            },
+            {
+                id: 'outside_cainhurst_lady_maria',
+                name: 'LADY MARIA OF THE ASTRAL CLOCKTOWER',
+                title: 'Outside Realm: Cainhurst Frozen Parapet &bull; Rakuyo Dual Trick Blades, Bloodflame Waves & Astral Clock',
+                unlockLocationId: 'outside_cainhurst_frozen_parapet',
+                icon: '🩸',
+                theme: 'flame',
+                bossScale: 2.3,
+                maxHp: 88000,
+                damage: 2280,
+                souls: 9800000,
+                radius: 3.5,
+                spawnPos: { x: -1545, z: -80 },
+                create: (cf, x, z) => cf.createLadyMariaAstralClocktower ? cf.createLadyMariaAstralClocktower(x, z) : cf.createSoulsborneBoss({ id: 'lady_maria', theme: 'flame', bossScale: 2.3 }, x, z)
+            },
+            {
+                id: 'outside_moonlight_altar_dragon_adula',
+                name: 'GLINTSTONE DRAGON ADULA OF MANUS CELES',
+                title: 'Outside Realm: Moonlight Altar Plateau &bull; Carian Moonlight Greatsword, Crystalline Frost Breath & Starlight Rain',
+                unlockLocationId: 'outside_moonlight_altar_ranni_cathedral',
+                icon: '💎',
+                theme: 'magic',
+                bossScale: 5.0,
+                maxHp: 108000,
+                damage: 2420,
+                souls: 11200000,
+                radius: 7.2,
+                spawnPos: { x: -1570, z: 80 },
+                create: (cf, x, z) => cf.createGlintstoneDragonAdula ? cf.createGlintstoneDragonAdula(x, z) : cf.createSoulsborneBoss({ id: 'glintstone_dragon_adula', theme: 'magic', bossScale: 5.0 }, x, z)
+            },
+            {
+                id: 'outside_aldrich_devourer_of_gods',
+                name: 'ALDRICH, DEVOURER OF GODS & SAINT OF THE DEEP',
+                title: 'Outside Realm: Cathedral of the Deep Sunken Graveyard &bull; Golden Darkmoon Longbow, Moonlight Arrow Storm & Lifehunt Scythe',
+                unlockLocationId: 'outside_cathedral_deep_sunken_graveyard',
+                icon: '🌑',
+                theme: 'dark',
+                bossScale: 3.8,
+                maxHp: 94000,
+                damage: 2320,
+                souls: 10200000,
+                radius: 5.2,
+                spawnPos: { x: -1595, z: 220 },
+                create: (cf, x, z) => cf.createAldrichDevourerOfGods ? cf.createAldrichDevourerOfGods(x, z) : cf.createSoulsborneBoss({ id: 'aldrich_devourer_gods', theme: 'dark', bossScale: 3.8 }, x, z)
+            },
+            {
+                id: 'outside_dark_sun_gwyndolin',
+                name: 'DARK SUN GWYNDOLIN & SHADOWS OF ANOR LONDO',
+                title: 'Outside Realm: Anor Londo Dark Sun Tomb &bull; Crown of the Sun Halo, Golden Moonlight Longbow & Writhing Serpents',
+                unlockLocationId: 'outside_anor_londo_dark_sun_sanctuary',
+                icon: '☀️',
+                theme: 'magic',
+                bossScale: 2.6,
+                maxHp: 86000,
+                damage: 2240,
+                souls: 9600000,
+                radius: 3.8,
+                spawnPos: { x: -1620, z: -320 },
+                create: (cf, x, z) => cf.createDarkSunGwyndolin ? cf.createDarkSunGwyndolin(x, z) : cf.createSoulsborneBoss({ id: 'dark_sun_gwyndolin', theme: 'magic', bossScale: 2.6 }, x, z)
+            },
+            {
+                id: 'outside_elemer_of_the_briar',
+                name: 'ELEMER OF THE BRIAR & BELL BEARING HUNTER',
+                title: 'Outside Realm: Shaded Castle Poison Briar Moat &bull; Telekinetic Marais Executioner Sword, Rusted Briar Armor & Corkscrew Thrust',
+                unlockLocationId: 'outside_shaded_castle_briar_terrace',
+                icon: '🗡️',
+                theme: 'physical',
+                bossScale: 2.5,
+                maxHp: 92000,
+                damage: 2360,
+                souls: 10000000,
+                radius: 3.6,
+                spawnPos: { x: -1645, z: 340 },
+                create: (cf, x, z) => cf.createElemerOfTheBriar ? cf.createElemerOfTheBriar(x, z) : cf.createSoulsborneBoss({ id: 'elemer_of_the_briar', theme: 'physical', bossScale: 2.5 }, x, z)
+            },
+            {
+                id: 'outside_corrupted_monk_priestess',
+                name: 'CORRUPTED MONK, ILLUSION & TRUE NAGINATA GUARDIAN',
+                title: 'Outside Realm: Senpou Bell Demon Bamboo Sanctum &bull; Gleaming Jumonji Naginata, Whirling 360-Degree Slash & Illusion Fog',
+                unlockLocationId: 'outside_senpou_bell_demon_sanctum',
+                icon: '🎋',
+                theme: 'physical',
+                bossScale: 3.2,
+                maxHp: 98000,
+                damage: 2380,
+                souls: 10800000,
+                radius: 4.5,
+                spawnPos: { x: -1670, z: -160 },
+                create: (cf, x, z) => cf.createCorruptedMonkPriestess ? cf.createCorruptedMonkPriestess(x, z) : cf.createSoulsborneBoss({ id: 'corrupted_monk', theme: 'physical', bossScale: 3.2 }, x, z)
+            },
+            {
+                id: 'outside_astel_stars_of_darkness',
+                name: 'ASTEL, STARS OF DARKNESS & NATURALBORN ABYSS',
+                title: 'Outside Realm: Nokstella Stargazer Waterfall Basin &bull; Cosmic Dragonfly Carapace, Void Gravity Waves & Meteorite Tail',
+                unlockLocationId: 'outside_nokstella_stargazer_basin',
+                icon: '🌌',
+                theme: 'cosmic',
+                bossScale: 4.6,
+                maxHp: 112000,
+                damage: 2460,
+                souls: 12000000,
+                radius: 6.5,
+                spawnPos: { x: -1695, z: 460 },
+                create: (cf, x, z) => cf.createAstelStarsOfDarkness ? cf.createAstelStarsOfDarkness(x, z) : cf.createSoulsborneBoss({ id: 'astel_stars_darkness', theme: 'cosmic', bossScale: 4.6 }, x, z)
             }
         ];
     }
@@ -5551,7 +5672,16 @@ class DarkSoulsCombat {
             [-1380.0, -16.0, -320.0], [-1388.0, -16.0, -328.0], [-1372.0, -16.0, -312.0], // Altar of Despair (Luminescent Celestial Emissaries)
             [-1400.0, 8.0, 320.0], [-1408.0, 8.0, 328.0], [-1392.0, 8.0, 312.0],     // Ashina Castle Gatefield (Ashina Ashigaru Riflemen)
             [-1420.0, 16.0, -140.0], [-1428.0, 16.0, -148.0], [-1412.0, 16.0, -132.0], // Dragon's Pit Crags (Dragon Cult Lapis Knights)
-            [-1440.0, -12.0, 440.0], [-1448.0, -12.0, 448.0], [-1432.0, -12.0, 432.0]  // Volcano Manor Magma Chamber (Man-Serpent Magma Sorcerers)
+            [-1440.0, -12.0, 440.0], [-1448.0, -12.0, 448.0], [-1432.0, -12.0, 432.0], // Volcano Manor Magma Chamber (Man-Serpent Magma Sorcerers)
+            // 8 Brand-New Outside Ascended Expeditions Patrols (V69 Expansion):
+            [-1520.0, 18.0, -220.0], [-1528.0, 18.0, -212.0], [-1512.0, 18.0, -228.0], // Fountainhead Palace (Fountainhead Okami Warriors)
+            [-1545.0, 14.0, -80.0], [-1553.0, 14.0, -72.0], [-1537.0, 14.0, -88.0],   // Cainhurst Frozen Parapets (Cainhurst Bloodlicker Gargoyles)
+            [-1570.0, 22.0, 80.0], [-1578.0, 22.0, 88.0], [-1562.0, 22.0, 72.0],       // Moonlight Altar (Carian Marionette Aviators)
+            [-1595.0, -15.0, 220.0], [-1603.0, -15.0, 228.0], [-1587.0, -15.0, 212.0], // Cathedral Sunken Graveyard (Deep Evangelist Preachers)
+            [-1620.0, 12.0, -320.0], [-1628.0, 12.0, -312.0], [-1612.0, 12.0, -328.0], // Anor Londo Dark Sun (Giant Royal Sentinels)
+            [-1645.0, -8.0, 340.0], [-1653.0, -8.0, 348.0], [-1637.0, -8.0, 332.0],   // Shaded Castle Briar Moat (Briar Duelist Gladiators)
+            [-1670.0, 20.0, -160.0], [-1678.0, 20.0, -152.0], [-1662.0, 20.0, -168.0], // Bell Demon Sanctum (Senpou Taro Troopers)
+            [-1695.0, -18.0, 460.0], [-1703.0, -18.0, 468.0], [-1687.0, -18.0, 452.0]  // Nokstella Stargazer Basin (Silver Tear Mimic Slimes)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -5570,7 +5700,7 @@ class DarkSoulsCombat {
                 'sanctum_knight_automaton', 'mimic_tear_mercurial',
                 'cleanrot_valkyrie_knight', 'divine_beast_disciple', 'alonne_shadow_samurai',
                 'charred_loyce_knight', 'ringed_knight_executioner', 'abyssal_dragon_apostle',
-                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent', 'corvian_rapier_knight', 'dragonkin_lightning_halberdier', 'ashina_redguard_arquebusier', 'church_doctor_executioner', 'leyndell_tree_sentinel_patrol', 'badlands_blood_berserker', 'fire_knight_queelign_duelist', 'hornsent_inquisitor_priest', 'leyndell_perfumer_page', 'senpou_strawhat_assassin', 'clayman_priest_uhl', 'oolacile_bloathead_sorcerer', 'luminescent_celestial_emissary', 'ashina_ashigaru_rifleman', 'dragon_cult_lapis_knight', 'manserpent_magma_sorcerer'
+                'blood_cleric_hunter', 'clockwork_automaton_maiden', 'dreadflame_harvester', 'deep_sea_fishman_priest', 'black_knight_annihilator', 'archdragon_stone_disciple', 'kindred_of_rot_pest', 'cainhurst_vileblood_guard', 'okami_palace_noble', 'serpent_lightning_manserpent', 'corvian_rapier_knight', 'dragonkin_lightning_halberdier', 'ashina_redguard_arquebusier', 'church_doctor_executioner', 'leyndell_tree_sentinel_patrol', 'badlands_blood_berserker', 'fire_knight_queelign_duelist', 'hornsent_inquisitor_priest', 'leyndell_perfumer_page', 'senpou_strawhat_assassin', 'clayman_priest_uhl', 'oolacile_bloathead_sorcerer', 'luminescent_celestial_emissary', 'ashina_ashigaru_rifleman', 'dragon_cult_lapis_knight', 'manserpent_magma_sorcerer', 'fountainhead_okami_warrior', 'cainhurst_bloodlicker_gargoyle', 'carian_marionette_soldier', 'deep_evangelist_preacher', 'anor_londo_giant_sentinel', 'briar_duelist_gladiator', 'senpou_taro_trooper', 'silver_tear_mimic_slime'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

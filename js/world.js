@@ -887,8 +887,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-1480, -28], z in [-780, 780]
-        if (x >= -1480 && x <= -28 && z >= -780 && z <= 780) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-1750, -28], z in [-850, 850]
+        if (x >= -1750 && x <= -28 && z >= -850 && z <= 850) {
+            // 8 Brand-New Ascended Outside Realm Expeditions (V69 Expansion)
+            // 1. Fountainhead Palace Vermilion Waterway & Sacred Sanctuary (outside_fountainhead_vermilion_sanctuary) (elev: +18.0m)
+            if (x >= -1565 && x <= -1475 && z >= -265 && z <= -175) {
+                return 18.0;
+            }
+            // 2. Forsaken Castle Cainhurst Frozen Parapets & Snow Spires (outside_cainhurst_frozen_parapet) (elev: +14.0m)
+            if (x >= -1590 && x <= -1500 && z >= -125 && z <= -35) {
+                return 14.0;
+            }
+            // 3. Moonlight Altar of Manus Celes & Lunar Cathedral (outside_moonlight_altar_ranni_cathedral) (elev: +22.0m)
+            if (x >= -1615 && x <= -1525 && z >= 35 && z <= 125) {
+                return 22.0;
+            }
+            // 4. Cathedral of the Deep Sunken Graveyard & Sludge Mire (outside_cathedral_deep_sunken_graveyard) (elev: -15.0m)
+            if (x >= -1640 && x <= -1550 && z >= 175 && z <= 265) {
+                return -15.0;
+            }
+            // 5. Anor Londo Dark Sun Tomb & Gwyndolin Sanctuary (outside_anor_londo_dark_sun_sanctuary) (elev: +12.0m)
+            if (x >= -1665 && x <= -1575 && z >= -365 && z <= -275) {
+                return 12.0;
+            }
+            // 6. The Shaded Castle Poison Briar Moat & Maleigh Terrace (outside_shaded_castle_briar_terrace) (elev: -8.0m)
+            if (x >= -1690 && x <= -1600 && z >= 295 && z <= 385) {
+                return -8.0;
+            }
+            // 7. Mt. Senpou Bamboo Path & Bell Demon Sanctum (outside_senpou_bell_demon_sanctum) (elev: +20.0m)
+            if (x >= -1715 && x <= -1625 && z >= -205 && z <= -115) {
+                return 20.0;
+            }
+            // 8. Nokstella Eternal City Stargazer Waterfall Basin (outside_nokstella_stargazer_basin) (elev: -18.0m)
+            if (x >= -1740 && x <= -1650 && z >= 415 && z <= 505) {
+                return -18.0;
+            }
             // 8 Brand-New Cataclysmic Outside Realm Expeditions (V60 Expansion)
             // 1. Leyndell Erdtree Sanctuary & Throne of Omens (outside_leyndell_throne_of_omens) (elev: +20.0m)
             if (x >= -1345 && x <= -1255 && z >= -245 && z <= -155) {
@@ -3820,6 +3853,9 @@ class DarkSoulsWorld {
         // Build 8 Brand-New Cataclysmic Outside Realm Expeditions (V60 Expansion)
         this.buildEightCataclysmicOutsideExpeditions(outsideGroup);
 
+        // Build 8 Brand-New Ascended Outside Realm Expeditions (V69 Expansion)
+        this.buildEightAscendedOutsideExpeditions(outsideGroup);
+
         this.scene.add(outsideGroup);
     }
 
@@ -5594,6 +5630,353 @@ class DarkSoulsWorld {
         this.createStandingBrazier(-1456, -12.0, 440, 0xf43f5e, 6.5, 36);
         this.createPathBeacon(-1440, -12.0, 440, 0xe11d48, "🌋 VOLCANO MANOR MAGMA CHAMBER [ELEV -12.0m]", "RYKARD LORD OF BLASPHEMY • BLASPHEMOUS BLADE • MAN-SERPENT MAGMA SORCERERS", "#ffe4e6");
         this.createFloorSoapstone(-1440, -12.0, 428, "#e11d48", "🌋 MAGMA CHAMBER", "TOGETHAAA AS FAMILYYY WE WILL DEVOUR THE VERY GODS! Serpent hunter blade required.");
+    }
+
+    buildEightAscendedOutsideExpeditions(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V69 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. FOUNTAINHEAD PALACE VERMILION WATERWAY & SACRED SANCTUARY
+        // Center: (-1520, 18.0, -220) | Elev: +18.0m | Theme: Celestial Waters, Wisteria & Divine Dragon
+        // --------------------------------------------------------------------
+        const toriiMat = new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.45, metalness: 0.2 });
+        const waterPondMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.1, metalness: 0.5, transparent: true, opacity: 0.85 });
+        const wisteriaMat = new THREE.MeshStandardMaterial({ color: 0xd8b4fe, roughness: 0.7 });
+        const roofWoodMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.6 });
+
+        // Sacred Pond Platform
+        const pondGeo = new THREE.CylinderGeometry(36, 38, 1.2, 24);
+        const pondMesh = new THREE.Mesh(pondGeo, waterPondMat);
+        pondMesh.position.set(-1520, 17.4, -220);
+        outsideGroup.add(pondMesh);
+
+        // Triple Vermilion Torii Archways
+        for (let t = -1; t <= 1; t++) {
+            const toriiZ = -220 + t * 16;
+            const leftPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.65, 12, 10), toriiMat);
+            leftPillar.position.set(-1532, 23.0, toriiZ);
+            outsideGroup.add(leftPillar);
+
+            const rightPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.65, 12, 10), toriiMat);
+            rightPillar.position.set(-1508, 23.0, toriiZ);
+            outsideGroup.add(rightPillar);
+
+            const crossbarUpper = new THREE.Mesh(new THREE.BoxGeometry(28, 0.8, 1.2), toriiMat);
+            crossbarUpper.position.set(-1520, 28.5, toriiZ);
+            outsideGroup.add(crossbarUpper);
+
+            const crossbarRoof = new THREE.Mesh(new THREE.BoxGeometry(30, 0.4, 1.8), roofWoodMat);
+            crossbarRoof.position.set(-1520, 29.0, toriiZ);
+            outsideGroup.add(crossbarRoof);
+        }
+
+        // Weeping Wisteria Trees
+        for (let w = 0; w < 4; w++) {
+            const ang = (w / 4) * Math.PI * 2;
+            const wx = -1520 + Math.cos(ang) * 26;
+            const wz = -220 + Math.sin(ang) * 26;
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.8, 9, 8), roofWoodMat);
+            trunk.position.set(wx, 22.0, wz);
+            outsideGroup.add(trunk);
+
+            const canopy = new THREE.Mesh(new THREE.SphereGeometry(4.2, 8, 8), wisteriaMat);
+            canopy.position.set(wx, 26.5, wz);
+            outsideGroup.add(canopy);
+        }
+
+        const dragonLight = new THREE.PointLight(0x34d399, 4.5, 55.0);
+        dragonLight.position.set(-1520, 26.0, -220);
+        outsideGroup.add(dragonLight);
+
+        this.createStandingBrazier(-1506, 18.0, -220, 0x34d399, 5.0, 30);
+        this.createStandingBrazier(-1534, 18.0, -220, 0x38bdf8, 5.0, 30);
+        this.createPathBeacon(-1520, 18.0, -220, 0x34d399, "🌸 FOUNTAINHEAD VERMILION WATERWAY [ELEV +18.0m]", "DIVINE DRAGON • SEVEN-BRANCHED SWORD • OKAMI WARRIORS", "#dcfce7");
+        this.createFloorSoapstone(-1520, 18.0, -232, "#34d399", "🌸 FOUNTAINHEAD PALACE", "Drink of the sacred palace waters and behold the timeless celestial dragon dancing in the storm.");
+
+        // --------------------------------------------------------------------
+        // 2. FORSAKEN CASTLE CAINHURST FROZEN PARAPETS & SNOW SPIRES
+        // Center: (-1545, 14.0, -80) | Elev: +14.0m | Theme: Gothic Frost, Bloodflame & Lady Maria
+        // --------------------------------------------------------------------
+        const frozenStoneMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8 });
+        const frostIceMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, roughness: 0.15, metalness: 0.4, transparent: true, opacity: 0.85 });
+        const bloodVelvetMat = new THREE.MeshStandardMaterial({ color: 0x881337, roughness: 0.6 });
+
+        // Gothic Parapet Platform
+        const parapetFloor = new THREE.Mesh(new THREE.BoxGeometry(42, 1.4, 42), frozenStoneMat);
+        parapetFloor.position.set(-1545, 13.3, -80);
+        outsideGroup.add(parapetFloor);
+
+        // Gothic Battlements and Gargoyle Spires
+        for (let corner = 0; corner < 4; corner++) {
+            const cx = -1545 + ((corner % 2 === 0) ? -19 : 19);
+            const cz = -80 + ((corner < 2) ? -19 : 19);
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(2.5, 14, 6), frozenStoneMat);
+            spire.position.set(cx, 21.0, cz);
+            outsideGroup.add(spire);
+
+            const iceSpike = new THREE.Mesh(new THREE.ConeGeometry(0.8, 5.5, 5), frostIceMat);
+            iceSpike.position.set(cx, 13.8, cz);
+            outsideGroup.add(iceSpike);
+        }
+
+        // Blood-Red Heraldic Banners
+        for (let b = -1; b <= 1; b += 2) {
+            const banner = new THREE.Mesh(new THREE.BoxGeometry(0.1, 7.5, 2.4), bloodVelvetMat);
+            banner.position.set(-1545 + b * 12, 17.5, -99);
+            outsideGroup.add(banner);
+        }
+
+        const mariaLight = new THREE.PointLight(0xe11d48, 4.0, 50.0);
+        mariaLight.position.set(-1545, 19.0, -80);
+        outsideGroup.add(mariaLight);
+
+        this.createStandingBrazier(-1532, 14.0, -80, 0xe11d48, 5.5, 32);
+        this.createStandingBrazier(-1558, 14.0, -80, 0x38bdf8, 5.5, 32);
+        this.createPathBeacon(-1545, 14.0, -80, 0xe11d48, "❄️ CAINHURST FROZEN PARAPET [ELEV +14.0m]", "LADY MARIA OF ASTRAL CLOCKTOWER • RAKUYO DUAL BLADES • BLOODLICKER GARGOYLES", "#ffe4e6");
+        this.createFloorSoapstone(-1545, 14.0, -92, "#e11d48", "❄️ CAINHURST PARAPET", "A corpse should be left well alone. Bloodflame and clocktower whispers ignite the cold.");
+
+        // --------------------------------------------------------------------
+        // 3. MOONLIGHT ALTAR OF MANUS CELES & LUNAR CATHEDRAL
+        // Center: (-1570, 22.0, 80) | Elev: +22.0m | Theme: Glintstone Crystals, Lunar Rings & Dragon Adula
+        // --------------------------------------------------------------------
+        const glintCrystalMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.2, roughness: 0.1 });
+        const cathedralMarbleMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+
+        // Lunar Terrace Slab
+        const altarSlab = new THREE.Mesh(new THREE.CylinderGeometry(34, 36, 1.5, 16), cathedralMarbleMat);
+        altarSlab.position.set(-1570, 21.25, 80);
+        outsideGroup.add(altarSlab);
+
+        // Giant Glintstone Crystal Geodes
+        for (let g = 0; g < 6; g++) {
+            const gang = (g / 6) * Math.PI * 2;
+            const gx = -1570 + Math.cos(gang) * 22;
+            const gz = 80 + Math.sin(gang) * 22;
+            const crystal = new THREE.Mesh(new THREE.ConeGeometry(2.2, 9.5 + (g % 3) * 2, 6), glintCrystalMat);
+            crystal.position.set(gx, 26.0, gz);
+            crystal.rotation.z = (Math.random() - 0.5) * 0.4;
+            outsideGroup.add(crystal);
+        }
+
+        // Floating Lunar Ring Torus
+        const moonRing = new THREE.Mesh(new THREE.TorusGeometry(8.5, 0.45, 6, 24), glintCrystalMat);
+        moonRing.position.set(-1570, 31.0, 80);
+        moonRing.rotation.x = Math.PI / 3;
+        outsideGroup.add(moonRing);
+
+        const adulaLight = new THREE.PointLight(0x38bdf8, 5.0, 60.0);
+        adulaLight.position.set(-1570, 28.0, 80);
+        outsideGroup.add(adulaLight);
+
+        this.createStandingBrazier(-1555, 22.0, 80, 0x38bdf8, 6.0, 35);
+        this.createStandingBrazier(-1585, 22.0, 80, 0x818cf8, 6.0, 35);
+        this.createPathBeacon(-1570, 22.0, 80, 0x38bdf8, "🌙 MOONLIGHT ALTAR OF MANUS CELES [ELEV +22.0m]", "GLINTSTONE DRAGON ADULA • CARIAN MOONLIGHT BLADE • CARIAN MARIONETTES", "#e0f2fe");
+        this.createFloorSoapstone(-1570, 22.0, 68, "#38bdf8", "🌙 MOONLIGHT ALTAR", "Here begins the chill dark night of the stars. The Carian blade shines with frozen moonlight.");
+
+        // --------------------------------------------------------------------
+        // 4. CATHEDRAL OF THE DEEP SUNKEN GRAVEYARD & SLUDGE MIRE
+        // Center: (-1595, -15.0, 220) | Elev: -15.0m | Theme: Sunken Cemetery, Dregs & Aldrich Devourer of Gods
+        // --------------------------------------------------------------------
+        const mireSludgeMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.9, metalness: 0.1 });
+        const gravestoneMat = new THREE.MeshStandardMaterial({ color: 0x292524, roughness: 0.85 });
+        const darkmoonMat = new THREE.MeshStandardMaterial({ color: 0x581c87, emissive: 0x3b0764, emissiveIntensity: 2.0 });
+
+        // Sunken Cemetery Basin
+        const basin = new THREE.Mesh(new THREE.BoxGeometry(45, 1.2, 45), mireSludgeMat);
+        basin.position.set(-1595, -15.6, 220);
+        outsideGroup.add(basin);
+
+        // Crooked Gravestones and Obelisks
+        for (let gr = 0; gr < 10; gr++) {
+            const rx = -1595 + (Math.sin(gr * 1.7) * 16);
+            const rz = 220 + (Math.cos(gr * 2.3) * 16);
+            const grave = new THREE.Mesh(new THREE.BoxGeometry(1.2, 3.2 + (gr % 3) * 0.8, 0.45), gravestoneMat);
+            grave.position.set(rx, -13.5, rz);
+            grave.rotation.y = gr * 0.6;
+            grave.rotation.z = (Math.sin(gr) * 0.25);
+            outsideGroup.add(grave);
+        }
+
+        // Deep Dregs Altar Platform
+        const dregAltar = new THREE.Mesh(new THREE.CylinderGeometry(5.0, 6.0, 1.8, 8), darkmoonMat);
+        dregAltar.position.set(-1595, -14.1, 220);
+        outsideGroup.add(dregAltar);
+
+        const aldrichLight = new THREE.PointLight(0x7c3aed, 4.5, 48.0);
+        aldrichLight.position.set(-1595, -10.0, 220);
+        outsideGroup.add(aldrichLight);
+
+        this.createStandingBrazier(-1580, -15.0, 220, 0x7c3aed, 5.0, 28);
+        this.createStandingBrazier(-1610, -15.0, 220, 0x4c1d95, 5.0, 28);
+        this.createPathBeacon(-1595, -15.0, 220, 0x7c3aed, "🕯️ CATHEDRAL SUNKEN GRAVEYARD [ELEV -15.0m]", "ALDRICH DEVOURER OF GODS • DARKMOON LONGBOW • DEEP EVANGELISTS", "#f3e8ff");
+        this.createFloorSoapstone(-1595, -15.0, 208, "#7c3aed", "🕯️ DEEP GRAVEYARD", "Beyond the human dregs lies the devourer of gods. Beware the unending moonlight arrow rain.");
+
+        // --------------------------------------------------------------------
+        // 5. ANOR LONDO DARK SUN TOMB & GWYNDOLIN SANCTUARY
+        // Center: (-1620, 12.0, -320) | Elev: +12.0m | Theme: Anor Londo Twilight, Gold Statues & Gwyndolin
+        // --------------------------------------------------------------------
+        const whiteMarbleMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.35, metalness: 0.1 });
+        const gwynGoldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.3, metalness: 0.85 });
+
+        // Marble Corridor Platform
+        const corridor = new THREE.Mesh(new THREE.BoxGeometry(22, 1.2, 54), whiteMarbleMat);
+        corridor.position.set(-1620, 11.4, -320);
+        outsideGroup.add(corridor);
+
+        // Flanking Fluted Marble Columns
+        for (let col = -3; col <= 3; col++) {
+            const cz = -320 + col * 7.5;
+            const leftCol = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.75, 10, 12), whiteMarbleMat);
+            leftCol.position.set(-1629, 16.5, cz);
+            outsideGroup.add(leftCol);
+
+            const rightCol = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.75, 10, 12), whiteMarbleMat);
+            rightCol.position.set(-1611, 16.5, cz);
+            outsideGroup.add(rightCol);
+        }
+
+        // Golden Gwyn Statues
+        for (let side = -1; side <= 1; side += 2) {
+            const statue = new THREE.Mesh(new THREE.BoxGeometry(1.6, 5.0, 1.4), gwynGoldMat);
+            statue.position.set(-1620 + side * 6.5, 14.5, -342);
+            outsideGroup.add(statue);
+        }
+
+        const gwyndolinLight = new THREE.PointLight(0xfbbf24, 4.5, 50.0);
+        gwyndolinLight.position.set(-1620, 18.0, -320);
+        outsideGroup.add(gwyndolinLight);
+
+        this.createStandingBrazier(-1614, 12.0, -320, 0xfbbf24, 5.0, 30);
+        this.createStandingBrazier(-1626, 12.0, -320, 0x60a5fa, 5.0, 30);
+        this.createPathBeacon(-1620, 12.0, -320, 0xfbbf24, "☀️ ANOR LONDO DARK SUN TOMB [ELEV +12.0m]", "DARK SUN GWYNDOLIN • GOLDEN MOONLIGHT BOW • ANOR LONDO GIANT SENTINELS", "#fef9c3");
+        this.createFloorSoapstone(-1620, 12.0, -332, "#fbbf24", "☀️ DARK SUN TOMB", "Tread lightly in the twilight tomb of Gwyn. The Dark Sun weaves eternal illusions.");
+
+        // --------------------------------------------------------------------
+        // 6. THE SHADED CASTLE POISON BRIAR MOAT & MALEIGH TERRACE
+        // Center: (-1645, -8.0, 340) | Elev: -8.0m | Theme: Briar Thorns, Poison Mire & Elemer of the Briar
+        // --------------------------------------------------------------------
+        const poisonMireMat = new THREE.MeshStandardMaterial({ color: 0x14532d, roughness: 0.5, emissive: 0x052e16, emissiveIntensity: 1.5 });
+        const castleRustMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.75, metalness: 0.4 });
+        const thornMat = new THREE.MeshStandardMaterial({ color: 0x7f1d1d, roughness: 0.6 });
+
+        // Submerged Poison Fortress Slab
+        const poisonBasin = new THREE.Mesh(new THREE.BoxGeometry(42, 1.2, 42), poisonMireMat);
+        poisonBasin.position.set(-1645, -8.6, 340);
+        outsideGroup.add(poisonBasin);
+
+        // Rusted Fortress Rampart Walls
+        const backWall = new THREE.Mesh(new THREE.BoxGeometry(38, 7.0, 2.5), castleRustMat);
+        backWall.position.set(-1645, -4.5, 359);
+        outsideGroup.add(backWall);
+
+        // Barbed Briar Wire Rings
+        for (let br = 0; br < 5; br++) {
+            const bx = -1645 + (Math.sin(br * 1.5) * 14);
+            const bz = 340 + (Math.cos(br * 1.5) * 14);
+            const briarRing = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.35, 6, 12), thornMat);
+            briarRing.position.set(bx, -6.5, bz);
+            briarRing.rotation.x = Math.PI / 2;
+            outsideGroup.add(briarRing);
+        }
+
+        const elemerLight = new THREE.PointLight(0xdc2626, 4.2, 46.0);
+        elemerLight.position.set(-1645, -3.0, 340);
+        outsideGroup.add(elemerLight);
+
+        this.createStandingBrazier(-1632, -8.0, 340, 0xdc2626, 5.0, 28);
+        this.createStandingBrazier(-1658, -8.0, 340, 0x16a34a, 5.0, 28);
+        this.createPathBeacon(-1645, -8.0, 340, 0xdc2626, "🧪 SHADED CASTLE BRIAR MOAT [ELEV -8.0m]", "ELEMER OF THE BRIAR • MARAIS EXECUTIONER SWORD • BRIAR DUELISTS", "#fee2e2");
+        this.createFloorSoapstone(-1645, -8.0, 328, "#dc2626", "🧪 SHADED CASTLE", "Beware the executioner wrapped in rusted thorns. The dancing red blade strikes from afar.");
+
+        // --------------------------------------------------------------------
+        // 7. MT. SENPOU BAMBOO PATH & BELL DEMON SANCTUM
+        // Center: (-1670, 20.0, -160) | Elev: +20.0m | Theme: Japanese Pagoda, Bamboo & Corrupted Monk
+        // --------------------------------------------------------------------
+        const cedarWoodMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.65 });
+        const bambooStemMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.5 });
+        const bellBronzeMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, roughness: 0.3, metalness: 0.8 });
+
+        // Bamboo Mountain Terrace
+        const senpouPlaza = new THREE.Mesh(new THREE.CylinderGeometry(32, 34, 1.4, 16), cedarWoodMat);
+        senpouPlaza.position.set(-1670, 19.3, -160);
+        outsideGroup.add(senpouPlaza);
+
+        // Bamboo Grove Clusters
+        for (let bm = 0; bm < 14; bm++) {
+            const bx = -1670 + (Math.sin(bm * 1.8) * 22);
+            const bz = -160 + (Math.cos(bm * 1.8) * 22);
+            const stalk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 12, 6), bambooStemMat);
+            stalk.position.set(bx, 25.0, bz);
+            outsideGroup.add(stalk);
+        }
+
+        // Giant Bell Demon Pagoda Frame & Bronze Bell
+        const bPillar1 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 11, 0.8), cedarWoodMat);
+        bPillar1.position.set(-1674, 24.5, -160);
+        outsideGroup.add(bPillar1);
+
+        const bPillar2 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 11, 0.8), cedarWoodMat);
+        bPillar2.position.set(-1666, 24.5, -160);
+        outsideGroup.add(bPillar2);
+
+        const bBeam = new THREE.Mesh(new THREE.BoxGeometry(10, 0.8, 1.2), cedarWoodMat);
+        bBeam.position.set(-1670, 29.5, -160);
+        outsideGroup.add(bBeam);
+
+        const bellDemon = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 2.2, 4.2, 12), bellBronzeMat);
+        bellDemon.position.set(-1670, 26.5, -160);
+        outsideGroup.add(bellDemon);
+
+        const monkLight = new THREE.PointLight(0xa855f7, 4.5, 52.0);
+        monkLight.position.set(-1670, 25.0, -160);
+        outsideGroup.add(monkLight);
+
+        this.createStandingBrazier(-1656, 20.0, -160, 0xa855f7, 5.5, 30);
+        this.createStandingBrazier(-1684, 20.0, -160, 0xf97316, 5.5, 30);
+        this.createPathBeacon(-1670, 20.0, -160, 0xa855f7, "🔔 BELL DEMON SANCTUM [ELEV +20.0m]", "CORRUPTED MONK • JUMONJI NAGINATA • SENPOU TARO TROOPERS", "#f3e8ff");
+        this.createFloorSoapstone(-1670, 20.0, -172, "#a855f7", "🔔 BELL DEMON SANCTUM", "Do not ring the bell of misfortune unless you crave fierce suffering. The monk guards the bridge.");
+
+        // --------------------------------------------------------------------
+        // 8. NOKSTELLA ETERNAL CITY STARGAZER WATERFALL BASIN
+        // Center: (-1695, -18.0, 460) | Elev: -18.0m | Theme: Void Nebula, Stargazer Ruins & Astel Stars of Darkness
+        // --------------------------------------------------------------------
+        const voidRockMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.8, metalness: 0.3 });
+        const cosmicNebulaMat = new THREE.MeshStandardMaterial({ color: 0x818cf8, emissive: 0x4338ca, emissiveIntensity: 2.5, roughness: 0.2 });
+
+        // Stargazer Cavern Basin Slab
+        const stargazerBasin = new THREE.Mesh(new THREE.CylinderGeometry(35, 38, 1.4, 20), voidRockMat);
+        stargazerBasin.position.set(-1695, -18.7, 460);
+        outsideGroup.add(stargazerBasin);
+
+        // Obsidian Monoliths with Cosmic Runes
+        for (let m = 0; m < 8; m++) {
+            const mang = (m / 8) * Math.PI * 2;
+            const mx = -1695 + Math.cos(mang) * 24;
+            const mz = 460 + Math.sin(mang) * 24;
+            const mono = new THREE.Mesh(new THREE.BoxGeometry(2.0, 12 + (m % 2) * 3, 2.0), voidRockMat);
+            mono.position.set(mx, -12.0, mz);
+            outsideGroup.add(mono);
+
+            const runeSphere = new THREE.Mesh(new THREE.SphereGeometry(0.85, 8, 8), cosmicNebulaMat);
+            runeSphere.position.set(mx, -4.5, mz);
+            outsideGroup.add(runeSphere);
+        }
+
+        // Cascading Starlight Waterfall Mesh
+        const waterfall = new THREE.Mesh(new THREE.BoxGeometry(18, 16, 1.2), cosmicNebulaMat);
+        waterfall.position.set(-1695, -10.0, 484);
+        outsideGroup.add(waterfall);
+
+        const astelLight = new THREE.PointLight(0xa855f7, 5.0, 58.0);
+        astelLight.position.set(-1695, -11.0, 460);
+        outsideGroup.add(astelLight);
+
+        this.createStandingBrazier(-1678, -18.0, 460, 0xa855f7, 5.5, 32);
+        this.createStandingBrazier(-1712, -18.0, 460, 0x6366f1, 5.5, 32);
+        this.createPathBeacon(-1695, -18.0, 460, 0xa855f7, "🌌 NOKSTELLA STARGAZER BASIN [ELEV -18.0m]", "ASTEL STARS OF DARKNESS • VOID METEORITE TAIL • SILVER TEAR MIMICS", "#ede9fe");
+        this.createFloorSoapstone(-1695, -18.0, 448, "#a855f7", "🌌 STARGAZER BASIN", "A malformed star born in the flightless void. Gravitational collapse awaits all who tread here.");
     }
 
     buildSerpentSanctum() {

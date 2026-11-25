@@ -600,7 +600,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -1480, -640, 1452, 1300, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -1740, -720, 1712, 1440, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -657,6 +657,15 @@
                 this.drawZoneRect(ctx, -1400, 320, 40, 40, "rgba(65, 30, 10, 0.65)", "#f97316", "🏯 ASHINA CASTLE GATEFIELD (+8m)");
                 this.drawZoneRect(ctx, -1420, -140, 40, 40, "rgba(70, 15, 15, 0.65)", "#ef4444", "⚡ DRAGON'S PIT CRAGS (+16m)");
                 this.drawZoneRect(ctx, -1440, 440, 40, 40, "rgba(75, 10, 25, 0.65)", "#e11d48", "🌋 VOLCANO MANOR MAGMA CHAMBER (-12m)");
+                // 8 Brand-New Outside Realm Expeditions (V69 Expansion)
+                this.drawZoneRect(ctx, -1520, -220, 40, 40, "rgba(60, 20, 40, 0.65)", "#ec4899", "🌸 FOUNTAINHEAD VERMILION WATERWAY (+18m)");
+                this.drawZoneRect(ctx, -1545, -80, 40, 40, "rgba(20, 40, 70, 0.65)", "#38bdf8", "❄️ CAINHURST FROZEN PARAPET (+14m)");
+                this.drawZoneRect(ctx, -1570, 80, 40, 40, "rgba(25, 30, 80, 0.65)", "#818cf8", "🌙 MOONLIGHT ALTAR CATHEDRAL (+22m)");
+                this.drawZoneRect(ctx, -1595, 220, 40, 40, "rgba(20, 20, 35, 0.65)", "#64748b", "🕯️ CATHEDRAL SUNKEN GRAVEYARD (-15m)");
+                this.drawZoneRect(ctx, -1620, -320, 40, 40, "rgba(70, 50, 15, 0.65)", "#facc15", "☀️ ANOR LONDO DARK SUN TOMB (+12m)");
+                this.drawZoneRect(ctx, -1645, 340, 40, 40, "rgba(40, 50, 15, 0.65)", "#84cc16", "🧪 SHADED CASTLE BRIAR MOAT (-8m)");
+                this.drawZoneRect(ctx, -1670, -160, 40, 40, "rgba(60, 40, 20, 0.65)", "#fb923c", "🔔 BELL DEMON SANCTUM (+20m)");
+                this.drawZoneRect(ctx, -1695, 460, 40, 40, "rgba(35, 15, 60, 0.65)", "#a855f7", "🌌 NOKSTELLA STARGAZER BASIN (-18m)");
             }
 
             // 3. Draw All World Pins

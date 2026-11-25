@@ -67,7 +67,7 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 265 Legendary Boss Roster
+### 🌲 Outside Realm Apex Bosses & 289 Legendary Boss Roster
 Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 257 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
@@ -274,9 +274,31 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (569 Fast-Travel Locations & 93 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (577 Fast-Travel Locations & 101 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 1,500 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 77 bespoke Outside locations, 76 active mob patrols, and 38 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 1,750 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 85 bespoke Outside locations, 84 active mob patrols, and 46 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V69 Expansion)
+1. **Fountainhead Okami Warrior (Lightning Kemari & Katana)**: Slender porcelain-masked warrior in blue silk kimono and flowing wisteria purple sash, volleying crackling lightning kemari balls and delivering swift silver katana slashes.
+2. **Cainhurst Castle Gargoyle Bloodlicker (Flea Beast)**: Grotesque bloated crimson blood-sac aberration with spindly skeletal quadruped legs, tattered leathery bat wings, and a long razor proboscis needle.
+3. **Carian Marionette Aviator (Quad-Arm Clockwork Puppet)**: Brass clockwork puppet body powered by a pulsing glintstone core, featuring 4 articulated arms wielding dual curved shortswords and twin rapid-fire shortbows.
+4. **Deep Evangelist Preacher (Spiked Mace & Wimple Robes)**: Bulky white-wimpled clerical priestess in charcoal-grey robes, swinging a devastating two-handed spiked iron mace and casting dark gnawing Deep Soul hexes.
+5. **Giant Royal Sentinel of Anor Londo (Brass Halberd & Tower Shield)**: Colossal 4-meter brass-armored guardian crowned in golden sun plumes, brandishing a massive gilded tower shield and ceremonial war halberd.
+6. **Briar Duelist Gladiator (Barbed Battleaxe & Chain)**: Muscular bronze-tanned arena fighter wound in tight coils of rusted barbed briar wire, wielding a heavy barbed battleaxe connected to iron chains and spiked buckler.
+7. **Senpou Taro Trooper (Giant Tree-Trunk War Mallet)**: Gigantic childlike monk brute in coarse hemp robes wearing sacred red prayer beads, swinging a mammoth tree-trunk war mallet with earth-shattering force.
+8. **Silver Tear Mimic Slime (Formless Chrome Shifter)**: Undulating dome of liquid mercury chrome with metallic specular reflections, sprouting morphing silver spike pseudopods and a glowing celestial starlight core.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V69 Expansion)
+1. **Divine Dragon of Fountainhead & Gracious Tears (Sacred Fountainhead Palace)**: Majestic celestial jade-white dragon floating amidst sacred vermilion Torii gates, wielding the legendary Seven-Branched Sword Nanatsusaya crackling with emerald storms and dragon lightning (+18.0m elevation).
+2. **Lady Maria of the Astral Clocktower (Cainhurst Frozen Parapets)**: Noble hunter matriarch in tri-corner hat and midnight coat, dual-wielding the curved Rakuyo trick blades igniting scorching bloodflame waves and fiery crimson arcs (+14.0m elevation).
+3. **Glintstone Dragon Adula of Manus Celes (Moonlight Altar Plateau)**: Majestic crystalline four-winged azure dragon crowned in jagged glintstone horns, channeling the colossal Carian Moonlight Greatsword in its jaws and breathing crystalline frost (+22.0m elevation).
+4. **Aldrich, Devourer of Gods & Saint of the Deep (Cathedral Sunken Graveyard)**: Horrific undulating mass of abyssal sludge and dregs fused with the upper body of god Gwyndolin, unleashing moonlight arrow storms from the Darkmoon Longbow and reaping with the Lifehunt Scythe (-15.0m elevation).
+5. **Dark Sun Gwyndolin & Shadows of Anor Londo (Anor Londo Dark Sun Tomb)**: Serpentine deity draped in golden silk skirts with lower body composed of writhing black serpents, crowned in a radiant sun-halo mask and firing homing moonlight arrows (+12.0m elevation).
+6. **Elemer of the Briar & Bell Bearing Hunter (The Shaded Castle Poison Briar Moat)**: Rusted iron executioner bound in barbed thorns, telekinetically commanding the floating Marais Executioner's Sword to drill forward in red corkscrew corking thrusts (-8.0m elevation).
+7. **Corrupted Monk, Illusion & True Naginata Guardian (Mt. Senpou Bell Demon Bamboo Sanctum)**: Towering smiling-masked priestess in flowing lavender monk robes, whirling a 5.2-meter silver Jumonji Naginata polearm in continuous 360-degree slashing combos (+20.0m elevation).
+8. **Astel, Stars of Darkness & Naturalborn Abyss (Nokstella Stargazer Waterfall Basin)**: Cosmic dragonfly aberration crowned in miniature nebulae, featuring celestial wings, crushing gravity pincers, and a segmented tail swinging devastating meteorite explosions (-18.0m elevation).
+
+
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V60 Expansion)
 1. **Leyndell Perfumer Page (Repeating Crossbow & Spark Aromatic)**: Slender white silk tunic with gold embroidered collar, traveler's tricorn hood, repeating mechanical triple-shot crossbow with bronze crank, and perfume flask with floating golden spark aromatic mist.

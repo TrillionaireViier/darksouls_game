@@ -10,7 +10,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES';
+            var TARGET_BUILD = '20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1768,8 +1768,8 @@
                 <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
                 <button class="btn-icon-bar" onclick="openNPCsModal()" title="330 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (330)</span></button>
-                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,126 3D Models: 340 Armors, 330 NPCs, 418 Mobs & 38 Outside Apex Bosses" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,126)</span></button>
-                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="281 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (281)</span></button>
+                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,142 3D Models: 340 Armors, 330 NPCs, 426 Mobs & 46 Outside Apex Bosses" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,142)</span></button>
+                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="289 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (289)</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" title="70 Legendary Soulsborne Weapons & Arsenal" style="border-color: #d4af37; color: #ffd778; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);">⚔️ <span class="btn-label-text">WEAPONS (70)</span></button>
                 <button class="btn-icon-bar" onclick="openRingsModal()" title="50 Legendary Soulsborne Rings & Talismans (4 Equip Slots)" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">💍 <span class="btn-label-text">RINGS (50)</span></button>
@@ -1780,7 +1780,7 @@
                 <button class="btn-icon-bar" onclick="openSunkenLiturgyModal()" title="The Sunken Liturgy • Dark Fantasy Debt Realm & Lore [L]" style="border-color: #ffaa33; color: #ffe0b2; font-weight: 800; background: rgba(60, 35, 10, 0.85); box-shadow: 0 0 14px rgba(255, 170, 51, 0.5);">⚖️ <span class="btn-label-text">SUNKEN LITURGY [L]</span></button>
                 <button class="btn-icon-bar" onclick="openDevMapModal()" title="Open God-Mode Interactive Dev Map & Radar [M]" style="border-color: #00ffaa; color: #a5ffbe; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">DEV MAP [M]</span></button>
                 <button class="btn-icon-bar" onclick="if(window.game)window.game.travelToLocation('outside_fallen_spaceship_bazaar')" title="Visit Fallen Starship 30 Merchants Bazaar [U]" style="border-color: #00f5ff; color: #a5f3fc; font-weight: 800; background: rgba(0, 45, 65, 0.85); box-shadow: 0 0 12px rgba(0, 245, 255, 0.45);">🛸 <span class="btn-label-text">STARSHIP [U]</span></button>
-                <button class="btn-icon-bar" onclick="openLocationsModal()" title="569 Warriors' Dream & Soulsborne Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (569)</span></button>
+                <button class="btn-icon-bar" onclick="openLocationsModal()" title="577 Warriors' Dream & Soulsborne Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (577)</span></button>
                 <button class="btn-icon-bar" onclick="teleportOrHighlightPath('outside')" title="Outside Realm: Darkroot Woods, Primeval Archtree & Dragon Plateau [O]" style="border-color: #2ecc71; color: #a8ffb2; font-weight: 800; background: rgba(20, 50, 30, 0.75); box-shadow: 0 0 12px rgba(46, 204, 113, 0.45);">🌲 <span class="btn-label-text">OUTSIDE [O]</span></button>
                 <button class="btn-icon-bar" id="btn-touch-toggle" onclick="toggleVirtualControls()" title="Toggle On-Screen Virtual Joystick & Buttons" style="border-color: #ffd700; color: #ffe680; font-weight: 700;">🕹️ <span class="btn-label-text">CONTROLS PAD</span></button>
                 <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
@@ -2148,10 +2148,10 @@
 
             <!-- Category Tabs -->
             <div style="display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px;">
-                <button class="btn-icon-bar compendium-tab-btn active" data-category="ALL" onclick="filterCompendiumCategory('ALL')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">ALL (1,126)</button>
+                <button class="btn-icon-bar compendium-tab-btn active" data-category="ALL" onclick="filterCompendiumCategory('ALL')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">ALL (1,142)</button>
                 <button class="btn-icon-bar compendium-tab-btn" data-category="ARMOR" onclick="filterCompendiumCategory('ARMOR')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">🛡️ ARMORS (340)</button>
                 <button class="btn-icon-bar compendium-tab-btn" data-category="NPC" onclick="filterCompendiumCategory('NPC')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #00ffaa; color: #a5ffbe;">🧙 NPCS (330)</button>
-                <button class="btn-icon-bar compendium-tab-btn" data-category="MOB" onclick="filterCompendiumCategory('MOB')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ff5555; color: #ffaaaa;">👹 MOBS (418)</button>
+                <button class="btn-icon-bar compendium-tab-btn" data-category="MOB" onclick="filterCompendiumCategory('MOB')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ff5555; color: #ffaaaa;">👹 MOBS (426)</button>
             </div>
 
             <!-- Cards Grid -->
@@ -4981,6 +4981,110 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('outside_volcano_manor_rykard_blasphemy')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 282: Divine Dragon of Fountainhead & Gracious Tears (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_fountainhead_divine_dragon">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐉</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">282. DIVINE DRAGON OF FOUNTAINHEAD</div>
+                            <div class="boss-card-desc">Sacred Fountainhead Palace &bull; Seven-Branched Sword Nanatsusaya, Emerald Lightning &amp; Windstorms</div>
+                            <div class="boss-card-stats">HP: 102,000 &bull; REWARD: 10,500,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_fountainhead_divine_dragon')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 283: Lady Maria of the Astral Clocktower (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_cainhurst_lady_maria">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🩸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">283. LADY MARIA OF ASTRAL CLOCKTOWER</div>
+                            <div class="boss-card-desc">Cainhurst Frozen Parapet &bull; Rakuyo Dual Trick Blades, Bloodflame Waves &amp; Astral Clock</div>
+                            <div class="boss-card-stats">HP: 88,000 &bull; REWARD: 9,800,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_cainhurst_lady_maria')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 284: Glintstone Dragon Adula of Manus Celes (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_moonlight_altar_dragon_adula">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">💎</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">284. GLINTSTONE DRAGON ADULA OF MANUS CELES</div>
+                            <div class="boss-card-desc">Moonlight Altar Plateau &bull; Carian Moonlight Greatsword, Crystalline Frost Breath &amp; Starlight Rain</div>
+                            <div class="boss-card-stats">HP: 108,000 &bull; REWARD: 11,200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_moonlight_altar_dragon_adula')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 285: Aldrich, Devourer of Gods & Saint of the Deep (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_aldrich_devourer_of_gods">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌑</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">285. ALDRICH, DEVOURER OF GODS</div>
+                            <div class="boss-card-desc">Cathedral Sunken Graveyard &bull; Golden Darkmoon Longbow, Moonlight Arrow Storm &amp; Lifehunt Scythe</div>
+                            <div class="boss-card-stats">HP: 94,000 &bull; REWARD: 10,200,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_aldrich_devourer_of_gods')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 286: Dark Sun Gwyndolin & Shadows of Anor Londo (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_dark_sun_gwyndolin">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">☀️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">286. DARK SUN GWYNDOLIN &amp; SHADOWS</div>
+                            <div class="boss-card-desc">Anor Londo Dark Sun Tomb &bull; Crown of the Sun Halo, Golden Moonlight Longbow &amp; Serpents</div>
+                            <div class="boss-card-stats">HP: 86,000 &bull; REWARD: 9,600,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_dark_sun_gwyndolin')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 287: Elemer of the Briar & Bell Bearing Hunter (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_elemer_of_the_briar">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🗡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">287. ELEMER OF THE BRIAR &amp; HUNTER</div>
+                            <div class="boss-card-desc">Shaded Castle Poison Briar Moat &bull; Telekinetic Marais Executioner Sword, Briar Armor &amp; Corkscrew Thrust</div>
+                            <div class="boss-card-stats">HP: 92,000 &bull; REWARD: 10,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_elemer_of_the_briar')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 288: Corrupted Monk, Illusion & True Naginata Guardian (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_corrupted_monk_priestess">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🎋</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">288. CORRUPTED MONK OF SENPOU</div>
+                            <div class="boss-card-desc">Bell Demon Bamboo Sanctum &bull; Gleaming Jumonji Naginata, Whirling 360-Degree Slash &amp; Illusion Fog</div>
+                            <div class="boss-card-stats">HP: 98,000 &bull; REWARD: 10,800,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_corrupted_monk_priestess')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 289: Astel, Stars of Darkness & Naturalborn Abyss (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_astel_stars_of_darkness">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🌌</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">289. ASTEL, STARS OF DARKNESS</div>
+                            <div class="boss-card-desc">Nokstella Stargazer Basin &bull; Cosmic Dragonfly Carapace, Void Gravity Waves &amp; Meteorite Tail</div>
+                            <div class="boss-card-stats">HP: 112,000 &bull; REWARD: 12,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_astel_stars_of_darkness')">CHALLENGE</button>
                 </div>
             </div>
 
@@ -9985,25 +10089,25 @@
 
     <!-- Game Scripts (with version cache-busting) -->
     <script src="js/three.min.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
-    <script src="js/audio.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/lore_items.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/merchants_30.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/world.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/character.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/siege_warfare.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/heraldry_nobility.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/apothecary_crafting.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/collision_system.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/qa_bot_tester.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/combat.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/postprocessing.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/qa_suite.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/blacksmith_forge.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/inventory_system.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/compendium_300_models.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/death_quotes_300.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/game.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
-    <script src="js/dev_map.js?v=20261125_V68_BUGFIXES_POISE_ABYSS_RESPAWN_BOUNDARIES"></script>
+    <script src="js/audio.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/lore_items.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/merchants_30.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/world.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/character.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/siege_warfare.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/heraldry_nobility.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/apothecary_crafting.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/collision_system.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/qa_bot_tester.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/combat.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/postprocessing.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/qa_suite.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/blacksmith_forge.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/inventory_system.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/compendium_300_models.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/death_quotes_300.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/game.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
+    <script src="js/dev_map.js?v=20261125_V69_OUTSIDE_REALM_EXPANSION_8_BOSSES_8_MOBS_8_LOCATIONS"></script>
     <script>
         // Automatic Game Initialization Failsafe
         (function() {
