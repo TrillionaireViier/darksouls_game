@@ -989,6 +989,295 @@ class DarkSoulsCombat {
                 poiseBreak: 2.4,
                 cost: 19000,
                 unlocked: false
+            },
+            dragon_hunter_katana: {
+                id: 'dragon_hunter_katana',
+                name: "Dragon Hunter's Great Katana",
+                type: 'Great Katana',
+                icon: '🐉',
+                desc: 'Ancient gravel stone dragon-smiting blade. Dragon Slash unleashes high-voltage kinetic arcs that sever dragon scales.',
+                lightDmg: 310,
+                heavyDmg: 590,
+                reach: 4.5,
+                bossReachBonus: 3.5,
+                lightStamina: 24,
+                heavyStamina: 38,
+                speedMultiplier: 1.15,
+                poiseBreak: 2.6,
+                cost: 20000,
+                unlocked: false
+            },
+            fallingstar_beast_jaw: {
+                id: 'fallingstar_beast_jaw',
+                name: 'Fallingstar Beast Jaw',
+                type: 'Colossal Gravity Weapon',
+                icon: '🌌',
+                desc: 'Harvested from an extraterrestrial star beast. Heavy attacks pierce the earth to call down crackling gravity lightning bolts.',
+                lightDmg: 340,
+                heavyDmg: 640,
+                reach: 4.3,
+                bossReachBonus: 3.4,
+                lightStamina: 36,
+                heavyStamina: 55,
+                speedMultiplier: 0.88,
+                poiseBreak: 3.8,
+                cost: 21000,
+                unlocked: false
+            },
+            silurias_tree: {
+                id: 'silurias_tree',
+                name: "Siluria's Tree",
+                type: 'Crucible Great Spear',
+                icon: '🌲',
+                desc: 'Holy spear of Crucible Knight Siluria. Siluria’s Woe charges a spinning vortex of primordial gold that pierces through foes.',
+                lightDmg: 295,
+                heavyDmg: 570,
+                reach: 4.9,
+                bossReachBonus: 3.8,
+                lightStamina: 25,
+                heavyStamina: 40,
+                speedMultiplier: 1.05,
+                poiseBreak: 2.5,
+                cost: 19500,
+                unlocked: false
+            },
+            helphens_steeple: {
+                id: 'helphens_steeple',
+                name: "Helphen's Steeple",
+                type: 'Ghostflame Greatsword',
+                icon: '🕯️',
+                desc: 'Greatsword modeled on the steeple of the spirit world. Coated in ruinous black-white ghostflame that inflicts severe frostbite.',
+                lightDmg: 310,
+                heavyDmg: 585,
+                reach: 4.2,
+                bossReachBonus: 3.2,
+                lightStamina: 26,
+                heavyStamina: 42,
+                speedMultiplier: 1.02,
+                poiseBreak: 2.5,
+                cost: 20500,
+                unlocked: false
+            },
+            deaths_poker: {
+                id: 'deaths_poker',
+                name: "Death's Poker",
+                type: 'Ghostflame Barbed Stave',
+                icon: '💀',
+                desc: 'Barbed iron poker carried by Death Rite Birds. Sets ablaze a crawling path of icy ghostflame that consumes enemy health.',
+                lightDmg: 285,
+                heavyDmg: 540,
+                reach: 3.9,
+                bossReachBonus: 3.0,
+                lightStamina: 20,
+                heavyStamina: 34,
+                speedMultiplier: 1.25,
+                poiseBreak: 2.1,
+                cost: 18000,
+                unlocked: false
+            },
+            darkdrift: {
+                id: 'darkdrift',
+                name: 'Darkdrift',
+                type: 'Phantom Invisible Katana',
+                icon: '👻',
+                desc: 'Blade forged of crystal and spirit mist. Completely invisible and passes straight through enemy shields as if they did not exist.',
+                lightDmg: 250,
+                heavyDmg: 480,
+                reach: 3.7,
+                bossReachBonus: 2.8,
+                lightStamina: 16,
+                heavyStamina: 28,
+                speedMultiplier: 1.42,
+                poiseBreak: 1.5,
+                cost: 16500,
+                unlocked: false
+            },
+            marais_executioner: {
+                id: 'marais_executioner',
+                name: "Marais Executioner's Sword",
+                type: 'Eochaid Greatsword',
+                icon: '🗡️',
+                desc: 'House Marais heirloom. Imbued with psychokinetic telekinesis that hurls the corkscrewing blade forward in continuous drills.',
+                lightDmg: 315,
+                heavyDmg: 595,
+                reach: 4.1,
+                bossReachBonus: 3.1,
+                lightStamina: 28,
+                heavyStamina: 44,
+                speedMultiplier: 1.05,
+                poiseBreak: 2.6,
+                cost: 22000,
+                unlocked: false
+            },
+            golden_order_greatsword: {
+                id: 'golden_order_greatsword',
+                name: 'Golden Order Greatsword',
+                type: 'Holy Light Greatsword',
+                icon: '☀️',
+                desc: 'Forged of pure light by King Consort Radagon. Establish Order emits a golden salute followed by a wide crescent slash of holy light.',
+                lightDmg: 305,
+                heavyDmg: 580,
+                reach: 4.3,
+                bossReachBonus: 3.3,
+                lightStamina: 26,
+                heavyStamina: 42,
+                speedMultiplier: 1.05,
+                poiseBreak: 2.4,
+                cost: 22500,
+                unlocked: false
+            },
+            ordovis_greatsword: {
+                id: 'ordovis_greatsword',
+                name: "Ordovis's Greatsword",
+                type: 'Crucible Vortex Greatsword',
+                icon: '🌀',
+                desc: 'Greatsword of Crucible Knight Ordovis. Channeling the primordial red-tinted gold vortex slams the ground with devastating poise damage.',
+                lightDmg: 325,
+                heavyDmg: 620,
+                reach: 4.2,
+                bossReachBonus: 3.3,
+                lightStamina: 30,
+                heavyStamina: 48,
+                speedMultiplier: 0.98,
+                poiseBreak: 3.1,
+                cost: 23000,
+                unlocked: false
+            },
+            euporia: {
+                id: 'euporia',
+                name: 'Euporia',
+                type: 'Radiant Twinblade',
+                icon: '⚜️',
+                desc: 'Twinblade of cascading golden radiance from the tower of Enir-Ilim. Rapid spinning strikes build up lustrous light that discharges in beams.',
+                lightDmg: 275,
+                heavyDmg: 520,
+                reach: 3.8,
+                bossReachBonus: 2.8,
+                lightStamina: 18,
+                heavyStamina: 32,
+                speedMultiplier: 1.48,
+                poiseBreak: 2.0,
+                cost: 24000,
+                unlocked: false
+            },
+            sword_of_night: {
+                id: 'sword_of_night',
+                name: 'Sword of Night',
+                type: 'Midnight Katana',
+                icon: '🌑',
+                desc: 'Pure obsidian katana coated in liquid darkness. Witching Hour slash sends forth three successive arcs of midnight void blades.',
+                lightDmg: 290,
+                heavyDmg: 550,
+                reach: 3.8,
+                bossReachBonus: 2.9,
+                lightStamina: 18,
+                heavyStamina: 30,
+                speedMultiplier: 1.45,
+                poiseBreak: 1.8,
+                cost: 23500,
+                unlocked: false
+            },
+            queelign_greatsword: {
+                id: 'queelign_greatsword',
+                name: "Queelign's Greatsword",
+                type: 'Heavy Thrusting Flame Sword',
+                icon: '🔥',
+                desc: 'Spiral rapier carried by Fire Knight Queelign. Heavy lunges pierce armor with a spiraling blast of sacred flame.',
+                lightDmg: 280,
+                heavyDmg: 530,
+                reach: 4.4,
+                bossReachBonus: 3.4,
+                lightStamina: 21,
+                heavyStamina: 35,
+                speedMultiplier: 1.25,
+                poiseBreak: 2.2,
+                cost: 21500,
+                unlocked: false
+            },
+            fire_knight_greatsword: {
+                id: 'fire_knight_greatsword',
+                name: "Fire Knight's Greatsword",
+                type: 'Messmer Flame Colossal Sword',
+                icon: '🗡️',
+                desc: 'Colossal two-handed blade bathed in Messmer’s unholy red flame. Sweeps engulf huge areas in roaring fiery whirlwinds.',
+                lightDmg: 345,
+                heavyDmg: 660,
+                reach: 4.7,
+                bossReachBonus: 3.7,
+                lightStamina: 34,
+                heavyStamina: 54,
+                speedMultiplier: 0.92,
+                poiseBreak: 3.5,
+                cost: 25000,
+                unlocked: false
+            },
+            ancient_meteoric_ore_sword: {
+                id: 'ancient_meteoric_ore_sword',
+                name: 'Ancient Meteoric Ore Greatsword',
+                type: 'Cosmic Colossal Sword',
+                icon: '☄️',
+                desc: 'Forged from a stellar meteorite shard. White Light Charge rockets the user forward, detonating an immense white lightning nova.',
+                lightDmg: 355,
+                heavyDmg: 685,
+                reach: 4.6,
+                bossReachBonus: 3.6,
+                lightStamina: 35,
+                heavyStamina: 56,
+                speedMultiplier: 0.94,
+                poiseBreak: 3.7,
+                cost: 26000,
+                unlocked: false
+            },
+            spear_of_the_impaler: {
+                id: 'spear_of_the_impaler',
+                name: 'Spear of the Impaler',
+                type: 'Serpentine Great Spear',
+                icon: '🐍',
+                desc: 'Weapon of Messmer the Impaler. Strong attacks hurl the flaming spear like a javelin which explodes upon impact.',
+                lightDmg: 310,
+                heavyDmg: 590,
+                reach: 5.1,
+                bossReachBonus: 4.0,
+                lightStamina: 24,
+                heavyStamina: 38,
+                speedMultiplier: 1.20,
+                poiseBreak: 2.7,
+                cost: 27000,
+                unlocked: false
+            },
+            rakshasa_great_katana: {
+                id: 'rakshasa_great_katana',
+                name: "Rakshasa's Great Katana",
+                type: 'Frenzy Great Katana',
+                icon: '🩸',
+                desc: 'Savage great katana belonging to Rakshasa. Unstoppable hyper-armor attacks cleave through enemy poise without interruption.',
+                lightDmg: 325,
+                heavyDmg: 615,
+                reach: 4.5,
+                bossReachBonus: 3.5,
+                lightStamina: 26,
+                heavyStamina: 42,
+                speedMultiplier: 1.18,
+                poiseBreak: 2.9,
+                cost: 25500,
+                unlocked: false
+            },
+            putrescence_cleaver: {
+                id: 'putrescence_cleaver',
+                name: 'Putrescence Cleaver',
+                type: 'Ghostflame Greataxe',
+                icon: '🪓',
+                desc: 'Crescent greataxe drenched in decomposing purplish ghostflame. Spinning Guillotine cleaves repeatedly, bathing the earth in frost flame.',
+                lightDmg: 335,
+                heavyDmg: 645,
+                reach: 4.1,
+                bossReachBonus: 3.1,
+                lightStamina: 32,
+                heavyStamina: 50,
+                speedMultiplier: 1.05,
+                poiseBreak: 3.2,
+                cost: 24500,
+                unlocked: false
             }
         };
         this.currentWeaponId = 'sword';
@@ -997,7 +1286,7 @@ class DarkSoulsCombat {
         this.projectiles = [];
 
         // ----------------------------------------------------
-        // SOULSBORNE MAGIC GRIMOIRE & SPELLCASTING SYSTEM (12 SPELLS)
+        // SOULSBORNE MAGIC GRIMOIRE & SPELLCASTING SYSTEM (40 SPELLS)
         // ----------------------------------------------------
         this.currentSpellId = 'soul_arrow';
         this.unlockedSpells = [
@@ -1020,7 +1309,27 @@ class DarkSoulsCombat {
             'flame_grant_strength',
             'dark_bead',
             'frenzied_burst',
-            'elden_stars'
+            'elden_stars',
+            'placidusax_ruin',
+            'ranni_dark_moon',
+            'ancient_dragon_lightning',
+            'black_flame_ritual',
+            'greyoll_roar',
+            'bloodboon',
+            'wrath_of_gold',
+            'loretta_mastery',
+            'flame_of_fell_god',
+            'night_comet',
+            'crucible_breath',
+            'vow_of_indomitable',
+            'pest_threads',
+            'meteorite_of_astel',
+            'rotten_breath',
+            'messmers_orb',
+            'midras_flame',
+            'light_of_miquella',
+            'rain_of_fire',
+            'blade_of_death'
         ];
         // ----------------------------------------------------
         // SOULSBORNE RINGS & TALISMANS SYSTEM (4 SLOTS, 30 RINGS)
@@ -1057,7 +1366,27 @@ class DarkSoulsCombat {
             graven_mass: { id: 'graven_mass', name: 'Graven-Mass Talisman', icon: '🔮', type: 'Elden Talisman', desc: '+20% Sorcery spell effectiveness.' },
             flock_canvas: { id: 'flock_canvas', name: "Flock's Canvas Talisman", icon: '📜', type: 'Elden Talisman', desc: '+20% Faith incantation and lightning spell damage.' },
             winged_sword: { id: 'winged_sword', name: 'Rotten Winged Sword Insignia', icon: '🗡️', type: 'Elden Talisman', desc: 'Consecutive successive weapon hits boost damage up to +30%.' },
-            gold_scarab: { id: 'gold_scarab', name: 'Golden Scarab Talisman', icon: '🪲', type: 'Elden Talisman', desc: '+40% Bonus Souls reaped from all vanquished foes.' }
+            gold_scarab: { id: 'gold_scarab', name: 'Golden Scarab Talisman', icon: '🪲', type: 'Elden Talisman', desc: '+40% Bonus Souls reaped from all vanquished foes.' },
+            bull_goat_talisman: { id: 'bull_goat_talisman', name: "Bull-Goat's Talisman", icon: '🐐', type: 'Heavy Talisman', desc: '+45% Maximum Poise and stagger resistance against heavy blows.' },
+            takers_cameo: { id: 'takers_cameo', name: "Taker's Cameo", icon: '🩸', type: 'Elden Talisman', desc: 'Restores 80 HP every time a hostile foe is slain in battle.' },
+            ancestral_spirit_horn: { id: 'ancestral_spirit_horn', name: "Ancestral Spirit's Horn", icon: '🦌', type: 'Spirit Talisman', desc: 'Restores 25 Stamina on every enemy kill, preventing exhaustion.' },
+            crimson_amber_medallion: { id: 'crimson_amber_medallion', name: 'Crimson Amber Medallion +3', icon: '🔴', type: 'Vitality Talisman', desc: '+350 Flat Maximum Health Points.' },
+            viridian_amber_medallion: { id: 'viridian_amber_medallion', name: 'Viridian Amber Medallion +3', icon: '🟢', type: 'Endurance Talisman', desc: '+35 Flat Maximum Stamina capacity.' },
+            ritual_sword_talisman: { id: 'ritual_sword_talisman', name: 'Ritual Sword Talisman', icon: '⚔️', type: 'Ritual Talisman', desc: '+20% Attack Damage boost whenever player is at full HP.' },
+            ritual_shield_talisman: { id: 'ritual_shield_talisman', name: 'Ritual Shield Talisman', icon: '🛡️', type: 'Ritual Talisman', desc: '+40% Damage Negation shield whenever player is at full HP.' },
+            old_lord_talisman: { id: 'old_lord_talisman', name: "Old Lord's Talisman", icon: '👑', type: 'Ancient Talisman', desc: '+100% Duration to Pine Resins, Warcries, and Spells.' },
+            blue_dancer_charm: { id: 'blue_dancer_charm', name: 'Blue Dancer Charm', icon: '💃', type: 'Agility Talisman', desc: '+25% Physical Attack scaling when operating at light equip load.' },
+            carian_filigreed_crest: { id: 'carian_filigreed_crest', name: 'Carian Filigreed Crest', icon: '💎', type: 'Sorcery Talisman', desc: '-30% Stamina consumption for weapon skills and heavy strikes.' },
+            claw_talisman: { id: 'claw_talisman', name: 'Claw Talisman', icon: '🦅', type: 'Aerial Talisman', desc: '+30% Damage bonus on Jump Attacks and Plunging Strikes.' },
+            curved_sword_talisman: { id: 'curved_sword_talisman', name: 'Curved Sword Talisman', icon: '🤺', type: 'Combat Talisman', desc: '+40% Retaliatory Damage on successful Guard Counters.' },
+            graven_school_talisman: { id: 'graven_school_talisman', name: 'Graven-School Talisman', icon: '🔮', type: 'Sorcery Talisman', desc: '+15% Potency to all Glintstone and Primeval Sorceries.' },
+            faithful_canvas_talisman: { id: 'faithful_canvas_talisman', name: "Faithful's Canvas Talisman", icon: '📜', type: 'Faith Talisman', desc: '+15% Potency to all Miracles, Dragon Cult and Erdtree Spells.' },
+            dragoncrest_shield_3: { id: 'dragoncrest_shield_3', name: 'Dragoncrest Shield +3', icon: '🛡️', type: 'Defense Talisman', desc: '+20% Physical Damage Negation across all physical damage.' },
+            crane_talisman: { id: 'crane_talisman', name: 'Blessed Dew Talisman', icon: '💧', type: 'Regen Talisman', desc: 'Slowly regenerates 4 HP every single second passively.' },
+            assassins_crimson_dagger: { id: 'assassins_crimson_dagger', name: "Assassin's Crimson Dagger", icon: '🗡️', type: 'Critical Talisman', desc: 'Critical ripostes and backstabs immediately restore 15% Max HP.' },
+            assassins_cerulean_dagger: { id: 'assassins_cerulean_dagger', name: "Assassin's Cerulean Dagger", icon: '💠', type: 'Critical Talisman', desc: 'Critical ripostes and backstabs immediately restore 40 Stamina.' },
+            crusade_insignia: { id: 'crusade_insignia', name: 'Crusade Insignia', icon: '🚩', type: 'Combat Talisman', desc: 'Defeating any enemy empowers weapon attack by +15% for 20 seconds.' },
+            aged_ones_exultation: { id: 'aged_ones_exultation', name: "Aged One's Exultation", icon: '🔥', type: 'Madness Talisman', desc: '+20% Attack Power boost in the presence of flame, rot or chaos.' }
         };
 
         this.spells = {
@@ -1280,6 +1609,226 @@ class DarkSoulsCombat {
                 speed: 18,
                 color: 0xffea55,
                 desc: 'Fires a sacred star of the Greater Will trailing shooting starlight.'
+            },
+            placidusax_ruin: {
+                id: 'placidusax_ruin',
+                name: "Placidusax's Ruin",
+                type: 'Dragonlord Incantation',
+                icon: '🐲',
+                damage: 960,
+                staminaCost: 50,
+                speed: 32,
+                color: 0xffaa00,
+                desc: 'Summons Dragonlord Placidusax’s twin golden breath lasers that sweep and explode.'
+            },
+            ranni_dark_moon: {
+                id: 'ranni_dark_moon',
+                name: "Ranni's Dark Moon",
+                type: 'Lunar Sorcery',
+                icon: '🌙',
+                damage: 750,
+                staminaCost: 38,
+                speed: 20,
+                color: 0x88ddff,
+                desc: 'Hurls a cold full moon that dissipates spells and inflicts heavy frostbite.'
+            },
+            ancient_dragon_lightning: {
+                id: 'ancient_dragon_lightning',
+                name: "Ancient Dragons' Lightning Strike",
+                type: 'Dragon Cult Incantation',
+                icon: '⚡',
+                damage: 890,
+                staminaCost: 46,
+                speed: 26,
+                color: 0xff1133,
+                desc: 'Summons red dragon lightning bolts that cascade outward in fiery waves.'
+            },
+            black_flame_ritual: {
+                id: 'black_flame_ritual',
+                name: 'Black Flame Ritual',
+                type: 'Godslayer Incantation',
+                icon: '🖤',
+                damage: 690,
+                staminaCost: 36,
+                speed: 22,
+                color: 0x772299,
+                desc: 'Surrounds the caster with a roaring wall of god-slaying black flame pillars.'
+            },
+            greyoll_roar: {
+                id: 'greyoll_roar',
+                name: "Greyoll's Roar",
+                type: 'Dragon Communion Incantation',
+                icon: '🦁',
+                damage: 590,
+                staminaCost: 32,
+                speed: 24,
+                color: 0xeebb44,
+                desc: 'Emits Elder Dragon Greyoll’s terrifying acoustic roar, shattering enemy defense.'
+            },
+            bloodboon: {
+                id: 'bloodboon',
+                name: 'Bloodboon',
+                type: 'Blood Incantation',
+                icon: '🩸',
+                damage: 630,
+                staminaCost: 30,
+                speed: 25,
+                color: 0xcc0033,
+                desc: 'Scatters bloodflame in a wide forward fan, igniting the earth in burning blood.'
+            },
+            wrath_of_gold: {
+                id: 'wrath_of_gold',
+                name: 'Wrath of Gold',
+                type: 'Erdtree Incantation',
+                icon: '✨',
+                damage: 550,
+                staminaCost: 28,
+                speed: 20,
+                color: 0xffea44,
+                desc: 'Unleashes an instantaneous radial shockwave of condensed holy kinetic force.'
+            },
+            loretta_mastery: {
+                id: 'loretta_mastery',
+                name: "Loretta's Mastery",
+                type: 'Carian Sorcery',
+                icon: '🏹',
+                damage: 770,
+                staminaCost: 40,
+                speed: 28,
+                color: 0x55bbff,
+                desc: 'Manifests a colossal crystal greatbow to fire four homing great arrows simultaneously.'
+            },
+            flame_of_fell_god: {
+                id: 'flame_of_fell_god',
+                name: 'Flame of the Fell God',
+                type: 'Fire Giant Incantation',
+                icon: '☀️',
+                damage: 830,
+                staminaCost: 44,
+                speed: 16,
+                color: 0xff5500,
+                desc: 'Releases a slow homing orb of the Fell God that erupts into an immense firestorm.'
+            },
+            night_comet: {
+                id: 'night_comet',
+                name: 'Night Comet',
+                type: 'Night Sorcery',
+                icon: '🌌',
+                damage: 600,
+                staminaCost: 30,
+                speed: 27,
+                color: 0x113366,
+                desc: 'Semi-invisible sorcery that cuts through enemy lines without drawing evasive dodges.'
+            },
+            crucible_breath: {
+                id: 'crucible_breath',
+                name: 'Aspect of the Crucible: Breath',
+                type: 'Crucible Incantation',
+                icon: '🔥',
+                damage: 650,
+                staminaCost: 34,
+                speed: 22,
+                color: 0xff7722,
+                desc: 'Spews a continuous sweeping torrent of primordial flame from the caster’s throat.'
+            },
+            vow_of_indomitable: {
+                id: 'vow_of_indomitable',
+                name: 'Vow of the Indomitable',
+                type: 'Protection Incantation',
+                icon: '🛡️',
+                damage: 390,
+                staminaCost: 26,
+                speed: 18,
+                color: 0xfff2bb,
+                desc: 'Emits a golden protective sanctuary sphere granting immediate invulnerability.'
+            },
+            pest_threads: {
+                id: 'pest_threads',
+                name: 'Pest Threads',
+                type: 'Servants of Rot Incantation',
+                icon: '🕸️',
+                damage: 530,
+                staminaCost: 24,
+                speed: 25,
+                color: 0xddcc88,
+                desc: 'Fires dozens of serrated sticky threads that home in and pierce repeatedly.'
+            },
+            meteorite_of_astel: {
+                id: 'meteorite_of_astel',
+                name: 'Meteorite of Astel',
+                type: 'Gravity Sorcery',
+                icon: '☄️',
+                damage: 930,
+                staminaCost: 48,
+                speed: 26,
+                color: 0x8844ee,
+                desc: 'Summons a localized cosmic void hailing devastating purple meteorites on target.'
+            },
+            rotten_breath: {
+                id: 'rotten_breath',
+                name: "Rotten Breath of Ekzykes",
+                type: 'Dragon Communion Incantation',
+                icon: '☣️',
+                damage: 670,
+                staminaCost: 36,
+                speed: 20,
+                color: 0xbb2255,
+                desc: 'Spews a billowing cloud of lethal scarlet rot mist that rapidly consumes targets.'
+            },
+            messmers_orb: {
+                id: 'messmers_orb',
+                name: "Messmer's Orb",
+                type: 'Shadow Incantation',
+                icon: '🔴',
+                damage: 940,
+                staminaCost: 48,
+                speed: 28,
+                color: 0xff2200,
+                desc: 'Leaps high and plunges a colossal red-fire orb that explodes into roaring serpents.'
+            },
+            midras_flame: {
+                id: 'midras_flame',
+                name: "Midra's Flame of Frenzy",
+                type: 'Frenzied Lord Incantation',
+                icon: '🔥',
+                damage: 870,
+                staminaCost: 45,
+                speed: 26,
+                color: 0xffaa00,
+                desc: 'Summons the burning visage of the Lord of Frenzied Flame, spewing devastating madness.'
+            },
+            light_of_miquella: {
+                id: 'light_of_miquella',
+                name: 'Light of Miquella',
+                type: 'Sacred Incantation',
+                icon: '✨',
+                damage: 910,
+                staminaCost: 48,
+                speed: 24,
+                color: 0xfff5aa,
+                desc: 'Annihilates foes with a towering column of divine golden starlight from the heavens.'
+            },
+            rain_of_fire: {
+                id: 'rain_of_fire',
+                name: 'Rain of Fire',
+                type: 'Messmer Pyromancy',
+                icon: '🌧️',
+                damage: 790,
+                staminaCost: 40,
+                speed: 22,
+                color: 0xff5511,
+                desc: 'Rains a cataclysmic shower of flaming embers over a huge perimeter.'
+            },
+            blade_of_death: {
+                id: 'blade_of_death',
+                name: 'Blade of Destined Death',
+                type: 'Black Blade Incantation',
+                icon: '🗡️',
+                damage: 860,
+                staminaCost: 42,
+                speed: 30,
+                color: 0x220011,
+                desc: 'Unleashes the red-black wave of Destined Death, reducing enemy maximum HP.'
             }
         };
         // ----------------------------------------------------
@@ -1528,6 +2077,186 @@ class DarkSoulsCombat {
                 color: 0xd7ccc8,
                 desc: 'The mighty living jar. Spins like a flaming tempest, spewing molten lava and body-checking titan bosses.',
                 cost: 4200
+            },
+            lhutel_the_headless: {
+                id: 'lhutel_the_headless',
+                name: 'Lhutel the Headless',
+                title: 'Mausoleum Knight Commander',
+                icon: '🛡️',
+                hp: 3500,
+                maxHp: 3500,
+                damage: 260,
+                color: 0x78909c,
+                desc: 'Headless phantom commander who shifts in and out of the ethereal plane, hurling spectral lances.',
+                cost: 3800
+            },
+            redmane_knight_ogha: {
+                id: 'redmane_knight_ogha',
+                name: 'Redmane Knight Ogha',
+                title: 'Radahn Greatbow Master',
+                icon: '🏹',
+                hp: 3100,
+                maxHp: 3100,
+                damage: 360,
+                color: 0xd32f2f,
+                desc: 'Veteran commander of the Redmanes. Fires gravitas great arrows that topple colossal beasts.',
+                cost: 4100
+            },
+            nightmaiden_swordstress: {
+                id: 'nightmaiden_swordstress',
+                name: 'Nightmaiden & Swordstress Puppets',
+                title: 'Nokstella Eternal Twins',
+                icon: '👯',
+                hp: 2800,
+                maxHp: 2800,
+                damage: 310,
+                color: 0x9fa8da,
+                desc: 'Twin cold silver maidens wielding flowing fluid whips and liquid curved swords that bypass shields.',
+                cost: 3600
+            },
+            ancient_dragon_kristoff: {
+                id: 'ancient_dragon_kristoff',
+                name: 'Ancient Dragon Knight Kristoff',
+                title: 'Leyndell Dragon Cult Champion',
+                icon: '⚡',
+                hp: 3400,
+                maxHp: 3400,
+                damage: 320,
+                color: 0xffb300,
+                desc: 'Rightful hero of the Royal Capital. Summons crackling red dragonbolt lightning to strike the earth.',
+                cost: 4300
+            },
+            warhawk_with_blades: {
+                id: 'warhawk_with_blades',
+                name: 'Warhawk with Blades',
+                title: 'Stormveil Talon Raptor',
+                icon: '🦅',
+                hp: 1900,
+                maxHp: 1900,
+                damage: 390,
+                color: 0xff8a65,
+                desc: 'Ferocious battle hawk whose talons are grafted with burning sabers. Dive-bombs with aerial slashes.',
+                cost: 2900
+            },
+            bloodhound_knight_floh: {
+                id: 'bloodhound_knight_floh',
+                name: 'Bloodhound Knight Floh',
+                title: 'The Rabid Tracker',
+                icon: '🐾',
+                hp: 3000,
+                maxHp: 3000,
+                damage: 370,
+                color: 0x8d6e63,
+                desc: 'Fierce tracker who teleports across battlefields with Bloodhound’s Step, relentless in blood pursuit.',
+                cost: 4000
+            },
+            grave_warden_duelist: {
+                id: 'grave_warden_duelist',
+                name: 'Grave Warden Duelist',
+                title: 'Gladiator of the Catacombs',
+                icon: '⛓️',
+                hp: 3200,
+                maxHp: 3200,
+                damage: 310,
+                color: 0xef5350,
+                desc: 'Exiled gladiatorial champion. Swings twin heavy chained greathammer flails, drawing enemy aggro.',
+                cost: 3500
+            },
+            battlemage_hugues: {
+                id: 'battlemage_hugues',
+                name: 'Battlemage Hugues',
+                title: 'Haima Gavel & Cannon Scholar',
+                icon: '💣',
+                hp: 2900,
+                maxHp: 2900,
+                damage: 350,
+                color: 0x42a5f5,
+                desc: 'Fierce Raya Lucarian judge. Hammers the earth with Gavel of Haima and bombards from afar with explosive cannonballs.',
+                cost: 3900
+            },
+            blackflame_monk_amon: {
+                id: 'blackflame_monk_amon',
+                name: 'Blackflame Monk Amon',
+                title: 'Apostle of the God-Slaying Flame',
+                icon: '🖤',
+                hp: 3000,
+                maxHp: 3000,
+                damage: 330,
+                color: 0xab47bc,
+                desc: 'Monk wielding the Godskin Apostles’ black flame. Scatters burning pillars that melt boss vitality.',
+                cost: 3700
+            },
+            crystalian_blademaiden: {
+                id: 'crystalian_blademaiden',
+                name: 'Crystalian Blademaiden',
+                title: 'Indestructible Crystal Sentinel',
+                icon: '💎',
+                hp: 2700,
+                maxHp: 2700,
+                damage: 280,
+                color: 0x80deea,
+                desc: 'Living crystal automaton. Unbreakable hyper-poise allows her to hop and toss spinning ring-blades uninterrupted.',
+                cost: 3300
+            },
+            radahn_soldier_duo: {
+                id: 'radahn_soldier_duo',
+                name: 'Redmane Soldiers of Caelid',
+                title: 'Scarlet Rot Purifiers',
+                icon: '⚔️',
+                hp: 3100,
+                maxHp: 3100,
+                damage: 280,
+                color: 0xff7043,
+                desc: 'Twin front-line legionnaires of General Radahn. Charge into melee with flaming broadswords and torch rushes.',
+                cost: 2900
+            },
+            kaiden_sellsword: {
+                id: 'kaiden_sellsword',
+                name: 'Kaiden Mercenary',
+                title: 'Horseman of the Northern Steppes',
+                icon: '🏇',
+                hp: 2900,
+                maxHp: 2900,
+                damage: 320,
+                color: 0xa1887f,
+                desc: 'Northern nomad sellsword. Leaps with heavy two-handed Dismounter curved greatswords and thunderous battle cries.',
+                cost: 3100
+            },
+            depraved_perfumer_carmaan: {
+                id: 'depraved_perfumer_carmaan',
+                name: 'Depraved Perfumer Carmaan',
+                title: 'Master of Aromatic Alchemy',
+                icon: '🧪',
+                hp: 2600,
+                maxHp: 2600,
+                damage: 300,
+                color: 0x66bb6a,
+                desc: 'Former hero searching for his revived master. Hurls explosive spark aromatic dust and releases invigorating mist.',
+                cost: 3200
+            },
+            fire_monk_pyromancer: {
+                id: 'fire_monk_pyromancer',
+                name: 'Fire Monk Pyromancer',
+                title: 'Guardian of the Giantsflame',
+                icon: '🔥',
+                hp: 2800,
+                maxHp: 2800,
+                damage: 330,
+                color: 0xff5722,
+                desc: 'Zealous monk of Mountaintops. Erupts boiling pillars of flame and strikes with flaming spiked iron maces.',
+                cost: 3400
+            },
+            marionette_soldiers: {
+                id: 'marionette_soldiers',
+                name: 'Marionette Archer Squad',
+                title: 'Carian Four-Armed Automatons',
+                icon: '🤖',
+                hp: 2300,
+                maxHp: 2300,
+                damage: 360,
+                color: 0x90a4ae,
+                desc: 'Twin mechanical constructs with four arms. Rapidly fire spinning barrages of 20 arrows in berserk frenzy.',
+                cost: 3300
             }
         };
         this.unlockedSpiritAshes = Object.keys(this.spiritAshesDatabase);
@@ -5629,6 +6358,23 @@ class DarkSoulsCombat {
             totalDmg += this.game.blacksmith.getWeaponDamageBonus(this.currentWeaponId);
         }
 
+        // Active Talisman Attack Bonuses
+        if (this.hasRing('ritual_sword_talisman') && this.hp >= this.maxHp) {
+            totalDmg = Math.round(totalDmg * 1.20); // +20% damage at full health
+        }
+        if (this.hasRing('blue_dancer_charm')) {
+            totalDmg = Math.round(totalDmg * 1.20); // +20% damage
+        }
+        if (this.hasRing('claw_talisman') && (this.attackCombo === 5 || this.attackCombo === 6)) {
+            totalDmg = Math.round(totalDmg * 1.30); // +30% jump/plunge damage
+        }
+        if (this.hasRing('curved_sword_talisman') && this.attackCombo === 4) {
+            totalDmg = Math.round(totalDmg * 1.40); // +40% guard counter damage
+        }
+        if (this._crusadeBuffTimer && this._crusadeBuffTimer > 0) {
+            totalDmg = Math.round(totalDmg * 1.15); // +15% Crusade buff
+        }
+
         // Player Damage Multiplier & 1-Hit Kill Mobs Cheat
         if (this.playerDamageMultiplier && this.playerDamageMultiplier > 1.0) {
             totalDmg = Math.round(totalDmg * this.playerDamageMultiplier);
@@ -6245,12 +6991,17 @@ equipWeapon(weaponId) {
             hpMult += 0.1;
             staminaMult += 0.1;
         }
+        let bonusHp = 0;
+        if (this.hasRing('crimson_amber_medallion')) bonusHp += 350;
+        let bonusStam = 0;
+        if (this.hasRing('viridian_amber_medallion')) bonusStam += 35;
+
         const baseHp = 1000 + (this.vigor - 10) * 45;
-        this.maxHp = Math.round(baseHp * hpMult);
+        this.maxHp = Math.round((baseHp + bonusHp) * hpMult);
         this.hp = Math.min(this.hp, this.maxHp);
 
         const baseStam = 100 + (this.endurance - 10) * 5;
-        this.maxStamina = Math.round(baseStam * staminaMult);
+        this.maxStamina = Math.round((baseStam + bonusStam) * staminaMult);
         this.stamina = Math.min(this.stamina, this.maxStamina);
 
         let regen = 38;
@@ -6261,6 +7012,7 @@ equipWeapon(weaponId) {
         if (this.hasRing('havel')) basePoise = Math.round(basePoise * 1.5);
         if (this.hasRing('wolf_ring')) basePoise += 60;
         if (this.hasRing('erdtree_favor')) basePoise = Math.round(basePoise * 1.25);
+        if (this.hasRing('bull_goat_talisman')) basePoise = Math.round(basePoise * 1.45);
         this.maxPoise = basePoise;
         this.poise = Math.min(this.poise, this.maxPoise);
 
@@ -6414,6 +7166,14 @@ equipWeapon(weaponId) {
             damage = Math.max(1, Math.round(damage * this.game.blacksmith.getArmorDamageReduction()));
         }
 
+        // Active Talisman Defenses
+        if (this.hasRing('ritual_shield_talisman') && this.hp >= this.maxHp) {
+            damage = Math.max(1, Math.round(damage * 0.60)); // -40% damage at full health
+        }
+        if (this.hasRing('dragoncrest_shield_3')) {
+            damage = Math.max(1, Math.round(damage * 0.80)); // -20% physical damage
+        }
+
         // Cheats & QA Test Mode Hook: Clamp incoming damage to 1 HP
         if (this.cheatMobsAttack1Hp || this.qaOneHpDamage || (window.qaSuite && window.qaSuite.qaOneHpDamageActive)) {
             damage = 1;
@@ -6537,6 +7297,22 @@ equipWeapon(weaponId) {
         const soulReward = enemy.souls || 150;
         this.souls += soulReward;
         this.game.showSoulsGained(soulReward);
+
+        // Active Ring & Talisman Kill Effects
+        if (this.hasRing('takers_cameo')) {
+            this.hp = Math.min(this.maxHp, this.hp + 80);
+            if (this.game && this.game.updateHUD) this.game.updateHUD();
+        }
+        if (this.hasRing('ancestral_spirit_horn')) {
+            this.stamina = Math.min(this.maxStamina, this.stamina + 25);
+            if (this.game && this.game.updateHUD) this.game.updateHUD();
+        }
+        if (this.hasRing('crusade_insignia')) {
+            this._crusadeBuffTimer = 20.0;
+            if (this.game && this.game.showNotification) {
+                this.game.showNotification("🚩 CRUSADE INSIGNIA: +15% ATTACK (20s)");
+            }
+        }
 
         // Dark Souls Lore Item Unlocking & Notification
         if (enemy.loreId && window.DarkSoulsLore) {
@@ -6996,6 +7772,19 @@ equipWeapon(weaponId) {
 
         if (this._warcryBuffTimer > 0) {
             this._warcryBuffTimer -= delta;
+        }
+        if (this._crusadeBuffTimer && this._crusadeBuffTimer > 0) {
+            this._crusadeBuffTimer -= delta;
+        }
+
+        // Blessed Dew Talisman: Passive HP Regeneration
+        if (this.hasRing('crane_talisman') && !this.isDead && this.hp < this.maxHp) {
+            this._dewRegenTimer = (this._dewRegenTimer || 0) + delta;
+            if (this._dewRegenTimer >= 1.0) {
+                this._dewRegenTimer = 0;
+                this.hp = Math.min(this.maxHp, this.hp + 4);
+                if (this.game && this.game.updateHUD) this.game.updateHUD();
+            }
         }
 
         // God Mode / Cheats: ensure player stays alive, full HP and full stamina

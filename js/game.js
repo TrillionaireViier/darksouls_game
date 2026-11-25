@@ -247,6 +247,7 @@ class DarkSoulsGame {
 
         setTimeout(() => {
             if (this.initFirelinkNPCs) this.initFirelinkNPCs();
+            this.initCovenants();
         }, 900);
     }
 
@@ -403,7 +404,15 @@ class DarkSoulsGame {
             if (e.code === 'KeyP' || e.key === 'p' || e.key === 'P' || e.key === 'з' || e.key === 'З' || e.code === 'KeyV' || e.key === 'v' || e.key === 'V' || e.key === 'м' || e.key === 'М' || e.code === 'Digit4') this.combat.tryDrinkAntidote();
             if (e.code === 'Digit2' || e.code === 'KeyX' || e.key === 'x' || e.key === 'X' || e.key === 'ч' || e.key === 'Ч') this.cycleEquippedWeapon(1);
             if (e.code === 'KeyZ' || e.key === 'z' || e.key === 'Z' || e.key === 'я' || e.key === 'Я') this.cycleEquippedWeapon(-1);
-            if (e.code === 'KeyC' || e.key === 'c' || e.key === 'C' || e.key === 'с' || e.key === 'С') this.openWeaponArsenalModal();
+            if (e.code === 'KeyC' || e.key === 'c' || e.key === 'C' || e.key === 'с' || e.key === 'С') {
+                e.preventDefault();
+                const covModal = document.getElementById('covenants-modal');
+                if (covModal && covModal.style.display === 'flex') {
+                    this.closeCovenantsModal();
+                } else {
+                    this.openCovenantsModal();
+                }
+            }
             if (e.code === 'KeyL' || e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д') {
                 e.preventDefault();
                 const litModal = document.getElementById('sunken-liturgy-modal');
@@ -4763,6 +4772,179 @@ class DarkSoulsGame {
         });
     }
 
+    // ----------------------------------------------------
+    // THE 6 SACRED COVENANTS OF LORDRAN
+    // ----------------------------------------------------
+    initCovenants() {
+        this.covenants = {
+            covenant_sunlight: {
+                id: 'covenant_sunlight',
+                name: 'Warriors of Sunlight',
+                patron: 'Lord Gwyn & Solaire of Astora',
+                badge: '☀️ GOLDEN PHANTOM',
+                icon: '☀️',
+                offeringItem: 'Sunlight Medals',
+                desc: 'Ancient faith of the Golden Sun. Bound by golden camaraderie and incandescent radiant lightning.',
+                rank1: '+10% Miracle & Lightning Incantation Damage',
+                rank2: '+20% Stamina Recovery Regeneration Rate',
+                rank3: 'Sunlight Spear of the Sun Divine Aura'
+            },
+            covenant_darkmoon: {
+                id: 'covenant_darkmoon',
+                name: 'Blades of the Darkmoon',
+                patron: 'Dark Sun Gwyndolin & Company Captain Yorshka',
+                badge: '🌙 BLUE SENTINEL',
+                icon: '🌙',
+                offeringItem: 'Proofs of a Concord Kept',
+                desc: 'Vengeful shadow sentinels who hunt trespassers and sever sin under the moon of Anor Londo.',
+                rank1: '+15% Riposte & Backstab Critical Strike Multiplier',
+                rank2: 'Darkmoon Blade Crescent Wave on Heavy Strikes',
+                rank3: 'Wrath of the Darkmoon Starlight Shield'
+            },
+            covenant_chaos: {
+                id: 'covenant_chaos',
+                name: 'Chaos Servants',
+                patron: 'The Fair Lady of Izalith & Daughter of Chaos',
+                badge: '🔥 DAUGHTER OF FLAME',
+                icon: '🔥',
+                offeringItem: 'Humanity & Chaos Embers',
+                desc: 'Guardians of the suffering pale spider maiden, nursing the bed of chaos flames.',
+                rank1: '+25% Resistance against Fire, Lava and Environmental Heat',
+                rank2: '+20% Chaos & Pyromancy Flame Spell Damage',
+                rank3: 'Chaos Firestorm Molten Crown Passive'
+            },
+            covenant_dragon: {
+                id: 'covenant_dragon',
+                name: 'Path of the Dragon',
+                patron: 'Ancient Everlasting Dragon of Ash Lake',
+                badge: '🐉 DRAGON DISCIPLE',
+                icon: '🐉',
+                offeringItem: 'Dragon Scales',
+                desc: 'Transcend humanity to walk the eternal primordial path of the everlasting stone dragons.',
+                rank1: '+35 Flat Poise and Scaled Skin Defenses',
+                rank2: 'Ancient Dragon Breath Fire Attack Ability',
+                rank3: 'Titan Dragon Roar & Permanent Scaled Armor'
+            },
+            covenant_blood: {
+                id: 'covenant_blood',
+                name: 'Mohgwyn Sanguine Dynasty',
+                patron: 'Mohg, Lord of Blood & Formless Mother',
+                badge: '🩸 LORD OF BLOOD',
+                icon: '🩸',
+                offeringItem: 'Pureblood Medals',
+                desc: 'Cult of the underground blood palace, communing with the wounding Mother of Truth.',
+                rank1: '+20% Blood Loss Buildup on All Slashing Weapons',
+                rank2: 'Attacks restore 5% of all damage dealt as Health Points',
+                rank3: 'Sanguine Nihil Surge Crimson Aura'
+            },
+            covenant_liturgy: {
+                id: 'covenant_liturgy',
+                name: 'Order of the Sunken Liturgy',
+                patron: 'The Grand Auditors & Arbiters of Debt',
+                badge: '⚖️ GRAND ARBITER',
+                icon: '⚖️',
+                offeringItem: 'Ledgers of Default',
+                desc: 'Enforcers of the Primordial Golden Ledger, executing absolute foreclosures in the abyssal deep.',
+                rank1: '+50% Bonus Souls reaped from all slain enemies',
+                rank2: 'Attacks pierce all enemy physical defenses by 25%',
+                rank3: 'Decree of Absolute Foreclosure Golden Halo'
+            }
+        };
+        this.currentCovenant = localStorage.getItem('ds_covenant_pledge') || 'covenant_sunlight';
+        this.applyCovenantPerks();
+    }
+
+    openCovenantsModal() {
+        const modal = document.getElementById('covenants-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateCovenantsUI();
+            if (this.audio) this.audio.playRoll();
+        }
+    }
+
+    closeCovenantsModal() {
+        const modal = document.getElementById('covenants-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    pledgeCovenant(id) {
+        if (!this.covenants || !this.covenants[id]) return;
+        this.currentCovenant = id;
+        localStorage.setItem('ds_covenant_pledge', id);
+        this.applyCovenantPerks();
+        this.updateCovenantsUI();
+        this.showNotification(`👑 PLEDGED ALLEGIANCE: ${this.covenants[id].name.toUpperCase()}!`);
+        if (this.audio && this.audio.playBellToll) this.audio.playBellToll();
+    }
+
+    offerCovenantItem(id) {
+        if (!this.covenants || !this.covenants[id]) return;
+        const curRank = parseInt(localStorage.getItem(`ds_covenant_rank_${id}`) || '0', 10);
+        if (curRank >= 3) {
+            this.showNotification(`✨ MAXIMUM COVENANT RANK REACHED (RANK 3)!`);
+            return;
+        }
+        const costSouls = (curRank + 1) * 3000;
+        if (!this.combat || this.combat.souls < costSouls) {
+            this.showNotification(`⚠️ REQUIRE ${costSouls.toLocaleString()} SOULS TO FORGE OFFERINGS!`);
+            return;
+        }
+        this.combat.souls -= costSouls;
+        const newRank = curRank + 1;
+        localStorage.setItem(`ds_covenant_rank_${id}`, newRank);
+        this.applyCovenantPerks();
+        this.updateCovenantsUI();
+        this.showNotification(`🔥 ${this.covenants[id].name.toUpperCase()} RANK INCREASED TO RANK ${newRank}!`);
+        if (this.audio && this.audio.playBossSlam) this.audio.playBossSlam();
+    }
+
+    applyCovenantPerks() {
+        if (!this.combat) return;
+        const covId = this.currentCovenant || 'covenant_sunlight';
+        const rank = parseInt(localStorage.getItem(`ds_covenant_rank_${covId}`) || '0', 10);
+        this.covenantActiveRank = rank;
+
+        // Apply covenant-specific passive bonuses
+        if (covId === 'covenant_sunlight' && rank >= 2) {
+            this.combat.staminaRegenRate = Math.round(this.combat.staminaRegenRate * 1.20);
+        }
+        if (covId === 'covenant_dragon' && rank >= 1) {
+            this.combat.maxPoise += 35;
+            this.combat.poise = Math.min(this.combat.poise + 35, this.combat.maxPoise);
+        }
+        if (this.updateHUD) this.updateHUD();
+    }
+
+    updateCovenantsUI() {
+        if (!this.covenants) this.initCovenants();
+        const current = this.currentCovenant || 'covenant_sunlight';
+        const cards = document.querySelectorAll('.covenant-card');
+        cards.forEach(card => {
+            const cid = card.getAttribute('data-covenant-id');
+            const rank = parseInt(localStorage.getItem(`ds_covenant_rank_${cid}`) || '0', 10);
+            const rankBadge = card.querySelector('.covenant-rank-badge');
+            if (rankBadge) rankBadge.textContent = `RANK ${rank} / 3`;
+
+            const pledgeBtn = card.querySelector('.btn-pledge-covenant');
+            if (pledgeBtn) {
+                if (cid === current) {
+                    pledgeBtn.textContent = 'ACTIVE PLEDGE ✓';
+                    pledgeBtn.disabled = true;
+                    pledgeBtn.style.borderColor = '#ffd700';
+                    pledgeBtn.style.color = '#fff3a8';
+                    pledgeBtn.style.background = 'rgba(70, 50, 15, 0.85)';
+                } else {
+                    pledgeBtn.textContent = 'PLEDGE ALLEGIANCE';
+                    pledgeBtn.disabled = false;
+                    pledgeBtn.style.borderColor = '#886633';
+                    pledgeBtn.style.color = '#ddd';
+                    pledgeBtn.style.background = 'transparent';
+                }
+            }
+        });
+    }
+
     // ==========================================
     // ADMIN TESTING & DEV SUITE (PERMANENT)
     // ==========================================
@@ -5635,6 +5817,10 @@ window.summonSpiritAsh = (ashId) => { if (window.game && window.game.combat) win
 window.cycleSpiritAsh = (dir = 1) => { if (window.game && window.game.combat) window.game.combat.cycleSpiritAsh(dir); };
 window.openGrimoireModal = () => { if (window.game) window.game.openGrimoireModal(); };
 window.closeGrimoireModal = () => { if (window.game) window.game.closeGrimoireModal(); };
+window.openCovenantsModal = () => { if (window.game) window.game.openCovenantsModal(); };
+window.closeCovenantsModal = () => { if (window.game) window.game.closeCovenantsModal(); };
+window.pledgeCovenant = (id) => { if (window.game) window.game.pledgeCovenant(id); };
+window.offerCovenantItem = (id) => { if (window.game) window.game.offerCovenantItem(id); };
 window.adminGrantSoulsAndEstus = (s) => { if (window.game) window.game.adminGrantSoulsAndEstus(s); };
 window.adminToggleGodMode = () => { if (window.game) window.game.adminToggleGodMode(); };
 window.adminWarp = (d) => { if (window.game) window.game.adminWarp(d); };
