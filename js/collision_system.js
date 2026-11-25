@@ -41,21 +41,21 @@ class CollisionSystem {
         const initialX = pos.x;
         const initialZ = pos.z;
 
-        // A. Royal Bridge Parapets (z in [4815.0, 37215.0], 1,710m Wide x 32,400m Long Viaduct) - TITAN X9 EXPANSION!
-        if (pos.z >= 4815.0 && pos.z <= 37215.0 && Math.abs(pos.x) <= 850.0) {
+        // A. Royal Bridge Parapets (z in [24075.0, 186075.0], 8,550m Wide x 162,000m Long Viaduct) - 5X COLOSSAL EXPANSION!
+        if (pos.z >= 24075.0 && pos.z <= 186075.0 && Math.abs(pos.x) <= 4250.0) {
             if (y >= -1.0 && y <= 4.0) {
-                const minX = -845.0 + radius;
-                const maxX = 845.0 - radius;
+                const minX = -4225.0 + radius;
+                const maxX = 4225.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             }
         }
 
-        // B. Surface Boss Arena (z in [37260.0, 112860.0], 6,480m Wide x 75,600m Long Colosseum Arena) - TITAN X9 EXPANSION!
-        if (pos.z >= 37260.0 && pos.z <= 112860.0 && y >= -1.0 && y <= 25.0) {
-            const minX = -3220.0 + radius;
-            const maxX = 3220.0 - radius;
+        // B. Surface Boss Arena (z in [186300.0, 564300.0], 32,400m Wide x 378,000m Long Colosseum Arena) - 5X COLOSSAL EXPANSION!
+        if (pos.z >= 186300.0 && pos.z <= 564300.0 && y >= -1.0 && y <= 25.0) {
+            const minX = -16100.0 + radius;
+            const maxX = 16100.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            pos.z = Math.min(112800.0 - radius, pos.z);
+            pos.z = Math.min(564000.0 - radius, pos.z);
         }
 
         // C. Flooded Catacombs Corridor (z in [22.0, 270.0], y < -2.0 - strictly subterranean only)
@@ -74,30 +74,30 @@ class CollisionSystem {
             pos.z = Math.min(270.0 - radius, pos.z);
         }
 
-        // F. Courtyard Starting Arena (z in [-20250.0, 4860.0], x in [-4050.0, 4050.0]) - TITAN X9 EXPANSION!
-        if (pos.z >= -20250.0 && pos.z < 4860.0 && pos.x >= -4050.0 && y > -2.0) {
-            const inWestGate = (pos.z >= -288.0 && pos.z <= 288.0);
-            const minX = inWestGate ? -150000.0 : (-4040.0 + radius);
-            const maxX = 4040.0 - radius;
+        // F. Courtyard Starting Arena (z in [-101250.0, 24300.0], x in [-20250.0, 20250.0]) - 5X COLOSSAL EXPANSION!
+        if (pos.z >= -101250.0 && pos.z < 24300.0 && pos.x >= -20250.0 && y > -2.0) {
+            const inWestGate = (pos.z >= -1440.0 && pos.z <= 1440.0);
+            const minX = inWestGate ? -750000.0 : (-20200.0 + radius);
+            const maxX = 20200.0 - radius;
             pos.x = Math.max(minX, Math.min(maxX, pos.x));
-            if (pos.x >= -4040.0 && (pos.x < -360.0 || pos.x > 360.0)) {
-                pos.z = Math.max(-20230.0 + radius, pos.z);
+            if (pos.x >= -20200.0 && (pos.x < -1800.0 || pos.x > 1800.0)) {
+                pos.z = Math.max(-101150.0 + radius, pos.z);
             }
         }
 
-        // G. Serpent Sanctuary & Gorgon Temple (z in [-60750.0, -20250.0], x in [-1350.0, 1350.0]) - TITAN X9 EXPANSION!
-        if (pos.z < -20250.0 && pos.z >= -60750.0) {
-            if (pos.z >= -36450.0) {
-                // Sunken Serpent Courtyard (14,580m long, 2,160m wide)
-                const minX = -1060.0 + radius;
-                const maxX = 1060.0 - radius;
+        // G. Serpent Sanctuary & Gorgon Temple (z in [-303750.0, -101250.0], x in [-6750.0, 6750.0]) - 5X COLOSSAL EXPANSION!
+        if (pos.z < -101250.0 && pos.z >= -303750.0) {
+            if (pos.z >= -182250.0) {
+                // Sunken Serpent Courtyard (72,900m long, 10,800m wide)
+                const minX = -5300.0 + radius;
+                const maxX = 5300.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
             } else {
-                // Gorgon Inner Sanctum (24,300m long, 2,700m wide)
-                const minX = -1340.0 + radius;
-                const maxX = 1340.0 - radius;
+                // Gorgon Inner Sanctum (121,500m long, 13,500m wide)
+                const minX = -6700.0 + radius;
+                const maxX = 6700.0 - radius;
                 pos.x = Math.max(minX, Math.min(maxX, pos.x));
-                pos.z = Math.max(-60730.0 + radius, pos.z);
+                pos.z = Math.max(-303650.0 + radius, pos.z);
             }
         }
 

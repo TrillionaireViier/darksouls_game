@@ -10,7 +10,7 @@ class DarkSoulsGame {
 
         // Three.js Core
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 350000);
+        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1800000);
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             powerPreference: 'high-performance'
@@ -3192,8 +3192,11 @@ class DarkSoulsGame {
         const px = pPos.x;
         const py = pPos.y;
         const pz = pPos.z;
-        for (let i = 0; i < this.world.interactables.length; i++) {
-            const item = this.world.interactables[i];
+        const nearbyInteractables = (this.world && this.world.queryNearbyInteractables)
+            ? this.world.queryNearbyInteractables(px, pz)
+            : this.world.interactables;
+        for (let i = 0; i < nearbyInteractables.length; i++) {
+            const item = nearbyInteractables[i];
             if (item.type === 'fog_gate' && this.world.fogTraversed) continue;
             const ipos = item.position;
             const dx = px - ipos.x;
@@ -4034,9 +4037,11 @@ class DarkSoulsGame {
         if (p.z >= -30 && p.z < 24 && Math.abs(p.x) <= 35) {
             return 'Firelink Courtyard Sanctuary (0m)';
         }
-        // 7. Outside Realm & Extended Expeditions
+        // 7. Outside Realm & Extended Expeditions (O(1) Spatial Query)
         if (p.x < -32) {
-            const locs = window.DARK_SOULS_LOCATIONS || [];
+            const locs = (this.world && this.world.queryNearbyLocations)
+                ? this.world.queryNearbyLocations(p.x, p.z, 120)
+                : [];
             let closest = null, minDist = Infinity;
             for (let i = 0; i < locs.length; i++) {
                 const loc = locs[i];
@@ -5487,7 +5492,8 @@ class DarkSoulsGame {
             </div>
         `;
 
-        html += filtered.map(l => {
+        const displayList = filtered.slice(0, 120);
+        html += displayList.map(l => {
             const isUnlocked = unlocked.includes(l.id) || l.id === 'royal_bridge_arena';
             const elevColor = l.pos[1] < -1 ? '#00ffaa' : (l.pos[1] > 2 ? '#ffd700' : '#ff7722');
             const borderColor = isUnlocked ? '#a87932' : '#443528';

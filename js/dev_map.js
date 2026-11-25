@@ -14,8 +14,8 @@
             this.ctx = null;
             this.isOpen = false;
             
-            // Map view transformation - Tactical zoom for 8x Megalithic Realm
-            this.scale = 0.08; // pixels per meter
+            // Map view transformation - Tactical zoom for 5x Colossal Megalithic Realm
+            this.scale = 0.016; // pixels per meter
             this.offsetX = 0;
             this.offsetZ = 0;
             this.isDragging = false;
@@ -291,16 +291,20 @@
         getAllWorldItems() {
             const items = [];
 
-            // 1. Locations (300)
+            // 1. Locations (Capped & sampled for 60 FPS Dev Map rendering)
             if (this.layers.locations && window.DARK_SOULS_LOCATIONS) {
-                window.DARK_SOULS_LOCATIONS.forEach(loc => {
+                const allLocs = window.DARK_SOULS_LOCATIONS;
+                const step = (!this.searchQuery && allLocs.length > 1000) ? Math.ceil(allLocs.length / 800) : 1;
+                let added = 0;
+                for (let i = 0; i < allLocs.length; i += step) {
+                    const loc = allLocs[i];
                     const elevNum = loc.pos[1];
                     let elevType = 'SURFACE';
                     if (elevNum > 2.0) elevType = 'RAMPARTS';
                     else if (elevNum < -1.5) elevType = 'DEPTHS';
 
-                    if (this.elevationFilter !== 'ALL' && this.elevationFilter !== elevType) return;
-                    if (this.searchQuery && !loc.name.toLowerCase().includes(this.searchQuery) && !loc.zone.toLowerCase().includes(this.searchQuery)) return;
+                    if (this.elevationFilter !== 'ALL' && this.elevationFilter !== elevType) continue;
+                    if (this.searchQuery && !loc.name.toLowerCase().includes(this.searchQuery) && !loc.zone.toLowerCase().includes(this.searchQuery)) continue;
 
                     items.push({
                         type: 'location',
@@ -316,7 +320,9 @@
                         icon: '📍',
                         color: elevType === 'DEPTHS' ? '#00ffaa' : (elevType === 'RAMPARTS' ? '#ffd700' : '#ff7722')
                     });
-                });
+                    added++;
+                    if (added >= 1000) break;
+                }
             }
 
             // 2. Bosses
