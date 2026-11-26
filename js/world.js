@@ -1047,8 +1047,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-2300, -28], z in [-1050, 1050]
-        if (x >= -2300 && x <= -28 && z >= -1050 && z <= 1050) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-2550, -28], z in [-1150, 1150]
+        if (x >= -2550 && x <= -28 && z >= -1150 && z <= 1150) {
+            // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V76 EXPANSION) ===
+            // 1. Tomb of the Giants & Nito's Ossuary (outside_tomb_of_giants_gravelord_nito) (elev: -18.0m)
+            if (x >= -2290 && x <= -2200 && z >= -355 && z <= -265) {
+                return -18.0;
+            }
+            // 2. Boreal Valley & Dancer's Grand High Plaza (outside_boreal_dancer_grand_plaza) (elev: +15.0m)
+            if (x >= -2320 && x <= -2230 && z >= 115 && z <= 205) {
+                return 15.0;
+            }
+            // 3. Finger Ruins of Dheo & Microcosm Crater (outside_finger_ruins_of_dheo_metyr) (elev: -10.0m)
+            if (x >= -2350 && x <= -2260 && z >= -185 && z <= -95) {
+                return -10.0;
+            }
+            // 4. Stone Coffin Fissure & Putrescent Deep Garden (outside_stone_coffin_fissure_putrescent) (elev: -24.0m)
+            if (x >= -2380 && x <= -2290 && z >= 265 && z <= 355) {
+                return -24.0;
+            }
+            // 5. Bodhisattva Valley & Primordial Waterhole (outside_bodhisattva_valley_guardian_ape) (elev: +8.0m)
+            if (x >= -2410 && x <= -2320 && z >= -465 && z <= -375) {
+                return 8.0;
+            }
+            // 6. Cosmic Golden Sea & Greater Will Dais (outside_cosmic_golden_sea_elden_beast) (elev: +24.0m)
+            if (x >= -2440 && x <= -2350 && z >= 25 && z <= 115) {
+                return 24.0;
+            }
+            // 7. Nightmare Grand Cathedral & Blazing Altar (outside_nightmare_grand_cathedral_laurence) (elev: +18.0m)
+            if (x >= -2470 && x <= -2380 && z >= -295 && z <= -205) {
+                return 18.0;
+            }
+            // 8. Iron Keep Smelting Core & Magma Kiln (outside_iron_keep_smelting_furnace) (elev: -14.0m)
+            if (x >= -2500 && x <= -2410 && z >= 395 && z <= 485) {
+                return -14.0;
+            }
             // 8 Brand-New Ascended Outside Realm Expeditions (V74 Expansion)
             // 1. Kiln of the First Flame & Ash Cinder Caldera (outside_kiln_of_the_first_flame_gwyn) (elev: +30.0m)
             if (x >= -2050 && x <= -1960 && z >= -305 && z <= -215) {
@@ -4088,6 +4121,7 @@ class DarkSoulsWorld {
 
         // Build 8 Brand-New Ascended Outside Realm Expeditions (V74 Expansion)
         this.buildEightAscendedOutsideExpeditionsV74(outsideGroup);
+        this.buildEightAscendedOutsideExpeditionsV76(outsideGroup);
 
         this.scene.add(outsideGroup);
     }
@@ -7989,6 +8023,363 @@ class DarkSoulsWorld {
             mesh: flameCore,
             seed: Math.random() * 20
         });
+    }
+
+    buildEightAscendedOutsideExpeditionsV76(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V76 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. TOMB OF THE GIANTS & NITO'S OSSUARY
+        // Center: (-2245, -18.0, -310) | Elev: -18.0m | Theme: Skulls, Skeletons, Red Miasma & Gravelord Nito
+        // --------------------------------------------------------------------
+        const ossuaryStoneMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.95 });
+        const boneMat = new THREE.MeshStandardMaterial({ color: 0xd6d3d1, roughness: 0.85 });
+        const redMiasmaMat = new THREE.MeshStandardMaterial({ color: 0x991b1b, emissive: 0x7f1d1d, emissiveIntensity: 2.2 });
+        const gravelordIronMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.6, metalness: 0.8 });
+
+        // Sunken Ossuary Pit Floor
+        const nitoFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 33, 4.0, 24), ossuaryStoneMat);
+        nitoFloor.position.set(-2245, -20.0, -310);
+        outsideGroup.add(nitoFloor);
+
+        // Ring of 10 Giant Skeletal Spine Columns (Ribcage Arches)
+        for (let i = 0; i < 10; i++) {
+            const angle = (i / 10) * Math.PI * 2;
+            const px = -2245 + Math.cos(angle) * 22;
+            const pz = -310 + Math.sin(angle) * 22;
+            const spine = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.8, 16.0, 8), boneMat);
+            spine.position.set(px, -10.0, pz);
+            spine.rotation.z = Math.cos(angle) * 0.18;
+            spine.rotation.x = Math.sin(angle) * 0.18;
+            outsideGroup.add(spine);
+
+            // Skull Capitols atop spines
+            const skull = new THREE.Mesh(new THREE.SphereGeometry(1.4, 8, 8), boneMat);
+            skull.position.set(px, -1.2, pz);
+            outsideGroup.add(skull);
+        }
+
+        // Central Gravelord Sarcophagus Altar
+        const sarcophagus = new THREE.Mesh(new THREE.BoxGeometry(6.0, 2.2, 3.8), ossuaryStoneMat);
+        sarcophagus.position.set(-2245, -16.9, -310);
+        outsideGroup.add(sarcophagus);
+
+        // Red Miasma Brazier atop Sarcophagus
+        const miasmaCore = new THREE.Mesh(new THREE.SphereGeometry(1.5, 12, 12), redMiasmaMat);
+        miasmaCore.position.set(-2245, -14.6, -310);
+        outsideGroup.add(miasmaCore);
+
+        const nitoLight = new THREE.PointLight(0xef4444, 4.0, 50.0);
+        nitoLight.position.set(-2245, -14.0, -310);
+        outsideGroup.add(nitoLight);
+
+        this.createFloorSoapstone(-2245, -18.0, -298, "#ef4444", "💀 OSSUARY OF FIRST OF THE DEAD", "Fear the Gravelord's dance; strike when the miasma parts!");
+
+        // --------------------------------------------------------------------
+        // 2. BOREAL VALLEY & DANCER'S GRAND HIGH PLAZA
+        // Center: (-2275, 15.0, 160) | Elev: +15.0m | Theme: Silver Gothic Marble, Frost Columns & Dancer
+        // --------------------------------------------------------------------
+        const borealMarbleMat = new THREE.MeshStandardMaterial({ color: 0xe0e7ff, roughness: 0.35, metalness: 0.25 });
+        const borealSilverMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.25, metalness: 0.85 });
+        const frostIceMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.4 });
+
+        // Raised Circular Marble Terrace
+        const dancerPlaza = new THREE.Mesh(new THREE.CylinderGeometry(26, 30, 3.5, 24), borealMarbleMat);
+        dancerPlaza.position.set(-2275, 13.25, 160);
+        outsideGroup.add(dancerPlaza);
+
+        // 8 Slender Gothic Filigree Pillars
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2275 + Math.cos(angle) * 20;
+            const pz = 160 + Math.sin(angle) * 20;
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.1, 14.0, 12), borealMarbleMat);
+            pillar.position.set(px, 22.0, pz);
+            outsideGroup.add(pillar);
+
+            // Silver crossbeam arches
+            const arch = new THREE.Mesh(new THREE.BoxGeometry(7.0, 0.8, 0.9), borealSilverMat);
+            arch.position.set(px, 29.0, pz);
+            arch.rotation.y = angle + Math.PI / 4;
+            outsideGroup.add(arch);
+        }
+
+        // Central Moonlit Frost Brazier
+        const frostOrb = new THREE.Mesh(new THREE.SphereGeometry(1.6, 12, 12), frostIceMat);
+        frostOrb.position.set(-2275, 17.5, 160);
+        outsideGroup.add(frostOrb);
+
+        const dancerLight = new THREE.PointLight(0x38bdf8, 4.5, 55.0);
+        dancerLight.position.set(-2275, 18.0, 160);
+        outsideGroup.add(dancerLight);
+
+        this.createFloorSoapstone(-2275, 15.0, 172, "#38bdf8", "💃 BOREAL HIGH PLAZA", "Beware the endless spinning pirouette of blades—roll through the fire!");
+
+        // --------------------------------------------------------------------
+        // 3. FINGER RUINS OF DHEO & MICROCOSM CRATER
+        // Center: (-2305, -10.0, -140) | Elev: -10.0m | Theme: Stone Finger Trees, Cosmic Microcosm & Metyr
+        // --------------------------------------------------------------------
+        const cosmicStoneMat = new THREE.MeshStandardMaterial({ color: 0x1e1b4b, roughness: 0.9 });
+        const fingerStoneMat = new THREE.MeshStandardMaterial({ color: 0xa8a29e, roughness: 0.75 });
+        const microcosmGlowMat = new THREE.MeshStandardMaterial({ color: 0xc084fc, emissive: 0x9333ea, emissiveIntensity: 2.8 });
+
+        // Cosmic Crater Basin
+        const fingerCrater = new THREE.Mesh(new THREE.CylinderGeometry(27, 32, 3.5, 24), cosmicStoneMat);
+        fingerCrater.position.set(-2305, -11.75, -140);
+        outsideGroup.add(fingerCrater);
+
+        // Ring of 12 Gigantic Stone Finger Obelisks (curved inward)
+        for (let i = 0; i < 12; i++) {
+            const angle = (i / 12) * Math.PI * 2;
+            const px = -2305 + Math.cos(angle) * 21;
+            const pz = -140 + Math.sin(angle) * 21;
+            const fBase = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.5, 12.0, 8), fingerStoneMat);
+            fBase.position.set(px, -4.0, pz);
+            fBase.rotation.x = -Math.sin(angle) * 0.22;
+            fBase.rotation.z = Math.cos(angle) * 0.22;
+            outsideGroup.add(fBase);
+
+            // Upper finger knuckle segment
+            const fTip = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), fingerStoneMat);
+            fTip.position.set(px, 2.5, pz);
+            outsideGroup.add(fTip);
+        }
+
+        // Microcosm Pulsing Cosmic Pearl Altar
+        const pearlAltar = new THREE.Mesh(new THREE.CylinderGeometry(3.0, 4.0, 1.8, 16), cosmicStoneMat);
+        pearlAltar.position.set(-2305, -9.1, -140);
+        outsideGroup.add(pearlAltar);
+
+        const microcosmOrb = new THREE.Mesh(new THREE.SphereGeometry(1.8, 16, 16), microcosmGlowMat);
+        microcosmOrb.position.set(-2305, -6.8, -140);
+        outsideGroup.add(microcosmOrb);
+
+        const metyrLight = new THREE.PointLight(0xa855f7, 5.0, 55.0);
+        metyrLight.position.set(-2305, -6.5, -140);
+        outsideGroup.add(metyrLight);
+
+        this.createFloorSoapstone(-2305, -10.0, -128, "#a855f7", "🖐️ FINGER RUINS OF DHEO", "The Mother of Fingers listens to cosmic void; dodge the starlight ray!");
+
+        // --------------------------------------------------------------------
+        // 4. STONE COFFIN FISSURE & PUTRESCENT DEEP GARDEN
+        // Center: (-2335, -24.0, 310) | Elev: -24.0m | Theme: Megalithic Coffins, Ghostflame Putrescence & Putrescent Knight
+        // --------------------------------------------------------------------
+        const coffinStoneMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.95 });
+        const putrescentSlimeMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, emissive: 0x0891b2, emissiveIntensity: 2.6 });
+
+        // Deep Fissure Slab
+        const fissureFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 34, 4.0, 24), coffinStoneMat);
+        fissureFloor.position.set(-2335, -26.0, 310);
+        outsideGroup.add(fissureFloor);
+
+        // 6 Colossal Tilted Megalithic Stone Coffins
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const px = -2335 + Math.cos(angle) * 19;
+            const pz = 310 + Math.sin(angle) * 19;
+            const coffin = new THREE.Mesh(new THREE.BoxGeometry(4.5, 14.0, 3.2), coffinStoneMat);
+            coffin.position.set(px, -17.0, pz);
+            coffin.rotation.z = Math.cos(angle) * 0.28;
+            coffin.rotation.x = Math.sin(angle) * 0.28;
+            outsideGroup.add(coffin);
+        }
+
+        // Luminous Ghostflame Putrescence Pool
+        const putrescentPool = new THREE.Mesh(new THREE.CylinderGeometry(6.5, 7.5, 0.4, 20), putrescentSlimeMat);
+        putrescentPool.position.set(-2335, -23.8, 310);
+        outsideGroup.add(putrescentPool);
+
+        const putrescentLight = new THREE.PointLight(0x06b6d4, 4.5, 50.0);
+        putrescentLight.position.set(-2335, -22.5, 310);
+        outsideGroup.add(putrescentLight);
+
+        this.createFloorSoapstone(-2335, -24.0, 322, "#06b6d4", "🐎 STONE COFFIN FISSURE", "The Putrescent Knight rides without fear; roll when the cleaver returns!");
+
+        // --------------------------------------------------------------------
+        // 5. BODHISATTVA VALLEY & PRIMORDIAL WATERHOLE
+        // Center: (-2365, 8.0, -420) | Elev: +8.0m | Theme: Colossal Buddha Statues, Bamboo & Guardian Ape
+        // --------------------------------------------------------------------
+        const mossRockMat = new THREE.MeshStandardMaterial({ color: 0x365314, roughness: 0.9 });
+        const bambooGreenMat = new THREE.MeshStandardMaterial({ color: 0x65a30d, roughness: 0.6 });
+        const riverWaterMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.2, metalness: 0.4 });
+
+        // Overgrown Canyon Basin Floor
+        const canyonFloor = new THREE.Mesh(new THREE.CylinderGeometry(27, 32, 3.5, 24), mossRockMat);
+        canyonFloor.position.set(-2365, 6.25, -420);
+        outsideGroup.add(canyonFloor);
+
+        // Serene River Water Basin
+        const waterPond = new THREE.Mesh(new THREE.CylinderGeometry(14, 15, 0.3, 20), riverWaterMat);
+        waterPond.position.set(-2365, 8.1, -420);
+        outsideGroup.add(waterPond);
+
+        // 4 Colossal Mossy Bodhisattva Buddha Statues
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2 + 0.4;
+            const px = -2365 + Math.cos(angle) * 21;
+            const pz = -420 + Math.sin(angle) * 21;
+
+            // Buddha base torso
+            const bTorso = new THREE.Mesh(new THREE.BoxGeometry(5.0, 7.5, 4.0), mossRockMat);
+            bTorso.position.set(px, 12.0, pz);
+            bTorso.rotation.y = angle + Math.PI;
+            outsideGroup.add(bTorso);
+
+            // Buddha head
+            const bHead = new THREE.Mesh(new THREE.SphereGeometry(2.2, 10, 10), mossRockMat);
+            bHead.position.set(px, 17.5, pz);
+            outsideGroup.add(bHead);
+        }
+
+        // Bamboo Grove Clusters around Perimeter
+        for (let b = 0; b < 16; b++) {
+            const bAngle = (b / 16) * Math.PI * 2;
+            const bx = -2365 + Math.cos(bAngle) * 23;
+            const bz = -420 + Math.sin(bAngle) * 23;
+            const bamboo = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 12.0, 6), bambooGreenMat);
+            bamboo.position.set(bx, 14.0, bz);
+            outsideGroup.add(bamboo);
+        }
+
+        const apeLight = new THREE.PointLight(0xa3e635, 3.5, 45.0);
+        apeLight.position.set(-2365, 11.0, -420);
+        outsideGroup.add(apeLight);
+
+        this.createFloorSoapstone(-2365, 8.0, -408, "#84cc16", "🐒 BODHISATTVA WATERHOLE", "When the terror scream echoes, flee behind the sacred stone!");
+
+        // --------------------------------------------------------------------
+        // 6. COSMIC GOLDEN SEA & GREATER WILL DAIS
+        // Center: (-2395, 24.0, 70) | Elev: +24.0m | Theme: Mirrored Golden Waters, Spectral Erdtrees & Elden Beast
+        // --------------------------------------------------------------------
+        const goldenWaterMat = new THREE.MeshStandardMaterial({ color: 0xfef08a, roughness: 0.15, metalness: 0.85 });
+        const erdtreeGoldMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 2.2 });
+        const divineStoneMat = new THREE.MeshStandardMaterial({ color: 0xfffbeb, roughness: 0.3 });
+
+        // Mirrored Liquid Gold Platform
+        const goldenSeaFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 33, 3.5, 24), goldenWaterMat);
+        goldenSeaFloor.position.set(-2395, 22.25, 70);
+        outsideGroup.add(goldenSeaFloor);
+
+        // 4 Towering Spectral Golden Erdtrees
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2;
+            const px = -2395 + Math.cos(angle) * 22;
+            const pz = 70 + Math.sin(angle) * 22;
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.8, 22.0, 10), erdtreeGoldMat);
+            trunk.position.set(px, 35.0, pz);
+            outsideGroup.add(trunk);
+
+            const crown = new THREE.Mesh(new THREE.ConeGeometry(6.5, 12.0, 8), erdtreeGoldMat);
+            crown.position.set(px, 48.0, pz);
+            outsideGroup.add(crown);
+        }
+
+        // Concentric Golden Rune Circles in Center
+        for (let r = 0; r < 3; r++) {
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(3.5 + r * 3.5, 0.25, 8, 24), erdtreeGoldMat);
+            ring.position.set(-2395, 24.2, 70);
+            ring.rotation.x = Math.PI / 2;
+            outsideGroup.add(ring);
+        }
+
+        const eldenLight = new THREE.PointLight(0xfacc15, 6.0, 65.0);
+        eldenLight.position.set(-2395, 28.0, 70);
+        outsideGroup.add(eldenLight);
+
+        this.createFloorSoapstone(-2395, 24.0, 82, "#facc15", "✨ COSMIC GOLDEN SEA", "Elden Stars fall from the cosmos; sprint in circles to escape the starlight!");
+
+        // --------------------------------------------------------------------
+        // 7. NIGHTMARE GRAND CATHEDRAL & BLAZING ALTAR
+        // Center: (-2425, 18.0, -250) | Elev: +18.0m | Theme: Scorched Gothic Nave, Lava Fissure & Laurence
+        // --------------------------------------------------------------------
+        const scorchedCathedralMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.9 });
+        const roaringLavaMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 3.2 });
+        const cathedralBrassMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.4, metalness: 0.7 });
+
+        // Cathedral Nave Floor Slab
+        const laurenceFloor = new THREE.Mesh(new THREE.BoxGeometry(48, 4.0, 32), scorchedCathedralMat);
+        laurenceFloor.position.set(-2425, 16.0, -250);
+        outsideGroup.add(laurenceFloor);
+
+        // 8 Vaulted Scorched Cathedral Buttress Columns
+        for (let c = 0; c < 4; c++) {
+            for (let side of [-12, 12]) {
+                const cz = -250 - 12 + c * 8;
+                const pillar = new THREE.Mesh(new THREE.BoxGeometry(2.0, 18.0, 2.0), scorchedCathedralMat);
+                pillar.position.set(-2425 + side, 26.0, cz);
+                outsideGroup.add(pillar);
+
+                // Burning iron wall sconces
+                const sconce = new THREE.Mesh(new THREE.SphereGeometry(0.7, 8, 8), roaringLavaMat);
+                sconce.position.set(-2425 + side * 0.9, 23.0, cz);
+                outsideGroup.add(sconce);
+            }
+        }
+
+        // Central Molten Lava Fissure
+        const lavaChasm = new THREE.Mesh(new THREE.BoxGeometry(32, 0.5, 4.0), roaringLavaMat);
+        lavaChasm.position.set(-2425, 18.1, -250);
+        outsideGroup.add(lavaChasm);
+
+        const laurenceLight = new THREE.PointLight(0xea580c, 5.5, 60.0);
+        laurenceLight.position.set(-2425, 21.0, -250);
+        outsideGroup.add(laurenceLight);
+
+        this.createFloorSoapstone(-2425, 18.0, -238, "#ea580c", "🌋 NIGHTMARE CATHEDRAL", "Laurence bleeds molten lava; stay clear of the trailing magma pool!");
+
+        // --------------------------------------------------------------------
+        // 8. IRON KEEP SMELTING CORE & MAGMA KILN
+        // Center: (-2455, -14.0, 440) | Elev: -14.0m | Theme: Iron Foundry, Chains, Molten Metal & Smelter Demon
+        // --------------------------------------------------------------------
+        const castIronMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.5, metalness: 0.9 });
+        const moltenMagmaMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xb91c1c, emissiveIntensity: 3.5 });
+
+        // Octagonal Smelting Crucible Floor
+        const furnaceFloor = new THREE.Mesh(new THREE.CylinderGeometry(26, 30, 4.0, 8), castIronMat);
+        furnaceFloor.position.set(-2455, -16.0, 440);
+        outsideGroup.add(furnaceFloor);
+
+        // 6 Heavy Blast Furnace Exhaust Chimneys
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const px = -2455 + Math.cos(angle) * 20;
+            const pz = 440 + Math.sin(angle) * 20;
+            const chimney = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 2.2, 16.0, 10), castIronMat);
+            chimney.position.set(px, -6.0, pz);
+            outsideGroup.add(chimney);
+
+            // Glowing heat exhaust cap
+            const cap = new THREE.Mesh(new THREE.SphereGeometry(1.4, 8, 8), moltenMagmaMat);
+            cap.position.set(px, 2.5, pz);
+            outsideGroup.add(cap);
+        }
+
+        // Heavy Iron Mooring Chains crossing the Arena
+        for (let ch = 0; ch < 4; ch++) {
+            const chAngle = (ch / 4) * Math.PI;
+            const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 36.0, 8), castIronMat);
+            chain.position.set(-2455, -5.0, 440);
+            chain.rotation.z = Math.PI / 2;
+            chain.rotation.y = chAngle;
+            outsideGroup.add(chain);
+        }
+
+        // Central Smelting Core Vat
+        const vat = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 5.5, 2.0, 16), castIronMat);
+        vat.position.set(-2455, -13.0, 440);
+        outsideGroup.add(vat);
+
+        const moltenCore = new THREE.Mesh(new THREE.CylinderGeometry(4.0, 4.0, 0.4, 16), moltenMagmaMat);
+        moltenCore.position.set(-2455, -11.9, 440);
+        outsideGroup.add(moltenCore);
+
+        const smelterLight = new THREE.PointLight(0xef4444, 5.0, 55.0);
+        smelterLight.position.set(-2455, -10.0, 440);
+        outsideGroup.add(smelterLight);
+
+        this.createFloorSoapstone(-2455, -14.0, 452, "#ef4444", "👹 SMELTING FURNACE", "When the Smelter Demon ignites its core, keep your distance from the heat pulse!");
     }
 
     createFloorSoapstone(x, y, z, colorHex, title, desc) {

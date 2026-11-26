@@ -606,7 +606,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -2280, -820, 2252, 1640, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -2530, -850, 2502, 1700, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -690,6 +690,15 @@
                 this.drawZoneRect(ctx, -2155, 40, 40, 40, "rgba(70, 20, 20, 0.65)", "#ef4444", "🕰️ ASTRAL CLOCKTOWER (+20m)");
                 this.drawZoneRect(ctx, -2185, -220, 40, 40, "rgba(50, 20, 10, 0.65)", "#ea580c", "🐉 CALAMITY PEAK KALAMEET (+26m)");
                 this.drawZoneRect(ctx, -2215, 390, 40, 40, "rgba(60, 15, 25, 0.65)", "#dc2626", "⚡ DEEPROOT FORTISSAX (-8m)");
+                // 8 Brand-New Outside Realm Expeditions (V76 Expansion)
+                this.drawZoneRect(ctx, -2245, -310, 40, 40, "rgba(50, 10, 10, 0.65)", "#ef4444", "💀 TOMB OF GIANTS NITO (-18m)");
+                this.drawZoneRect(ctx, -2275, 160, 40, 40, "rgba(10, 50, 80, 0.65)", "#38bdf8", "💃 BOREAL DANCER PLAZA (+15m)");
+                this.drawZoneRect(ctx, -2305, -140, 40, 40, "rgba(35, 10, 50, 0.65)", "#a855f7", "🖐️ FINGER RUINS METYR (-10m)");
+                this.drawZoneRect(ctx, -2335, 310, 40, 40, "rgba(10, 45, 55, 0.65)", "#06b6d4", "🐎 STONE COFFIN FISSURE (-24m)");
+                this.drawZoneRect(ctx, -2365, -420, 40, 40, "rgba(30, 50, 10, 0.65)", "#84cc16", "🐒 BODHISATTVA APE (+8m)");
+                this.drawZoneRect(ctx, -2395, 70, 40, 40, "rgba(75, 60, 15, 0.65)", "#facc15", "✨ COSMIC GOLDEN SEA (+24m)");
+                this.drawZoneRect(ctx, -2425, -250, 40, 40, "rgba(70, 25, 10, 0.65)", "#ea580c", "🌋 NIGHTMARE CATHEDRAL (+18m)");
+                this.drawZoneRect(ctx, -2455, 440, 40, 40, "rgba(65, 15, 15, 0.65)", "#ef4444", "👹 SMELTING FURNACE (-14m)");
             }
 
             // 3. Draw All World Pins

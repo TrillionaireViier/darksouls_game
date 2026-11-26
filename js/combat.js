@@ -5571,6 +5571,127 @@ class DarkSoulsCombat {
                 radius: 8.0,
                 spawnPos: { x: -2215, z: 390 },
                 create: (cf, x, z) => cf.createLichdragonFortissaxDeathblight ? cf.createLichdragonFortissaxDeathblight(x, z) : cf.createSoulsborneBoss({ id: 'fortissax', theme: 'lightning', bossScale: 5.4 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V76 EXPANSION) ===
+            {
+                id: 'outside_gravelord_nito_first_of_the_dead',
+                name: 'GRAVELORD NITO, FIRST OF THE DEAD',
+                title: 'Outside Realm: Tomb of the Giants &bull; Skeletons Cloak, Toxic Red Miasma & Gravelord Greatsword Dance',
+                unlockLocationId: 'outside_tomb_of_giants_gravelord_nito',
+                icon: '💀',
+                theme: 'dark',
+                bossScale: 4.6,
+                maxHp: 152000,
+                damage: 2950,
+                souls: 17500000,
+                radius: 7.0,
+                spawnPos: { x: -2245, z: -310 },
+                create: (cf, x, z) => cf.createGravelordNitoFirstOfTheDead ? cf.createGravelordNitoFirstOfTheDead(x, z) : cf.createSoulsborneBoss({ id: 'gravelord_nito', theme: 'dark', bossScale: 4.6 }, x, z)
+            },
+            {
+                id: 'outside_dancer_boreal_valley_grace',
+                name: 'DANCER OF THE BOREAL VALLEY',
+                title: 'Outside Realm: Boreal Grand High Plaza &bull; Filigree Veil, Fire & Dark Blades & Endless Vortex Pirouette',
+                unlockLocationId: 'outside_boreal_dancer_grand_plaza',
+                icon: '💃',
+                theme: 'magic',
+                bossScale: 4.3,
+                maxHp: 146000,
+                damage: 2890,
+                souls: 16800000,
+                radius: 6.5,
+                spawnPos: { x: -2275, z: 160 },
+                create: (cf, x, z) => cf.createDancerBorealValleyGrace ? cf.createDancerBorealValleyGrace(x, z) : cf.createSoulsborneBoss({ id: 'dancer_boreal', theme: 'magic', bossScale: 4.3 }, x, z)
+            },
+            {
+                id: 'outside_metyr_mother_of_fingers',
+                name: 'METYR, MOTHER OF FINGERS',
+                title: 'Outside Realm: Finger Ruins of Dheo &bull; Microcosm Cosmic Pearl, Finger Tail Whips & Starlight Laser',
+                unlockLocationId: 'outside_finger_ruins_of_dheo_metyr',
+                icon: '🖐️',
+                theme: 'magic',
+                bossScale: 4.5,
+                maxHp: 155000,
+                damage: 3020,
+                souls: 18200000,
+                radius: 7.2,
+                spawnPos: { x: -2305, z: -140 },
+                create: (cf, x, z) => cf.createMetyrMotherOfFingers ? cf.createMetyrMotherOfFingers(x, z) : cf.createSoulsborneBoss({ id: 'metyr_mother', theme: 'magic', bossScale: 4.5 }, x, z)
+            },
+            {
+                id: 'outside_putrescent_knight_fissure',
+                name: 'PUTRESCENT KNIGHT & GHOST STEED',
+                title: 'Outside Realm: Stone Coffin Fissure &bull; Boomerang Cleaver, Ghost Drift Flurries & Putrescent Ghostflame',
+                unlockLocationId: 'outside_stone_coffin_fissure_putrescent',
+                icon: '🐎',
+                theme: 'magic',
+                bossScale: 4.4,
+                maxHp: 150000,
+                damage: 2960,
+                souls: 17200000,
+                radius: 6.8,
+                spawnPos: { x: -2335, z: 310 },
+                create: (cf, x, z) => cf.createPutrescentKnightFissure ? cf.createPutrescentKnightFissure(x, z) : cf.createSoulsborneBoss({ id: 'putrescent_knight', theme: 'magic', bossScale: 4.4 }, x, z)
+            },
+            {
+                id: 'outside_guardian_ape_bodhisattva',
+                name: 'GUARDIAN APE & HEADLESS PRIMORDIAL BEAST',
+                title: 'Outside Realm: Bodhisattva Valley &bull; Giant Rusty Nodachi, Poison Miasma Roar & Headless Terror Shriek',
+                unlockLocationId: 'outside_bodhisattva_valley_guardian_ape',
+                icon: '🐒',
+                theme: 'physical',
+                bossScale: 4.6,
+                maxHp: 158000,
+                damage: 3050,
+                souls: 18500000,
+                radius: 7.0,
+                spawnPos: { x: -2365, z: -420 },
+                create: (cf, x, z) => cf.createGuardianApeBodhisattva ? cf.createGuardianApeBodhisattva(x, z) : cf.createSoulsborneBoss({ id: 'guardian_ape', theme: 'physical', bossScale: 4.6 }, x, z)
+            },
+            {
+                id: 'outside_elden_beast_cosmic_vessel',
+                name: 'ELDEN BEAST, COSMIC VESSEL OF GREATER WILL',
+                title: 'Outside Realm: Cosmic Golden Sea &bull; Sacred Relic Greatsword, Golden Galaxy Ribs & Elden Stars Starlight',
+                unlockLocationId: 'outside_cosmic_golden_sea_elden_beast',
+                icon: '✨',
+                theme: 'holy',
+                bossScale: 5.0,
+                maxHp: 165000,
+                damage: 3150,
+                souls: 20000000,
+                radius: 8.0,
+                spawnPos: { x: -2395, z: 70 },
+                create: (cf, x, z) => cf.createEldenBeastCosmicVessel ? cf.createEldenBeastCosmicVessel(x, z) : cf.createSoulsborneBoss({ id: 'elden_beast', theme: 'holy', bossScale: 5.0 }, x, z)
+            },
+            {
+                id: 'outside_laurence_first_vicar_flame',
+                name: 'LAURENCE, THE FIRST VICAR',
+                title: 'Outside Realm: Nightmare Grand Cathedral &bull; Molten Left Claw, Lava Trail Eruption & Raging Cleric Beast Fire',
+                unlockLocationId: 'outside_nightmare_grand_cathedral_laurence',
+                icon: '🌋',
+                theme: 'flame',
+                bossScale: 4.8,
+                maxHp: 162000,
+                damage: 3100,
+                souls: 19500000,
+                radius: 7.5,
+                spawnPos: { x: -2425, z: -250 },
+                create: (cf, x, z) => cf.createLaurenceFirstVicarFlame ? cf.createLaurenceFirstVicarFlame(x, z) : cf.createSoulsborneBoss({ id: 'laurence_first_vicar', theme: 'flame', bossScale: 4.8 }, x, z)
+            },
+            {
+                id: 'outside_smelter_demon_iron_core',
+                name: 'SMELTER DEMON, BLAZING COLOSSUS',
+                title: 'Outside Realm: Iron Keep Smelting Core &bull; Blazing Bull Horns, Immolation Heat Pulse & Flaming Smelter Sword',
+                unlockLocationId: 'outside_iron_keep_smelting_furnace',
+                icon: '👹',
+                theme: 'flame',
+                bossScale: 4.5,
+                maxHp: 154000,
+                damage: 2980,
+                souls: 17800000,
+                radius: 6.8,
+                spawnPos: { x: -2455, z: 440 },
+                create: (cf, x, z) => cf.createSmelterDemonIronCore ? cf.createSmelterDemonIronCore(x, z) : cf.createSoulsborneBoss({ id: 'smelter_demon', theme: 'flame', bossScale: 4.5 }, x, z)
             }
         ];
     }
@@ -5941,7 +6062,16 @@ class DarkSoulsCombat {
             [-2125.0, -16.0, -380.0], [-2133.0, -16.0, -388.0], [-2117.0, -16.0, -372.0], // Undead Crypt (Syan Knights)
             [-2155.0, 20.0, 40.0], [-2163.0, 20.0, 48.0], [-2147.0, 20.0, 32.0],       // Astral Clocktower (Patient Mobs)
             [-2185.0, 26.0, -220.0], [-2193.0, 26.0, -228.0], [-2177.0, 26.0, -212.0], // Calamity Crater (Calamity Dragon Acolytes)
-            [-2215.0, -8.0, 390.0], [-2223.0, -8.0, 398.0], [-2207.0, -8.0, 382.0]    // Deeproot Depths (Crucible Knight Siluria)
+            [-2215.0, -8.0, 390.0], [-2223.0, -8.0, 398.0], [-2207.0, -8.0, 382.0],   // Deeproot Depths (Crucible Knight Siluria)
+            // 8 Brand-New Outside Ascended Expeditions Patrols (V76 Expansion):
+            [-2245.0, -18.0, -310.0], [-2253.0, -18.0, -318.0], [-2237.0, -18.0, -302.0], // Tomb of Giants (Skeleton Wheels)
+            [-2275.0, 15.0, 160.0], [-2283.0, 15.0, 168.0], [-2267.0, 15.0, 152.0],       // Boreal Plaza (Outrider Knights)
+            [-2305.0, -10.0, -140.0], [-2313.0, -10.0, -148.0], [-2297.0, -10.0, -132.0], // Finger Ruins (Fingercreepers)
+            [-2335.0, -24.0, 310.0], [-2343.0, -24.0, 318.0], [-2327.0, -24.0, 302.0],   // Stone Coffin (Bloodfiend Cleavers)
+            [-2365.0, 8.0, -420.0], [-2373.0, 8.0, -428.0], [-2357.0, 8.0, -412.0],       // Bodhisattva (Nightjar Tengu)
+            [-2395.0, 24.0, 70.0], [-2403.0, 24.0, 78.0], [-2387.0, 24.0, 62.0],          // Cosmic Golden Sea (Golden Envoys)
+            [-2425.0, 18.0, -250.0], [-2433.0, 18.0, -258.0], [-2417.0, 18.0, -242.0],   // Nightmare Cathedral (Church Executioners)
+            [-2455.0, -14.0, 440.0], [-2463.0, -14.0, 448.0], [-2447.0, -14.0, 432.0]    // Iron Keep (Turtle Knights)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -5964,7 +6094,9 @@ class DarkSoulsCombat {
                 'winged_knight', 'crow_demon', 'nightjar_ninja', 'flame_chariot',
                 'yharnam_huntsman', 'silver_knight_greatbow', 'ruin_sentinel', 'blade_warhawk',
                 'black_knight_cinder', 'oolacile_bloathead', 'crystal_golem_prism', 'grave_warden_kukri',
-                'undead_crypt_syan', 'clocktower_patient', 'calamity_dragon_acolyte', 'crucible_knight_siluria'
+                'undead_crypt_syan', 'clocktower_patient', 'calamity_dragon_acolyte', 'crucible_knight_siluria',
+                'skeleton_wheel', 'boreal_outrider', 'fingercreeper', 'bloodfiend_cleaver',
+                'nightjar_tengu', 'golden_envoy', 'church_nightmare', 'ironclad_turtle'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

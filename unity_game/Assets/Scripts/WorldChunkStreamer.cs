@@ -16,18 +16,27 @@ namespace DarkSouls
         public bool isOutsideRealm;
     }
 
+    internal struct CompactLocation
+    {
+        public float x, y, z;
+        public ushort zoneIdx;
+        public ushort bossIdx;
+        public byte sectorIdx;
+        public int localIdx;
+    }
+
     /// <summary>
-    /// Unity 6 LTS High-FPS Spatial Chunk Streamer & 5x5 (25x Total) Location Registry (Build V75).
-    /// Streams 2500m x 2500m 3D world chunks (3x3 active window) with procedural gothic architecture,
-    /// pooled torch lights, and 1,130,425+ O(1) indexed locations across 40+ Dark Souls & Outside realms.
+    /// Unity 6 LTS High-FPS Spatial Chunk Streamer & 5x-on-5x Location Registry (Build V76).
+    /// Streams 2500m x 2500m 3D world chunks (3x3 active window) with gothic arches, obelisks,
+    /// pooled torch lights, and 5,652,125+ O(1) indexed locations across 125 sectors & 88+ realms.
     /// </summary>
     public class WorldChunkStreamer : MonoBehaviour
     {
-        [Header("25x Colossal World Dimensions")]
-        public float worldHalfExtentX = 1800000f;
-        public float worldHalfExtentZ = 1875000f;
+        [Header("125x Colossal World Dimensions")]
+        public float worldHalfExtentX = 9000000f;
+        public float worldHalfExtentZ = 9375000f;
         public float chunkSize = 2500f;
-        public float locationGridCellSize = 5000f;
+        public float locationGridCellSize = 10000f;
 
         [Header("60 FPS PointLight Pool")]
         public int maxActivePointLights = 6;
@@ -36,8 +45,8 @@ namespace DarkSouls
         public int TotalLocationsCount => allLocations.Count;
         public WorldLocation CurrentNearestLocation { get; private set; }
 
-        private readonly List<WorldLocation> allLocations = new List<WorldLocation>(1130500);
-        private readonly Dictionary<long, List<WorldLocation>> locationGrid = new Dictionary<long, List<WorldLocation>>();
+        private readonly List<CompactLocation> allLocations = new List<CompactLocation>(5652200);
+        private readonly Dictionary<long, List<int>> locationGrid = new Dictionary<long, List<int>>(65536);
         private readonly Dictionary<long, GameObject> activeChunks = new Dictionary<long, GameObject>();
         private readonly List<Light> pooledLights = new List<Light>();
         private readonly List<Vector3> activeTorchPositions = new List<Vector3>();
@@ -49,11 +58,10 @@ namespace DarkSouls
         private Material goldTrimMat;
 
         private static readonly string[] AllZones = {
-            // Core & 5x Zones
+            // Core & V74/V75 Realms (44)
             "Firelink Citadel", "Anor Londo", "Darkroot Woods", "Ash Lake", "Blighttown",
             "Sunken Serpent Abyss", "Altus Plateau", "Carian Observatory", "Leyndell Capital",
             "Cainhurst Parapets", "Ashina Castle", "Fountainhead Palace",
-            // V74 Outside Locations
             "Kiln of the First Flame", "Chasm of the Abyss", "Crystal Cave Archive", "Untended Graves",
             "Undead Crypt Colonnade", "Astral Clocktower", "Oolacile Calamity Crater", "Deeproot Depths",
             "Lothric Castle Throne", "Painted World of Ariamis", "Ashina Upper Dojo", "Caelid Wailing Dunes",
@@ -61,25 +69,28 @@ namespace DarkSouls
             "Cathedral of the Deep", "Shaded Castle Moat", "Mt. Senpou Sanctum", "Nokstella Eternal City",
             "Leyndell Erdtree Sanctuary", "Usui Misty Forest", "Ainsel River Basin", "Upper Cathedral Ward",
             "Jagged Peak Dragon's Pit", "Volcano Manor Magma Lake", "Farron Keep Mausoleum", "Crumbling Farum Azula",
-            "Irithyll Boreal Cathedral", "Hirata Estate Blazing Hall", "Raya Lucaria Grand Library", "Ancient Ruins of Rauh"
-        };
-
-        private static readonly string[] AllBosses = {
-            "Taurus Demon", "Bell Gargoyle", "Capra Demon", "Great Grey Wolf Sif",
-            "Gwyn, Lord of Cinder", "Manus, Father of the Abyss", "Seath the Scaleless",
-            "Champion Gundyr", "Velstadt, Royal Aegis", "Lady Maria", "Black Dragon Kalameet",
-            "Lichdragon Fortissax", "Twin Princes Lothric & Lorian", "Crossbreed Priscilla",
-            "Isshin, Sword Saint", "Starscourge Radahn", "Father Gascoigne",
-            "Ornstein & Smough", "The Pursuer", "Godrick the Grafted", "Pontiff Sulyvahn",
-            "Maliketh, the Black Blade", "Morgott, the Omen King", "Rennala, Queen of the Full Moon",
-            "Demon of Hatred"
+            "Irithyll Boreal Cathedral", "Hirata Estate Blazing Hall", "Raya Lucaria Grand Library", "Ancient Ruins of Rauh",
+            // V76 5x Expansion Realms (+44 More = 88 Total)
+            "Archdragon Peak", "Ringed City Inner Wall", "Dreg Heap Ruined Spire", "Profaned Capital",
+            "Smouldering Lake", "Duke's Archives", "New Londo Ruins", "Tomb of the Giants",
+            "Lost Izalith", "Demon Ruins", "Sen's Fortress", "Undead Burg",
+            "Undead Parish", "Majula Cliffside", "Heide's Tower of Flame", "Drangleic Castle",
+            "Shrine of Amana", "Dragon Aerie", "Brume Tower", "Eleum Loyce",
+            "Yharnam Central", "Hemwick Charnel Lane", "Nightmare of Mensis", "Hunter's Nightmare",
+            "Fishing Hamlet", "Mibu Village", "Sunken Valley", "Bodhisattva Valley",
+            "Consecrated Snowfield", "Haligtree Canopy", "Elphael Brace", "Mohgwyn Palace",
+            "Siofra River Well", "Lake of Rot", "Mountaintops of the Giants", "Subterranean Shunning-Grounds",
+            "Shadow Keep", "Scadu Altus", "Gravesite Plain", "Belurat Tower Settlement",
+            "Enir-Ilim", "Abyssal Woods", "Cerulean Coast", "Jagged Peak Summit"
         };
 
         private static readonly string[] SectorTags = {
             "Core Realm", "Outer Abyssal Rim", "Astral Titan Expanse",
             "Primordial Horizon", "Eternal Eclipse Reach",
             "Outside Shattered Veil", "Outside Ash Caldera", "Outside Lunar Spire",
-            "Outside Crimson Rot", "Outside Celestial Void"
+            "Outside Crimson Rot", "Outside Celestial Void",
+            "Beyond the Fog", "Scadutree Shadow", "Nightmare Frontier",
+            "First Flame Zenith", "Primeval Singularity"
         };
 
         private void Awake()
@@ -88,7 +99,7 @@ namespace DarkSouls
             QualitySettings.vSyncCount = 0;
             InitSharedMaterials();
             InitLightPool();
-            BuildLocations5xUnity();
+            BuildLocations5x5();
         }
 
         private void Start()
@@ -146,78 +157,87 @@ namespace DarkSouls
         private static long PackCoord(int cx, int cz) => ((long)cx << 32) ^ (uint)cz;
 
         /// <summary>
-        /// Generates 1,130,425+ locations (5x previous 226,085) across 25 sectors and 44 zones.
+        /// Generates 5,652,125 locations (5x previous 1,130,425) across 125 sectors and 88 realms.
         /// </summary>
-        private void BuildLocations5xUnity()
+        private void BuildLocations5x5()
         {
             const int baseSectors = 45217;
-            const int sectorCount = 25; // 5x more than previous 5 sectors!
+            const int sectorCount = 125; // 5x more than V75's 25 sectors!
+            int bossCount = Enum.GetValues(typeof(BossType)).Length;
+
             for (int s = 0; s < sectorCount; s++)
             {
-                float mult = 1f + (s % 10) * 1.35f + (s / 10) * 4.5f;
+                float mult = 1f + (s % 15) * 1.4f + (s / 15) * 5.2f;
                 float sx = (s % 2 == 0) ? 1f : -1f;
                 float sz = (s % 4 < 2) ? 1f : -1f;
-                bool isOutside = s >= 5;
 
                 for (int i = 0; i < baseSectors; i++)
                 {
-                    float angle = ((i + s * 17) % 360) * Mathf.Deg2Rad;
-                    float dist = 350f + (i % 64) * 560f * mult;
+                    float angle = ((i + s * 19) % 360) * Mathf.Deg2Rad;
+                    float dist = 350f + (i % 64) * 580f * mult;
                     float wx = Mathf.Cos(angle) * dist * sx;
                     float wz = Mathf.Sin(angle) * dist * sz;
                     float wy = (i % 5 == 0) ? -6f : ((i % 7 == 0) ? 14f : 0f);
 
-                    string zoneName = AllZones[(i + s * 3) % AllZones.Length];
-                    string tag = SectorTags[s % SectorTags.Length];
-
-                    var loc = new WorldLocation
+                    int idx = allLocations.Count;
+                    allLocations.Add(new CompactLocation
                     {
-                        id = $"loc_u5x_s{s}_{i}",
-                        name = $"{zoneName} Sector #{i + 1} [{tag}]",
-                        zone = zoneName,
-                        position = new Vector3(wx, wy, wz),
-                        bossName = AllBosses[(i + s) % AllBosses.Length],
-                        dangerTier = $"Tier {((i + s) % 10) + 1}",
-                        isOutsideRealm = isOutside
-                    };
-
-                    allLocations.Add(loc);
+                        x = wx,
+                        y = wy,
+                        z = wz,
+                        zoneIdx = (ushort)((i + s * 3) % AllZones.Length),
+                        bossIdx = (ushort)((i + s) % bossCount),
+                        sectorIdx = (byte)s,
+                        localIdx = i
+                    });
 
                     int gx = Mathf.FloorToInt(wx / locationGridCellSize);
                     int gz = Mathf.FloorToInt(wz / locationGridCellSize);
                     long key = PackCoord(gx, gz);
                     if (!locationGrid.TryGetValue(key, out var bucket))
                     {
-                        bucket = new List<WorldLocation>(8);
+                        bucket = new List<int>(8);
                         locationGrid[key] = bucket;
                     }
-                    bucket.Add(loc);
+                    bucket.Add(idx);
                 }
             }
+        }
+
+        private WorldLocation Materialize(int index)
+        {
+            var c = allLocations[index];
+            string z = AllZones[c.zoneIdx];
+            string tag = SectorTags[c.sectorIdx % SectorTags.Length];
+            BossType bt = (BossType)c.bossIdx;
+            return new WorldLocation
+            {
+                id = $"loc_v76_s{c.sectorIdx}_{c.localIdx}",
+                name = $"{z} Sector #{c.localIdx + 1} [{tag}]",
+                zone = z,
+                position = new Vector3(c.x, c.y, c.z),
+                bossName = bt.ToString(),
+                dangerTier = $"Tier {((c.localIdx + c.sectorIdx) % 15) + 1}",
+                isOutsideRealm = c.sectorIdx >= 5
+            };
         }
 
         public WorldLocation GetSampleLocation(int index)
         {
             if (allLocations.Count == 0) return default;
             int idx = Mathf.Abs(index) % allLocations.Count;
-            return allLocations[idx];
+            return Materialize(idx);
         }
 
         public float GetGroundHeight(float x, float z, float currentY)
         {
-            // Surface Boss Arena (5x Colossal Expansion)
             if (x >= -17100f && x <= 17100f && z >= 186300f && z <= 567000f && currentY >= -2.2f)
                 return 0f;
-
-            // Central Royal Bridge (5x Colossal Expansion)
             if (x >= -4275f && x <= 4275f && z >= 24075f && z <= 186750f && currentY >= -2.2f)
                 return 0f;
-
-            // Courtyard Starting Arena (5x Colossal Expansion)
             if (x >= -20250f && x <= 20250f && z >= -101250f && z <= 24300f)
                 return (x >= -25.5f && x <= -14.5f && z >= 22f && z <= 270f && currentY < -2f) ? -4.92f : 0f;
 
-            // O(1) Spatial Location Height Query
             int gx = Mathf.FloorToInt(x / locationGridCellSize);
             int gz = Mathf.FloorToInt(z / locationGridCellSize);
             float minDistSq = 1200f * 1200f;
@@ -231,14 +251,14 @@ namespace DarkSouls
                     if (!locationGrid.TryGetValue(PackCoord(gx + dx, gz + dz), out var bucket)) continue;
                     for (int i = 0; i < bucket.Count; i++)
                     {
-                        var loc = bucket[i];
-                        float lx = x - loc.position.x;
-                        float lz = z - loc.position.z;
+                        var loc = allLocations[bucket[i]];
+                        float lx = x - loc.x;
+                        float lz = z - loc.z;
                         float d2 = lx * lx + lz * lz;
-                        if (d2 < minDistSq && Mathf.Abs(currentY - loc.position.y) < 22f)
+                        if (d2 < minDistSq && Mathf.Abs(currentY - loc.y) < 22f)
                         {
                             minDistSq = d2;
-                            bestY = loc.position.y;
+                            bestY = loc.y;
                             found = true;
                         }
                     }
@@ -255,15 +275,7 @@ namespace DarkSouls
             int gx = Mathf.FloorToInt(pos.x / locationGridCellSize);
             int gz = Mathf.FloorToInt(pos.z / locationGridCellSize);
             float bestDistSq = float.MaxValue;
-            WorldLocation bestLoc = new WorldLocation
-            {
-                id = "firelink_sanctuary",
-                name = "Firelink Citadel Courtyard",
-                zone = "Firelink Citadel",
-                position = Vector3.zero,
-                bossName = "Taurus Demon",
-                dangerTier = "Tier 1"
-            };
+            int bestIdx = -1;
 
             for (int dx = -1; dx <= 1; dx++)
             {
@@ -272,18 +284,36 @@ namespace DarkSouls
                     if (!locationGrid.TryGetValue(PackCoord(gx + dx, gz + dz), out var bucket)) continue;
                     for (int i = 0; i < bucket.Count; i++)
                     {
-                        var loc = bucket[i];
-                        float d2 = (pos - loc.position).sqrMagnitude;
+                        var loc = allLocations[bucket[i]];
+                        float dxp = pos.x - loc.x;
+                        float dyp = pos.y - loc.y;
+                        float dzp = pos.z - loc.z;
+                        float d2 = dxp * dxp + dyp * dyp + dzp * dzp;
                         if (d2 < bestDistSq)
                         {
                             bestDistSq = d2;
-                            bestLoc = loc;
+                            bestIdx = bucket[i];
                         }
                     }
                 }
             }
 
-            CurrentNearestLocation = bestLoc;
+            if (bestIdx >= 0)
+            {
+                CurrentNearestLocation = Materialize(bestIdx);
+            }
+            else
+            {
+                CurrentNearestLocation = new WorldLocation
+                {
+                    id = "firelink_sanctuary",
+                    name = "Firelink Citadel Courtyard",
+                    zone = "Firelink Citadel",
+                    position = Vector3.zero,
+                    bossName = "Taurus Demon",
+                    dangerTier = "Tier 1"
+                };
+            }
         }
 
         private void UpdateChunksAround(Vector3 playerPos)
@@ -329,7 +359,6 @@ namespace DarkSouls
             float centerX = (cx + 0.5f) * chunkSize;
             float centerZ = (cz + 0.5f) * chunkSize;
 
-            // Ground slab (no flickering: clean single collider + lit stone)
             var ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
             ground.name = "GroundSlab";
             ground.transform.SetParent(chunkGo.transform, false);
@@ -338,20 +367,18 @@ namespace DarkSouls
             var gRenderer = ground.GetComponent<Renderer>();
             if (gRenderer != null) gRenderer.sharedMaterial = stoneFloorMat;
 
-            // Procedural gothic pillars & wall-mounted torches (6 pillars around chunk center)
             int seed = (cx * 73856093) ^ (cz * 19349663);
             System.Random rng = new System.Random(seed);
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 18; i++)
             {
-                float ox = (float)(rng.NextDouble() - 0.5) * (chunkSize * 0.7f);
-                float oz = (float)(rng.NextDouble() - 0.5) * (chunkSize * 0.7f);
+                float ox = (float)(rng.NextDouble() - 0.5) * (chunkSize * 0.72f);
+                float oz = (float)(rng.NextDouble() - 0.5) * (chunkSize * 0.72f);
                 float px = centerX + ox;
                 float pz = centerZ + oz;
 
-                // Keep central spawn clear
                 if (Mathf.Abs(px) < 12f && Mathf.Abs(pz) < 12f) continue;
 
-                float height = 10f + (float)rng.NextDouble() * 14f;
+                float height = 10f + (float)rng.NextDouble() * 16f;
                 var pillar = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 pillar.name = $"GothicPillar_{i}";
                 pillar.transform.SetParent(chunkGo.transform, false);
@@ -360,7 +387,6 @@ namespace DarkSouls
                 var pr = pillar.GetComponent<Renderer>();
                 if (pr != null) pr.sharedMaterial = (i % 3 == 0) ? goldTrimMat : pillarMat;
 
-                // Attach torch directly to pillar (never floating in mid-air!)
                 if (i % 2 == 0)
                 {
                     var torch = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -371,6 +397,18 @@ namespace DarkSouls
                     Destroy(torch.GetComponent<Collider>());
                     activeTorchPositions.Add(new Vector3(px, height * 0.5f + 1.2f, pz + 1.8f));
                 }
+
+                // Ruined gothic arch crossbeam on every 4th pillar
+                if (i % 4 == 0)
+                {
+                    var arch = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    arch.name = $"RuinedArch_{i}";
+                    arch.transform.SetParent(chunkGo.transform, false);
+                    arch.transform.position = new Vector3(px + 4.5f, height - 1.2f, pz);
+                    arch.transform.localScale = new Vector3(9.5f, 1.8f, 2.2f);
+                    var ar = arch.GetComponent<Renderer>();
+                    if (ar != null) ar.sharedMaterial = goldTrimMat;
+                }
             }
 
             return chunkGo;
@@ -380,7 +418,6 @@ namespace DarkSouls
         {
             if (activeTorchPositions.Count == 0 || pooledLights.Count == 0) return;
 
-            // Assign pooled lights to nearest torches for 60 FPS stability
             for (int l = 0; l < pooledLights.Count; l++)
             {
                 float bestDist = 4500f;

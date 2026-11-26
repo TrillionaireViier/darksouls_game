@@ -67,8 +67,8 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 305 Legendary Boss Roster
-Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 273 legendary bosses across all Soulsborne eras:
+### 🌲 Outside Realm Apex Bosses & 313 Legendary Boss Roster
+Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 281 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
 - **Dragonlord Placidusax (Владыка Драконов Плацидусакс)** — Scorched Dragonbarrow
@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (593 Fast-Travel Locations & 117 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (601 Fast-Travel Locations & 125 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 2,300 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 101 bespoke Outside locations, 100 active mob patrols, and 62 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 2,550 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 109 bespoke Outside locations, 108 active mob patrols, and 70 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V76 Expansion)
+1. **Skeleton Wheel & Bone Necromancer Executioner (Spiked Wheel Shield & Scythe)**: Spiked iron wheel shield mounted on left arm with 8 pointed spikes, hollow ribcage with glowing crimson eye sockets, curved bone scythe and necromancy flame skull lantern.
+2. **Boreal Outrider Knight (Animalistic Silver Plate & Frost Rapier)**: Sleek silver animalistic plate armor with frost crest, glowing cyan visor slit, frost rapier and boreal greatsword with trailing ice particles.
+3. **Fingercreeper Colossus (Multi-Jointed Crawling Hand & Arcane Gem Ring)**: Giant crawling hand beast with 10 articulated jointed fingers, jagged claws, and glowing purple ring jewel on the palm.
+4. **Putrescent Slime Mass & Bloodfiend Cleaver (Rotting Gelatin & Fissure Cleaver)**: Rotting cyan-ectoplasm slime ghoul draped in decaying gelatin, brandishing an oversized rusty fissure cleaver with cyan putrescent ghostflame light.
+5. **Nightjar Tengu Shinobi (Raven Beak Mask, Feather Wing Cloak & Dual Kama)**: Agile shinobi acrobat in dark raven-beaked Tengu mask with feathered wing cloak, wielding dual curved steel Kama sickles.
+6. **Golden Order Envoy Longhorn Oracle (Silk Robe, Turban & Golden Longhorn)**: Ceremonial white silk robe and spherical turban headdress, holding a monumental golden bubble longhorn trumpet blowing homing golden spheres.
+7. **Church Nightmare Executioner (Crimson Vestments, Bell Helm & Heavy Greataxe)**: Hulking nightmare church executioner in heavy crimson robes, conical brass bell helm, swinging a 3.2m Executioner's Greataxe.
+8. **Alonne Ironclad Turtle Knight (Turtle Shell Carapace & Spiked Warhammer)**: Heavy black-iron turtle carapace shell and spiked helm, swinging a massive 2.6m Cast-Iron Warhammer with ground shockwaves.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V76 Expansion)
+1. **Gravelord Nito, First of the Dead (Tomb of the Giants & Nito's Ossuary)**: Colossal avatar of thousands of animated skeletons cloaked in death miasma, wielding the jagged 5.2m Gravelord Greatsword and unleashing toxic red miasma waves (-18.0m elevation).
+2. **Dancer of the Boreal Valley (Boreal Valley & Dancer's Grand High Plaza)**: Slender sinuous dancer in silver-blue filigree gown and veil, dual-wielding curved Fire and Dark Magic blades in endless pirouettes (+15.0m elevation).
+3. **Metyr, Mother of Fingers (Finger Ruins of Dheo & Microcosm Crater)**: Cosmic eldritch entity of intertwined fingers crowned with a radiant purple Microcosm Pearl, firing starlight beams and tail whips (-10.0m elevation).
+4. **Putrescent Knight & Ghost Steed (Stone Coffin Fissure & Putrescent Deep Garden)**: Skeletal knight fused atop a rotting ghost steed dripping cyan ghostflame, throwing the 4.6m Boomerang Putrescence Cleaver (-24.0m elevation).
+5. **Guardian Ape & Headless Primordial Beast (Bodhisattva Valley & Primordial Waterhole)**: Colossal white ape titan with a 5.4m rusty nodachi sword lodged in neck, leaping into belly-flops, poison roars, and headless terror shrieks (+8.0m elevation).
+6. **Elden Beast, Cosmic Vessel of Greater Will (Cosmic Golden Sea & Greater Will Dais)**: Translucent starlit nebula serpent-whale with golden galaxy ribs, wielding the 6.2m Sacred Relic Greatsword and Elden Stars rain (+24.0m elevation).
+7. **Laurence, the First Vicar (Nightmare Grand Cathedral & Blazing Altar)**: Gargantuan horned cleric beast engulfed in raging flames, trailing pools of crawling molten lava from its mutated left claw (+18.0m elevation).
+8. **Smelter Demon, Blazing Colossus of Iron Keep (Iron Keep Smelting Core & Magma Kiln)**: Bull-horned black iron colossus with hollow blazing chest furnace, immolation heat pulses, and the 5.0m flaming Smelter Sword (-14.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V74 Expansion)
 1. **Black Knight Cinder Executioner (Charred Plate & Flaming Greatsword)**: Charred obsidian fluted armor radiating molten orange embers between plates, wielding a 3.4m Black Knight Greatsword with flaming overhead cleaves and a heavy iron kite shield.
