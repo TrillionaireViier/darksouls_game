@@ -305,12 +305,12 @@ namespace DarkSouls
         private void OnGUI()
         {
             // Top-Right Real-Time World & Arsenal Telemetry
-            float w = 440f;
-            GUI.Box(new Rect(Screen.width - w - 16, 16, w, 160), "DARK SOULS UNITY 125X EXPANSION (BUILD V77)");
+            float w = 460f;
+            GUI.Box(new Rect(Screen.width - w - 16, 16, w, 160), "DARK SOULS UNITY 625X EXPANSION (BUILD V78)");
             string locName = streamer != null ? streamer.CurrentNearestLocation.name : "Firelink Citadel";
             string zoneName = streamer != null ? streamer.CurrentNearestLocation.zone : "Firelink Citadel";
-            int totalLocs = streamer != null ? streamer.TotalLocationsCount : 0;
-            string covName = covenants != null ? $"{covenants.ActiveCovenant} / {covenants.ActiveOrder}" : "None";
+            long totalLocs = streamer != null ? streamer.TotalLocationsCount : 0;
+            string covName = covenants != null ? $"{covenants.ActiveCovenant} / {covenants.ActiveVow}" : "None";
             string wepName = arsenal != null ? $"{arsenal.ActiveWeapon.name} [{arsenal.CurrentWeaponIndex + 1}/{arsenal.Weapons.Count}]" : "Astora Straight Sword";
             string splName = arsenal != null ? $"{arsenal.ActiveSpell.name} [{arsenal.CurrentSpellIndex + 1}/{arsenal.Spells.Count}]" : "Soul Arrow";
             string rngName = arsenal != null ? $"{arsenal.ActiveRing.name} [{arsenal.CurrentRingIndex + 1}/{arsenal.Rings.Count}]" : "Ring of Favor";
@@ -320,37 +320,34 @@ namespace DarkSouls
             GUI.Label(new Rect(Screen.width - w - 4, 80, w - 20, 22), $"Weapon [Tab]: {wepName}");
             GUI.Label(new Rect(Screen.width - w - 4, 100, w - 20, 22), $"Spell [R/F]: {splName}");
             GUI.Label(new Rect(Screen.width - w - 4, 120, w - 20, 22), $"Ring [T]: {rngName}");
-            GUI.Label(new Rect(Screen.width - w - 4, 142, w - 20, 22), $"Cov [C]: {covName} | [M] 625 Bosses & 625 Sectors");
+            GUI.Label(new Rect(Screen.width - w - 4, 142, w - 20, 22), $"Cov [C]: {covName} | [M] 3,125 Bosses & 3,125 Sectors");
 
             if (showWarpMenu && gm != null)
             {
                 var allBosses = (BossType[])Enum.GetValues(typeof(BossType));
                 Rect win = new Rect(Screen.width * 0.5f - 300, Screen.height * 0.5f - 250, 600, 500);
-                GUI.Box(win, $"625 BOSS ENCOUNTERS & 28.26M LOCATIONS WARP [M to Close]");
+                GUI.Box(win, $"3,125 BOSS ENCOUNTERS & 141.3M LOCATIONS WARP [M to Close]");
 
-                string[] tierNames = { "T1 Base", "T2 Abyssal", "T3 Cinderlord", "T4 Outer God", "T5 Primeval" };
-                for (int t = 0; t < 5; t++)
-                {
-                    if (GUI.Button(new Rect(win.x + 14 + t * 115, win.y + 28, 110, 24), (selectedBossTier == t ? "> " : "") + tierNames[t]))
-                    {
-                        selectedBossTier = t;
-                    }
-                }
+                if (GUI.Button(new Rect(win.x + 14, win.y + 28, 120, 24), "Ascension Tier -"))
+                    selectedBossTier = (selectedBossTier + 24) % 25;
+                GUI.Label(new Rect(win.x + 150, win.y + 30, 300, 24), $"Selected Ascension Tier: T{selectedBossTier + 1} / 25");
+                if (GUI.Button(new Rect(win.x + 466, win.y + 28, 120, 24), "Ascension Tier +"))
+                    selectedBossTier = (selectedBossTier + 1) % 25;
 
                 bossScroll = GUI.BeginScrollView(new Rect(win.x + 12, win.y + 58, win.width - 24, win.height - 70), bossScroll, new Rect(0, 0, 550, allBosses.Length * 34 + 10));
                 int y = 0;
                 foreach (BossType bt in allBosses)
                 {
-                    if (GUI.Button(new Rect(0, y, 265, 28), $"Boss #{(int)bt + 1} ({tierNames[selectedBossTier]}): {bt}"))
+                    if (GUI.Button(new Rect(0, y, 265, 28), $"Boss #{(int)bt + 1} (T{selectedBossTier + 1}): {bt}"))
                     {
                         gm.SpawnBoss(bt, selectedBossTier);
                         showWarpMenu = false;
                         Cursor.lockState = CursorLockMode.Locked;
                         Cursor.visible = false;
                     }
-                    if (streamer != null && GUI.Button(new Rect(275, y, 265, 28), $"Warp Ring #{((int)bt + 1) * (selectedBossTier + 1)}"))
+                    if (streamer != null && GUI.Button(new Rect(275, y, 265, 28), $"Warp Ring #{((long)(int)bt + 1 + selectedBossTier * 125)}"))
                     {
-                        var loc = streamer.GetSampleLocation(((int)bt + selectedBossTier * 125) * 45217);
+                        var loc = streamer.GetSampleLocation(((long)(int)bt + selectedBossTier * 125L) * 45217L);
                         gm.WarpPlayerToLocation(loc);
                         showWarpMenu = false;
                         Cursor.lockState = CursorLockMode.Locked;

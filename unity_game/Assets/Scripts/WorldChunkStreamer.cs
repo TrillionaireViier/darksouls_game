@@ -24,11 +24,11 @@ namespace DarkSouls
     public class WorldChunkStreamer : MonoBehaviour
     {
         public const int BaseSectorsPerRing = 45217;
-        public const int SectorRings = 625; // 5x V76's 125 sectors -> 28,260,625 locations!
+        public const int SectorRings = 3125; // 5x V77's 625 sectors -> 141,303,125 locations!
 
-        [Header("625x Colossal World Dimensions")]
-        public float worldHalfExtentX = 45000000f;
-        public float worldHalfExtentZ = 46875000f;
+        [Header("3125x Colossal World Dimensions")]
+        public float worldHalfExtentX = 225000000f;
+        public float worldHalfExtentZ = 234375000f;
         public float chunkSize = 2500f;
         public float locationGridCellSize = 10000f;
 
@@ -36,7 +36,7 @@ namespace DarkSouls
         public int maxActivePointLights = 6;
 
         public Transform playerTransform;
-        public int TotalLocationsCount => BaseSectorsPerRing * SectorRings; // 28,260,625
+        public long TotalLocationsCount => (long)BaseSectorsPerRing * SectorRings; // 141,303,125
         public WorldLocation CurrentNearestLocation { get; private set; }
 
         private readonly Dictionary<long, GameObject> activeChunks = new Dictionary<long, GameObject>();
@@ -156,14 +156,14 @@ namespace DarkSouls
 
         private static long PackCoord(int cx, int cz) => ((long)cx << 32) ^ (uint)cz;
 
-        public WorldLocation GetSampleLocation(int index)
+        public WorldLocation GetSampleLocation(long index)
         {
             long total = (long)BaseSectorsPerRing * SectorRings;
-            long safeIdx = Math.Abs((long)index) % total;
+            long safeIdx = Math.Abs(index) % total;
             int s = (int)(safeIdx / BaseSectorsPerRing);
             int i = (int)(safeIdx % BaseSectorsPerRing);
 
-            float mult = 1f + (s % 20) * 1.45f + (s / 20) * 5.8f;
+            float mult = 1f + (s % 25) * 1.5f + (s / 25) * 6.0f;
             float sx = (s % 2 == 0) ? 1f : -1f;
             float sz = (s % 4 < 2) ? 1f : -1f;
             float angle = ((i + s * 19) % 360) * Mathf.Deg2Rad;
@@ -178,12 +178,12 @@ namespace DarkSouls
 
             return new WorldLocation
             {
-                id = $"loc_v77_s{s}_{i}",
+                id = $"loc_v78_s{s}_{i}",
                 name = $"{z} Sector #{i + 1} [{tag}]",
                 zone = z,
                 position = new Vector3(wx, wy, wz),
                 bossName = bt.ToString(),
-                dangerTier = $"Tier {((i + s) % 25) + 1}",
+                dangerTier = $"Tier {((i + s) % 50) + 1}",
                 isOutsideRealm = s >= 5
             };
         }

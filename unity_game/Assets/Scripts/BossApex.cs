@@ -78,14 +78,17 @@ namespace DarkSouls
             }
 
             string[] tierPrefixes = { "", "Abyssal ", "Cinderlord ", "Outer God ", "Primeval " };
-            int safeTier = Mathf.Clamp(ascensionTier, 0, tierPrefixes.Length - 1);
+            string[] cycleSuffixes = { "", " [NG+]", " [NG+2]", " [NG+3]", " [NG+4]" };
+            int safeTier = Mathf.Clamp(ascensionTier, 0, 24);
             if (safeTier > 0)
             {
-                bossName = $"{tierPrefixes[safeTier]}{bossName}";
-                maxHealth *= (1f + safeTier * 0.45f);
-                baseDamage *= (1f + safeTier * 0.25f);
-                soulReward = Mathf.RoundToInt(soulReward * (1f + safeTier * 0.65f));
-                modelScale *= (1f + safeTier * 0.08f);
+                int prefixIdx = safeTier % 5;
+                int cycleIdx = safeTier / 5;
+                bossName = $"{tierPrefixes[prefixIdx]}{bossName}{cycleSuffixes[cycleIdx]}";
+                maxHealth *= (1f + safeTier * 0.25f);
+                baseDamage *= (1f + safeTier * 0.14f);
+                soulReward = Mathf.RoundToInt(soulReward * (1f + safeTier * 0.35f));
+                modelScale *= (1f + Mathf.Min(safeTier, 8) * 0.05f);
                 accentColor = accents[(idx + safeTier) % accents.Length];
             }
 

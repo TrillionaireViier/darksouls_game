@@ -29,13 +29,23 @@ namespace DarkSouls
         OrderOfCinder
     }
 
+    public enum SacredVow
+    {
+        VowOfFire,
+        VowOfBlood,
+        VowOfStars,
+        VowOfShadow,
+        VowOfEternity
+    }
+
     /// <summary>
-    /// 60 Sacred Covenant Oaths (12 Covenants x 5 Sacred Orders) with Rank progression (Build V77).
+    /// 300 Sacred Covenant Oaths (12 Covenants x 5 Orders x 5 Vows) with Rank progression (Build V78).
     /// </summary>
     public class CovenantSystem : MonoBehaviour
     {
         public SacredCovenant ActiveCovenant { get; private set; } = SacredCovenant.WarriorsOfSunlight;
         public SacredOrder ActiveOrder { get; private set; } = SacredOrder.OrderOfSunlight;
+        public SacredVow ActiveVow { get; private set; } = SacredVow.VowOfFire;
         public int CovenantRank { get; private set; } = 1;
 
         public event Action<SacredCovenant, int> OnCovenantChanged;
@@ -54,7 +64,9 @@ namespace DarkSouls
             if (next == 0)
             {
                 next = 1;
-                ActiveOrder = (SacredOrder)(((int)ActiveOrder + 1) % 5);
+                int nextOrder = ((int)ActiveOrder + 1) % 5;
+                ActiveOrder = (SacredOrder)nextOrder;
+                if (nextOrder == 0) ActiveVow = (SacredVow)(((int)ActiveVow + 1) % 5);
             }
             JoinCovenant((SacredCovenant)next);
         }

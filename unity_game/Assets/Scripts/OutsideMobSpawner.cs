@@ -69,7 +69,7 @@ namespace DarkSouls
             pos.y = 0f;
 
             var archetype = (MobArchetype)Random.Range(0, System.Enum.GetValues(typeof(MobArchetype)).Length);
-            int affixTier = Random.Range(0, 5); // 75 archetypes x 5 affixes = 375 variants
+            int affixTier = Random.Range(0, 25); // 75 archetypes x 25 affixes = 1,875 variants (Build V78)
             var go = new GameObject($"Mob_{archetype}_T{affixTier}");
             go.transform.position = pos;
             var mob = go.AddComponent<OutsideMob>();
