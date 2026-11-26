@@ -85,7 +85,7 @@ namespace DarkSouls
 
             if (targetPlayer != null)
             {
-                targetPlayer.TakeDamage(damage);
+                targetPlayer.TakeDamage(damage, transform.position);
             }
 
             Invoke(nameof(ResetToChase), 0.7f);

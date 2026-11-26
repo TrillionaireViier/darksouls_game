@@ -188,7 +188,7 @@ namespace DarkSouls
         {
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
-            Vector3 inputDir = new Vector3(h, 0f, v).normalized();
+            Vector3 inputDir = new Vector3(h, 0f, v).normalized;
 
             if (inputDir.magnitude > 0.05f)
             {
@@ -316,9 +316,26 @@ namespace DarkSouls
             float radius = (attackCombo == 3) ? 2.5f : 2.0f;
             float damage = (attackCombo == 3) ? 280f : 150f;
 
-            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1.5f, radius, enemyLayers);
+            var arsenal = FindFirstObjectByType<ArsenalAndMagicSystem>();
+            if (arsenal != null)
+            {
+                float mult = (attackCombo == 3) ? 1.65f : 1.0f;
+                damage = arsenal.ActiveWeapon.baseDamage * mult * arsenal.ActiveRing.damageMult;
+                radius = Mathf.Max(radius, arsenal.ActiveWeapon.range * 0.7f);
+            }
+            if (covenantSystem != null)
+            {
+                damage *= covenantSystem.GetAttackBonusMultiplier();
+            }
+
+            Vector3 hitCenter = transform.position + transform.forward * 1.5f;
+            Collider[] hits = (enemyLayers.value == 0)
+                ? Physics.OverlapSphere(hitCenter, radius)
+                : Physics.OverlapSphere(hitCenter, radius, enemyLayers);
+
             foreach (var hit in hits)
             {
+                if (hit.gameObject == gameObject) continue;
                 if (hit.TryGetComponent<EnemyHollow>(out var enemy))
                 {
                     enemy.TakeDamage(damage, transform.position);
@@ -326,6 +343,14 @@ namespace DarkSouls
                 else if (hit.TryGetComponent<BossTaurus>(out var boss))
                 {
                     boss.TakeDamage(damage, transform.position);
+                }
+                else if (hit.TryGetComponent<OutsideMob>(out var mob))
+                {
+                    mob.TakeDamage(damage, transform.position);
+                }
+                else if (hit.TryGetComponent<BossApex>(out var apex))
+                {
+                    apex.TakeDamage(damage);
                 }
             }
         }

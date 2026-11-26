@@ -9,7 +9,27 @@ namespace DarkSouls
         BellGargoyle,
         CapraDemon,
         GreatGreyWolfSif,
-        LordGwyn
+        LordGwyn,
+        ManusFatherOfTheAbyss,
+        SeathTheScaleless,
+        ChampionGundyr,
+        VelstadtRoyalAegis,
+        LadyMaria,
+        BlackDragonKalameet,
+        LichdragonFortissax,
+        TwinPrinces,
+        CrossbreedPriscilla,
+        IsshinSwordSaint,
+        StarscourgeRadahn,
+        FatherGascoigne,
+        OrnsteinAndSmough,
+        ThePursuer,
+        GodrickTheGrafted,
+        PontiffSulyvahn,
+        MalikethBlackBlade,
+        MorgottOmenKing,
+        RennalaFullMoon,
+        DemonOfHatred
     }
 
     public class DarkSoulsGameManager : MonoBehaviour
@@ -21,8 +41,9 @@ namespace DarkSouls
         public DarkSoulsHUD hud;
         public WorldChunkStreamer worldStreamer;
         public CovenantSystem covenantSystem;
+        public ArsenalAndMagicSystem arsenalSystem;
 
-        [Header("Boss Prefabs")]
+        [Header("Legacy Boss Prefabs (Optional)")]
         public GameObject taurusPrefab;
         public GameObject gargoylePrefab;
         public GameObject capraPrefab;
@@ -39,7 +60,6 @@ namespace DarkSouls
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
 
-            // Unity 6 LTS High-Performance 60 FPS Lock
             Application.targetFrameRate = 60;
             QualitySettings.vSyncCount = 0;
         }
@@ -51,39 +71,69 @@ namespace DarkSouls
             if (hud == null) hud = FindFirstObjectByType<DarkSoulsHUD>();
             if (worldStreamer == null) worldStreamer = FindFirstObjectByType<WorldChunkStreamer>();
             if (covenantSystem == null) covenantSystem = FindFirstObjectByType<CovenantSystem>();
+            if (arsenalSystem == null) arsenalSystem = FindFirstObjectByType<ArsenalAndMagicSystem>();
 
-            SpawnBoss(BossType.TaurusDemon);
+            SpawnBoss(BossType.ManusFatherOfTheAbyss);
         }
 
         public void SpawnBoss(BossType type)
         {
             if (currentBossInstance != null) Destroy(currentBossInstance);
 
-            Vector3 spawnPos = bossSpawnPoint != null ? bossSpawnPoint.position : new Vector3(0f, 0f, 35f);
+            Vector3 basePos = player != null ? player.transform.position + player.transform.forward * 28f : new Vector3(0f, 0f, 35f);
+            basePos.y = 0f;
+            Vector3 spawnPos = bossSpawnPoint != null ? bossSpawnPoint.position : basePos;
             Quaternion spawnRot = bossSpawnPoint != null ? bossSpawnPoint.rotation : Quaternion.Euler(0f, 180f, 0f);
 
-            GameObject prefabToSpawn = taurusPrefab;
-            switch (type)
+            GameObject prefabToSpawn = type switch
             {
-                case BossType.TaurusDemon: prefabToSpawn = taurusPrefab; break;
-                case BossType.BellGargoyle: prefabToSpawn = gargoylePrefab; break;
-                case BossType.CapraDemon: prefabToSpawn = capraPrefab; break;
-                case BossType.GreatGreyWolfSif: prefabToSpawn = sifPrefab; break;
-                case BossType.LordGwyn: prefabToSpawn = gwynPrefab; break;
-            }
+                BossType.TaurusDemon => taurusPrefab,
+                BossType.BellGargoyle => gargoylePrefab,
+                BossType.CapraDemon => capraPrefab,
+                BossType.GreatGreyWolfSif => sifPrefab,
+                BossType.LordGwyn => gwynPrefab,
+                _ => null
+            };
 
             if (prefabToSpawn != null)
             {
                 currentBossInstance = Instantiate(prefabToSpawn, spawnPos, spawnRot);
             }
+            else
+            {
+                // Procedural 3D Apex Boss for all 25 bosses
+                currentBossInstance = new GameObject($"Boss_{type}");
+                currentBossInstance.transform.position = spawnPos;
+                currentBossInstance.transform.rotation = spawnRot;
+                var apex = currentBossInstance.AddComponent<BossApex>();
+                apex.Configure(type);
+            }
+
+            if (hud != null)
+            {
+                hud.ShowNotification($"CHALLENGE: {type}");
+            }
+        }
+
+        public void WarpPlayerToLocation(WorldLocation loc)
+        {
+            if (player == null) return;
+            var cc = player.GetComponent<CharacterController>();
+            if (cc != null) cc.enabled = false;
+            player.transform.position = new Vector3(loc.position.x, loc.position.y + 1.5f, loc.position.z);
+            if (cc != null) cc.enabled = true;
+            SetSafeCheckpoint(player.transform.position, false);
+            if (hud != null) hud.ShowNotification($"WARPED TO: {loc.name.ToUpper()}");
         }
 
         public void WarpPlayerToArena()
         {
             if (player != null)
             {
-                // Do not overwrite lastSafeBonfirePosition when fast-traveling to a boss arena
+                var cc = player.GetComponent<CharacterController>();
+                if (cc != null) cc.enabled = false;
                 player.transform.position = new Vector3(0f, 1f, -15f);
+                if (cc != null) cc.enabled = true;
             }
         }
 
@@ -105,7 +155,10 @@ namespace DarkSouls
             {
                 safePos = new Vector3(0f, 0f, 5f);
             }
+            var cc = player.GetComponent<CharacterController>();
+            if (cc != null) cc.enabled = false;
             player.transform.position = safePos;
+            if (cc != null) cc.enabled = true;
             player.RestAtBonfire(safePos);
         }
     }
