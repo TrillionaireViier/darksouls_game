@@ -5692,6 +5692,127 @@ class DarkSoulsCombat {
                 radius: 6.8,
                 spawnPos: { x: -2455, z: 440 },
                 create: (cf, x, z) => cf.createSmelterDemonIronCore ? cf.createSmelterDemonIronCore(x, z) : cf.createSoulsborneBoss({ id: 'smelter_demon', theme: 'flame', bossScale: 4.5 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V79 EXPANSION) ===
+            {
+                id: 'outside_fire_giant_fell_caldera',
+                name: 'FIRE GIANT, TITAN OF THE FELL GOD',
+                title: 'Outside Realm: Fell Caldera &bull; Chest Fell Eye, Iron Cauldron Disc & Flame Eruptions',
+                unlockLocationId: 'outside_fell_caldera_fire_giant',
+                icon: '🔥',
+                theme: 'flame',
+                bossScale: 5.2,
+                maxHp: 168000,
+                damage: 3180,
+                souls: 20500000,
+                radius: 8.2,
+                spawnPos: { x: -2485, z: -180 },
+                create: (cf, x, z) => cf.createFireGiantFellCaldera ? cf.createFireGiantFellCaldera(x, z) : cf.createSoulsborneBoss({ id: 'fire_giant', theme: 'flame', bossScale: 5.2 }, x, z)
+            },
+            {
+                id: 'outside_divine_beast_dancing_lion',
+                name: 'DIVINE BEAST DANCING LION, STORMHERALD OF BELURAT',
+                title: 'Outside Realm: Belurat Dancing Stage &bull; Spiral Horns, Tempest, Frost Shards & Golden Thunder',
+                unlockLocationId: 'outside_belurat_dancing_stage_lion',
+                icon: '🦁',
+                theme: 'lightning',
+                bossScale: 4.5,
+                maxHp: 160000,
+                damage: 3080,
+                souls: 19000000,
+                radius: 7.0,
+                spawnPos: { x: -2515, z: 260 },
+                create: (cf, x, z) => cf.createDivineBeastDancingLion ? cf.createDivineBeastDancingLion(x, z) : cf.createSoulsborneBoss({ id: 'dancing_lion', theme: 'lightning', bossScale: 4.5 }, x, z)
+            },
+            {
+                id: 'outside_looking_glass_knight_passage',
+                name: 'LOOKING GLASS KNIGHT, SENTINEL OF THE PASSAGE',
+                title: 'Outside Realm: King\'s Passage &bull; Weeping Mask, Reflective Mirror Shield & Thorned Lightning Sword',
+                unlockLocationId: 'outside_kings_passage_looking_glass_knight',
+                icon: '🪞',
+                theme: 'lightning',
+                bossScale: 4.4,
+                maxHp: 156000,
+                damage: 3020,
+                souls: 18400000,
+                radius: 6.8,
+                spawnPos: { x: -2545, z: -380 },
+                create: (cf, x, z) => cf.createLookingGlassKnightPassage ? cf.createLookingGlassKnightPassage(x, z) : cf.createSoulsborneBoss({ id: 'looking_glass_knight', theme: 'lightning', bossScale: 4.4 }, x, z)
+            },
+            {
+                id: 'outside_demon_prince_chaos_basin',
+                name: 'DEMON PRINCE, LAST LORD OF CHAOS',
+                title: 'Outside Realm: The Dreg Heap &bull; Obsidian Magma Wings, Bat Horns & Blazing Chaos Meteor',
+                unlockLocationId: 'outside_dreg_heap_demon_prince',
+                icon: '🦇',
+                theme: 'flame',
+                bossScale: 4.9,
+                maxHp: 164000,
+                damage: 3140,
+                souls: 19800000,
+                radius: 7.8,
+                spawnPos: { x: -2575, z: 140 },
+                create: (cf, x, z) => cf.createDemonPrinceChaosBasin ? cf.createDemonPrinceChaosBasin(x, z) : cf.createSoulsborneBoss({ id: 'demon_prince', theme: 'flame', bossScale: 4.9 }, x, z)
+            },
+            {
+                id: 'outside_commander_gaius_gravity_ridge',
+                name: 'COMMANDER GAIUS & GREAT ARMORED TUSK BOAR',
+                title: 'Outside Realm: Scaduview Gravity Ridge &bull; Armored War Boar, Razor Tusks & Purple Gravity Lance',
+                unlockLocationId: 'outside_scaduview_gravity_gaius',
+                icon: '🐗',
+                theme: 'magic',
+                bossScale: 4.6,
+                maxHp: 158000,
+                damage: 3060,
+                souls: 18800000,
+                radius: 7.2,
+                spawnPos: { x: -2605, z: -480 },
+                create: (cf, x, z) => cf.createCommanderGaiusGravityRidge ? cf.createCommanderGaiusGravityRidge(x, z) : cf.createSoulsborneBoss({ id: 'commander_gaius', theme: 'magic', bossScale: 4.6 }, x, z)
+            },
+            {
+                id: 'outside_moon_presence_nightmare_bloom',
+                name: 'MOON PRESENCE, FLORA OF THE BLOOD MOON',
+                title: 'Outside Realm: Nightmare Blood Lake &bull; Eldritch Tentacles, Paleblood Heart & Red Moon Gaze',
+                unlockLocationId: 'outside_nightmare_bloom_moon_presence',
+                icon: '🩸',
+                theme: 'dark',
+                bossScale: 4.6,
+                maxHp: 162000,
+                damage: 3120,
+                souls: 19400000,
+                radius: 7.4,
+                spawnPos: { x: -2635, z: 380 },
+                create: (cf, x, z) => cf.createMoonPresenceNightmareBloom ? cf.createMoonPresenceNightmareBloom(x, z) : cf.createSoulsborneBoss({ id: 'moon_presence', theme: 'dark', bossScale: 4.6 }, x, z)
+            },
+            {
+                id: 'outside_yhorm_the_giant_profaned',
+                name: 'YHORM THE GIANT, LORD OF THE PROFANED FLAME',
+                title: 'Outside Realm: Profaned Capital &bull; Glowing Ember Visor, Chained Armor & Jagged Great Machete',
+                unlockLocationId: 'outside_profaned_capital_yhorm',
+                icon: '👑',
+                theme: 'flame',
+                bossScale: 5.1,
+                maxHp: 170000,
+                damage: 3200,
+                souls: 21000000,
+                radius: 8.0,
+                spawnPos: { x: -2665, z: -220 },
+                create: (cf, x, z) => cf.createYhormTheGiantProfaned ? cf.createYhormTheGiantProfaned(x, z) : cf.createSoulsborneBoss({ id: 'yhorm_giant', theme: 'flame', bossScale: 5.1 }, x, z)
+            },
+            {
+                id: 'outside_dragonslayer_armour_bastion',
+                name: 'DRAGONSLAYER ARMOUR, POSSESSED IRON BASTION',
+                title: 'Outside Realm: Lothric High Bridge &bull; Dragon Horn Shield, Greataxe & Golden Lightning Storm',
+                unlockLocationId: 'outside_lothric_bridge_dragonslayer_armour',
+                icon: '🛡️',
+                theme: 'lightning',
+                bossScale: 4.4,
+                maxHp: 154000,
+                damage: 2990,
+                souls: 18000000,
+                radius: 6.8,
+                spawnPos: { x: -2695, z: 80 },
+                create: (cf, x, z) => cf.createDragonslayerArmourBastion ? cf.createDragonslayerArmourBastion(x, z) : cf.createSoulsborneBoss({ id: 'dragonslayer_armour', theme: 'lightning', bossScale: 4.4 }, x, z)
             }
         ];
     }
@@ -6071,7 +6192,16 @@ class DarkSoulsCombat {
             [-2365.0, 8.0, -420.0], [-2373.0, 8.0, -428.0], [-2357.0, 8.0, -412.0],       // Bodhisattva (Nightjar Tengu)
             [-2395.0, 24.0, 70.0], [-2403.0, 24.0, 78.0], [-2387.0, 24.0, 62.0],          // Cosmic Golden Sea (Golden Envoys)
             [-2425.0, 18.0, -250.0], [-2433.0, 18.0, -258.0], [-2417.0, 18.0, -242.0],   // Nightmare Cathedral (Church Executioners)
-            [-2455.0, -14.0, 440.0], [-2463.0, -14.0, 448.0], [-2447.0, -14.0, 432.0]    // Iron Keep (Turtle Knights)
+            [-2455.0, -14.0, 440.0], [-2463.0, -14.0, 448.0], [-2447.0, -14.0, 432.0],   // Iron Keep (Turtle Knights)
+            // 8 Brand-New Outside Ascended Expeditions Patrols (V79 Expansion):
+            [-2485.0, 32.0, -180.0], [-2493.0, 32.0, -188.0], [-2477.0, 32.0, -172.0], // Fell Caldera (Fire Monk Prelates)
+            [-2515.0, 12.0, 260.0], [-2523.0, 12.0, 268.0], [-2507.0, 12.0, 252.0],   // Belurat (Hornsent Inquisitors)
+            [-2545.0, -16.0, -380.0], [-2553.0, -16.0, -388.0], [-2537.0, -16.0, -372.0], // King's Passage (Mirror Squires)
+            [-2575.0, -28.0, 140.0], [-2583.0, -28.0, 148.0], [-2567.0, -28.0, 132.0], // Dreg Heap (Chaos Fire Harpies)
+            [-2605.0, 20.0, -480.0], [-2613.0, 20.0, -488.0], [-2597.0, 20.0, -472.0], // Scaduview (Messmer Fire Knights)
+            [-2635.0, 6.0, 380.0], [-2643.0, 6.0, 388.0], [-2627.0, 6.0, 372.0],       // Nightmare Bloom (Winter Lanterns)
+            [-2665.0, -20.0, -220.0], [-2673.0, -20.0, -228.0], [-2657.0, -20.0, -212.0], // Profaned Capital (Profaned Gargoyles)
+            [-2695.0, 26.0, 80.0], [-2703.0, 26.0, 88.0], [-2687.0, 26.0, 72.0]       // Lothric Bridge (Lothric Greatlance Knights)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -6096,7 +6226,9 @@ class DarkSoulsCombat {
                 'black_knight_cinder', 'oolacile_bloathead', 'crystal_golem_prism', 'grave_warden_kukri',
                 'undead_crypt_syan', 'clocktower_patient', 'calamity_dragon_acolyte', 'crucible_knight_siluria',
                 'skeleton_wheel', 'boreal_outrider', 'fingercreeper', 'bloodfiend_cleaver',
-                'nightjar_tengu', 'golden_envoy', 'church_nightmare', 'ironclad_turtle'
+                'nightjar_tengu', 'golden_envoy', 'church_nightmare', 'ironclad_turtle',
+                'fire_monk_prelate', 'hornsent_inquisitor', 'syan_mirror_squire', 'chaos_fire_harpy',
+                'messmer_fire_knight', 'winter_lantern_brain', 'gargoyle_profaned_herald', 'lothric_knights_greatlance'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

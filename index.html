@@ -10,7 +10,7 @@
     <script>
         // Automatic cache buster for iOS / Android mobile browsers
         (function() {
-            var TARGET_BUILD = '20261126_V76_OUTSIDE_REALM_EXPANSION';
+            var TARGET_BUILD = '20261126_V79_OUTSIDE_REALM_EXPANSION';
             var urlParams = new URLSearchParams(window.location.search);
             var bParam = urlParams.get('b');
             if (bParam !== TARGET_BUILD) {
@@ -1768,8 +1768,8 @@
                 <button class="btn-icon-bar btn-perf-toggle" onclick="togglePerformanceMode()" title="Toggle 60 FPS Turbo Mode / AAA Graphics" style="border-color: #4caf50; color: #a5d6a7; font-weight: 700;">⚡ <span class="btn-label-text">60 FPS</span></button>
                 <button class="btn-icon-bar" onclick="openAdminModal()" style="border-color: #ffd700; color: #fff3a8; font-weight: 900; background: rgba(50, 40, 10, 0.7); box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);">👑 <span class="btn-label-text">ADMIN</span></button>
                 <button class="btn-icon-bar" onclick="openNPCsModal()" title="330 Legendary Soulsborne NPCs, Phantoms & Allies" style="border-color: #00e5ff; color: #80d8ff; font-weight: 800; background: rgba(0, 40, 60, 0.75); box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);">🧙 <span class="btn-label-text">NPCS (330)</span></button>
-                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,190 3D Models: 340 Armors, 330 NPCs, 450 Mobs & 70 Outside Apex Bosses" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,190)</span></button>
-                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="313 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (313)</span></button>
+                <button class="btn-icon-bar" onclick="openCompendiumModal()" title="1,206 3D Models: 340 Armors, 330 NPCs, 458 Mobs & 78 Outside Apex Bosses" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(55, 42, 12, 0.8); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);">🗿 <span class="btn-label-text">3D MODELS (1,206)</span></button>
+                <button class="btn-icon-bar" onclick="openBossSelectModal()" title="321 Legendary Soulsborne Bosses" style="border-color: #c49a45; color: #ffd276; font-weight: 800; background: rgba(50, 35, 15, 0.75); box-shadow: 0 0 12px rgba(196,154,69,0.45);">⚔️ <span class="btn-label-text">BOSSES (321)</span></button>
                 <button class="btn-icon-bar" onclick="openSkinsModal()" style="border-color: #64b5f6; color: #bbdefb; font-weight: 700; box-shadow: 0 0 10px rgba(100,181,246,0.3);">🛡️ <span class="btn-label-text">SKINS</span></button>
                 <button class="btn-icon-bar" onclick="openWeaponArsenalModal()" title="70 Legendary Soulsborne Weapons & Arsenal" style="border-color: #d4af37; color: #ffd778; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);">⚔️ <span class="btn-label-text">WEAPONS (70)</span></button>
                 <button class="btn-icon-bar" onclick="openRingsModal()" title="50 Legendary Soulsborne Rings & Talismans (4 Equip Slots)" style="border-color: #ffd700; color: #fff3a8; font-weight: 800; background: rgba(50, 40, 15, 0.75); box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">💍 <span class="btn-label-text">RINGS (50)</span></button>
@@ -1780,7 +1780,7 @@
                 <button class="btn-icon-bar" onclick="openSunkenLiturgyModal()" title="The Sunken Liturgy • Dark Fantasy Debt Realm & Lore [L]" style="border-color: #ffaa33; color: #ffe0b2; font-weight: 800; background: rgba(60, 35, 10, 0.85); box-shadow: 0 0 14px rgba(255, 170, 51, 0.5);">⚖️ <span class="btn-label-text">SUNKEN LITURGY [L]</span></button>
                 <button class="btn-icon-bar" onclick="openDevMapModal()" title="Open God-Mode Interactive Dev Map & Radar [M]" style="border-color: #00ffaa; color: #a5ffbe; font-weight: 800; background: rgba(0, 40, 30, 0.75); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">DEV MAP [M]</span></button>
                 <button class="btn-icon-bar" onclick="if(window.game)window.game.travelToLocation('outside_fallen_spaceship_bazaar')" title="Visit Fallen Starship 30 Merchants Bazaar [U]" style="border-color: #00f5ff; color: #a5f3fc; font-weight: 800; background: rgba(0, 45, 65, 0.85); box-shadow: 0 0 12px rgba(0, 245, 255, 0.45);">🛸 <span class="btn-label-text">STARSHIP [U]</span></button>
-                <button class="btn-icon-bar" onclick="openLocationsModal()" title="601 Warriors' Dream & Soulsborne Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (601)</span></button>
+                <button class="btn-icon-bar" onclick="openLocationsModal()" title="609 Warriors' Dream & Soulsborne Fast-Travel Expeditions" style="border-color: #00ffaa; color: #a5d6a7; font-weight: 800; background: rgba(10, 45, 30, 0.7); box-shadow: 0 0 12px rgba(0, 255, 170, 0.45);">🗺️ <span class="btn-label-text">LOCATIONS (609)</span></button>
                 <button class="btn-icon-bar" onclick="teleportOrHighlightPath('outside')" title="Outside Realm: Darkroot Woods, Primeval Archtree & Dragon Plateau [O]" style="border-color: #2ecc71; color: #a8ffb2; font-weight: 800; background: rgba(20, 50, 30, 0.75); box-shadow: 0 0 12px rgba(46, 204, 113, 0.45);">🌲 <span class="btn-label-text">OUTSIDE [O]</span></button>
                 <button class="btn-icon-bar" id="btn-touch-toggle" onclick="toggleVirtualControls()" title="Toggle On-Screen Virtual Joystick & Buttons" style="border-color: #ffd700; color: #ffe680; font-weight: 700;">🕹️ <span class="btn-label-text">CONTROLS PAD</span></button>
                 <button class="btn-icon-bar" id="btn-torch-toggle" onclick="toggleTorch()" title="Equip / Stow Medieval Pitch Torch [T]" style="border-color: #ff7722; color: #ffaa44; font-weight: 700;">🔥 <span class="btn-label-text">TORCH</span></button>
@@ -2148,11 +2148,11 @@
 
             <!-- Category Tabs -->
             <div style="display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px;">
-                <button class="btn-icon-bar compendium-tab-btn active" data-category="ALL" onclick="filterCompendiumCategory('ALL')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">ALL (1,190)</button>
+                <button class="btn-icon-bar compendium-tab-btn active" data-category="ALL" onclick="filterCompendiumCategory('ALL')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">ALL (1,206)</button>
                 <button class="btn-icon-bar compendium-tab-btn" data-category="ARMOR" onclick="filterCompendiumCategory('ARMOR')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ffd700; color: #fff3a8;">🛡️ ARMORS (340)</button>
                 <button class="btn-icon-bar compendium-tab-btn" data-category="NPC" onclick="filterCompendiumCategory('NPC')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #00ffaa; color: #a5ffbe;">🧙 NPCS (330)</button>
-                <button class="btn-icon-bar compendium-tab-btn" data-category="MOB" onclick="filterCompendiumCategory('MOB')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ff5555; color: #ffaaaa;">👹 MOBS (450)</button>
-                <button class="btn-icon-bar compendium-tab-btn" data-category="BOSS" onclick="filterCompendiumCategory('BOSS')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #f59e0b; color: #fde68a;">⚔️ BOSSES (70)</button>
+                <button class="btn-icon-bar compendium-tab-btn" data-category="MOB" onclick="filterCompendiumCategory('MOB')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #ff5555; color: #ffaaaa;">👹 MOBS (458)</button>
+                <button class="btn-icon-bar compendium-tab-btn" data-category="BOSS" onclick="filterCompendiumCategory('BOSS')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 800; border-color: #f59e0b; color: #fde68a;">⚔️ BOSSES (78)</button>
             </div>
 
             <!-- Cards Grid -->
@@ -5398,6 +5398,110 @@
                         </div>
                     </div>
                     <button class="btn-fight-boss" onclick="chooseBoss('outside_smelter_demon_iron_core')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 314: Fire Giant (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_fire_giant_fell_caldera">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🔥</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">314. FIRE GIANT, TITAN OF FELL GOD</div>
+                            <div class="boss-card-desc">Fell Caldera &bull; Chest Fell Eye, Iron Cauldron Disc &amp; Flame Eruptions</div>
+                            <div class="boss-card-stats">HP: 168,000 &bull; REWARD: 20,500,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_fire_giant_fell_caldera')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 315: Divine Beast Dancing Lion (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_divine_beast_dancing_lion">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦁</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">315. DIVINE BEAST DANCING LION</div>
+                            <div class="boss-card-desc">Belurat Stage &bull; Spiral Horns, Tempest, Frost Shards &amp; Golden Thunder</div>
+                            <div class="boss-card-stats">HP: 160,000 &bull; REWARD: 19,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_divine_beast_dancing_lion')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 316: Looking Glass Knight (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_looking_glass_knight_passage">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🪞</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">316. LOOKING GLASS KNIGHT</div>
+                            <div class="boss-card-desc">King's Passage &bull; Weeping Mask, Reflective Mirror Shield &amp; Thorned Lightning Sword</div>
+                            <div class="boss-card-stats">HP: 156,000 &bull; REWARD: 18,400,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_looking_glass_knight_passage')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 317: Demon Prince (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_demon_prince_chaos_basin">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🦇</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">317. DEMON PRINCE (CHAOS LORD)</div>
+                            <div class="boss-card-desc">The Dreg Heap &bull; Obsidian Magma Wings, Bat Horns &amp; Blazing Chaos Meteor</div>
+                            <div class="boss-card-stats">HP: 164,000 &bull; REWARD: 19,800,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_demon_prince_chaos_basin')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 318: Commander Gaius (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_commander_gaius_gravity_ridge">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🐗</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">318. COMMANDER GAIUS &amp; WAR BOAR</div>
+                            <div class="boss-card-desc">Scaduview Ridge &bull; Armored War Boar, Razor Tusks &amp; Purple Gravity Lance</div>
+                            <div class="boss-card-stats">HP: 158,000 &bull; REWARD: 18,800,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_commander_gaius_gravity_ridge')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 319: Moon Presence (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_moon_presence_nightmare_bloom">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🩸</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">319. MOON PRESENCE (FLORA)</div>
+                            <div class="boss-card-desc">Nightmare Blood Lake &bull; Eldritch Tentacles, Paleblood Heart &amp; Red Moon Gaze</div>
+                            <div class="boss-card-stats">HP: 162,000 &bull; REWARD: 19,400,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_moon_presence_nightmare_bloom')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 320: Yhorm the Giant (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_yhorm_the_giant_profaned">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">👑</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">320. YHORM THE GIANT</div>
+                            <div class="boss-card-desc">Profaned Capital &bull; Glowing Ember Visor, Chained Armor &amp; Jagged Great Machete</div>
+                            <div class="boss-card-stats">HP: 170,000 &bull; REWARD: 21,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_yhorm_the_giant_profaned')">CHALLENGE</button>
+                </div>
+
+                <!-- Boss 321: Dragonslayer Armour (Outside Realm) -->
+                <div class="boss-card" data-boss-id="outside_dragonslayer_armour_bastion">
+                    <div class="boss-card-info">
+                        <div class="boss-card-icon">🛡️</div>
+                        <div class="boss-card-text">
+                            <div class="boss-card-name">321. DRAGONSLAYER ARMOUR</div>
+                            <div class="boss-card-desc">Lothric High Bridge &bull; Dragon Horn Shield, Greataxe &amp; Golden Lightning Storm</div>
+                            <div class="boss-card-stats">HP: 154,000 &bull; REWARD: 18,000,000 SOULS</div>
+                        </div>
+                    </div>
+                    <button class="btn-fight-boss" onclick="chooseBoss('outside_dragonslayer_armour_bastion')">CHALLENGE</button>
                 </div>
             </div>
 
@@ -10407,25 +10511,25 @@
 
     <!-- Game Scripts (with version cache-busting) -->
     <script src="js/three.min.js?v=20261124_V54_MENU_SPEED_CAM_AND_BUGFIXES"></script>
-    <script src="js/audio.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/lore_items.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/merchants_30.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/world.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/character.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/siege_warfare.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/heraldry_nobility.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/apothecary_crafting.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/collision_system.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/qa_bot_tester.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/combat.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/postprocessing.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/qa_suite.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/blacksmith_forge.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/inventory_system.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/compendium_300_models.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/death_quotes_300.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/game.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
-    <script src="js/dev_map.js?v=20261126_V76_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/audio.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/lore_items.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/merchants_30.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/world.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/character.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/siege_warfare.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/heraldry_nobility.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/apothecary_crafting.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/collision_system.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/qa_bot_tester.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/combat.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/postprocessing.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/qa_suite.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/blacksmith_forge.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/inventory_system.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/compendium_300_models.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/death_quotes_300.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/game.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
+    <script src="js/dev_map.js?v=20261126_V79_OUTSIDE_REALM_EXPANSION"></script>
     <script>
         // Automatic Game Initialization Failsafe
         (function() {

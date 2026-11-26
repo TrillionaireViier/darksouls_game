@@ -67,7 +67,7 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 313 Legendary Boss Roster
+### 🌲 Outside Realm Apex Bosses & 321 Legendary Boss Roster
 Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 281 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (601 Fast-Travel Locations & 125 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (609 Fast-Travel Locations & 133 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 2,550 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 109 bespoke Outside locations, 108 active mob patrols, and 70 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 2,800 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 117 bespoke Outside locations, 116 active mob patrols, and 78 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V79 Expansion)
+1. **Fire Monk Prelate Executioner (Bulbous Scarlet Silk & Prelate Hammer)**: Bulbous scarlet silk robe with gold embroidery, oversized polished brass kettle cauldron helm, swinging a 2.8m Prelate's Inferno Hammer and flame whip.
+2. **Hornsent Inquisitor Priest (Golden Spiral Horns & Multi-Barbed Staff)**: Tangled spiral golden horns crown, ceremonial prayer tunic with parchment strips, brandishing a multi-barbed golden inquisitor staff and sickle ring blades.
+3. **Syan Royal Mirror Squire (Embossed Gold Armor & Mirror Tower Shield)**: Ornate gold-embossed plate armor with high blue plume helm, mirror tower shield reflecting starlight, and crackling lightning halberd.
+4. **Dreg Heap Chaos Fire Harpy (Obsidian Skin & Magma Wings)**: Obsidian skin demon humanoid with broad tattered leathery wings lined in orange magma embers, razor talons, and a glowing chaos chest.
+5. **Messmer Fire Knight (Winged Dragon Sallet & Spiral Flame Needle)**: Tall slender silver plate armor with winged dragon sallet helm and crimson silk tabard, wielding a slender spiral flame needle rapier.
+6. **Nightmare Winter Lantern (Multi-Eyed Brain Mass & Victorian Gown)**: Fragile Victorian lace gown supporting an enormous grotesque multi-lobed brain head studded with 14 glowing yellow frenzy eyes.
+7. **Profaned Gargoyle Herald (Carved Granite Wings & Molten Flame Spear)**: Carved granite stone gargoyle with muscular stone torso, ram horns, angular wings, brandishing a 2.9m stone flame spear with glowing molten veins.
+8. **Lothric Castle Elite Greatlance Knight (Royal Blue Cape & Jousting Greatlance)**: High-crested steel plate knight with flowing royal blue cape and winged helm, wielding a monumental 3.8m jousting Greatlance and tower shield.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V79 Expansion)
+1. **Fire Giant, Titan of the Fell God (Fell Caldera & Forge of the Giants)**: Colossal red-bearded titan with chest Fell God eye, bone-bound leg, swinging an iron cauldron disc shield and flame eruptions (+32.0m elevation).
+2. **Divine Beast Dancing Lion, Stormherald of Belurat (Belurat Tower & Storm Dancing Stage)**: Ceremonial two-performer Hornsent lion with golden spiral horn mask, cycling between tempest wind, frost shards, and golden thunder (+12.0m elevation).
+3. **Looking Glass Knight, Sentinel of the Passage (King's Passage & Storm Mirror Dais)**: Gothic silver plate titan with weeping mask, summoning phantoms from his reflective mirror shield and calling lightning (-16.0m elevation).
+4. **Demon Prince, Last Lord of Chaos (The Dreg Heap & Sunken Kiln Basin)**: Last lord of chaos with obsidian magma ribcage, 5.4m wingspan bat wings, and a floating blazing chaos meteor orb (-28.0m elevation).
+5. **Commander Gaius & Great Armored Tusk Boar (Scaduview Gravity Ridge & Boar Gate)**: Dark-steel plated Albinauric general riding an armored tusked war boar, charging with a 5.2m purple gravity lance (+20.0m elevation).
+6. **Moon Presence, Flora of the Blood Moon (Nightmare Bloom & Red Moon Lake)**: Eldritch flora god of the blood moon with facial tentacles, exposed ribcage, paleblood heart, and blinding red gaze (+6.0m elevation).
+7. **Yhorm the Giant, Lord of the Profaned Flame (Profaned Capital & Burning Throne Dais)**: Ash-grey giant king with glowing ember visor slit, iron armor, swinging a 5.8m jagged Great Machete engulfed in Profaned Flame (-20.0m elevation).
+8. **Dragonslayer Armour, Possessed Iron Bastion (Lothric High Bridge & Bastion Mooring)**: Possessed dragon scale iron armor with twin-horned dragon greatshield, 4.8m lightning greataxe, and pilgrim butterflies (+26.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V76 Expansion)
 1. **Skeleton Wheel & Bone Necromancer Executioner (Spiked Wheel Shield & Scythe)**: Spiked iron wheel shield mounted on left arm with 8 pointed spikes, hollow ribcage with glowing crimson eye sockets, curved bone scythe and necromancy flame skull lantern.

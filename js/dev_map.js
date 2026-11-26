@@ -606,7 +606,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -2530, -850, 2502, 1700, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -2780, -900, 2752, 1800, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -699,6 +699,15 @@
                 this.drawZoneRect(ctx, -2395, 70, 40, 40, "rgba(75, 60, 15, 0.65)", "#facc15", "✨ COSMIC GOLDEN SEA (+24m)");
                 this.drawZoneRect(ctx, -2425, -250, 40, 40, "rgba(70, 25, 10, 0.65)", "#ea580c", "🌋 NIGHTMARE CATHEDRAL (+18m)");
                 this.drawZoneRect(ctx, -2455, 440, 40, 40, "rgba(65, 15, 15, 0.65)", "#ef4444", "👹 SMELTING FURNACE (-14m)");
+                // 8 Brand-New Outside Realm Expeditions (V79 Expansion)
+                this.drawZoneRect(ctx, -2485, -180, 40, 40, "rgba(80, 25, 10, 0.65)", "#f97316", "🔥 FELL CALDERA (+32m)");
+                this.drawZoneRect(ctx, -2515, 260, 40, 40, "rgba(75, 60, 15, 0.65)", "#facc15", "🦁 BELURAT STAGE (+12m)");
+                this.drawZoneRect(ctx, -2545, -380, 40, 40, "rgba(10, 50, 80, 0.65)", "#38bdf8", "🪞 KING'S PASSAGE (-16m)");
+                this.drawZoneRect(ctx, -2575, 140, 40, 40, "rgba(70, 25, 10, 0.65)", "#ea580c", "🦇 DREG HEAP KILN (-28m)");
+                this.drawZoneRect(ctx, -2605, -480, 40, 40, "rgba(40, 15, 60, 0.65)", "#c084fc", "🐗 SCADUVIEW RIDGE (+20m)");
+                this.drawZoneRect(ctx, -2635, 380, 40, 40, "rgba(65, 10, 10, 0.65)", "#ef4444", "🩸 NIGHTMARE BLOOM (+6m)");
+                this.drawZoneRect(ctx, -2665, -220, 40, 40, "rgba(75, 50, 10, 0.65)", "#f59e0b", "👑 PROFANED CAPITAL (-20m)");
+                this.drawZoneRect(ctx, -2695, 80, 40, 40, "rgba(70, 55, 15, 0.65)", "#eab308", "🛡️ LOTHRIC BRIDGE (+26m)");
             }
 
             // 3. Draw All World Pins

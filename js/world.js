@@ -1047,8 +1047,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-2550, -28], z in [-1150, 1150]
-        if (x >= -2550 && x <= -28 && z >= -1150 && z <= 1150) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-2800, -28], z in [-1250, 1250]
+        if (x >= -2800 && x <= -28 && z >= -1250 && z <= 1250) {
+            // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V79 EXPANSION) ===
+            // 1. Fell Caldera & Forge of the Giants (outside_fell_caldera_fire_giant) (elev: +32.0m)
+            if (x >= -2530 && x <= -2440 && z >= -225 && z <= -135) {
+                return 32.0;
+            }
+            // 2. Belurat Tower & Storm Dancing Stage (outside_belurat_dancing_stage_lion) (elev: +12.0m)
+            if (x >= -2560 && x <= -2470 && z >= 215 && z <= 305) {
+                return 12.0;
+            }
+            // 3. King's Passage & Storm Mirror Dais (outside_kings_passage_looking_glass_knight) (elev: -16.0m)
+            if (x >= -2590 && x <= -2500 && z >= -425 && z <= -335) {
+                return -16.0;
+            }
+            // 4. The Dreg Heap & Sunken Kiln Basin (outside_dreg_heap_demon_prince) (elev: -28.0m)
+            if (x >= -2620 && x <= -2530 && z >= 95 && z <= 185) {
+                return -28.0;
+            }
+            // 5. Scaduview Gravity Ridge & Boar Gate (outside_scaduview_gravity_gaius) (elev: +20.0m)
+            if (x >= -2650 && x <= -2560 && z >= -525 && z <= -435) {
+                return 20.0;
+            }
+            // 6. Nightmare Bloom & Red Moon Lake (outside_nightmare_bloom_moon_presence) (elev: +6.0m)
+            if (x >= -2680 && x <= -2590 && z >= 335 && z <= 425) {
+                return 6.0;
+            }
+            // 7. Profaned Capital & Burning Throne Dais (outside_profaned_capital_yhorm) (elev: -20.0m)
+            if (x >= -2710 && x <= -2620 && z >= -265 && z <= -175) {
+                return -20.0;
+            }
+            // 8. Lothric High Bridge & Bastion Mooring (outside_lothric_bridge_dragonslayer_armour) (elev: +26.0m)
+            if (x >= -2740 && x <= -2650 && z >= 35 && z <= 125) {
+                return 26.0;
+            }
             // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V76 EXPANSION) ===
             // 1. Tomb of the Giants & Nito's Ossuary (outside_tomb_of_giants_gravelord_nito) (elev: -18.0m)
             if (x >= -2290 && x <= -2200 && z >= -355 && z <= -265) {
@@ -4122,6 +4155,7 @@ class DarkSoulsWorld {
         // Build 8 Brand-New Ascended Outside Realm Expeditions (V74 Expansion)
         this.buildEightAscendedOutsideExpeditionsV74(outsideGroup);
         this.buildEightAscendedOutsideExpeditionsV76(outsideGroup);
+        this.buildEightAscendedOutsideExpeditionsV79(outsideGroup);
 
         this.scene.add(outsideGroup);
     }
@@ -8380,6 +8414,340 @@ class DarkSoulsWorld {
         outsideGroup.add(smelterLight);
 
         this.createFloorSoapstone(-2455, -14.0, 452, "#ef4444", "👹 SMELTING FURNACE", "When the Smelter Demon ignites its core, keep your distance from the heat pulse!");
+    }
+
+    buildEightAscendedOutsideExpeditionsV79(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V79 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. FELL CALDERA & FORGE OF THE GIANTS
+        // Center: (-2485, 32.0, -180) | Elev: +32.0m | Theme: Primordial Fire, Basalt Crags & Fire Giant
+        // --------------------------------------------------------------------
+        const calderaStoneMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.95 });
+        const magmaVeinMat = new THREE.MeshStandardMaterial({ color: 0xea580c, emissive: 0xc2410c, emissiveIntensity: 2.8 });
+        const giantIronMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.5, metalness: 0.85 });
+
+        // Raised Volcanic Caldera Platform
+        const calderaFloor = new THREE.Mesh(new THREE.CylinderGeometry(30, 35, 4.0, 24), calderaStoneMat);
+        calderaFloor.position.set(-2485, 30.0, -180);
+        outsideGroup.add(calderaFloor);
+
+        // Giant Iron Cauldron Forge in Center
+        const forgeCauldron = new THREE.Mesh(new THREE.CylinderGeometry(7.5, 6.0, 5.0, 16, 1, true), giantIronMat);
+        forgeCauldron.position.set(-2485, 34.0, -180);
+        outsideGroup.add(forgeCauldron);
+
+        const forgeMagma = new THREE.Mesh(new THREE.CylinderGeometry(7.0, 7.0, 0.4, 16), magmaVeinMat);
+        forgeMagma.position.set(-2485, 33.5, -180);
+        outsideGroup.add(forgeMagma);
+
+        // Ring of 8 Monumental Basalt Spikes bound with Chains
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2485 + Math.cos(angle) * 24;
+            const pz = -180 + Math.sin(angle) * 24;
+            const spike = new THREE.Mesh(new THREE.ConeGeometry(2.0, 14.0, 6), calderaStoneMat);
+            spike.position.set(px, 39.0, pz);
+            outsideGroup.add(spike);
+
+            const chainRing = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.22, 6, 12), giantIronMat);
+            chainRing.position.set(px, 37.0, pz);
+            chainRing.rotation.x = Math.PI / 2;
+            outsideGroup.add(chainRing);
+        }
+
+        const fireGiantLight = new THREE.PointLight(0xf97316, 2.8, 65);
+        fireGiantLight.position.set(-2485, 37.0, -180);
+        outsideGroup.add(fireGiantLight);
+
+        this.createFloorSoapstone(-2485, 32.0, -168, "#f97316", "🔥 FELL CALDERA & GIANT'S FORGE", "Beware the Fell God's gaze; when the cauldron lid strikes, roll beneath the titan's heel!");
+
+        // --------------------------------------------------------------------
+        // 2. BELURAT TOWER & STORM DANCING STAGE
+        // Center: (-2515, 12.0, 260) | Elev: +12.0m | Theme: Spiral Arches, Golden Thunder & Dancing Lion
+        // --------------------------------------------------------------------
+        const hornsentStoneMat = new THREE.MeshStandardMaterial({ color: 0xd6d3d1, roughness: 0.85 });
+        const spiralGoldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.4, metalness: 0.75 });
+        const stormCyanMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.2 });
+
+        // Hornsent Theatre Stage Dais
+        const lionStage = new THREE.Mesh(new THREE.CylinderGeometry(28, 32, 3.5, 24), hornsentStoneMat);
+        lionStage.position.set(-2515, 10.25, 260);
+        outsideGroup.add(lionStage);
+
+        // 8 Spiral Hornsent Arches around the Stage
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2515 + Math.cos(angle) * 22;
+            const pz = 260 + Math.sin(angle) * 22;
+            const archPillar = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.6, 12.0, 8), hornsentStoneMat);
+            archPillar.position.set(px, 18.0, pz);
+            outsideGroup.add(archPillar);
+
+            const hornCrown = new THREE.Mesh(new THREE.TorusGeometry(1.8, 0.35, 6, 12, Math.PI), spiralGoldMat);
+            hornCrown.position.set(px, 24.5, pz);
+            hornCrown.rotation.z = Math.PI / 2;
+            outsideGroup.add(hornCrown);
+        }
+
+        // Swirling Incense Braziers
+        const brazier1 = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 0.9, 2.2, 8), spiralGoldMat);
+        brazier1.position.set(-2515 - 12, 13.0, 260);
+        outsideGroup.add(brazier1);
+
+        const brazier2 = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 0.9, 2.2, 8), spiralGoldMat);
+        brazier2.position.set(-2515 + 12, 13.0, 260);
+        outsideGroup.add(brazier2);
+
+        const lionLight = new THREE.PointLight(0xfacc15, 2.5, 60);
+        lionLight.position.set(-2515, 17.0, 260);
+        outsideGroup.add(lionLight);
+
+        this.createFloorSoapstone(-2515, 12.0, 272, "#facc15", "🦁 BELURAT STORM DANCING STAGE", "The Divine Beast cycles through tempest, frost, and golden thunder; watch the horns to predict the element!");
+
+        // --------------------------------------------------------------------
+        // 3. KING'S PASSAGE & STORM MIRROR DAIS
+        // Center: (-2545, -16.0, -380) | Elev: -16.0m | Theme: Wet Flagstones, Mirror Reflections & Looking Glass Knight
+        // --------------------------------------------------------------------
+        const wetSlateMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.35, metalness: 0.5 });
+        const mirrorGlassMat = new THREE.MeshStandardMaterial({ color: 0xe0f2fe, roughness: 0.1, metalness: 0.95 });
+        const lightningBlueMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.6 });
+
+        // Rain-slicked Castle Terrace
+        const terrace = new THREE.Mesh(new THREE.BoxGeometry(48, 3.0, 56), wetSlateMat);
+        terrace.position.set(-2545, -17.5, -380);
+        outsideGroup.add(terrace);
+
+        // 10 Storm Buttress Columns with Spires
+        for (let i = 0; i < 10; i++) {
+            const side = (i % 2 === 0) ? -1 : 1;
+            const zStep = Math.floor(i / 2) * 11 - 22;
+            const col = new THREE.Mesh(new THREE.BoxGeometry(2.4, 16.0, 2.4), wetSlateMat);
+            col.position.set(-2545 + side * 22, -8.0, -380 + zStep);
+            outsideGroup.add(col);
+
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(0.8, 4.5, 6), mirrorGlassMat);
+            spire.position.set(-2545 + side * 22, 2.0, -380 + zStep);
+            outsideGroup.add(spire);
+        }
+
+        // Mirror Glass Dais in Center
+        const mirrorCenterDais = new THREE.Mesh(new THREE.CylinderGeometry(10.0, 11.5, 0.8, 16), mirrorGlassMat);
+        mirrorCenterDais.position.set(-2545, -15.6, -380);
+        outsideGroup.add(mirrorCenterDais);
+
+        const mirrorLight = new THREE.PointLight(0x38bdf8, 2.3, 55);
+        mirrorLight.position.set(-2545, -10.0, -380);
+        outsideGroup.add(mirrorLight);
+
+        this.createFloorSoapstone(-2545, -16.0, -368, "#38bdf8", "🪞 KING'S PASSAGE MIRROR DAIS", "When the Looking Glass Knight plants his mirror shield, rush the mirror before phantoms emerge!");
+
+        // --------------------------------------------------------------------
+        // 4. THE DREG HEAP & SUNKEN KILN BASIN
+        // Center: (-2575, -28.0, 140) | Elev: -28.0m | Theme: Submerged Cathedrals, Chaos Magma & Demon Prince
+        // --------------------------------------------------------------------
+        const dregAshMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.95 });
+        const chaosLavaMat = new THREE.MeshStandardMaterial({ color: 0xea580c, emissive: 0x9a3412, emissiveIntensity: 3.2 });
+        const ruinedStoneMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.85 });
+
+        // Sunken Basin Floor
+        const kilnBasin = new THREE.Mesh(new THREE.CylinderGeometry(30, 36, 4.0, 24), dregAshMat);
+        kilnBasin.position.set(-2575, -30.0, 140);
+        outsideGroup.add(kilnBasin);
+
+        // Magma Chasms in Basin
+        const magmaPool = new THREE.Mesh(new THREE.CylinderGeometry(14.0, 14.0, 0.4, 16), chaosLavaMat);
+        magmaPool.position.set(-2575, -27.8, 140);
+        outsideGroup.add(magmaPool);
+
+        // 4 Tilted Ruined Cathedral Towers in Ash
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2 + 0.4;
+            const px = -2575 + Math.cos(angle) * 20;
+            const pz = 140 + Math.sin(angle) * 20;
+            const ruinedTower = new THREE.Mesh(new THREE.BoxGeometry(4.5, 18.0, 4.5), ruinedStoneMat);
+            ruinedTower.position.set(px, -20.0, pz);
+            ruinedTower.rotation.z = 0.28 * Math.cos(angle);
+            ruinedTower.rotation.x = 0.28 * Math.sin(angle);
+            outsideGroup.add(ruinedTower);
+        }
+
+        const demonPrinceLight = new THREE.PointLight(0xea580c, 2.7, 60);
+        demonPrinceLight.position.set(-2575, -23.0, 140);
+        outsideGroup.add(demonPrinceLight);
+
+        this.createFloorSoapstone(-2575, -28.0, 152, "#ea580c", "🦇 SUNKEN KILN OF THE DREG HEAP", "The Demon Prince channels chaos meteors; sprint behind the sunken cathedral pillars for cover!");
+
+        // --------------------------------------------------------------------
+        // 5. SCADUVIEW GRAVITY RIDGE & BOAR GATE
+        // Center: (-2605, 20.0, -480) | Elev: +20.0m | Theme: Shadowrock Ridge, Purple Gravity & Commander Gaius
+        // --------------------------------------------------------------------
+        const scaduRockMat = new THREE.MeshStandardMaterial({ color: 0x1e1b4b, roughness: 0.9 });
+        const gravityPurpleMat = new THREE.MeshStandardMaterial({ color: 0xc084fc, emissive: 0x7e22ce, emissiveIntensity: 2.8 });
+        const gateIronMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5, metalness: 0.85 });
+
+        // High Fortress Ridge Platform
+        const scaduRidge = new THREE.Mesh(new THREE.BoxGeometry(50, 4.0, 50), scaduRockMat);
+        scaduRidge.position.set(-2605, 18.0, -480);
+        outsideGroup.add(scaduRidge);
+
+        // Colossal Fortress Boar Gate
+        const leftTower = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 4.2, 20.0, 12), scaduRockMat);
+        leftTower.position.set(-2605 - 16, 28.0, -480 - 18);
+        outsideGroup.add(leftTower);
+
+        const rightTower = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 4.2, 20.0, 12), scaduRockMat);
+        rightTower.position.set(-2605 + 16, 28.0, -480 - 18);
+        outsideGroup.add(rightTower);
+
+        const gateArch = new THREE.Mesh(new THREE.BoxGeometry(34, 4.0, 4.5), scaduRockMat);
+        gateArch.position.set(-2605, 36.0, -480 - 18);
+        outsideGroup.add(gateArch);
+
+        // Floating Purple Gravity Rifts
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2;
+            const gx = -2605 + Math.cos(angle) * 16;
+            const gz = -480 + Math.sin(angle) * 16;
+            const gravOrb = new THREE.Mesh(new THREE.SphereGeometry(1.2, 12, 12), gravityPurpleMat);
+            gravOrb.position.set(gx, 25.0, gz);
+            outsideGroup.add(gravOrb);
+        }
+
+        const gaiusLight = new THREE.PointLight(0xc084fc, 2.5, 55);
+        gaiusLight.position.set(-2605, 25.0, -480);
+        outsideGroup.add(gaiusLight);
+
+        this.createFloorSoapstone(-2605, 20.0, -468, "#c084fc", "🐗 SCADUVIEW GRAVITY RIDGE", "Commander Gaius charges with unstoppable boar momentum; time your dodge sideways through the tusks!");
+
+        // --------------------------------------------------------------------
+        // 6. NIGHTMARE BLOOM & RED MOON LAKE
+        // Center: (-2635, 6.0, 380) | Elev: +6.0m | Theme: Crimson Blood Water, White Flora & Moon Presence
+        // --------------------------------------------------------------------
+        const bloodLakeMat = new THREE.MeshStandardMaterial({ color: 0x450a0a, roughness: 0.15, metalness: 0.4 });
+        const lunarFloraMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xf1f5f9, emissiveIntensity: 1.5 });
+        const redMoonBoneMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xb91c1c, emissiveIntensity: 3.0 });
+
+        // Blood Lake Basin
+        const bloodLake = new THREE.Mesh(new THREE.CylinderGeometry(28, 33, 3.0, 24), bloodLakeMat);
+        bloodLake.position.set(-2635, 4.5, 380);
+        outsideGroup.add(bloodLake);
+
+        // Clusters of White Lunar Night-Flowers
+        for (let i = 0; i < 24; i++) {
+            const fAngle = (i / 24) * Math.PI * 2;
+            const fDist = 6.0 + (i % 5) * 3.5;
+            const fx = -2635 + Math.cos(fAngle) * fDist;
+            const fz = 380 + Math.sin(fAngle) * fDist;
+            const flower = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.2, 6), lunarFloraMat);
+            flower.position.set(fx, 6.6, fz);
+            outsideGroup.add(flower);
+        }
+
+        // Ring of 8 Petrified Bone Pillars
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2635 + Math.cos(angle) * 22;
+            const pz = 380 + Math.sin(angle) * 22;
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.6, 14.0, 8), boneMat);
+            pillar.position.set(px, 13.0, pz);
+            outsideGroup.add(pillar);
+
+            const redOrb = new THREE.Mesh(new THREE.SphereGeometry(1.0, 10, 10), redMoonBoneMat);
+            redOrb.position.set(px, 20.8, pz);
+            outsideGroup.add(redOrb);
+        }
+
+        const moonPresenceLight = new THREE.PointLight(0xef4444, 2.7, 65);
+        moonPresenceLight.position.set(-2635, 14.0, 380);
+        outsideGroup.add(moonPresenceLight);
+
+        this.createFloorSoapstone(-2635, 6.0, 392, "#ef4444", "🩸 NIGHTMARE RED MOON LAKE", "The Moon Presence gazes with eldritch eyes; when the blood flash blinds you, drink your vial immediately!");
+
+        // --------------------------------------------------------------------
+        // 7. PROFANED CAPITAL & BURNING THRONE DAIS
+        // Center: (-2665, -20.0, -220) | Elev: -20.0m | Theme: Burnt Gold, Iron Chains, Profaned Flame & Yhorm
+        // --------------------------------------------------------------------
+        const profanedStoneMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.9 });
+        const burntGoldMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.45, metalness: 0.75 });
+        const profanedFlameMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xd97706, emissiveIntensity: 3.0 });
+
+        // Sunken Gilded Palace Hall
+        const profanedHall = new THREE.Mesh(new THREE.CylinderGeometry(30, 35, 4.0, 24), profanedStoneMat);
+        profanedHall.position.set(-2665, -22.0, -220);
+        outsideGroup.add(profanedHall);
+
+        // Monumental Colossal Throne of Yhorm
+        const yhormThrone = new THREE.Mesh(new THREE.BoxGeometry(10.0, 12.0, 6.0), profanedStoneMat);
+        yhormThrone.position.set(-2665, -14.0, -220 - 18);
+        outsideGroup.add(yhormThrone);
+
+        const throneSeat = new THREE.Mesh(new THREE.BoxGeometry(8.0, 4.0, 5.0), burntGoldMat);
+        throneSeat.position.set(-2665, -16.0, -220 - 15);
+        outsideGroup.add(throneSeat);
+
+        // 8 Massive Columns bound with Iron Chains & Flaming Braziers
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2665 + Math.cos(angle) * 22;
+            const pz = -220 + Math.sin(angle) * 22;
+            const pCol = new THREE.Mesh(new THREE.BoxGeometry(2.8, 18.0, 2.8), profanedStoneMat);
+            pCol.position.set(px, -11.0, pz);
+            outsideGroup.add(pCol);
+
+            const brazier = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 0.7, 1.4, 8), profanedFlameMat);
+            brazier.position.set(px, -1.0, pz);
+            outsideGroup.add(brazier);
+        }
+
+        const yhormLight = new THREE.PointLight(0xf59e0b, 2.6, 60);
+        yhormLight.position.set(-2665, -10.0, -220);
+        outsideGroup.add(yhormLight);
+
+        this.createFloorSoapstone(-2665, -20.0, -208, "#f59e0b", "👑 PROFANED CAPITAL THRONE DAIS", "Yhorm's great machete leaves flaming rifts; take refuge in the wind of the Storm Ruler!");
+
+        // --------------------------------------------------------------------
+        // 8. LOTHRIC HIGH BRIDGE & BASTION MOORING
+        // Center: (-2695, 26.0, 80) | Elev: +26.0m | Theme: High Castle Viaduct, Dragon Greatshields & Dragonslayer Armour
+        // --------------------------------------------------------------------
+        const lothricAshlarMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.8 });
+        const lothricIronMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.45, metalness: 0.85 });
+        const dragonslayerLightningMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 2.8 });
+
+        // Monumental Viaduct Bridge Deck
+        const highBridge = new THREE.Mesh(new THREE.BoxGeometry(32, 4.0, 60), lothricAshlarMat);
+        highBridge.position.set(-2695, 24.0, 80);
+        outsideGroup.add(highBridge);
+
+        // Bridge Parapets on Sides
+        const leftParapet = new THREE.Mesh(new THREE.BoxGeometry(2.0, 2.5, 60), lothricAshlarMat);
+        leftParapet.position.set(-2695 - 15, 27.25, 80);
+        outsideGroup.add(leftParapet);
+
+        const rightParapet = new THREE.Mesh(new THREE.BoxGeometry(2.0, 2.5, 60), lothricAshlarMat);
+        rightParapet.position.set(-2695 + 15, 27.25, 80);
+        outsideGroup.add(rightParapet);
+
+        // 6 Gothic Arch Pylons with Heraldic Dragon Heads
+        for (let i = 0; i < 6; i++) {
+            const side = (i % 2 === 0) ? -1 : 1;
+            const zStep = Math.floor(i / 2) * 22 - 22;
+            const pylon = new THREE.Mesh(new THREE.BoxGeometry(3.0, 16.0, 3.0), lothricIronMat);
+            pylon.position.set(-2695 + side * 15, 32.0, 80 + zStep);
+            outsideGroup.add(pylon);
+
+            const lightningConduit = new THREE.Mesh(new THREE.ConeGeometry(0.7, 3.5, 6), dragonslayerLightningMat);
+            lightningConduit.position.set(-2695 + side * 15, 41.5, 80 + zStep);
+            outsideGroup.add(lightningConduit);
+        }
+
+        const dragonslayerLight = new THREE.PointLight(0xeab308, 2.5, 55);
+        dragonslayerLight.position.set(-2695, 31.0, 80);
+        outsideGroup.add(dragonslayerLight);
+
+        this.createFloorSoapstone(-2695, 26.0, 92, "#eab308", "🛡️ LOTHRIC CASTLE HIGH BRIDGE", "The Dragonslayer Armour swings with crushing poise; keep the shield raised and beware the butterfly volleys!");
     }
 
     createFloorSoapstone(x, y, z, colorHex, title, desc) {
