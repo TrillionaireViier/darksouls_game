@@ -69,10 +69,11 @@ namespace DarkSouls
             pos.y = 0f;
 
             var archetype = (MobArchetype)Random.Range(0, System.Enum.GetValues(typeof(MobArchetype)).Length);
-            var go = new GameObject($"Mob_{archetype}");
+            int affixTier = Random.Range(0, 5); // 75 archetypes x 5 affixes = 375 variants
+            var go = new GameObject($"Mob_{archetype}_T{affixTier}");
             go.transform.position = pos;
             var mob = go.AddComponent<OutsideMob>();
-            mob.Init(archetype);
+            mob.Init(archetype, affixTier);
             activeMobs.Add(mob);
         }
     }
@@ -90,7 +91,7 @@ namespace DarkSouls
         private float cooldown = 0f;
         private bool dead = false;
 
-        public void Init(MobArchetype type)
+        public void Init(MobArchetype type, int affixTier = 0)
         {
             archetype = type;
             int idx = (int)type;
@@ -104,14 +105,14 @@ namespace DarkSouls
                 Color.white, Color.cyan, new Color(1f, 0.4f, 0.1f), Color.red, Color.yellow, Color.magenta
             };
 
-            maxHealth = 280f + (idx % 12) * 65f;
-            damage = 95f + (idx % 10) * 16f;
-            soulReward = 150 + idx * 25;
-            moveSpeed = 2.6f + (idx % 5) * 0.3f;
+            maxHealth = (280f + (idx % 12) * 65f) * (1f + affixTier * 0.25f);
+            damage = (95f + (idx % 10) * 16f) * (1f + affixTier * 0.18f);
+            soulReward = Mathf.RoundToInt((150 + idx * 25) * (1f + affixTier * 0.4f));
+            moveSpeed = 2.6f + (idx % 5) * 0.3f + affixTier * 0.15f;
 
-            float scale = 1.0f + (idx % 5) * 0.12f;
+            float scale = (1.0f + (idx % 5) * 0.12f) * (1f + affixTier * 0.06f);
             currentHealth = maxHealth;
-            BuildMesh(bodyColors[idx % bodyColors.Length], accentColors[idx % accentColors.Length], scale);
+            BuildMesh(bodyColors[(idx + affixTier) % bodyColors.Length], accentColors[(idx + affixTier) % accentColors.Length], scale);
         }
 
         private void BuildMesh(Color bodyColor, Color accentColor, float scale)

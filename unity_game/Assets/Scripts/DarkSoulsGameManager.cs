@@ -81,7 +81,7 @@ namespace DarkSouls
             SpawnBoss(BossType.ManusFatherOfTheAbyss);
         }
 
-        public void SpawnBoss(BossType type)
+        public void SpawnBoss(BossType type, int ascensionTier = 0)
         {
             if (currentBossInstance != null) Destroy(currentBossInstance);
 
@@ -90,7 +90,7 @@ namespace DarkSouls
             Vector3 spawnPos = bossSpawnPoint != null ? bossSpawnPoint.position : basePos;
             Quaternion spawnRot = bossSpawnPoint != null ? bossSpawnPoint.rotation : Quaternion.Euler(0f, 180f, 0f);
 
-            GameObject prefabToSpawn = type switch
+            GameObject prefabToSpawn = (ascensionTier == 0) ? type switch
             {
                 BossType.TaurusDemon => taurusPrefab,
                 BossType.BellGargoyle => gargoylePrefab,
@@ -98,7 +98,7 @@ namespace DarkSouls
                 BossType.GreatGreyWolfSif => sifPrefab,
                 BossType.LordGwyn => gwynPrefab,
                 _ => null
-            };
+            } : null;
 
             if (prefabToSpawn != null)
             {
@@ -106,16 +106,16 @@ namespace DarkSouls
             }
             else
             {
-                currentBossInstance = new GameObject($"Boss_{type}");
+                currentBossInstance = new GameObject($"Boss_{type}_T{ascensionTier}");
                 currentBossInstance.transform.position = spawnPos;
                 currentBossInstance.transform.rotation = spawnRot;
                 var apex = currentBossInstance.AddComponent<BossApex>();
-                apex.Configure(type);
+                apex.Configure(type, ascensionTier);
             }
 
             if (hud != null)
             {
-                hud.ShowNotification($"CHALLENGE: {type}");
+                hud.ShowNotification($"CHALLENGE: {type} (TIER {ascensionTier + 1})");
             }
         }
 

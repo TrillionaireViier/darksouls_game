@@ -20,12 +20,22 @@ namespace DarkSouls
         VolcanoManorRecusants
     }
 
+    public enum SacredOrder
+    {
+        OrderOfAsh,
+        OrderOfSunlight,
+        OrderOfTheAbyss,
+        OrderOfTheMoon,
+        OrderOfCinder
+    }
+
     /// <summary>
-    /// 12 Sacred Covenants (2x original) with Rank progression and combat/soul bonuses (Build V75).
+    /// 60 Sacred Covenant Oaths (12 Covenants x 5 Sacred Orders) with Rank progression (Build V77).
     /// </summary>
     public class CovenantSystem : MonoBehaviour
     {
         public SacredCovenant ActiveCovenant { get; private set; } = SacredCovenant.WarriorsOfSunlight;
+        public SacredOrder ActiveOrder { get; private set; } = SacredOrder.OrderOfSunlight;
         public int CovenantRank { get; private set; } = 1;
 
         public event Action<SacredCovenant, int> OnCovenantChanged;
@@ -41,7 +51,11 @@ namespace DarkSouls
         {
             int count = Enum.GetValues(typeof(SacredCovenant)).Length;
             int next = ((int)ActiveCovenant + 1) % count;
-            if (next == 0) next = 1;
+            if (next == 0)
+            {
+                next = 1;
+                ActiveOrder = (SacredOrder)(((int)ActiveOrder + 1) % 5);
+            }
             JoinCovenant((SacredCovenant)next);
         }
 

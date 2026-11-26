@@ -41,13 +41,13 @@ namespace DarkSouls
     }
 
     /// <summary>
-    /// Unity 5x-on-5x Arsenal & Magic System: 75 Weapons, 50 Spells/Miracles, and 50 Sacred Rings (Build V76).
+    /// Unity 125x-on-5x Arsenal & Magic System: 375 Weapons, 250 Spells/Miracles, and 250 Sacred Rings (Build V77).
     /// </summary>
     public class ArsenalAndMagicSystem : MonoBehaviour
     {
-        public List<WeaponDefinition> Weapons { get; private set; } = new List<WeaponDefinition>(75);
-        public List<SpellDefinition> Spells { get; private set; } = new List<SpellDefinition>(50);
-        public List<RingDefinition> Rings { get; private set; } = new List<RingDefinition>(50);
+        public List<WeaponDefinition> Weapons { get; private set; } = new List<WeaponDefinition>(375);
+        public List<SpellDefinition> Spells { get; private set; } = new List<SpellDefinition>(250);
+        public List<RingDefinition> Rings { get; private set; } = new List<RingDefinition>(250);
 
         public int CurrentWeaponIndex { get; private set; } = 0;
         public int CurrentSpellIndex { get; private set; } = 0;
@@ -113,19 +113,23 @@ namespace DarkSouls
                 new Color(0.45f, 0.18f, 0.78f), new Color(0.95f, 0.78f, 0.25f), new Color(0.88f, 0.12f, 0.18f)
             };
 
+            string[] infusions = { "", "Heavy +10 ", "Lightning ", "Abyssal ", "Primordial " };
             Weapons.Clear();
-            for (int i = 0; i < weaponNames.Length; i++)
+            for (int tier = 0; tier < infusions.Length; tier++)
             {
-                Weapons.Add(new WeaponDefinition
+                for (int i = 0; i < weaponNames.Length; i++)
                 {
-                    name = weaponNames[i],
-                    category = categories[i % categories.Length],
-                    baseDamage = 145f + (i * 5.5f),
-                    staminaCost = 18f + (i % 6) * 4f,
-                    range = 3.0f + (i % 5) * 0.45f,
-                    poiseDamage = 28f + (i % 7) * 10f,
-                    bladeTint = tints[i % tints.Length]
-                });
+                    Weapons.Add(new WeaponDefinition
+                    {
+                        name = $"{infusions[tier]}{weaponNames[i]}",
+                        category = categories[i % categories.Length],
+                        baseDamage = (145f + (i * 5.5f)) * (1f + tier * 0.18f),
+                        staminaCost = 18f + (i % 6) * 4f,
+                        range = 3.0f + (i % 5) * 0.45f + tier * 0.12f,
+                        poiseDamage = (28f + (i % 7) * 10f) * (1f + tier * 0.12f),
+                        bladeTint = tints[(i + tier) % tints.Length]
+                    });
+                }
             }
         }
 
@@ -149,21 +153,25 @@ namespace DarkSouls
                 new Color(0.45f, 0.12f, 0.72f), new Color(0.20f, 0.90f, 0.85f), new Color(0.88f, 0.12f, 0.18f)
             };
 
+            string[] mastery = { "", "Greater ", "Primeval ", "Calamitous ", "Transcendent " };
             Spells.Clear();
-            for (int i = 0; i < spellNames.Length; i++)
+            for (int tier = 0; tier < mastery.Length; tier++)
             {
-                bool heal = spellNames[i].Contains("Heal") || spellNames[i].Contains("Grace");
-                Spells.Add(new SpellDefinition
+                for (int i = 0; i < spellNames.Length; i++)
                 {
-                    name = spellNames[i],
-                    school = schools[i % schools.Length],
-                    damage = 160f + i * 9f,
-                    staminaCost = 18f + (i % 5) * 5f,
-                    range = heal ? 0f : 18f + (i % 4) * 5f,
-                    cooldown = 0.8f + (i % 4) * 0.35f,
-                    projectileColor = colors[i % colors.Length],
-                    isHeal = heal
-                });
+                    bool heal = spellNames[i].Contains("Heal") || spellNames[i].Contains("Grace");
+                    Spells.Add(new SpellDefinition
+                    {
+                        name = $"{mastery[tier]}{spellNames[i]}",
+                        school = schools[i % schools.Length],
+                        damage = (160f + i * 9f) * (1f + tier * 0.22f),
+                        staminaCost = 18f + (i % 5) * 5f,
+                        range = heal ? 0f : 18f + (i % 4) * 5f + tier * 2f,
+                        cooldown = Mathf.Max(0.45f, (0.8f + (i % 4) * 0.35f) - tier * 0.06f),
+                        projectileColor = colors[(i + tier) % colors.Length],
+                        isHeal = heal
+                    });
+                }
             }
         }
 
@@ -182,22 +190,26 @@ namespace DarkSouls
                 "Graven-Mass Talisman", "Flock's Canvas Talisman", "Dragoncrest Greatshield", "Lord of Blood's Exultation", "Two-Handed Sword Talisman"
             };
 
+            string[] ringTiers = { "", " [Ascended +1]", " [Ascended +2]", " [Ascended +3]", " [Primordial +4]" };
             Rings.Clear();
-            for (int i = 0; i < ringNames.Length; i++)
+            for (int tier = 0; tier < ringTiers.Length; tier++)
             {
-                float hp = 1.0f + ((i % 4 == 0) ? 0.25f : 0.08f);
-                float stam = 1.0f + ((i % 3 == 0) ? 0.35f : 0.12f);
-                float dmg = 1.0f + ((i % 2 == 0) ? 0.28f : 0.15f) + (i * 0.005f);
-                float poise = 1.0f + ((i % 5 == 0) ? 0.50f : 0.10f);
-                Rings.Add(new RingDefinition
+                for (int i = 0; i < ringNames.Length; i++)
                 {
-                    name = ringNames[i],
-                    effectDescription = $"+{Mathf.RoundToInt((hp - 1f) * 100)}% HP, +{Mathf.RoundToInt((dmg - 1f) * 100)}% DMG",
-                    hpMult = hp,
-                    staminaRegenMult = stam,
-                    damageMult = dmg,
-                    poiseMult = poise
-                });
+                    float hp = 1.0f + ((i % 4 == 0) ? 0.25f : 0.08f) + tier * 0.06f;
+                    float stam = 1.0f + ((i % 3 == 0) ? 0.35f : 0.12f) + tier * 0.08f;
+                    float dmg = 1.0f + ((i % 2 == 0) ? 0.28f : 0.15f) + (i * 0.005f) + tier * 0.10f;
+                    float poise = 1.0f + ((i % 5 == 0) ? 0.50f : 0.10f) + tier * 0.10f;
+                    Rings.Add(new RingDefinition
+                    {
+                        name = $"{ringNames[i]}{ringTiers[tier]}",
+                        effectDescription = $"+{Mathf.RoundToInt((hp - 1f) * 100)}% HP, +{Mathf.RoundToInt((dmg - 1f) * 100)}% DMG",
+                        hpMult = hp,
+                        staminaRegenMult = stam,
+                        damageMult = dmg,
+                        poiseMult = poise
+                    });
+                }
             }
         }
 

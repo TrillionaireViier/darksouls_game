@@ -30,7 +30,7 @@ namespace DarkSouls
         private bool isDead = false;
         private bool hudShown = false;
 
-        public void Configure(BossType type)
+        public void Configure(BossType type, int ascensionTier = 0)
         {
             int idx = (int)type;
             string raw = type.ToString();
@@ -75,6 +75,18 @@ namespace DarkSouls
                     bossName = "Isshin, the Sword Saint"; maxHealth = 4900f; baseDamage = 295f; soulReward = 32000; moveSpeed = 5.5f; break;
                 case BossType.MalikethBlackBlade:
                     bossName = "Maliketh, the Black Blade"; maxHealth = 5500f; baseDamage = 340f; soulReward = 40000; moveSpeed = 5.5f; break;
+            }
+
+            string[] tierPrefixes = { "", "Abyssal ", "Cinderlord ", "Outer God ", "Primeval " };
+            int safeTier = Mathf.Clamp(ascensionTier, 0, tierPrefixes.Length - 1);
+            if (safeTier > 0)
+            {
+                bossName = $"{tierPrefixes[safeTier]}{bossName}";
+                maxHealth *= (1f + safeTier * 0.45f);
+                baseDamage *= (1f + safeTier * 0.25f);
+                soulReward = Mathf.RoundToInt(soulReward * (1f + safeTier * 0.65f));
+                modelScale *= (1f + safeTier * 0.08f);
+                accentColor = accents[(idx + safeTier) % accents.Length];
             }
 
             currentHealth = maxHealth;
