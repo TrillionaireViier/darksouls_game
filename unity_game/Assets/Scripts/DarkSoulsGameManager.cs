@@ -5,31 +5,36 @@ namespace DarkSouls
 {
     public enum BossType
     {
-        TaurusDemon,
-        BellGargoyle,
-        CapraDemon,
-        GreatGreyWolfSif,
-        LordGwyn,
-        ManusFatherOfTheAbyss,
-        SeathTheScaleless,
-        ChampionGundyr,
-        VelstadtRoyalAegis,
-        LadyMaria,
-        BlackDragonKalameet,
-        LichdragonFortissax,
-        TwinPrinces,
-        CrossbreedPriscilla,
-        IsshinSwordSaint,
-        StarscourgeRadahn,
-        FatherGascoigne,
-        OrnsteinAndSmough,
-        ThePursuer,
-        GodrickTheGrafted,
-        PontiffSulyvahn,
-        MalikethBlackBlade,
-        MorgottOmenKing,
-        RennalaFullMoon,
-        DemonOfHatred
+        // Original 25 (V75)
+        TaurusDemon, BellGargoyle, CapraDemon, GreatGreyWolfSif, LordGwyn,
+        ManusFatherOfTheAbyss, SeathTheScaleless, ChampionGundyr, VelstadtRoyalAegis, LadyMaria,
+        BlackDragonKalameet, LichdragonFortissax, TwinPrinces, CrossbreedPriscilla, IsshinSwordSaint,
+        StarscourgeRadahn, FatherGascoigne, OrnsteinAndSmough, ThePursuer, GodrickTheGrafted,
+        PontiffSulyvahn, MalikethBlackBlade, MorgottOmenKing, RennalaFullMoon, DemonOfHatred,
+
+        // +100 New Bosses = 125 Total (5x Expansion, V76)
+        AsylumDemon, StrayDemon, DemonFiresage, MoonlightButterfly, GapingDragon,
+        ChaosWitchQuelaag, CeaselessDischarge, CentipedeDemon, BedOfChaos, Pinwheel,
+        GravelordNito, DarkSunGwyndolin, IronGolem, FourKings, SanctuaryGuardian,
+        KnightArtorias, LastGiant, Dragonrider, OldDragonslayer, FlexileSentry,
+        RuinSentinels, LostSinner, BelfryGargoyles, SkeletonLords, ExecutionersChariot,
+        CovetousDemon, MythaBanefulQueen, SmelterDemon, OldIronKing, ScorpionessNajka,
+        RoyalRatAuthority, DukesDearFreja, LookingGlassKnight, DemonOfSong, GuardianDragon,
+        AncientDragon, GiantLord, ThroneWatcher, Nashandra, AldiaScholar,
+        FumeKnight, SirAlonne, BlueSmelterDemon, BurntIvoryKing, SinhSlumberingDragon,
+        ElanaSqualidQueen, IudexGundyr, VordtOfBorealValley, CurseRottedGreatwood, CrystalSage,
+        DeaconsOfTheDeep, AbyssWatchers, HighLordWolnir, OldDemonKing, YhormTheGiant,
+        AldrichDevourer, DancerOfBorealValley, DragonslayerArmour, OceirosConsumedKing, NamelessKing,
+        SoulOfCinder, SisterFriede, ChampionGravetender, DemonPrince, HalflightSpear,
+        DarkeaterMidir, SlaveKnightGael, ClericBeast, BloodStarvedBeast, VicarAmelia,
+        WitchOfHemwick, ShadowOfYharnam, RomVacuousSpider, OneReborn, MicolashHost,
+        MergosWetNurse, MartyrLogarius, CelestialEmissary, EbrietasDaughter, GehrmanFirstHunter,
+        MoonPresence, LudwigAccursed, LivingFailures, OrphanOfKos, LaurenceFirstVicar,
+        GyoubuOniwa, LadyButterfly, GenichiroAshina, FoldingScreenMonkeys, GuardianApe,
+        CorruptedMonk, DivineDragon, OwlFather, EmmaGentleBlade, MargitFellOmen,
+        MohgLordOfBlood, MaleniaBladeOfMiquella, FireGiant, GodfreyFirstEldenLord, RadagonGoldenOrder,
+        EldenBeast, AstelNaturalborn, DragonlordPlacidusax, RegalAncestorSpirit, MessmerTheImpaler,
+        RellanaTwinMoon, DivineBeastDancingLion, RominaSaintOfBud, MidraLordOfFrenziedFlame, PromisedConsortRadahn
     }
 
     public class DarkSoulsGameManager : MonoBehaviour
@@ -101,7 +106,6 @@ namespace DarkSouls
             }
             else
             {
-                // Procedural 3D Apex Boss for all 25 bosses
                 currentBossInstance = new GameObject($"Boss_{type}");
                 currentBossInstance.transform.position = spawnPos;
                 currentBossInstance.transform.rotation = spawnRot;

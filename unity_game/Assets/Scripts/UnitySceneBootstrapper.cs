@@ -304,41 +304,42 @@ namespace DarkSouls
         private void OnGUI()
         {
             // Top-Right Real-Time World & Arsenal Telemetry
-            float w = 390f;
-            GUI.Box(new Rect(Screen.width - w - 16, 16, w, 155), "DARK SOULS UNITY 5X EXPANSION (BUILD V75)");
+            float w = 420f;
+            GUI.Box(new Rect(Screen.width - w - 16, 16, w, 160), "DARK SOULS UNITY 25X EXPANSION (BUILD V76)");
             string locName = streamer != null ? streamer.CurrentNearestLocation.name : "Firelink Citadel";
             string zoneName = streamer != null ? streamer.CurrentNearestLocation.zone : "Firelink Citadel";
             int totalLocs = streamer != null ? streamer.TotalLocationsCount : 0;
             string covName = covenants != null ? $"{covenants.ActiveCovenant} (R{covenants.CovenantRank})" : "None";
-            string wepName = arsenal != null ? arsenal.ActiveWeapon.name : "Astora Straight Sword";
-            string splName = arsenal != null ? arsenal.ActiveSpell.name : "Soul Arrow";
-            string rngName = arsenal != null ? arsenal.ActiveRing.name : "Ring of Favor";
+            string wepName = arsenal != null ? $"{arsenal.ActiveWeapon.name} [{arsenal.CurrentWeaponIndex + 1}/{arsenal.Weapons.Count}]" : "Astora Straight Sword";
+            string splName = arsenal != null ? $"{arsenal.ActiveSpell.name} [{arsenal.CurrentSpellIndex + 1}/{arsenal.Spells.Count}]" : "Soul Arrow";
+            string rngName = arsenal != null ? $"{arsenal.ActiveRing.name} [{arsenal.CurrentRingIndex + 1}/{arsenal.Rings.Count}]" : "Ring of Favor";
 
             GUI.Label(new Rect(Screen.width - w - 4, 40, w - 20, 22), $"Zone: {zoneName} ({totalLocs:N0} Locations)");
             GUI.Label(new Rect(Screen.width - w - 4, 60, w - 20, 22), $"Sector: {locName}");
             GUI.Label(new Rect(Screen.width - w - 4, 80, w - 20, 22), $"Weapon [Tab]: {wepName}");
-            GUI.Label(new Rect(Screen.width - w - 4, 100, w - 20, 22), $"Spell [R/F]: {splName} | Ring [T]: {rngName}");
-            GUI.Label(new Rect(Screen.width - w - 4, 120, w - 20, 22), $"Covenant [C]: {covName}");
-            GUI.Label(new Rect(Screen.width - w - 4, 140, w - 20, 22), "Press [M] for 25 Bosses & Outside Realms Warp Menu");
+            GUI.Label(new Rect(Screen.width - w - 4, 100, w - 20, 22), $"Spell [R/F]: {splName}");
+            GUI.Label(new Rect(Screen.width - w - 4, 120, w - 20, 22), $"Ring [T]: {rngName} | Cov [C]: {covName}");
+            GUI.Label(new Rect(Screen.width - w - 4, 142, w - 20, 22), "Press [M] for 125 Bosses & 125 Outside Sectors Warp Menu");
 
             if (showWarpMenu && gm != null)
             {
-                Rect win = new Rect(Screen.width * 0.5f - 280, Screen.height * 0.5f - 220, 560, 440);
-                GUI.Box(win, "25 APEX BOSSES & OUTSIDE REALMS WARP [M to Close]");
-                bossScroll = GUI.BeginScrollView(new Rect(win.x + 12, win.y + 32, win.width - 24, win.height - 44), bossScroll, new Rect(0, 0, 510, 920));
+                var allBosses = (BossType[])Enum.GetValues(typeof(BossType));
+                Rect win = new Rect(Screen.width * 0.5f - 290, Screen.height * 0.5f - 240, 580, 480);
+                GUI.Box(win, $"125 APEX BOSSES & 5.65M LOCATIONS WARP [M to Close]");
+                bossScroll = GUI.BeginScrollView(new Rect(win.x + 12, win.y + 32, win.width - 24, win.height - 44), bossScroll, new Rect(0, 0, 530, allBosses.Length * 34 + 10));
                 int y = 0;
-                foreach (BossType bt in Enum.GetValues(typeof(BossType)))
+                foreach (BossType bt in allBosses)
                 {
-                    if (GUI.Button(new Rect(0, y, 245, 28), $"Spawn Boss: {bt}"))
+                    if (GUI.Button(new Rect(0, y, 255, 28), $"Boss #{(int)bt + 1}: {bt}"))
                     {
                         gm.SpawnBoss(bt);
                         showWarpMenu = false;
                         Cursor.lockState = CursorLockMode.Locked;
                         Cursor.visible = false;
                     }
-                    if (streamer != null && GUI.Button(new Rect(255, y, 245, 28), $"Warp Outside #{(int)bt + 1}"))
+                    if (streamer != null && GUI.Button(new Rect(265, y, 255, 28), $"Warp Outside Sector #{(int)bt + 1}"))
                     {
-                        var loc = streamer.GetSampleLocation(((int)bt + 1) * 45217);
+                        var loc = streamer.GetSampleLocation(((int)bt) * 45217);
                         gm.WarpPlayerToLocation(loc);
                         showWarpMenu = false;
                         Cursor.lockState = CursorLockMode.Locked;

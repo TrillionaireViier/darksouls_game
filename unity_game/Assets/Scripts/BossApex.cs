@@ -1,12 +1,11 @@
 using System;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace DarkSouls
 {
     /// <summary>
-    /// Unified Multi-Phase Apex & Outside Boss Controller (20+ Bosses for Unity 5x Expansion, Build V75).
-    /// Procedurally constructs bespoke 3D boss silhouettes (wings, crowns, colossal blades, glowing cores)
-    /// and executes melee cleaves, leap slams, and Phase-2 shockwaves.
+    /// Unified Multi-Phase Apex & Outside Boss Controller (125 Bosses for Unity 5x-on-5x Expansion, Build V76).
     /// </summary>
     public class BossApex : MonoBehaviour
     {
@@ -17,7 +16,7 @@ namespace DarkSouls
         public float moveSpeed = 3.8f;
         public float baseDamage = 260f;
         public int soulReward = 18000;
-        public float aggroRange = 36f;
+        public float aggroRange = 38f;
         public float attackRange = 3.8f;
         public Color primaryColor = new Color(0.18f, 0.10f, 0.28f);
         public Color accentColor = new Color(0.75f, 0.25f, 1.0f);
@@ -33,69 +32,51 @@ namespace DarkSouls
 
         public void Configure(BossType type)
         {
+            int idx = (int)type;
+            string raw = type.ToString();
+            bossName = Regex.Replace(raw, "([a-z])([A-Z])", "$1 $2");
+
+            Color[] primaries = {
+                new Color(0.15f, 0.10f, 0.22f), new Color(0.55f, 0.45f, 0.20f), new Color(0.24f, 0.24f, 0.28f),
+                new Color(0.36f, 0.12f, 0.14f), new Color(0.12f, 0.22f, 0.34f), new Color(0.75f, 0.85f, 0.95f)
+            };
+            Color[] accents = {
+                new Color(0.75f, 0.25f, 1.0f), new Color(1.0f, 0.80f, 0.25f), new Color(1.0f, 0.32f, 0.10f),
+                new Color(0.35f, 0.88f, 1.0f), new Color(0.95f, 0.18f, 0.22f), new Color(0.90f, 0.95f, 1.0f)
+            };
+
+            maxHealth = 3200f + (idx % 15) * 280f;
+            baseDamage = 200f + (idx % 12) * 18f;
+            soulReward = 12000 + idx * 450;
+            moveSpeed = 3.6f + (idx % 5) * 0.45f;
+            modelScale = 1.35f + (idx % 6) * 0.18f;
+            hasWings = (idx % 3 == 1) || raw.Contains("Dragon") || raw.Contains("Gargoyle") || raw.Contains("Malenia") || raw.Contains("Nameless");
+            primaryColor = primaries[idx % primaries.Length];
+            accentColor = accents[idx % accents.Length];
+
+            // Bespoke overrides for signature bosses
             switch (type)
             {
                 case BossType.ManusFatherOfTheAbyss:
-                    bossName = "Manus, Father of the Abyss"; maxHealth = 4800f; baseDamage = 280f; soulReward = 25000;
-                    primaryColor = new Color(0.12f, 0.08f, 0.18f); accentColor = new Color(0.65f, 0.15f, 0.95f); modelScale = 1.9f; break;
-                case BossType.SeathTheScaleless:
-                    bossName = "Seath the Scaleless"; maxHealth = 4400f; baseDamage = 240f; soulReward = 22000;
-                    primaryColor = new Color(0.75f, 0.88f, 0.98f); accentColor = new Color(0.35f, 0.88f, 1.0f); modelScale = 2.0f; hasWings = true; break;
-                case BossType.ChampionGundyr:
-                    bossName = "Champion Gundyr"; maxHealth = 3800f; baseDamage = 250f; soulReward = 18000;
-                    primaryColor = new Color(0.28f, 0.28f, 0.32f); accentColor = new Color(0.95f, 0.35f, 0.18f); modelScale = 1.55f; break;
-                case BossType.VelstadtRoyalAegis:
-                    bossName = "Velstadt, the Royal Aegis"; maxHealth = 3900f; baseDamage = 265f; soulReward = 19000;
-                    primaryColor = new Color(0.55f, 0.45f, 0.18f); accentColor = new Color(0.45f, 0.18f, 0.68f); modelScale = 1.6f; break;
-                case BossType.LadyMaria:
-                    bossName = "Lady Maria of the Astral Clocktower"; maxHealth = 3600f; baseDamage = 235f; soulReward = 21000; moveSpeed = 5.2f;
-                    primaryColor = new Color(0.32f, 0.10f, 0.14f); accentColor = new Color(0.98f, 0.20f, 0.28f); modelScale = 1.25f; break;
-                case BossType.BlackDragonKalameet:
-                    bossName = "Black Dragon Kalameet"; maxHealth = 5200f; baseDamage = 300f; soulReward = 28000;
-                    primaryColor = new Color(0.10f, 0.10f, 0.12f); accentColor = new Color(1.0f, 0.42f, 0.10f); modelScale = 2.1f; hasWings = true; break;
-                case BossType.LichdragonFortissax:
-                    bossName = "Lichdragon Fortissax"; maxHealth = 5400f; baseDamage = 310f; soulReward = 30000;
-                    primaryColor = new Color(0.16f, 0.14f, 0.16f); accentColor = new Color(1.0f, 0.78f, 0.15f); modelScale = 2.1f; hasWings = true; break;
-                case BossType.TwinPrinces:
-                    bossName = "Lorian & Lothric, Twin Princes"; maxHealth = 4500f; baseDamage = 270f; soulReward = 24000;
-                    primaryColor = new Color(0.22f, 0.20f, 0.24f); accentColor = new Color(1.0f, 0.85f, 0.45f); modelScale = 1.55f; break;
-                case BossType.CrossbreedPriscilla:
-                    bossName = "Crossbreed Priscilla"; maxHealth = 3400f; baseDamage = 220f; soulReward = 17500;
-                    primaryColor = new Color(0.90f, 0.92f, 0.96f); accentColor = new Color(0.55f, 0.82f, 1.0f); modelScale = 1.4f; break;
-                case BossType.IsshinSwordSaint:
-                    bossName = "Isshin, the Sword Saint"; maxHealth = 4900f; baseDamage = 295f; soulReward = 32000; moveSpeed = 5.4f;
-                    primaryColor = new Color(0.18f, 0.22f, 0.34f); accentColor = new Color(0.75f, 0.90f, 1.0f); modelScale = 1.35f; break;
+                    bossName = "Manus, Father of the Abyss"; maxHealth = 4800f; baseDamage = 280f; soulReward = 25000; modelScale = 1.9f; break;
                 case BossType.StarscourgeRadahn:
-                    bossName = "Starscourge Radahn"; maxHealth = 6000f; baseDamage = 330f; soulReward = 38000;
-                    primaryColor = new Color(0.42f, 0.14f, 0.14f); accentColor = new Color(0.68f, 0.38f, 1.0f); modelScale = 2.2f; break;
-                case BossType.FatherGascoigne:
-                    bossName = "Father Gascoigne"; maxHealth = 3100f; baseDamage = 215f; soulReward = 15000; moveSpeed = 4.9f;
-                    primaryColor = new Color(0.16f, 0.16f, 0.18f); accentColor = new Color(0.85f, 0.12f, 0.18f); modelScale = 1.3f; break;
-                case BossType.OrnsteinAndSmough:
-                    bossName = "Dragonslayer Ornstein"; maxHealth = 4300f; baseDamage = 265f; soulReward = 26000; moveSpeed = 4.8f;
-                    primaryColor = new Color(0.85f, 0.68f, 0.20f); accentColor = new Color(1.0f, 0.92f, 0.45f); modelScale = 1.5f; break;
-                case BossType.ThePursuer:
-                    bossName = "The Pursuer"; maxHealth = 3500f; baseDamage = 240f; soulReward = 16500;
-                    primaryColor = new Color(0.25f, 0.26f, 0.30f); accentColor = new Color(0.95f, 0.18f, 0.18f); modelScale = 1.55f; break;
-                case BossType.GodrickTheGrafted:
-                    bossName = "Godrick the Grafted"; maxHealth = 4100f; baseDamage = 255f; soulReward = 20000;
-                    primaryColor = new Color(0.45f, 0.36f, 0.22f); accentColor = new Color(1.0f, 0.52f, 0.12f); modelScale = 1.85f; break;
-                case BossType.PontiffSulyvahn:
-                    bossName = "Pontiff Sulyvahn"; maxHealth = 4400f; baseDamage = 275f; soulReward = 24000;
-                    primaryColor = new Color(0.24f, 0.22f, 0.32f); accentColor = new Color(0.98f, 0.35f, 0.15f); modelScale = 1.5f; hasWings = true; break;
+                    bossName = "Starscourge Radahn"; maxHealth = 6000f; baseDamage = 330f; soulReward = 38000; modelScale = 2.2f; break;
+                case BossType.MaleniaBladeOfMiquella:
+                    bossName = "Malenia, Blade of Miquella"; maxHealth = 5800f; baseDamage = 345f; soulReward = 48000; moveSpeed = 5.6f; hasWings = true; break;
+                case BossType.PromisedConsortRadahn:
+                    bossName = "Promised Consort Radahn"; maxHealth = 7200f; baseDamage = 380f; soulReward = 65000; moveSpeed = 5.2f; modelScale = 2.15f; break;
+                case BossType.MessmerTheImpaler:
+                    bossName = "Messmer the Impaler"; maxHealth = 5600f; baseDamage = 335f; soulReward = 45000; moveSpeed = 5.3f; break;
+                case BossType.DarkeaterMidir:
+                    bossName = "Darkeater Midir"; maxHealth = 6800f; baseDamage = 350f; soulReward = 50000; modelScale = 2.4f; hasWings = true; break;
+                case BossType.SlaveKnightGael:
+                    bossName = "Slave Knight Gael"; maxHealth = 6200f; baseDamage = 335f; soulReward = 46000; moveSpeed = 5.4f; break;
+                case BossType.IsshinSwordSaint:
+                    bossName = "Isshin, the Sword Saint"; maxHealth = 4900f; baseDamage = 295f; soulReward = 32000; moveSpeed = 5.5f; break;
                 case BossType.MalikethBlackBlade:
-                    bossName = "Maliketh, the Black Blade"; maxHealth = 5500f; baseDamage = 340f; soulReward = 40000; moveSpeed = 5.5f;
-                    primaryColor = new Color(0.12f, 0.12f, 0.14f); accentColor = new Color(0.98f, 0.18f, 0.12f); modelScale = 1.75f; break;
-                case BossType.MorgottOmenKing:
-                    bossName = "Morgott, the Omen King"; maxHealth = 4700f; baseDamage = 275f; soulReward = 27000;
-                    primaryColor = new Color(0.32f, 0.28f, 0.24f); accentColor = new Color(1.0f, 0.80f, 0.22f); modelScale = 1.6f; break;
-                case BossType.RennalaFullMoon:
-                    bossName = "Rennala, Queen of the Full Moon"; maxHealth = 3900f; baseDamage = 245f; soulReward = 22000;
-                    primaryColor = new Color(0.15f, 0.20f, 0.45f); accentColor = new Color(0.45f, 0.85f, 1.0f); modelScale = 1.45f; break;
-                case BossType.DemonOfHatred:
-                    bossName = "Demon of Hatred"; maxHealth = 6200f; baseDamage = 350f; soulReward = 45000;
-                    primaryColor = new Color(0.24f, 0.08f, 0.06f); accentColor = new Color(1.0f, 0.32f, 0.05f); modelScale = 2.25f; break;
+                    bossName = "Maliketh, the Black Blade"; maxHealth = 5500f; baseDamage = 340f; soulReward = 40000; moveSpeed = 5.5f; break;
             }
+
             currentHealth = maxHealth;
             BuildProceduralBossMesh();
         }
@@ -118,7 +99,6 @@ namespace DarkSouls
                 glowMat.SetColor("_EmissionColor", accentColor * 2.2f);
             }
 
-            // Torso
             var torso = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             torso.transform.SetParent(transform, false);
             torso.transform.localPosition = new Vector3(0f, 1.5f * modelScale, 0f);
@@ -126,7 +106,6 @@ namespace DarkSouls
             torso.GetComponent<Renderer>().sharedMaterial = bodyMat;
             Destroy(torso.GetComponent<Collider>());
 
-            // Crowned Head
             var head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             head.transform.SetParent(transform, false);
             head.transform.localPosition = new Vector3(0f, 2.85f * modelScale, 0f);
@@ -134,7 +113,6 @@ namespace DarkSouls
             head.GetComponent<Renderer>().sharedMaterial = glowMat;
             Destroy(head.GetComponent<Collider>());
 
-            // Colossal Greatsword
             var sword = GameObject.CreatePrimitive(PrimitiveType.Cube);
             sword.transform.SetParent(transform, false);
             sword.transform.localPosition = new Vector3(0.95f * modelScale, 1.8f * modelScale, 0.6f * modelScale);
@@ -169,7 +147,6 @@ namespace DarkSouls
         private void Update()
         {
             if (isDead || player == null) return;
-
             if (attackCooldown > 0f) attackCooldown -= Time.deltaTime;
 
             float dist = Vector3.Distance(transform.position, player.transform.position);

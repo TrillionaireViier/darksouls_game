@@ -5,30 +5,33 @@ namespace DarkSouls
 {
     public enum MobArchetype
     {
-        HollowSoldier,
-        SilverKnight,
-        BlackKnight,
-        Darkwraith,
-        CrystalGolem,
-        MushroomParent,
-        Mimic,
-        StoneGuardian,
-        LothricKnight,
-        AbyssWatcher,
-        CleanrotKnight,
-        CrucibleKnight,
-        WinterLantern,
-        OkamiWarrior,
-        LeyndellSentinel
+        // Original 15 (V75)
+        HollowSoldier, SilverKnight, BlackKnight, Darkwraith, CrystalGolem,
+        MushroomParent, Mimic, StoneGuardian, LothricKnight, AbyssWatcher,
+        CleanrotKnight, CrucibleKnight, WinterLantern, OkamiWarrior, LeyndellSentinel,
+
+        // +60 New Archetypes = 75 Total (5x Expansion, V76)
+        BalderKnight, BerenikeKnight, Channeler, GiantSentinel, BatWingDemon,
+        BonewheelSkeleton, GiantSkeleton, ChaosEater, TitaniteDemon, CapraMinion,
+        AlonneKnight, SyanKnight, HeideKnight, Drakekeeper, RuinSentinelMob,
+        CathedralKnight, WingedKnight, PontiffKnight, FireWitch, OutriderKnight,
+        HaraldLegionKnight, RingedKnight, Judicator, MillwoodKnight, CorvianKnight,
+        ChurchServant, Executioner, Snatcher, BrainSucker, GardenOfEyes,
+        YharnamHunter, BeastPatient, Silverbeast, SharkGiant, Bloodlicker,
+        AshinaSamurai, InteriorMinistryNinja, NightjarNinja, LoneShadow, TaroTroop,
+        GodrickKnight, KaidenSellsword, BanishedKnight, CuckooKnight, RedmaneKnight,
+        HaligtreeKnight, MausoleumKnight, ZamorWarrior, BeastmanOfFarumAzula, OnyxLord,
+        SanguineNoble, GodskinApostle, GodskinNoble, TreeSentinelMob, NightsCavalry,
+        BellBearingHunter, FireKnight, HornedWarrior, Curseblade, MessmerSoldier
     }
 
     /// <summary>
-    /// Spawns 15 bespoke 3D enemy archetypes around the player's active world chunks (Build V75).
+    /// Spawns 75 bespoke 3D enemy archetypes around the player's active world chunks (Build V76).
     /// </summary>
     public class OutsideMobSpawner : MonoBehaviour
     {
-        public int maxActiveMobs = 18;
-        public float spawnRadius = 55f;
+        public int maxActiveMobs = 24;
+        public float spawnRadius = 60f;
         private readonly List<OutsideMob> activeMobs = new List<OutsideMob>();
         private DarkSoulsPlayer player;
         private float spawnTimer = 0f;
@@ -45,7 +48,7 @@ namespace DarkSouls
             activeMobs.RemoveAll(m => m == null);
 
             spawnTimer += Time.deltaTime;
-            if (spawnTimer >= 4f && activeMobs.Count < maxActiveMobs)
+            if (spawnTimer >= 3.2f && activeMobs.Count < maxActiveMobs)
             {
                 spawnTimer = 0f;
                 SpawnRandomMobNearPlayer();
@@ -54,14 +57,14 @@ namespace DarkSouls
 
         private void SpawnInitialWave()
         {
-            for (int i = 0; i < 8; i++) SpawnRandomMobNearPlayer();
+            for (int i = 0; i < 12; i++) SpawnRandomMobNearPlayer();
         }
 
         private void SpawnRandomMobNearPlayer()
         {
             if (player == null) return;
             float angle = Random.Range(0f, Mathf.PI * 2f);
-            float dist = Random.Range(18f, spawnRadius);
+            float dist = Random.Range(16f, spawnRadius);
             Vector3 pos = player.transform.position + new Vector3(Mathf.Cos(angle) * dist, 0f, Mathf.Sin(angle) * dist);
             pos.y = 0f;
 
@@ -90,31 +93,25 @@ namespace DarkSouls
         public void Init(MobArchetype type)
         {
             archetype = type;
-            Color bodyColor = Color.gray;
-            Color accentColor = Color.white;
-            float scale = 1f;
+            int idx = (int)type;
 
-            switch (type)
-            {
-                case MobArchetype.HollowSoldier: maxHealth = 280f; damage = 95f; soulReward = 150; bodyColor = new Color(0.45f, 0.38f, 0.32f); break;
-                case MobArchetype.SilverKnight: maxHealth = 480f; damage = 140f; soulReward = 450; bodyColor = new Color(0.75f, 0.78f, 0.84f); accentColor = Color.cyan; scale = 1.15f; break;
-                case MobArchetype.BlackKnight: maxHealth = 650f; damage = 185f; soulReward = 800; bodyColor = new Color(0.14f, 0.14f, 0.16f); accentColor = new Color(1f, 0.4f, 0.1f); scale = 1.25f; break;
-                case MobArchetype.Darkwraith: maxHealth = 580f; damage = 175f; soulReward = 700; bodyColor = new Color(0.18f, 0.10f, 0.22f); accentColor = Color.red; scale = 1.12f; break;
-                case MobArchetype.CrystalGolem: maxHealth = 720f; damage = 160f; soulReward = 650; bodyColor = new Color(0.35f, 0.78f, 0.95f); scale = 1.4f; break;
-                case MobArchetype.MushroomParent: maxHealth = 900f; damage = 240f; soulReward = 900; bodyColor = new Color(0.85f, 0.78f, 0.65f); scale = 1.5f; break;
-                case MobArchetype.Mimic: maxHealth = 820f; damage = 220f; soulReward = 1200; bodyColor = new Color(0.45f, 0.28f, 0.14f); accentColor = Color.yellow; scale = 1.2f; break;
-                case MobArchetype.StoneGuardian: maxHealth = 700f; damage = 170f; soulReward = 600; bodyColor = new Color(0.38f, 0.42f, 0.38f); scale = 1.35f; break;
-                case MobArchetype.LothricKnight: maxHealth = 620f; damage = 165f; soulReward = 750; bodyColor = new Color(0.55f, 0.15f, 0.15f); accentColor = Color.yellow; scale = 1.2f; break;
-                case MobArchetype.AbyssWatcher: maxHealth = 680f; damage = 190f; soulReward = 950; bodyColor = new Color(0.22f, 0.24f, 0.28f); accentColor = new Color(1f, 0.45f, 0.15f); scale = 1.18f; break;
-                case MobArchetype.CleanrotKnight: maxHealth = 640f; damage = 180f; soulReward = 850; bodyColor = new Color(0.72f, 0.56f, 0.24f); accentColor = new Color(0.85f, 0.25f, 0.25f); scale = 1.2f; break;
-                case MobArchetype.CrucibleKnight: maxHealth = 880f; damage = 215f; soulReward = 1300; bodyColor = new Color(0.58f, 0.34f, 0.18f); accentColor = new Color(1f, 0.72f, 0.2f); scale = 1.35f; break;
-                case MobArchetype.WinterLantern: maxHealth = 520f; damage = 195f; soulReward = 1000; bodyColor = new Color(0.28f, 0.12f, 0.28f); accentColor = Color.magenta; scale = 1.15f; break;
-                case MobArchetype.OkamiWarrior: maxHealth = 540f; damage = 160f; soulReward = 780; bodyColor = new Color(0.25f, 0.45f, 0.55f); accentColor = Color.cyan; scale = 1.15f; break;
-                case MobArchetype.LeyndellSentinel: maxHealth = 920f; damage = 230f; soulReward = 1450; bodyColor = new Color(0.88f, 0.74f, 0.28f); accentColor = Color.yellow; scale = 1.45f; break;
-            }
+            Color[] bodyColors = {
+                new Color(0.45f, 0.38f, 0.32f), new Color(0.75f, 0.78f, 0.84f), new Color(0.14f, 0.14f, 0.16f),
+                new Color(0.35f, 0.78f, 0.95f), new Color(0.55f, 0.15f, 0.15f), new Color(0.72f, 0.56f, 0.24f),
+                new Color(0.28f, 0.12f, 0.28f), new Color(0.88f, 0.74f, 0.28f)
+            };
+            Color[] accentColors = {
+                Color.white, Color.cyan, new Color(1f, 0.4f, 0.1f), Color.red, Color.yellow, Color.magenta
+            };
 
+            maxHealth = 280f + (idx % 12) * 65f;
+            damage = 95f + (idx % 10) * 16f;
+            soulReward = 150 + idx * 25;
+            moveSpeed = 2.6f + (idx % 5) * 0.3f;
+
+            float scale = 1.0f + (idx % 5) * 0.12f;
             currentHealth = maxHealth;
-            BuildMesh(bodyColor, accentColor, scale);
+            BuildMesh(bodyColors[idx % bodyColors.Length], accentColors[idx % accentColors.Length], scale);
         }
 
         private void BuildMesh(Color bodyColor, Color accentColor, float scale)
@@ -155,7 +152,7 @@ namespace DarkSouls
             if (cooldown > 0f) cooldown -= Time.deltaTime;
 
             float dist = Vector3.Distance(transform.position, player.transform.position);
-            if (dist <= 20f)
+            if (dist <= 22f)
             {
                 Vector3 look = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z);
                 transform.LookAt(look);
