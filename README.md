@@ -67,7 +67,7 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 321 Legendary Boss Roster
+### 🌲 Outside Realm Apex Bosses & 329 Legendary Boss Roster
 Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 281 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (609 Fast-Travel Locations & 133 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (617 Fast-Travel Locations & 141 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 2,800 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 117 bespoke Outside locations, 116 active mob patrols, and 78 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 3,050 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 125 bespoke Outside locations, 124 active mob patrols, and 86 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V80 Expansion)
+1. **Dark Chasm Havel Phantom (Carved Solid Rock Armor & Dragon Tooth)**: Carved solid stone armor and helm, swinging a massive 2.4m Dragon Tooth club and arched stone tower shield steeped in abyss.
+2. **Desert Pyromancer Sorceress (Crimson Silk Vestments & Flame Palm)**: Crimson silk vestments with gold bangles and sheer veil, casting swirling combustion fireballs from her palm and fanning sparks.
+3. **Yharnam Scourge Werewolf (Lanky Lupine Beast & Long Claws)**: Hunched lanky lycanthrope with matted black-grey fur, razor lupine fangs, elongated talons, and glowing red predator eyes.
+4. **Carthus Skeleton Assassin (Bleached Ribcage & Dual Curved Shotels)**: Bleached ivory ribcage and articulated skeletal agility, crimson desert headwrap, wielding dual curving Carthus Shotels.
+5. **Depths Butcher Executioner (Burlap Sack Mask & Dual Meat Cleavers)**: Hulking muscular butcher with stained burlap hood and blood-caked leather apron, dual-wielding massive notched meat cleavers.
+6. **Amana Shrine Water Priestess (Azure Silk Robe & Water Soul Staff)**: Azure and aquamarine silk vestments with white coral veil, channeling homing water soul spears from her glowing coral staff.
+7. **Lothric Royal Winged Knight (Bulbous Brass Armor & Angel Wings)**: Bulbous domed golden brass plate armor with twin feathered angel wings on back, swinging a 2.5m heavy royal halberd.
+8. **Forbidden Woods Snake Host (Victorian Coat & Writhing Snake Cluster)**: Tattered Victorian huntsman trenchcoat with a writhing cluster of venomous green vipers bursting from the chest, wielding a rusty axe.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V80 Expansion)
+1. **Darklurker, Angel of the Dark Chasm (Dark Chasm of Old & Pilgrims' Altar)**: Levitating 4-winged fallen angel with purple void cowl, dual ethereal soul greatswords, dark soul orb volleys, and split duplication (-18.0m elevation).
+2. **Mytha, the Baneful Queen (Earthen Peak & Windmill Poison Basin)**: 8m serpent-bodied lamia with golden corset, holding her severed singing head aloft while thrusting a 4.8m toxic golden trident spear (+14.0m elevation).
+3. **Cleric Beast of the Great Bridge (Great Bridge of Central Yharnam)**: Massive screeching white-furred beast titan with colossal mutated left claw arm, ragged ribcage, stag antlers, and crushing jump slams (+28.0m elevation).
+4. **High Lord Wolnir, Skeleton Sovereign of the Abyss (Catacombs Abyssal Hall)**: Colossal skeleton sovereign rising from dark abyss with jeweled golden crown, 3 radiant glowing gold bangles, and Holy Grave Greatsword (-26.0m elevation).
+5. **Gaping Dragon of the Sunken Depths (Sunken Depths & Flooded Sewer Maw)**: Monstrous mutated dragon whose entire chest and belly splits open into a vertical maw lined with 20 razor rib teeth, 6 wings, and acid spew (-22.0m elevation).
+6. **Demon of Song, Amphibious Lurker (Shrine of Amana & Flooded Lotus Haven)**: Armored amphibious stone frog shell that parts open to expose a pale grotesque human face with sunken eyes, 4.2m arms, and singing cries (+4.0m elevation).
+7. **Vordt of the Boreal Valley (High Wall of Lothric & Boreal Outrider Gate)**: Hunched quadruped outrider knight in frost fluted plate armor with spiked crown, glowing ice eyes, subzero breath cone, and Great Hammer (+32.0m elevation).
+8. **Shadow of Yharnam, Wraiths of the Woods (Forbidden Grave & Shadow Snake Basin)**: Faceless Nazgûl wraith robed in billowing tattered black cowl, wielding a 4.2m flaming curved scimitar, smoking candle brazier, and serpents (-10.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V79 Expansion)
 1. **Fire Monk Prelate Executioner (Bulbous Scarlet Silk & Prelate Hammer)**: Bulbous scarlet silk robe with gold embroidery, oversized polished brass kettle cauldron helm, swinging a 2.8m Prelate's Inferno Hammer and flame whip.

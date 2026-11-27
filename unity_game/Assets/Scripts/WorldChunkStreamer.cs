@@ -26,11 +26,11 @@ namespace DarkSouls
         public const int BaseSectorsPerRing = 45217;
         public const int SectorRings = 3125; // 5x V77's 625 sectors -> 141,303,125 locations!
 
-        [Header("3125x Colossal World Dimensions")]
+        [Header("300x300 Full Location Chunks")]
         public float worldHalfExtentX = 225000000f;
         public float worldHalfExtentZ = 234375000f;
-        public float chunkSize = 2500f;
-        public float locationGridCellSize = 10000f;
+        public float chunkSize = 300f;
+        public float locationGridCellSize = 300f;
 
         [Header("60 FPS PointLight Pool")]
         public int maxActivePointLights = 6;
@@ -267,12 +267,37 @@ namespace DarkSouls
             float centerZ = (cz + 0.5f) * chunkSize;
 
             var ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            ground.name = "GroundSlab";
+            ground.name = "GroundSlab_300x300";
             ground.transform.SetParent(chunkGo.transform, false);
             ground.transform.position = new Vector3(centerX, -0.5f, centerZ);
             ground.transform.localScale = new Vector3(chunkSize, 1f, chunkSize);
             var gRenderer = ground.GetComponent<Renderer>();
             if (gRenderer != null) gRenderer.sharedMaterial = stoneFloorMat;
+
+            // 300x300 Perimeter Battlement Walls with 40m Gateways
+            float half = chunkSize * 0.5f;
+            float segLen = (chunkSize - 40f) * 0.5f;
+            float segOffset = (half - segLen * 0.5f);
+            Vector3[] wallPos = {
+                new Vector3(centerX - segOffset, 3.5f, centerZ + half),
+                new Vector3(centerX + segOffset, 3.5f, centerZ + half),
+                new Vector3(centerX - segOffset, 3.5f, centerZ - half),
+                new Vector3(centerX + segOffset, 3.5f, centerZ - half),
+                new Vector3(centerX + half, 3.5f, centerZ - segOffset),
+                new Vector3(centerX + half, 3.5f, centerZ + segOffset),
+                new Vector3(centerX - half, 3.5f, centerZ - segOffset),
+                new Vector3(centerX - half, 3.5f, centerZ + segOffset)
+            };
+            for (int w = 0; w < wallPos.Length; w++)
+            {
+                var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                wall.name = $"PerimeterWall_{w}";
+                wall.transform.SetParent(chunkGo.transform, false);
+                wall.transform.position = wallPos[w];
+                wall.transform.localScale = (w < 4) ? new Vector3(segLen, 7f, 2.5f) : new Vector3(2.5f, 7f, segLen);
+                var wr = wall.GetComponent<Renderer>();
+                if (wr != null) wr.sharedMaterial = pillarMat;
+            }
 
             int seed = (cx * 73856093) ^ (cz * 19349663);
             System.Random rng = new System.Random(seed);

@@ -1047,8 +1047,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-2800, -28], z in [-1250, 1250]
-        if (x >= -2800 && x <= -28 && z >= -1250 && z <= 1250) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-3050, -28], z in [-1350, 1350]
+        if (x >= -3050 && x <= -28 && z >= -1350 && z <= 1350) {
+            // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V80 EXPANSION) ===
+            // 1. Dark Chasm of Old & Pilgrims' Altar (outside_dark_chasm_of_old) (elev: -18.0m)
+            if (x >= -2770 && x <= -2680 && z >= -365 && z <= -275) {
+                return -18.0;
+            }
+            // 2. Earthen Peak & Windmill Poison Basin (outside_earthen_peak_poison_basin) (elev: +14.0m)
+            if (x >= -2800 && x <= -2710 && z >= 195 && z <= 285) {
+                return 14.0;
+            }
+            // 3. Great Bridge of Central Yharnam (outside_central_yharnam_great_bridge) (elev: +28.0m)
+            if (x >= -2830 && x <= -2740 && z >= -165 && z <= -75) {
+                return 28.0;
+            }
+            // 4. Catacombs of Carthus & Abyssal Goblet Hall (outside_catacombs_of_carthus_abyss) (elev: -26.0m)
+            if (x >= -2860 && x <= -2770 && z >= 295 && z <= 385) {
+                return -26.0;
+            }
+            // 5. Sunken Depths & Flooded Sewer Maw (outside_sunken_depths_sewer_basin) (elev: -22.0m)
+            if (x >= -2890 && x <= -2800 && z >= -465 && z <= -375) {
+                return -22.0;
+            }
+            // 6. Shrine of Amana & Flooded Lotus Haven (outside_shrine_of_amana_lotus_haven) (elev: +4.0m)
+            if (x >= -2920 && x <= -2830 && z >= 115 && z <= 205) {
+                return 4.0;
+            }
+            // 7. High Wall of Lothric & Boreal Outrider Gate (outside_high_wall_boreal_gate) (elev: +32.0m)
+            if (x >= -2950 && x <= -2860 && z >= -265 && z <= -175) {
+                return 32.0;
+            }
+            // 8. Forbidden Grave & Shadow Snake Basin (outside_forbidden_grave_snake_basin) (elev: -10.0m)
+            if (x >= -2980 && x <= -2890 && z >= 335 && z <= 425) {
+                return -10.0;
+            }
             // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V79 EXPANSION) ===
             // 1. Fell Caldera & Forge of the Giants (outside_fell_caldera_fire_giant) (elev: +32.0m)
             if (x >= -2530 && x <= -2440 && z >= -225 && z <= -135) {
@@ -4156,6 +4189,7 @@ class DarkSoulsWorld {
         this.buildEightAscendedOutsideExpeditionsV74(outsideGroup);
         this.buildEightAscendedOutsideExpeditionsV76(outsideGroup);
         this.buildEightAscendedOutsideExpeditionsV79(outsideGroup);
+        this.buildEightAscendedOutsideExpeditionsV80(outsideGroup);
 
         this.scene.add(outsideGroup);
     }
@@ -8748,6 +8782,369 @@ class DarkSoulsWorld {
         outsideGroup.add(dragonslayerLight);
 
         this.createFloorSoapstone(-2695, 26.0, 92, "#eab308", "🛡️ LOTHRIC CASTLE HIGH BRIDGE", "The Dragonslayer Armour swings with crushing poise; keep the shield raised and beware the butterfly volleys!");
+    }
+
+    buildEightAscendedOutsideExpeditionsV80(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V80 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. DARK CHASM OF OLD & PILGRIMS' ALTAR
+        // Center: (-2725, -18.0, -320) | Elev: -18.0m | Theme: Abyssal Obsidian, Void Runes & Darklurker
+        // --------------------------------------------------------------------
+        const chasmDarkMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.9 });
+        const chasmRuneMat = new THREE.MeshStandardMaterial({ color: 0x9333ea, emissive: 0x7e22ce, emissiveIntensity: 2.6 });
+        const chasmSoulMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.2 });
+
+        // Sunken Circular Abyssal Dais
+        const chasmFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 32, 3.5, 24), chasmDarkMat);
+        chasmFloor.position.set(-2725, -19.75, -320);
+        outsideGroup.add(chasmFloor);
+
+        const chasmInnerRing = new THREE.Mesh(new THREE.RingGeometry(8, 22, 24), chasmRuneMat);
+        chasmInnerRing.rotation.x = -Math.PI / 2;
+        chasmInnerRing.position.set(-2725, -17.95, -320);
+        outsideGroup.add(chasmInnerRing);
+
+        // 8 Twisted Abyssal Obelisks crowned with Dark Soul Beacons
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2725 + Math.cos(angle) * 22;
+            const pz = -320 + Math.sin(angle) * 22;
+            const obelisk = new THREE.Mesh(new THREE.BoxGeometry(1.8, 14.0, 1.8), chasmDarkMat);
+            obelisk.position.set(px, -11.0, pz);
+            obelisk.rotation.y = angle;
+            outsideGroup.add(obelisk);
+
+            const soulBeacon = new THREE.Mesh(new THREE.SphereGeometry(0.8, 8, 8), chasmSoulMat);
+            soulBeacon.position.set(px, -3.2, pz);
+            outsideGroup.add(soulBeacon);
+        }
+
+        const darkChasmLight = new THREE.PointLight(0xa855f7, 2.7, 60);
+        darkChasmLight.position.set(-2725, -12.0, -320);
+        outsideGroup.add(darkChasmLight);
+
+        this.createFloorSoapstone(-2725, -18.0, -308, "#a855f7", "🌌 DARK CHASM OF OLD & PILGRIMS' ALTAR", "The Darklurker splits its soul in two; strike fast when the blade forms and beware the abyssal orb!");
+
+        // --------------------------------------------------------------------
+        // 2. EARTHEN PEAK & WINDMILL POISON BASIN
+        // Center: (-2755, 14.0, 240) | Elev: +14.0m | Theme: Toxic Sludge, Iron Pipes & Mytha Baneful Queen
+        // --------------------------------------------------------------------
+        const peakWoodMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.9 });
+        const toxicSlimeMat = new THREE.MeshStandardMaterial({ color: 0x16a34a, emissive: 0x15803d, emissiveIntensity: 2.5 });
+        const rustedIronMat = new THREE.MeshStandardMaterial({ color: 0x713f12, roughness: 0.7, metalness: 0.6 });
+
+        // Raised Industrial Timber & Sludge Dais
+        const peakFloor = new THREE.Mesh(new THREE.CylinderGeometry(29, 34, 3.8, 24), peakWoodMat);
+        peakFloor.position.set(-2755, 12.1, 240);
+        outsideGroup.add(peakFloor);
+
+        const poisonPool = new THREE.Mesh(new THREE.CylinderGeometry(22, 22, 0.4, 24), toxicSlimeMat);
+        poisonPool.position.set(-2755, 14.1, 240);
+        outsideGroup.add(poisonPool);
+
+        // Windmill Gear Hub & Blades in Center
+        const gearHub = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 3.5, 2.0, 16), rustedIronMat);
+        gearHub.position.set(-2755, 20.0, 240);
+        gearHub.rotation.x = Math.PI / 2;
+        outsideGroup.add(gearHub);
+
+        for (let i = 0; i < 4; i++) {
+            const bladeAngle = (i / 4) * Math.PI * 2;
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(1.2, 16.0, 0.4), peakWoodMat);
+            blade.position.set(-2755 + Math.cos(bladeAngle) * 8.0, 20.0 + Math.sin(bladeAngle) * 8.0, 240);
+            blade.rotation.z = bladeAngle;
+            outsideGroup.add(blade);
+        }
+
+        // 4 Bubbling Toxic Vats
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+            const px = -2755 + Math.cos(angle) * 18;
+            const pz = 240 + Math.sin(angle) * 18;
+            const vat = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.0, 4.0, 12), rustedIronMat);
+            vat.position.set(px, 16.0, pz);
+            outsideGroup.add(vat);
+
+            const vatSlime = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 0.3, 12), toxicSlimeMat);
+            vatSlime.position.set(px, 18.0, pz);
+            outsideGroup.add(vatSlime);
+        }
+
+        const mythaLight = new THREE.PointLight(0x22c55e, 2.8, 60);
+        mythaLight.position.set(-2755, 18.0, 240);
+        outsideGroup.add(mythaLight);
+
+        this.createFloorSoapstone(-2755, 14.0, 252, "#22c55e", "🐍 EARTHEN PEAK POISON BASIN", "Mytha's severed singing head casts venomous waves; keep clear of toxic pools and strike the tail!");
+
+        // --------------------------------------------------------------------
+        // 3. GREAT BRIDGE OF CENTRAL YHARNAM
+        // Center: (-2785, 28.0, -120) | Elev: +28.0m | Theme: Victorian Cobblestone, Gas Lamps & Cleric Beast
+        // --------------------------------------------------------------------
+        const bridgeCobbleMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.85 });
+        const victorianIronMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.5, metalness: 0.8 });
+        const gasFlameMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xd97706, emissiveIntensity: 3.2 });
+
+        // Monumental Elevated Viaduct Bridge Deck
+        const bridgeRoad = new THREE.Mesh(new THREE.BoxGeometry(26.0, 4.0, 60.0), bridgeCobbleMat);
+        bridgeRoad.position.set(-2785, 26.0, -120);
+        outsideGroup.add(bridgeRoad);
+
+        // Heavy Stone Parapets
+        const leftBalustrade = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.5, 60.0), victorianIronMat);
+        leftBalustrade.position.set(-2785 - 12.0, 29.25, -120);
+        outsideGroup.add(leftBalustrade);
+
+        const rightBalustrade = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.5, 60.0), victorianIronMat);
+        rightBalustrade.position.set(-2785 + 12.0, 29.25, -120);
+        outsideGroup.add(rightBalustrade);
+
+        // 6 Ornate Iron Streetlamp Posts with Glowing Amber Gas Lamps
+        for (let i = 0; i < 6; i++) {
+            const side = (i % 2 === 0) ? -1 : 1;
+            const zStep = Math.floor(i / 2) * 20 - 20;
+            const post = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.35, 7.0, 8), victorianIronMat);
+            post.position.set(-2785 + side * 11.5, 31.5, -120 + zStep);
+            outsideGroup.add(post);
+
+            const lantern = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.4, 1.2), gasFlameMat);
+            lantern.position.set(-2785 + side * 11.5, 35.2, -120 + zStep);
+            outsideGroup.add(lantern);
+        }
+
+        const clericLight = new THREE.PointLight(0xf59e0b, 2.6, 65);
+        clericLight.position.set(-2785, 33.0, -120);
+        outsideGroup.add(clericLight);
+
+        this.createFloorSoapstone(-2785, 28.0, -102, "#f59e0b", "🐺 GREAT BRIDGE OF CENTRAL YHARNAM", "The Cleric Beast shrieks from the bridge chapel; roll through its oversized left claw!");
+
+        // --------------------------------------------------------------------
+        // 4. CATACOMBS OF CARTHUS & ABYSSAL GOBLET HALL
+        // Center: (-2815, -26.0, 340) | Elev: -26.0m | Theme: Skulls, Gold Bangles, Black Fog & High Lord Wolnir
+        // --------------------------------------------------------------------
+        const carthusBoneMat = new THREE.MeshStandardMaterial({ color: 0x52525b, roughness: 0.95 });
+        const wolnirGoldMat = new THREE.MeshStandardMaterial({ color: 0xeab308, roughness: 0.35, metalness: 0.9 });
+        const abyssVoidMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 1.0 });
+
+        // Sunken Carthus Crypt Dais
+        const cryptFloor = new THREE.Mesh(new THREE.CylinderGeometry(30, 35, 4.0, 24), carthusBoneMat);
+        cryptFloor.position.set(-2815, -28.0, 340);
+        outsideGroup.add(cryptFloor);
+
+        // Monumental Golden Chalice Goblet in Center
+        const gobletStem = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 3.2, 5.0, 16), wolnirGoldMat);
+        gobletStem.position.set(-2815, -23.5, 340);
+        outsideGroup.add(gobletStem);
+
+        const gobletCup = new THREE.Mesh(new THREE.CylinderGeometry(6.0, 2.0, 5.5, 16, 1, true), wolnirGoldMat);
+        gobletCup.position.set(-2815, -18.5, 340);
+        outsideGroup.add(gobletCup);
+
+        const gobletAbyss = new THREE.Mesh(new THREE.CylinderGeometry(5.6, 5.6, 0.4, 16), abyssVoidMat);
+        gobletAbyss.position.set(-2815, -19.0, 340);
+        outsideGroup.add(gobletAbyss);
+
+        // 8 Skull Totem Columns with Golden Torches
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2815 + Math.cos(angle) * 23;
+            const pz = 340 + Math.sin(angle) * 23;
+            const skullPillar = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.8, 14.0, 8), carthusBoneMat);
+            skullPillar.position.set(px, -19.0, pz);
+            outsideGroup.add(skullPillar);
+
+            const goldCrown = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.3, 8, 16), wolnirGoldMat);
+            goldCrown.position.set(px, -11.8, pz);
+            goldCrown.rotation.x = Math.PI / 2;
+            outsideGroup.add(goldCrown);
+        }
+
+        const wolnirLight = new THREE.PointLight(0xeab308, 2.8, 65);
+        wolnirLight.position.set(-2815, -18.0, 340);
+        outsideGroup.add(wolnirLight);
+
+        this.createFloorSoapstone(-2815, -26.0, 352, "#eab308", "💀 CATACOMBS ABYSSAL GOBLET HALL", "Shatter High Lord Wolnir's glowing golden bangles before the abyssal vapor suffocates you!");
+
+        // --------------------------------------------------------------------
+        // 5. SUNKEN DEPTHS & FLOODED SEWER MAW
+        // Center: (-2845, -22.0, -420) | Elev: -22.0m | Theme: Iron Grates, Ribcage Arches & Gaping Dragon
+        // --------------------------------------------------------------------
+        const sewerStoneMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.95 });
+        const slimeWaterMat = new THREE.MeshStandardMaterial({ color: 0x84cc16, emissive: 0x4d7c0f, emissiveIntensity: 2.0 });
+        const boneRibMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d8, roughness: 0.7 });
+
+        // Sunken Amphitheater Sewer Basin
+        const sewerFloor = new THREE.Mesh(new THREE.CylinderGeometry(30, 35, 4.0, 24), sewerStoneMat);
+        sewerFloor.position.set(-2845, -24.0, -420);
+        outsideGroup.add(sewerFloor);
+
+        const slimeLake = new THREE.Mesh(new THREE.CylinderGeometry(24, 24, 0.4, 24), slimeWaterMat);
+        slimeLake.position.set(-2845, -21.9, -420);
+        outsideGroup.add(slimeLake);
+
+        // 6 Monumental Ribcage Arches around the Basin
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const px = -2845 + Math.cos(angle) * 20;
+            const pz = -420 + Math.sin(angle) * 20;
+            const ribArch = new THREE.Mesh(new THREE.TorusGeometry(8.0, 0.8, 8, 16, Math.PI), boneRibMat);
+            ribArch.position.set(px, -15.0, pz);
+            ribArch.rotation.y = angle + Math.PI / 2;
+            ribArch.rotation.z = Math.PI;
+            outsideGroup.add(ribArch);
+        }
+
+        const gapingDragonLight = new THREE.PointLight(0xa3e635, 2.5, 60);
+        gapingDragonLight.position.set(-2845, -16.0, -420);
+        outsideGroup.add(gapingDragonLight);
+
+        this.createFloorSoapstone(-2845, -22.0, -408, "#a3e635", "🐲 SUNKEN DEPTHS FLOODED MAW", "The Gaping Dragon's ribcage opens into an insatiable maw; avoid the charge and cut the tail!");
+
+        // --------------------------------------------------------------------
+        // 6. SHRINE OF AMANA & FLOODED LOTUS HAVEN
+        // Center: (-2875, 4.0, 160) | Elev: +4.0m | Theme: Submerged Azure Sanctum, Water Lilies & Demon of Song
+        // --------------------------------------------------------------------
+        const amanaStoneMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
+        const amanaWaterMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, emissive: 0x0369a1, emissiveIntensity: 2.2 });
+        const lotusBloomMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0ea5e9, emissiveIntensity: 2.8 });
+
+        // Submerged Circular Platform
+        const amanaDais = new THREE.Mesh(new THREE.CylinderGeometry(28, 33, 3.2, 24), amanaStoneMat);
+        amanaDais.position.set(-2875, 2.4, 160);
+        outsideGroup.add(amanaDais);
+
+        const waterSheen = new THREE.Mesh(new THREE.CylinderGeometry(25, 25, 0.4, 24), amanaWaterMat);
+        waterSheen.position.set(-2875, 4.1, 160);
+        outsideGroup.add(waterSheen);
+
+        // 16 Luminous Water Lilies / Lotus Blooms
+        for (let i = 0; i < 16; i++) {
+            const fAngle = (i / 16) * Math.PI * 2;
+            const fDist = 7.0 + (i % 4) * 4.0;
+            const fx = -2875 + Math.cos(fAngle) * fDist;
+            const fz = 160 + Math.sin(fAngle) * fDist;
+            const lotusPad = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.1, 8), amanaStoneMat);
+            lotusPad.position.set(fx, 4.2, fz);
+            outsideGroup.add(lotusPad);
+
+            const flower = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1.0, 6), lotusBloomMat);
+            flower.position.set(fx, 4.7, fz);
+            outsideGroup.add(flower);
+        }
+
+        // 8 Luminous Crystal Spires
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const px = -2875 + Math.cos(angle) * 22;
+            const pz = 160 + Math.sin(angle) * 22;
+            const crystal = new THREE.Mesh(new THREE.ConeGeometry(1.2, 12.0, 6), lotusBloomMat);
+            crystal.position.set(px, 10.0, pz);
+            outsideGroup.add(crystal);
+        }
+
+        const amanaLight = new THREE.PointLight(0x38bdf8, 2.6, 60);
+        amanaLight.position.set(-2875, 11.0, 160);
+        outsideGroup.add(amanaLight);
+
+        this.createFloorSoapstone(-2875, 4.0, 172, "#38bdf8", "🪷 SHRINE OF AMANA LOTUS HAVEN", "Wait for the Demon of Song's armored carapace to open before unleashing your strikes!");
+
+        // --------------------------------------------------------------------
+        // 7. HIGH WALL OF LOTHRIC & BOREAL OUTRIDER GATE
+        // Center: (-2905, 32.0, -220) | Elev: +32.0m | Theme: Frozen Castle Bastion, Icicles & Vordt of Boreal Valley
+        // --------------------------------------------------------------------
+        const frozenCastleMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.85 });
+        const borealFrostMat = new THREE.MeshStandardMaterial({ color: 0x93c5fd, emissive: 0x60a5fa, emissiveIntensity: 2.6 });
+        const iceIronMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5, metalness: 0.8 });
+
+        // Raised Frozen Castle Rampart Platform
+        const borealPlatform = new THREE.Mesh(new THREE.BoxGeometry(32.0, 4.5, 45.0), frozenCastleMat);
+        borealPlatform.position.set(-2905, 29.75, -220);
+        outsideGroup.add(borealPlatform);
+
+        // Massive Portcullis Archway at North End
+        const archL = new THREE.Mesh(new THREE.BoxGeometry(4.0, 18.0, 4.0), iceIronMat);
+        archL.position.set(-2905 - 12.0, 41.0, -220 - 18.0);
+        outsideGroup.add(archL);
+
+        const archR = new THREE.Mesh(new THREE.BoxGeometry(4.0, 18.0, 4.0), iceIronMat);
+        archR.position.set(-2905 + 12.0, 41.0, -220 - 18.0);
+        outsideGroup.add(archR);
+
+        const archTop = new THREE.Mesh(new THREE.BoxGeometry(28.0, 4.0, 4.0), iceIronMat);
+        archTop.position.set(-2905, 52.0, -220 - 18.0);
+        outsideGroup.add(archTop);
+
+        // 6 Frost Icicle Braziers along Battlement Edges
+        for (let i = 0; i < 6; i++) {
+            const side = (i % 2 === 0) ? -1 : 1;
+            const zStep = Math.floor(i / 2) * 16 - 16;
+            const brazierBase = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 0.8, 3.5, 8), iceIronMat);
+            brazierBase.position.set(-2905 + side * 14.0, 33.75, -220 + zStep);
+            outsideGroup.add(brazierBase);
+
+            const frostFlame = new THREE.Mesh(new THREE.ConeGeometry(0.8, 2.5, 6), borealFrostMat);
+            frostFlame.position.set(-2905 + side * 14.0, 36.5, -220 + zStep);
+            outsideGroup.add(frostFlame);
+        }
+
+        const vordtLight = new THREE.PointLight(0x60a5fa, 2.8, 65);
+        vordtLight.position.set(-2905, 37.0, -220);
+        outsideGroup.add(vordtLight);
+
+        this.createFloorSoapstone(-2905, 32.0, -204, "#60a5fa", "❄️ HIGH WALL BOREAL OUTRIDER GATE", "Vordt charges in a subzero fury; dodge behind his armored haunches to avoid the frost cone!");
+
+        // --------------------------------------------------------------------
+        // 8. FORBIDDEN GRAVE & SHADOW SNAKE BASIN
+        // Center: (-2935, -10.0, 380) | Elev: -10.0m | Theme: Mossy Gravestones, Serpent Monoliths & Shadow of Yharnam
+        // --------------------------------------------------------------------
+        const mossGraveMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.95 });
+        const serpentStoneMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.85 });
+        const shadowFlameMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 2.8 });
+
+        // Misty Forest Basin Dais
+        const graveFloor = new THREE.Mesh(new THREE.CylinderGeometry(30, 35, 4.0, 24), mossGraveMat);
+        graveFloor.position.set(-2935, -12.0, 380);
+        outsideGroup.add(graveFloor);
+
+        // 12 Ancient Tilting Headstones
+        for (let i = 0; i < 12; i++) {
+            const hAngle = (i / 12) * Math.PI * 2;
+            const hDist = 8.0 + (i % 3) * 5.0;
+            const hx = -2935 + Math.cos(hAngle) * hDist;
+            const hz = 380 + Math.sin(hAngle) * hDist;
+            const headstone = new THREE.Mesh(new THREE.BoxGeometry(0.8, 2.2, 0.4), mossGraveMat);
+            headstone.position.set(hx, -9.0, hz);
+            headstone.rotation.y = hAngle;
+            headstone.rotation.z = (i % 2 === 0 ? 0.15 : -0.15);
+            outsideGroup.add(headstone);
+        }
+
+        // 4 Monumental Serpent Pillars entwined with Fire
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+            const px = -2935 + Math.cos(angle) * 21;
+            const pz = 380 + Math.sin(angle) * 21;
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.2, 14.0, 8), serpentStoneMat);
+            pillar.position.set(px, -3.0, pz);
+            outsideGroup.add(pillar);
+
+            const coil = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.4, 8, 16), serpentStoneMat);
+            coil.position.set(px, 1.0, pz);
+            coil.rotation.x = Math.PI / 3;
+            outsideGroup.add(coil);
+
+            const fireBrazier = new THREE.Mesh(new THREE.SphereGeometry(1.0, 8, 8), shadowFlameMat);
+            fireBrazier.position.set(px, 5.0, pz);
+            outsideGroup.add(fireBrazier);
+        }
+
+        const shadowLight = new THREE.PointLight(0xf97316, 2.7, 65);
+        shadowLight.position.set(-2935, -3.0, 380);
+        outsideGroup.add(shadowLight);
+
+        this.createFloorSoapstone(-2935, -10.0, 392, "#f97316", "🌑 FORBIDDEN GRAVE SHADOW BASIN", "Three shadows hunt in concert; separate the pyromancer first and watch the ground for giant serpents!");
     }
 
     createFloorSoapstone(x, y, z, colorHex, title, desc) {

@@ -5813,6 +5813,127 @@ class DarkSoulsCombat {
                 radius: 6.8,
                 spawnPos: { x: -2695, z: 80 },
                 create: (cf, x, z) => cf.createDragonslayerArmourBastion ? cf.createDragonslayerArmourBastion(x, z) : cf.createSoulsborneBoss({ id: 'dragonslayer_armour', theme: 'lightning', bossScale: 4.4 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V80 EXPANSION) ===
+            {
+                id: 'outside_darklurker_dark_chasm',
+                name: 'DARKLURKER, ANGEL OF THE DARK CHASM',
+                title: 'Outside Realm: Dark Chasm of Old &bull; 4 Obsidian Wings, Dual Soul Blades & Void Orb Teleportation',
+                unlockLocationId: 'outside_dark_chasm_of_old',
+                icon: '🌌',
+                theme: 'dark',
+                bossScale: 4.5,
+                maxHp: 165000,
+                damage: 3150,
+                souls: 20000000,
+                radius: 7.2,
+                spawnPos: { x: -2725, z: -320 },
+                create: (cf, x, z) => cf.createDarklurkerDarkChasm ? cf.createDarklurkerDarkChasm(x, z) : cf.createSoulsborneBoss({ id: 'darklurker', theme: 'dark', bossScale: 4.5 }, x, z)
+            },
+            {
+                id: 'outside_mytha_baneful_queen',
+                name: 'MYTHA, THE BANEFUL QUEEN',
+                title: 'Outside Realm: Earthen Peak Windmill &bull; Decapitated Singing Head, Serpent Tail & Toxic Golden Trident',
+                unlockLocationId: 'outside_earthen_peak_poison_basin',
+                icon: '🐍',
+                theme: 'rot',
+                bossScale: 4.6,
+                maxHp: 162000,
+                damage: 3100,
+                souls: 19500000,
+                radius: 7.0,
+                spawnPos: { x: -2755, z: 240 },
+                create: (cf, x, z) => cf.createMythaBanefulQueen ? cf.createMythaBanefulQueen(x, z) : cf.createSoulsborneBoss({ id: 'mytha', theme: 'rot', bossScale: 4.6 }, x, z)
+            },
+            {
+                id: 'outside_cleric_beast_great_bridge',
+                name: 'CLERIC BEAST OF THE GREAT BRIDGE',
+                title: 'Outside Realm: Great Bridge &bull; Oversized Mutated Left Claw, Horrifying Screech & Antler Horn Slam',
+                unlockLocationId: 'outside_central_yharnam_great_bridge',
+                icon: '🐺',
+                theme: 'physical',
+                bossScale: 4.8,
+                maxHp: 172000,
+                damage: 3220,
+                souls: 21500000,
+                radius: 7.6,
+                spawnPos: { x: -2785, z: -120 },
+                create: (cf, x, z) => cf.createClericBeastGreatBridge ? cf.createClericBeastGreatBridge(x, z) : cf.createSoulsborneBoss({ id: 'cleric_beast', theme: 'physical', bossScale: 4.8 }, x, z)
+            },
+            {
+                id: 'outside_high_lord_wolnir_abyss',
+                name: 'HIGH LORD WOLNIR, SKELETON SOVEREIGN OF THE ABYSS',
+                title: 'Outside Realm: Catacombs Abyssal Hall &bull; Colossal Golden Crown, 3 Radiant Bangles & Holy Grave Sword',
+                unlockLocationId: 'outside_catacombs_of_carthus_abyss',
+                icon: '💀',
+                theme: 'dark',
+                bossScale: 5.2,
+                maxHp: 176000,
+                damage: 3280,
+                souls: 22000000,
+                radius: 8.5,
+                spawnPos: { x: -2815, z: 340 },
+                create: (cf, x, z) => cf.createHighLordWolnirAbyss ? cf.createHighLordWolnirAbyss(x, z) : cf.createSoulsborneBoss({ id: 'high_lord_wolnir', theme: 'dark', bossScale: 5.2 }, x, z)
+            },
+            {
+                id: 'outside_gaping_dragon_depths',
+                name: 'GAPING DRAGON OF THE SUNKEN DEPTHS',
+                title: 'Outside Realm: Sunken Depths Sewer &bull; Split Vertical Rib Maw, 20 Razor Fangs & Corrosive Slime Wave',
+                unlockLocationId: 'outside_sunken_depths_sewer_basin',
+                icon: '🐲',
+                theme: 'dragon',
+                bossScale: 5.0,
+                maxHp: 174000,
+                damage: 3250,
+                souls: 21800000,
+                radius: 8.0,
+                spawnPos: { x: -2845, z: -420 },
+                create: (cf, x, z) => cf.createGapingDragonDepths ? cf.createGapingDragonDepths(x, z) : cf.createSoulsborneBoss({ id: 'gaping_dragon', theme: 'dragon', bossScale: 5.0 }, x, z)
+            },
+            {
+                id: 'outside_demon_of_song_lurker',
+                name: 'DEMON OF SONG, AMPHIBIOUS LURKER',
+                title: 'Outside Realm: Shrine of Amana &bull; Armored Frog Shell, Pale Humanoid Face & Water Soul Geysers',
+                unlockLocationId: 'outside_shrine_of_amana_lotus_haven',
+                icon: '🪷',
+                theme: 'magic',
+                bossScale: 4.6,
+                maxHp: 166000,
+                damage: 3160,
+                souls: 20200000,
+                radius: 7.2,
+                spawnPos: { x: -2875, z: 160 },
+                create: (cf, x, z) => cf.createDemonOfSongLurker ? cf.createDemonOfSongLurker(x, z) : cf.createSoulsborneBoss({ id: 'demon_of_song', theme: 'magic', bossScale: 4.6 }, x, z)
+            },
+            {
+                id: 'outside_vordt_boreal_valley',
+                name: 'VORDT OF THE BOREAL VALLEY',
+                title: 'Outside Realm: High Wall Boreal Gate &bull; Frost Fluted Plate, Subzero Great Hammer & Glacial Charge',
+                unlockLocationId: 'outside_high_wall_boreal_gate',
+                icon: '❄️',
+                theme: 'frost',
+                bossScale: 4.6,
+                maxHp: 168000,
+                damage: 3180,
+                souls: 20800000,
+                radius: 7.4,
+                spawnPos: { x: -2905, z: -220 },
+                create: (cf, x, z) => cf.createVordtBorealValley ? cf.createVordtBorealValley(x, z) : cf.createSoulsborneBoss({ id: 'vordt', theme: 'frost', bossScale: 4.6 }, x, z)
+            },
+            {
+                id: 'outside_shadow_of_yharnam_wraiths',
+                name: 'SHADOW OF YHARNAM, WRAITHS OF THE WOODS',
+                title: 'Outside Realm: Forbidden Grave &bull; Ragged Cowled Wraiths, Flaming Scimitar, Candle Brazier & Giant Serpents',
+                unlockLocationId: 'outside_forbidden_grave_snake_basin',
+                icon: '🌑',
+                theme: 'fire',
+                bossScale: 4.4,
+                maxHp: 164000,
+                damage: 3120,
+                souls: 19800000,
+                radius: 6.8,
+                spawnPos: { x: -2935, z: 380 },
+                create: (cf, x, z) => cf.createShadowOfYharnamWraiths ? cf.createShadowOfYharnamWraiths(x, z) : cf.createSoulsborneBoss({ id: 'shadow_of_yharnam', theme: 'fire', bossScale: 4.4 }, x, z)
             }
         ];
     }
@@ -6201,7 +6322,16 @@ class DarkSoulsCombat {
             [-2605.0, 20.0, -480.0], [-2613.0, 20.0, -488.0], [-2597.0, 20.0, -472.0], // Scaduview (Messmer Fire Knights)
             [-2635.0, 6.0, 380.0], [-2643.0, 6.0, 388.0], [-2627.0, 6.0, 372.0],       // Nightmare Bloom (Winter Lanterns)
             [-2665.0, -20.0, -220.0], [-2673.0, -20.0, -228.0], [-2657.0, -20.0, -212.0], // Profaned Capital (Profaned Gargoyles)
-            [-2695.0, 26.0, 80.0], [-2703.0, 26.0, 88.0], [-2687.0, 26.0, 72.0]       // Lothric Bridge (Lothric Greatlance Knights)
+            [-2695.0, 26.0, 80.0], [-2703.0, 26.0, 88.0], [-2687.0, 26.0, 72.0],       // Lothric Bridge (Lothric Greatlance Knights)
+            // 8 Brand-New Outside Ascended Expeditions Patrols (V80 Expansion):
+            [-2725.0, -18.0, -320.0], [-2733.0, -18.0, -328.0], [-2717.0, -18.0, -312.0], // Dark Chasm (Dark Chasm Havel Phantoms)
+            [-2755.0, 14.0, 240.0], [-2763.0, 14.0, 248.0], [-2747.0, 14.0, 232.0],       // Earthen Peak (Desert Pyromancers)
+            [-2785.0, 28.0, -120.0], [-2793.0, 28.0, -128.0], [-2777.0, 28.0, -112.0],   // Great Bridge (Yharnam Werewolves)
+            [-2815.0, -26.0, 340.0], [-2823.0, -26.0, 348.0], [-2807.0, -26.0, 332.0],   // Catacombs (Carthus Skeleton Assassins)
+            [-2845.0, -22.0, -420.0], [-2853.0, -22.0, -428.0], [-2837.0, -22.0, -412.0], // Sunken Depths (Depths Butchers)
+            [-2875.0, 4.0, 160.0], [-2883.0, 4.0, 168.0], [-2867.0, 4.0, 152.0],          // Shrine of Amana (Amana Water Priestesses)
+            [-2905.0, 32.0, -220.0], [-2913.0, 32.0, -228.0], [-2897.0, 32.0, -212.0],   // High Wall (Lothric Royal Winged Knights)
+            [-2935.0, -10.0, 380.0], [-2943.0, -10.0, 388.0], [-2927.0, -10.0, 372.0]    // Forbidden Grave (Forbidden Snake Hosts)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -6228,7 +6358,7 @@ class DarkSoulsCombat {
                 'skeleton_wheel', 'boreal_outrider', 'fingercreeper', 'bloodfiend_cleaver',
                 'nightjar_tengu', 'golden_envoy', 'church_nightmare', 'ironclad_turtle',
                 'fire_monk_prelate', 'hornsent_inquisitor', 'syan_mirror_squire', 'chaos_fire_harpy',
-                'messmer_fire_knight', 'winter_lantern_brain', 'gargoyle_profaned_herald', 'lothric_knights_greatlance'
+                'messmer_fire_knight', 'winter_lantern_brain', 'gargoyle_profaned_herald', 'lothric_knights_greatlance', 'dark_chasm_havel_phantom', 'desert_pyromancer_sorceress', 'yharnam_scourge_werewolf', 'carthus_skeleton_assassin', 'depths_butcher_executioner', 'amana_water_priestess', 'lothric_royal_winged_knight', 'forbidden_woods_snake_host'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

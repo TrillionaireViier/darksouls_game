@@ -606,7 +606,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -2780, -900, 2752, 1800, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -3050, -950, 3022, 1900, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -708,6 +708,15 @@
                 this.drawZoneRect(ctx, -2635, 380, 40, 40, "rgba(65, 10, 10, 0.65)", "#ef4444", "🩸 NIGHTMARE BLOOM (+6m)");
                 this.drawZoneRect(ctx, -2665, -220, 40, 40, "rgba(75, 50, 10, 0.65)", "#f59e0b", "👑 PROFANED CAPITAL (-20m)");
                 this.drawZoneRect(ctx, -2695, 80, 40, 40, "rgba(70, 55, 15, 0.65)", "#eab308", "🛡️ LOTHRIC BRIDGE (+26m)");
+                // 8 Brand-New Outside Realm Expeditions (V80 Expansion)
+                this.drawZoneRect(ctx, -2725, -320, 40, 40, "rgba(50, 15, 70, 0.65)", "#a855f7", "🌌 DARK CHASM (-18m)");
+                this.drawZoneRect(ctx, -2755, 240, 40, 40, "rgba(15, 60, 25, 0.65)", "#22c55e", "🐍 EARTHEN PEAK (+14m)");
+                this.drawZoneRect(ctx, -2785, -120, 40, 40, "rgba(75, 45, 10, 0.65)", "#f59e0b", "🐺 GREAT BRIDGE (+28m)");
+                this.drawZoneRect(ctx, -2815, 340, 40, 40, "rgba(75, 55, 15, 0.65)", "#eab308", "💀 WOLNIR ABYSS (-26m)");
+                this.drawZoneRect(ctx, -2845, -420, 40, 40, "rgba(45, 60, 10, 0.65)", "#a3e635", "🐲 SUNKEN DEPTHS (-22m)");
+                this.drawZoneRect(ctx, -2875, 160, 40, 40, "rgba(10, 50, 80, 0.65)", "#38bdf8", "🪷 SHRINE OF AMANA (+4m)");
+                this.drawZoneRect(ctx, -2905, -220, 40, 40, "rgba(25, 45, 80, 0.65)", "#60a5fa", "❄️ HIGH WALL BOREAL (+32m)");
+                this.drawZoneRect(ctx, -2935, 380, 40, 40, "rgba(70, 25, 10, 0.65)", "#f97316", "🌑 FORBIDDEN GRAVE (-10m)");
             }
 
             // 3. Draw All World Pins
