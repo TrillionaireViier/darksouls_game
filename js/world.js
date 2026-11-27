@@ -1047,8 +1047,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-3050, -28], z in [-1350, 1350]
-        if (x >= -3050 && x <= -28 && z >= -1350 && z <= 1350) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-3250, -28], z in [-1450, 1450]
+        if (x >= -3250 && x <= -28 && z >= -1450 && z <= 1450) {
+            // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V81 EXPANSION) ===
+            // 1. New Londo Ruins & The Abyss Void Well (outside_new_londo_abyss_well) (elev: -32.0m)
+            if (x >= -3010 && x <= -2920 && z >= -385 && z <= -295) {
+                return -32.0;
+            }
+            // 2. Blighttown Depths & Magma Web Caldera (outside_blighttown_magma_web) (elev: -24.0m)
+            if (x >= -3040 && x <= -2950 && z >= 215 && z <= 305) {
+                return -24.0;
+            }
+            // 3. Old Yharnam & Church of the Good Chalice (outside_old_yharnam_good_chalice) (elev: +16.0m)
+            if (x >= -3070 && x <= -2980 && z >= -185 && z <= -95) {
+                return 16.0;
+            }
+            // 4. Moonside Lake & Reflective Glass Expanse (outside_moonside_lake_glass_expanse) (elev: +2.0m)
+            if (x >= -3100 && x <= -3010 && z >= 315 && z <= 405) {
+                return 2.0;
+            }
+            // 5. Consumed King's Garden & Toxic Fog Basin (outside_consumed_kings_garden_fog) (elev: -18.0m)
+            if (x >= -3130 && x <= -3040 && z >= -325 && z <= -235) {
+                return -18.0;
+            }
+            // 6. Iron Keep Lower Foundry & Molten Brimstone Caldera (outside_iron_keep_molten_brimstone) (elev: -28.0m)
+            if (x >= -3160 && x <= -3070 && z >= 135 && z <= 225) {
+                return -28.0;
+            }
+            // 7. Yahar'gul Graveyard & Hypogean Electric Basin (outside_yahargul_hypogean_basin) (elev: -12.0m)
+            if (x >= -3190 && x <= -3100 && z >= -425 && z <= -335) {
+                return -12.0;
+            }
+            // 8. Enir-Ilim Cleansing Terrace & Golden Needle Altar (outside_enir_ilim_cleansing_terrace) (elev: +44.0m)
+            if (x >= -3220 && x <= -3130 && z >= 235 && z <= 325) {
+                return 44.0;
+            }
             // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V80 EXPANSION) ===
             // 1. Dark Chasm of Old & Pilgrims' Altar (outside_dark_chasm_of_old) (elev: -18.0m)
             if (x >= -2770 && x <= -2680 && z >= -365 && z <= -275) {
@@ -4190,6 +4223,7 @@ class DarkSoulsWorld {
         this.buildEightAscendedOutsideExpeditionsV76(outsideGroup);
         this.buildEightAscendedOutsideExpeditionsV79(outsideGroup);
         this.buildEightAscendedOutsideExpeditionsV80(outsideGroup);
+        this.buildEightAscendedOutsideExpeditionsV81(outsideGroup);
 
         this.scene.add(outsideGroup);
     }
@@ -9145,6 +9179,317 @@ class DarkSoulsWorld {
         outsideGroup.add(shadowLight);
 
         this.createFloorSoapstone(-2935, -10.0, 392, "#f97316", "🌑 FORBIDDEN GRAVE SHADOW BASIN", "Three shadows hunt in concert; separate the pyromancer first and watch the ground for giant serpents!");
+    }
+
+    buildEightAscendedOutsideExpeditionsV81(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V81 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. NEW LONDO RUINS & THE ABYSS VOID WELL
+        // Center: (-2965, -32.0, -340) | Elev: -32.0m | Theme: Drowned Stone, Void Darkness & Four Kings
+        // --------------------------------------------------------------------
+        const drownedStoneMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.95 });
+        const abyssVoidMat = new THREE.MeshStandardMaterial({ color: 0x030712, roughness: 1.0 });
+        const abyssSoulMat = new THREE.MeshStandardMaterial({ color: 0x6366f1, emissive: 0x4338ca, emissiveIntensity: 2.5 });
+
+        // Sunken Circular Abyssal Pit
+        const abyssFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 32, 4.0, 24), drownedStoneMat);
+        abyssFloor.position.set(-2965, -34.0, -340);
+        outsideGroup.add(abyssFloor);
+
+        const abyssVoidInner = new THREE.Mesh(new THREE.RingGeometry(6, 22, 24), abyssVoidMat);
+        abyssVoidInner.rotation.x = -Math.PI / 2;
+        abyssVoidInner.position.set(-2965, -31.95, -340);
+        outsideGroup.add(abyssVoidInner);
+
+        // 4 Monumental Abyssal Thrones
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2;
+            const tx = -2965 + Math.cos(angle) * 19;
+            const tz = -340 + Math.sin(angle) * 19;
+            const throne = new THREE.Mesh(new THREE.BoxGeometry(2.6, 6.5, 2.0), drownedStoneMat);
+            throne.position.set(tx, -28.75, tz);
+            throne.rotation.y = angle + Math.PI;
+            outsideGroup.add(throne);
+
+            const soulOrb = new THREE.Mesh(new THREE.SphereGeometry(0.7, 8, 8), abyssSoulMat);
+            soulOrb.position.set(tx, -24.8, tz);
+            outsideGroup.add(soulOrb);
+        }
+
+        const newLondoLight = new THREE.PointLight(0x818cf8, 2.6, 55);
+        newLondoLight.position.set(-2965, -26.0, -340);
+        outsideGroup.add(newLondoLight);
+
+        this.createFloorSoapstone(-2965, -32.0, -328, "#818cf8", "👑 NEW LONDO ABYSS VOID WELL", "Four Kings rise from the dark abyss; equip Covenant of Artorias, stay close and slay each before the next awakens!");
+
+        // --------------------------------------------------------------------
+        // 2. BLIGHTTOWN DEPTHS & MAGMA WEB CALDERA
+        // Center: (-2995, -24.0, 260) | Elev: -24.0m | Theme: Boiling Magma, Silk Webs & Chaos Witch Quelaag
+        // --------------------------------------------------------------------
+        const magmaRockMat = new THREE.MeshStandardMaterial({ color: 0x262626, roughness: 0.9 });
+        const boilingMagmaMat = new THREE.MeshStandardMaterial({ color: 0xea580c, emissive: 0xc2410c, emissiveIntensity: 3.2 });
+        const silkWebMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f4, roughness: 0.3, transparent: true, opacity: 0.85 });
+
+        // Raised Volcanic Caldera Rim
+        const calderaBase = new THREE.Mesh(new THREE.CylinderGeometry(29, 34, 4.0, 24), magmaRockMat);
+        calderaBase.position.set(-2995, -26.0, 260);
+        outsideGroup.add(calderaBase);
+
+        const lavaPool = new THREE.Mesh(new THREE.CylinderGeometry(20, 20, 0.4, 24), boilingMagmaMat);
+        lavaPool.position.set(-2995, -23.8, 260);
+        outsideGroup.add(lavaPool);
+
+        // 6 Basalt Spider Web Pillars
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const px = -2995 + Math.cos(angle) * 22;
+            const pz = 260 + Math.sin(angle) * 22;
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.4, 12.0, 8), magmaRockMat);
+            pillar.position.set(px, -18.0, pz);
+            outsideGroup.add(pillar);
+
+            const webMesh = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.3, 6, 12), silkWebMat);
+            webMesh.position.set(px, -13.0, pz);
+            webMesh.rotation.x = Math.PI / 4;
+            outsideGroup.add(webMesh);
+        }
+
+        const quelaagLight = new THREE.PointLight(0xf97316, 3.0, 60);
+        quelaagLight.position.set(-2995, -17.0, 260);
+        outsideGroup.add(quelaagLight);
+
+        this.createFloorSoapstone(-2995, -24.0, 272, "#f97316", "🕷️ BLIGHTTOWN MAGMA WEB CALDERA", "Chaos Witch Quelaag spews boiling magma; watch her human torso for the explosion signal and circle to her spider flank!");
+
+        // --------------------------------------------------------------------
+        // 3. OLD YHARNAM & CHURCH OF THE GOOD CHALICE
+        // Center: (-3025, 16.0, -140) | Elev: +16.0m | Theme: Burned Cathedral, Blood Sacraments & Blood-starved Beast
+        // --------------------------------------------------------------------
+        const charredStoneMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.9 });
+        const bloodAltarMat = new THREE.MeshStandardMaterial({ color: 0x991b1b, emissive: 0x7f1d1d, emissiveIntensity: 2.2 });
+        const chaliceGoldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.85, roughness: 0.3 });
+
+        // Cathedral Nave Platform
+        const naveFloor = new THREE.Mesh(new THREE.BoxGeometry(42, 3.5, 26), charredStoneMat);
+        naveFloor.position.set(-3025, 14.25, -140);
+        outsideGroup.add(naveFloor);
+
+        // High Sacrificial Chalice Altar
+        const altarBase = new THREE.Mesh(new THREE.BoxGeometry(8, 2.2, 5), charredStoneMat);
+        altarBase.position.set(-3040, 17.1, -140);
+        outsideGroup.add(altarBase);
+
+        const chaliceBowl = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 0.6, 2.2, 12), chaliceGoldMat);
+        chaliceBowl.position.set(-3040, 19.3, -140);
+        outsideGroup.add(chaliceBowl);
+
+        const bloodPool = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.2, 12), bloodAltarMat);
+        bloodPool.position.set(-3040, 20.3, -140);
+        outsideGroup.add(bloodPool);
+
+        // 8 Burnt Gothic Colonnade Pillars
+        for (let i = 0; i < 4; i++) {
+            const zOff = (i % 2 === 0) ? -10.5 : 10.5;
+            const xOff = -3010 - Math.floor(i / 2) * 14;
+            const col = new THREE.Mesh(new THREE.BoxGeometry(2.0, 13.0, 2.0), charredStoneMat);
+            col.position.set(xOff, 22.5, -140 + zOff);
+            outsideGroup.add(col);
+        }
+
+        const chaliceLight = new THREE.PointLight(0xef4444, 2.8, 55);
+        chaliceLight.position.set(-3025, 22.0, -140);
+        outsideGroup.add(chaliceLight);
+
+        this.createFloorSoapstone(-3025, 16.0, -128, "#ef4444", "🩸 CHURCH OF THE GOOD CHALICE", "Blood-starved Beast attacks with frenzied poison swipes; dodge to her left and throw pungent blood cocktails!");
+
+        // --------------------------------------------------------------------
+        // 4. MOONSIDE LAKE & REFLECTIVE GLASS EXPANSE
+        // Center: (-3055, 2.0, 360) | Elev: +2.0m | Theme: Infinite Mirror Water, Cosmic Moon & Rom the Vacuous Spider
+        // --------------------------------------------------------------------
+        const mirrorWaterMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.1, metalness: 0.7 });
+        const lunarGlowMat = new THREE.MeshStandardMaterial({ color: 0xe0f2fe, emissive: 0xbae6fd, emissiveIntensity: 2.8 });
+        const cosmicMistMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.0 });
+
+        // Glass-like Mirror Surface
+        const lakeDisc = new THREE.Mesh(new THREE.CylinderGeometry(32, 35, 2.5, 32), mirrorWaterMat);
+        lakeDisc.position.set(-3055, 0.75, 360);
+        outsideGroup.add(lakeDisc);
+
+        const lunarRing = new THREE.Mesh(new THREE.RingGeometry(12, 28, 32), lunarGlowMat);
+        lunarRing.rotation.x = -Math.PI / 2;
+        lunarRing.position.set(-3055, 2.05, 360);
+        outsideGroup.add(lunarRing);
+
+        // 8 Floating Crystalline Moon Shards
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const cx = -3055 + Math.cos(angle) * 23;
+            const cz = 360 + Math.sin(angle) * 23;
+            const shard = new THREE.Mesh(new THREE.OctahedronGeometry(1.6, 0), cosmicMistMat);
+            shard.position.set(cx, 6.0, cz);
+            shard.rotation.y = angle;
+            outsideGroup.add(shard);
+        }
+
+        const moonsideLight = new THREE.PointLight(0x7dd3fc, 2.9, 65);
+        moonsideLight.position.set(-3055, 8.0, 360);
+        outsideGroup.add(moonsideLight);
+
+        this.createFloorSoapstone(-3055, 2.0, 372, "#7dd3fc", "🌕 MOONSIDE LAKE REFLECTIVE EXPANSE", "Rom summons meteor showers from the cosmos; sprint laterally when she rears up and crush the brood from behind!");
+
+        // --------------------------------------------------------------------
+        // 5. CONSUMED KING'S GARDEN & TOXIC FOG BASIN
+        // Center: (-3085, -18.0, -280) | Elev: -18.0m | Theme: Sunken Marble Courtyard, Toxic Vapor & Oceiros Consumed King
+        // --------------------------------------------------------------------
+        const mossMarbleMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.85 });
+        const toxicFogMat = new THREE.MeshStandardMaterial({ color: 0x84cc16, emissive: 0x65a30d, emissiveIntensity: 2.2 });
+        const royalGoldMat = new THREE.MeshStandardMaterial({ color: 0xeab308, metalness: 0.75, roughness: 0.35 });
+
+        // Octagonal Sunken Royal Terrace
+        const gardenFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 32, 3.8, 8), mossMarbleMat);
+        gardenFloor.position.set(-3085, -19.9, -280);
+        outsideGroup.add(gardenFloor);
+
+        const toxicPool = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 0.3, 8), toxicFogMat);
+        toxicPool.position.set(-3085, -17.9, -280);
+        outsideGroup.add(toxicPool);
+
+        // 6 Twisted Overgrown Royal Balustrades & Statues
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const bx = -3085 + Math.cos(angle) * 22;
+            const bz = -280 + Math.sin(angle) * 22;
+            const statue = new THREE.Mesh(new THREE.BoxGeometry(2.0, 8.0, 2.0), mossMarbleMat);
+            statue.position.set(bx, -14.0, bz);
+            outsideGroup.add(statue);
+
+            const crown = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2.0, 6), royalGoldMat);
+            crown.position.set(bx, -9.0, bz);
+            outsideGroup.add(crown);
+        }
+
+        const oceirosLight = new THREE.PointLight(0xa3e635, 2.6, 55);
+        oceirosLight.position.set(-3085, -12.0, -280);
+        outsideGroup.add(oceirosLight);
+
+        this.createFloorSoapstone(-3085, -18.0, -268, "#a3e635", "🐉 CONSUMED KING'S GARDEN", "Oceiros thrashes with blinding crystal rage; stay under his dragon tail in phase 2 and roll through his no-windup charge!");
+
+        // --------------------------------------------------------------------
+        // 6. IRON KEEP LOWER FOUNDRY & MOLTEN BRIMSTONE CALDERA
+        // Center: (-3115, -28.0, 180) | Elev: -28.0m | Theme: Black Iron Foundry, Lava Sea & Old Iron King
+        // --------------------------------------------------------------------
+        const castIronMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.8, metalness: 0.7 });
+        const moltenBrimstoneMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, emissive: 0xb91c1c, emissiveIntensity: 3.5 });
+        const ironSpikeMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.6, metalness: 0.8 });
+
+        // Raised Heavy Iron Smelting Island
+        const ironPlatform = new THREE.Mesh(new THREE.BoxGeometry(32, 4.0, 32), castIronMat);
+        ironPlatform.position.set(-3115, -30.0, 180);
+        outsideGroup.add(ironPlatform);
+
+        const lavaLake = new THREE.Mesh(new THREE.RingGeometry(18, 36, 24), moltenBrimstoneMat);
+        lavaLake.rotation.x = -Math.PI / 2;
+        lavaLake.position.set(-3115, -27.8, 180);
+        outsideGroup.add(lavaLake);
+
+        // 4 Monumental Iron Blast Chimneys
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+            const fx = -3115 + Math.cos(angle) * 18;
+            const fz = 180 + Math.sin(angle) * 18;
+            const chimney = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 2.4, 14.0, 8), castIronMat);
+            chimney.position.set(fx, -21.0, fz);
+            outsideGroup.add(chimney);
+
+            const flameTop = new THREE.Mesh(new THREE.ConeGeometry(2.0, 3.5, 8), moltenBrimstoneMat);
+            flameTop.position.set(fx, -12.5, fz);
+            outsideGroup.add(flameTop);
+        }
+
+        const ironKingLight = new THREE.PointLight(0xef4444, 3.2, 60);
+        ironKingLight.position.set(-3115, -19.0, 180);
+        outsideGroup.add(ironKingLight);
+
+        this.createFloorSoapstone(-3115, -28.0, 192, "#ef4444", "🔥 MOLTEN BRIMSTONE FOUNDRY CALDERA", "The Old Iron King commands the molten abyss; bait his flame fist onto the stone slab and avoid the lava pit hole!");
+
+        // --------------------------------------------------------------------
+        // 7. YAHAR'GUL GRAVEYARD & HYPOGEAN ELECTRIC BASIN
+        // Center: (-3145, -12.0, -380) | Elev: -12.0m | Theme: Sunken Basalt Crypts, Lightning Arcs & Darkbeast Paarl
+        // --------------------------------------------------------------------
+        const hypogeanStoneMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.95 });
+        const cyanLightningMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, emissive: 0x0891b2, emissiveIntensity: 3.2 });
+        const ironCageMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.8, roughness: 0.4 });
+
+        // Sunken Circular Courtyard
+        const hypogeanFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 33, 3.8, 24), hypogeanStoneMat);
+        hypogeanFloor.position.set(-3145, -13.9, -380);
+        outsideGroup.add(hypogeanFloor);
+
+        const electricRings = new THREE.Mesh(new THREE.RingGeometry(8, 22, 24), cyanLightningMat);
+        electricRings.rotation.x = -Math.PI / 2;
+        electricRings.position.set(-3145, -11.9, -380);
+        outsideGroup.add(electricRings);
+
+        // 6 Megalithic Skeletal Cage Arches
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const kx = -3145 + Math.cos(angle) * 21;
+            const kz = -380 + Math.sin(angle) * 21;
+            const cage = new THREE.Mesh(new THREE.BoxGeometry(2.2, 11.0, 2.2), ironCageMat);
+            cage.position.set(kx, -6.5, kz);
+            outsideGroup.add(cage);
+
+            const spark = new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 0), cyanLightningMat);
+            spark.position.set(kx, 0.0, kz);
+            outsideGroup.add(spark);
+        }
+
+        const paarlLight = new THREE.PointLight(0x06b6d4, 2.9, 60);
+        paarlLight.position.set(-3145, -5.0, -380);
+        outsideGroup.add(paarlLight);
+
+        this.createFloorSoapstone(-3145, -12.0, -368, "#06b6d4", "⚡ YAHAR'GUL HYPOGEAN ELECTRIC BASIN", "Darkbeast Paarl surges with blinding lightning; focus your strikes on his skeletal legs to break his electric charge!");
+
+        // --------------------------------------------------------------------
+        // 8. ENIR-ILIM CLEANSING TERRACE & GOLDEN NEEDLE ALTAR
+        // Center: (-3175, 44.0, 280) | Elev: +44.0m | Theme: Celestial Limestone, Helical Spires & Needle Knight Leda
+        // --------------------------------------------------------------------
+        const celestialStoneMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.6 });
+        const holyNeedleMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 2.8 });
+        const divineFabricMat = new THREE.MeshStandardMaterial({ color: 0xfef08a, roughness: 0.4 });
+
+        // Monumental Sunlit Limestone Terrace
+        const terraceBase = new THREE.Mesh(new THREE.CylinderGeometry(30, 35, 4.5, 24), celestialStoneMat);
+        terraceBase.position.set(-3175, 41.75, 280);
+        outsideGroup.add(terraceBase);
+
+        const needleDais = new THREE.Mesh(new THREE.RingGeometry(7, 24, 24), divineFabricMat);
+        needleDais.rotation.x = -Math.PI / 2;
+        needleDais.position.set(-3175, 44.05, 280);
+        outsideGroup.add(needleDais);
+
+        // 8 Radiant Helical Columns crowned with Golden Needles
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const hx = -3175 + Math.cos(angle) * 22;
+            const hz = 280 + Math.sin(angle) * 22;
+            const col = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.8, 14.0, 8), celestialStoneMat);
+            col.position.set(hx, 51.0, hz);
+            col.rotation.y = angle;
+            outsideGroup.add(col);
+
+            const needle = new THREE.Mesh(new THREE.ConeGeometry(0.5, 4.0, 6), holyNeedleMat);
+            needle.position.set(hx, 60.0, hz);
+            outsideGroup.add(needle);
+        }
+
+        const ledaLight = new THREE.PointLight(0xfef08a, 3.0, 65);
+        ledaLight.position.set(-3175, 52.0, 280);
+        outsideGroup.add(ledaLight);
+
+        this.createFloorSoapstone(-3175, 44.0, 292, "#fde047", "🗡️ ENIR-ILIM CLEANSING TERRACE", "Needle Knight Leda purges all who stray from Miquella's grace; roll through her piercing thrust and parry her golden flurry!");
     }
 
     createFloorSoapstone(x, y, z, colorHex, title, desc) {

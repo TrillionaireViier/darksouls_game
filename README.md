@@ -67,7 +67,7 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 329 Legendary Boss Roster
+### 🌲 Outside Realm Apex Bosses & 337 Legendary Boss Roster
 Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 281 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (617 Fast-Travel Locations & 141 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (625 Fast-Travel Locations & 149 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 3,050 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 125 bespoke Outside locations, 124 active mob patrols, and 86 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 3,250 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 133 bespoke Outside locations, 132 active mob patrols, and 94 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V81 Expansion)
+1. **New Londo Darkwraith Knight (Skull Helmet, Dark Sword & Red Dark Hand)**: Skull-faced dark plate knight wielding a jagged Dark Sword and ethereal crimson vortex Dark Hand shield.
+2. **Blighttown Blowdart Hollow (Bandaged Mutant & Poison Blowpipe)**: Bandaged hunched mutant stalking toxic rafters, firing venomous poison darts from a bamboo blowpipe.
+3. **Yharnam Cloaked Beast Patient (Tattered Cowl & Beast Claws)**: Shaggy beast under tattered cowl, wielding a blazing torch and slashing with venomous beast talons.
+4. **Moonside Hard-Head Spider Broodling (Crystalline Skull Carapace)**: Small armored arachnid with a deflection stone-hard skull carapace and cluster of glowing blue cosmic eyes.
+5. **Cathedral Knight of the Garden (Towering Blued Steel & Greatsword)**: Towering blued steel knight in cylindrical bucket helm, swinging a 2.8m Greatsword and holy cross tower shield.
+6. **Alonne Knight Captain of the Forge (Horned Kabuto & Flame Katana)**: Blackened iron armor with horned kabuto crest and crimson neckguard, lunging with a flame-engulfed katana.
+7. **Yharnam Snatcher Kidnapper (Tall Lanky Predator & Bloody Sack)**: Lanky pale-faced predator robed in tattered black, carrying a bloody burlap sack and entering lethal frenzy rage.
+8. **Divine Horned Warrior of Enir-Ilim (Ram Horns & Dual Storm Cleavers)**: Beast-horned warrior in flowing golden silk trousers, performing relentless spinning storm cleaver flurries.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V81 Expansion)
+1. **Four Kings, Shadow Sovereigns of the Abyss (New Londo Ruins & The Abyss Void Well)**: 4 levitating shadow kings floating in formation with spired diadems, 4.4m dark soul greatswords and purple void grabs (-32.0m elevation).
+2. **Chaos Witch Quelaag, Daughter of Chaos (Blighttown Depths & Magma Web Caldera)**: Colossal glowing molten spider abdomen with boiling lava vents mounted by a pale flame sorceress wielding Quelaag's Furysword (-24.0m elevation).
+3. **Blood-starved Beast of Old Yharnam (Old Yharnam & Church of the Good Chalice)**: Emaciated flayed beast with trailing back-skin ribbons, exposed spine, caustic poison blood, and front scythe claws (+16.0m elevation).
+4. **Rom, the Vacuous Spider of the Moonside Lake (Moonside Lake & Reflective Glass Expanse)**: Massive segmented pale caterpillar arachnid with stone boulder skull, clustered cosmic eyes, and cosmic meteor volleys (+2.0m elevation).
+5. **Oceiros, the Consumed King (Consumed King's Garden & Toxic Fog Basin)**: Grotesque eyeless dragon scale humanoid mutant cradling an invisible infant, wielding a 4.5m crystal catalyst staff (-18.0m elevation).
+6. **Old Iron King of the Molten Lava Lake (Iron Keep Lower Foundry & Molten Brimstone Caldera)**: Colossal bull-horned demon colossus emerging waist-deep from molten magma, with lava-cracked chest and sweeping flame fists (-28.0m elevation).
+7. **Darkbeast Paarl of the Graveyard (Yahar'gul Graveyard & Hypogean Electric Basin)**: Skeletal quadruped beast draped in crackling cyan lightning discharges, sweeping spidery claw strikes and shockwaves (-12.0m elevation).
+8. **Needle Knight Leda, Cleansing Sword of Miquella (Enir-Ilim Cleansing Terrace & Golden Needle Altar)**: Chased silver-gilt armor with white feathered mantle, wielding Leda's Piercing Sword and floating golden needle projectiles (+44.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V80 Expansion)
 1. **Dark Chasm Havel Phantom (Carved Solid Rock Armor & Dragon Tooth)**: Carved solid stone armor and helm, swinging a massive 2.4m Dragon Tooth club and arched stone tower shield steeped in abyss.

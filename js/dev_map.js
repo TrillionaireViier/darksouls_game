@@ -606,7 +606,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -3050, -950, 3022, 1900, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -3250, -1050, 3222, 2100, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -717,6 +717,15 @@
                 this.drawZoneRect(ctx, -2875, 160, 40, 40, "rgba(10, 50, 80, 0.65)", "#38bdf8", "🪷 SHRINE OF AMANA (+4m)");
                 this.drawZoneRect(ctx, -2905, -220, 40, 40, "rgba(25, 45, 80, 0.65)", "#60a5fa", "❄️ HIGH WALL BOREAL (+32m)");
                 this.drawZoneRect(ctx, -2935, 380, 40, 40, "rgba(70, 25, 10, 0.65)", "#f97316", "🌑 FORBIDDEN GRAVE (-10m)");
+                // 8 Brand-New Outside Realm Expeditions (V81 Expansion)
+                this.drawZoneRect(ctx, -2965, -340, 40, 40, "rgba(30, 25, 75, 0.65)", "#818cf8", "👑 NEW LONDO ABYSS (-32m)");
+                this.drawZoneRect(ctx, -2995, 260, 40, 40, "rgba(80, 25, 10, 0.65)", "#f97316", "🕷️ BLIGHTTOWN WEB (-24m)");
+                this.drawZoneRect(ctx, -3025, -140, 40, 40, "rgba(75, 15, 20, 0.65)", "#ef4444", "🩸 OLD YHARNAM (+16m)");
+                this.drawZoneRect(ctx, -3055, 360, 40, 40, "rgba(15, 55, 95, 0.65)", "#38bdf8", "🌕 MOONSIDE LAKE (+2m)");
+                this.drawZoneRect(ctx, -3085, -280, 40, 40, "rgba(35, 55, 20, 0.65)", "#a3e635", "🐉 CONSUMED GARDEN (-18m)");
+                this.drawZoneRect(ctx, -3115, 180, 40, 40, "rgba(80, 20, 15, 0.65)", "#ef4444", "🔥 MOLTEN FOUNDRY (-28m)");
+                this.drawZoneRect(ctx, -3145, -380, 40, 40, "rgba(10, 60, 80, 0.65)", "#06b6d4", "⚡ YAHAR'GUL BASIN (-12m)");
+                this.drawZoneRect(ctx, -3175, 280, 40, 40, "rgba(75, 70, 20, 0.65)", "#fde047", "🗡️ ENIR-ILIM TERRACE (+44m)");
             }
 
             // 3. Draw All World Pins
