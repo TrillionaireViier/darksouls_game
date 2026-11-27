@@ -26,11 +26,11 @@ namespace DarkSouls
         public const int BaseSectorsPerRing = 45217;
         public const int SectorRings = 3125; // 5x V77's 625 sectors -> 141,303,125 locations!
 
-        [Header("300x300 Full Location Chunks")]
+        [Header("400x400 Full Location Chunks")]
         public float worldHalfExtentX = 225000000f;
         public float worldHalfExtentZ = 234375000f;
-        public float chunkSize = 300f;
-        public float locationGridCellSize = 300f;
+        public float chunkSize = 400f;
+        public float locationGridCellSize = 400f;
 
         [Header("60 FPS PointLight Pool")]
         public int maxActivePointLights = 6;
@@ -267,7 +267,7 @@ namespace DarkSouls
             float centerZ = (cz + 0.5f) * chunkSize;
 
             var ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            ground.name = "GroundSlab_300x300";
+            ground.name = "GroundSlab_400x400";
             ground.transform.SetParent(chunkGo.transform, false);
             ground.transform.position = new Vector3(centerX, -0.5f, centerZ);
             ground.transform.localScale = new Vector3(chunkSize, 1f, chunkSize);
