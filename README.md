@@ -67,7 +67,7 @@ Use the **⚔️ BOSS ROSTER** button or the **Bonfire Altar** to challenge any 
    - *Abilities*: Relentless 3-hit flaming sword flurry, 360° radiant Sunlight Burst shockwave (`playSunlightFlame()`), lunging flame thrust.
    - *Reward*: 20,000 Souls
 
-### 🌲 Outside Realm Apex Bosses & 337 Legendary Boss Roster
+### 🌲 Outside Realm Apex Bosses & 345 Legendary Boss Roster
 Traverse beyond the West Courtyard Gatehouse into the expansive Outside wilderness to challenge 281 legendary bosses across all Soulsborne eras:
 - **Maliketh, The Black Blade (Маликейт Черный Клинок)** — Abyssal Eclipse Chasm
   - Wolf-beast anatomy in golden dragon plate, wielding the colossal Destined Death Greatsword radiating crimson-black vortex waves.
@@ -274,9 +274,29 @@ Encounter newly crafted, fully rigged Three.js procedural 3D creatures with cust
 
 ---
 
-## 🌲 Outside Realm Expeditions & Apex Lords (625 Fast-Travel Locations & 149 Outside Zones)
+## 🌲 Outside Realm Expeditions & Apex Lords (633 Fast-Travel Locations & 157 Outside Zones)
 
-The outside world beyond the Royal Citadel gates spans over 3,250 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 133 bespoke Outside locations, 132 active mob patrols, and 94 apex Soulsborne lords:
+The outside world beyond the Royal Citadel gates spans over 3,450 meters of primeval terrain, ancient archtree forests, volcanic calderas, and abyssal ruins, featuring 141 bespoke Outside locations, 140 active mob patrols, and 102 apex Soulsborne lords:
+
+### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V82 Expansion)
+1. **Yahar'gul Bell-Ringing Woman (Crimson Cowl & Silver Resonance Bell)**: Robed sorceress in deep crimson cowl and gold-trimmed skirt, holding aloft a shining silver resonance bell that summons blood phantoms and fires blood needles.
+2. **Demon Ruins Taurus Statue Demolisher (Carved Basalt Bull Demon & Flame Greathammer)**: Heavy basalt stone bull demon statue with glowing molten lava fissures, swinging an immense volcanic stone greathammer with incandescent ground sparks.
+3. **Purgatory Skeletal Halberdier (Spiked Iron Sallet & Barbed Halberd)**: Bleached skeleton in rusted iron sallet helmet and breastplate, swinging a 2.8m barbed poleaxe halberd and spiked iron buckler.
+4. **Darkroot Forest Treant Sentinel (Mossy Bark Torso & Root Tendril Whip)**: Gnarled ancient oak tree sentinel with verdant emerald moss canopy, lash root whip, and toxic spore cloud glands.
+5. **Smouldering Lake Ghru Pyromancer (Twisted Horns & Demon Fire Staff)**: Caprine beast with long curved ram horns and charred ash hide, brandishing a gnarled staff crowned with a burning chaos cinder orb.
+6. **Undead Settlement Evangelist Matron (Bulbous Robes & Spiked Morningstar Flail)**: Plump preacher in flowing ivory clergy vestments and wide straw hat, swinging a heavy spiked flail morningstar and reading burning scriptures.
+7. **Raya Lucaria Glintstone Lazuli Scholar (Indigo Robes & Scholar Glintstone Kris)**: Slender academy scholar wearing an indigo gown and carved Karolos glintstone mask, channeling crystal glintstone stars from a sapphire staff.
+8. **Research Hall Enlarged Head Patient (Restraint Smock & Fluid IV Drip Pole)**: Asylum patient in restraint smock with an enormously swollen hydrocephalic head in bandages, swinging a heavy brass hospital IV pole in blind flurries.
+
+### 👑 8 Brand-New Apex Outside Lords & Arenas (V82 Expansion)
+1. **The One Reborn, Grotesque Amalgam of Flesh (Yahar'gul Advent Plaza & Blood Moon Chasm)**: Monumental skeletal corpse titan formed from hundreds of conjoined corpses, raining down rotting limbs and spitting caustic acid slime (-16.0m elevation).
+2. **Ceaseless Discharge, Guardian of the Lava Chasm (Demon Ruins Lava Gorge & Magma Rift)**: Weeping son of chaos towering over a boiling magma rift, with 6 sweeping incandescent lava arms and volcanic magma breath (-30.0m elevation).
+3. **Executioner's Chariot & Demon Steeds of Purgatory (Undead Purgatory & Circular Spiked Trench)**: Two-headed skeletal demon stallion pulling an iron spiked battle chariot with bladed scythe wheels, driven by a hooded executioner (+8.0m elevation).
+4. **Moonlight Butterfly of the Ancient Canopy (Darkroot Basin & Crystalline Moon Bridge)**: Celestial entity with translucent iridescent crystal wings, hovering above the ancient pine canopy while hurling homing lunar soul darts (+24.0m elevation).
+5. **Old Demon King, Last Sovereign of the Chaos Pyre (Smouldering Lake & Ashen Demon Pyre)**: Ancient demon sovereign seated on a mound of demon skulls, brandishing a smouldering molten stone club and erupting chaos flame rings (-22.0m elevation).
+6. **Curse-rotted Greatwood, Sovereign of Hollows (Pit of Hollows & Dilapidated Courtyard)**: Immense ancient cursed oak covered in pulsing yellow spore sacs, wielding gnarled root limbs and a pale wooden hand bursting from its chest (-8.0m elevation).
+7. **Red Wolf of Radagon, Beast of the Academy (Debate Parlor Meadow & Glintstone Altar)**: Acrobatic russet lupine predator holding a glowing blue Carian Greatsword in its jaws, conjuring orbiting glintblades and magical comets (+14.0m elevation).
+8. **Living Failures of the Astral Clocktower (Astral Clocktower Patio & Lumenflower Garden)**: Towering cosmic blue humanoids reaching skyward in arcane synchronization, bringing down deep celestial darkness and meteor showers (+36.0m elevation).
 
 ### 🌟 8 Brand-New Bespoke 3D Mob Archetypes (V81 Expansion)
 1. **New Londo Darkwraith Knight (Skull Helmet, Dark Sword & Red Dark Hand)**: Skull-faced dark plate knight wielding a jagged Dark Sword and ethereal crimson vortex Dark Hand shield.

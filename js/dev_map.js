@@ -606,7 +606,7 @@
                 this.drawZoneRect(ctx, -35, -95, 70, 50, "rgba(15, 30, 40, 0.65)", "#00e5ff", "SERPENT SANCTUARY (-4m)");
 
                 // Outside Realm: Darkroot Archtrees & Expanded Wildlands
-                this.drawZoneRect(ctx, -3250, -1050, 3222, 2100, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
+                this.drawZoneRect(ctx, -3480, -1150, 3452, 2300, "rgba(18, 45, 28, 0.35)", "#22c55e", "OUTSIDE REALM & EXPEDITIONS: WEST WILDLANDS & ARCHTREES (0m)");
                 this.drawZoneRect(ctx, -85, 20, 60, 40, "rgba(10, 45, 60, 0.65)", "#00f5ff", "🛸 FALLEN STARSHIP BAZAAR (30 MERCHANTS)");
                 this.drawZoneRect(ctx, -285, 50, 50, 50, "rgba(55, 15, 15, 0.60)", "#ef4444", "🌋 JAGGED PEAK CALDERA (+4m)");
                 this.drawZoneRect(ctx, -195, -135, 40, 40, "rgba(50, 15, 25, 0.60)", "#f97316", "🏰 SHADOW KEEP RAMPARTS (+4m)");
@@ -726,6 +726,15 @@
                 this.drawZoneRect(ctx, -3115, 180, 40, 40, "rgba(80, 20, 15, 0.65)", "#ef4444", "🔥 MOLTEN FOUNDRY (-28m)");
                 this.drawZoneRect(ctx, -3145, -380, 40, 40, "rgba(10, 60, 80, 0.65)", "#06b6d4", "⚡ YAHAR'GUL BASIN (-12m)");
                 this.drawZoneRect(ctx, -3175, 280, 40, 40, "rgba(75, 70, 20, 0.65)", "#fde047", "🗡️ ENIR-ILIM TERRACE (+44m)");
+                // 8 Brand-New Outside Realm Expeditions (V82 Expansion)
+                this.drawZoneRect(ctx, -3205, -320, 40, 40, "rgba(45, 15, 30, 0.65)", "#f43f5e", "🩸 YAHAR'GUL ADVENT (-16m)");
+                this.drawZoneRect(ctx, -3235, 260, 40, 40, "rgba(85, 25, 10, 0.65)", "#fb923c", "🔥 DEMON MAGMA RIFT (-30m)");
+                this.drawZoneRect(ctx, -3265, -220, 40, 40, "rgba(75, 15, 15, 0.65)", "#ef4444", "🐎 UNDEAD PURGATORY (+8m)");
+                this.drawZoneRect(ctx, -3295, 340, 40, 40, "rgba(10, 60, 95, 0.65)", "#38bdf8", "🦋 MOONLIGHT BRIDGE (+24m)");
+                this.drawZoneRect(ctx, -3325, -160, 40, 40, "rgba(80, 25, 10, 0.65)", "#f97316", "👑 SMOULDERING PYRE (-22m)");
+                this.drawZoneRect(ctx, -3355, 190, 40, 40, "rgba(55, 45, 15, 0.65)", "#eab308", "🌳 PIT OF HOLLOWS (-8m)");
+                this.drawZoneRect(ctx, -3385, -360, 40, 40, "rgba(20, 40, 80, 0.65)", "#60a5fa", "🐺 DEBATE PARLOR (+14m)");
+                this.drawZoneRect(ctx, -3415, 280, 40, 40, "rgba(35, 20, 75, 0.65)", "#c084fc", "🌌 ASTRAL PATIO (+36m)");
             }
 
             // 3. Draw All World Pins

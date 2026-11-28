@@ -6055,6 +6055,127 @@ class DarkSoulsCombat {
                 radius: 7.2,
                 spawnPos: { x: -3175, z: 280 },
                 create: (cf, x, z) => cf.createNeedleKnightLeda ? cf.createNeedleKnightLeda(x, z) : cf.createSoulsborneBoss({ id: 'needle_knight_leda', theme: 'holy', bossScale: 4.4 }, x, z)
+            },
+            // === 8 BRAND-NEW APEX OUTSIDE REALM BOSSES (V82 EXPANSION) ===
+            {
+                id: 'outside_the_one_reborn_advent_plaza',
+                name: 'THE ONE REBORN, GROTESQUE AMALGAM OF FLESH',
+                title: 'Outside Realm: Yahar\'gul Advent Plaza &bull; Multi-Corpse Amalgam Titan, Corpse Limbs & Acid Slime',
+                unlockLocationId: 'outside_the_one_reborn_advent_plaza',
+                icon: '🩸',
+                theme: 'dark',
+                bossScale: 4.8,
+                maxHp: 190000,
+                damage: 3450,
+                souls: 26500000,
+                radius: 8.5,
+                spawnPos: { x: -3205, z: -320 },
+                create: (cf, x, z) => cf.createTheOneReborn ? cf.createTheOneReborn(x, z) : cf.createSoulsborneBoss({ id: 'the_one_reborn', theme: 'dark', bossScale: 4.8 }, x, z)
+            },
+            {
+                id: 'outside_ceaseless_discharge_magma_rift',
+                name: 'CEASELESS DISCHARGE, GUARDIAN OF THE LAVA CHASM',
+                title: 'Outside Realm: Demon Ruins Magma Rift &bull; Boiling Lava Colossus, 6 Magma Tendrils & Lava Wave',
+                unlockLocationId: 'outside_ceaseless_discharge_magma_rift',
+                icon: '🔥',
+                theme: 'fire',
+                bossScale: 5.2,
+                maxHp: 194000,
+                damage: 3500,
+                souls: 27000000,
+                radius: 9.2,
+                spawnPos: { x: -3235, z: 260 },
+                create: (cf, x, z) => cf.createCeaselessDischarge ? cf.createCeaselessDischarge(x, z) : cf.createSoulsborneBoss({ id: 'ceaseless_discharge', theme: 'fire', bossScale: 5.2 }, x, z)
+            },
+            {
+                id: 'outside_executioners_chariot_purgatory',
+                name: 'EXECUTIONER\'S CHARIOT & DEMON STEEDS OF PURGATORY',
+                title: 'Outside Realm: Undead Purgatory &bull; Two-Headed Demon War Stallions, Scythe Wheels & Phantom Whipmaster',
+                unlockLocationId: 'outside_executioners_chariot_purgatory',
+                icon: '🐎',
+                theme: 'blood',
+                bossScale: 4.6,
+                maxHp: 188000,
+                damage: 3420,
+                souls: 25500000,
+                radius: 8.2,
+                spawnPos: { x: -3265, z: -220 },
+                create: (cf, x, z) => cf.createExecutionersChariot ? cf.createExecutionersChariot(x, z) : cf.createSoulsborneBoss({ id: 'executioners_chariot', theme: 'blood', bossScale: 4.6 }, x, z)
+            },
+            {
+                id: 'outside_moonlight_butterfly_basin',
+                name: 'MOONLIGHT BUTTERFLY OF THE ANCIENT CANOPY',
+                title: 'Outside Realm: Darkroot Basin Moon Bridge &bull; Iridescent Crystal Wings, Soul Darts & Lunar Ray',
+                unlockLocationId: 'outside_moonlight_butterfly_basin',
+                icon: '🦋',
+                theme: 'magic',
+                bossScale: 4.5,
+                maxHp: 186000,
+                damage: 3400,
+                souls: 25000000,
+                radius: 8.0,
+                spawnPos: { x: -3295, z: 340 },
+                create: (cf, x, z) => cf.createMoonlightButterfly ? cf.createMoonlightButterfly(x, z) : cf.createSoulsborneBoss({ id: 'moonlight_butterfly', theme: 'magic', bossScale: 4.5 }, x, z)
+            },
+            {
+                id: 'outside_old_demon_king_smouldering_pyre',
+                name: 'OLD DEMON KING, LAST SOVEREIGN OF THE CHAOS PYRE',
+                title: 'Outside Realm: Smouldering Lake Pyre &bull; Hunched Demon Colossus, Smouldering Greathammer & Fire Rings',
+                unlockLocationId: 'outside_old_demon_king_smouldering_pyre',
+                icon: '👑',
+                theme: 'fire',
+                bossScale: 5.0,
+                maxHp: 196000,
+                damage: 3550,
+                souls: 27500000,
+                radius: 9.0,
+                spawnPos: { x: -3325, z: -160 },
+                create: (cf, x, z) => cf.createOldDemonKing ? cf.createOldDemonKing(x, z) : cf.createSoulsborneBoss({ id: 'old_demon_king', theme: 'fire', bossScale: 5.0 }, x, z)
+            },
+            {
+                id: 'outside_curse_rotted_greatwood_pit',
+                name: 'CURSE-ROTTED GREATWOOD, SOVEREIGN OF HOLLOWS',
+                title: 'Outside Realm: Pit of Hollows Courtyard &bull; Gnarled Ancient Cursed Oak, Pulsing Spore Sacs & Hollow Hand',
+                unlockLocationId: 'outside_curse_rotted_greatwood_pit',
+                icon: '🌳',
+                theme: 'rot',
+                bossScale: 5.2,
+                maxHp: 192000,
+                damage: 3480,
+                souls: 26800000,
+                radius: 9.0,
+                spawnPos: { x: -3355, z: 190 },
+                create: (cf, x, z) => cf.createCurseRottedGreatwood ? cf.createCurseRottedGreatwood(x, z) : cf.createSoulsborneBoss({ id: 'curse_rotted_greatwood', theme: 'rot', bossScale: 5.2 }, x, z)
+            },
+            {
+                id: 'outside_red_wolf_radagon_meadow',
+                name: 'RED WOLF OF RADAGON, BEAST OF THE ACADEMY',
+                title: 'Outside Realm: Debate Parlor Meadow &bull; Russet Lupine Beast, Jaws Carian Greatsword & Glintblade Volley',
+                unlockLocationId: 'outside_red_wolf_radagon_meadow',
+                icon: '🐺',
+                theme: 'magic',
+                bossScale: 4.4,
+                maxHp: 185000,
+                damage: 3440,
+                souls: 26000000,
+                radius: 7.8,
+                spawnPos: { x: -3385, z: -360 },
+                create: (cf, x, z) => cf.createRedWolfRadagon ? cf.createRedWolfRadagon(x, z) : cf.createSoulsborneBoss({ id: 'red_wolf_radagon', theme: 'magic', bossScale: 4.4 }, x, z)
+            },
+            {
+                id: 'outside_living_failures_astral_garden',
+                name: 'LIVING FAILURES OF THE ASTRAL CLOCKTOWER',
+                title: 'Outside Realm: Astral Clocktower Patio &bull; Rubbery Cosmic Indigo Humanoids, Star Runes & Meteor Storm',
+                unlockLocationId: 'outside_living_failures_astral_garden',
+                icon: '🌌',
+                theme: 'dark',
+                bossScale: 4.6,
+                maxHp: 198000,
+                damage: 3580,
+                souls: 28000000,
+                radius: 8.4,
+                spawnPos: { x: -3415, z: 280 },
+                create: (cf, x, z) => cf.createLivingFailures ? cf.createLivingFailures(x, z) : cf.createSoulsborneBoss({ id: 'living_failures', theme: 'dark', bossScale: 4.6 }, x, z)
             }
         ];
     }
@@ -6452,7 +6573,25 @@ class DarkSoulsCombat {
             [-2845.0, -22.0, -420.0], [-2853.0, -22.0, -428.0], [-2837.0, -22.0, -412.0], // Sunken Depths (Depths Butchers)
             [-2875.0, 4.0, 160.0], [-2883.0, 4.0, 168.0], [-2867.0, 4.0, 152.0],          // Shrine of Amana (Amana Water Priestesses)
             [-2905.0, 32.0, -220.0], [-2913.0, 32.0, -228.0], [-2897.0, 32.0, -212.0],   // High Wall (Lothric Royal Winged Knights)
-            [-2935.0, -10.0, 380.0], [-2943.0, -10.0, 388.0], [-2927.0, -10.0, 372.0]    // Forbidden Grave (Forbidden Snake Hosts)
+            [-2935.0, -10.0, 380.0], [-2943.0, -10.0, 388.0], [-2927.0, -10.0, 372.0],   // Forbidden Grave (Forbidden Snake Hosts)
+            // 8 Brand-New Outside Ascended Expeditions Patrols (V81 Expansion):
+            [-2965.0, -32.0, -340.0], [-2973.0, -32.0, -348.0], [-2957.0, -32.0, -332.0], // New Londo Ruins (Darkwraith Knights)
+            [-2995.0, -24.0, 260.0], [-3003.0, -24.0, 268.0], [-2987.0, -24.0, 252.0],   // Blighttown Depths (Blowdart Hollows)
+            [-3025.0, 16.0, -140.0], [-3033.0, 16.0, -148.0], [-3017.0, 16.0, -132.0],   // Old Yharnam (Cloaked Beast Patients)
+            [-3055.0, 2.0, 360.0], [-3063.0, 2.0, 368.0], [-3047.0, 2.0, 352.0],          // Moonside Lake (Hardhead Spiders)
+            [-3085.0, -18.0, -280.0], [-3093.0, -18.0, -288.0], [-3077.0, -18.0, -272.0], // Consumed King Garden (Cathedral Knights)
+            [-3115.0, -28.0, 180.0], [-3123.0, -28.0, 188.0], [-3107.0, -28.0, 172.0],   // Iron Keep Lower Foundry (Alonne Captains)
+            [-3145.0, -12.0, -380.0], [-3153.0, -12.0, -388.0], [-3137.0, -12.0, -372.0], // Yahar'gul Graveyard (Snatcher Kidnappers)
+            [-3175.0, 44.0, 280.0], [-3183.0, 44.0, 288.0], [-3167.0, 44.0, 272.0],       // Enir-Ilim Terrace (Divine Horned Warriors)
+            // 8 Brand-New Outside Ascended Expeditions Patrols (V82 Expansion):
+            [-3205.0, -16.0, -320.0], [-3213.0, -16.0, -328.0], [-3197.0, -16.0, -312.0], // Yahar'gul Advent Plaza (Bell-Ringing Women)
+            [-3235.0, -30.0, 260.0], [-3243.0, -30.0, 268.0], [-3227.0, -30.0, 252.0],   // Demon Ruins Magma Rift (Taurus Statues)
+            [-3265.0, 8.0, -220.0], [-3273.0, 8.0, -228.0], [-3257.0, 8.0, -212.0],       // Undead Purgatory (Skeletal Halberdiers)
+            [-3295.0, 24.0, 340.0], [-3303.0, 24.0, 348.0], [-3287.0, 24.0, 332.0],       // Darkroot Basin Bridge (Treant Sentinels)
+            [-3325.0, -22.0, -160.0], [-3333.0, -22.0, -168.0], [-3317.0, -22.0, -152.0], // Smouldering Lake (Ghru Pyromancers)
+            [-3355.0, -8.0, 190.0], [-3363.0, -8.0, 198.0], [-3347.0, -8.0, 182.0],       // Pit of Hollows (Evangelist Preachers)
+            [-3385.0, 14.0, -360.0], [-3393.0, 14.0, -368.0], [-3377.0, 14.0, -352.0],   // Debate Parlor Meadow (Lazuli Scholars)
+            [-3415.0, 36.0, 280.0], [-3423.0, 36.0, 288.0], [-3407.0, 36.0, 272.0]        // Astral Clocktower Patio (Enlarged Head Patients)
         ];
         outsidePositions.forEach((pos, idx) => {
             const types = [
@@ -6479,7 +6618,7 @@ class DarkSoulsCombat {
                 'skeleton_wheel', 'boreal_outrider', 'fingercreeper', 'bloodfiend_cleaver',
                 'nightjar_tengu', 'golden_envoy', 'church_nightmare', 'ironclad_turtle',
                 'fire_monk_prelate', 'hornsent_inquisitor', 'syan_mirror_squire', 'chaos_fire_harpy',
-                'messmer_fire_knight', 'winter_lantern_brain', 'gargoyle_profaned_herald', 'lothric_knights_greatlance', 'dark_chasm_havel_phantom', 'desert_pyromancer_sorceress', 'yharnam_scourge_werewolf', 'carthus_skeleton_assassin', 'depths_butcher_executioner', 'amana_water_priestess', 'lothric_royal_winged_knight', 'forbidden_woods_snake_host'
+                'messmer_fire_knight', 'winter_lantern_brain', 'gargoyle_profaned_herald', 'lothric_knights_greatlance', 'dark_chasm_havel_phantom', 'desert_pyromancer_sorceress', 'yharnam_scourge_werewolf', 'carthus_skeleton_assassin', 'depths_butcher_executioner', 'amana_water_priestess', 'lothric_royal_winged_knight', 'forbidden_woods_snake_host', 'new_londo_darkwraith_knight', 'blighttown_blowdart_hollow', 'yharnam_cloaked_beast_patient', 'moonside_hardhead_spider', 'cathedral_knight_garden', 'alonne_captain_forge', 'yahargul_snatcher_kidnapper', 'divine_horned_warrior', 'yahargul_bell_ringing_woman', 'demon_ruins_taurus_statue', 'purgatory_skeletal_halberdier', 'darkroot_treant_sentinel', 'smouldering_ghru_pyromancer', 'undead_settlement_evangelist', 'raya_lucaria_lazuli_scholar', 'research_hall_enlarged_head'
             ];
             const mType = types[idx % types.length];
             const isGorgon = (mType === 'gorgon_medusa');

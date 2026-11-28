@@ -1047,8 +1047,41 @@ class DarkSoulsWorld {
             return -2.0;
         }
 
-        // 5b. Outside Realm & Extended Expeditions: x in [-3250, -28], z in [-1450, 1450]
-        if (x >= -3250 && x <= -28 && z >= -1450 && z <= 1450) {
+        // 5b. Outside Realm & Extended Expeditions: x in [-3480, -28], z in [-1550, 1550]
+        if (x >= -3480 && x <= -28 && z >= -1550 && z <= 1550) {
+            // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V82 EXPANSION) ===
+            // 1. Yahar'gul Advent Plaza & Blood Moon Chasm (outside_the_one_reborn_advent_plaza) (elev: -16.0m)
+            if (x >= -3250 && x <= -3160 && z >= -365 && z <= -275) {
+                return -16.0;
+            }
+            // 2. Demon Ruins Lava Gorge & Magma Rift (outside_ceaseless_discharge_magma_rift) (elev: -30.0m)
+            if (x >= -3280 && x <= -3190 && z >= 215 && z <= 305) {
+                return -30.0;
+            }
+            // 3. Undead Purgatory & Circular Spiked Trench (outside_executioners_chariot_purgatory) (elev: +8.0m)
+            if (x >= -3310 && x <= -3220 && z >= -265 && z <= -175) {
+                return 8.0;
+            }
+            // 4. Darkroot Basin & Crystalline Moon Bridge (outside_moonlight_butterfly_basin) (elev: +24.0m)
+            if (x >= -3340 && x <= -3250 && z >= 295 && z <= 385) {
+                return 24.0;
+            }
+            // 5. Smouldering Lake & Ashen Demon Pyre (outside_old_demon_king_smouldering_pyre) (elev: -22.0m)
+            if (x >= -3370 && x <= -3280 && z >= -205 && z <= -115) {
+                return -22.0;
+            }
+            // 6. Pit of Hollows & Dilapidated Courtyard (outside_curse_rotted_greatwood_pit) (elev: -8.0m)
+            if (x >= -3400 && x <= -3310 && z >= 145 && z <= 235) {
+                return -8.0;
+            }
+            // 7. Debate Parlor Meadow & Glintstone Altar (outside_red_wolf_radagon_meadow) (elev: +14.0m)
+            if (x >= -3430 && x <= -3340 && z >= -405 && z <= -315) {
+                return 14.0;
+            }
+            // 8. Astral Clocktower Patio & Lumenflower Garden (outside_living_failures_astral_garden) (elev: +36.0m)
+            if (x >= -3460 && x <= -3370 && z >= 235 && z <= 325) {
+                return 36.0;
+            }
             // === 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V81 EXPANSION) ===
             // 1. New Londo Ruins & The Abyss Void Well (outside_new_londo_abyss_well) (elev: -32.0m)
             if (x >= -3010 && x <= -2920 && z >= -385 && z <= -295) {
@@ -4224,6 +4257,7 @@ class DarkSoulsWorld {
         this.buildEightAscendedOutsideExpeditionsV79(outsideGroup);
         this.buildEightAscendedOutsideExpeditionsV80(outsideGroup);
         this.buildEightAscendedOutsideExpeditionsV81(outsideGroup);
+        this.buildEightAscendedOutsideExpeditionsV82(outsideGroup);
 
         this.scene.add(outsideGroup);
     }
@@ -9490,6 +9524,307 @@ class DarkSoulsWorld {
         outsideGroup.add(ledaLight);
 
         this.createFloorSoapstone(-3175, 44.0, 292, "#fde047", "🗡️ ENIR-ILIM CLEANSING TERRACE", "Needle Knight Leda purges all who stray from Miquella's grace; roll through her piercing thrust and parry her golden flurry!");
+    }
+
+    buildEightAscendedOutsideExpeditionsV82(outsideGroup) {
+        // ====================================================================
+        // 8 BRAND-NEW ASCENDED OUTSIDE REALM EXPEDITIONS (V82 EXPANSION)
+        // ====================================================================
+
+        // --------------------------------------------------------------------
+        // 1. YAHAR'GUL ADVENT PLAZA & BLOOD MOON CHASM
+        // Center: (-3205, -16.0, -320) | Elev: -16.0m | Theme: Blood Moon, Corpse Street & The One Reborn
+        // --------------------------------------------------------------------
+        const bloodBasaltMat = new THREE.MeshStandardMaterial({ color: 0x13111c, roughness: 0.95 });
+        const crimsonGooMat = new THREE.MeshStandardMaterial({ color: 0x881337, emissive: 0x4c0519, emissiveIntensity: 2.2 });
+        const ironCageArchMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8, roughness: 0.4 });
+
+        // Monumental Sunken Street Plaza
+        const adventStreet = new THREE.Mesh(new THREE.BoxGeometry(44, 3.8, 28), bloodBasaltMat);
+        adventStreet.position.set(-3205, -17.9, -320);
+        outsideGroup.add(adventStreet);
+
+        const bloodPool = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 0.2, 16), crimsonGooMat);
+        bloodPool.position.set(-3205, -15.9, -320);
+        outsideGroup.add(bloodPool);
+
+        // 6 Towering Iron Bell Balustrades
+        for (let i = 0; i < 6; i++) {
+            const bx = -3222 + (i % 3) * 17;
+            const bz = -320 + ((i < 3) ? -12 : 12);
+            const bal = new THREE.Mesh(new THREE.BoxGeometry(2.4, 9.0, 2.4), ironCageArchMat);
+            bal.position.set(bx, -11.5, bz);
+            outsideGroup.add(bal);
+
+            const bell = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.2, 1.6, 8), bloodBasaltMat);
+            bell.position.set(bx, -6.0, bz);
+            outsideGroup.add(bell);
+        }
+
+        const oneRebornLight = new THREE.PointLight(0xe11d48, 3.2, 60);
+        oneRebornLight.position.set(-3205, -8.0, -320);
+        outsideGroup.add(oneRebornLight);
+
+        this.createFloorSoapstone(-3205, -16.0, -308, "#f43f5e", "🩸 YAHAR'GUL ADVENT PLAZA", "The One Reborn rains down corpse limbs and acid vomit; take out the bell-ringing summoners on the balcony first, then smash the center mass!");
+
+        // --------------------------------------------------------------------
+        // 2. DEMON RUINS LAVA GORGE & MAGMA RIFT
+        // Center: (-3235, -30.0, 260) | Elev: -30.0m | Theme: Boiling Magma Chasm, Weeping Son of Chaos & Ceaseless Discharge
+        // --------------------------------------------------------------------
+        const scorchedBasaltMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.9 });
+        const boilingRiftMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xd97706, emissiveIntensity: 3.6 });
+        const altarAshMat = new THREE.MeshStandardMaterial({ color: 0x292524, roughness: 0.85 });
+
+        // Raised Volcanic Terrace
+        const lavaTerrace = new THREE.Mesh(new THREE.BoxGeometry(40, 4.0, 34), scorchedBasaltMat);
+        lavaTerrace.position.set(-3235, -32.0, 260);
+        outsideGroup.add(lavaTerrace);
+
+        // Sunken Magma Chasm Rift
+        const magmaRift = new THREE.Mesh(new THREE.BoxGeometry(36, 0.4, 12), boilingRiftMat);
+        magmaRift.position.set(-3235, -29.8, 260);
+        outsideGroup.add(magmaRift);
+
+        // 4 Ancient Demon Altar Crags
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+            const cx = -3235 + Math.cos(angle) * 19;
+            const cz = 260 + Math.sin(angle) * 19;
+            const crag = new THREE.Mesh(new THREE.ConeGeometry(2.8, 12.0, 6), altarAshMat);
+            crag.position.set(cx, -24.0, cz);
+            outsideGroup.add(crag);
+        }
+
+        const ceaselessLight = new THREE.PointLight(0xffedd5, 3.5, 65);
+        ceaselessLight.position.set(-3235, -18.0, 260);
+        outsideGroup.add(ceaselessLight);
+
+        this.createFloorSoapstone(-3235, -30.0, 272, "#fb923c", "🔥 DEMON RUINS MAGMA RIFT", "Ceaseless Discharge weeps over his sister's grave; sprint toward the narrow rock passage to force his lava limb over the precipice!");
+
+        // --------------------------------------------------------------------
+        // 3. UNDEAD PURGATORY & CIRCULAR SPIKED TRENCH
+        // Center: (-3265, 8.0, -220) | Elev: +8.0m | Theme: Racetrack Trench, Iron Spikes & Executioner's Chariot
+        // --------------------------------------------------------------------
+        const rustedGraniteMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.95 });
+        const bloodRutsMat = new THREE.MeshStandardMaterial({ color: 0x7f1d1d, roughness: 0.8 });
+        const ironSpikeSpireMat = new THREE.MeshStandardMaterial({ color: 0x374151, metalness: 0.85, roughness: 0.3 });
+
+        // Circular Arena Floor
+        const chariotArena = new THREE.Mesh(new THREE.CylinderGeometry(30, 34, 4.0, 28), rustedGraniteMat);
+        chariotArena.position.set(-3265, 6.0, -220);
+        outsideGroup.add(chariotArena);
+
+        // Outer Chariot Racetrack Ring
+        const raceRing = new THREE.Mesh(new THREE.RingGeometry(18, 26, 28), bloodRutsMat);
+        raceRing.rotation.x = -Math.PI / 2;
+        raceRing.position.set(-3265, 8.05, -220);
+        outsideGroup.add(raceRing);
+
+        // 8 Spiked Iron Palisades with Refuge Alcoves
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const sx = -3265 + Math.cos(angle) * 27;
+            const sz = -220 + Math.sin(angle) * 27;
+            const alcove = new THREE.Mesh(new THREE.BoxGeometry(3.5, 8.0, 2.5), rustedGraniteMat);
+            alcove.position.set(sx, 12.0, sz);
+            alcove.rotation.y = angle + Math.PI / 2;
+            outsideGroup.add(alcove);
+
+            const spike = new THREE.Mesh(new THREE.ConeGeometry(0.6, 4.0, 6), ironSpikeSpireMat);
+            spike.position.set(sx, 18.0, sz);
+            outsideGroup.add(spike);
+        }
+
+        const chariotLight = new THREE.PointLight(0xdc2626, 3.0, 55);
+        chariotLight.position.set(-3265, 14.0, -220);
+        outsideGroup.add(chariotLight);
+
+        this.createFloorSoapstone(-3265, 8.0, -208, "#ef4444", "🐎 UNDEAD PURGATORY SPIKED TRENCH", "The Executioner's Chariot circles relentlessly; dive into the side alcoves as he thunders past, sprint to the lever to lower the portcullis!");
+
+        // --------------------------------------------------------------------
+        // 4. DARKROOT BASIN & CRYSTALLINE MOON BRIDGE
+        // Center: (-3295, 24.0, 340) | Elev: +24.0m | Theme: High Forest Bridge, Iridescent Crystal & Moonlight Butterfly
+        // --------------------------------------------------------------------
+        const mossBridgeMat = new THREE.MeshStandardMaterial({ color: 0x14532d, roughness: 0.8 });
+        const moonCrystalMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 2.8, transparent: true, opacity: 0.88 });
+        const starlightStoneMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.7 });
+
+        // High Canopy Ruined Bridge
+        const bridgeSpan = new THREE.Mesh(new THREE.BoxGeometry(42, 3.5, 16), mossBridgeMat);
+        bridgeSpan.position.set(-3295, 22.25, 340);
+        outsideGroup.add(bridgeSpan);
+
+        // 8 Floating Iridescent Moon Shards along the Balustrade
+        for (let i = 0; i < 8; i++) {
+            const bx = -3312 + (i % 4) * 11;
+            const bz = 340 + ((i < 4) ? -7.5 : 7.5);
+            const post = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.0, 6.0, 6), starlightStoneMat);
+            post.position.set(bx, 27.0, bz);
+            outsideGroup.add(post);
+
+            const geode = new THREE.Mesh(new THREE.OctahedronGeometry(1.4, 0), moonCrystalMat);
+            geode.position.set(bx, 31.5, bz);
+            geode.rotation.y = (i * Math.PI) / 4;
+            outsideGroup.add(geode);
+        }
+
+        const butterflyLight = new THREE.PointLight(0x38bdf8, 3.0, 65);
+        butterflyLight.position.set(-3295, 30.0, 340);
+        outsideGroup.add(butterflyLight);
+
+        this.createFloorSoapstone(-3295, 24.0, 350, "#38bdf8", "🦋 DARKROOT CRYSTALLINE MOON BRIDGE", "Moonlight Butterfly fires homing soul darts and laser barrages from the abyss; roll across the narrow parapet and strike when she rests upon the ledge!");
+
+        // --------------------------------------------------------------------
+        // 5. SMOULDERING LAKE & ASHEN DEMON PYRE
+        // Center: (-3325, -22.0, -160) | Elev: -22.0m | Theme: Ash Cavern, Demon Skulls & Old Demon King
+        // --------------------------------------------------------------------
+        const ashRockMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.95 });
+        const demonEmberMat = new THREE.MeshStandardMaterial({ color: 0xea580c, emissive: 0xc2410c, emissiveIntensity: 3.2 });
+        const skullPileMat = new THREE.MeshStandardMaterial({ color: 0x71717a, roughness: 0.85 });
+
+        // Octagonal Ash & Basalt Platform
+        const pyreFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 33, 3.8, 8), ashRockMat);
+        pyreFloor.position.set(-3325, -23.9, -160);
+        outsideGroup.add(pyreFloor);
+
+        // Central Demon Skull Cairn
+        const skullMound = new THREE.Mesh(new THREE.ConeGeometry(10, 4.5, 12), skullPileMat);
+        skullMound.position.set(-3325, -19.75, -160);
+        outsideGroup.add(skullMound);
+
+        // 4 Burning Basalt Obelisks
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2;
+            const ox = -3325 + Math.cos(angle) * 20;
+            const oz = -160 + Math.sin(angle) * 20;
+            const obelisk = new THREE.Mesh(new THREE.BoxGeometry(2.4, 11.0, 2.4), ashRockMat);
+            obelisk.position.set(ox, -16.5, oz);
+            outsideGroup.add(obelisk);
+
+            const flameBeacon = new THREE.Mesh(new THREE.DodecahedronGeometry(1.5, 0), demonEmberMat);
+            flameBeacon.position.set(ox, -9.5, oz);
+            outsideGroup.add(flameBeacon);
+        }
+
+        const demonKingLight = new THREE.PointLight(0xf97316, 3.2, 60);
+        demonKingLight.position.set(-3325, -13.0, -160);
+        outsideGroup.add(demonKingLight);
+
+        this.createFloorSoapstone(-3325, -22.0, -148, "#f97316", "👑 SMOULDERING ASHEN DEMON PYRE", "Old Demon King summons expanding flame rings and meteor rains; retreat behind the demon corpse mounds to avoid his apocalyptic chaos blast!");
+
+        // --------------------------------------------------------------------
+        // 6. PIT OF HOLLOWS & DILAPIDATED COURTYARD
+        // Center: (-3355, -8.0, 190) | Elev: -8.0m | Theme: Sunken Courtyard, Rotting Roots & Curse-rotted Greatwood
+        // --------------------------------------------------------------------
+        const mossPavingMat = new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.9 });
+        const toxicSporeMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, emissive: 0xa16207, emissiveIntensity: 2.4 });
+        const rottingWoodMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.95 });
+
+        // Sunken Dilapidated Courtyard Base
+        const hollowCourtyard = new THREE.Mesh(new THREE.CylinderGeometry(29, 34, 4.0, 20), mossPavingMat);
+        hollowCourtyard.position.set(-3355, -10.0, 190);
+        outsideGroup.add(hollowCourtyard);
+
+        const sporeBed = new THREE.Mesh(new THREE.RingGeometry(8, 22, 20), toxicSporeMat);
+        sporeBed.rotation.x = -Math.PI / 2;
+        sporeBed.position.set(-3355, -7.95, 190);
+        outsideGroup.add(sporeBed);
+
+        // 6 Gnarled Rotting Timber Arches
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const rx = -3355 + Math.cos(angle) * 21;
+            const rz = 190 + Math.sin(angle) * 21;
+            const arch = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.2, 9.5, 6), rottingWoodMat);
+            arch.position.set(rx, -3.25, rz);
+            arch.rotation.z = Math.cos(angle) * 0.2;
+            outsideGroup.add(arch);
+        }
+
+        const greatwoodLight = new THREE.PointLight(0xeab308, 2.8, 55);
+        greatwoodLight.position.set(-3355, 0.0, 190);
+        outsideGroup.add(greatwoodLight);
+
+        this.createFloorSoapstone(-3355, -8.0, 202, "#eab308", "🌳 PIT OF HOLLOWS COURTYARD", "Curse-rotted Greatwood is immune to direct damage; pop the pulsing egg sacs on his belly, legs, and back to shatter his massive health pool!");
+
+        // --------------------------------------------------------------------
+        // 7. DEBATE PARLOR MEADOW & GLINTSTONE ALTAR
+        // Center: (-3385, 14.0, -360) | Elev: +14.0m | Theme: Academy Slate, Scholar Roses & Red Wolf of Radagon
+        // --------------------------------------------------------------------
+        const academySlateMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.65 });
+        const glintstoneGlowMat = new THREE.MeshStandardMaterial({ color: 0x60a5fa, emissive: 0x2563eb, emissiveIntensity: 3.0 });
+        const carianMarbleMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.5 });
+
+        // Academy Courtyard Platform
+        const parlorFloor = new THREE.Mesh(new THREE.CylinderGeometry(28, 32, 3.8, 24), academySlateMat);
+        parlorFloor.position.set(-3385, 12.1, -360);
+        outsideGroup.add(parlorFloor);
+
+        const glintCircle = new THREE.Mesh(new THREE.RingGeometry(6, 20, 24), glintstoneGlowMat);
+        glintCircle.rotation.x = -Math.PI / 2;
+        glintCircle.position.set(-3385, 14.05, -360);
+        outsideGroup.add(glintCircle);
+
+        // 6 Carian Marble Colonnades with Floating Glintstones
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const px = -3385 + Math.cos(angle) * 20;
+            const pz = -360 + Math.sin(angle) * 20;
+            const col = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.8, 12.0, 8), carianMarbleMat);
+            col.position.set(px, 20.0, pz);
+            outsideGroup.add(col);
+
+            const gem = new THREE.Mesh(new THREE.OctahedronGeometry(1.3, 0), glintstoneGlowMat);
+            gem.position.set(px, 27.5, pz);
+            gem.rotation.y = angle;
+            outsideGroup.add(gem);
+        }
+
+        const redWolfLight = new THREE.PointLight(0x60a5fa, 2.9, 60);
+        redWolfLight.position.set(-3385, 21.0, -360);
+        outsideGroup.add(redWolfLight);
+
+        this.createFloorSoapstone(-3385, 14.0, -348, "#60a5fa", "🐺 DEBATE PARLOR GLINTSTONE MEADOW", "Red Wolf of Radagon conjures flying glintblade swords while leaping; stay mobile, roll through his magic sword bite, and punish his landing!");
+
+        // --------------------------------------------------------------------
+        // 8. ASTRAL CLOCKTOWER PATIO & LUMENFLOWER GARDEN
+        // Center: (-3415, 36.0, 280) | Elev: +36.0m | Theme: Elevated Astral Patio, Lumenflowers & Living Failures
+        // --------------------------------------------------------------------
+        const astralMarbleMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+        const lumenflowerMat = new THREE.MeshStandardMaterial({ color: 0xc084fc, emissive: 0x9333ea, emissiveIntensity: 2.8 });
+        const astronomicalBrassMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.85, roughness: 0.35 });
+
+        // Monumental Astral Stone Terrace
+        const patioFloor = new THREE.Mesh(new THREE.CylinderGeometry(30, 35, 4.5, 24), astralMarbleMat);
+        patioFloor.position.set(-3415, 33.75, 280);
+        outsideGroup.add(patioFloor);
+
+        // Astronomical Brass Armillary Rings
+        const armillaryRing = new THREE.Mesh(new THREE.TorusGeometry(18, 0.4, 8, 28), astronomicalBrassMat);
+        armillaryRing.rotation.x = Math.PI / 3;
+        armillaryRing.position.set(-3415, 42.0, 280);
+        outsideGroup.add(armillaryRing);
+
+        // 8 Radiant Lumenflower Pillars
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const fx = -3415 + Math.cos(angle) * 22;
+            const fz = 280 + Math.sin(angle) * 22;
+            const post = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.6, 11.0, 8), astralMarbleMat);
+            post.position.set(fx, 41.5, fz);
+            outsideGroup.add(post);
+
+            const flower = new THREE.Mesh(new THREE.DodecahedronGeometry(1.6, 0), lumenflowerMat);
+            flower.position.set(fx, 48.5, fz);
+            flower.rotation.y = angle;
+            outsideGroup.add(flower);
+        }
+
+        const failuresLight = new THREE.PointLight(0xa855f7, 3.2, 65);
+        failuresLight.position.set(-3415, 45.0, 280);
+        outsideGroup.add(failuresLight);
+
+        this.createFloorSoapstone(-3415, 36.0, 292, "#c084fc", "🌌 ASTRAL CLOCKTOWER LUMENFLOWER PATIO", "Living Failures raise their hands to call the cosmos; when the sky darkens and meteors descend, hide behind the great Astral Tree!");
     }
 
     createFloorSoapstone(x, y, z, colorHex, title, desc) {
